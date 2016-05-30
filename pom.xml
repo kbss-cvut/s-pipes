@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>cz.cvut.kbss</groupId>
+	<version>1.0-SNAPSHOT</version>
+	<artifactId>semantic-pipes</artifactId>
+	<packaging>pom</packaging>
+	<name>Semantic Pipes</name>
+
+	<modules>
+		<module>semantic-pipes-parent</module>
+		<module>semantic-pipes-core</module>
+		<module>semantic-pipes-cli</module>
+	<!--	<module>semantic-pipes-web</module> -->
+	</modules>
+	<dependencies>
+		<dependency>
+			<groupId>org.topbraid</groupId>
+			<artifactId>shacl</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
+</project>
+
