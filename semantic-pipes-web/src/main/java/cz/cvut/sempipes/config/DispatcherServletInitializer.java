@@ -12,9 +12,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import java.util.EnumSet;
 
-/**
- * Created by ledvima1 on 8.4.15.
- */
 public class DispatcherServletInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
     @Override

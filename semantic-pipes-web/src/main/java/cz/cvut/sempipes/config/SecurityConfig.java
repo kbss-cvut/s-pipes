@@ -19,12 +19,9 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
-/**
- * @author ledvima1
- */
 @Configuration
 @EnableWebSecurity(debug = false)
-@ComponentScan(basePackages = "cz.cvut.kbss.inbas.audit.security")
+@ComponentScan(basePackages = "cz.cvut.sempipes.security")
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
