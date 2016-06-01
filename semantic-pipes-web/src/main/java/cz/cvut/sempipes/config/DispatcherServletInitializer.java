@@ -16,7 +16,7 @@ public class DispatcherServletInitializer extends AbstractAnnotationConfigDispat
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class<?>[]{AppConfig.class};
+        return new Class<?>[]{WebAppConfig.class};
     }
 
     @Override
@@ -26,7 +26,7 @@ public class DispatcherServletInitializer extends AbstractAnnotationConfigDispat
 
     @Override
     protected String[] getServletMappings() {
-        return new String[]{"/rest/*"};
+        return new String[]{"/service/*"};
     }
 
     @Override
