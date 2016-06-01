@@ -49,10 +49,9 @@ public class SempipesServiceControllerTest {
                 param("paramIRI","http://test.me").
                 accept(RDFMimeType.LD_JSON_STRING).
                 contentType(RDFMimeType.N_TRIPLES_STRING).
-//                contentType("text/plain").
                 content("<http://a> <http://a> <http://a> .");
         MvcResult result = mockMvc.perform(rb)
-                .andDo(MockMvcResultHandlers.print())
+//                .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk()).andReturn();
         System.out.println("Resulting JSON: " + result.getResponse().getContentAsString());
     }
