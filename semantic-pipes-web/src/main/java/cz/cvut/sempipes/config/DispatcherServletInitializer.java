@@ -26,23 +26,23 @@ public class DispatcherServletInitializer extends AbstractAnnotationConfigDispat
 
     @Override
     protected String[] getServletMappings() {
-        return new String[]{"/service/*"};
+        return new String[]{"/*"};
     }
 
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         System.out.println("****** Application Context Initialization ******");
 
-        initSecurityFilter(servletContext);
+//        initSecurityFilter(servletContext);
         servletContext.addListener(new RequestContextListener());
         servletContext.getSessionCookieConfig().setName(SecurityConstants.SESSION_COOKIE_NAME);
         super.onStartup(servletContext);
     }
 
-    private void initSecurityFilter(ServletContext servletContext) {
-        FilterRegistration.Dynamic securityFilter = servletContext.addFilter("springSecurityFilterChain",
-                DelegatingFilterProxy.class);
-        final EnumSet<DispatcherType> es = EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD);
-        securityFilter.addMappingForUrlPatterns(es, true, "/*");
-    }
+//    private void initSecurityFilter(ServletContext servletContext) {
+//        FilterRegistration.Dynamic securityFilter = servletContext.addFilter("springSecurityFilterChain",
+//                DelegatingFilterProxy.class);
+//        final EnumSet<DispatcherType> es = EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD);
+//        securityFilter.addMappingForUrlPatterns(es, true, "/*");
+//    }
 }

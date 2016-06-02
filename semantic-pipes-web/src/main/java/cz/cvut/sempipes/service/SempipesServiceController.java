@@ -68,7 +68,7 @@ public class SempipesServiceController {
         return querySolution;
     }
 
-    private String run(final InputStream rdfData, final String contentType, final MultiValueMap parameters) {
+    private String run(final InputStream rdfData, String contentType, final MultiValueMap parameters) {
         LOG.info("- parameters={}", parameters);
 
         if (!parameters.containsKey(P_ID)) {
@@ -83,6 +83,7 @@ public class SempipesServiceController {
 
         final QuerySolution querySolution = transform(moduleParams);
         LOG.info("- parameters as query solution ={}", querySolution);
+        contentType = contentType == null || contentType.isEmpty() ? "application/n-triples" : contentType;
 
         // TODO find in module registry ?!?
         String result="";
