@@ -32,7 +32,7 @@ public class SempipesServiceController {
     public static final String P_ID = "id";
 
     @RequestMapping(
-            value = "/serviceGet",
+            value = "/service",
             method = RequestMethod.GET,
             produces = {RDFMimeType.LD_JSON_STRING}
     )
@@ -42,7 +42,7 @@ public class SempipesServiceController {
     }
 
     @RequestMapping(
-            value = "/servicePost",
+            value = "/service",
             method = RequestMethod.POST
             ,
             consumes = {
