@@ -1,9 +1,7 @@
 package cz.cvut.sempipes.modules;
 
 import cz.cvut.sempipes.TestConstants;
-import cz.cvut.sempipes.engine.ExecutionContext;
-import cz.cvut.sempipes.engine.ExecutionContextImpl;
-import cz.cvut.sempipes.engine.ExecutionEngine;
+import cz.cvut.sempipes.engine.*;
 import org.junit.Test;
 
 import java.nio.file.Paths;
@@ -18,16 +16,17 @@ public class TarqlModuleTest {
     @Test
     public void execute() throws Exception {
 
-        ExecutionEngine e = new ExecutionEngine();
+        ExecutionEngine e = ExecutionEngineFactory.createEngine();
 
-        Module module = ModuleFactory.loadModule(
+        Module module = PipelineFactory.loadModule(
                 Paths.get(TestConstants.RESOURCES_DIR_PATH,
                         TARQL_MODULE_DIR,
                         "spin-query-config.ttl"),
                 "http://onto.fel.cvut.cz/ontologies/test/tarql-module#CreateSampleTriples");
 
-        ExecutionContext ec = module.execute(new ExecutionContextImpl());
+        ExecutionContext ec = module.execute(ExecutionContextFactory.createEmptyContext());
         ec.getDefaultModel().write(System.out);
+
     }
 
 }

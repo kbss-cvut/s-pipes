@@ -1,10 +1,7 @@
 package cz.cvut.sempipes.modules;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
+
 import cz.cvut.sempipes.util.ExecUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.output.*;
-import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.junit.Test;
 import java.io.*;
 import java.nio.file.Files;

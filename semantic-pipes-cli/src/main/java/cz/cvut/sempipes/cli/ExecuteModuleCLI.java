@@ -10,16 +10,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.sun.istack.internal.NotNull;
 import cz.cvut.kbss.util.CmdLineUtils;
-import cz.cvut.sempipes.engine.ExecutionContext;
-import cz.cvut.sempipes.engine.ExecutionContextImpl;
-import cz.cvut.sempipes.engine.ExecutionEngine;
-import cz.cvut.sempipes.engine.ExecutionEngineImpl;
+import cz.cvut.sempipes.engine.*;
 import cz.cvut.sempipes.modules.Module;
-import cz.cvut.sempipes.modules.ModuleFactory;
-import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
+import cz.cvut.sempipes.modules.PipelineFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.util.FileUtils;
@@ -28,7 +22,6 @@ import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.topbraid.spin.util.JenaUtil;
 
 
 /**
@@ -104,8 +97,6 @@ public class ExecuteModuleCLI {
         //List<List<String>> rowsOfInputData = new LinkedList();
         System.err.println("Executing external module ... ");
 
-        ExecutionEngine e = new ExecutionEngineImpl();
-
         // load input model
         Model inputDataModel = ModelFactory.createDefaultModel();
 
@@ -134,27 +125,23 @@ public class ExecuteModuleCLI {
 
         configModel.read(new FileInputStream(asArgs.configFile), null, FileUtils.langTurtle);
 
+        //TODO set up input binding
+        ExecutionContext inputExecutionContext = ExecutionContextFactory.createContext(inputDataModel);
 
-        ExecutionContext outputExecutionContext = new ExecutionContextImpl();
-
+        ExecutionEngine engine = ExecutionEngineFactory.createEngine();
+        ExecutionContext outputExecutionContext = null;
+        Module module = null;
         // should execute module only
         if (asArgs.isExecuteModuleOnly) {
+            module = PipelineFactory.loadModule(configModel.createResource(asArgs.configResourceUri));
+            outputExecutionContext = engine.executeModule(module, inputExecutionContext);
+        } else {
+            module = PipelineFactory.loadPipeline(configModel.createResource(asArgs.configResourceUri));
+            outputExecutionContext = engine.executePipeline(module, inputExecutionContext);
 
-            Module module = ModuleFactory.loadModule(configModel.createResource(asArgs.configResourceUri));
-
-
-            ExecutionContext inputExecutionContext = new ExecutionContextImpl();
-
-            // set up input data
-            inputExecutionContext.setDefaultModel(inputDataModel);
-
-            //TODO set up input binding
-            outputExecutionContext = module.execute(inputExecutionContext);
         }
 
         //TODO return output binding
-        QueryExecutionFactory fac;
-
 
         // return output data
         if (asArgs.outputRdfFile != null) {
