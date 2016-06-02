@@ -1,8 +1,8 @@
 package cz.cvut.sempipes.modules;
 
-import cz.cvut.sempipes.constants.Constants;
+import cz.cvut.sempipes.constants.SML;
 import cz.cvut.sempipes.engine.ExecutionContext;
-import cz.cvut.sempipes.engine.ExecutionContextImpl;
+import cz.cvut.sempipes.engine.ExecutionContextFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
@@ -24,26 +24,21 @@ public class ApplyConstructModuleTest {
 
     @Test
     public void execute() throws Exception {
-        ApplyConstructModule module = new ApplyConstructModule();
 
         // set external context
-        ExecutionContext context = new ExecutionContextImpl();
         Model model = ModelFactory.createDefaultModel();
-        context.setDefaultModel(model);
 
         // load config
         model.read(getClass().getResourceAsStream("/apply-construct-module/standard-query-config.ttl"), null, FileUtils.langTurtle);
 
         Resource moduleRes = model.listResourcesWithProperty(
                 RDF.type,
-                model.createProperty(Constants.SML_APPLY_CONSTRUCT)
+                SML.ApplyConstruct
         ).nextResource();
 
+        Module module = PipelineFactory.loadModule(moduleRes);
 
-
-        module.loadConfiguration(moduleRes);
-
-        ExecutionContext newContext = module.execute(context);
+        ExecutionContext newContext = module.execute(ExecutionContextFactory.createContext(model));
 
         newContext.getDefaultModel().write(System.out, FileUtils.langTurtle);
         // check results

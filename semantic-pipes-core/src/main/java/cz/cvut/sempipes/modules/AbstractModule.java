@@ -1,9 +1,16 @@
 package cz.cvut.sempipes.modules;
 
+import cz.cvut.sempipes.engine.ExecutionContext;
+import cz.cvut.sempipes.engine.VariablesBinding;
+import org.apache.jena.query.QuerySolution;
 import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.reasoner.ReasonerRegistry;
+import org.apache.jena.vocabulary.RDFS;
+import org.topbraid.spin.model.SPINFactory;
+import org.topbraid.spin.util.SPINExpressions;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -25,6 +32,11 @@ public abstract class AbstractModule implements Module {
         return resource;
     }
 
+    public String getLabel() {
+        RDFNode labelNode =  resource.getProperty(RDFS.label).getObject();
+        return ((labelNode != null) && labelNode.isLiteral()) ? labelNode.toString() : resource.asResource().getLocalName();
+    }
+
     public void setResource(Resource resource) {
         this.resource = resource;
     }
@@ -39,9 +51,13 @@ public abstract class AbstractModule implements Module {
         this.inputModules = inputModules;
     }
 
-    boolean getPropertyValue(String propertyStr, boolean defaultValue) {
+    RDFNode getPropertyValue(Property property) {
+        return resource.getProperty(property).getObject();
+    }
 
-        Statement s = resource.getProperty(getProperty(propertyStr));
+    boolean getPropertyValue(Property property, boolean defaultValue) {
+
+        Statement s = resource.getProperty(property);
 
         if (s != null && s.getObject().isLiteral()) {
             //TODO check if it is boolean first
@@ -50,12 +66,23 @@ public abstract class AbstractModule implements Module {
         return defaultValue;
     }
 
-    // TODO move to utils
-    Property getProperty(String propertyStr) {
-        return resource.getModel().createProperty(propertyStr);
+    public String getStringPropertyValue(Property property) {
+        return resource.getProperty(property).getObject().toString();
     }
 
-    public String getStringFromProperty(String propertyResourceUri) {
-        return resource.getProperty(resource.getModel().createProperty(propertyResourceUri)).getObject().toString();
+    protected RDFNode getEffectiveValue(RDFNode valueNode, ExecutionContext context) {
+        if (SPINExpressions.isExpression(valueNode)) {
+            Resource expr = (Resource) SPINFactory.asExpression(valueNode);
+            QuerySolution bindings = context.getVariablesBinding().asQuerySolution();
+            return SPINExpressions.evaluate(expr, resource.getModel(), bindings); //TODO resource.getModel() should be part o context
+        } else {
+            return valueNode;
+        }
+    }
+
+    @Override
+    public String toString() {
+        String resourceId = (resource  != null) ? ( " (" + resource.getId() + ")") : "";
+        return this + resourceId;
     }
 }

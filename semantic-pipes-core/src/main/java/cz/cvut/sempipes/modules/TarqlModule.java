@@ -1,9 +1,9 @@
 package cz.cvut.sempipes.modules;
 
 import cz.cvut.sempipes.constants.AppConstants;
-import cz.cvut.sempipes.constants.Constants;
+import cz.cvut.sempipes.constants.SML;
 import cz.cvut.sempipes.engine.ExecutionContext;
-import cz.cvut.sempipes.engine.ExecutionContextImpl;
+import cz.cvut.sempipes.engine.ExecutionContextFactory;
 import cz.cvut.sempipes.util.ExecUtils;
 import org.apache.jena.ext.com.google.common.io.Files;
 import org.apache.jena.query.Query;
@@ -23,10 +23,7 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.zone.ZoneRulesProvider;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -104,9 +101,7 @@ public class TarqlModule extends AbstractModule {
         //newModel.write(System.out, FileUtils.langTurtle);
 
         //TODO should return only Model ???
-        ExecutionContext ec = new ExecutionContextImpl();
-        ec.setDefaultModel(mergedModel);
-
+        ExecutionContext ec = ExecutionContextFactory.createContext(mergedModel);
         return ec;
     }
 
@@ -118,7 +113,7 @@ public class TarqlModule extends AbstractModule {
 
         // TODO does not work with string query as object is not RDF resource ???
         constructQueries = moduleRes
-                .listProperties(getProperty(Constants.SML_CONSTRUCT_QUERY))
+                .listProperties(SML.constructQuery)
                 .toList().stream()
                 .map(st -> st.getObject().asResource())
                 .collect(Collectors.toList());
@@ -126,9 +121,9 @@ public class TarqlModule extends AbstractModule {
         LOG.debug("Loading spin constuct queries ... " + constructQueries);
 
         //TODO default value must be taken from template definition
-        isReplace = this.getPropertyValue(Constants.SML_REPLACE, false);
+        isReplace = this.getPropertyValue(SML.replace, false);
 
-        sourceFilePath = this.getStringFromProperty(Constants.SML_SOURCE_FILE_PATH).toString();
+        sourceFilePath = this.getStringPropertyValue(SML.sourceFilePath);
     }
 
 

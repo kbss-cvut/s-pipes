@@ -26,8 +26,8 @@ public class ExecutionEngineTest {
 
         RDFNode rdfNode = null; // sparql expression
         BindWithConstantModule bindRepo = new BindWithConstantModule();
-        bindRepo.setOutputVariable("repoUrl");
-        bindRepo.setValue(rdfNode);
+       // bindRepo.setOutputVariable("repoUrl");
+        //bindRepo.setValue(rdfNode);
 
         Module tarqlModule = new TarqlModule();
 

@@ -24,23 +24,24 @@
         <!--<com.fasterxml.jackson.version>2.3.3</com.fasterxml.jackson.version>-->
         <!--<junit.version>4.12</junit.version>-->
         <ch.qos.logback.version>1.1.2</ch.qos.logback.version>
+        <org.apache.jena>3.1.0</org.apache.jena>
         <slf4j.version>1.7.12</slf4j.version>
         <!--<org.mapstruct.version>1.0.0.CR1</org.mapstruct.version>-->
     </properties>
 
 
-    <!--<repositories>-->
-    <!--<repository>-->
-    <!--<id>krizik</id>-->
-    <!--<name>KBSS Maven 2 Repository</name>-->
-    <!--<url>http://kbss.felk.cvut.cz/m2repo</url>-->
-    <!--<snapshots>-->
-    <!--<checksumPolicy>warn</checksumPolicy>-->
-    <!--<enabled>true</enabled>-->
-    <!--<updatePolicy>always</updatePolicy>-->
-    <!--</snapshots>-->
-    <!--</repository>-->
-    <!--</repositories>-->
+    <repositories>
+        <repository>
+            <id>krizik</id>
+            <name>KBSS Maven 2 Repository</name>
+            <url>http://kbss.felk.cvut.cz/m2repo</url>
+            <snapshots>
+                <checksumPolicy>warn</checksumPolicy>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <dependencies>
         <!-- Commandline parameters processing -->

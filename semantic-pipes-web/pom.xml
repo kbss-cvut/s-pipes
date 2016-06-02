@@ -25,6 +25,7 @@
         <!--<junit.version>4.12</junit.version>-->
         <ch.qos.logback.version>1.1.2</ch.qos.logback.version>
         <slf4j.version>1.7.12</slf4j.version>
+        <org.apache.jena>3.1.0</org.apache.jena>
         <!--<org.mapstruct.version>1.0.0.CR1</org.mapstruct.version>-->
     </properties>
 
@@ -181,12 +182,12 @@
         <dependency>
             <groupId>org.apache.jena</groupId>
             <artifactId>jena-core</artifactId>
-            <version>3.1.0</version>
+            <version>${org.apache.jena}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.jena</groupId>
             <artifactId>jena-arq</artifactId>
-            <version>3.1.0</version>
+            <version>${org.apache.jena}</version>
         </dependency>
         <!--&lt;!&ndash; JOPA &ndash;&gt;-->
         <!--<dependency>-->

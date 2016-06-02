@@ -1,8 +1,8 @@
 package cz.cvut.sempipes.modules;
 
-import cz.cvut.sempipes.constants.Constants;
+import cz.cvut.sempipes.constants.SML;
 import cz.cvut.sempipes.engine.ExecutionContext;
-import cz.cvut.sempipes.engine.ExecutionContextImpl;
+import cz.cvut.sempipes.engine.ExecutionContextFactory;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
@@ -80,10 +80,7 @@ public class ApplyConstructModule extends AbstractModule {
         //newModel.write(System.out, FileUtils.langTurtle);
 
         //TODO should return only Model ???
-        ExecutionContext ec = new ExecutionContextImpl();
-        ec.setDefaultModel(mergedModel);
-
-        return ec;
+        return ExecutionContextFactory.createContext(mergedModel);
     }
 
 
@@ -97,7 +94,7 @@ public class ApplyConstructModule extends AbstractModule {
 
         // TODO does not work with string query as object is not RDF resource ???
         constructQueries = moduleRes
-                .listProperties(getProperty(Constants.SML_CONSTRUCT_QUERY))
+                .listProperties(SML.constructQuery)
                 .toList().stream()
                 .map(st -> st.getObject().asResource())
                 .collect(Collectors.toList());
@@ -105,7 +102,7 @@ public class ApplyConstructModule extends AbstractModule {
         LOG.debug("Loading spin constuct queries ... " + constructQueries);
 
         //TODO default value must be taken from template definition
-        isReplace = this.getPropertyValue(Constants.SML_REPLACE, false);
+        isReplace = this.getPropertyValue(SML.replace, false);
 
         if (!isReplace) {//TODO
             throw new RuntimeException("Not implemented exception for isReplace = false");
