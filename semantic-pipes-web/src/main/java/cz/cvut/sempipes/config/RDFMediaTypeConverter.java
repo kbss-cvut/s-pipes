@@ -1,9 +1,9 @@
-package cz.cvut.sempipes.service;
+package cz.cvut.sempipes.config;
 
+import cz.cvut.sempipes.util.RDFMimeType;
 import org.apache.jena.riot.RDFLanguages;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
-import org.springframework.http.MediaType;
 import org.springframework.http.converter.AbstractHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
@@ -12,15 +12,15 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Component
-public class AnyMediaTypeConverter extends AbstractHttpMessageConverter {
+public class RDFMediaTypeConverter extends AbstractHttpMessageConverter {
 
-    public AnyMediaTypeConverter() {
+    public RDFMediaTypeConverter() {
         super(
-                MediaType.parseMediaType(RDFLanguages.N3.getContentType().getContentType()),
-                MediaType.parseMediaType(RDFLanguages.NTRIPLES.getContentType().getContentType()),
-                MediaType.parseMediaType(RDFLanguages.TURTLE.getContentType().getContentType()),
-                MediaType.parseMediaType(RDFLanguages.RDFXML.getContentType().getContentType()),
-                MediaType.parseMediaType(RDFLanguages.JSONLD.getContentType().getContentType())
+                RDFMimeType.transform(RDFLanguages.N3),
+                RDFMimeType.transform(RDFLanguages.NTRIPLES),
+                RDFMimeType.transform(RDFLanguages.TURTLE),
+                RDFMimeType.transform(RDFLanguages.RDFXML),
+                RDFMimeType.transform(RDFLanguages.JSONLD)
         );
     }
 

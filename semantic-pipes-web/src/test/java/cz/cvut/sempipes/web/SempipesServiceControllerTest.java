@@ -1,7 +1,7 @@
 package cz.cvut.sempipes.web;
 
 import cz.cvut.sempipes.config.WebAppConfig;
-import cz.cvut.sempipes.service.RDFMimeType;
+import cz.cvut.sempipes.util.RDFMimeType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,7 +10,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.*;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -47,6 +46,19 @@ public class SempipesServiceControllerTest {
                 param("paramString","haha").
                 param("paramInt","7").
                 param("paramIRI","http://test.me").
+                accept(RDFMimeType.LD_JSON_STRING).
+                contentType(RDFMimeType.N_TRIPLES_STRING).
+                content("<http://a> <http://a> <http://a> .");
+        MvcResult result = mockMvc.perform(rb)
+//                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk()).andReturn();
+        System.out.println("Resulting JSON: " + result.getResponse().getContentAsString());
+    }
+
+    @Test
+    public void testAcceptJSONLD() throws Exception {
+        final RequestBuilder rb = post("/servicePost").
+                param("id","http://onto.fel.cvut.cz/ontologies/sempipes/identity-transformer").
                 accept(RDFMimeType.LD_JSON_STRING).
                 contentType(RDFMimeType.N_TRIPLES_STRING).
                 content("<http://a> <http://a> <http://a> .");

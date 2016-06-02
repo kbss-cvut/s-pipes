@@ -1,5 +1,6 @@
 package cz.cvut.sempipes.service;
 
+import cz.cvut.sempipes.util.RDFMimeType;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.rdf.model.Model;

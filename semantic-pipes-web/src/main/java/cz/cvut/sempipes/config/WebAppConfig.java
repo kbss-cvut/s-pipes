@@ -3,7 +3,6 @@ package cz.cvut.sempipes.config;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cz.cvut.sempipes.service.AnyMediaTypeConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -65,7 +64,7 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
         final StringHttpMessageConverter stringConverter = new StringHttpMessageConverter(Charset.forName("UTF-8"));
         converters.add(stringConverter);
 
-        final AnyMediaTypeConverter RDFConverter = new AnyMediaTypeConverter();
+        final RDFMediaTypeConverter RDFConverter = new RDFMediaTypeConverter();
         converters.add(RDFConverter);
 
         super.configureMessageConverters(converters);
