@@ -15,12 +15,6 @@
 		<module>semantic-pipes-cli</module>
 		<module>semantic-pipes-web</module>
 	</modules>
-	<dependencies>
-		<dependency>
-			<groupId>org.topbraid</groupId>
-			<artifactId>shacl</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-	</dependencies>
+
 </project>
 
