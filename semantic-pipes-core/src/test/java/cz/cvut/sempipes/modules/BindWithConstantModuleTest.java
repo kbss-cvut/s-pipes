@@ -4,6 +4,7 @@ import cz.cvut.sempipes.constants.SML;
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
 import org.apache.jena.ontology.OntDocumentManager;
+import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
@@ -28,17 +29,18 @@ public class BindWithConstantModuleTest {
     public void execute() throws Exception {
 
         // set external context
-        Model model = ModelFactory.createDefaultModel();
+        OntModel ontModel = ModelFactory.createOntologyModel();
 
         OntDocumentManager dm = OntDocumentManager.getInstance();
         dm.setFileManager( FileManager.get() );
         //LocationMapper lm= FileManager.get().getLocationMapper();
 
-
         // load config
-        model.read(getClass().getResourceAsStream("/bind-with-constant-module/config.ttl"), null, FileUtils.langTurtle);
+        ontModel.read(getClass().getResourceAsStream("/bind-with-constant-module/config.ttl"), null, FileUtils.langTurtle);
 
-        List<Module> moduleList = PipelineFactory.loadPipelines(model);
+        dm.loadImports(ontModel);
+
+        List<Module> moduleList = PipelineFactory.loadPipelines(ontModel);
         assertTrue(moduleList.size() == 1);
 
         Module module = moduleList.get(0);
@@ -46,7 +48,7 @@ public class BindWithConstantModuleTest {
         System.out.println("Root module of pipeline is " + module);
 
 
-        ExecutionContext newContext = module.execute(ExecutionContextFactory.createContext(model));
+        ExecutionContext newContext = module.execute(ExecutionContextFactory.createContext(ontModel));
 
         newContext.getDefaultModel().write(System.out, FileUtils.langTurtle);
 

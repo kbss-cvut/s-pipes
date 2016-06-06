@@ -3,6 +3,7 @@ package cz.cvut.sempipes.modules;
 import cz.cvut.sempipes.constants.KBSS_MODULE;
 import cz.cvut.sempipes.constants.SM;
 import cz.cvut.sempipes.constants.SML;
+import cz.cvut.sempipes.util.JenaModuleUtils;
 import org.apache.jena.rdf.model.InfModel;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -10,6 +11,7 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.RDF;
 import org.jetbrains.annotations.NotNull;
+import org.topbraid.spin.util.JenaUtil;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -45,7 +47,7 @@ public class PipelineFactory {
     }
 
     //TODO not here ?!
-    public static Module loadModule(Resource configResource)  {
+    public static Module loadModule(Resource configResource) {
 
         // TODO multiple module types per resource
         Resource moduleTypeRes = configResource.getPropertyResourceValue(RDF.type);
@@ -65,7 +67,7 @@ public class PipelineFactory {
     }
 
     // TODO not very effective
-    public static Module loadPipeline(@NotNull  Resource resource) {
+    public static Module loadPipeline(@NotNull Resource resource) {
         return loadPipelines(resource.getModel()).stream().filter(m -> {
             //TODO does not work on annonymous node
             if (resource.getURI().equals(m.getResource().getURI())) {
@@ -78,8 +80,8 @@ public class PipelineFactory {
     public static List<Module> loadPipelines(@NotNull Model configModel) {
 
         // find and load all modules
-        Map<Resource, Module> res2ModuleMap = configModel.listResourcesWithProperty(RDF.type, SM.Module)
-                .toList().stream()
+        Map<Resource, Module> res2ModuleMap = configModel.listResourcesWithProperty(RDF.type)
+                .filterKeep(JenaModuleUtils::isModule).toList().stream()
                 .collect(Collectors.toMap(Function.identity(), PipelineFactory::loadModule));
 
         // set appropriate links //TODO problem 2 files reusing module inconsistently ? do i need to solve it ?
@@ -88,8 +90,8 @@ public class PipelineFactory {
                     Resource res = e.getKey();
 
                     e.getValue().getInputModules().addAll(
-                        res.listProperties(SM.next).toList().stream()
-                                .map(res2ModuleMap::get).collect(Collectors.toList())
+                            res.listProperties(SM.next).toList().stream()
+                                    .map(res2ModuleMap::get).collect(Collectors.toList())
                     );
                 });
 
