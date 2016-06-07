@@ -11,6 +11,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>semantic-pipes-modules</artifactId>
+    <name>Semantic Pipes Modules</name>
     <packaging>pom</packaging>
 
     <modules>
