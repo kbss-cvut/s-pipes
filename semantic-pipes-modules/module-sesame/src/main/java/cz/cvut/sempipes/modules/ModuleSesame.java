@@ -4,6 +4,7 @@ import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.riot.RDFLanguages;
 import org.openrdf.model.Resource;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
@@ -29,15 +30,27 @@ public class ModuleSesame extends AbstractModule {
         return ResourceFactory.createProperty(MODULE_IRI + "/" + name);
     }
 
+    /**
+     * URL of the Sesame server
+     */
     static final Property P_SESAME_SERVER_URL = getParameter("p-sesame-server-url");
     private String sesameServerURL;
 
+    /**
+     * Sesame repository ID
+     */
     static final Property P_SESAME_REPOSITORY_NAME = getParameter("p-sesame-repository-name");
     private String sesameRepositoryName;
 
+    /**
+     * IRI of the context that should be used for deployment
+     */
     static final Property P_SESAME_CONTEXT_IRI = getParameter("p-sesame-context-iri");
     private String sesameContextIRI;
 
+    /**
+     * Whether the context should be replaced (true) or just enriched (false).
+     */
     static final Property P_IS_REPLACE_CONTEXT_IRI = getParameter("p-is-replace");
     private boolean isReplaceContext;
 
@@ -58,7 +71,7 @@ public class ModuleSesame extends AbstractModule {
             }
 
             StringWriter w = new StringWriter();
-            context.getDefaultModel().write(w,"N-TRIPLES");
+            context.getDefaultModel().write(w, RDFLanguages.NTRIPLES.getName());
 
             connection.add(new StringReader(w.getBuffer().toString()), "", RDFFormat.N3, sesameContextIRIResource);
             connection.commit();
