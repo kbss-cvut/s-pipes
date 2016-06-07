@@ -21,7 +21,7 @@ import java.io.StringWriter;
 
 public class ModuleSesame extends AbstractModule {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ApplyConstructModule.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ModuleSesame.class);
 
     private static final String BASE_IRI = "http://onto.fel.cvut.cz/ontologies/lib/module/";
     private static final String MODULE_IRI = BASE_IRI + "sesame";
