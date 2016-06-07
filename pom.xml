@@ -14,6 +14,7 @@
 		<module>semantic-pipes-core</module>
 		<module>semantic-pipes-cli</module>
 		<module>semantic-pipes-web</module>
+		<module>semantic-pipes-modules</module>
 	</modules>
 
 </project>
