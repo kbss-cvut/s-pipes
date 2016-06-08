@@ -74,12 +74,13 @@ public class ApplyConstructModule extends AbstractModule {
 
             QueryExecution execution = QueryExecutionFactory.create(query, defaultModel);
 
-            mergedModel = mergedModel.add(execution.execConstruct());
+            mergedModel = ModelFactory.createUnion(mergedModel, execution.execConstruct());
         }
 
-        //newModel.write(System.out, FileUtils.langTurtle);
+        if (! isReplace) {
+            mergedModel = ModelFactory.createUnion(mergedModel, defaultModel);
+        }
 
-        //TODO should return only Model ???
         return ExecutionContextFactory.createContext(mergedModel);
     }
 

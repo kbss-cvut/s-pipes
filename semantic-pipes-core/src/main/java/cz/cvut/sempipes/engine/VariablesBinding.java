@@ -21,6 +21,11 @@ public class VariablesBinding {
     public VariablesBinding(){
     }
 
+    //TODO move to factory
+    public VariablesBinding(QuerySolution querySolution) {
+        binding.addAll(querySolution);
+    }
+
     public VariablesBinding(String varName, RDFNode node) {
         binding.add(varName, node);
     }

@@ -38,6 +38,6 @@ sml:bind-name
   sm:nodeX 291 ;
   sm:nodeY 43 ;
   sm:outputVariable "name"^^xsd:string ;
-  sml:value "Miroslav"^^xsd:string ;
+  sml:value "James"^^xsd:string ;
   rdfs:label "Bind name"^^xsd:string ;
 .

@@ -1,5 +1,6 @@
 package cz.cvut.sempipes.modules;
 
+import cz.cvut.sempipes.engine.PipelineFactory;
 import org.apache.jena.ontology.OntDocumentManager;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
@@ -36,6 +37,12 @@ public abstract class AbstractModuleTestHelper {
                 getClass().getResourceAsStream(getConfigFilePath()), null, FileUtils.langTurtle);
 
         return ontModel;
+    }
+
+    public Module getConfigRootModule() {
+        OntModel configModel = getConfigOntModel();
+
+        return PipelineFactory.loadPipelines(configModel).get(0);
     }
 
 

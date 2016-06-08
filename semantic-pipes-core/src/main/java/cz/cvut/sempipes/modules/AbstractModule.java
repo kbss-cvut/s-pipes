@@ -75,7 +75,8 @@ public abstract class AbstractModule implements Module {
         return resource.getProperty(property).getObject().toString();
     }
 
-    protected RDFNode getEffectiveValue(RDFNode valueNode) {
+    protected RDFNode getEffectiveValue(Property valueProperty) {
+        RDFNode valueNode = resource.getProperty(valueProperty).getObject();
         if (SPINExpressions.isExpression(valueNode)) {
             Resource expr = (Resource) SPINFactory.asExpression(valueNode);
             QuerySolution bindings = executionContext.getVariablesBinding().asQuerySolution();

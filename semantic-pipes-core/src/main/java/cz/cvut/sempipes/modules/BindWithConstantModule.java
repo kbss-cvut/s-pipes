@@ -13,12 +13,10 @@ import org.apache.jena.rdf.model.RDFNode;
 public class BindWithConstantModule extends AbstractModule  {
 
     String outputVariable;
-    RDFNode valueNode;
+    RDFNode value;
 
     @Override
     public ExecutionContext execute() {
-
-        RDFNode value = getEffectiveValue(valueNode);
 
         return ExecutionContextFactory.createContext(
                 executionContext.getDefaultModel(),
@@ -27,26 +25,23 @@ public class BindWithConstantModule extends AbstractModule  {
 
     @Override
     public void loadConfiguration() {
-        valueNode = getPropertyValue(SML.value);
+        value = getEffectiveValue(SML.value);
         outputVariable = getStringPropertyValue(SM.outputVariable);
     }
 
+    public String getOutputVariable() {
+        return outputVariable;
+    }
 
+    public void setOutputVariable(String outputVariable) {
+        this.outputVariable = outputVariable;
+    }
 
-//    public void setOutputVariable(String outputVariable) {
-//        this.outputVariable = outputVariable;
-//    }
-//
-//
-//    public RDFNode getValue() {
-//        return valueNode;
-//    }
-//
-//    public void setValue(RDFNode spExpression) {
-//        this.valueNode = value;
-//    }
-//
-//    public void setValue(String value) {
-//        valueNode = resource.getModel().createLiteral(value);
-//    }
+    public RDFNode getValue() {
+        return value;
+    }
+
+    public void setValue(RDFNode value) {
+        this.value = value;
+    }
 }
