@@ -17,13 +17,13 @@ import static org.junit.Assert.*;
 public class ExternalModuleTest {
 
 
-    @Test
+    //@Test
     public void executeExternalProgram() throws Exception {
 
         String programCall = "/home/blcha/bin/rdf2rdf.sh -.ttl -.rdf";
         String[] programCallParams = programCall.split(" ");
 
-        String DIR = "src/test/resources/apply-construct-module";
+        String DIR = "src/test/resources/module.apply-construct";
         Path path = Paths.get(DIR + "/standard-query-config.ttl");
 
         InputStream is = new FileInputStream(path.toFile());

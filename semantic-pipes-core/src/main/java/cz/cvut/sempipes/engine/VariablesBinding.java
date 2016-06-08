@@ -74,6 +74,6 @@ public class VariablesBinding {
 
     @Override
     public String toString() {
-        return binding.toString();
+        return binding.asMap().toString();
     }
 }

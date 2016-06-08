@@ -54,9 +54,9 @@ public class ApplyConstructModule extends AbstractModule {
         this.constructQueries = constructQueries;
     }
 
-    public ExecutionContext execute(ExecutionContext context) {
+    public ExecutionContext execute() {
 
-        Model defaultModel = context.getDefaultModel();
+        Model defaultModel = executionContext.getDefaultModel();
 
         // TODO full external context support
         // set variable binding
@@ -85,15 +85,13 @@ public class ApplyConstructModule extends AbstractModule {
 
 
     @Override
-    public void loadConfiguration(Resource moduleRes) {
+    public void loadConfiguration() {
 
         // TODO sparql expressions
         // TODO load default values from configuration
 
-        resource = moduleRes; //TODO remove
-
         // TODO does not work with string query as object is not RDF resource ???
-        constructQueries = moduleRes
+        constructQueries = resource
                 .listProperties(SML.constructQuery)
                 .toList().stream()
                 .map(st -> st.getObject().asResource())

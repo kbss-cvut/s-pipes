@@ -6,7 +6,6 @@ import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
 import cz.cvut.sempipes.engine.VariablesBinding;
 import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.Resource;
 
 /**
  * Created by Miroslav Blasko on 28.5.16.
@@ -17,18 +16,17 @@ public class BindWithConstantModule extends AbstractModule  {
     RDFNode valueNode;
 
     @Override
-    public ExecutionContext execute(ExecutionContext context) {
+    public ExecutionContext execute() {
 
-        RDFNode value = getEffectiveValue(valueNode, context);
+        RDFNode value = getEffectiveValue(valueNode);
 
         return ExecutionContextFactory.createContext(
-                context.getDefaultModel(),
+                executionContext.getDefaultModel(),
                 new VariablesBinding(outputVariable, value));
     }
 
-
     @Override
-    public void loadConfiguration(Resource moduleRes) {
+    public void loadConfiguration() {
         valueNode = getPropertyValue(SML.value);
         outputVariable = getStringPropertyValue(SM.outputVariable);
     }

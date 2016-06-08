@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import cz.cvut.kbss.util.CmdLineUtils;
 import cz.cvut.sempipes.engine.*;
 import cz.cvut.sempipes.modules.Module;
-import cz.cvut.sempipes.modules.PipelineFactory;
+import cz.cvut.sempipes.engine.PipelineFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.util.FileUtils;

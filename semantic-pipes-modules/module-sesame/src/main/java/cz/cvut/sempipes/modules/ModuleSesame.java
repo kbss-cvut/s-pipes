@@ -55,7 +55,7 @@ public class ModuleSesame extends AbstractModule {
     private boolean isReplaceContext;
 
     @Override
-    public ExecutionContext execute(ExecutionContext context) {
+    public ExecutionContext execute() {
         final Repository repository = new HTTPRepository(sesameServerURL, sesameRepositoryName );
         RepositoryConnection connection = null;
 
@@ -71,7 +71,7 @@ public class ModuleSesame extends AbstractModule {
             }
 
             StringWriter w = new StringWriter();
-            context.getDefaultModel().write(w, RDFLanguages.NTRIPLES.getName());
+            executionContext.getDefaultModel().write(w, RDFLanguages.NTRIPLES.getName());
 
             connection.add(new StringReader(w.getBuffer().toString()), "", RDFFormat.N3, sesameContextIRIResource);
             connection.commit();
@@ -95,11 +95,11 @@ public class ModuleSesame extends AbstractModule {
             }
         }
 
-        return ExecutionContextFactory.createContext(context.getDefaultModel());
+        return ExecutionContextFactory.createContext(executionContext.getDefaultModel());
     }
 
     @Override
-    public void loadConfiguration(org.apache.jena.rdf.model.Resource moduleRes) {
+    public void loadConfiguration() {
         sesameServerURL = this.getStringPropertyValue(P_SESAME_SERVER_URL);
         sesameRepositoryName = this.getStringPropertyValue(P_SESAME_REPOSITORY_NAME);
         sesameContextIRI = this.getStringPropertyValue(P_SESAME_CONTEXT_IRI);

@@ -1,0 +1,43 @@
+# baseURI: http://onto.fel.cvut.cz/ontologies/test/abstract/config
+# imports: http://topbraid.org/sparqlmotionfunctions
+# imports: http://topbraid.org/sparqlmotionlib-tbc
+
+@prefix abstract: <http://onto.fel.cvut.cz/ontologies/test/abstract/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sm: <http://topbraid.org/sparqlmotion#> .
+@prefix sml: <http://topbraid.org/sparqlmotionlib#> .
+@prefix sp: <http://spinrdf.org/sp#> .
+@prefix spin: <http://spinrdf.org/spin#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+abstract:config
+  rdf:type owl:Ontology ;
+  owl:imports <http://topbraid.org/sparqlmotionfunctions> ;
+  owl:imports <http://topbraid.org/sparqlmotionlib-tbc> ;
+  owl:versionInfo "Created with TopBraid Composer"^^xsd:string ;
+.
+sml:bind-greeting
+  rdf:type sml:BindWithConstant ;
+  sm:nodeX 289 ;
+  sm:nodeY 209 ;
+  sm:outputVariable "greetingMessage"^^xsd:string ;
+  sml:value [
+      rdf:type sp:concat ;
+      sp:arg1 "Hello " ;
+      sp:arg2 [
+          sp:varName "name"^^xsd:string ;
+        ] ;
+    ] ;
+  rdfs:label "bind-greeting"^^xsd:string ;
+.
+sml:bind-name
+  rdf:type sml:BindWithConstant ;
+  sm:next sml:bind-greeting ;
+  sm:nodeX 291 ;
+  sm:nodeY 43 ;
+  sm:outputVariable "name"^^xsd:string ;
+  sml:value "Miroslav"^^xsd:string ;
+  rdfs:label "Bind name"^^xsd:string ;
+.

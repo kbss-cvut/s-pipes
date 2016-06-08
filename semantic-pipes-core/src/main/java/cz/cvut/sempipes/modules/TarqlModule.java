@@ -54,7 +54,7 @@ public class TarqlModule extends AbstractModule {
 
 
     @Override
-    public ExecutionContext execute(ExecutionContext context) {
+    public ExecutionContext execute() {
 
         //Model defaultInputModel = context.getDefaultModel();
 
@@ -65,8 +65,8 @@ public class TarqlModule extends AbstractModule {
 
         Model mergedModel = ModelFactory.createDefaultModel();
         if (! isReplace) { // TODO mozno sa mozu zmenit blank nody (asi by som mal mergovat do defaultneho modelu ?)
-            if (context.getDefaultModel() != null) {
-                mergedModel.add(context.getDefaultModel());
+            if (executionContext.getDefaultModel() != null) {
+                mergedModel.add(executionContext.getDefaultModel());
             }
         }
 
@@ -106,13 +106,11 @@ public class TarqlModule extends AbstractModule {
     }
 
     @Override
-    public void loadConfiguration(Resource moduleRes) {
+    public void loadConfiguration() {
         // TODO load default values from configuration
 
-        resource = moduleRes; //TODO remove
-
         // TODO does not work with string query as object is not RDF resource ???
-        constructQueries = moduleRes
+        constructQueries = resource
                 .listProperties(SML.constructQuery)
                 .toList().stream()
                 .map(st -> st.getObject().asResource())
