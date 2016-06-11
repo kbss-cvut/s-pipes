@@ -54,7 +54,7 @@ public class TarqlModule extends AbstractModule {
 
 
     @Override
-    public ExecutionContext execute() {
+    public ExecutionContext executeSelf() {
 
         //Model defaultInputModel = context.getDefaultModel();
 

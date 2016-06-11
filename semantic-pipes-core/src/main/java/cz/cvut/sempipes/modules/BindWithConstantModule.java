@@ -6,21 +6,28 @@ import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
 import cz.cvut.sempipes.engine.VariablesBinding;
 import org.apache.jena.rdf.model.RDFNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by Miroslav Blasko on 28.5.16.
  */
 public class BindWithConstantModule extends AbstractModule  {
 
+    private static final Logger LOG = LoggerFactory.getLogger(BindWithConstantModule.class);
     String outputVariable;
     RDFNode value;
 
     @Override
-    public ExecutionContext execute() {
+    public ExecutionContext executeSelf() {
+
+        VariablesBinding bindings = new VariablesBinding(outputVariable, value);
+
+        LOG.debug("\tBinding {} --> {}", outputVariable, value);
 
         return ExecutionContextFactory.createContext(
                 executionContext.getDefaultModel(),
-                new VariablesBinding(outputVariable, value));
+                bindings);
     }
 
     @Override

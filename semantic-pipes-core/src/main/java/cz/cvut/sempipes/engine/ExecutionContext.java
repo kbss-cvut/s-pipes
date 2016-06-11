@@ -12,6 +12,7 @@ public interface ExecutionContext {
     Model getDefaultModel();
     VariablesBinding getVariablesBinding();
 
+    String toSimpleString();
 
 
     //getReadOnlyModel();

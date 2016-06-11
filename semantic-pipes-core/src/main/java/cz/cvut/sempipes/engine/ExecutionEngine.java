@@ -10,6 +10,7 @@ public interface ExecutionEngine {
 
     void loadConfiguration(Model config);
 
+    // TODO web service have injected execution context
     ExecutionContext executePipeline(Module m, ExecutionContext context);
 
     // TODO differentiate output, input modules ?

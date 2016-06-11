@@ -41,26 +41,27 @@ public class BindWithConstantModuleTest extends AbstractModuleTestHelper {
         assertEquals("Output binding does not contain correct value.", variableValue, context.getVariablesBinding().getNode(outputVariable));
     }
 
-//    @Test
-//    public void execute() throws Exception {
-//
-//        OntModel ontModel = getConfigOntModel();
-//
-//        List<Module> moduleList = PipelineFactory.loadPipelines(ontModel);
-//        assertEquals("Bad number of output modules", moduleList.size(), 1);
-//
-//        Module module = moduleList.get(0);
-//
-//        System.out.println("Root module of pipeline is " + module);
-//
-//        ExecutionEngine e = ExecutionEngineFactory.createEngine();
-//
-//        ExecutionContext newContext = e.executeModule(module);
-//
-//        assertEquals("Output variable binding of this module is not correct",
-//                "Hello Miroslav",
-//                Optional.ofNullable(newContext.getVariablesBinding().getNode("greetingMessage")).map(RDFNode::toString).orElse(null));
-//    }
+    @Test
+    public void executeWithBindedValue() throws Exception {
+
+        OntModel ontModel = getConfigOntModel();
+
+        List<Module> moduleList = PipelineFactory.loadPipelines(ontModel);
+        assertEquals("Bad number of output modules", moduleList.size(), 1);
+
+        Module module = moduleList.get(0);
+
+        System.out.println("Root module of pipeline is " + module);
+
+        ExecutionEngine e = ExecutionEngineFactory.createEngine();
+        ExecutionContext context = ExecutionContextFactory.createContext(new VariablesBinding("name", ResourceFactory.createPlainLiteral("Miroslav")));
+
+        ExecutionContext newContext = e.executeModule(module, context);
+
+        assertEquals("Output variable binding of this module is not correct",
+                "Hello Miroslav",
+                Optional.ofNullable(newContext.getVariablesBinding().getNode("greetingMessage")).map(RDFNode::toString).orElse(null));
+    }
 
 
 };

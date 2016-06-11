@@ -19,6 +19,19 @@ class ExecutionContextImpl implements ExecutionContext {
         return variablesBinding;
     }
 
+    @Override
+    public String toSimpleString() {
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Context ").append(this.hashCode()).append("[ \n")
+                .append("\t varBindings = ").append(variablesBinding).append("\n")
+                .append("\t modelSize = ").append(defaultModel.listStatements().toList().size())
+                .append("]");
+
+        return sb.toString();
+    }
+
     public void setDefaultModel(Model defaultModel) {
         this.defaultModel = defaultModel;
     }

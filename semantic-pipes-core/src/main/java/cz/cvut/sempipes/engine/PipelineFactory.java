@@ -4,7 +4,7 @@ import cz.cvut.sempipes.constants.KBSS_MODULE;
 import cz.cvut.sempipes.constants.SM;
 import cz.cvut.sempipes.constants.SML;
 import cz.cvut.sempipes.modules.*;
-import cz.cvut.sempipes.util.JenaModuleUtils;
+import cz.cvut.sempipes.util.JenaPipelineUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
@@ -58,7 +58,7 @@ public class PipelineFactory {
             LOG.error("Cannot load module {} as its {} property value is missing.", moduleRes, RDF.type);
             return null;
         }
-        return  loadModule(moduleRes, moduleTypeRes);
+        return loadModule(moduleRes, moduleTypeRes);
     }
 
     // TODO not very effective
@@ -73,17 +73,23 @@ public class PipelineFactory {
     }
 
     /**
-     *
      * @param configModel
      * @return List of output modules.
      */
     public static List<Module> loadPipelines(@NotNull Model configModel) {
 
         // find and load all modules
-        Map<Resource, Module> res2ModuleMap = JenaModuleUtils.getAllModulesWithTypes(configModel)
-                .entrySet().stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, e -> loadModule(e.getKey(), e.getValue())));
+        Map<Resource, Module> res2ModuleMap = new HashMap<>();
 
+        JenaPipelineUtils.getAllModulesWithTypes(configModel)
+                .entrySet().stream()
+                .forEach(e -> {
+                    Module m = loadModule(e.getKey(), e.getValue());
+                    if (m != null) {
+                        res2ModuleMap.put(e.getKey(), m);
+                    }
+                });
+        //      .collect(Collectors.toMap(Map.Entry::getKey, e -> loadModule(e.getKey(), e.getValue())));
 
 
         // set appropriate links //TODO problem 2 files reusing module inconsistently ? do i need to solve it ?
@@ -100,11 +106,11 @@ public class PipelineFactory {
                                 }
                                 return m;
                             }).filter(m -> (m != null)).forEach(
-                                    m -> {
+                            m -> {
 
-                                        m.getInputModules().add(e.getValue());
-                                    }
-                            );
+                                m.getInputModules().add(e.getValue());
+                            }
+                    );
 
                 });
 
@@ -131,13 +137,13 @@ public class PipelineFactory {
             module = moduleClass.newInstance();
             module.setConfigurationResource(moduleRes);
         } catch (InstantiationException | IllegalAccessException e) {
-            throw new  IllegalArgumentException("Could not instantiate module of type " + moduleTypeRes, e);
+            throw new IllegalArgumentException("Could not instantiate module of type " + moduleTypeRes, e);
         }
 
         return module;
     }
 
-    public static Module loadModule(@NotNull Path configFilePath,@NotNull String moduleResourceUri) {
+    public static Module loadModule(@NotNull Path configFilePath, @NotNull String moduleResourceUri) {
         // load config file
         Model configModel = ModelFactory.createDefaultModel();
 
