@@ -42,7 +42,8 @@ public class SempipesServiceControllerTest {
     @Test
     public void testRunExistingModule() throws Exception {
         final RequestBuilder rb = post("/module").
-                param("id","http://onto.fel.cvut.cz/ontologies/sempipes/identity-transformer").
+                param("id","http://onto.fel.cvut.cz/ontologies/sempipes/identity-transformerx").
+                param("configURL",getClass().getResource("/module-identity/config.ttl").toString()).
                 param("paramString","haha").
                 param("paramInt","7").
                 param("paramIRI","http://test.me").

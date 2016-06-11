@@ -1,6 +1,10 @@
 package cz.cvut.sempipes.service;
 
 import cz.cvut.sempipes.eccairs.EccairsService;
+import cz.cvut.sempipes.engine.*;
+import cz.cvut.sempipes.modules.AbstractModule;
+import cz.cvut.sempipes.modules.Module;
+import cz.cvut.sempipes.modules.ModuleIdentity;
 import cz.cvut.sempipes.util.RDFMimeType;
 import cz.cvut.sempipes.util.RawJson;
 import org.apache.jena.query.QuerySolution;
@@ -11,6 +15,7 @@ import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFLanguages;
+import org.apache.jena.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -20,6 +25,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.URL;
 import java.util.Map;
 
 @RestController
@@ -32,6 +38,11 @@ public class SempipesServiceController {
      * Request parameter - 'id' of the module to be executed
      */
     public static final String P_ID = "id";
+
+    /**
+     * Request parameter - URL of the resource containing configuration
+     */
+    public static final String P_CONFIG_URL = "configURL";
 
     @RequestMapping(
             value = "/module",
@@ -90,6 +101,15 @@ public class SempipesServiceController {
         final String id = parameters.getFirst(P_ID).toString();
         LOG.info("- id={}", id);
 
+        // LOAD MODULE CONFIGURATION
+        if (!parameters.containsKey(P_CONFIG_URL)) {
+            throw new SempipesServiceNoModuleIdException();
+        }
+        final String configURL = parameters.getFirst(P_CONFIG_URL).toString();
+        LOG.info("- config URL={}", configURL);
+        final Model configModel = ModelFactory.createDefaultModel();
+        configModel.read(configURL,"TURTLE");
+
         final Map moduleParams = parameters.toSingleValueMap();
         moduleParams.remove(P_ID);
 
@@ -97,20 +117,45 @@ public class SempipesServiceController {
         LOG.info("- parameters as query solution ={}", querySolution);
         contentType = contentType == null || contentType.isEmpty() ? "application/n-triples" : contentType;
 
-        // TODO find in module registry ?!?
-        String result="";
-        if ( id.equals("http://onto.fel.cvut.cz/ontologies/sempipes/identity-transformer") ) {
-            Model m = ModelFactory.createDefaultModel();
-            m.read(rdfData,"", RDFLanguages.contentTypeToLang(contentType).getLabel());
-            final StringWriter writer = new StringWriter();
-//            m.write(writer);
-            RDFDataMgr.write(writer, m, Lang.JSONLD);
-            result = writer.toString();
-        } else {
+        // LOAD INPUT DATA
+        Model inputDataModel = ModelFactory.createDefaultModel();
+        inputDataModel.read(rdfData,"", RDFLanguages.contentTypeToLang(contentType).getLabel());
+
+        ExecutionContext inputExecutionContext = ExecutionContextFactory.createContext(inputDataModel);
+
+        ExecutionEngine engine = ExecutionEngineFactory.createEngine();
+        ExecutionContext outputExecutionContext = null;
+        Module module = null;
+        // should execute module only
+//        if (asArgs.isExecuteModuleOnly) {
+        module = loadModule(configModel,id);
+
+        if ( module == null ) {
             throw new SempipesServiceInvalidModuleIdException();
         }
 
+        outputExecutionContext = engine.executeModule(module, inputExecutionContext);
+//        } else {
+//            module = PipelineFactory.loadPipeline(configModel.createResource(asArgs.configResourceUri));
+//            outputExecutionContext = engine.executePipeline(module, inputExecutionContext);
+//        }
+
+        // TODO output binding
+
+        final StringWriter writer = new StringWriter();
+        RDFDataMgr.write(writer, outputExecutionContext.getDefaultModel(), Lang.JSONLD);
+        String result = writer.toString();
+
         LOG.info("Processing successfully finished.");
         return new RawJson(result);
+    }
+
+    private Module loadModule(Model configModel, String id) {
+        // TODO find in module registry ?!?
+        if ( "http://onto.fel.cvut.cz/ontologies/sempipes/identity-transformer".equals(id)) {
+            return new ModuleIdentity();
+        } else {
+            return PipelineFactory.loadModule(configModel.createResource(id));
+        }
     }
 }
