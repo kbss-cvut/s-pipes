@@ -38,7 +38,7 @@ public class SempipesServiceController {
             method = RequestMethod.GET,
             produces = {RDFMimeType.LD_JSON_STRING}
     )
-    public String processGetRequest(@RequestParam MultiValueMap parameters) {
+    public RawJson processGetRequest(@RequestParam MultiValueMap parameters) {
         LOG.info("Processing GET request.");
         return run(new ByteArrayInputStream(new byte[]{}), "", parameters);
     }
@@ -54,7 +54,7 @@ public class SempipesServiceController {
                     RDFMimeType.TURTLE_STRING},
             produces = {RDFMimeType.LD_JSON_STRING}
     )
-    public String processPostRequest(@RequestBody InputStream rdfData, @RequestParam MultiValueMap parameters, @RequestHeader(value="Content-type") String contentType) {
+    public RawJson processPostRequest(@RequestBody InputStream rdfData, @RequestParam MultiValueMap parameters, @RequestHeader(value="Content-type") String contentType) {
         LOG.info("Processing POST request.");
         return run(rdfData, contentType, parameters);
     }
@@ -80,7 +80,7 @@ public class SempipesServiceController {
         return querySolution;
     }
 
-    private String run(final InputStream rdfData, String contentType, final MultiValueMap parameters) {
+    private RawJson run(final InputStream rdfData, String contentType, final MultiValueMap parameters) {
         LOG.info("- parameters={}", parameters);
 
         if (!parameters.containsKey(P_ID)) {
@@ -111,6 +111,6 @@ public class SempipesServiceController {
         }
 
         LOG.info("Processing successfully finished.");
-        return result;
+        return new RawJson(result);
     }
 }
