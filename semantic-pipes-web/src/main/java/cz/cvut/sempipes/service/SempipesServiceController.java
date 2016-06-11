@@ -121,7 +121,7 @@ public class SempipesServiceController {
         Model inputDataModel = ModelFactory.createDefaultModel();
         inputDataModel.read(rdfData,"", RDFLanguages.contentTypeToLang(contentType).getLabel());
 
-        ExecutionContext inputExecutionContext = ExecutionContextFactory.createContext(inputDataModel);
+        ExecutionContext inputExecutionContext = ExecutionContextFactory.createContext(inputDataModel, new VariablesBinding(querySolution));
 
         ExecutionEngine engine = ExecutionEngineFactory.createEngine();
         ExecutionContext outputExecutionContext = null;
