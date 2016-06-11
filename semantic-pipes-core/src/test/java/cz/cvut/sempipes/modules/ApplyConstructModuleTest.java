@@ -4,6 +4,7 @@ import cz.cvut.sempipes.constants.SML;
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
 import cz.cvut.sempipes.engine.PipelineFactory;
+import cz.cvut.sempipes.engine.VariablesBinding;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
@@ -32,7 +33,7 @@ public class ApplyConstructModuleTest extends AbstractModuleTestHelper {
     }
 
     @Test
-    public void execute()  {
+    public void executeSimple()  {
 
         ApplyConstructModule module = (ApplyConstructModule) getConfigRootModule();
 
@@ -58,15 +59,21 @@ public class ApplyConstructModuleTest extends AbstractModuleTestHelper {
     public void executeConstructQueryWithVariable() {
         ApplyConstructModule module = (ApplyConstructModule) getRootModule("remote-query.ttl");
 
-        module.setExecutionContext(ExecutionContextFactory.createContext(createSimpleModel()));
-        module.loadConfiguration();
 
         ExecutionContext newContext = null;
+
+        VariablesBinding variablesBinding = new VariablesBinding(
+                "sampleServiceUri",
+                ResourceFactory.createResource("http://martin.inbas.cz/openrdf-sesame/repositories/form-generator?default-graph-uri=http://www.inbas.cz/ontologies/reporting-tool/formGen-977414103")
+        );
+
+        module.setExecutionContext(ExecutionContextFactory.createContext(createSimpleModel(), variablesBinding));
+        module.loadConfiguration();
 
         // isReplace = true
         module.setReplace(true);
         newContext = module.executeSelf();
-        Assert.assertEquals(newContext.getDefaultModel().listStatements().toList().size(), 2);
+        Assert.assertEquals(newContext.getDefaultModel().listStatements().toList().size(), 54);
 
 
 
