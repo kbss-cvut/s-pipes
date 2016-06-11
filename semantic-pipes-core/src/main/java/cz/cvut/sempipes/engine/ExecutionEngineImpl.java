@@ -7,10 +7,7 @@ import org.apache.jena.rdf.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -35,14 +32,22 @@ class ExecutionEngineImpl implements ExecutionEngine {
 
     // TODO differentiate output, input modules ?
     public ExecutionContext executeModule(Module m, ExecutionContext context) {
+        m.setExecutionContext(context);
+        m.loadConfiguration();
         LOG.info("Executing module " + m.getResource());
-        return m.execute(context);
+        return m.execute();
     }
+
+    @Override
+    public ExecutionContext executeModule(Module m) {
+        return executeModule(m, ExecutionContextFactory.createEmptyContext());
+    }
+
 
     private ExecutionContext _executePipeline(Module module, ExecutionContext context) {
         // module has no predeccesor
         if (module.getInputModules().isEmpty()) {
-            return module.execute(context);
+            return module.execute();
         }
 
         Map<Resource, ExecutionContext> resource2ContextMap = module.getInputModules().stream()

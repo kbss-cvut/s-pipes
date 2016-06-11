@@ -1,13 +1,11 @@
 package cz.cvut.sempipes.modules;
 
 import cz.cvut.sempipes.engine.ExecutionContext;
-import cz.cvut.sempipes.engine.VariablesBinding;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
-import org.apache.jena.reasoner.ReasonerRegistry;
 import org.apache.jena.vocabulary.RDFS;
 import org.topbraid.spin.model.SPINFactory;
 import org.topbraid.spin.util.SPINExpressions;
@@ -22,11 +20,21 @@ public abstract class AbstractModule implements Module {
 
     Resource resource;
     List<Module> inputModules = new LinkedList<>();
+    ExecutionContext executionContext;
 
     // load each properties
     // valiadation of required parameter
     // ?? validation of shape of input graph
 
+    @Override
+    public void setExecutionContext(ExecutionContext executionContext) {
+        this.executionContext = executionContext;
+    }
+
+    @Override
+    public void setConfigurationResource(Resource resource) {
+        this.resource = resource;
+    }
 
     public Resource getResource() {
         return resource;
@@ -37,9 +45,6 @@ public abstract class AbstractModule implements Module {
         return ((labelNode != null) && labelNode.isLiteral()) ? labelNode.toString() : resource.asResource().getLocalName();
     }
 
-    public void setResource(Resource resource) {
-        this.resource = resource;
-    }
 
     @Override
     public List<Module> getInputModules() {
@@ -70,19 +75,20 @@ public abstract class AbstractModule implements Module {
         return resource.getProperty(property).getObject().toString();
     }
 
-    protected RDFNode getEffectiveValue(RDFNode valueNode, ExecutionContext context) {
+    protected RDFNode getEffectiveValue(Property valueProperty) {
+        RDFNode valueNode = resource.getProperty(valueProperty).getObject();
         if (SPINExpressions.isExpression(valueNode)) {
             Resource expr = (Resource) SPINFactory.asExpression(valueNode);
-            QuerySolution bindings = context.getVariablesBinding().asQuerySolution();
+            QuerySolution bindings = executionContext.getVariablesBinding().asQuerySolution();
             return SPINExpressions.evaluate(expr, resource.getModel(), bindings); //TODO resource.getModel() should be part o context
         } else {
             return valueNode;
         }
     }
 
-    @Override
-    public String toString() {
-        String resourceId = (resource  != null) ? ( " (" + resource.getId() + ")") : "";
-        return this + resourceId;
-    }
+//    @Override
+//    public String toString() {
+//        String resourceId = (resource  != null) ? ( " (" + resource.getId() + ")") : "";
+//        return resourceId;
+//    }
 }

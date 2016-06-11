@@ -54,9 +54,9 @@ public class ApplyConstructModule extends AbstractModule {
         this.constructQueries = constructQueries;
     }
 
-    public ExecutionContext execute(ExecutionContext context) {
+    public ExecutionContext execute() {
 
-        Model defaultModel = context.getDefaultModel();
+        Model defaultModel = executionContext.getDefaultModel();
 
         // TODO full external context support
         // set variable binding
@@ -74,26 +74,25 @@ public class ApplyConstructModule extends AbstractModule {
 
             QueryExecution execution = QueryExecutionFactory.create(query, defaultModel);
 
-            mergedModel = mergedModel.add(execution.execConstruct());
+            mergedModel = ModelFactory.createUnion(mergedModel, execution.execConstruct());
         }
 
-        //newModel.write(System.out, FileUtils.langTurtle);
+        if (! isReplace) {
+            mergedModel = ModelFactory.createUnion(mergedModel, defaultModel);
+        }
 
-        //TODO should return only Model ???
         return ExecutionContextFactory.createContext(mergedModel);
     }
 
 
     @Override
-    public void loadConfiguration(Resource moduleRes) {
+    public void loadConfiguration() {
 
         // TODO sparql expressions
         // TODO load default values from configuration
 
-        resource = moduleRes; //TODO remove
-
         // TODO does not work with string query as object is not RDF resource ???
-        constructQueries = moduleRes
+        constructQueries = resource
                 .listProperties(SML.constructQuery)
                 .toList().stream()
                 .map(st -> st.getObject().asResource())

@@ -1,4 +1,4 @@
-# baseURI: http://onto.fel.cvut.cz/ontologies/test/apply-construct/standard-query-config
+# baseURI: http://onto.fel.cvut.cz/ontologies/test/apply-construct/spin-query-config
 # imports: http://topbraid.org/sparqlmotionfunctions
 # imports: http://topbraid.org/sparqlmotionlib-tbc
 
@@ -22,11 +22,28 @@ apply-construct:CreateSampleTriples
           [
             sp:object "example" ;
             sp:predicate rdfs:label ;
-            sp:subject <http://example.org/example> ;
+            sp:subject <http://example.org> ;
           ]
         ) ;
       sp:text """CONSTRUCT {
-    <http://example.org> rdfs:label \"example\" .    
+    <http://example.org> rdfs:label \"example\" .  
+}
+WHERE {
+    
+}"""^^xsd:string ;
+      sp:where () ;
+    ] ;
+  sml:constructQuery [
+      rdf:type sp:Construct ;
+      sp:templates (
+          [
+            sp:object "sample" ;
+            sp:predicate rdfs:label ;
+            sp:subject <http://example.org> ;
+          ]
+        ) ;
+      sp:text """CONSTRUCT {
+       <http://example.org> rdfs:label \"sample\" .    
 }
 WHERE {
     
@@ -36,7 +53,7 @@ WHERE {
   sml:replace "true"^^xsd:boolean ;
   rdfs:label "Create sample triples"^^xsd:string ;
 .
-<http://onto.fel.cvut.cz/ontologies/test/apply-construct/standard-query-config>
+<http://onto.fel.cvut.cz/ontologies/test/apply-construct/spin-query-config>
   rdf:type owl:Ontology ;
   owl:imports <http://topbraid.org/sparqlmotionfunctions> ;
   owl:imports <http://topbraid.org/sparqlmotionlib-tbc> ;

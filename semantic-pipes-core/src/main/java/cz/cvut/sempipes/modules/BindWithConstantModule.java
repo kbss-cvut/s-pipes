@@ -6,7 +6,6 @@ import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
 import cz.cvut.sempipes.engine.VariablesBinding;
 import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.Resource;
 
 /**
  * Created by Miroslav Blasko on 28.5.16.
@@ -14,41 +13,35 @@ import org.apache.jena.rdf.model.Resource;
 public class BindWithConstantModule extends AbstractModule  {
 
     String outputVariable;
-    RDFNode valueNode;
+    RDFNode value;
 
     @Override
-    public ExecutionContext execute(ExecutionContext context) {
-
-        RDFNode value = getEffectiveValue(valueNode, context);
+    public ExecutionContext execute() {
 
         return ExecutionContextFactory.createContext(
-                context.getDefaultModel(),
+                executionContext.getDefaultModel(),
                 new VariablesBinding(outputVariable, value));
     }
 
-
     @Override
-    public void loadConfiguration(Resource moduleRes) {
-        valueNode = getPropertyValue(SML.value);
+    public void loadConfiguration() {
+        value = getEffectiveValue(SML.value);
         outputVariable = getStringPropertyValue(SM.outputVariable);
     }
 
+    public String getOutputVariable() {
+        return outputVariable;
+    }
 
+    public void setOutputVariable(String outputVariable) {
+        this.outputVariable = outputVariable;
+    }
 
-//    public void setOutputVariable(String outputVariable) {
-//        this.outputVariable = outputVariable;
-//    }
-//
-//
-//    public RDFNode getValue() {
-//        return valueNode;
-//    }
-//
-//    public void setValue(RDFNode spExpression) {
-//        this.valueNode = value;
-//    }
-//
-//    public void setValue(String value) {
-//        valueNode = resource.getModel().createLiteral(value);
-//    }
+    public RDFNode getValue() {
+        return value;
+    }
+
+    public void setValue(RDFNode value) {
+        this.value = value;
+    }
 }

@@ -22,11 +22,17 @@ apply-construct:CreateSampleTriples
           [
             sp:object "example" ;
             sp:predicate rdfs:label ;
-            sp:subject <http://example.org/example> ;
+            sp:subject <http://example.org> ;
+          ]
+          [
+            sp:object "sample" ;
+            sp:predicate rdfs:label ;
+            sp:subject <http://example.org> ;
           ]
         ) ;
       sp:text """CONSTRUCT {
-    <http://example.org> rdfs:label \"example\" .    
+    <http://example.org> rdfs:label \"example\" . 
+   <http://example.org> rdfs:label \"sample\" .     
 }
 WHERE {
     

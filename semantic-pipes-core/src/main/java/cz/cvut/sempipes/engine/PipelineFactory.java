@@ -1,17 +1,18 @@
-package cz.cvut.sempipes.modules;
+package cz.cvut.sempipes.engine;
 
 import cz.cvut.sempipes.constants.KBSS_MODULE;
 import cz.cvut.sempipes.constants.SM;
 import cz.cvut.sempipes.constants.SML;
+import cz.cvut.sempipes.modules.*;
 import cz.cvut.sempipes.util.JenaModuleUtils;
-import org.apache.jena.rdf.model.InfModel;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.RDF;
 import org.jetbrains.annotations.NotNull;
-import org.topbraid.spin.util.JenaUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -19,13 +20,15 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
  * Created by Miroslav Blasko on 11.5.16.
  */
 public class PipelineFactory {
+
+    private static final Logger LOG = LoggerFactory.getLogger(PipelineFactory.class);
 
     // TODO inheritence not involved, not static context
     static Map<Resource, Class<? extends Module>> moduleTypes = new HashMap<>();
@@ -47,23 +50,15 @@ public class PipelineFactory {
     }
 
     //TODO not here ?!
-    public static Module loadModule(Resource configResource) {
+    public static Module loadModule(@NotNull Resource moduleRes) {
 
         // TODO multiple module types per resource
-        Resource moduleTypeRes = configResource.getPropertyResourceValue(RDF.type);
-
-        Class<? extends Module> moduleClass = moduleTypes.get(moduleTypeRes);
-
-        Module module = null;
-
-        try {
-            module = moduleClass.newInstance();
-            module.loadConfiguration(configResource);
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
+        Resource moduleTypeRes = moduleRes.getPropertyResourceValue(RDF.type);
+        if (moduleTypeRes == null) {
+            LOG.error("Cannot load module {} as its {} property value is missing.", moduleRes, RDF.type);
+            return null;
         }
-
-        return module;
+        return  loadModule(moduleRes, moduleTypeRes);
     }
 
     // TODO not very effective
@@ -77,28 +72,72 @@ public class PipelineFactory {
         }).findAny().orElse(null);
     }
 
+    /**
+     *
+     * @param configModel
+     * @return List of output modules.
+     */
     public static List<Module> loadPipelines(@NotNull Model configModel) {
 
         // find and load all modules
-        Map<Resource, Module> res2ModuleMap = configModel.listResourcesWithProperty(RDF.type)
-                .filterKeep(JenaModuleUtils::isModule).toList().stream()
-                .collect(Collectors.toMap(Function.identity(), PipelineFactory::loadModule));
+        Map<Resource, Module> res2ModuleMap = JenaModuleUtils.getAllModulesWithTypes(configModel)
+                .entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> loadModule(e.getKey(), e.getValue())));
+
+
 
         // set appropriate links //TODO problem 2 files reusing module inconsistently ? do i need to solve it ?
         res2ModuleMap.entrySet().stream()
                 .forEach(e -> {
                     Resource res = e.getKey();
 
-                    e.getValue().getInputModules().addAll(
-                            res.listProperties(SM.next).toList().stream()
-                                    .map(res2ModuleMap::get).collect(Collectors.toList())
-                    );
+                    // set up input modules
+                    res.listProperties(SM.next).toList().stream()
+                            .map(st -> {
+                                Module m = res2ModuleMap.get(st.getObject().asResource());
+                                if (m == null) {
+                                    LOG.error("Ignoring statement {}. The object of the triple must have rdf:type {}.", st, SM.Module);
+                                }
+                                return m;
+                            }).filter(m -> (m != null)).forEach(
+                                    m -> {
+
+                                        m.getInputModules().add(e.getValue());
+                                    }
+                            );
+
                 });
 
-        return res2ModuleMap.values().stream().collect(Collectors.toList());
+        Set<Module> inputModulesSet = res2ModuleMap.values().stream().flatMap(m -> m.getInputModules().stream()).collect(Collectors.toSet());
+
+        List<Module> outputModulesList = res2ModuleMap.values().stream().collect(Collectors.toList());
+        outputModulesList.removeAll(inputModulesSet);
+
+        return outputModulesList;
     }
 
-    public static Module loadModule(Path configFilePath, String moduleResourceUri) {
+    private static Module loadModule(@NotNull Resource moduleRes, @NotNull Resource moduleTypeRes) {
+
+        Class<? extends Module> moduleClass = moduleTypes.get(moduleTypeRes);
+
+        if (moduleClass == null) {
+            LOG.error("Ignoring module {}. Its type {} is not registered.", moduleRes, moduleTypeRes);
+            return null;
+        }
+
+        Module module = null;
+
+        try {
+            module = moduleClass.newInstance();
+            module.setConfigurationResource(moduleRes);
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new  IllegalArgumentException("Could not instantiate module of type " + moduleTypeRes, e);
+        }
+
+        return module;
+    }
+
+    public static Module loadModule(@NotNull Path configFilePath,@NotNull String moduleResourceUri) {
         // load config file
         Model configModel = ModelFactory.createDefaultModel();
 

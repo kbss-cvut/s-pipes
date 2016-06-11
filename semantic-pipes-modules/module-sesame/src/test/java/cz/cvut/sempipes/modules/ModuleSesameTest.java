@@ -23,7 +23,7 @@ public class ModuleSesameTest {
         model.add(root,ModuleSesame.P_SESAME_REPOSITORY_NAME, "test-semantic-pipes");
         model.add(root,ModuleSesame.P_SESAME_CONTEXT_IRI, "");
 
-        moduleSesame.setResource(root);
+        moduleSesame.setConfigurationResource(root);
         moduleSesame.loadConfiguration(null);
 
         // TODO: currently running server is needed;
