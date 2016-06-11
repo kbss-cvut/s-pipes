@@ -1,10 +1,5 @@
 package cz.cvut.sempipes.engine;
 
-import cz.cvut.sempipes.JenaTestUtils;
-import cz.cvut.sempipes.modules.Module;
-import org.apache.jena.datatypes.RDFDatatype;
-import org.apache.jena.graph.NodeFactory;
-import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.junit.Assert;
 import org.junit.Rule;
@@ -13,14 +8,12 @@ import org.junit.rules.ExpectedException;
 
 import java.io.*;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.assertEquals;
 
 public class VariablesBindingTest {
     @Rule
