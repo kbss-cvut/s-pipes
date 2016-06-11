@@ -26,6 +26,7 @@ public class ModuleSesameTest {
         moduleSesame.setConfigurationResource(root);
 
         // TODO: currently running server is needed;
-        // moduleSesame.execute(executionContext);
+        moduleSesame.setExecutionContext(executionContext);
+        moduleSesame.execute();
     }
 }
