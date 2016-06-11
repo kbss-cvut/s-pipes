@@ -21,6 +21,7 @@ import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Map;
 
 
@@ -160,7 +161,8 @@ public class EccairsService {
 
         for (Object key : parameters.keySet()) {
             // TODO types of RDFNode
-            querySolution.add(key.toString(), ResourceFactory.createPlainLiteral(parameters.get(key).toString()));
+            String value = (String) ((LinkedList) parameters.get(key)).get(0);
+            querySolution.add(key.toString(), ResourceFactory.createPlainLiteral(value));
         }
 
         return querySolution;

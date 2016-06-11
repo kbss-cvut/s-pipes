@@ -1,5 +1,6 @@
 # baseURI: http://onto.fel.cvut.cz/ontologies/test/apply-construct/spin-remote-query-config
 # imports: http://topbraid.org/sparqlmotionfunctions
+# imports: http://topbraid.org/sparqlmotionlib
 
 @prefix apply-construct: <http://onto.fel.cvut.cz/ontologies/test/apply-construct#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
@@ -34,7 +35,7 @@ apply-construct:CreateSampleTriples
     ?s ?p ?o .
 }
 WHERE {
-    SERVICE <http://martin.inbas.cz/openrdf-sesame/repositories/form-generator?default-graph-uri=http://www.inbas.cz/ontologies/reporting-tool/formGen-977414103> {
+    SERVICE ?sampleServiceUri {
            ?s ?p ?o .
     }
 }"""^^xsd:string ;
@@ -54,7 +55,9 @@ WHERE {
                     ] ;
                 ]
               ) ;
-            sp:serviceURI <http://martin.inbas.cz/openrdf-sesame/repositories/form-generator?default-graph-uri=http://www.inbas.cz/ontologies/reporting-tool/formGen-977414103> ;
+            sp:serviceURI [
+                sp:varName "sampleServiceUri"^^xsd:string ;
+              ] ;
           ]
         ) ;
     ] ;
@@ -64,5 +67,6 @@ WHERE {
 <http://onto.fel.cvut.cz/ontologies/test/apply-construct/spin-remote-query-config>
   rdf:type owl:Ontology ;
   owl:imports <http://topbraid.org/sparqlmotionfunctions> ;
+  owl:imports <http://topbraid.org/sparqlmotionlib> ;
   owl:versionInfo "Created with TopBraid Composer"^^xsd:string ;
 .
