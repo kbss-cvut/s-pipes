@@ -74,9 +74,6 @@ public class ApplyConstructModuleTest extends AbstractModuleTestHelper {
         module.setReplace(true);
         newContext = module.executeSelf();
         Assert.assertEquals(newContext.getDefaultModel().listStatements().toList().size(), 54);
-
-
-
     }
 
     private Model createSimpleModel() {
