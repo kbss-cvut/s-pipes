@@ -9,7 +9,7 @@ public class FormGeneratorModule extends AbstractModule {
 
 
     @Override
-    public ExecutionContext execute() {
+    public ExecutionContext executeSelf() {
 
         return null;
     }

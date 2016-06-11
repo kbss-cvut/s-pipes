@@ -17,7 +17,7 @@ public class BindBySelectModule extends AbstractModule  {
     private Select selectQuery;
 
     @Override
-    public ExecutionContext execute() {
+    public ExecutionContext executeSelf() {
 
         Query query = ARQFactory.get().createQuery(selectQuery);
 

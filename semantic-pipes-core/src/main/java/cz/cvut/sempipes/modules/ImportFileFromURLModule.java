@@ -7,7 +7,7 @@ import cz.cvut.sempipes.engine.ExecutionContext;
  */
 public class ImportFileFromURLModule extends AbstractModule  {
     @Override
-    public ExecutionContext execute() {
+    public ExecutionContext executeSelf() {
         return null;
     }
 

@@ -6,6 +6,7 @@ import cz.cvut.sempipes.engine.ExecutionContextFactory;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QuerySolution;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
@@ -54,16 +55,11 @@ public class ApplyConstructModule extends AbstractModule {
         this.constructQueries = constructQueries;
     }
 
-    public ExecutionContext execute() {
+    public ExecutionContext executeSelf() {
 
         Model defaultModel = executionContext.getDefaultModel();
 
-        // TODO full external context support
-        // set variable binding
-
-        //QueryExecution.setInitialBinding(QuerySolution binding)
-        //sparql.engine.binding.Binding
-
+        QuerySolution bindings = executionContext.getVariablesBinding().asQuerySolution();
         Model mergedModel = ModelFactory.createDefaultModel();
 
         //      set up variable bindings
@@ -72,7 +68,7 @@ public class ApplyConstructModule extends AbstractModule {
 
             Query query = ARQFactory.get().createQuery(spinConstructRes);
 
-            QueryExecution execution = QueryExecutionFactory.create(query, defaultModel);
+            QueryExecution execution = QueryExecutionFactory.create(query, defaultModel, bindings);
 
             mergedModel = ModelFactory.createUnion(mergedModel, execution.execConstruct());
         }
@@ -102,11 +98,6 @@ public class ApplyConstructModule extends AbstractModule {
 
         //TODO default value must be taken from template definition
         isReplace = this.getPropertyValue(SML.replace, false);
-
-        if (!isReplace) {//TODO
-            throw new RuntimeException("Not implemented exception for isReplace = false");
-        }
-
 
     }
 }

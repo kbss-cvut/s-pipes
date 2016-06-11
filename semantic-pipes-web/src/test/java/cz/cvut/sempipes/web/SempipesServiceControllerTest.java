@@ -29,19 +29,19 @@ public class SempipesServiceControllerTest {
 
     @Test
     public void testRunNoModule() throws Exception {
-        final RequestBuilder rb = get("/service");
+        final RequestBuilder rb = get("/module");
         mockMvc.perform(rb).andExpect(status().is4xxClientError());
     }
 
     @Test
     public void testRunNonExistingModule() throws Exception {
-        final RequestBuilder rb = get("/service").param("id","http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/sempipes");
+        final RequestBuilder rb = get("/module").param("id","http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/sempipes");
         mockMvc.perform(rb).andExpect(status().is4xxClientError());
     }
 
     @Test
     public void testRunExistingModule() throws Exception {
-        final RequestBuilder rb = post("/service").
+        final RequestBuilder rb = post("/module").
                 param("id","http://onto.fel.cvut.cz/ontologies/sempipes/identity-transformer").
                 param("paramString","haha").
                 param("paramInt","7").
@@ -65,7 +65,7 @@ public class SempipesServiceControllerTest {
 //    }
 
     private void testMimeType( final String mimeType, boolean pass ) throws Exception {
-        final RequestBuilder rb = post("/service").
+        final RequestBuilder rb = post("/module").
                 param("id","http://onto.fel.cvut.cz/ontologies/sempipes/identity-transformer").
                 accept(mimeType);
         mockMvc.perform(rb)

@@ -23,6 +23,10 @@ public abstract class AbstractModuleTestHelper {
     abstract String getModuleName();
 
     public OntModel getConfigOntModel() {
+        return getOntModel(CONFIG_FILE_NAME);
+    }
+
+    public OntModel getOntModel(String fileName) {
         OntModel ontModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
 
         // set external context
@@ -34,17 +38,29 @@ public abstract class AbstractModuleTestHelper {
 
         // load config
         ontModel.read(
-                getClass().getResourceAsStream(getConfigFilePath()), null, FileUtils.langTurtle);
+                getClass().getResourceAsStream(getFilePath(fileName)), null, FileUtils.langTurtle);
 
         return ontModel;
     }
 
     public Module getConfigRootModule() {
-        OntModel configModel = getConfigOntModel();
+        return  getRootModule(CONFIG_FILE_NAME);
+    }
+
+    public Module getRootModule(String fileName) {
+        OntModel configModel = getOntModel(fileName);
+
+        OntModel ontModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
+
+        ontModel.read(
+                getClass().getResourceAsStream(getConfigFilePath()), null, FileUtils.langTurtle);
 
         return PipelineFactory.loadPipelines(configModel).get(0);
     }
 
+    private String getFilePath(String fileName) {
+        return "/" + MODULE_DIR_NAME + "/" + getModuleName() + "/" + fileName;
+    }
 
     private String getConfigFilePath() {
         return "/" + MODULE_DIR_NAME + "/" + getModuleName() + "/" + CONFIG_FILE_NAME;

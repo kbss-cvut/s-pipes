@@ -1,6 +1,8 @@
 package cz.cvut.sempipes.service;
 
+import cz.cvut.sempipes.eccairs.EccairsService;
 import cz.cvut.sempipes.util.RDFMimeType;
+import cz.cvut.sempipes.util.RawJson;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.rdf.model.Model;
@@ -11,13 +13,13 @@ import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFLanguages;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.StringWriter;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.Map;
 
 @RestController
@@ -32,7 +34,7 @@ public class SempipesServiceController {
     public static final String P_ID = "id";
 
     @RequestMapping(
-            value = "/service",
+            value = "/module",
             method = RequestMethod.GET,
             produces = {RDFMimeType.LD_JSON_STRING}
     )
@@ -42,7 +44,7 @@ public class SempipesServiceController {
     }
 
     @RequestMapping(
-            value = "/service",
+            value = "/module",
             method = RequestMethod.POST
             ,
             consumes = {
@@ -55,6 +57,16 @@ public class SempipesServiceController {
     public String processPostRequest(@RequestBody InputStream rdfData, @RequestParam MultiValueMap parameters, @RequestHeader(value="Content-type") String contentType) {
         LOG.info("Processing POST request.");
         return run(rdfData, contentType, parameters);
+    }
+
+    @RequestMapping(
+            value = "/service",
+            method = RequestMethod.GET,
+            produces = {RDFMimeType.LD_JSON_STRING}
+    ) // @ResponseBody
+    public RawJson processServiceGetRequest(@RequestParam MultiValueMap parameters, HttpServletResponse response) {
+        LOG.info("Processing service GET request.");
+        return new RawJson(new EccairsService().run(new ByteArrayInputStream(new byte[]{}), "", parameters));
     }
 
     private QuerySolution transform(final Map parameters) {

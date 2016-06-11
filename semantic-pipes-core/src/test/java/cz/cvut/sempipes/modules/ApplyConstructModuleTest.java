@@ -36,23 +36,40 @@ public class ApplyConstructModuleTest extends AbstractModuleTestHelper {
 
         ApplyConstructModule module = (ApplyConstructModule) getConfigRootModule();
 
-        module.loadConfiguration();
-
         module.setExecutionContext(ExecutionContextFactory.createContext(createSimpleModel()));
+        module.loadConfiguration();
 
         ExecutionContext newContext = null;
 
         // isReplace = true
         module.setReplace(true);
-        newContext = module.execute();
+        newContext = module.executeSelf();
         Assert.assertEquals(newContext.getDefaultModel().listStatements().toList().size(), 2);
 
         // isReplace = true
         module.setReplace(false);
-        newContext = module.execute();
+        newContext = module.executeSelf();
         Assert.assertEquals(newContext.getDefaultModel().listStatements().toList().size(), 3);
 
         //newContext.getDefaultModel().write(System.out, FileUtils.langTurtle);
+    }
+
+    @Test
+    public void executeConstructQueryWithVariable() {
+        ApplyConstructModule module = (ApplyConstructModule) getRootModule("remote-query.ttl");
+
+        module.setExecutionContext(ExecutionContextFactory.createContext(createSimpleModel()));
+        module.loadConfiguration();
+
+        ExecutionContext newContext = null;
+
+        // isReplace = true
+        module.setReplace(true);
+        newContext = module.executeSelf();
+        Assert.assertEquals(newContext.getDefaultModel().listStatements().toList().size(), 2);
+
+
+
     }
 
     private Model createSimpleModel() {

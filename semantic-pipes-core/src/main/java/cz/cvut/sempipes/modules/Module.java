@@ -20,6 +20,8 @@ public interface Module {
 
     void setExecutionContext(ExecutionContext context);
 
+    ExecutionContext getExecutionContext();
+
     /**
      * TODO move to execution context
      * @param moduleResource
@@ -43,6 +45,8 @@ public interface Module {
 
     List<Module> getInputModules();
 
-    //setInputContext()
-    //getOutputContext()
+
+    //void setOutputContext(ExecutionContext);
+    // TODO execute should not return Execution context
+    ExecutionContext getOutputContext();
 }

@@ -13,7 +13,7 @@ public class ExternalModule extends AbstractModule {
     String programCall;
 
     @Override
-    public ExecutionContext execute() {
+    public ExecutionContext executeSelf() {
         return null;
     }
 

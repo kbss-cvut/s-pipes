@@ -26,6 +26,14 @@ public class ExecutionContextFactory {
         return context;
     }
 
+    public static ExecutionContext createContext(VariablesBinding variablesBinding) {
+        ExecutionContextImpl context = new ExecutionContextImpl();
+        context.setDefaultModel(ModelFactory.createDefaultModel());
+        context.setVariablesBinding(variablesBinding);
+        return context;
+    }
+
+
 
     public static ExecutionContext createContext(Model defaultModel) {
         ExecutionContextImpl context = new ExecutionContextImpl();

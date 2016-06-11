@@ -1,0 +1,16 @@
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sm: <http://topbraid.org/sparqlmotion#>
+PREFIX spin: <http://spinrdf.org/spin#>
+
+
+#TODO NOT FINISHED
+
+SELECT DISTINCT ?function ?argumentResource
+WHERE {
+    ?function a sm:Function .
+    OPTIONAL {
+        ?function sm:returnModule ?returnModule .
+    }
+}

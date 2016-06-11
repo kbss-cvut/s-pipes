@@ -24,7 +24,6 @@ public class ModuleSesameTest {
         model.add(root,ModuleSesame.P_SESAME_CONTEXT_IRI, "");
 
         moduleSesame.setConfigurationResource(root);
-        moduleSesame.loadConfiguration(null);
 
         // TODO: currently running server is needed;
         // moduleSesame.execute(executionContext);

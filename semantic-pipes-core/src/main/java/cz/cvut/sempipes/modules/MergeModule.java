@@ -9,7 +9,7 @@ import cz.cvut.sempipes.engine.ExecutionContextFactory;
 public class MergeModule extends AbstractModule  {
 
     @Override
-    public ExecutionContext execute() {
+    public ExecutionContext executeSelf() {
         return ExecutionContextFactory.createContext(executionContext.getDefaultModel());
     }
 
