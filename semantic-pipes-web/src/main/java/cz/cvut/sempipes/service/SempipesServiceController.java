@@ -2,7 +2,6 @@ package cz.cvut.sempipes.service;
 
 import cz.cvut.sempipes.eccairs.EccairsService;
 import cz.cvut.sempipes.engine.*;
-import cz.cvut.sempipes.modules.AbstractModule;
 import cz.cvut.sempipes.modules.Module;
 import cz.cvut.sempipes.modules.ModuleIdentity;
 import cz.cvut.sempipes.util.RDFMimeType;
@@ -12,24 +11,16 @@ import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.ResourceFactory;
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
-import org.apache.jena.riot.RDFLanguages;
-import org.apache.jena.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.MediaType;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -65,11 +56,16 @@ public class SempipesServiceController {
     @RequestMapping(
             value = "/module",
             method = RequestMethod.GET,
-            produces = {RDFMimeType.LD_JSON_STRING}
+            produces = {
+                    RDFMimeType.LD_JSON_STRING,
+                    RDFMimeType.N_TRIPLES_STRING,
+                    RDFMimeType.RDF_XML_STRING,
+                    RDFMimeType.TURTLE_STRING
+            }
     )
-    public RawJson processGetRequest(@RequestParam MultiValueMap parameters) {
+    public Model processGetRequest(@RequestParam MultiValueMap<String,String> parameters) {
         LOG.info("Processing GET request.");
-        return run(new ByteArrayInputStream(new byte[]{}), "", parameters);
+        return run(ModelFactory.createDefaultModel(), parameters);
     }
 
     @RequestMapping(
@@ -80,12 +76,20 @@ public class SempipesServiceController {
                     RDFMimeType.LD_JSON_STRING,
                     RDFMimeType.N_TRIPLES_STRING,
                     RDFMimeType.RDF_XML_STRING,
-                    RDFMimeType.TURTLE_STRING},
-            produces = {RDFMimeType.LD_JSON_STRING}
+                    RDFMimeType.TURTLE_STRING
+            },
+            produces = {
+                    RDFMimeType.LD_JSON_STRING,
+                    RDFMimeType.N_TRIPLES_STRING,
+                    RDFMimeType.RDF_XML_STRING,
+                    RDFMimeType.TURTLE_STRING
+            }
     )
-    public RawJson processPostRequest(@RequestBody InputStream rdfData, @RequestParam MultiValueMap parameters, @RequestHeader(value="Content-type") String contentType) {
+    public Model processPostRequest(@RequestBody Model inputModel,
+                                    @RequestParam MultiValueMap<String,String> parameters
+    ) {
         LOG.info("Processing POST request.");
-        return run(rdfData, contentType, parameters);
+        return run(inputModel, parameters);
     }
 
     @RequestMapping(
@@ -93,7 +97,7 @@ public class SempipesServiceController {
             method = RequestMethod.GET,
             produces = {RDFMimeType.LD_JSON_STRING}
     ) // @ResponseBody
-    public RawJson processServiceGetRequest(@RequestParam MultiValueMap parameters, HttpServletResponse response) {
+    public RawJson processServiceGetRequest(@RequestParam MultiValueMap parameters) {
         LOG.info("Processing service GET request.");
         return new RawJson(new EccairsService().run(new ByteArrayInputStream(new byte[]{}), "", parameters));
     }
@@ -109,30 +113,33 @@ public class SempipesServiceController {
 
         return querySolution;
     }
-    private RawJson run(final InputStream rdfData, String contentType, final MultiValueMap parameters) {
+    private Model run(final Model inputDataModel, final MultiValueMap<String,String> parameters ) {
         LOG.info("- parameters={}", parameters);
 
         if (!parameters.containsKey(P_ID)) {
             throw new SempipesServiceInvalidModuleIdException();
         }
-
-        final String id = parameters.getFirst(P_ID).toString();
+        final String id = parameters.getFirst(P_ID);
         LOG.info("- id={}", id);
 
         // LOAD MODULE CONFIGURATION
         if (!parameters.containsKey(P_CONFIG_URL)) {
             throw new SempipesServiceInvalidConfigurationException();
         }
-        final String configURL = parameters.getFirst(P_CONFIG_URL).toString();
+        final String configURL = parameters.getFirst(P_CONFIG_URL);
         LOG.info("- config URL={}", configURL);
         final Model configModel = ModelFactory.createDefaultModel();
-        configModel.read(configURL,"TURTLE");
+        try {
+            configModel.read(configURL, "TURTLE");
+        } catch(Exception e) {
+            throw new SempipesServiceInvalidConfigurationException();
+        }
 
         // FILE WHERE TO GET INPUT BINDING
         URL inputBindingURL = null;
         if (parameters.containsKey(P_INPUT_BINDING_URL)) {
             try {
-                inputBindingURL = new URL(parameters.getFirst(P_INPUT_BINDING_URL).toString());
+                inputBindingURL = new URL(parameters.getFirst(P_INPUT_BINDING_URL));
             } catch (MalformedURLException e) {
                 throw new SempipesServiceInvalidOutputBindingException(e);
             }
@@ -144,7 +151,7 @@ public class SempipesServiceController {
         File outputBindingPath = null;
         if (parameters.containsKey(P_OUTPUT_BINDING_URL)) {
             try {
-                final URL outputBindingURL = new URL(parameters.getFirst(P_OUTPUT_BINDING_URL).toString());
+                final URL outputBindingURL = new URL(parameters.getFirst(P_OUTPUT_BINDING_URL));
                 if (!outputBindingURL.getProtocol().equals("file")) {
                     throw new SempipesServiceInvalidOutputBindingException();
                 }
@@ -180,15 +187,11 @@ public class SempipesServiceController {
         LOG.info("- input variable binding ={}", inputVariablesBinding);
 
         // LOAD INPUT DATA
-        contentType = contentType == null || contentType.isEmpty() ? "application/n-triples" : contentType;
-        Model inputDataModel = ModelFactory.createDefaultModel();
-        inputDataModel.read(rdfData,"", RDFLanguages.contentTypeToLang(contentType).getLabel());
-
         ExecutionContext inputExecutionContext = ExecutionContextFactory.createContext(inputDataModel, inputVariablesBinding);
 
         ExecutionEngine engine = ExecutionEngineFactory.createEngine();
-        ExecutionContext outputExecutionContext = null;
-        Module module = null;
+        ExecutionContext outputExecutionContext;
+        Module module;
         // should execute module only
 //        if (asArgs.isExecuteModuleOnly) {
         module = loadModule(configModel,id);
@@ -211,12 +214,8 @@ public class SempipesServiceController {
             }
         }
 
-        final StringWriter writer = new StringWriter();
-        RDFDataMgr.write(writer, outputExecutionContext.getDefaultModel(), Lang.JSONLD);
-        String result = writer.toString();
-
         LOG.info("Processing successfully finished.");
-        return new RawJson(result);
+        return outputExecutionContext.getDefaultModel();
     }
 
     private Module loadModule(Model configModel, String id) {
