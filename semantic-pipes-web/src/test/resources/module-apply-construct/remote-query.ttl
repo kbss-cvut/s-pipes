@@ -1,0 +1,72 @@
+# baseURI: http://onto.fel.cvut.cz/ontologies/test/apply-construct/spin-remote-query-config
+# imports: http://topbraid.org/sparqlmotionfunctions
+# imports: http://topbraid.org/sparqlmotionlib
+
+@prefix apply-construct: <http://onto.fel.cvut.cz/ontologies/test/apply-construct#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sm: <http://topbraid.org/sparqlmotion#> .
+@prefix sml: <http://topbraid.org/sparqlmotionlib#> .
+@prefix sp: <http://spinrdf.org/sp#> .
+@prefix spin: <http://spinrdf.org/spin#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+apply-construct:CreateSampleTriples
+  rdf:type sml:ApplyConstruct ;
+  sm:nodeX 292 ;
+  sm:nodeY 155 ;
+  sml:constructQuery [
+      rdf:type sp:Construct ;
+      sp:templates (
+          [
+            sp:object [
+                sp:varName "o"^^xsd:string ;
+              ] ;
+            sp:predicate [
+                sp:varName "p"^^xsd:string ;
+              ] ;
+            sp:subject [
+                sp:varName "s"^^xsd:string ;
+              ] ;
+          ]
+        ) ;
+      sp:text """CONSTRUCT {
+    ?s ?p ?o .
+}
+WHERE {
+    SERVICE ?sampleServiceUri {
+           ?s ?p ?o .
+    }
+}"""^^xsd:string ;
+      sp:where (
+          [
+            rdf:type sp:Service ;
+            sp:elements (
+                [
+                  sp:object [
+                      sp:varName "o"^^xsd:string ;
+                    ] ;
+                  sp:predicate [
+                      sp:varName "p"^^xsd:string ;
+                    ] ;
+                  sp:subject [
+                      sp:varName "s"^^xsd:string ;
+                    ] ;
+                ]
+              ) ;
+            sp:serviceURI [
+                sp:varName "sampleServiceUri"^^xsd:string ;
+              ] ;
+          ]
+        ) ;
+    ] ;
+  sml:replace "true"^^xsd:boolean ;
+  rdfs:label "Create sample triples"^^xsd:string ;
+.
+<http://onto.fel.cvut.cz/ontologies/test/apply-construct/spin-remote-query-config>
+  rdf:type owl:Ontology ;
+  owl:imports <http://topbraid.org/sparqlmotionfunctions> ;
+  owl:imports <http://topbraid.org/sparqlmotionlib> ;
+  owl:versionInfo "Created with TopBraid Composer"^^xsd:string ;
+.

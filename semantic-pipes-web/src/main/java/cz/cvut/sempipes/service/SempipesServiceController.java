@@ -25,7 +25,12 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -37,12 +42,25 @@ public class SempipesServiceController {
     /**
      * Request parameter - 'id' of the module to be executed
      */
-    public static final String P_ID = "id";
+    public static final String P_ID = "_pId";
 
     /**
      * Request parameter - URL of the resource containing configuration
+     * TODO redesign
      */
-    public static final String P_CONFIG_URL = "configURL";
+    public static final String P_CONFIG_URL = "_pConfigURL";
+
+    /**
+     * Input binding - URL of the file where input bindings are stored
+     * TODO redesign
+     */
+    public static final String P_INPUT_BINDING_URL = "_pInputBindingURL";
+
+    /**
+     * Output binding - URL of the file where output bindings are stored
+     * TODO redesign
+     */
+    public static final String P_OUTPUT_BINDING_URL = "_pOutputBindingURL";
 
     @RequestMapping(
             value = "/module",
@@ -83,19 +101,19 @@ public class SempipesServiceController {
     private QuerySolution transform(final Map parameters) {
         final QuerySolutionMap querySolution = new QuerySolutionMap();
 
-        for(Object key : parameters.keySet()) {
+        for (Object key : parameters.keySet()) {
             // TODO types of RDFNode
-            querySolution.add(key.toString(), ResourceFactory.createPlainLiteral(parameters.get(key).toString()));
+            String value = (String) ((List) parameters.get(key)).get(0);
+            querySolution.add(key.toString(), ResourceFactory.createPlainLiteral(value));
         }
 
         return querySolution;
     }
-
     private RawJson run(final InputStream rdfData, String contentType, final MultiValueMap parameters) {
         LOG.info("- parameters={}", parameters);
 
         if (!parameters.containsKey(P_ID)) {
-            throw new SempipesServiceNoModuleIdException();
+            throw new SempipesServiceInvalidModuleIdException();
         }
 
         final String id = parameters.getFirst(P_ID).toString();
@@ -103,25 +121,70 @@ public class SempipesServiceController {
 
         // LOAD MODULE CONFIGURATION
         if (!parameters.containsKey(P_CONFIG_URL)) {
-            throw new SempipesServiceNoModuleIdException();
+            throw new SempipesServiceInvalidConfigurationException();
         }
         final String configURL = parameters.getFirst(P_CONFIG_URL).toString();
         LOG.info("- config URL={}", configURL);
         final Model configModel = ModelFactory.createDefaultModel();
         configModel.read(configURL,"TURTLE");
 
-        final Map moduleParams = parameters.toSingleValueMap();
-        moduleParams.remove(P_ID);
+        // FILE WHERE TO GET INPUT BINDING
+        URL inputBindingURL = null;
+        if (parameters.containsKey(P_INPUT_BINDING_URL)) {
+            try {
+                inputBindingURL = new URL(parameters.getFirst(P_INPUT_BINDING_URL).toString());
+            } catch (MalformedURLException e) {
+                throw new SempipesServiceInvalidOutputBindingException(e);
+            }
 
-        final QuerySolution querySolution = transform(moduleParams);
-        LOG.info("- parameters as query solution ={}", querySolution);
-        contentType = contentType == null || contentType.isEmpty() ? "application/n-triples" : contentType;
+            LOG.info("- input binding URL={}", inputBindingURL);
+        }
+
+        // FILE WHERE TO SAVE OUTPUT BINDING
+        File outputBindingPath = null;
+        if (parameters.containsKey(P_OUTPUT_BINDING_URL)) {
+            try {
+                final URL outputBindingURL = new URL(parameters.getFirst(P_OUTPUT_BINDING_URL).toString());
+                if (!outputBindingURL.getProtocol().equals("file")) {
+                    throw new SempipesServiceInvalidOutputBindingException();
+                }
+                outputBindingPath = new File(outputBindingURL.toURI());
+            } catch (MalformedURLException | URISyntaxException e) {
+                throw new SempipesServiceInvalidOutputBindingException(e);
+            }
+
+            LOG.info("- output binding FILE={}", outputBindingPath);
+        }
+
+        parameters.remove(P_ID);
+        parameters.remove(P_CONFIG_URL);
+        parameters.remove(P_INPUT_BINDING_URL);
+        parameters.remove(P_OUTPUT_BINDING_URL);
+
+        // END OF PARAMETER PROCESSING
+        final VariablesBinding inputVariablesBinding = new VariablesBinding(transform(parameters));
+        try {
+            if (inputBindingURL != null) {
+                final VariablesBinding vb2 = new VariablesBinding();
+                vb2.load(inputBindingURL.openStream(), "TURTLE");
+                VariablesBinding vb3 = inputVariablesBinding.extendConsistently(vb2);
+                if (vb3.isEmpty()) {
+                    LOG.info("- no conflict between bindings loaded from '" + P_INPUT_BINDING_URL + "' and those provided in query string.");
+                } else {
+                    LOG.info("- conflicts found between bindings loaded from '" + P_INPUT_BINDING_URL + "' and those provided in query string: " + vb3.toString());
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        LOG.info("- input variable binding ={}", inputVariablesBinding);
 
         // LOAD INPUT DATA
+        contentType = contentType == null || contentType.isEmpty() ? "application/n-triples" : contentType;
         Model inputDataModel = ModelFactory.createDefaultModel();
         inputDataModel.read(rdfData,"", RDFLanguages.contentTypeToLang(contentType).getLabel());
 
-        ExecutionContext inputExecutionContext = ExecutionContextFactory.createContext(inputDataModel, new VariablesBinding(querySolution));
+        ExecutionContext inputExecutionContext = ExecutionContextFactory.createContext(inputDataModel, inputVariablesBinding);
 
         ExecutionEngine engine = ExecutionEngineFactory.createEngine();
         ExecutionContext outputExecutionContext = null;
@@ -140,7 +203,13 @@ public class SempipesServiceController {
 //            outputExecutionContext = engine.executePipeline(module, inputExecutionContext);
 //        }
 
-        // TODO output binding
+        if ( outputBindingPath != null ) {
+            try {
+                outputExecutionContext.getVariablesBinding().save(new FileOutputStream(outputBindingPath), "TURTLE");
+            } catch (IOException e) {
+                throw new SempipesServiceInvalidOutputBindingException(e);
+            }
+        }
 
         final StringWriter writer = new StringWriter();
         RDFDataMgr.write(writer, outputExecutionContext.getDefaultModel(), Lang.JSONLD);
