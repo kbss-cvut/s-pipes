@@ -55,7 +55,7 @@ public class ModuleSesame extends AbstractModule {
     private boolean isReplaceContext;
 
     @Override
-    public ExecutionContext execute() {
+    ExecutionContext executeSelf() {
         final Repository repository = new HTTPRepository(sesameServerURL, sesameRepositoryName );
         RepositoryConnection connection = null;
 

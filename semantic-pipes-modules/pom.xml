@@ -16,7 +16,8 @@
 
     <modules>
         <module>module-sesame</module>
-        <module>module-tarql</module>
+        <!--<module>module-tarql</module>-->
+        <module>module-identity</module>
     </modules>
 
     <dependencyManagement>
