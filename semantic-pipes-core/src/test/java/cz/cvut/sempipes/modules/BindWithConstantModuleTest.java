@@ -35,7 +35,7 @@ public class BindWithConstantModuleTest extends AbstractModuleTestHelper {
         module.setOutputVariable(outputVariable);
         module.setValue(variableValue);
 
-        ExecutionContext context = module.execute();
+        ExecutionContext context = module.executeSelf();
 
         assertFalse("Output binding of the module is empty.", context.getVariablesBinding().isEmpty());
         assertEquals("Output binding does not contain correct value.", variableValue, context.getVariablesBinding().getNode(outputVariable));

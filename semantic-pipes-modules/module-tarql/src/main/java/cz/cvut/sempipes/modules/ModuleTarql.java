@@ -48,7 +48,7 @@ public class ModuleTarql extends AbstractModule {
     private boolean isReplaceContext;
 
     @Override
-    public ExecutionContext execute(ExecutionContext context) {
+    public ExecutionContext executeSelf() {
 //        final Repository repository = new HTTPRepository(sesameServerURL, sesameRepositoryName );
 //        RepositoryConnection connection = null;
 //
@@ -88,11 +88,13 @@ public class ModuleTarql extends AbstractModule {
 //            }
 //        }
 
-        return ExecutionContextFactory.createContext(context.getDefaultModel());
+        return ExecutionContextFactory.createContext(executionContext.getDefaultModel());
     }
 
+
+
     @Override
-    public void loadConfiguration(org.apache.jena.rdf.model.Resource moduleRes) {
+    public void loadConfiguration() {
         sesameServerURL = this.getStringPropertyValue(P_SESAME_SERVER_URL);
         sesameRepositoryName = this.getStringPropertyValue(P_SESAME_REPOSITORY_NAME);
         sesameContextIRI = this.getStringPropertyValue(P_SESAME_CONTEXT_IRI);

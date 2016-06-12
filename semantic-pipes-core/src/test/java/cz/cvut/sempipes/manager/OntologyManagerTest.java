@@ -32,7 +32,7 @@ public class OntologyManagerTest {
 
         Map<String, String> map = OntologyManager.getAllBaseIris(dirPath);
 
-        assertEquals(map.size(), 6);
+        assertEquals(3, map.size());
     }
 
     //@Test
