@@ -66,7 +66,10 @@ class ExecutionEngineImpl implements ExecutionEngine {
                 .collect(Collectors.toMap(Module::getResource, mod -> this._executePipeline(mod, context)));
 
         LOG.info(" ##### " + module.getLabel());
-        module.setExecutionContext(mergeContexts(resource2ContextMap));
+        ExecutionContext mergedContext = mergeContexts(resource2ContextMap);
+        LOG.trace("Using meged context {}", mergedContext.toSimpleString());
+
+        module.setExecutionContext(mergedContext);
         return module.execute();
     }
 

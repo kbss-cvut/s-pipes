@@ -1,6 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
+
+    <!-- logging to own file taken from http://www.mkyong.com/logging/logback-xml-example/ TODO does not work -->
+    <!--<property name="PORTAL_LOG_HOME" value="/srv/inbas.cz/portal/liferay/logs" />-->
+    <!--<property name="PORTAL_LOG_HOME" value="/home/blcha/tmp/day" />-->
+
+    <!--<appender name="FILELOG"-->
+              <!--class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+        <!--<file>${PORTAL_LOG_HOME}/sempipes-debug.log</file>-->
+        <!--<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">-->
+            <!--<Pattern>-->
+                <!--%d{yyyy-MM-dd HH:mm:ss} - %msg%n-->
+            <!--</Pattern>-->
+        <!--</encoder>-->
+
+        <!--<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+            <!--&lt;!&ndash; rollover daily &ndash;&gt;-->
+            <!--<fileNamePattern>${PORTAL_LOG_HOME}/archived/sempipes-debug.%d{yyyy-MM-dd}.%i.log-->
+            <!--</fileNamePattern>-->
+            <!--<timeBasedFileNamingAndTriggeringPolicy-->
+                    <!--class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">-->
+                <!--<maxFileSize>10MB</maxFileSize>-->
+            <!--</timeBasedFileNamingAndTriggeringPolicy>-->
+        <!--</rollingPolicy>-->
+    <!--</appender>-->
+
+    <!--<logger name="cz.cvut.sempipes" level="TRACE" additivity="false">-->
+        <!--<appender-ref ref="FILELOG"/>-->
+    <!--</logger>-->
+    <!--<logger name="cz.cvut.sempipes.modules.BindWithConstantModule" level="TRACE" additivity="false">-->
+        <!--<appender-ref ref="FILELOG"/>-->
+    <!--</logger>-->
+
+
+    <!-- Restrict logging of the Sesame HTTP client (used to connect to remote repositories -->
+    <!--<logger name="org.openrdf.http" level="WARN" additivity="false">-->
+        <!--<appender-ref ref="FILELOG"/>-->
+    <!--</logger>-->
+
+    <!-- Restrict logging of Spring -->
+    <!--<logger name="org.springframework" level="INFO" additivity="false">-->
+        <!--<appender-ref ref="FILELOG"/>-->
+    <!--</logger>-->
+
+    <!-- By default, the level of the root level is set to DEBUG -->
+    <!--<root level="INFO">-->
+        <!--<appender-ref ref="FILELOG"/>-->
+    <!--</root>-->
+
+
+
+
+    <!-- ################# STDOUT ####################### -->
+
     <!-- Send debug messages to System.out -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <!-- By default, encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder -->
@@ -14,7 +67,7 @@
         <appender-ref ref="STDOUT"/>
     </logger>
     <logger name="cz.cvut.sempipes.modules.BindWithConstantModule" level="TRACE" additivity="false">
-        <appender-ref ref="STDOUT"/>
+    <appender-ref ref="STDOUT"/>
     </logger>
 
 
@@ -26,6 +79,11 @@
     <!-- Restrict logging of Spring -->
     <logger name="org.springframework" level="INFO" additivity="false">
         <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <!-- Restrict logging of logback -->
+    <logger name="ch.qos.logback" level="INFO" additivity="false">
+        <appender-ref ref="DEBUG"/>
     </logger>
 
     <!-- By default, the level of the root level is set to DEBUG -->
