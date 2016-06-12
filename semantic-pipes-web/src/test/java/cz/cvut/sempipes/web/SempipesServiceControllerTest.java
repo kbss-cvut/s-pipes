@@ -14,6 +14,7 @@ import org.apache.jena.riot.RDFLanguages;
 import org.apache.jena.vocabulary.RDFS;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,6 +80,7 @@ public class SempipesServiceControllerTest {
                 content("<http://a/b> <http://a/b> <http://a/b> .");
     }
 
+    @Ignore
     @Test
     public void testRunExistingModule() throws Exception {
         MvcResult result = mockMvc.perform(createDefaultIdentityModuleBuilder().
@@ -87,6 +89,7 @@ public class SempipesServiceControllerTest {
         System.out.println("Resulting JSON: " + result.getResponse().getContentAsString());
     }
 
+    @Ignore
     @Test
     public void testAcceptRDFMimeTypes() throws Exception {
         testMimeType(RDFMimeType.N_TRIPLES_STRING, true);
@@ -163,6 +166,7 @@ public class SempipesServiceControllerTest {
         Assert.assertEquals(mOutput.listStatements().toList().size(), expectedNumberOfStatements);
     }
 
+    @Ignore
     @Test
     public void testRunApplyConstructNotReplace() throws Exception {
         testModule(
@@ -174,6 +178,7 @@ public class SempipesServiceControllerTest {
                 2);
     }
 
+    @Ignore
     @Test
     public void testRunApplyConstructQueryWithVariable() throws Exception {
         VariablesBinding inputVariablesBinding = new VariablesBinding(
