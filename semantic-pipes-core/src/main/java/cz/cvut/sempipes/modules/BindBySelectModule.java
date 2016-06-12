@@ -6,6 +6,8 @@ import cz.cvut.sempipes.engine.ExecutionContextFactory;
 import cz.cvut.sempipes.engine.VariablesBinding;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.topbraid.spin.arq.ARQFactory;
 import org.topbraid.spin.model.Select;
 
@@ -14,6 +16,7 @@ import org.topbraid.spin.model.Select;
  */
 public class BindBySelectModule extends AbstractModule  {
 
+    private static final Logger LOG = LoggerFactory.getLogger(BindBySelectModule.class);
     private Select selectQuery;
 
     @Override
@@ -23,9 +26,21 @@ public class BindBySelectModule extends AbstractModule  {
 
         QueryExecution execution = QueryExecutionFactory.create(query, executionContext.getDefaultModel());
 
-        QuerySolution qs = execution.execSelect().next();
+        ResultSet resultSet = execution.execSelect();
 
-        VariablesBinding variablesBinding = new VariablesBinding(qs);
+        VariablesBinding variablesBinding = new VariablesBinding();
+
+        if (! resultSet.hasNext()) {
+            LOG.warn("\"{}\" query did not return any values.", getLabel());
+        } else {
+            QuerySolution qs = resultSet.next();
+
+            variablesBinding = new VariablesBinding(qs);
+
+            if (resultSet.hasNext()) {
+                LOG.warn("\"{}\" query did not return unique value. Returning binding {}, ignoring binding {}", getLabel(), variablesBinding.asQuerySolution(), resultSet.next());
+            }
+        }
 
         return ExecutionContextFactory.createContext(executionContext.getDefaultModel(), variablesBinding);
     }
