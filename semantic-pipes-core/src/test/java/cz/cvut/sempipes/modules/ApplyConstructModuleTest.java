@@ -14,6 +14,7 @@ import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -55,6 +56,7 @@ public class ApplyConstructModuleTest extends AbstractModuleTestHelper {
         //newContext.getDefaultModel().write(System.out, FileUtils.langTurtle);
     }
 
+    @Ignore
     @Test
     public void executeConstructQueryWithVariable() {
         ApplyConstructModule module = (ApplyConstructModule) getRootModule("remote-query.ttl");
