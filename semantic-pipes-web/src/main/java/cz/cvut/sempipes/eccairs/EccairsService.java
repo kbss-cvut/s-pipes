@@ -1,8 +1,11 @@
 package cz.cvut.sempipes.eccairs;
 
+import cz.cvut.sempipes.constants.KBSS_MODULE;
 import cz.cvut.sempipes.engine.*;
 import cz.cvut.sempipes.manager.OntologyManager;
 import cz.cvut.sempipes.modules.Module;
+import cz.cvut.sempipes.modules.ModuleSesame;
+import cz.cvut.sempipes.service.SempipesServiceController;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.QuerySolutionMap;
@@ -31,7 +34,8 @@ import java.util.Map;
 public class EccairsService {
 
     private static final Logger LOG = LoggerFactory.getLogger(EccairsService.class);
-    private Path inbasModelPath = Paths.get(ConfigProperies.get("inbasModelDir"));
+    private static Path inbasModelPath = Paths.get(ConfigProperies.get("inbasModelDir"));
+    private static Model libsModel = ModelFactory.createDefaultModel();
 
     public String run(final InputStream rdfData, String contentType, final MultiValueMap parameters) {
         if (Boolean.valueOf(ConfigProperies.get("returnSampleFlag"))) {
@@ -39,6 +43,26 @@ public class EccairsService {
         } else {
             return  runGeneratorService(parameters);
         }
+
+    }
+
+    static {
+
+        LOG.info("Constructing library modules ...");
+
+        libsModel.add(OntologyManager.loadModel(getInbasModelFilePath("eccairsFormGeneratorPath")));
+        String[] relativePaths = new String[]{
+                "lib",
+                "forms/eccairs-0.2/eccairs-form-lib.ttl"
+        };
+
+        Arrays.asList(relativePaths).forEach(relPath -> {
+            OntologyManager.getAllFile2Model(inbasModelPath.resolve(relPath)).values().forEach(
+                    libsModel::add
+            );
+        });
+
+        SPINModuleRegistry.get().registerAll(libsModel, null);
 
     }
 
@@ -54,23 +78,26 @@ public class EccairsService {
 
 
         Model mergedModel = ModelFactory.createDefaultModel();
-
-        mergedModel.add(OntologyManager.loadModel(getInbasModelFilePath("eccairsFormGeneratorPath")));
-        String[] relativePaths = new String[]{
-                "lib",
-                "forms/eccairs-0.2/eccairs-form-lib.ttl"
-        };
-
-        Arrays.asList(relativePaths).forEach(relPath -> {
-            OntologyManager.getAllFile2Model(inbasModelPath.resolve(relPath)).values().forEach(
-                    mergedModel::add
-            );
-        });
-
-        SPINModuleRegistry.get().registerAll(mergedModel, null);
+        mergedModel.add(libsModel);
 
 
-        Module module = PipelineFactory.loadPipeline(mergedModel.getResource(ConfigProperies.get("eccairsServiceModule")));
+        String id = (String) parameters.getFirst("id");
+
+        Module module = null;
+        switch (id) {
+            case "deploy-question-templates":
+                LOG.info("Running deploy-question-templates module");
+                LOG.info("Registering {} -> {}", KBSS_MODULE.deploy, ModuleSesame.class);
+                PipelineFactory.registerModule(KBSS_MODULE.deploy, ModuleSesame.class);
+                module = PipelineFactory.loadPipeline(mergedModel.getResource(ConfigProperies.get("deployQueryTemplatesModule")));
+                break;
+            default:
+                LOG.info("Running eccairs service module");
+                module = PipelineFactory.loadPipeline(mergedModel.getResource(ConfigProperies.get("eccairsServiceModule")));
+                break;
+        }
+
+
 
         // TODO service definition workaround -- all parameters are visible in all modules => must be unique
         ExecutionContext context = ExecutionContextFactory.createContext(ModelFactory.createDefaultModel(), new VariablesBinding(transform(parameters)));

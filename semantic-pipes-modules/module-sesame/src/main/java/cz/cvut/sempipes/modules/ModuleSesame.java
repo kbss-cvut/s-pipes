@@ -1,7 +1,9 @@
 package cz.cvut.sempipes.modules;
 
+import cz.cvut.sempipes.constants.KBSS_MODULE;
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
+import cz.cvut.sempipes.engine.PipelineFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.riot.RDFLanguages;
@@ -29,6 +31,12 @@ public class ModuleSesame extends AbstractModule {
     private static Property getParameter(final String name) {
         return ResourceFactory.createProperty(MODULE_IRI + "/" + name);
     }
+
+    static {
+        LOG.info("Registering {} -> {}", KBSS_MODULE.deploy, ModuleSesame.class);
+        PipelineFactory.registerModule(KBSS_MODULE.deploy, ModuleSesame.class);
+    }
+
 
     /**
      * URL of the Sesame server

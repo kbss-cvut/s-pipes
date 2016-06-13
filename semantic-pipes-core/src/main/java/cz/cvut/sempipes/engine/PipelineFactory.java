@@ -43,11 +43,19 @@ public class PipelineFactory {
         moduleTypes.put(SML.Merge, MergeModule.class);
         moduleTypes.put(SML.ReturnRDF, ReturnRDFModule.class);
 
+
         //kbss modules
         moduleTypes.put(KBSS_MODULE.tarql, TarqlModule.class);
         moduleTypes.put(KBSS_MODULE.form_generator, FormGeneratorModule.class);
 
     }
+
+
+    public static void registerModule(Resource moduleType, Class<? extends Module> moduleClass) {
+        moduleTypes.put(moduleType, moduleClass);
+    }
+
+
 
     //TODO not here ?!
     public static Module loadModule(@NotNull Resource moduleRes) {
