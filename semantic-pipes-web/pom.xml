@@ -48,7 +48,12 @@
     </repositories>
 
     <dependencies>
-
+        <!-- TODO REMOVE - JUST HOT FIX FOR DEPLOY SESAME-->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.2</version>
+        </dependency>
         <dependency>
             <groupId>cz.cvut.kbss</groupId>
             <artifactId>semantic-pipes-core</artifactId>
