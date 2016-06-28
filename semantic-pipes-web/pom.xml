@@ -48,12 +48,6 @@
     </repositories>
 
     <dependencies>
-        <!-- TODO REMOVE - JUST HOT FIX FOR DEPLOY SESAME-->
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5.2</version>
-        </dependency>
         <dependency>
             <groupId>cz.cvut.kbss</groupId>
             <artifactId>semantic-pipes-core</artifactId>
@@ -63,9 +57,16 @@
         <dependency>
             <groupId>cz.cvut.kbss</groupId>
             <artifactId>semantic-pipes-modules-identity</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${project.parent.version}</version>
+            <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>cz.cvut.kbss</groupId>
+            <artifactId>semantic-pipes-modules-sesame</artifactId>
+            <version>${project.parent.version}</version>
+            <!-- TODO remove after EccairsService removal-->
+        </dependency>
 
         <!-- Logging -->
         <!--<dependency>-->
@@ -108,9 +109,9 @@
             <version>${org.springframework.version}</version>
         </dependency>
         <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-test</artifactId>
-        <version>${org.springframework.version}</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${org.springframework.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -207,11 +208,6 @@
             <groupId>org.apache.jena</groupId>
             <artifactId>jena-arq</artifactId>
             <version>${org.apache.jena}</version>
-        </dependency>
-        <dependency>
-            <groupId>cz.cvut.kbss</groupId>
-            <artifactId>semantic-pipes-modules-sesame</artifactId>
-            <version>1.0-SNAPSHOT</version>
         </dependency>
         <!--&lt;!&ndash; JOPA &ndash;&gt;-->
         <!--<dependency>-->

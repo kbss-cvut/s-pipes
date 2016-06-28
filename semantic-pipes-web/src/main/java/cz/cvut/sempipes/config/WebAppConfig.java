@@ -54,6 +54,8 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
 
+        final RDFMediaTypeConverter RDFConverter = new RDFMediaTypeConverter();
+        converters.add(RDFConverter);
         final MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
         final ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -63,8 +65,6 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
         final StringHttpMessageConverter stringConverter = new StringHttpMessageConverter(Charset.forName("UTF-8"));
         converters.add(stringConverter);
 
-//        final RDFMediaTypeConverter RDFConverter = new RDFMediaTypeConverter();
-//        converters.add(RDFConverter);
         super.configureMessageConverters(converters);
     }
 }

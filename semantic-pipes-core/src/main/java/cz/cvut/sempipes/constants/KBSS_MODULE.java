@@ -23,6 +23,7 @@ public class KBSS_MODULE {
     public static final Resource tarql = resource("tarql");
     public static final Resource form_generator = resource("form-generator");
     public static final Resource deploy = resource("deploy");
+    public static final Resource identity = resource("identity");
 
     /**
      returns the URI for this schema

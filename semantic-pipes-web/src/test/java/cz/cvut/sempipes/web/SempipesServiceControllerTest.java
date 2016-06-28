@@ -1,7 +1,10 @@
 package cz.cvut.sempipes.web;
 
 import cz.cvut.sempipes.config.WebAppConfig;
+import cz.cvut.sempipes.constants.KBSS_MODULE;
+import cz.cvut.sempipes.engine.PipelineFactory;
 import cz.cvut.sempipes.engine.VariablesBinding;
+import cz.cvut.sempipes.modules.ModuleIdentity;
 import cz.cvut.sempipes.service.SempipesServiceController;
 import cz.cvut.sempipes.util.RDFMimeType;
 import org.apache.jena.ext.com.google.common.collect.Lists;
@@ -12,11 +15,10 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFLanguages;
 import org.apache.jena.vocabulary.RDFS;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -37,10 +39,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = WebAppConfig.class)
 public class SempipesServiceControllerTest {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SempipesServiceControllerTest.class);
+
+    public static final String SAMPLE_IDENTITY_MODULE = "http://onto.fel.cvut.cz/ontologies/semantic-pipes/identity#SampleIdentity";
+    public static final String CREATE_SAMPLE_TRIPLES = "http://onto.fel.cvut.cz/ontologies/test/apply-construct#CreateSampleTriples";
+
     @Autowired
     protected WebApplicationContext ctx;
 
     private MockMvc mockMvc;
+
+    @BeforeClass
+    public static void setUpClass() {
+        PipelineFactory.registerModule(KBSS_MODULE.identity, ModuleIdentity.class);
+    }
 
     @Before
     public void setUp() {
@@ -63,15 +75,14 @@ public class SempipesServiceControllerTest {
     @Test
     public void testRunInvalidConfigurationModule() throws Exception {
         final RequestBuilder rb = get("/module").
-                param(SempipesServiceController.P_ID,"http://onto.fel.cvut.cz/ontologies/sempipes/identity-transformer").
+                param(SempipesServiceController.P_ID,SAMPLE_IDENTITY_MODULE).
                 param(SempipesServiceController.P_CONFIG_URL,"http://example.org/sempipes/test-no-module/no-configuration");
         mockMvc.perform(rb).andExpect(status().is4xxClientError());
     }
 
     private MockHttpServletRequestBuilder createDefaultIdentityModuleBuilder() throws Exception {
-        // TODO identity transformer resolution
         return post("/module").
-                param(SempipesServiceController.P_ID,"http://onto.fel.cvut.cz/ontologies/sempipes/identity-transformer").
+                param(SempipesServiceController.P_ID, SAMPLE_IDENTITY_MODULE).
                 param(SempipesServiceController.P_CONFIG_URL,getClass().getResource("/module-identity/config.ttl").toURI().toURL().toString()).
                 param("paramString","haha").
                 param("paramInt","7").
@@ -80,16 +91,14 @@ public class SempipesServiceControllerTest {
                 content("<http://a/b> <http://a/b> <http://a/b> .");
     }
 
-    @Ignore
     @Test
     public void testRunExistingModule() throws Exception {
         MvcResult result = mockMvc.perform(createDefaultIdentityModuleBuilder().
                 accept(RDFMimeType.LD_JSON_STRING)
         ).andExpect(status().isOk()).andReturn();
-        System.out.println("Resulting JSON: " + result.getResponse().getContentAsString());
+        LOGGER.info("Resulting JSON: " + result.getResponse().getContentAsString());
     }
 
-    @Ignore
     @Test
     public void testAcceptRDFMimeTypes() throws Exception {
         testMimeType(RDFMimeType.N_TRIPLES_STRING, true);
@@ -102,7 +111,7 @@ public class SempipesServiceControllerTest {
         MvcResult result = mockMvc.perform(createDefaultIdentityModuleBuilder().
                 accept(mimeType)
         ).andExpect(pass ? status().isOk() : status().is(415)).andReturn();
-        System.out.println("Result: " + result.getResponse().getContentAsString());
+        LOGGER.info("Result: {}", result.getResponse().getContentAsString());
         final Model m = ModelFactory.createDefaultModel();
         try {
             m.read(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()), "", RDFLanguages.contentTypeToLang(mimeType).getName());
@@ -130,6 +139,7 @@ public class SempipesServiceControllerTest {
             int expectedNumberOfStatements
 
     ) throws Exception {
+        LOGGER.info("Testing module with parameters:\n - id={},\n - cfg={},\n - inputBinding={}", id, resourceConfig,inputVariablesBinding);
         if ( inputVariablesBinding == null ) {
             inputVariablesBinding = new VariablesBinding();
         }
@@ -155,10 +165,11 @@ public class SempipesServiceControllerTest {
         MvcResult result = mockMvc.perform(rb)
 //                .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk()).andReturn();
-        System.out.println("Result: " + result.getResponse().getContentAsString());
         VariablesBinding outputBinding = new VariablesBinding();
         outputBinding.load(new FileInputStream(outputBindingFile), "TURTLE");
         Assert.assertEquals(Lists.newArrayList(outputBinding.getVarNames()), Lists.newArrayList(expectedOutputVariablesBinding.getVarNames()));
+
+        LOGGER.info(" - content returned: {}", result.getResponse().getContentAsString());
 
         final StringReader res = new StringReader(result.getResponse().getContentAsString());
         final Model mOutput = ModelFactory.createDefaultModel();
@@ -166,11 +177,10 @@ public class SempipesServiceControllerTest {
         Assert.assertEquals(mOutput.listStatements().toList().size(), expectedNumberOfStatements);
     }
 
-    @Ignore
     @Test
     public void testRunApplyConstructNotReplace() throws Exception {
         testModule(
-                "http://onto.fel.cvut.cz/ontologies/test/apply-construct#CreateSampleTriples",
+                CREATE_SAMPLE_TRIPLES,
                 "/module-apply-construct/config.ttl",
                 createSimpleModel(),
                 null,
@@ -178,20 +188,49 @@ public class SempipesServiceControllerTest {
                 2);
     }
 
-    @Ignore
     @Test
     public void testRunApplyConstructQueryWithVariable() throws Exception {
         VariablesBinding inputVariablesBinding = new VariablesBinding(
                 "sampleServiceUri",
-                ResourceFactory.createResource("http://martin.inbas.cz/openrdf-sesame/repositories/form-generator?default-graph-uri=http://www.inbas.cz/ontologies/reporting-tool/formGen-977414103")
+                ResourceFactory.createResource("http://martin.inbas.cz/openrdf-sesame/repositories/form-generator?default-graph-uri=http://www.inbas.cz/ontologies/reporting-tool/formGen-307795792")
         );
 
         testModule(
-                "http://onto.fel.cvut.cz/ontologies/test/apply-construct#CreateSampleTriples",
+                CREATE_SAMPLE_TRIPLES,
                 "/module-apply-construct/remote-query.ttl",
                 createSimpleModel(),
                 inputVariablesBinding,
                 null,
-                54);
+                86);
     }
- }
+
+    @Test
+    @Ignore
+    public void testByReportingTool() throws Exception {
+        VariablesBinding inputVariablesBinding = new VariablesBinding();
+        inputVariablesBinding.add(
+                "repositoryUrl",
+                ResourceFactory.createResource("http://martin.inbas.cz/openrdf-sesame/repositories/form-generator")
+        );
+        inputVariablesBinding.add(
+                "graphId",
+                ResourceFactory.createResource("http://www.inbas.cz/ontologies/reporting-tool/formGen1647127699")
+        );
+        inputVariablesBinding.add(
+                "eventType",
+                ResourceFactory.createResource("http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-a-390/v-2200101")
+        );
+        inputVariablesBinding.add(
+                "event",
+                ResourceFactory.createResource("http://onto.fel.cvut.cz/ontologies/ufo/Event#instance1610141053")
+        );
+
+        testModule(
+                "http://onto.fel.cvut.cz/ontologies/aviation/eccairs-form-generation-0.2/generateEccairsForms_Return",
+                "/module-generate-eccairs-forms/config.ttl",
+                ModelFactory.createDefaultModel(),
+                inputVariablesBinding,
+                null,
+                86);
+    }
+}

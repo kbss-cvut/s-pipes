@@ -3,7 +3,6 @@ package cz.cvut.sempipes.service;
 import cz.cvut.sempipes.eccairs.EccairsService;
 import cz.cvut.sempipes.engine.*;
 import cz.cvut.sempipes.modules.Module;
-import cz.cvut.sempipes.modules.ModuleIdentity;
 import cz.cvut.sempipes.util.RDFMimeType;
 import cz.cvut.sempipes.util.RawJson;
 import org.apache.jena.query.QuerySolution;
@@ -13,6 +12,7 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -21,6 +21,7 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -102,6 +103,12 @@ public class SempipesServiceController {
         return new RawJson(new EccairsService().run(new ByteArrayInputStream(new byte[]{}), "", parameters));
     }
 
+    @ExceptionHandler
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public Map<String, String> notFoundHandler(SempipesServiceException e){
+        return Collections.singletonMap("message", e.getMessage());
+    }
+
     private QuerySolution transform(final Map parameters) {
         final QuerySolutionMap querySolution = new QuerySolutionMap();
 
@@ -113,18 +120,19 @@ public class SempipesServiceController {
 
         return querySolution;
     }
+
     private Model run(final Model inputDataModel, final MultiValueMap<String,String> parameters ) {
         LOG.info("- parameters={}", parameters);
 
         if (!parameters.containsKey(P_ID)) {
-            throw new SempipesServiceInvalidModuleIdException();
+            throw new SempipesServiceException("Invalid/no module id supplied.");
         }
         final String id = parameters.getFirst(P_ID);
         LOG.info("- id={}", id);
 
         // LOAD MODULE CONFIGURATION
         if (!parameters.containsKey(P_CONFIG_URL)) {
-            throw new SempipesServiceInvalidConfigurationException();
+            throw new SempipesServiceException("No config URL supplied.");
         }
         final String configURL = parameters.getFirst(P_CONFIG_URL);
         LOG.info("- config URL={}", configURL);
@@ -132,7 +140,7 @@ public class SempipesServiceController {
         try {
             configModel.read(configURL, "TURTLE");
         } catch(Exception e) {
-            throw new SempipesServiceInvalidConfigurationException();
+            throw new SempipesServiceException("No config URL supplied.");
         }
 
         // FILE WHERE TO GET INPUT BINDING
@@ -141,7 +149,7 @@ public class SempipesServiceController {
             try {
                 inputBindingURL = new URL(parameters.getFirst(P_INPUT_BINDING_URL));
             } catch (MalformedURLException e) {
-                throw new SempipesServiceInvalidOutputBindingException(e);
+                throw new SempipesServiceException("Invalid input binding URL supplied.",e);
             }
 
             LOG.info("- input binding URL={}", inputBindingURL);
@@ -153,11 +161,11 @@ public class SempipesServiceController {
             try {
                 final URL outputBindingURL = new URL(parameters.getFirst(P_OUTPUT_BINDING_URL));
                 if (!outputBindingURL.getProtocol().equals("file")) {
-                    throw new SempipesServiceInvalidOutputBindingException();
+                    throw new SempipesServiceException("Invalid output binding URL schema - currently only file: URLs are supported.");
                 }
                 outputBindingPath = new File(outputBindingURL.toURI());
             } catch (MalformedURLException | URISyntaxException e) {
-                throw new SempipesServiceInvalidOutputBindingException(e);
+                throw new SempipesServiceException("Invalid output binding URL supplied.",e);
             }
 
             LOG.info("- output binding FILE={}", outputBindingPath);
@@ -194,10 +202,10 @@ public class SempipesServiceController {
         Module module;
         // should execute module only
 //        if (asArgs.isExecuteModuleOnly) {
-        module = loadModule(configModel,id);
+        module = PipelineFactory.loadModule(configModel.createResource(id));
 
         if ( module == null ) {
-            throw new SempipesServiceInvalidModuleIdException();
+            throw new SempipesServiceException("Cannot load module with id="+id);
         }
 
         outputExecutionContext = engine.executeModule(module, inputExecutionContext);
@@ -210,20 +218,11 @@ public class SempipesServiceController {
             try {
                 outputExecutionContext.getVariablesBinding().save(new FileOutputStream(outputBindingPath), "TURTLE");
             } catch (IOException e) {
-                throw new SempipesServiceInvalidOutputBindingException(e);
+                throw new SempipesServiceException("Cannot save output binding.",e);
             }
         }
 
         LOG.info("Processing successfully finished.");
         return outputExecutionContext.getDefaultModel();
-    }
-
-    private Module loadModule(Model configModel, String id) {
-        // TODO find in module registry ?!?
-        if ( "http://onto.fel.cvut.cz/ontologies/sempipes/identity-transformer".equals(id)) {
-            return new ModuleIdentity();
-        } else {
-            return PipelineFactory.loadModule(configModel.createResource(id));
-        }
     }
 }

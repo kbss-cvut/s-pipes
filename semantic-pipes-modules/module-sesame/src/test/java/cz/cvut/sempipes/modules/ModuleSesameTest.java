@@ -7,7 +7,6 @@ import org.junit.Ignore;
 
 public class ModuleSesameTest {
 
-    @Ignore
     @org.junit.Test
     public void testDeployEmpty() throws Exception {
         final ModuleSesame moduleSesame = new ModuleSesame();

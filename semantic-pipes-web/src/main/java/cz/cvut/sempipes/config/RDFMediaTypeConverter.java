@@ -59,7 +59,7 @@ public class RDFMediaTypeConverter extends AbstractHttpMessageConverter {
 
     @Override
     protected boolean supports(Class aClass) {
-        System.out.println("Supports? "+aClass);
+        LOG.debug("Supports {} ? ", aClass);
         return Model.class.isAssignableFrom(aClass);
     }
 }
