@@ -188,6 +188,7 @@ public class SempipesServiceControllerTest {
                 2);
     }
 
+    @Ignore
     @Test
     public void testRunApplyConstructQueryWithVariable() throws Exception {
         VariablesBinding inputVariablesBinding = new VariablesBinding(
