@@ -5,8 +5,6 @@ import cz.cvut.sempipes.engine.*;
 import cz.cvut.sempipes.manager.OntologyManager;
 import cz.cvut.sempipes.modules.Module;
 import cz.cvut.sempipes.modules.ModuleSesame;
-import cz.cvut.sempipes.service.SempipesServiceController;
-import org.apache.jena.ontology.OntModel;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.rdf.model.Model;
@@ -47,7 +45,10 @@ public class EccairsService {
     }
 
     static {
+        loadEccairsModel();
+    }
 
+    private static void loadEccairsModel() {
         LOG.info("Constructing library modules ...");
 
         libsModel.add(OntologyManager.loadModel(getInbasModelFilePath("eccairsFormGeneratorPath")));
@@ -66,6 +67,10 @@ public class EccairsService {
 
     }
 
+    private static void clearEccairsModel() {
+        libsModel = ModelFactory.createDefaultModel();
+    }
+
 
 
     public String runGeneratorService(final MultiValueMap parameters) {
@@ -76,6 +81,10 @@ public class EccairsService {
 //        OntologyManager.ignoreImport("http://onto.fel.cvut.cz/ontologies/aviation/eccairs-form-static-0.2");
 //        OntModel model = OntologyManager.loadOntModel(getInbasModelFilePath("eccairsFormGeneratorPath"));
 
+
+        LOG.warn("!!! temporary hack - reload model each service call (should be removed)"); //TODO !!! remove this hack
+        clearEccairsModel();
+        loadEccairsModel();
 
         Model mergedModel = ModelFactory.createDefaultModel();
         mergedModel.add(libsModel);

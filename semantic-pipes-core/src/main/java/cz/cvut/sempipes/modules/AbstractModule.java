@@ -1,21 +1,26 @@
 package cz.cvut.sempipes.modules;
 
+import cz.cvut.sempipes.constants.KBSS_MODULE;
 import cz.cvut.sempipes.engine.ExecutionContext;
-import org.apache.jena.query.QuerySolution;
-import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.atlas.lib.NotImplemented;
+import org.apache.jena.query.*;
+import org.apache.jena.query.Query;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.topbraid.spin.model.SPINFactory;
+import org.topbraid.spin.arq.ARQFactory;
+import org.topbraid.spin.constraints.ConstraintViolation;
+import org.topbraid.spin.constraints.SPINConstraints;
+import org.topbraid.spin.model.*;
 import org.topbraid.spin.util.SPINExpressions;
+import org.topbraid.spin.vocabulary.SP;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by Miroslav Blasko on 10.5.16.
@@ -27,6 +32,8 @@ public abstract class AbstractModule implements Module {
     List<Module> inputModules = new LinkedList<>();
     ExecutionContext executionContext;
     ExecutionContext outputContext;
+    private List<Resource> inputConstraintQueries;
+    private List<Resource> outputConstraintQueries;
 
 
     // load each properties
@@ -39,7 +46,10 @@ public abstract class AbstractModule implements Module {
     @Override
     public ExecutionContext execute() {
         loadConfiguration();
+        loadModuleConstraints();
+        checkInputConstraints();
         outputContext = executeSelf();
+        checkOutputConstraints();
         return  outputContext;
     }
 
@@ -83,6 +93,86 @@ public abstract class AbstractModule implements Module {
         this.inputModules = inputModules;
     }
 
+
+    /* ------------------ PRIVATE METHODS --------------------- */
+
+    private void loadModuleConstraints() {
+        inputConstraintQueries = getResourcesByProperty(KBSS_MODULE.has_input_graph_constraint);
+        outputConstraintQueries = getResourcesByProperty(KBSS_MODULE.has_output_graph_constraint);
+    }
+
+    private void checkOutputConstraints() {
+
+    }
+
+    private void checkInputConstraints() {
+        Model defaultModel = executionContext.getDefaultModel();
+
+        QuerySolution bindings = executionContext.getVariablesBinding().asQuerySolution();
+        Model mergedModel = ModelFactory.createDefaultModel();
+
+        //      set up variable bindings
+        for (Resource queryRes : inputConstraintQueries) {
+            org.topbraid.spin.model.Query spinQuery = SPINFactory.asQuery(queryRes);
+
+            // TODO template call
+//            if (spinQuery == null) {
+//                TemplateCall templateCall = SPINFactory.asTemplateCall(queryRes);
+//            }
+
+            Query query = ARQFactory.get().createQuery(spinQuery);
+
+            QueryExecution execution = QueryExecutionFactory.create(query, defaultModel, bindings);
+
+            boolean constaintViolated = false;
+            String additionalInfo = null;
+
+            if (spinQuery instanceof Ask) {
+                constaintViolated = execution.execAsk();
+            } else if (spinQuery instanceof Select) { //TODO implement
+                throw new NotImplemented("Constraints for objects " + query + " not implemented.");
+            } else if (spinQuery instanceof Construct) {
+                throw new NotImplemented("Constraints for objects " + query + " not implemented.");
+            } else {
+                throw new NotImplemented("Constraints for objects " + query + " not implemented.");
+            }
+
+            if (constaintViolated) {
+                LOG.error("Validation of input constraints failed -- {}.", getQueryComment(spinQuery));
+                LOG.error("Failed validation constraint -- {}", spinQuery.toString());
+                if (additionalInfo != null) {
+                    LOG.error("Failed validation constraint info : ", additionalInfo);
+                }
+            }
+        }
+    }
+
+    private String getQueryComment(org.topbraid.spin.model.Query query) {
+        if (query.getComment() != null) {
+            return query.getComment();
+        }
+//        Resource obj = query.getPropertyResourceValue(RDFS.comment);
+//        if (obj == null) {
+//            return query.getURI();
+//        }
+        return query.getURI();
+    }
+
+    private org.topbraid.spin.model.Query getQuery(Resource queryResource) {
+        if (queryResource.hasProperty(RDF.type, SP.Ask)){
+            return queryResource.as(Ask.class);
+        }
+        if (queryResource.hasProperty(RDF.type, SP.Construct)) {
+            return queryResource.as(Construct.class);
+        }
+        if (queryResource.hasProperty(RDF.type, SP.Select)) {
+            return queryResource.as(Select.class);
+        }
+
+        throw new IllegalStateException("Unknown query resource type -- " + queryResource.getPropertyResourceValue(RDF.type));
+    }
+
+
     RDFNode getPropertyValue(Property property) {
         return resource.getProperty(property).getObject();
     }
@@ -98,13 +188,20 @@ public abstract class AbstractModule implements Module {
         return defaultValue;
     }
 
-    public String getStringPropertyValue(@NotNull  Property property) {
+    protected String getStringPropertyValue(@NotNull Property property) {
 
         Statement st = resource.getProperty(property);
         if (st == null) {
             return null;
         }
         return resource.getProperty(property).getObject().toString();
+    }
+
+    protected List<Resource> getResourcesByProperty(Property property) {
+        return resource.listProperties(property)
+                .toList().stream()
+                .map(st -> st.getObject().asResource())
+                .collect(Collectors.toList());
     }
 
     protected RDFNode getEffectiveValue(Property valueProperty) {

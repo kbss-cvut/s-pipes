@@ -88,11 +88,7 @@ public class ApplyConstructModule extends AbstractModule {
         // TODO load default values from configuration
 
         // TODO does not work with string query as object is not RDF resource ???
-        constructQueries = resource
-                .listProperties(SML.constructQuery)
-                .toList().stream()
-                .map(st -> st.getObject().asResource())
-                .collect(Collectors.toList());
+        constructQueries = getResourcesByProperty(SML.constructQuery);
 
         LOG.debug("Loading spin constuct queries ... " + constructQueries);
 
