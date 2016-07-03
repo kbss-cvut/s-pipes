@@ -96,7 +96,7 @@ public class SempipesServiceController {
     @RequestMapping(
             value = "/service",
             method = RequestMethod.GET,
-            produces = {RDFMimeType.LD_JSON_STRING}
+            produces = {RDFMimeType.LD_JSON_STRING + ";charset=utf-8"}
     ) // @ResponseBody
     public RawJson processServiceGetRequest(@RequestParam MultiValueMap parameters) {
         LOG.info("Processing service GET request.");
