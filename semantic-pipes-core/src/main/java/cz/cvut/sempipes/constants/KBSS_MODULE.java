@@ -28,6 +28,8 @@ public class KBSS_MODULE {
 
     public static final Property has_input_graph_constraint = property("has-input-graph-constraint");
     public static final Property has_output_graph_constraint = property("has-output-graph-constraint");
+    public static final Property has_target_module_flag = property("has-target-module-flag");
+    public static final Property has_debug_mode_flag = property("has-debug-mode-flag");
 
     /**
      returns the URI for this schema

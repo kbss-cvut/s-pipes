@@ -85,6 +85,7 @@ public class EccairsService {
         LOG.warn("!!! temporary hack - reload model each service call (should be removed)"); //TODO !!! remove this hack
         clearEccairsModel();
         loadEccairsModel();
+        PipelineFactory.registerModule(KBSS_MODULE.deploy, ModuleSesame.class);
 
         Model mergedModel = ModelFactory.createDefaultModel();
         mergedModel.add(libsModel);

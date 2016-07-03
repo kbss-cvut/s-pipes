@@ -47,7 +47,10 @@ class ExecutionEngineImpl implements ExecutionEngine {
 
         // module has run already
         if (module.getOutputContext() != null) {
+            module.addOutputBindings(context.getVariablesBinding());
             return module.getOutputContext();
+
+
         }
 
         // module has no predeccesor
@@ -59,7 +62,11 @@ class ExecutionEngineImpl implements ExecutionEngine {
                 module.setExecutionContext(context);
             }
             LOG.info(" ##### " + module.getLabel());
-            return module.execute();
+            LOG.trace("Using input context {}", context.toSimpleString()); //TODO redundant code -> merge
+            ExecutionContext outputContext = module.execute();
+            LOG.trace("Returning output context {}", outputContext.toSimpleString());
+            module.addOutputBindings(context.getVariablesBinding());
+            return module.getOutputContext();
         }
 
         Map<Resource, ExecutionContext> resource2ContextMap = module.getInputModules().stream()
@@ -67,10 +74,20 @@ class ExecutionEngineImpl implements ExecutionEngine {
 
         LOG.info(" ##### " + module.getLabel());
         ExecutionContext mergedContext = mergeContexts(resource2ContextMap);
-        LOG.trace("Using meged context {}", mergedContext.toSimpleString());
+        LOG.trace("Using input merged context {}", mergedContext.toSimpleString());
 
         module.setExecutionContext(mergedContext);
-        return module.execute();
+
+        ExecutionContext outputContext = module.execute();
+        LOG.trace("Returning output context {}", outputContext.toSimpleString());
+        module.addOutputBindings(mergedContext.getVariablesBinding());
+        return module.getOutputContext();
+    }
+
+    private ExecutionContext createMergedExecutionContext(ExecutionContext executionContext, VariablesBinding additionalVariablesBinding) {
+        VariablesBinding mergedVarsBinding = new VariablesBinding(executionContext.getVariablesBinding().asQuerySolution());
+        mergedVarsBinding.extendConsistently(additionalVariablesBinding);
+        return ExecutionContextFactory.createContext(executionContext.getDefaultModel(), mergedVarsBinding);
     }
 
 

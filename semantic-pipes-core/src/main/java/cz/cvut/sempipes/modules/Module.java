@@ -1,6 +1,7 @@
 package cz.cvut.sempipes.modules;
 
 import cz.cvut.sempipes.engine.ExecutionContext;
+import cz.cvut.sempipes.engine.VariablesBinding;
 import org.apache.jena.rdf.model.Resource;
 
 import java.util.List;
@@ -49,4 +50,7 @@ public interface Module {
     //void setOutputContext(ExecutionContext);
     // TODO execute should not return Execution context
     ExecutionContext getOutputContext();
+
+    // TODO should not be here !!!! but rather generalized
+    void addOutputBindings(VariablesBinding variablesBinding);
 }

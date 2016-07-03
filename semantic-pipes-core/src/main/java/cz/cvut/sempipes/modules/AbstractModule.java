@@ -2,10 +2,13 @@ package cz.cvut.sempipes.modules;
 
 import cz.cvut.sempipes.constants.KBSS_MODULE;
 import cz.cvut.sempipes.engine.ExecutionContext;
+import cz.cvut.sempipes.engine.ExecutionContextFactory;
+import cz.cvut.sempipes.engine.VariablesBinding;
 import org.apache.jena.atlas.lib.NotImplemented;
 import org.apache.jena.query.*;
 import org.apache.jena.query.Query;
 import org.apache.jena.rdf.model.*;
+import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.jetbrains.annotations.NotNull;
@@ -18,6 +21,8 @@ import org.topbraid.spin.model.*;
 import org.topbraid.spin.util.SPINExpressions;
 import org.topbraid.spin.vocabulary.SP;
 
+import java.io.*;
+import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,6 +39,8 @@ public abstract class AbstractModule implements Module {
     ExecutionContext outputContext;
     private List<Resource> inputConstraintQueries;
     private List<Resource> outputConstraintQueries;
+    private boolean isInDebugMode;
+    private boolean isTargetModule;
 
 
     // load each properties
@@ -45,13 +52,28 @@ public abstract class AbstractModule implements Module {
 
     @Override
     public ExecutionContext execute() {
+        loadModuleFlags();
+        if (isInDebugMode) {
+            LOG.debug("Entering debug mode within this module.");
+        }
         loadConfiguration();
         loadModuleConstraints();
         checkInputConstraints();
         outputContext = executeSelf();
         checkOutputConstraints();
+        if (isInDebugMode) {
+            LOG.debug("Saveing module execution output to file {}.", saveModelToTemporaryFile(outputContext.getDefaultModel()));
+        }
         return  outputContext;
     }
+
+    @Override
+    public void addOutputBindings(VariablesBinding additionalVariablesBinding) {
+        VariablesBinding mergedVarsBinding = new VariablesBinding(outputContext.getVariablesBinding().asQuerySolution());
+        mergedVarsBinding.extendConsistently(additionalVariablesBinding);
+        outputContext = ExecutionContextFactory.createContext(outputContext.getDefaultModel(), mergedVarsBinding);
+    }
+
 
     @Override
     public ExecutionContext getOutputContext() {
@@ -96,10 +118,35 @@ public abstract class AbstractModule implements Module {
 
     /* ------------------ PRIVATE METHODS --------------------- */
 
+    // TODO revise
+    private String saveModelToTemporaryFile(Model model) {
+        File tempFile = null;
+        try {
+            tempFile = Files.createTempFile("formgen-", ".ttl").toFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        try (OutputStream tempFileIs = new FileOutputStream(tempFile)) {
+            model.write(tempFileIs, FileUtils.langTurtle);
+
+            return tempFile.getAbsolutePath();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     private void loadModuleConstraints() {
         inputConstraintQueries = getResourcesByProperty(KBSS_MODULE.has_input_graph_constraint);
         outputConstraintQueries = getResourcesByProperty(KBSS_MODULE.has_output_graph_constraint);
     }
+
+    private void loadModuleFlags() {
+        isTargetModule = getPropertyValue(KBSS_MODULE.has_debug_mode_flag, false);
+        isInDebugMode = getPropertyValue(KBSS_MODULE.has_debug_mode_flag, false);
+    }
+
 
     private void checkOutputConstraints() {
 
