@@ -15,6 +15,7 @@ import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 public class RDFMediaTypeConverter extends AbstractHttpMessageConverter {
@@ -32,6 +33,7 @@ public class RDFMediaTypeConverter extends AbstractHttpMessageConverter {
     }
 
     private String getRDFLanguageForContentType( final HttpMessage m, final String defaultValue) {
+        LOG.debug("Getting RDF Language for content type " + m + ", message: " + defaultValue);
         MediaType contentType = m.getHeaders().getContentType();
         if ( contentType == null ) { contentType = MediaType.parseMediaType(defaultValue); }
         return RDFLanguages.contentTypeToLang(contentType.toString()).getLabel();
@@ -39,10 +41,10 @@ public class RDFMediaTypeConverter extends AbstractHttpMessageConverter {
 
     @Override
     protected Object readInternal(Class aClass, HttpInputMessage httpInputMessage) throws IOException, HttpMessageNotReadableException {
+        LOG.debug("Reading " + aClass + ", message: " + httpInputMessage.getHeaders());
         if (  ! aClass.isAssignableFrom( Model.class ) ) {
             throw new UnsupportedOperationException();
         }
-        LOG.debug("Reading " + aClass + ", message: " + httpInputMessage.getHeaders());
         Model inputDataModel = ModelFactory.createDefaultModel();
         inputDataModel.read(httpInputMessage.getBody(), "", getRDFLanguageForContentType(httpInputMessage, RDFMimeType.N_TRIPLES_STRING));
         return inputDataModel;
@@ -50,10 +52,10 @@ public class RDFMediaTypeConverter extends AbstractHttpMessageConverter {
 
     @Override
     protected void writeInternal(Object o, HttpOutputMessage httpOutputMessage) throws IOException, HttpMessageNotWritableException {
+        LOG.debug("Writing " + o + ", message: " + httpOutputMessage.getHeaders());
         if ( ! ( o instanceof Model ) ) {
             throw new UnsupportedOperationException();
         }
-        LOG.debug("Writing " + o + ", message: " + httpOutputMessage.getHeaders());
         ((Model) o).write(httpOutputMessage.getBody(), getRDFLanguageForContentType(httpOutputMessage, RDFMimeType.LD_JSON_STRING));
     }
 
