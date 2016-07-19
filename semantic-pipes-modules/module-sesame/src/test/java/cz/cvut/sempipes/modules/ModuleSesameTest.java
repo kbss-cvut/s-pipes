@@ -2,12 +2,15 @@ package cz.cvut.sempipes.modules;
 
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
+import info.aduna.webapp.util.HttpServerUtil;
 import org.apache.jena.rdf.model.*;
+import org.junit.Before;
 import org.junit.Ignore;
 
 public class ModuleSesameTest {
 
     @org.junit.Test
+    @Ignore
     public void testDeployEmpty() throws Exception {
         final ModuleSesame moduleSesame = new ModuleSesame();
 
