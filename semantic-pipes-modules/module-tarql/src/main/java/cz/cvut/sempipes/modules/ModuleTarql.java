@@ -56,7 +56,7 @@ public class ModuleTarql extends AbstractModule {
         Model model = ModelFactory.createDefaultModel();
 
         try {
-            final File output = File.createTempFile("query", ".tarql");
+            final File output = File.createTempFile("output", ".nt");
 
             try (PrintStream s = new PrintStream(new FileOutputStream(output))) {
                 final File queryFile = File.createTempFile("query", ".tarql");
