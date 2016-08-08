@@ -2,33 +2,42 @@ package cz.cvut.sempipes.modules;
 
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
+import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.RDF;
+import org.junit.Assert;
 import org.junit.Ignore;
+
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class ModuleTarqlTest {
 
     @Ignore
     @org.junit.Test
-    public void testDeployEmpty() throws Exception {
+    public void testTarqlSimple() throws Exception {
         final ModuleTarql module = new ModuleTarql();
 
-        final Model deployModel = ModelFactory.createDefaultModel();
-        final Property resource = ResourceFactory.createProperty("http://a");
-        deployModel.add(resource, resource, resource);
-
-        final ExecutionContext executionContext = ExecutionContextFactory.createContext(deployModel);
+        final Model inputModel = ModelFactory.createDefaultModel();
+        final ExecutionContext executionContext = ExecutionContextFactory.createContext(inputModel);
 
         final Model model = ModelFactory.createDefaultModel();
         final Resource root = model.createResource();
-        model.add(root, ModuleTarql.P_IS_REPLACE_CONTEXT_IRI, model.createTypedLiteral(true));
-        model.add(root, ModuleTarql.P_SESAME_SERVER_URL, "http://localhost:18080/openrdf-sesame");
-        model.add(root, ModuleTarql.P_SESAME_REPOSITORY_NAME, "test-semantic-pipes");
-        model.add(root, ModuleTarql.P_SESAME_CONTEXT_IRI, "");
+        model.add(root, ModuleTarql.P_INPUT_FILE, new File("src/test/resources/test-1.csv").getAbsolutePath());
+//        model.add(root, ModuleTarql.P_NO_HEADER, "false" );
+        model.add(root, ModuleTarql.P_ONTOLOGY_IRI, "http://onto.fel.cvut.cz/ontologies/test-1");
+        String contents = new String(Files.readAllBytes(Paths.get("src/test/resources/test-1.tarql")));
+        model.add(root, ModuleTarql.P_TARQL_STRING, contents);
 
-//        moduleSesame.setResource(root);
-//        moduleSesame.loadConfiguration(null);
+        module.setConfigurationResource(root);
 
-        // TODO: currently running server is needed;
-        //module.execute(executionContext);
+        module.setExecutionContext(executionContext);
+
+        module.execute();
+
+//        module.getOutputContext().getDefaultModel().write(System.out);
+
+        Assert.assertEquals(2, module.getOutputContext().getDefaultModel().listStatements(null, RDF.type, ResourceFactory.createResource("http://onto.fel.cvut.cz/ontologies/example/model/person")).toList().size());
     }
 }

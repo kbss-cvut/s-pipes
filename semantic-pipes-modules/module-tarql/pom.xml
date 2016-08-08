@@ -19,6 +19,19 @@
             <artifactId>semantic-pipes-core</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.deri.tarql</groupId>
+            <artifactId>tarql</artifactId>
+            <version>1.0a-jena-3.1.0</version>
+        </dependency>
+
+        <!-- http://mvnrepository.com/artifact/com.google.guava/guava -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>19.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>

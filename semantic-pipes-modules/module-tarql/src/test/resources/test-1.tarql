@@ -1,0 +1,15 @@
+PREFIX e: <http://onto.fel.cvut.cz/ontologies/example/model/>
+PREFIX : <http://onto.fel.cvut.cz/ontologies/example/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+CONSTRUCT {
+  ?URI a e:person ;
+    rdfs:label ?id ;
+    e:id ?id ;
+    e:firstname ?firstname ;
+    e:surname ?surname .
+} WHERE {
+  BIND ((?__FN__) AS ?FILE_NAME)
+  BIND (URI(CONCAT(str(:),?id)) AS ?URI)
+}
