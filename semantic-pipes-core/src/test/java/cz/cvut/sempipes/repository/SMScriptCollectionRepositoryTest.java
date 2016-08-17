@@ -73,6 +73,7 @@ public class SMScriptCollectionRepositoryTest {
 
     }
 
+    @Ignore
     @Test
     public void getResource() throws Exception {
 

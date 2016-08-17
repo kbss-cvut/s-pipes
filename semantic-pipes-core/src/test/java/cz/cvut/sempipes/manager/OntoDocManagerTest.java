@@ -29,6 +29,7 @@ public class OntoDocManagerTest {
     static Path managerDirPath = TestConstants.TEST_RESOURCES_DIR_PATH.resolve("manager").toAbsolutePath();
 
 
+    @Ignore
     @Test
     public void registerDocumentsDirectoryRecursive()  {
 
