@@ -204,6 +204,7 @@ public class SempipesServiceControllerTest {
         // TODO check number based on service logic
     }
 
+    @Ignore
     @Test
     public void testByReportingTool() throws Exception {
         VariablesBinding inputVariablesBinding = new VariablesBinding();
