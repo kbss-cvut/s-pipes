@@ -31,7 +31,7 @@ public class ModuleSesame extends AbstractModule {
 
     static {
         LOG.info("Registering {} -> {}", KBSS_MODULE.deploy, ModuleSesame.class);
-        PipelineFactory.registerModule(KBSS_MODULE.deploy, ModuleSesame.class);
+        PipelineFactory.registerModuleType(KBSS_MODULE.deploy, ModuleSesame.class);
     }
 
 
@@ -61,6 +61,7 @@ public class ModuleSesame extends AbstractModule {
 
     @Override
     ExecutionContext executeSelf() {
+        // TODO use org.openrdf.repository.manager.RepositoryProvider.getRepository()
         final Repository repository = new HTTPRepository(sesameServerURL, sesameRepositoryName );
         RepositoryConnection connection = null;
 

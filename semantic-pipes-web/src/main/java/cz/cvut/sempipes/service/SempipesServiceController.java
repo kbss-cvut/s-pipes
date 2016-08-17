@@ -1,7 +1,11 @@
 package cz.cvut.sempipes.service;
 
+import cz.cvut.sempipes.eccairs.ConfigProperies;
 import cz.cvut.sempipes.eccairs.EccairsService;
 import cz.cvut.sempipes.engine.*;
+import cz.cvut.sempipes.manager.OntoDocManager;
+import cz.cvut.sempipes.manager.OntologyDocumentManager;
+import cz.cvut.sempipes.manager.SempipesScriptManager;
 import cz.cvut.sempipes.modules.Module;
 import cz.cvut.sempipes.util.RDFMimeType;
 import cz.cvut.sempipes.util.RawJson;
@@ -21,15 +25,20 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @EnableWebMvc
 public class SempipesServiceController {
 
     private static final Logger LOG = LoggerFactory.getLogger(SempipesServiceController.class);
+    private SempipesScriptManager scriptManager;
 
     /**
      * Request parameter - 'id' of the module to be executed
@@ -53,6 +62,20 @@ public class SempipesServiceController {
      * TODO redesign
      */
     public static final String P_OUTPUT_BINDING_URL = "_pOutputBindingURL";
+
+    public SempipesServiceController() {
+        // TODO use spring injection instead
+        List<Path> scriptDirs  = Arrays
+                .stream(ConfigProperies.get("scriptDirs").split(";"))
+                .map(path -> Paths.get(path))
+                .collect(Collectors.toList());
+
+        OntologyDocumentManager ontoDocManager = OntoDocManager.getInstance();
+        List<String> globalScripts = SempipesScriptManager.getGlobalScripts(ontoDocManager, scriptDirs);
+
+        scriptManager = new SempipesScriptManager(ontoDocManager, globalScripts);
+
+    }
 
     @RequestMapping(
             value = "/module",
@@ -93,12 +116,27 @@ public class SempipesServiceController {
         return run(inputModel, parameters);
     }
 
+    @RequestMapping( //TODO remove old service
+            value = "/service-new",
+            method = RequestMethod.GET,
+            produces = {
+                    RDFMimeType.LD_JSON_STRING,
+                    RDFMimeType.N_TRIPLES_STRING,
+                    RDFMimeType.RDF_XML_STRING,
+                    RDFMimeType.TURTLE_STRING
+            }
+    )
+    public Model processServiceGetRequest(@RequestParam MultiValueMap<String,String> parameters) {
+        LOG.info("Processing service GET request.");
+        return runService(ModelFactory.createDefaultModel(), parameters);
+    }
+
     @RequestMapping(
             value = "/service",
             method = RequestMethod.GET,
             produces = {RDFMimeType.LD_JSON_STRING + ";charset=utf-8"}
-    ) // @ResponseBody
-    public RawJson processServiceGetRequest(@RequestParam MultiValueMap parameters) {
+    )
+    public RawJson processServiceOldGetRequest(@RequestParam MultiValueMap parameters) {
         LOG.info("Processing service GET request.");
         return new RawJson(new EccairsService().run(new ByteArrayInputStream(new byte[]{}), "", parameters));
     }
@@ -119,6 +157,70 @@ public class SempipesServiceController {
         }
 
         return querySolution;
+    }
+
+
+    // TODO merge it with implementation in /module
+    private Model runService(final Model inputDataModel, final MultiValueMap<String,String> parameters ) {
+        LOG.info("- parameters={}", parameters);
+
+        if (!parameters.containsKey(P_ID)) {
+            throw new SempipesServiceException("Invalid/no module id supplied.");
+        }
+        final String id = parameters.getFirst(P_ID);
+        LOG.info("- id={}", id);
+
+
+        // FILE WHERE TO GET INPUT BINDING
+        URL inputBindingURL = null;
+        if (parameters.containsKey(P_INPUT_BINDING_URL)) {
+            try {
+                inputBindingURL = new URL(parameters.getFirst(P_INPUT_BINDING_URL));
+            } catch (MalformedURLException e) {
+                throw new SempipesServiceException("Invalid input binding URL supplied.",e);
+            }
+
+            LOG.info("- input binding URL={}", inputBindingURL);
+        }
+
+        parameters.remove(P_ID);
+        parameters.remove(P_CONFIG_URL);
+        parameters.remove(P_INPUT_BINDING_URL);
+        parameters.remove(P_OUTPUT_BINDING_URL);
+
+        // END OF PARAMETER PROCESSING
+        final VariablesBinding inputVariablesBinding = new VariablesBinding(transform(parameters));
+        try {
+            if (inputBindingURL != null) {
+                final VariablesBinding vb2 = new VariablesBinding();
+                vb2.load(inputBindingURL.openStream(), "TURTLE");
+                VariablesBinding vb3 = inputVariablesBinding.extendConsistently(vb2);
+                if (vb3.isEmpty()) {
+                    LOG.info("- no conflict between bindings loaded from '" + P_INPUT_BINDING_URL + "' and those provided in query string.");
+                } else {
+                    LOG.info("- conflicts found between bindings loaded from '" + P_INPUT_BINDING_URL + "' and those provided in query string: " + vb3.toString());
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        LOG.info("- input variable binding ={}", inputVariablesBinding);
+
+        // LOAD INPUT DATA
+        ExecutionContext inputExecutionContext = ExecutionContextFactory.createContext(inputDataModel, inputVariablesBinding);
+
+        // EXECUTE PIPELINE
+        ExecutionEngine engine = ExecutionEngineFactory.createEngine();
+        Module module = scriptManager.loadFunction(id);
+
+
+        if ( module == null ) {
+            throw new SempipesServiceException("Cannot load module with id="+id);
+        }
+        ExecutionContext outputExecutionContext = engine.executePipeline(module, inputExecutionContext);
+
+        LOG.info("Processing successfully finished.");
+        return outputExecutionContext.getDefaultModel();
     }
 
     private Model run(final Model inputDataModel, final MultiValueMap<String,String> parameters ) {

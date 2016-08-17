@@ -7,7 +7,7 @@ import org.apache.jena.rdf.model.Resource;
 import java.util.List;
 
 /**
- * Module should be initialized with setConfigurationResource and setExecutionContext.
+ * Module should be initialized with setConfigurationResource and setInputContext.
  * Then loadConfiguration() and execute() method can be called.
  * TODO
  * Created by blcha on 6.5.16.
@@ -19,7 +19,7 @@ public interface Module {
 
     String getLabel();
 
-    void setExecutionContext(ExecutionContext context);
+    void setInputContext(ExecutionContext context);
 
     ExecutionContext getExecutionContext();
 

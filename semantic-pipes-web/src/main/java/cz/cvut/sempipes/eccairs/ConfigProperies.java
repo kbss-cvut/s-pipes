@@ -13,12 +13,12 @@ import java.io.InputStream;
 public class ConfigProperies {
     private static final String CONFIG_FILE = "config.properties";
     private static final java.util.Properties prop = new java.util.Properties();
-    private static final Logger LOG = LoggerFactory.getLogger(EccairsService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ConfigProperies.class);
 
     static {
         try {
 
-            InputStream is = EccairsService.class.getClassLoader().getResourceAsStream("config.properties");
+            InputStream is = ConfigProperies.class.getClassLoader().getResourceAsStream("config.properties");
             if (is != null) {
                 prop.load(is);
             } else {

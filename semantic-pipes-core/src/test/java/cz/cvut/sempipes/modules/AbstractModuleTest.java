@@ -30,7 +30,7 @@ public class AbstractModuleTest extends AbstractModuleTestHelper {
         VariablesBinding variablesBinding = new VariablesBinding();
         variablesBinding.add("name", ResourceFactory.createPlainLiteral("James"));
 
-        module.setExecutionContext(
+        module.setInputContext(
                 ExecutionContextFactory.createContext(ModelFactory.createDefaultModel(), variablesBinding));
 
         RDFNode node = ((AbstractModule) module).getEffectiveValue(SML.value);

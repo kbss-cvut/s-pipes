@@ -23,7 +23,7 @@
         <!--<org.springframework.version>4.1.5.RELEASE</org.springframework.version>-->
         <!--<org.springframework.security.version>4.0.2.RELEASE</org.springframework.security.version>-->
         <!--<com.fasterxml.jackson.version>2.3.3</com.fasterxml.jackson.version>-->
-        <!--<junit.version>4.12</junit.version>-->
+        <junit.version>4.12</junit.version>
         <ch.qos.logback.version>1.1.2</ch.qos.logback.version>
         <!--<org.mapstruct.version>1.0.0.CR1</org.mapstruct.version>-->
         <org.apache.jena>3.1.0</org.apache.jena>
@@ -127,35 +127,32 @@
 
         <!--&lt;!&ndash; Map Struct for DTO <-> entities mapping &ndash;&gt;-->
         <!--<dependency>-->
-            <!--<groupId>org.mapstruct</groupId>-->
-            <!--<artifactId>mapstruct-jdk8</artifactId>-->
-            <!--<version>${org.mapstruct.version}</version>-->
+        <!--<groupId>org.mapstruct</groupId>-->
+        <!--<artifactId>mapstruct-jdk8</artifactId>-->
+        <!--<version>${org.mapstruct.version}</version>-->
         <!--</dependency>-->
 
-        <!--&lt;!&ndash; Test dependencies &ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>junit</groupId>-->
-            <!--<artifactId>junit</artifactId>-->
-            <!--<version>${junit.version}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>org.springframework</groupId>-->
-            <!--<artifactId>spring-test</artifactId>-->
-            <!--<version>${org.springframework.version}</version>-->
-            <!--<scope>test</scope>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>org.mockito</groupId>-->
-            <!--<artifactId>mockito-core</artifactId>-->
-            <!--<version>1.10.19</version>-->
-            <!--<scope>test</scope>-->
-        <!--</dependency>-->
+        <!-- Test dependencies -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <!--<dependency>-->
+        <!--<groupId>org.springframework</groupId>-->
+        <!--<artifactId>spring-test</artifactId>-->
+        <!--<version>${org.springframework.version}</version>-->
+        <!--<scope>test</scope>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>1.10.19</version>
+            <scope>test</scope>
+        </dependency>
+
+
         <dependency>
             <groupId>org.apache.jena</groupId>
             <artifactId>jena-core</artifactId>
@@ -171,7 +168,7 @@
             <artifactId>jena-arq</artifactId>
             <version>${org.apache.jena}</version>
         </dependency>
-            <dependency>
+        <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.4</version>

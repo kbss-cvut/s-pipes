@@ -32,7 +32,7 @@ class ExecutionEngineImpl implements ExecutionEngine {
 
     // TODO differentiate output, input modules ?
     public ExecutionContext executeModule(Module m, ExecutionContext context) {
-        m.setExecutionContext(context);
+        m.setInputContext(context);
         LOG.info("Executing module " + m.getResource());
         return m.execute();
     }
@@ -59,7 +59,7 @@ class ExecutionEngineImpl implements ExecutionEngine {
             if (module.getExecutionContext() != null) {
                 LOG.debug("Execution context for module {} already set.", module);
             } else {
-                module.setExecutionContext(context);
+                module.setInputContext(context);
             }
             LOG.info(" ##### " + module.getLabel());
             LOG.trace("Using input context {}", context.toSimpleString()); //TODO redundant code -> merge
@@ -76,7 +76,7 @@ class ExecutionEngineImpl implements ExecutionEngine {
         ExecutionContext mergedContext = mergeContexts(resource2ContextMap);
         LOG.trace("Using input merged context {}", mergedContext.toSimpleString());
 
-        module.setExecutionContext(mergedContext);
+        module.setInputContext(mergedContext);
 
         ExecutionContext outputContext = module.execute();
         LOG.trace("Returning output context {}", outputContext.toSimpleString());

@@ -2,10 +2,8 @@ package cz.cvut.sempipes.modules;
 
 import cz.cvut.sempipes.engine.*;
 import org.apache.jena.ontology.OntModel;
-import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.ResourceFactory;
-import org.apache.jena.util.FileUtils;
 import org.junit.Test;
 
 import java.util.List;
@@ -31,7 +29,7 @@ public class BindWithConstantModuleTest extends AbstractModuleTestHelper {
 
         BindWithConstantModule module = new BindWithConstantModule();
 
-        module.setExecutionContext(ExecutionContextFactory.createEmptyContext());
+        module.setInputContext(ExecutionContextFactory.createEmptyContext());
         module.setOutputVariable(outputVariable);
         module.setValue(variableValue);
 

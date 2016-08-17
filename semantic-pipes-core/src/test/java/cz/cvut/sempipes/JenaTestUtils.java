@@ -7,12 +7,15 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.util.FileManager;
 import org.apache.jena.util.FileUtils;
 
+import java.io.InputStream;
+
 /**
  * Created by Miroslav Blasko on 7.6.16.
  */
 public class JenaTestUtils {
 
-    public static OntModel loadOntologyResource(String path) {
+
+    public static OntModel loadOntologyClosureFromResources(String path) {
         // set external context
         OntModel ontModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
 
@@ -21,7 +24,11 @@ public class JenaTestUtils {
         //LocationMapper lm= FileManager.get().getLocationMapper();
 
         // load config
-        ontModel.read(JenaTestUtils.class.getResourceAsStream(path), null, FileUtils.langTurtle);
+        InputStream inputStream = JenaTestUtils.class.getResourceAsStream(path);
+        if (inputStream == null) {
+            throw new IllegalArgumentException("Cannot find resource with path \"" + path + "\".");
+        }
+        ontModel.read(inputStream, null, FileUtils.langTurtle);
 
         dm.loadImports(ontModel);
         return ontModel;

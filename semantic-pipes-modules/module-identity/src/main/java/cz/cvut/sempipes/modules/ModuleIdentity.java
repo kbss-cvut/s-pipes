@@ -12,7 +12,7 @@ public class ModuleIdentity extends AbstractModule {
 
     static {
         LOG.info("Registering {} -> {}", KBSS_MODULE.identity, ModuleIdentity.class);
-        PipelineFactory.registerModule(KBSS_MODULE.identity, ModuleIdentity.class);
+        PipelineFactory.registerModuleType(KBSS_MODULE.identity, ModuleIdentity.class);
     }
 
     @Override

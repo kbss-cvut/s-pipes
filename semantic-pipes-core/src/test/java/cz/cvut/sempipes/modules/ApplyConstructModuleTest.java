@@ -1,16 +1,11 @@
 package cz.cvut.sempipes.modules;
 
-import cz.cvut.sempipes.constants.SML;
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
-import cz.cvut.sempipes.engine.PipelineFactory;
 import cz.cvut.sempipes.engine.VariablesBinding;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
-import org.apache.jena.util.FileUtils;
-import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.junit.Assert;
 import org.junit.Before;
@@ -38,7 +33,7 @@ public class ApplyConstructModuleTest extends AbstractModuleTestHelper {
 
         ApplyConstructModule module = (ApplyConstructModule) getConfigRootModule();
 
-        module.setExecutionContext(ExecutionContextFactory.createContext(createSimpleModel()));
+        module.setInputContext(ExecutionContextFactory.createContext(createSimpleModel()));
         module.loadConfiguration();
 
         ExecutionContext newContext = null;
@@ -69,7 +64,7 @@ public class ApplyConstructModuleTest extends AbstractModuleTestHelper {
                 ResourceFactory.createResource("http://martin.inbas.cz/openrdf-sesame/repositories/form-generator?default-graph-uri=http://www.inbas.cz/ontologies/reporting-tool/formGen-977414103")
         );
 
-        module.setExecutionContext(ExecutionContextFactory.createContext(createSimpleModel(), variablesBinding));
+        module.setInputContext(ExecutionContextFactory.createContext(createSimpleModel(), variablesBinding));
         module.loadConfiguration();
 
         // isReplace = true

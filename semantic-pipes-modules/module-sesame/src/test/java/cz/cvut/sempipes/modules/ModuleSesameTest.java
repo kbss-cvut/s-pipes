@@ -2,10 +2,10 @@ package cz.cvut.sempipes.modules;
 
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
-import info.aduna.webapp.util.HttpServerUtil;
+//import info.aduna.webapp.util.HttpServerUtil;
 import org.apache.jena.rdf.model.*;
-import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Test;
 
 public class ModuleSesameTest {
 
@@ -30,7 +30,7 @@ public class ModuleSesameTest {
         moduleSesame.setConfigurationResource(root);
 
         // TODO: currently running server is needed;
-        moduleSesame.setExecutionContext(executionContext);
+        moduleSesame.setInputContext(executionContext);
         moduleSesame.execute();
     }
 }

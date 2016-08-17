@@ -2,7 +2,7 @@ package cz.cvut.sempipes.eccairs;
 
 import cz.cvut.sempipes.constants.KBSS_MODULE;
 import cz.cvut.sempipes.engine.*;
-import cz.cvut.sempipes.manager.OntologyManager;
+import cz.cvut.sempipes.manager.OntoDocManager;
 import cz.cvut.sempipes.modules.Module;
 import cz.cvut.sempipes.modules.ModuleSesame;
 import org.apache.jena.query.QuerySolution;
@@ -51,14 +51,14 @@ public class EccairsService {
     private static void loadEccairsModel() {
         LOG.info("Constructing library modules ...");
 
-        libsModel.add(OntologyManager.loadModel(getInbasModelFilePath("eccairsFormGeneratorPath")));
+        libsModel.add(OntoDocManager.loadModel(getInbasModelFilePath("eccairsFormGeneratorPath")));
         String[] relativePaths = new String[]{
                 "lib",
                 "forms/eccairs-0.2/eccairs-form-lib.ttl"
         };
 
         Arrays.asList(relativePaths).forEach(relPath -> {
-            OntologyManager.getAllFile2Model(inbasModelPath.resolve(relPath)).values().forEach(
+            OntoDocManager.getAllFile2Model(inbasModelPath.resolve(relPath)).values().forEach(
                     libsModel::add
             );
         });
@@ -85,7 +85,7 @@ public class EccairsService {
         LOG.warn("!!! temporary hack - reload model each service call (should be removed)"); //TODO !!! remove this hack
         clearEccairsModel();
         loadEccairsModel();
-        PipelineFactory.registerModule(KBSS_MODULE.deploy, ModuleSesame.class);
+        PipelineFactory.registerModuleType(KBSS_MODULE.deploy, ModuleSesame.class);
 
         Model mergedModel = ModelFactory.createDefaultModel();
         mergedModel.add(libsModel);
@@ -98,10 +98,10 @@ public class EccairsService {
             case "deploy-question-templates":
                 LOG.info("Running deploy-question-templates module");
                 LOG.info("Registering {} -> {}", KBSS_MODULE.deploy, ModuleSesame.class);
-                PipelineFactory.registerModule(KBSS_MODULE.deploy, ModuleSesame.class);
+                PipelineFactory.registerModuleType(KBSS_MODULE.deploy, ModuleSesame.class);
                 module = PipelineFactory.loadPipeline(mergedModel.getResource(ConfigProperies.get("deployQueryTemplatesModule")));
                 break;
-            default:
+            case "generateEccairsForms":
                 LOG.info("Running eccairs service module");
                 module = PipelineFactory.loadPipeline(mergedModel.getResource(ConfigProperies.get("eccairsServiceModule")));
                 break;

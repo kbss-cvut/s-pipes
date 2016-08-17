@@ -25,7 +25,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.*;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -52,7 +51,7 @@ public class SempipesServiceControllerTest {
 
     @BeforeClass
     public static void setUpClass() {
-        PipelineFactory.registerModule(KBSS_MODULE.identity, ModuleIdentity.class);
+        PipelineFactory.registerModuleType(KBSS_MODULE.identity, ModuleIdentity.class);
     }
 
     @Before

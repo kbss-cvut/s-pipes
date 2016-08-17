@@ -51,7 +51,7 @@ public class PipelineFactory {
     }
 
 
-    public static void registerModule(Resource moduleType, Class<? extends Module> moduleClass) {
+    public static void registerModuleType(Resource moduleType, Class<? extends Module> moduleClass) {
         moduleTypes.put(moduleType, moduleClass);
     }
 

@@ -1,7 +1,7 @@
 package cz.cvut.sempipes.util;
 
 import cz.cvut.sempipes.constants.SM;
-import cz.cvut.sempipes.manager.OntologyManager;
+import cz.cvut.sempipes.manager.OntoDocManager;
 import org.apache.commons.io.IOUtils;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.query.*;
@@ -68,6 +68,10 @@ public class JenaPipelineUtils {
         queryExecution.execSelect().forEachRemaining(
                 qs -> {
                     Resource module = qs.get("function").asResource();
+                    if (qs.get("returnModule") == null) {
+                        //TODO cleaner workaround for -- ?function = <http://topbraid.org/sparqlmotion#Functions> )
+                        return;
+                    }
                     Resource moduleType = qs.get("returnModule").asResource();
                     Resource previous = function2retModuleMap.put(module, moduleType);
                     if (previous != null) {
@@ -114,7 +118,7 @@ public class JenaPipelineUtils {
 
 
     private static OntModel loadLibrary() {
-        return OntologyManager.loadOntModel("/lib.ttl");
+        return OntoDocManager.loadOntModel("/lib.ttl");
     }
 
 

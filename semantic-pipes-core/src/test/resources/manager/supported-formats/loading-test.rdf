@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+
+<rdf:Description rdf:about="http://onto.fel.cvut.cz/ontologies/test/loading-test">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Ontology"/>
+	<imports xmlns="http://www.w3.org/2002/07/owl#" rdf:resource="http://spinrdf.org/sp"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://onto.fel.cvut.cz/ontologies/test/loading-test/MyTestClass">
+	<rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+</rdf:Description>
+
+</rdf:RDF>

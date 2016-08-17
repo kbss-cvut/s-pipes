@@ -81,7 +81,7 @@ public abstract class AbstractModule implements Module {
     }
 
     @Override
-    public void setExecutionContext(ExecutionContext executionContext) {
+    public void setInputContext(ExecutionContext executionContext) {
         this.executionContext = executionContext;
     }
 
