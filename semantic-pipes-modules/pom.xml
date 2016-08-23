@@ -18,6 +18,7 @@
         <module>module-sesame</module>
         <!--<module>module-tarql</module>-->
         <module>module-identity</module>
+            <module>module-nlp</module>
     </modules>
 
     <dependencyManagement>

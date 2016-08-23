@@ -24,6 +24,7 @@ public class KBSS_MODULE {
     public static final Resource form_generator = resource("form-generator");
     public static final Resource deploy = resource("deploy");
     public static final Resource identity = resource("identity");
+    public static final Resource nlp = resource("nlp");
 
 
     public static final Property has_input_graph_constraint = property("has-input-graph-constraint");
