@@ -32,7 +32,7 @@ public class ModuleTarqlTest {
 
         module.setConfigurationResource(root);
 
-        module.setExecutionContext(executionContext);
+        module.setInputContext(executionContext);
 
         module.execute();
 
