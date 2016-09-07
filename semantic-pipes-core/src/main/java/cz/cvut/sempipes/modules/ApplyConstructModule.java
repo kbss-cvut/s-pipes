@@ -1,12 +1,10 @@
 package cz.cvut.sempipes.modules;
 
+import cz.cvut.sempipes.constants.KBSS_MODULE;
 import cz.cvut.sempipes.constants.SML;
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
-import org.apache.jena.query.Query;
-import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.query.QuerySolution;
+import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
@@ -15,9 +13,9 @@ import org.slf4j.LoggerFactory;
 import org.topbraid.spin.arq.ARQFactory;
 import org.topbraid.spin.model.Construct;
 import org.topbraid.spin.system.SPINModuleRegistry;
+import org.topbraid.spin.vocabulary.SP;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * TODO Order of queries is not enforced.   
@@ -33,6 +31,28 @@ public class ApplyConstructModule extends AbstractModule {
 
     //sml:replace
     private boolean isReplace;
+
+    //kbss:parseText
+    /**
+     * Whether the query should be taken from sp:text property instead of from SPIN serialization
+     */
+    private boolean parseText;
+
+    //kbss:iterationCount
+    /**
+     * Maximal number of iterations of the whole rule set. 0 means 0 iterations. The actual number of iterations can be smaller,
+     * if no new inferences are generated any more.
+     *
+     * iterationCount = 1:
+     *    - the whole rule set is executed only once.
+     * iterationCount > 1:
+     *    - the whole rule set is executed at most "iterationCount" times.
+     *    - in each iteration, queries are evaluated on the model merged from the default model and the result of previous iteration
+     *
+     * Within each iteration, all queries are evaluated on the same model.
+     *
+     */
+    private int iterationCount;
 
     public ApplyConstructModule() {
         // TODO move elsewhere
@@ -60,24 +80,43 @@ public class ApplyConstructModule extends AbstractModule {
         Model defaultModel = executionContext.getDefaultModel();
 
         QuerySolution bindings = executionContext.getVariablesBinding().asQuerySolution();
-        Model mergedModel = ModelFactory.createDefaultModel();
 
-        //      set up variable bindings
-        for (Resource constructQueryRes : constructQueries) {
-            Construct spinConstructRes = constructQueryRes.as(Construct.class);
+        long nNew = 1;
 
-            Query query = ARQFactory.get().createQuery(spinConstructRes);
+        int count = 0;
 
-            QueryExecution execution = QueryExecutionFactory.create(query, defaultModel, bindings);
+        Model inferredModel = ModelFactory.createDefaultModel();
 
-            mergedModel = ModelFactory.createUnion(mergedModel, execution.execConstruct());
+        while (nNew > 0 && count++ < iterationCount) {
+            //      set up variable bindings
+
+            Model inferredInSingleIterationModel = ModelFactory.createDefaultModel();
+
+            for (Resource constructQueryRes : constructQueries) {
+                Construct spinConstructRes = constructQueryRes.as(Construct.class);
+
+                Query query;
+                if (parseText) {
+                    query = QueryFactory.create(spinConstructRes.getProperty(SP.text).getLiteral().getString());
+                } else {
+                    query = ARQFactory.get().createQuery(spinConstructRes);
+                }
+                QueryExecution execution = QueryExecutionFactory.create(query,
+                        ModelFactory.createUnion(defaultModel, inferredModel), bindings);
+
+                inferredInSingleIterationModel = ModelFactory.createUnion(inferredInSingleIterationModel, execution.execConstruct());
+            }
+
+            inferredModel = ModelFactory.createUnion(inferredModel, inferredInSingleIterationModel);
+
+            nNew = inferredInSingleIterationModel.size();
         }
 
         if (! isReplace) {
-            mergedModel = ModelFactory.createUnion(mergedModel, defaultModel);
+            return ExecutionContextFactory.createContext(ModelFactory.createUnion(defaultModel, inferredModel));
+        } else {
+            return ExecutionContextFactory.createContext(inferredModel);
         }
-
-        return ExecutionContextFactory.createContext(mergedModel);
     }
 
 
@@ -95,5 +134,7 @@ public class ApplyConstructModule extends AbstractModule {
         //TODO default value must be taken from template definition
         isReplace = this.getPropertyValue(SML.replace, false);
 
+        parseText = this.getPropertyValue(KBSS_MODULE.is_parse_text, false);
+        iterationCount = this.getPropertyValue(KBSS_MODULE.has_max_iteration_count, 1);
     }
 }

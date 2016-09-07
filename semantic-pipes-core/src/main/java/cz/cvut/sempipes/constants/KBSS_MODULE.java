@@ -25,12 +25,15 @@ public class KBSS_MODULE {
     public static final Resource deploy = resource("deploy");
     public static final Resource identity = resource("identity");
     public static final Resource nlp = resource("nlp");
+    public static final Resource sparqlRules = resource("sparqlRules");
 
 
     public static final Property has_input_graph_constraint = property("has-input-graph-constraint");
     public static final Property has_output_graph_constraint = property("has-output-graph-constraint");
     public static final Property has_target_module_flag = property("has-target-module-flag");
     public static final Property has_debug_mode_flag = property("has-debug-mode-flag");
+    public static final Property is_parse_text = property("is-parse-text");
+    public static final Property has_max_iteration_count = property("has-max-iteration-count");
 
     /**
      returns the URI for this schema
