@@ -59,6 +59,22 @@ public class ApplyConstructModule extends AbstractModule {
         SPINModuleRegistry.get().init(); //TODO -- downloads spin from the web (should be cached instead)
     }
 
+    public boolean isParseText() {
+        return parseText;
+    }
+
+    public void setParseText(boolean parseText) {
+        this.parseText = parseText;
+    }
+
+    public int getIterationCount() {
+        return iterationCount;
+    }
+
+    public void setIterationCount(int iterationCount) {
+        this.iterationCount = iterationCount;
+    }
+
     public boolean isReplace() {
         return isReplace;
     }

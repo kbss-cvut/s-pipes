@@ -1,0 +1,50 @@
+
+@prefix apply-construct: <http://onto.fel.cvut.cz/ontologies/test/apply-construct#> .
+@prefix : <http://onto.fel.cvut.cz/ontologies/aviation/cz/caa/cat/audit/pipeline/>
+@prefix kbss: <http://onto.fel.cvut.cz/ontologies/lib/module/>
+@prefix sml: <http://topbraid.org/sparqlmotionlib#>
+@prefix sp: <http://spinrdf.org/sp#>
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+@prefix owl: <http://www.w3.org/2002/07/owl#>
+
+apply-construct:Construct1
+      a       sml:ApplyConstruct ;
+      rdfs:label "Construct test"^^xsd:string ;
+      kbss:is-parse-text "true"^^xsd:boolean ;
+      sml:replace "false"^^xsd:boolean;
+      sml:constructQuery
+              [ a    sp:Construct ;
+                     rdfs:comment "1-first step";
+                     sp:text """
+                              PREFIX : <http://onto.fel.cvut.cz/ontologies/test/apply-construct#>
+                              PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+                              CONSTRUCT {
+                                ?s ?p ?o .
+                              } WHERE {
+                                BIND( :s AS ?s )
+                                BIND( :p AS ?p)
+                                BIND( :o AS ?o)
+                              }"""^^xsd:string ;
+              ] ;
+      sml:constructQuery
+              [ a    sp:Construct ;
+                     rdfs:comment "2-second step";
+                     sp:text """
+                              PREFIX : <http://onto.fel.cvut.cz/ontologies/test/apply-construct#>
+                              PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+                              CONSTRUCT {
+                                ?s :p3 ?o .
+                              } WHERE {
+                                ?s :p ?o .
+                              }"""^^xsd:string ;
+              ] .
+
+<http://onto.fel.cvut.cz/ontologies/test/apply-construct/spin-query-config>
+    a owl:Ontology ;
+    owl:imports <http://topbraid.org/sparqlmotionfunctions> ;
+    owl:imports <http://topbraid.org/sparqlmotionlib> ;
+.
+
