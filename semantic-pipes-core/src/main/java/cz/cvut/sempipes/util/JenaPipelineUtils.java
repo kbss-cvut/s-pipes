@@ -73,6 +73,7 @@ public class JenaPipelineUtils {
                         return;
                     }
                     Resource moduleType = qs.get("returnModule").asResource();
+                    LOG.debug("Registering function {} to return module {}.", module, moduleType);
                     Resource previous = function2retModuleMap.put(module, moduleType);
                     if (previous != null) {
                         LOG.error("Function {} has colliding return modules -- {}, {}. Ignoring type {}.", module, previous, moduleType, previous);

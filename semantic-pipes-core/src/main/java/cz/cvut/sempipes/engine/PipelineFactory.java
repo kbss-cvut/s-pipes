@@ -17,10 +17,7 @@ import org.slf4j.LoggerFactory;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -56,7 +53,6 @@ public class PipelineFactory {
     }
 
 
-
     //TODO not here ?!
     public static Module loadModule(@NotNull Resource moduleRes) {
 
@@ -86,11 +82,23 @@ public class PipelineFactory {
      */
     public static List<Module> loadPipelines(@NotNull Model configModel) {
 
+        Map<Resource, Module> res2ModuleMap = loadAllModules(configModel);
+
+        Set<Module> inputModulesSet = res2ModuleMap.values().stream().flatMap(m -> m.getInputModules().stream()).collect(Collectors.toSet());
+
+        List<Module> outputModulesList = res2ModuleMap.values().stream().collect(Collectors.toList());
+        outputModulesList.removeAll(inputModulesSet);
+
+        return outputModulesList;
+    }
+
+    private static Map<Resource, Module> loadAllModules(@NotNull Model configModel) {
+
         // find and load all modules
         Map<Resource, Module> res2ModuleMap = new HashMap<>();
 
         JenaPipelineUtils.getAllModulesWithTypes(configModel)
-                .entrySet().stream()
+                .entrySet()
                 .forEach(e -> {
                     Module m = loadModule(e.getKey(), e.getValue());
                     if (m != null) {
@@ -101,7 +109,7 @@ public class PipelineFactory {
 
 
         // set appropriate links //TODO problem 2 files reusing module inconsistently ? do i need to solve it ?
-        res2ModuleMap.entrySet().stream()
+        res2ModuleMap.entrySet()
                 .forEach(e -> {
                     Resource res = e.getKey();
 
@@ -122,12 +130,7 @@ public class PipelineFactory {
 
                 });
 
-        Set<Module> inputModulesSet = res2ModuleMap.values().stream().flatMap(m -> m.getInputModules().stream()).collect(Collectors.toSet());
-
-        List<Module> outputModulesList = res2ModuleMap.values().stream().collect(Collectors.toList());
-        outputModulesList.removeAll(inputModulesSet);
-
-        return outputModulesList;
+        return res2ModuleMap;
     }
 
     private static Module loadModule(@NotNull Resource moduleRes, @NotNull Resource moduleTypeRes) {
@@ -165,4 +168,7 @@ public class PipelineFactory {
     }
 
 
+    public static Module loadModulePipeline(Resource returnModuleRes) {
+        return loadAllModules(returnModuleRes.getModel()).get(returnModuleRes);
+    }
 }

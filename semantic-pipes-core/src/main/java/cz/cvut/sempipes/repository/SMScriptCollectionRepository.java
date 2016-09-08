@@ -1,5 +1,6 @@
 package cz.cvut.sempipes.repository;
 
+import cz.cvut.sempipes.manager.OntoDocManager;
 import cz.cvut.sempipes.manager.OntologyDocumentManager;
 import cz.cvut.sempipes.util.JenaPipelineUtils;
 import cz.cvut.sempipes.util.JenaUtils;
@@ -7,6 +8,8 @@ import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.Resource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.*;
@@ -18,6 +21,7 @@ import java.util.stream.Collectors;
  * Created by Miroslav Blasko on 22.7.16.
  */
 public class SMScriptCollectionRepository implements ScriptCollectionRepository {
+    private static final Logger LOG = LoggerFactory.getLogger(SMScriptCollectionRepository.class);
 
 
     private final OntologyDocumentManager ontoDocManager;

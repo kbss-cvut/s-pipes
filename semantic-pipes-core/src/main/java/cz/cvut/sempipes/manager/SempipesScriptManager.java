@@ -125,7 +125,7 @@ public class SempipesScriptManager {
         Resource functionRes = scriptsRepository.getResource(resourceUri, resourceContextUri);
 
         Resource returnModuleRes = getReturnModule(functionRes);
-        return PipelineFactory.loadPipeline(returnModuleRes);
+        return PipelineFactory.loadModulePipeline(returnModuleRes);
     }
 
 

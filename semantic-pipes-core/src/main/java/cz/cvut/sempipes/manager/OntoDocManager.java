@@ -145,6 +145,7 @@ public class OntoDocManager implements OntologyDocumentManager{
 
                         String lang = FileUtils.guessLang(file.getFileName().toString());
 
+                        LOG.debug("Loading model from file {} ...", file);
                         Model model = loadModel(file, lang);
 
                         file2Model.put(file.toString(), model);

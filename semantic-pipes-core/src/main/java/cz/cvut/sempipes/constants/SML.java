@@ -28,6 +28,7 @@ public class SML {
     public static final Property selectQuery = property("selectQuery");
     public static final Property sourceFilePath = property("sourceFilePath");
     public static final Property url = property("url");
+    public static final Property targetFilePath = property("targetFilePath");
     public static final Property baseURI = property("baseURI");
     public static final Property serialization = property("serialization");
     public static final Property ignoreImports = property("ignoreImports");
