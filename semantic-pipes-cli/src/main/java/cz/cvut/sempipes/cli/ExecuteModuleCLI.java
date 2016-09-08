@@ -62,7 +62,7 @@ public class ExecuteModuleCLI {
 
 
 
-//    @Option(name = "-o", aliases = "--output-data-file", metaVar = "OUTPUT_FILE", usage = "Output data file")
+    @Option(name = "-o", aliases = "--output-data-file", metaVar = "OUTPUT_FILE", usage = "Output data file")
     private File outputRdfFile;
 //    @Option(name = "-b", aliases = "--input-binding-file", metaVar = "INPUT_BINDING_FILE", usage = "Input binding file")
     private File inputBindingFile;
@@ -120,8 +120,11 @@ public class ExecuteModuleCLI {
         SempipesScriptManager scriptManager = createSempipesScriptManager();
 
         // ----- load input bindings
-        final VariablesBinding inputVariablesBinding = new VariablesBinding(transform(asArgs.inputBindingParametersMap));
-        LOG.info("Loaded input variable binding ={}", inputVariablesBinding);
+        VariablesBinding inputVariablesBinding = new VariablesBinding();
+        if (asArgs.inputBindingParametersMap != null) {
+            inputVariablesBinding = new VariablesBinding(transform(asArgs.inputBindingParametersMap));
+            LOG.info("Loaded input variable binding ={}", inputVariablesBinding);
+        }
 
         // ----- create execution context
         ExecutionContext inputExecutionContext = ExecutionContextFactory.createContext(inputDataModel, inputVariablesBinding);
@@ -137,7 +140,7 @@ public class ExecuteModuleCLI {
         ExecutionContext outputExecutionContext = engine.executePipeline(module, inputExecutionContext);
 
         LOG.info("Processing successfully finished.");
-        outputExecutionContext.getDefaultModel().write(System.out);
+       // outputExecutionContext.getDefaultModel().write(System.out);
 
 
 //        Model inputBindingModel = null;
@@ -173,12 +176,12 @@ public class ExecuteModuleCLI {
 //
 //        //TODO return output binding
 //
-//        // return output data
-//        if (asArgs.outputRdfFile != null) {
-//            outputExecutionContext.getDefaultModel().write(new FileOutputStream(asArgs.outputRdfFile), FileUtils.langTurtle);
-//        } else {
-//            outputExecutionContext.getDefaultModel().write(System.out, FileUtils.langTurtle);
-//        }
+        // return output data
+        if (asArgs.outputRdfFile != null) {
+            outputExecutionContext.getDefaultModel().write(new FileOutputStream(asArgs.outputRdfFile), FileUtils.langTurtle);
+        } else {
+            outputExecutionContext.getDefaultModel().write(System.out, FileUtils.langTurtle);
+        }
 
         return;
     }
