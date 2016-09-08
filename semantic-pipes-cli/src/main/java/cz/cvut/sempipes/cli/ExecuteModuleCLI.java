@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import cz.cvut.kbss.util.CmdLineUtils;
 import cz.cvut.sempipes.constants.AppConstants;
+import cz.cvut.sempipes.constants.SM;
 import cz.cvut.sempipes.engine.*;
 import cz.cvut.sempipes.manager.OntoDocManager;
 import cz.cvut.sempipes.manager.OntologyDocumentManager;
@@ -76,6 +77,9 @@ public class ExecuteModuleCLI {
 //    @Option(name = "-r", aliases = "--module-resource-uri", metaVar = "CONFIG_RESOURCE_URI", usage = "RDF configuration uri")
     private String configResourceUri;
 
+    @Option(name = "-f", aliases = "--execute-only-one-function", usage = "Execute only one function (TEMPORARY)")
+    private boolean isExecuteOnlyOneFunction;
+
 
     @Option(name = "-i", aliases = "--input-data-from-stdin", usage = "Input rdf is taken from also from std-in")
     private boolean isInputDataFromStdIn = false;
@@ -117,7 +121,10 @@ public class ExecuteModuleCLI {
 
         // ----- load modules and functions
         LOG.debug("Loading  scripts ...");
-        SempipesScriptManager scriptManager = createSempipesScriptManager();
+        SempipesScriptManager scriptManager = null;
+        if (! asArgs.isExecuteOnlyOneFunction) { // TODO remove
+            scriptManager = createSempipesScriptManager();
+        }
 
         // ----- load input bindings
         VariablesBinding inputVariablesBinding = new VariablesBinding();
@@ -131,8 +138,12 @@ public class ExecuteModuleCLI {
 
         // ----- execute pipeline
         ExecutionEngine engine = ExecutionEngineFactory.createEngine();
-        Module module = scriptManager.loadFunction(asArgs.executionTarget);
-
+        Module module = null;
+        if (! asArgs.isExecuteOnlyOneFunction) {
+            module = scriptManager.loadFunction(asArgs.executionTarget);
+        } else {
+            module =  PipelineFactory.loadModulePipeline(inputDataModel.listObjectsOfProperty(SM.returnModule).next().asResource());
+        }
 
         if ( module == null ) {
             throw new RuntimeException("Cannot load module/function with id=" + asArgs.executionTarget);
