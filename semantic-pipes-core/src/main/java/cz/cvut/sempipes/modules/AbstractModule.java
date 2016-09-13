@@ -149,17 +149,32 @@ public abstract class AbstractModule implements Module {
 
 
     private void checkOutputConstraints() {
+        Model defaultModel = outputContext.getDefaultModel();
 
+        QuerySolution bindings = outputContext.getVariablesBinding().asQuerySolution();
+
+        if (! outputConstraintQueries.isEmpty()) {
+            LOG.debug("Validating module's output constraints ...");
+            checkConstraints(defaultModel, bindings, outputConstraintQueries);
+        }
     }
 
     private void checkInputConstraints() {
         Model defaultModel = executionContext.getDefaultModel();
 
         QuerySolution bindings = executionContext.getVariablesBinding().asQuerySolution();
-        Model mergedModel = ModelFactory.createDefaultModel();
+
+        if (! inputConstraintQueries.isEmpty()) {
+            LOG.debug("Validating module's input constraints ...");
+            checkConstraints(defaultModel, bindings, inputConstraintQueries);
+        }
+    }
+
+
+    private void checkConstraints(Model model, QuerySolution bindings, List<Resource> constraintQueries) {
 
         //      set up variable bindings
-        for (Resource queryRes : inputConstraintQueries) {
+        for (Resource queryRes : constraintQueries) {
             org.topbraid.spin.model.Query spinQuery = SPINFactory.asQuery(queryRes);
 
             // TODO template call
@@ -169,7 +184,7 @@ public abstract class AbstractModule implements Module {
 
             Query query = ARQFactory.get().createQuery(spinQuery);
 
-            QueryExecution execution = QueryExecutionFactory.create(query, defaultModel, bindings);
+            QueryExecution execution = QueryExecutionFactory.create(query, model, bindings);
 
             boolean constaintViolated = false;
             String additionalInfo = null;
@@ -185,13 +200,16 @@ public abstract class AbstractModule implements Module {
             }
 
             if (constaintViolated) {
-                LOG.error("Validation of input constraints failed -- {}.", getQueryComment(spinQuery));
+                LOG.error("Validation of constraint failed -- {}.", getQueryComment(spinQuery));
                 LOG.error("Failed validation constraint -- {}", spinQuery.toString());
                 if (additionalInfo != null) {
                     LOG.error("Failed validation constraint info : ", additionalInfo);
                 }
+            } else {
+                LOG.debug("Constraint validated --  {}.", getQueryComment(spinQuery));
             }
         }
+
     }
 
     private String getQueryComment(org.topbraid.spin.model.Query query) {
