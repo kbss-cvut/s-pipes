@@ -1,6 +1,7 @@
 package cz.cvut.sempipes.modules;
 
 import cz.cvut.sempipes.constants.AppConstants;
+import cz.cvut.sempipes.constants.KBSS_MODULE;
 import cz.cvut.sempipes.constants.SML;
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
@@ -106,6 +107,11 @@ public class TarqlModule extends AbstractModule {
     }
 
     @Override
+    public String getTypeURI() {
+        return KBSS_MODULE.tarql.getURI();
+    }
+
+    @Override
     public void loadConfiguration() {
         // TODO load default values from configuration
 
@@ -121,7 +127,7 @@ public class TarqlModule extends AbstractModule {
         //TODO default value must be taken from template definition
         isReplace = this.getPropertyValue(SML.replace, false);
 
-        sourceFilePath = this.getStringPropertyValue(SML.sourceFilePath);
+        sourceFilePath = getEffectiveValue(SML.sourceFilePath).asLiteral().toString(); // TODO should be Path
     }
 
 

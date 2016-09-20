@@ -18,6 +18,11 @@ public class ExternalModule extends AbstractModule {
     }
 
     @Override
+    public String getTypeURI() {
+        return "http://external-module.com";
+    }
+
+    @Override
     public void loadConfiguration() {
         // load external module path
         // load config

@@ -151,7 +151,12 @@
             <version>1.10.19</version>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <!-- TODO used only to load modules from classpath, replace it by OSGI/Jigsaw -->
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.10</version>
+        </dependency>
 
         <dependency>
             <groupId>org.apache.jena</groupId>
@@ -171,13 +176,32 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.5</version>
+            <version>2.4</version>
         </dependency>
         <dependency>
             <groupId>com.intellij</groupId>
             <artifactId>annotations</artifactId>
             <version>9.0.4</version>
         </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.springframework</groupId>-->
+            <!--<artifactId>spring-beans</artifactId>-->
+            <!--<version>4.1.5.RELEASE</version>-->
+            <!--<scope>test</scope>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.springframework</groupId>-->
+            <!--<artifactId>spring-web</artifactId>-->
+            <!--<version>4.1.5.RELEASE</version>-->
+            <!--<scope>test</scope>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.springframework</groupId>-->
+            <!--<artifactId>spring-test</artifactId>-->
+            <!--<version>4.1.5.RELEASE</version>-->
+            <!--<scope>test</scope>-->
+        <!--</dependency>-->
+
     </dependencies>
 
     <!--<profiles>-->
@@ -374,6 +398,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>

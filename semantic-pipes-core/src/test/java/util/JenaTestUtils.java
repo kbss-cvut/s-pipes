@@ -1,4 +1,4 @@
-package cz.cvut.sempipes;
+package util;
 
 import org.apache.jena.ontology.OntDocumentManager;
 import org.apache.jena.ontology.OntModel;

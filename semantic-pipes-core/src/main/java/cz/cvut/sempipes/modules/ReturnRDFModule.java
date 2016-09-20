@@ -18,6 +18,11 @@ public class ReturnRDFModule extends AbstractModule {
     }
 
     @Override
+    public String getTypeURI() {
+        return SML.ReturnRDF.getURI();
+    }
+
+    @Override
     public void loadConfiguration() {
         serialization = getPropertyValue(SML.serialization).asResource();
         baseURI = getStringPropertyValue(SML.baseURI);

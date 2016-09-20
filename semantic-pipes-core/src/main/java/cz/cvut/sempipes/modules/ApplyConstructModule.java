@@ -137,6 +137,11 @@ public class ApplyConstructModule extends AbstractModule {
 
 
     @Override
+    public String getTypeURI() {
+        return SML.ApplyConstruct.getURI();
+    }
+
+    @Override
     public void loadConfiguration() {
 
         // TODO sparql expressions

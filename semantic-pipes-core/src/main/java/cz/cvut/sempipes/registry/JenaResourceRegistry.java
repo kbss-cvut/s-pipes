@@ -123,7 +123,7 @@ public class JenaResourceRegistry implements  ResourceRegistry {
 
 
     private Set<String> getLocalName2Contexts(String localEntityId) {
-        return local2fullNamesMap.get(localEntityId).stream()
+        return local2fullNamesMap.getOrDefault(localEntityId, new HashSet<>()).stream()
                 .flatMap(fullId -> fullName2ContextsMap.get(fullId).stream())
                 .collect(Collectors.toSet());
     }

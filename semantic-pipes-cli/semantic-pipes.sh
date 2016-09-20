@@ -7,8 +7,8 @@
 #
 
 PRG=$0
-DEBUG=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
-#DEBUG=
+#DEBUG=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+DEBUG=
 
 while [ -h "$PRG" ]; do
     ls=`ls -ld "$PRG"`

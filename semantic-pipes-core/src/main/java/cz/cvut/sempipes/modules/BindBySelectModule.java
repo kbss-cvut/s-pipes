@@ -46,6 +46,11 @@ public class BindBySelectModule extends AbstractModule  {
     }
 
     @Override
+    public String getTypeURI() {
+        return SML.BindBySelect.getURI();
+    }
+
+    @Override
     public void loadConfiguration() {
         selectQuery = getPropertyValue(SML.selectQuery).asResource().as(Select.class);
     }

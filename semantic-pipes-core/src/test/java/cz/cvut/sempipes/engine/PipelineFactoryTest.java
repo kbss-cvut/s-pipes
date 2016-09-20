@@ -1,6 +1,6 @@
 package cz.cvut.sempipes.engine;
 
-import cz.cvut.sempipes.JenaTestUtils;
+import util.JenaTestUtils;
 import cz.cvut.sempipes.modules.Module;
 import org.apache.jena.ontology.OntModel;
 import org.junit.Test;

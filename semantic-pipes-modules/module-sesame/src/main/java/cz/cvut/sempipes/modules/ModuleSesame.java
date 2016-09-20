@@ -29,12 +29,6 @@ public class ModuleSesame extends AbstractModule {
         return ResourceFactory.createProperty(KBSS_MODULE.deploy.toString() + "/" + name);
     }
 
-    static {
-        LOG.info("Registering {} -> {}", KBSS_MODULE.deploy, ModuleSesame.class);
-        PipelineFactory.registerModuleType(KBSS_MODULE.deploy, ModuleSesame.class);
-    }
-
-
     /**
      * URL of the Sesame server
      */
@@ -102,6 +96,11 @@ public class ModuleSesame extends AbstractModule {
         }
 
         return ExecutionContextFactory.createContext(executionContext.getDefaultModel());
+    }
+
+    @Override
+    public String getTypeURI() {
+        return KBSS_MODULE.deploy.getURI();
     }
 
     @Override

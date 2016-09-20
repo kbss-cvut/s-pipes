@@ -8,14 +8,20 @@ import cz.cvut.sempipes.util.JenaPipelineUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.RDF;
 import org.jetbrains.annotations.NotNull;
+import org.reflections.Reflections;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.lang.reflect.Modifier;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -32,24 +38,34 @@ public class PipelineFactory {
 
     //TODO move to ModuleRegistry
     static {
-        moduleTypes.put(SML.ApplyConstruct, ApplyConstructModule.class);
-        moduleTypes.put(SML.ExportToRDFFile, ExportToRDFFileModule.class);
-        moduleTypes.put(SML.ImportFileFromURL, ImportFileFromURLModule.class);
-        moduleTypes.put(SML.BindWithConstant, BindWithConstantModule.class);
-        moduleTypes.put(SML.BindBySelect, BindBySelectModule.class);
-        moduleTypes.put(SML.Merge, MergeModule.class);
-        moduleTypes.put(SML.ReturnRDF, ReturnRDFModule.class);
-
-
-        //kbss modules
-        moduleTypes.put(KBSS_MODULE.tarql, TarqlModule.class);
-        moduleTypes.put(KBSS_MODULE.form_generator, FormGeneratorModule.class);
-
+        registerModuleTypesOnClassPath();
     }
 
 
     public static void registerModuleType(Resource moduleType, Class<? extends Module> moduleClass) {
+        LOG.info("Registering url to module: {} -> {}", moduleType, moduleClass);
         moduleTypes.put(moduleType, moduleClass);
+    }
+
+    public static void registerModuleTypesOnClassPath() {
+
+        Reflections reflections = new Reflections(
+                new ConfigurationBuilder()
+                        .setUrls(ClasspathHelper.forPackage("cz.cvut.sempipes.modules"))
+                        .setScanners(new SubTypesScanner())
+        );
+
+        List<Class<? extends Module>> moduleClasses = reflections.getSubTypesOf(Module.class).stream().filter(
+                c -> !Modifier.isAbstract(c.getModifiers())
+        ).collect(Collectors.toList());
+
+        moduleClasses.forEach(
+                mClass -> {
+                    String uri = instantiateModule(mClass).getTypeURI();
+                    registerModuleType(ResourceFactory.createResource(uri), mClass);
+                }
+        );
+
     }
 
 
@@ -152,6 +168,14 @@ public class PipelineFactory {
         }
 
         return module;
+    }
+
+    public static Module instantiateModule(Class<? extends Module> moduleClass) {
+        try {
+            return moduleClass.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new IllegalArgumentException("Could not instantiate module of type " +  moduleClass);
+        }
     }
 
     public static Module loadModule(@NotNull Path configFilePath, @NotNull String moduleResourceUri) {

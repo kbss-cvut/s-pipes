@@ -31,6 +31,11 @@ public class BindWithConstantModule extends AbstractModule  {
     }
 
     @Override
+    public String getTypeURI() {
+        return SML.BindWithConstant.getURI();
+    }
+
+    @Override
     public void loadConfiguration() {
         value = getEffectiveValue(SML.value);
         outputVariable = getStringPropertyValue(SM.outputVariable);

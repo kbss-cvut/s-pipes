@@ -13,6 +13,11 @@
     <name>Semantic Pipes Modules - TARQL</name>
     <packaging>jar</packaging>
 
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>cz.cvut.kbss</groupId>

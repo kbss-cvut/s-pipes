@@ -17,6 +17,8 @@ public interface Module {
     // TODO support for sparql expression
     // TODO sm:body ?
 
+    String getTypeURI();
+
     String getLabel();
 
     void setInputContext(ExecutionContext context);

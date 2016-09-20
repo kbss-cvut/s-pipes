@@ -1,13 +1,11 @@
 package cz.cvut.sempipes.repository;
 
-import cz.cvut.sempipes.JenaTestUtils;
-import cz.cvut.sempipes.TestConstants;
+import util.JenaTestUtils;
 import cz.cvut.sempipes.manager.OntologyDocumentManager;
 import cz.cvut.sempipes.util.JenaUtils;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.RDF;
-import org.hamcrest.CoreMatchers;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;

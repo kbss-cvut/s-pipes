@@ -106,6 +106,8 @@ public class EccairsService {
                 LOG.info("Running eccairs service module");
                 module = PipelineFactory.loadPipeline(mergedModel.getResource(ConfigProperies.get("eccairsServiceModule")));
                 break;
+            default:
+                throw new RuntimeException("Service id '" + id + "' not found");
         }
 
 

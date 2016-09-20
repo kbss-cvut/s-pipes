@@ -8,14 +8,18 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
  * Created by Miroslav Blasko on 26.5.16.
  */
 public class ExecUtils {
+    private static final Logger LOG = LoggerFactory.getLogger(ExecUtils.class);
+
     public static File stream2file(InputStream in) throws IOException {
-        File tempFile = Files.createTempFile("formgen-", ".txt").toFile();
+        File tempFile = Files.createTempFile("execution-", ".txt").toFile();
 
         //tempFile.deleteOnExit();
         System.err.println("Using temporary file for input stream " + tempFile.getAbsolutePath());
@@ -28,12 +32,12 @@ public class ExecUtils {
     public static File createTempFile() {
         File tempFile = null;
         try {
-            tempFile = Files.createTempFile("formgen-", ".txt").toFile();
+            tempFile = Files.createTempFile("execution-", ".txt").toFile();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        System.err.println("Using temporary file for output stream " + tempFile.getAbsolutePath());
+        LOG.info("Using temporary file for output stream " + tempFile.getAbsolutePath());
         return tempFile;
     }
 
@@ -68,7 +72,7 @@ public class ExecUtils {
     //TODO remove
     public static InputStream execProgramWithoutExeption(String[] programCall, InputStream inputStream) {
         String programCallStr = "\"" + Arrays.asList(programCall).stream().collect(Collectors.joining(" ")) + "\"" ;
-        System.err.println("Executing -- " + programCallStr);
+        LOG.info("Executing -- " + programCallStr);
         try {
             return execProgram(programCall, inputStream);
         } catch (IOException e) {

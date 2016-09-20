@@ -15,6 +15,11 @@ public class FormGeneratorModule extends AbstractModule {
     }
 
     @Override
+    public String getTypeURI() {
+        return "http://form-generator-module";
+    }
+
+    @Override
     public void loadConfiguration() {
 
     }

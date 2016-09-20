@@ -1,5 +1,6 @@
 package cz.cvut.sempipes.modules;
 
+import cz.cvut.sempipes.constants.SML;
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
 
@@ -11,6 +12,11 @@ public class MergeModule extends AbstractModule  {
     @Override
     public ExecutionContext executeSelf() {
         return ExecutionContextFactory.createContext(executionContext.getDefaultModel());
+    }
+
+    @Override
+    public String getTypeURI() {
+        return SML.Merge.getURI();
     }
 
     @Override
