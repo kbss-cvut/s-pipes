@@ -78,6 +78,11 @@ public class ModuleNLP extends AbstractModule {
     }
 
     @Override
+    public String getTypeURI() {
+        return KBSS_MODULE.nlp.getURI();
+    }
+
+    @Override
     public void loadConfiguration() {
     }
 

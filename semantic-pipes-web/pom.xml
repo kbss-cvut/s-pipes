@@ -48,24 +48,33 @@
     </repositories>
 
     <dependencies>
-        <dependency>
-            <groupId>cz.cvut.kbss</groupId>
-            <artifactId>semantic-pipes-core</artifactId>
-            <version>0.1.0</version>
-        </dependency>
-
+        <!-- Semantic pipes modules -->
         <dependency>
             <groupId>cz.cvut.kbss</groupId>
             <artifactId>semantic-pipes-modules-identity</artifactId>
             <version>${project.parent.version}</version>
-            <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>cz.cvut.kbss</groupId>
+            <artifactId>semantic-pipes-modules-nlp</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
         <dependency>
             <groupId>cz.cvut.kbss</groupId>
             <artifactId>semantic-pipes-modules-sesame</artifactId>
             <version>${project.parent.version}</version>
-            <!-- TODO remove after EccairsService removal-->
+        </dependency>
+        <dependency>
+            <groupId>cz.cvut.kbss</groupId>
+            <artifactId>semantic-pipes-modules-tarql</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- Semantic pipes core -->
+        <dependency>
+            <groupId>cz.cvut.kbss</groupId>
+            <artifactId>semantic-pipes-core</artifactId>
+            <version>0.1.0</version>
         </dependency>
 
         <!-- Logging -->

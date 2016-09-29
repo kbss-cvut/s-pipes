@@ -21,7 +21,7 @@ public class KBSS_MODULE {
     { return ResourceFactory.createProperty( uri, local ); }
 
     public static final Resource tarql = resource("tarql");
-    public static final Resource form_generator = resource("form-generator");
+    public static final Resource semform_generator = resource("semform-generator");
     public static final Resource deploy = resource("deploy");
     public static final Resource identity = resource("identity");
     public static final Resource nlp = resource("nlp");

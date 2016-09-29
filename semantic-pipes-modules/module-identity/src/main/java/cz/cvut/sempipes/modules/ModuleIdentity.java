@@ -21,6 +21,11 @@ public class ModuleIdentity extends AbstractModule {
     }
 
     @Override
+    public String getTypeURI() {
+        return KBSS_MODULE.identity.getURI();
+    }
+
+    @Override
     public void loadConfiguration() {
     }
 }

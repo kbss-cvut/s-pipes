@@ -1,5 +1,6 @@
 package cz.cvut.sempipes.modules;
 
+import cz.cvut.sempipes.constants.KBSS_MODULE;
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
 import org.apache.commons.io.FileUtils;
@@ -79,6 +80,11 @@ public class ModuleTarql extends AbstractModule {
             e.printStackTrace();
         }
         return ExecutionContextFactory.createContext(model);
+    }
+
+    @Override
+    public String getTypeURI() {
+        return KBSS_MODULE.tarql.getURI() + "-XXX-2";
     }
 
     @Override
