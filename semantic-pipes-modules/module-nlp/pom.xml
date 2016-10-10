@@ -22,11 +22,11 @@
             <groupId>cz.cvut.kbss</groupId>
             <artifactId>semantic-pipes-core</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.ocpsoft.prettytime</groupId>
-            <artifactId>prettytime-nlp</artifactId>
-            <version>4.0.1.Final</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.ocpsoft.prettytime</groupId>-->
+            <!--<artifactId>prettytime-nlp</artifactId>-->
+            <!--<version>4.0.1.Final</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

@@ -10,7 +10,6 @@ import static org.junit.Assert.*;
 public class ModuleSUTimeTest {
     @Test
     public void loadConfiguration() throws Exception {
-
     }
 
     @Test

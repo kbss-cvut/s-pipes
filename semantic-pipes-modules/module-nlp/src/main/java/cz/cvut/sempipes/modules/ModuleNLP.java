@@ -6,7 +6,7 @@ import cz.cvut.sempipes.engine.ExecutionContextFactory;
 import cz.cvut.sempipes.engine.PipelineFactory;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.util.iterator.ExtendedIterator;
-import org.ocpsoft.prettytime.nlp.PrettyTimeParser;
+//import org.ocpsoft.prettytime.nlp.PrettyTimeParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,12 +20,6 @@ public class ModuleNLP extends AbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(ModuleNLP.class);
     final Property HAS_DATE = ResourceFactory.createProperty("http://kbss/has-date");
-
-
-    static {
-        LOG.info("Registering {} -> {}", KBSS_MODULE.nlp, ModuleNLP.class);
-        PipelineFactory.registerModuleType(KBSS_MODULE.nlp, ModuleNLP.class);
-    }
 
     // TODO  ?! does not work with blank-nodes
     @Override
@@ -47,28 +41,28 @@ public class ModuleNLP extends AbstractModule {
                 }
         );
 
-        while (stmtIt.hasNext()) {
-            Statement st = stmtIt.next();
-
-            String lexicalForm = st.getObject().asLiteral().getLexicalForm();
-
-            List<Date> parsedDates = new PrettyTimeParser().parse(lexicalForm);
-
-            if (! parsedDates.isEmpty()) {
-                System.out.println("Lexical form: " + lexicalForm);
-            }
-
-            ReifiedStatement reification = st.createReifiedStatement();
-
-            parsedDates.forEach(
-                    date -> {
-                        Literal dateNode = getDateTimeRdfNode(date, reification.getModel());
-                        System.out.println("\t date: " + dateNode);
-
-                        reification.addProperty(HAS_DATE, dateNode);
-                    }
-            );
-        }
+//        while (stmtIt.hasNext()) {
+//            Statement st = stmtIt.next();
+//
+//            String lexicalForm = st.getObject().asLiteral().getLexicalForm();
+//
+//            List<Date> parsedDates = new PrettyTimeParser().parse(lexicalForm);
+//
+//            if (! parsedDates.isEmpty()) {
+//                System.out.println("Lexical form: " + lexicalForm);
+//            }
+//
+//            ReifiedStatement reification = st.createReifiedStatement();
+//
+//            parsedDates.forEach(
+//                    date -> {
+//                        Literal dateNode = getDateTimeRdfNode(date, reification.getModel());
+//                        System.out.println("\t date: " + dateNode);
+//
+//                        reification.addProperty(HAS_DATE, dateNode);
+//                    }
+//            );
+//        }
 
         // collect reifications
 

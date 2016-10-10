@@ -25,6 +25,7 @@ public class KBSS_MODULE {
     public static final Resource deploy = resource("deploy");
     public static final Resource identity = resource("identity");
     public static final Resource nlp = resource("nlp");
+    public static final Resource su_time = resource("su-time");
     public static final Resource sparqlRules = resource("sparqlRules");
 
 
