@@ -1,0 +1,1 @@
+{ ruleType: "time", pattern: /[0-9]{1,4}.?yyyy' Sb'/ }
