@@ -8,8 +8,7 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.util.FileUtils;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.ocpsoft.prettytime.nlp.PrettyTimeParser;
-import org.ocpsoft.prettytime.nlp.parse.DateGroup;
+
 
 import java.util.Date;
 import java.util.List;
