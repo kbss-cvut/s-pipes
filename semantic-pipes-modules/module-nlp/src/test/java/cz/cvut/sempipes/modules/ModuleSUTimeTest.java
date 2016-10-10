@@ -29,8 +29,12 @@ public class ModuleSUTimeTest {
     @Test
     public void simpleTest() throws Exception {
         //String ss = "od 08:00 do 16:00 hodin";
-        String ss = "Three interesting dates are 18 Feb 1997, the 20th of july and 4 days from today.";
+        //String ss = "I should be in school tomorrow by 9 o'clock.";
+        //String ss = "N 264/2008";
+        String ss = "č. 130/2008 Sb.";
+        //String ss = "č 130/2008 Sb.";
         Properties props = new Properties();
+        props.setProperty("sutime.rules", "sutime/defs.txt, sutime/defs.sutime.txt, sutime/english.holidays.sutime.txt, sutime/english.sutime.txt");
         AnnotationPipeline pipeline = new AnnotationPipeline();
         pipeline.addAnnotator(new TokenizerAnnotator(false));
         pipeline.addAnnotator(new WordsToSentencesAnnotator(false));
