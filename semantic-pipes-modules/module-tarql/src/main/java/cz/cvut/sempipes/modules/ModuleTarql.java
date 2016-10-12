@@ -3,7 +3,6 @@ package cz.cvut.sempipes.modules;
 import cz.cvut.sempipes.constants.KBSS_MODULE;
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
-import org.apache.commons.io.FileUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
@@ -20,11 +19,10 @@ public class ModuleTarql extends AbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(ModuleTarql.class);
 
-    private static final String BASE_IRI = "http://onto.fel.cvut.cz/ontologies/lib/module/";
-    private static final String MODULE_IRI = BASE_IRI + "tarql";
+    private static final String TYPE_URI = KBSS_MODULE.getURI() + "tarql" + "-XXX-2";
 
     private static Property getParameter(final String name) {
-        return ResourceFactory.createProperty(MODULE_IRI + "/" + name);
+        return ResourceFactory.createProperty(TYPE_URI + name);
     }
 
     /**
@@ -84,7 +82,7 @@ public class ModuleTarql extends AbstractModule {
 
     @Override
     public String getTypeURI() {
-        return KBSS_MODULE.tarql.getURI() + "-XXX-2";
+        return TYPE_URI;
     }
 
     @Override

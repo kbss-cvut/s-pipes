@@ -13,7 +13,7 @@ public class SU_TIME {
     /**
      * The namespace of the vocabulary as a string
      */
-    private static final String uri = KBSS_MODULE.su_time.getURI() + "/";
+    private static final String uri = ModuleSUTime.TYPE_URI;
 
     protected static final Resource resource(String local )
     { return ResourceFactory.createResource( uri + local ); }

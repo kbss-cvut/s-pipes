@@ -3,7 +3,6 @@ package cz.cvut.sempipes.modules;
 import cz.cvut.sempipes.constants.KBSS_MODULE;
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
-import cz.cvut.sempipes.engine.PipelineFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.riot.RDFLanguages;
@@ -25,8 +24,10 @@ public class ModuleSesame extends AbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(ModuleSesame.class);
 
+    private static String TYPE_URI = KBSS_MODULE.getURI()+"deploy";
+
     private static Property getParameter(final String name) {
-        return ResourceFactory.createProperty(KBSS_MODULE.deploy.toString() + "/" + name);
+        return ResourceFactory.createProperty(TYPE_URI + "/" + name);
     }
 
     /**
@@ -100,7 +101,7 @@ public class ModuleSesame extends AbstractModule {
 
     @Override
     public String getTypeURI() {
-        return KBSS_MODULE.deploy.getURI();
+        return TYPE_URI;
     }
 
     @Override

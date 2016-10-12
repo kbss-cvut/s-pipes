@@ -11,7 +11,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <name>Semantic Pipes Commandline Interface</name>
+    <name>Semantic Pipes Interface - Commandline</name>
     <artifactId>semantic-pipes-cli</artifactId>
     <packaging>jar</packaging>
 

@@ -11,7 +11,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <name>Semantic Pipes Web Interface</name>
+    <name>Semantic Pipes Interface - Web</name>
     <artifactId>semantic-pipes-web</artifactId>
     <version>0.1.0</version>
     <packaging>war</packaging>

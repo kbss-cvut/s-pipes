@@ -108,7 +108,7 @@ public class TarqlModule extends AbstractModule {
 
     @Override
     public String getTypeURI() {
-        return KBSS_MODULE.tarql.getURI();
+        return KBSS_MODULE.getURI()+"tarql";
     }
 
     @Override

@@ -31,6 +31,8 @@ public class ModuleSUTime extends AbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(ModuleSUTime.class);
 
+    public static final String TYPE_URI = KBSS_MODULE.getURI()+"su-time";
+
     private List<Path> ruleFilePaths = new LinkedList<>();
     private String documentDate; // TODO support other formats ?
 
@@ -40,7 +42,7 @@ public class ModuleSUTime extends AbstractModule {
 
     @Override
     public String getTypeURI() {
-        return KBSS_MODULE.su_time.getURI();
+        return TYPE_URI;
     }
 
     @Override

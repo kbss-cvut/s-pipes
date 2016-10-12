@@ -85,7 +85,6 @@ public class EccairsService {
         LOG.warn("!!! temporary hack - reload model each service call (should be removed)"); //TODO !!! remove this hack
         clearEccairsModel();
         loadEccairsModel(); // TODO enable it in static part of the class
-        PipelineFactory.registerModuleType(KBSS_MODULE.deploy, ModuleSesame.class);
 
         Model mergedModel = ModelFactory.createDefaultModel();
         mergedModel.add(libsModel);
@@ -98,8 +97,6 @@ public class EccairsService {
             case "fssStudyTestForms":
             case "deploy-question-templates":
                 LOG.info("Running deploy-question-templates module");
-                LOG.info("Registering {} -> {}", KBSS_MODULE.deploy, ModuleSesame.class);
-                PipelineFactory.registerModuleType(KBSS_MODULE.deploy, ModuleSesame.class);
                 module = PipelineFactory.loadPipeline(mergedModel.getResource(ConfigProperies.get("deployQueryTemplatesModule")));
                 break;
             case "generateEccairsForms":

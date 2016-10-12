@@ -19,6 +19,7 @@ import java.util.List;
 public class ModuleNLP extends AbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(ModuleNLP.class);
+
     final Property HAS_DATE = ResourceFactory.createProperty("http://kbss/has-date");
 
     // TODO  ?! does not work with blank-nodes
@@ -73,7 +74,7 @@ public class ModuleNLP extends AbstractModule {
 
     @Override
     public String getTypeURI() {
-        return KBSS_MODULE.nlp.getURI();
+        return KBSS_MODULE.getURI()+"nlp";
     }
 
     @Override

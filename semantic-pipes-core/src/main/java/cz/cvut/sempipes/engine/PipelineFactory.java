@@ -41,8 +41,15 @@ public class PipelineFactory {
         registerModuleTypesOnClassPath();
     }
 
-
+    /**
+     * @deprecated modules are loaded automatically
+     */
+    @Deprecated
     public static void registerModuleType(Resource moduleType, Class<? extends Module> moduleClass) {
+        _registerModuleType(moduleType,moduleClass);
+    }
+
+    private static void _registerModuleType(Resource moduleType, Class<? extends Module> moduleClass) {
         LOG.info("Registering url to module: {} -> {}", moduleType, moduleClass);
         moduleTypes.put(moduleType, moduleClass);
     }
@@ -62,7 +69,7 @@ public class PipelineFactory {
         moduleClasses.forEach(
                 mClass -> {
                     String uri = instantiateModule(mClass).getTypeURI();
-                    registerModuleType(ResourceFactory.createResource(uri), mClass);
+                    _registerModuleType(ResourceFactory.createResource(uri), mClass);
                 }
         );
 

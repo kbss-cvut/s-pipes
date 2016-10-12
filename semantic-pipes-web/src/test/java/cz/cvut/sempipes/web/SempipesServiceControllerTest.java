@@ -1,10 +1,7 @@
 package cz.cvut.sempipes.web;
 
 import cz.cvut.sempipes.config.WebAppConfig;
-import cz.cvut.sempipes.constants.KBSS_MODULE;
-import cz.cvut.sempipes.engine.PipelineFactory;
 import cz.cvut.sempipes.engine.VariablesBinding;
-import cz.cvut.sempipes.modules.ModuleIdentity;
 import cz.cvut.sempipes.service.SempipesServiceController;
 import cz.cvut.sempipes.util.RDFMimeType;
 import org.apache.jena.ext.com.google.common.collect.Lists;
@@ -48,11 +45,6 @@ public class SempipesServiceControllerTest {
     protected WebApplicationContext ctx;
 
     private MockMvc mockMvc;
-
-    @BeforeClass
-    public static void setUpClass() {
-        PipelineFactory.registerModuleType(KBSS_MODULE.identity, ModuleIdentity.class);
-    }
 
     @Before
     public void setUp() {
