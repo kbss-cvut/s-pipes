@@ -46,22 +46,7 @@
         <!-- Semantic pipes modules -->
         <dependency>
             <groupId>cz.cvut.kbss</groupId>
-            <artifactId>semantic-pipes-modules-identity</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>cz.cvut.kbss</groupId>
-            <artifactId>semantic-pipes-modules-nlp</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>cz.cvut.kbss</groupId>
-            <artifactId>semantic-pipes-modules-sesame</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>cz.cvut.kbss</groupId>
-            <artifactId>semantic-pipes-modules-tarql</artifactId>
+            <artifactId>semantic-pipes-modules-registry</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 
