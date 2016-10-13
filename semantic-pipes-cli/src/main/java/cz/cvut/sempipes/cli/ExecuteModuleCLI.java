@@ -111,20 +111,17 @@ public class ExecuteModuleCLI {
         if (asArgs.inputDataFiles != null) {
             for (File idFile : asArgs.inputDataFiles) {
                 LOG.debug("Loading input data from file {} ...", idFile);
-                inputDataModel.read(new FileInputStream(idFile), null);
+                inputDataModel.read(new FileInputStream(idFile), null, FileUtils.langTurtle);
             }
         }
         if (asArgs.isInputDataFromStdIn) {
             LOG.info("Loading input data from std-in ...");
-            inputDataModel.read(System.in, null);
+            inputDataModel.read(System.in, null, FileUtils.langTurtle);
         }
 
         // ----- load modules and functions
         LOG.debug("Loading  scripts ...");
-        SempipesScriptManager scriptManager = null;
-        if (! asArgs.isExecuteOnlyOneFunction) { // TODO remove
-            scriptManager = createSempipesScriptManager();
-        }
+        SempipesScriptManager scriptManager = scriptManager = createSempipesScriptManager();
 
         // ----- load input bindings
         VariablesBinding inputVariablesBinding = new VariablesBinding();
@@ -138,12 +135,8 @@ public class ExecuteModuleCLI {
 
         // ----- execute pipeline
         ExecutionEngine engine = ExecutionEngineFactory.createEngine();
-        Module module = null;
-        if (! asArgs.isExecuteOnlyOneFunction) {
-            module = scriptManager.loadFunction(asArgs.executionTarget);
-        } else {
-            module =  PipelineFactory.loadModulePipeline(inputDataModel.listObjectsOfProperty(SM.returnModule).next().asResource());
-        }
+        Module module = scriptManager.loadFunction(asArgs.executionTarget);
+//          module =  PipelineFactory.loadModulePipeline(inputDataModel.listObjectsOfProperty(SM.returnModule).next().asResource());
 
         if ( module == null ) {
             throw new RuntimeException("Cannot load module/function with id=" + asArgs.executionTarget);
@@ -152,7 +145,6 @@ public class ExecuteModuleCLI {
 
         LOG.info("Processing successfully finished.");
        // outputExecutionContext.getDefaultModel().write(System.out);
-
 
 //        Model inputBindingModel = null;
 //
