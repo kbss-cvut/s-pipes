@@ -25,9 +25,10 @@ public class ModuleSesame extends AbstractModule {
     private static final Logger LOG = LoggerFactory.getLogger(ModuleSesame.class);
 
     private static String TYPE_URI = KBSS_MODULE.getURI()+"deploy";
+    private static String PROPERTY_PREFIX_URI = KBSS_MODULE.getURI()+"sesame";
 
     private static Property getParameter(final String name) {
-        return ResourceFactory.createProperty(TYPE_URI + "/" + name);
+        return ResourceFactory.createProperty(PROPERTY_PREFIX_URI + "/" + name);
     }
 
     /**
