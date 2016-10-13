@@ -106,9 +106,9 @@ public class ModuleSesame extends AbstractModule {
 
     @Override
     public void loadConfiguration() {
-        sesameServerURL = this.getStringPropertyValue(P_SESAME_SERVER_URL);
-        sesameRepositoryName = this.getStringPropertyValue(P_SESAME_REPOSITORY_NAME);
-        sesameContextIRI = this.getStringPropertyValue(P_SESAME_CONTEXT_IRI);
+        sesameServerURL = getEffectiveValue(P_SESAME_SERVER_URL).asLiteral().getString();
+        sesameRepositoryName = getEffectiveValue(P_SESAME_REPOSITORY_NAME).asLiteral().getString();
+        sesameContextIRI = getEffectiveValue(P_SESAME_CONTEXT_IRI).asLiteral().getString();
         isReplaceContext = this.getPropertyValue(P_IS_REPLACE_CONTEXT_IRI, false);
     }
 }
