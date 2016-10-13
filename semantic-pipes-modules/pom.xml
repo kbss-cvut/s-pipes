@@ -19,6 +19,7 @@
         <module>module-tarql</module>
         <module>module-identity</module>
         <module>module-nlp</module>
+        <module>module-dataset-discovery</module>
     </modules>
 
     <dependencyManagement>

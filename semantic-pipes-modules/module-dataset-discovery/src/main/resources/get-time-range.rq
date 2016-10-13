@@ -1,0 +1,12 @@
+PREFIX spo-sum-desc:  <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/>
+PREFIX temporal-desc: <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/temporal/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?g (min(?o) as ?min) (max(?o) as ?max)
+WHERE {
+    GRAPH ?g {
+        ?s temporal-desc:hasDate ?o .
+    } .
+}
+GROUP BY ?g
+HAVING ( ?min < ?date^^xsd:date && ?date^^xsd:date < ?max )

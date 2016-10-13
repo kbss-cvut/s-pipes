@@ -1,0 +1,18 @@
+PREFIX spo-sum-desc:  <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/>
+PREFIX temporal-desc: <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/temporal/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+SELECT ?g
+WHERE {
+    GRAPH ?g {
+      ?st rdf:subject [a ?s];
+          rdf:predicate ?p;
+          rdf:object [a ?o]
+      FILTER(
+      	regex(str(?s),?keywords) ||
+        regex(str(?p),?keywords) ||
+        regex(str(?o),?keywords)
+      )
+    }
+} group by ?g
+limit 10
