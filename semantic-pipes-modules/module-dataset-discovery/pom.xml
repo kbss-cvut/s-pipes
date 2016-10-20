@@ -15,6 +15,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jopa-maven-plugin.version>0.7.11</jopa-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -28,4 +29,29 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>cz.cvut.kbss.jopa</groupId>
+                <artifactId>jopa-maven-plugin</artifactId>
+                <version>0.8.6</version>
+                <configuration>
+                    <package>cz.cvut.sempipes.modules.datasetdiscovery.model.generated</package>
+                    <output-directory>${project.basedir}/src/main/java/</output-directory>
+                    <ontology-iri>http://onto.fel.cvut.cz/ontologies/dataset-descriptor</ontology-iri>
+                    <mapping-file>${project.basedir}/src/main/resources/mapping</mapping-file>
+                    <vocabulary-only>true</vocabulary-only>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>owl2java-transform</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

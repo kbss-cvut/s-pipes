@@ -2,9 +2,10 @@ package cz.cvut.sempipes.modules;
 
 import cz.cvut.sempipes.constants.KBSS_MODULE;
 import cz.cvut.sempipes.engine.ExecutionContext;
+import cz.cvut.sempipes.modules.datasetdiscovery.model.generated.Vocabulary;
+import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.query.*;
-import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.*;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
@@ -80,7 +81,21 @@ public class ModuleDatasetDiscovery extends AbstractModule {
 
             List<String> datasetIRIs1 = getDatasetsForQuery(query, endpoint);
 
-            datasetIRIs1.forEach(datasetIRI -> executionContext.getDefaultModel().add(ResourceFactory.createResource(datasetIRI), RDF.type,ResourceFactory.createResource("http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data-collection")));
+            datasetIRIs1.forEach(datasetIRI -> {
+                Resource dataset = ResourceFactory.createResource(datasetIRI);
+                Model model = executionContext.getDefaultModel();
+                Resource cDatasetSnapshot = ResourceFactory.createResource(Vocabulary.s_c_dataset_snapshot);
+                Property pWasObtainedFrom = ResourceFactory.createProperty(Vocabulary.s_p_was_obtained_from);
+                Resource iSPARQLEndpoint = ResourceFactory.createResource("http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-source/linked.opendata.cz");
+                Property pHasURL = ResourceFactory.createProperty("http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-url");
+                Literal iSPARQLEndpointURL = ResourceFactory.createStringLiteral("http://linked.opendata.cz/sparql");
+                Resource cSPARQLEndpoint = ResourceFactory.createResource(Vocabulary.s_c_sparql_endpoint);
+
+                model.add(dataset, RDF.type, cDatasetSnapshot);
+                model.add(dataset, pWasObtainedFrom, iSPARQLEndpoint);
+                model.add(iSPARQLEndpoint, RDF.type, cSPARQLEndpoint);
+                model.add(iSPARQLEndpoint, pHasURL, iSPARQLEndpointURL);
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }

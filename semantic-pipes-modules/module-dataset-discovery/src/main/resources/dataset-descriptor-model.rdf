@@ -1,0 +1,935 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/"
+     xml:base="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:swrlb="http://www.w3.org/2003/11/swrlb#"
+     xmlns:swrl="http://www.w3.org/2003/11/swrl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:dataset-descriptor="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/">
+    <owl:Ontology rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Annotation properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/GS -->
+
+    <owl:AnnotationProperty rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/GS"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.componentOf -->
+
+    <owl:ObjectProperty rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.componentOf">
+        <owl:inverseOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/componentOf"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AsymmetricProperty"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#IrreflexiveProperty"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.has-source"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.has-target"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.is-purpose-of"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.memberOf"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.subCollectionOf"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/componentOf"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-source"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-target"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/is-purpose-of"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/memberOf"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/subCollectionOf"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.constitutes -->
+
+    <owl:ObjectProperty rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.constitutes">
+        <owl:inverseOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/constitutes"/>
+        <rdfs:domain rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot"/>
+        <rdfs:range rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.describes -->
+
+    <owl:ObjectProperty rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.describes">
+        <owl:inverseOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/describes"/>
+        <rdfs:domain rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot"/>
+        <rdfs:range rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-descriptor"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.has-dataset -->
+
+    <owl:ObjectProperty rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.has-dataset">
+        <owl:inverseOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-dataset"/>
+        <rdfs:domain rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset"/>
+        <rdfs:range rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.has-item -->
+
+    <owl:ObjectProperty rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.has-item">
+        <owl:inverseOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-item"/>
+        <rdfs:domain rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data-item"/>
+        <rdfs:range rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/single-item-selector"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.has-member -->
+
+    <owl:ObjectProperty rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.has-member">
+        <rdfs:subPropertyOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.memberOf"/>
+        <owl:inverseOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-member"/>
+        <rdfs:domain rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data-item"/>
+        <rdfs:range rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-member"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.has-source -->
+
+    <owl:ObjectProperty rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.has-source">
+        <owl:inverseOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-source"/>
+        <rdfs:domain rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/source-dataset"/>
+        <rdfs:range rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.is-purpose-of"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.memberOf"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.subCollectionOf"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/componentOf"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/is-purpose-of"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/memberOf"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/subCollectionOf"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.has-sub-dataset-instance -->
+
+    <owl:ObjectProperty rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.has-sub-dataset-instance">
+        <rdfs:subPropertyOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.componentOf"/>
+        <owl:inverseOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-sub-dataset-instance"/>
+        <rdfs:domain rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot"/>
+        <rdfs:range rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-sub-dataset-instance"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.has-target -->
+
+    <owl:ObjectProperty rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.has-target">
+        <owl:inverseOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-target"/>
+        <rdfs:domain rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/target-dataset"/>
+        <rdfs:range rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.is-purpose-of"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.memberOf"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.subCollectionOf"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/componentOf"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/is-purpose-of"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/memberOf"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/subCollectionOf"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.is-part-of -->
+
+    <owl:ObjectProperty rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.is-part-of">
+        <rdfs:subPropertyOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.subCollectionOf"/>
+        <owl:inverseOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/is-part-of"/>
+        <rdfs:domain rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data"/>
+        <rdfs:range rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/is-part-of"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.is-purpose-of -->
+
+    <owl:ObjectProperty rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.is-purpose-of">
+        <owl:inverseOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/is-purpose-of"/>
+        <rdfs:domain rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-descriptor"/>
+        <rdfs:range rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/descriptor-purpose"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.memberOf"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.subCollectionOf"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/componentOf"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-source"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-target"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/memberOf"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/subCollectionOf"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.memberOf -->
+
+    <owl:ObjectProperty rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.memberOf">
+        <owl:inverseOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/memberOf"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AsymmetricProperty"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#IrreflexiveProperty"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.subCollectionOf"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/componentOf"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-source"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-target"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/is-purpose-of"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/memberOf"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/subCollectionOf"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.offers -->
+
+    <owl:ObjectProperty rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.offers">
+        <owl:inverseOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/offers"/>
+        <rdfs:domain rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset"/>
+        <rdfs:range rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-source"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.subCollectionOf -->
+
+    <owl:ObjectProperty rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.subCollectionOf">
+        <owl:inverseOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/subCollectionOf"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AsymmetricProperty"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#IrreflexiveProperty"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/componentOf"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-source"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-target"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/is-purpose-of"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/memberOf"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/subCollectionOf"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.was-obtained-from -->
+
+    <owl:ObjectProperty rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.was-obtained-from">
+        <owl:inverseOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/was-obtained-from"/>
+        <rdfs:domain rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-source"/>
+        <rdfs:range rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.was-produced-by -->
+
+    <owl:ObjectProperty rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.was-produced-by">
+        <owl:inverseOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/was-produced-by"/>
+        <rdfs:domain rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation"/>
+        <rdfs:range rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-descriptor"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/componentOf -->
+
+    <owl:ObjectProperty rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/componentOf">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AsymmetricProperty"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#IrreflexiveProperty"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-source"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-target"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/is-purpose-of"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/memberOf"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/subCollectionOf"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/constitutes -->
+
+    <owl:ObjectProperty rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/constitutes">
+        <rdfs:domain rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data"/>
+        <rdfs:range rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot"/>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">constitutes</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/describes -->
+
+    <owl:ObjectProperty rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/describes">
+        <rdfs:domain rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-descriptor"/>
+        <rdfs:range rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot"/>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">describes</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-dataset -->
+
+    <owl:ObjectProperty rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-dataset">
+        <rdfs:domain rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot"/>
+        <rdfs:range rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset"/>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">has dataset</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-item -->
+
+    <owl:ObjectProperty rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-item">
+        <rdfs:domain rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/single-item-selector"/>
+        <rdfs:range rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data-item"/>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">has item</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-member -->
+
+    <owl:ObjectProperty rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-member">
+        <rdfs:subPropertyOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/memberOf"/>
+        <rdfs:domain rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data"/>
+        <rdfs:range rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data-item"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-source -->
+
+    <owl:ObjectProperty rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-source">
+        <rdfs:domain rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation"/>
+        <rdfs:range rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/source-dataset"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/is-purpose-of"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/memberOf"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/subCollectionOf"/>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">has source</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-sub-dataset-instance -->
+
+    <owl:ObjectProperty rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-sub-dataset-instance">
+        <rdfs:subPropertyOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/componentOf"/>
+        <rdfs:domain rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot"/>
+        <rdfs:range rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-target -->
+
+    <owl:ObjectProperty rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-target">
+        <rdfs:domain rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation"/>
+        <rdfs:range rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/target-dataset"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/is-purpose-of"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/memberOf"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/subCollectionOf"/>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">has target</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/is-part-of -->
+
+    <owl:ObjectProperty rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/is-part-of">
+        <rdfs:subPropertyOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/subCollectionOf"/>
+        <rdfs:domain rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data"/>
+        <rdfs:range rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/is-purpose-of -->
+
+    <owl:ObjectProperty rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/is-purpose-of">
+        <rdfs:domain rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/descriptor-purpose"/>
+        <rdfs:range rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-descriptor"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/memberOf"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/subCollectionOf"/>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">is purpose of</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/memberOf -->
+
+    <owl:ObjectProperty rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/memberOf">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AsymmetricProperty"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#IrreflexiveProperty"/>
+        <owl:propertyDisjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/subCollectionOf"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/offers -->
+
+    <owl:ObjectProperty rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/offers">
+        <rdfs:domain rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-source"/>
+        <rdfs:range rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset"/>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">offers</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/subCollectionOf -->
+
+    <owl:ObjectProperty rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/subCollectionOf">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AsymmetricProperty"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#IrreflexiveProperty"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/was-obtained-from -->
+
+    <owl:ObjectProperty rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/was-obtained-from">
+        <rdfs:domain rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot"/>
+        <rdfs:range rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-source"/>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">was obtained from</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/was-produced-by -->
+
+    <owl:ObjectProperty rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/was-produced-by">
+        <rdfs:domain rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-descriptor"/>
+        <rdfs:range rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation"/>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">was produced by</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/class-partition -->
+
+    <owl:Class rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/class-partition">
+        <rdfs:subClassOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/entity-partition"/>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Class Partition</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data -->
+
+    <owl:Class rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-member"/>
+                        <owl:minQualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:minQualifiedCardinality>
+                        <owl:onClass rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data-item"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/is-part-of"/>
+                <owl:maxQualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxQualifiedCardinality>
+                <owl:onClass rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <owl:disjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data-item"/>
+        <owl:disjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset"/>
+        <owl:disjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot"/>
+        <owl:disjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-source"/>
+        <owl:disjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/descriptor-purpose"/>
+        <owl:disjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation"/>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Data</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data-item -->
+
+    <owl:Class rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data-item">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.has-item"/>
+                        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                        <owl:onClass rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/single-item-selector"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.has-member"/>
+                        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                        <owl:onClass rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <owl:disjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset"/>
+        <owl:disjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot"/>
+        <owl:disjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-source"/>
+        <owl:disjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/descriptor-purpose"/>
+        <owl:disjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation"/>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Data Item</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data-quality-assessment-purpose -->
+
+    <owl:Class rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data-quality-assessment-purpose">
+        <rdfs:subClassOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/descriptor-purpose"/>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Data Quality Assessment Purpose</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset -->
+
+    <owl:Class rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.offers"/>
+                        <owl:someValuesFrom rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-source"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <owl:disjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot"/>
+        <owl:disjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-source"/>
+        <owl:disjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/descriptor-purpose"/>
+        <owl:disjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation"/>
+        <rdfs:comment xml:lang="en">The notiona of a dataset is similar to the notion of a dcat:dataset. I.e. it does not necessarily denote a list of definite triples. Instead, it is a logical unit, that might evolve in time.</rdfs:comment>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Dataset</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-aggregator -->
+
+    <owl:Class rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-aggregator">
+        <rdfs:subClassOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-descriptor"/>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Dataset Aggregator</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-descriptor -->
+
+    <owl:Class rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-descriptor">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.is-purpose-of"/>
+                        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                        <owl:onClass rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/descriptor-purpose"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/describes"/>
+                        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                        <owl:onClass rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/was-produced-by"/>
+                        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                        <owl:onClass rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot"/>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Dataset Descriptor</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-selector -->
+
+    <owl:Class rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-selector">
+        <rdfs:subClassOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-descriptor"/>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Dataset Selector</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot -->
+
+    <owl:Class rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/was-obtained-from"/>
+                        <owl:someValuesFrom rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-source"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-sub-dataset-instance"/>
+                        <owl:minQualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:minQualifiedCardinality>
+                        <owl:onClass rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.constitutes"/>
+                        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                        <owl:onClass rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-dataset"/>
+                        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                        <owl:onClass rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.has-sub-dataset-instance"/>
+                <owl:maxQualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxQualifiedCardinality>
+                <owl:onClass rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <owl:disjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-source"/>
+        <owl:disjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/descriptor-purpose"/>
+        <owl:disjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation"/>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Dataset Snapshot</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-source -->
+
+    <owl:Class rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-source">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.was-obtained-from"/>
+                        <owl:someValuesFrom rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/offers"/>
+                        <owl:someValuesFrom rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <owl:disjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/descriptor-purpose"/>
+        <owl:disjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation"/>
+        <rdfs:comment xml:lang="en">As a data access technique</rdfs:comment>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Dataset Source</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/descriptor-purpose -->
+
+    <owl:Class rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/descriptor-purpose">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/is-purpose-of"/>
+                        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                        <owl:onClass rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-descriptor"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <owl:disjointWith rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation"/>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Descriptor Purpose</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/entity-partition -->
+
+    <owl:Class rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/entity-partition">
+        <rdfs:subClassOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-selector"/>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Entity Partition</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/property-partition -->
+
+    <owl:Class rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/property-partition">
+        <rdfs:subClassOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/entity-partition"/>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Property Partition</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/shared-ontology-descriptor -->
+
+    <owl:Class rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/shared-ontology-descriptor">
+        <rdfs:subClassOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-descriptor"/>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Shared Ontology Descriptor</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/single-item-selector -->
+
+    <owl:Class rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/single-item-selector">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-item"/>
+                        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                        <owl:onClass rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data-item"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-selector"/>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Single Item Selector</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/source-dataset -->
+
+    <owl:Class rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/source-dataset">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.has-source"/>
+                        <owl:someValuesFrom rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot"/>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Source Dataset</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/sparql-construct -->
+
+    <owl:Class rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/sparql-construct">
+        <rdfs:subClassOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation"/>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">SPARQL Construct</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/sparql-endpoint -->
+
+    <owl:Class rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/sparql-endpoint">
+        <rdfs:subClassOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-source"/>
+        <rdfs:label xml:lang="en">SPARQL Endpoint</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/spatial-descriptor -->
+
+    <owl:Class rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/spatial-descriptor">
+        <rdfs:subClassOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-descriptor"/>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Spatial Descriptor</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/target-dataset -->
+
+    <owl:Class rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/target-dataset">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.has-target"/>
+                        <owl:someValuesFrom rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot"/>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Target Dataset</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/temporal-descriptor -->
+
+    <owl:Class rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/temporal-descriptor">
+        <rdfs:subClassOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-descriptor"/>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Temporal Descriptor</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation -->
+
+    <owl:Class rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-source"/>
+                        <owl:someValuesFrom rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/source-dataset"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/INV.was-produced-by"/>
+                        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                        <owl:onClass rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-descriptor"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-target"/>
+                        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                        <owl:onClass rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/target-dataset"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Transformation</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://onto.fel.cvut.cz/ontologies/dataset-descriptor/vocabulary-instance -->
+
+    <owl:Class rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/vocabulary-instance">
+        <rdfs:subClassOf rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-descriptor"/>
+        <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Vocabulary Instance</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Rules
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <rdf:Description rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/y">
+        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Variable"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/x">
+        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Variable"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/z">
+        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Variable"/>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#Imp"/>
+        <swrl:body>
+            <rdf:Description>
+                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#IndividualPropertyAtom"/>
+                        <swrl:propertyPredicate rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/memberOf"/>
+                        <swrl:argument1 rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/y"/>
+                        <swrl:argument2 rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/x"/>
+                    </rdf:Description>
+                </rdf:first>
+                <rdf:rest>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                        <rdf:first>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#IndividualPropertyAtom"/>
+                                <swrl:propertyPredicate rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/subCollectionOf"/>
+                                <swrl:argument1 rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/z"/>
+                                <swrl:argument2 rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/y"/>
+                            </rdf:Description>
+                        </rdf:first>
+                        <rdf:rest>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                                <rdf:first>
+                                    <rdf:Description>
+                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DifferentIndividualsAtom"/>
+                                        <swrl:argument1 rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/x"/>
+                                        <swrl:argument2 rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/z"/>
+                                    </rdf:Description>
+                                </rdf:first>
+                                <rdf:rest>
+                                    <rdf:Description>
+                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                                        <rdf:first>
+                                            <rdf:Description>
+                                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DifferentIndividualsAtom"/>
+                                                <swrl:argument1 rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/y"/>
+                                                <swrl:argument2 rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/x"/>
+                                            </rdf:Description>
+                                        </rdf:first>
+                                        <rdf:rest>
+                                            <rdf:Description>
+                                                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                                                <rdf:first>
+                                                    <rdf:Description>
+                                                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#DifferentIndividualsAtom"/>
+                                                        <swrl:argument1 rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/y"/>
+                                                        <swrl:argument2 rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/z"/>
+                                                    </rdf:Description>
+                                                </rdf:first>
+                                                <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                                            </rdf:Description>
+                                        </rdf:rest>
+                                    </rdf:Description>
+                                </rdf:rest>
+                            </rdf:Description>
+                        </rdf:rest>
+                    </rdf:Description>
+                </rdf:rest>
+            </rdf:Description>
+        </swrl:body>
+        <swrl:head>
+            <rdf:Description>
+                <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#AtomList"/>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="http://www.w3.org/2003/11/swrl#IndividualPropertyAtom"/>
+                        <swrl:propertyPredicate rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/memberOf"/>
+                        <swrl:argument1 rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/z"/>
+                        <swrl:argument2 rdf:resource="http://onto.fel.cvut.cz/ontologies/dataset-descriptor/x"/>
+                    </rdf:Description>
+                </rdf:first>
+                <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+            </rdf:Description>
+        </swrl:head>
+    </rdf:Description>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.2.6.20160910-2108) https://github.com/owlcs/owlapi -->
+
