@@ -1,0 +1,84 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/di-887aaeff8f63729ea66816b73729a53a> rdf:object _:node1b1c6ntinx1 ;
+	rdf:predicate <http://purl.org/dc/terms/title> ;
+	rdf:subject _:node1b1c6ntinx2 .
+@prefix : <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/> .
+
+:di-887aaeff8f63729ea66816b73729a53a :hasWeight "52"^^<http://www.w3.org/2001/XMLSchema#integer> .
+
+:di-6b1fa54f9cab127d8258cfc9d972b18c rdf:object _:node1b1c6ntinx3 ;
+	rdf:predicate <http://linked.opendata.cz/ontology/domain/vavai/cea/res/zkratka> ;
+	rdf:subject _:node1b1c6ntinx4 ;
+	:hasWeight "28"^^<http://www.w3.org/2001/XMLSchema#integer> .
+
+:di-0f34b69970db87155b8816e3684b7af7 rdf:object _:node1b1c6ntinx5 ;
+	rdf:predicate <http://linked.opendata.cz/ontology/domain/vavai/cea/res/jePoskytovatelem> ;
+	rdf:subject _:node1b1c6ntinx6 ;
+	:hasWeight "26"^^<http://www.w3.org/2001/XMLSchema#integer> .
+
+:di-26580b88d624e793196e4395bdb06564 rdf:object _:node1b1c6ntinx7 ;
+	rdf:predicate <http://purl.org/dc/terms/description> ;
+	rdf:subject _:node1b1c6ntinx8 ;
+	:hasWeight "10"^^<http://www.w3.org/2001/XMLSchema#integer> .
+
+:di-df21955cb03b477f11b10dae336f2248 rdf:object _:node1b1c6ntinx9 ;
+	rdf:predicate <http://linked.opendata.cz/ontology/domain/vavai/cea/res/jePoskytovatelemCEZ> ;
+	rdf:subject _:node1b1c6ntinx10 ;
+	:hasWeight "26"^^<http://www.w3.org/2001/XMLSchema#integer> .
+
+:di-76bab3ac4dfe8f4957d596adc8388e7b rdf:object _:node1b1c6ntinx11 ;
+	rdf:predicate <http://linked.opendata.cz/ontology/domain/vavai/cea/res/jePoskytovatelemVES> ;
+	rdf:subject _:node1b1c6ntinx12 ;
+	:hasWeight "26"^^<http://www.w3.org/2001/XMLSchema#integer> .
+
+:di-a7fbe298d7ccdda790690cc828a59f58 rdf:object _:node1b1c6ntinx13 ;
+	rdf:predicate <http://www.w3.org/2000/01/rdf-schema#seeAlso> ;
+	rdf:subject _:node1b1c6ntinx14 ;
+	:hasWeight "43"^^<http://www.w3.org/2001/XMLSchema#integer> .
+
+:di-1c3c760912858381aebb5686703dae3a rdf:object _:node1b1c6ntinx15 ;
+	rdf:predicate <http://linked.opendata.cz/ontology/domain/vavai/cea/res/jePoskytovatelemCEP> ;
+	rdf:subject _:node1b1c6ntinx16 ;
+	:hasWeight "26"^^<http://www.w3.org/2001/XMLSchema#integer> .
+
+:di-cd72ff5fca36e1804f13abfe1692f4de rdf:object _:node1b1c6ntinx17 ;
+	rdf:predicate <http://linked.opendata.cz/ontology/domain/vavai/cea/res/jDodavatelemRIV> ;
+	rdf:subject _:node1b1c6ntinx18 ;
+	:hasWeight "26"^^<http://www.w3.org/2001/XMLSchema#integer> .
+
+_:node1b1c6ntinx1 a rdf:langString .
+
+_:node1b1c6ntinx2 a <http://linked.opendata.cz/resource/domain/vavai/Resort> .
+
+_:node1b1c6ntinx3 a rdf:langString .
+
+_:node1b1c6ntinx4 a <http://linked.opendata.cz/resource/domain/vavai/Resort> .
+
+_:node1b1c6ntinx5 a <http://www.w3.org/2001/XMLSchema#string> .
+
+_:node1b1c6ntinx6 a <http://linked.opendata.cz/resource/domain/vavai/Resort> .
+
+_:node1b1c6ntinx7 a rdf:langString .
+
+_:node1b1c6ntinx8 a <http://linked.opendata.cz/resource/domain/vavai/Resort> .
+
+_:node1b1c6ntinx9 a <http://www.w3.org/2001/XMLSchema#string> .
+
+_:node1b1c6ntinx10 a <http://linked.opendata.cz/resource/domain/vavai/Resort> .
+
+_:node1b1c6ntinx11 a <http://www.w3.org/2001/XMLSchema#string> .
+
+_:node1b1c6ntinx12 a <http://linked.opendata.cz/resource/domain/vavai/Resort> .
+
+_:node1b1c6ntinx13 a <http://www.w3.org/2001/XMLSchema#anyURI> .
+
+_:node1b1c6ntinx14 a <http://linked.opendata.cz/resource/domain/vavai/Resort> .
+
+_:node1b1c6ntinx15 a <http://www.w3.org/2001/XMLSchema#string> .
+
+_:node1b1c6ntinx16 a <http://linked.opendata.cz/resource/domain/vavai/Resort> .
+
+_:node1b1c6ntinx17 a <http://www.w3.org/2001/XMLSchema#string> .
+
+_:node1b1c6ntinx18 a <http://linked.opendata.cz/resource/domain/vavai/Resort> .

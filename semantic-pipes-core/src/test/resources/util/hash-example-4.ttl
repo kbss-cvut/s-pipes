@@ -1,0 +1,51 @@
+@prefix : <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:di-0f34b69970db87155b8816e3684b7af7 :hasWeight 26 ;
+    rdf:object [ a xsd:string ] ;
+    rdf:predicate <http://linked.opendata.cz/ontology/domain/vavai/cea/res/jePoskytovatelem> ;
+    rdf:subject [ a <http://linked.opendata.cz/resource/domain/vavai/Resort> ] .
+
+:di-1c3c760912858381aebb5686703dae3a :hasWeight 26 ;
+    rdf:object [ a xsd:string ] ;
+    rdf:predicate <http://linked.opendata.cz/ontology/domain/vavai/cea/res/jePoskytovatelemCEP> ;
+    rdf:subject [ a <http://linked.opendata.cz/resource/domain/vavai/Resort> ] .
+
+:di-26580b88d624e793196e4395bdb06564 :hasWeight 10 ;
+    rdf:object [ a rdf:langString ] ;
+    rdf:predicate <http://purl.org/dc/terms/description> ;
+    rdf:subject [ a <http://linked.opendata.cz/resource/domain/vavai/Resort> ] .
+
+:di-6b1fa54f9cab127d8258cfc9d972b18c :hasWeight 28 ;
+    rdf:object [ a rdf:langString ] ;
+    rdf:predicate <http://linked.opendata.cz/ontology/domain/vavai/cea/res/zkratka> ;
+    rdf:subject [ a <http://linked.opendata.cz/resource/domain/vavai/Resort> ] .
+
+:di-76bab3ac4dfe8f4957d596adc8388e7b :hasWeight 26 ;
+    rdf:object [ a xsd:string ] ;
+    rdf:predicate <http://linked.opendata.cz/ontology/domain/vavai/cea/res/jePoskytovatelemVES> ;
+    rdf:subject [ a <http://linked.opendata.cz/resource/domain/vavai/Resort> ] .
+
+:di-887aaeff8f63729ea66816b73729a53a :hasWeight 52 ;
+    rdf:object [ a rdf:langString ] ;
+    rdf:predicate <http://purl.org/dc/terms/title> ;
+    rdf:subject [ a <http://linked.opendata.cz/resource/domain/vavai/Resort> ] .
+
+:di-a7fbe298d7ccdda790690cc828a59f58 :hasWeight 43 ;
+    rdf:object [ a xsd:anyURI ] ;
+    rdf:predicate rdfs:seeAlso ;
+    rdf:subject [ a <http://linked.opendata.cz/resource/domain/vavai/Resort> ] .
+
+:di-cd72ff5fca36e1804f13abfe1692f4de :hasWeight 26 ;
+    rdf:object [ a xsd:string ] ;
+    rdf:predicate <http://linked.opendata.cz/ontology/domain/vavai/cea/res/jDodavatelemRIV> ;
+    rdf:subject [ a <http://linked.opendata.cz/resource/domain/vavai/Resort> ] .
+
+:di-df21955cb03b477f11b10dae336f2248 :hasWeight 26 ;
+    rdf:object [ a xsd:string ] ;
+    rdf:predicate <http://linked.opendata.cz/ontology/domain/vavai/cea/res/jePoskytovatelemCEZ> ;
+    rdf:subject [ a <http://linked.opendata.cz/resource/domain/vavai/Resort> ] .
+

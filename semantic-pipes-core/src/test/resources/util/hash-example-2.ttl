@@ -1,0 +1,81 @@
+
+<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/di-887aaeff8f63729ea66816b73729a53a> <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> _:node1b1c74jobx1 ;
+	<http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://purl.org/dc/terms/title> ;
+	<http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> _:node1b1c74jobx2 ;
+	<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/hasWeight> "52"^^<http://www.w3.org/2001/XMLSchema#integer> .
+
+<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/di-6b1fa54f9cab127d8258cfc9d972b18c> <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> _:node1b1c74jobx3 ;
+	<http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://linked.opendata.cz/ontology/domain/vavai/cea/res/zkratka> ;
+	<http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> _:node1b1c74jobx4 ;
+	<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/hasWeight> "28"^^<http://www.w3.org/2001/XMLSchema#integer> .
+
+<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/di-0f34b69970db87155b8816e3684b7af7> <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> _:node1b1c74jobx5 ;
+	<http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://linked.opendata.cz/ontology/domain/vavai/cea/res/jePoskytovatelem> ;
+	<http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> _:node1b1c74jobx6 ;
+	<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/hasWeight> "26"^^<http://www.w3.org/2001/XMLSchema#integer> .
+
+<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/di-26580b88d624e793196e4395bdb06564> <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> _:node1b1c74jobx7 ;
+	<http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://purl.org/dc/terms/description> ;
+	<http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> _:node1b1c74jobx8 ;
+	<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/hasWeight> "10"^^<http://www.w3.org/2001/XMLSchema#integer> .
+
+<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/di-df21955cb03b477f11b10dae336f2248> <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> _:node1b1c74jobx9 ;
+	<http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://linked.opendata.cz/ontology/domain/vavai/cea/res/jePoskytovatelemCEZ> ;
+	<http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> _:node1b1c74jobx10 ;
+	<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/hasWeight> "26"^^<http://www.w3.org/2001/XMLSchema#integer> .
+
+<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/di-76bab3ac4dfe8f4957d596adc8388e7b> <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> _:node1b1c74jobx11 ;
+	<http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://linked.opendata.cz/ontology/domain/vavai/cea/res/jePoskytovatelemVES> ;
+	<http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> _:node1b1c74jobx12 ;
+	<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/hasWeight> "26"^^<http://www.w3.org/2001/XMLSchema#integer> .
+
+<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/di-a7fbe298d7ccdda790690cc828a59f58> <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> _:node1b1c74jobx13 ;
+	<http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://www.w3.org/2000/01/rdf-schema#seeAlso> ;
+	<http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> _:node1b1c74jobx14 ;
+	<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/hasWeight> "43"^^<http://www.w3.org/2001/XMLSchema#integer> .
+
+<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/di-1c3c760912858381aebb5686703dae3a> <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> _:node1b1c74jobx15 ;
+	<http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://linked.opendata.cz/ontology/domain/vavai/cea/res/jePoskytovatelemCEP> ;
+	<http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> _:node1b1c74jobx16 ;
+	<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/hasWeight> "26"^^<http://www.w3.org/2001/XMLSchema#integer> .
+
+<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/di-cd72ff5fca36e1804f13abfe1692f4de> <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> _:node1b1c74jobx17 ;
+	<http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://linked.opendata.cz/ontology/domain/vavai/cea/res/jDodavatelemRIV> ;
+	<http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> _:node1b1c74jobx18 ;
+	<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/hasWeight> "26"^^<http://www.w3.org/2001/XMLSchema#integer> .
+
+_:node1b1c74jobx1 a <http://www.w3.org/1999/02/22-rdf-syntax-ns#langString> .
+
+_:node1b1c74jobx2 a <http://linked.opendata.cz/resource/domain/vavai/Resort> .
+
+_:node1b1c74jobx3 a <http://www.w3.org/1999/02/22-rdf-syntax-ns#langString> .
+
+_:node1b1c74jobx4 a <http://linked.opendata.cz/resource/domain/vavai/Resort> .
+
+_:node1b1c74jobx5 a <http://www.w3.org/2001/XMLSchema#string> .
+
+_:node1b1c74jobx6 a <http://linked.opendata.cz/resource/domain/vavai/Resort> .
+
+_:node1b1c74jobx7 a <http://www.w3.org/1999/02/22-rdf-syntax-ns#langString> .
+
+_:node1b1c74jobx8 a <http://linked.opendata.cz/resource/domain/vavai/Resort> .
+
+_:node1b1c74jobx9 a <http://www.w3.org/2001/XMLSchema#string> .
+
+_:node1b1c74jobx10 a <http://linked.opendata.cz/resource/domain/vavai/Resort> .
+
+_:node1b1c74jobx11 a <http://www.w3.org/2001/XMLSchema#string> .
+
+_:node1b1c74jobx12 a <http://linked.opendata.cz/resource/domain/vavai/Resort> .
+
+_:node1b1c74jobx13 a <http://www.w3.org/2001/XMLSchema#anyURI> .
+
+_:node1b1c74jobx14 a <http://linked.opendata.cz/resource/domain/vavai/Resort> .
+
+_:node1b1c74jobx15 a <http://www.w3.org/2001/XMLSchema#string> .
+
+_:node1b1c74jobx16 a <http://linked.opendata.cz/resource/domain/vavai/Resort> .
+
+_:node1b1c74jobx17 a <http://www.w3.org/2001/XMLSchema#string> .
+
+_:node1b1c74jobx18 a <http://linked.opendata.cz/resource/domain/vavai/Resort> .

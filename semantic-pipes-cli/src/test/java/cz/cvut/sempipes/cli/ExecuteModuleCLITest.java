@@ -1,5 +1,9 @@
 package cz.cvut.sempipes.cli;
 
+import cz.cvut.sempipes.engine.ExecutionContext;
+
+import java.io.IOException;
+
 import static org.junit.Assert.*;
 
 /**
@@ -9,10 +13,30 @@ public class ExecuteModuleCLITest {
 
     @org.junit.Test
     public void main() throws Exception {
-        // load java -> rdf mapping of semantic modules
-        // load definitions of semantic modules
-        // load configuration of semantic modules
+    }
+
+    public void mainSucceedWithOnlyExecutionTarget() {
+        // bind -> world --> hello world
+    }
+
+    public void mainParametersAreSetToInputBinding() {
 
     }
+
+    public void mainInputGraphIsSetFromStdIn() {
+
+    }
+
+    public void mainInputGraphIsSetByParameters() throws IOException {
+        ExecuteModuleCLI.main(new String[]{
+            "--input-data-from-stdin"
+            }
+        );
+
+    }
+
+    // load java -> rdf mapping of semantic modules
+    // load definitions of semantic modules
+    // load configuration of semantic modules
 
 }
