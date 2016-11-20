@@ -20,3 +20,11 @@ dd:SampleDatasetDiscovery
   sm:nodeY 155 ;
   rdfs:label "Sample Dataset Descriptor"^^xsd:string ;
 .
+
+dd:SampleGetDatasetDescriptors
+  rdf:type <http://onto.fel.cvut.cz/ontologies/lib/module/get-dataset-descriptors-v1>;
+  ddm:p-dataset-iri <http://linked.opendata.cz/resource/dataset/vavai/projects> ;
+  sm:nodeX 292 ;
+  sm:nodeY 155 ;
+  rdfs:label "Sample Get Dataset Descriptors"^^xsd:string ;
+.

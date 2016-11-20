@@ -1,0 +1,16 @@
+PREFIX dd: <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/>
+
+CONSTRUCT {
+    ?s ?p ?o .
+}
+WHERE {
+  GRAPH ?g {
+     ?s ?p ?o .
+  }
+  ?g dd:describes ?de .
+  [ dd:is-description-of ?de ;
+    dd:has-source [
+      dd:has-graph-id ?ds
+    ]
+  ]
+}
