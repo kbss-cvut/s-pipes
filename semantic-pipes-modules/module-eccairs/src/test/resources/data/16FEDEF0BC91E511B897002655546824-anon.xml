@@ -1,0 +1,64 @@
+<SET TaxonomyName="ECCAIRS Aviation" TaxonomyVersion="3.4.0.1" Domain="RIT" Version="1.0.0.0">
+  <Occurrence>
+    <ATTRIBUTES>
+      <ATM_Contribution attributeId="428">2</ATM_Contribution>
+      <Occurrence_Category attributeId="430">25</Occurrence_Category>
+      <Occurrence_Class attributeId="431">500</Occurrence_Class>
+      <Highest_Damage attributeId="432">98</Highest_Damage>
+      <Local_Date attributeId="433">2015-05-21</Local_Date>
+      <Effect_On_ATM_Service attributeId="436">4</Effect_On_ATM_Service>
+      <Location_Name attributeId="440">ACC</Location_Name>
+      <Responsible_Entity attributeId="453">1046</Responsible_Entity>
+      <State_Area_Of_Occ attributeId="454" AdditionalTextEncoding="xs:string" AdditionalText="">63</State_Area_Of_Occ>
+      <Occurrence_Status attributeId="455">1</Occurrence_Status>
+      <Local_Time attributeId="457">18:33:00</Local_Time>
+      <Total_Fatalities_Ground attributeId="460">0</Total_Fatalities_Ground>
+      <Total_On_Board_A_C attributeId="462">0</Total_On_Board_A_C>
+      <Total_Injuries-Ground attributeId="463">0</Total_Injuries-Ground>
+      <Total_Minor_Injuries-Ground attributeId="469">0</Total_Minor_Injuries-Ground>
+      <Total_Serious_Injuries-Ground attributeId="472">0</Total_Serious_Injuries-Ground>
+      <UTC_Date attributeId="477">2015-05-21</UTC_Date>
+      <UTC_Time attributeId="478">18:33</UTC_Time>
+      <Headline attributeId="601">Nazev nazeve nazev!!!</Headline>
+      <Weather_Relevant attributeId="606">2</Weather_Relevant>
+      <Injury_Level attributeId="451">98</Injury_Level>
+      <Ground_Severity_Applied attributeId="1073">2</Ground_Severity_Applied>
+      <Overall_Severity_Applied attributeId="1076">2</Overall_Severity_Applied>
+      <Spec_Tech_Severity_Applied attributeId="1079">2</Spec_Tech_Severity_Applied>
+    </ATTRIBUTES>
+    <ENTITIES>
+      <Aerodrome_General>
+        <ATTRIBUTES>
+          <Location_Indicator attributeId="5" AdditionalText="" AdditionalTextEncoding="xs:string">998998</Location_Indicator>
+          <Location_On_Near_Aerodrome attributeId="641" AdditionalText="" AdditionalTextEncoding="xs:string">2</Location_On_Near_Aerodrome>
+        </ATTRIBUTES>
+      </Aerodrome_General>
+      <Air_Navigation_Service>
+        <ATTRIBUTES>
+          <ANSP_Name attributeId="372">ACC</ANSP_Name>
+        </ATTRIBUTES>
+      </Air_Navigation_Service>
+      <Events ID="09BD95C61A92E511B897002655546824">
+        <ATTRIBUTES>
+          <Event_Type attributeId="390">4050300</Event_Type>
+        </ATTRIBUTES>
+      </Events>
+      <Narrative>
+        <ATTRIBUTES>
+          <Narrative_Language attributeId="424">12</Narrative_Language>
+          <Narrative_Text attributeId="425">
+            <PlainText>blablabla blabla bla bla bla</PlainText>
+          </Narrative_Text>
+        </ATTRIBUTES>
+      </Narrative>
+      <Reporting_History>
+        <ATTRIBUTES>
+          <Report_Identification attributeId="438">EEE111</Report_Identification>
+          <Reporting_Entity attributeId="447">4006</Reporting_Entity>
+          <Report_Status attributeId="800">5</Report_Status>
+          <Reporting_Date attributeId="801">2015-05-21T20:30:00</Reporting_Date>
+        </ATTRIBUTES>
+      </Reporting_History>
+    </ENTITIES>
+  </Occurrence>
+</SET>
