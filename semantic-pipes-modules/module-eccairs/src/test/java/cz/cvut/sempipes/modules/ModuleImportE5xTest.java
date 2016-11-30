@@ -22,6 +22,7 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.util.FileUtils;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openrdf.repository.Repository;
 
@@ -51,7 +52,7 @@ public class ModuleImportE5xTest {
         streamResouce =  new StringStreamResource(e5xFilePath, fileContent);
     }
 
-
+    @Ignore
     @Test
     public void executeSelf() throws Exception {
         ModuleImportE5x module = new ModuleImportE5x();
