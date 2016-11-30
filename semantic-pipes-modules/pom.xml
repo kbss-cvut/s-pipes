@@ -20,6 +20,7 @@
         <module>module-identity</module>
         <module>module-nlp</module>
         <module>module-dataset-discovery</module>
+        <module>module-eccairs</module>
     </modules>
 
     <dependencyManagement>

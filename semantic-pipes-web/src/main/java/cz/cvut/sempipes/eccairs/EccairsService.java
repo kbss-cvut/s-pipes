@@ -48,7 +48,7 @@ public class EccairsService {
     //   loadEccairsModel();
     //}
 
-    private static void loadEccairsModel() {
+    public static void loadEccairsModel() {
         LOG.info("Constructing library modules ...");
 
         libsModel.add(OntoDocManager.loadModel(getInbasModelFilePath("eccairsFormGeneratorPath")));

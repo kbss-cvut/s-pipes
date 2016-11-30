@@ -21,6 +21,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import javax.annotation.PostConstruct;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -39,6 +40,14 @@ public class SempipesServiceController {
 
     private static final Logger LOG = LoggerFactory.getLogger(SempipesServiceController.class);
     private SempipesScriptManager scriptManager;
+
+    @PostConstruct
+    void init() {
+        // TODO remove !!!!
+        EccairsService.loadEccairsModel();
+    }
+
+
 
     /**
      * Request parameter - 'id' of the module to be executed

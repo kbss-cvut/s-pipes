@@ -2,9 +2,11 @@ package cz.cvut.sempipes.util;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.jena.rdf.model.*;
+import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -13,6 +15,13 @@ import java.util.List;
  * Created by Miroslav Blasko on 30.7.16.
  */
 public class JenaUtils {
+
+    public static Model readModelFromString(String modelText, String lang) {
+        Model model = ModelFactory.createDefaultModel();
+
+        return model.read(new ByteArrayInputStream(modelText.getBytes()), null, lang);
+    }
+
 
     // TODO what if OWL ontology is missing
     public static String getBaseUri(Model model) {
