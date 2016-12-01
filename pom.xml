@@ -1,22 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>cz.cvut.kbss</groupId>
-	<version>1.0-SNAPSHOT</version>
-	<artifactId>semantic-pipes</artifactId>
-	<packaging>pom</packaging>
-	<name>Semantic Pipes</name>
+    <groupId>cz.cvut.kbss</groupId>
+    <version>1.0-SNAPSHOT</version>
+    <artifactId>semantic-pipes</artifactId>
+    <packaging>pom</packaging>
+    <name>Semantic Pipes</name>
 
-	<modules>
-		<module>semantic-pipes-parent</module>
-		<module>semantic-pipes-core</module>
-		<module>semantic-pipes-cli</module>
-		<module>semantic-pipes-web</module>
-		<module>semantic-pipes-modules</module>
-		<module>semantic-pipes-modules-registry</module>
-	</modules>
+    <modules>
+        <module>semantic-pipes-parent</module>
+        <module>semantic-pipes-core</module>
+        <module>semantic-pipes-cli</module>
+        <module>semantic-pipes-web</module>
+        <module>semantic-pipes-modules</module>
+        <module>semantic-pipes-modules-registry</module>
+    </modules>
+
+    <build>
+        <plugins>
+            <!-- use mvn license:check to check for missing license headers, mvn license:format to add license headers -->
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>2.11</version>
+                <configuration>
+                    <header>header.txt</header>
+                    <excludes>
+                        <exclude>**/src/test/resources/**</exclude>
+                        <exclude>**/src/main/resources/**</exclude>
+                        <exclude>**/testResults/**</exclude>
+                        <exclude>**/*.owl</exclude>
+                        <exclude>license</exclude>
+                        <exclude>readme</exclude>
+                        <exclude>**/*.txt</exclude>
+                        <exclude>**/pom.xml</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <licenses>
+        <license>
+            <name>GNU Lesser General Public License</name>
+            <url>http://www.gnu.org/copyleft/lesser.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Petr Křemen</name>
+            <email>petr.kremen@fel.cvut.cz</email>
+            <url>http://cyber.felk.cvut.cz/people</url>
+            <organization>Czech Technical University in Prague, Knowledge Based and Software Systems Group
+            </organization>
+            <organizationUrl>http://kbss.felk.cvut.cz</organizationUrl>
+            <roles>
+            </roles>
+        </developer>
+        <developer>
+            <name>Miroslav Blaško</name>
+            <email>miroslav.blasko@fel.cvut.cz</email>
+            <url>http://cyber.felk.cvut.cz/people</url>
+            <organization>Czech Technical University in Prague, Knowledge Based and Software Systems Group
+            </organization>
+            <organizationUrl>http://kbss.felk.cvut.cz</organizationUrl>
+            <roles>
+            </roles>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>GNU Lesser General Public License</name>
+            <url>http://www.gnu.org/copyleft/lesser.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
 
 </project>
 
