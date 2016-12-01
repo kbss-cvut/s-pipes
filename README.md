@@ -1,4 +1,4 @@
-# S-Pipes
+# Semantic pipes
 
-Web and CLI tool to manage semantic pipelines which are defined in RDF. 
+Web and CLI tool to manage semantic pipelines defined in RDF. 
 
