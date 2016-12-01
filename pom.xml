@@ -7,7 +7,7 @@
     <version>1.0-SNAPSHOT</version>
     <artifactId>semantic-pipes</artifactId>
     <packaging>pom</packaging>
-    <name>Semantic Pipes</name>
+    <name>S-Pipes (Semantic Pipelines)</name>
 
     <modules>
         <module>semantic-pipes-parent</module>
@@ -42,14 +42,6 @@
         </plugins>
     </build>
 
-    <licenses>
-        <license>
-            <name>GNU Lesser General Public License</name>
-            <url>http://www.gnu.org/copyleft/lesser.html</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-
     <developers>
         <developer>
             <name>Petr Křemen</name>
@@ -72,6 +64,11 @@
             </roles>
         </developer>
     </developers>
+
+    <organization>
+        <name>Czech Technical University in Prague, Knowledge Based and Software Systems Group</name>
+        <url>http://kbss.felk.cvut.cz</url>
+    </organization>
 
     <licenses>
         <license>
