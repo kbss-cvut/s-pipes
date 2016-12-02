@@ -61,7 +61,7 @@ public class StreamResourceController {
 
         LOG.info("Registering new stream resource with url {} " + res.getPersistentUri());
         StreamResourceRegistry.getInstance().registerResource(res.getId(), body);
-                //LOG.debug("Resource content : {}", body);
+        LOG.info("Resource content : {}", body);
 
         final HttpHeaders headers = RestUtils.createLocationHeaderFromCurrentUri("/{id}", res.getId());
         return new ResponseEntity<StreamResourceDTO>(res, headers, HttpStatus.CREATED);
