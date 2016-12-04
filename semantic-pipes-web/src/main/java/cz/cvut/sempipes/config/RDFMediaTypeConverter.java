@@ -36,7 +36,7 @@ public class RDFMediaTypeConverter extends AbstractHttpMessageConverter {
         LOG.debug("Getting RDF Language for content type " + m + ", message: " + defaultValue);
         MediaType contentType = m.getHeaders().getContentType();
         if ( contentType == null ) { contentType = MediaType.parseMediaType(defaultValue); }
-        return RDFLanguages.contentTypeToLang(contentType.toString()).getLabel();
+        return RDFLanguages.contentTypeToLang(contentType.toString().split(";")[0]).getLabel();
     }
 
     @Override
