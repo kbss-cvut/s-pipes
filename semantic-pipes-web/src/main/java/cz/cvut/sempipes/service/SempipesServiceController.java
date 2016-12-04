@@ -43,8 +43,6 @@ public class SempipesServiceController {
 
     @PostConstruct
     void init() {
-        // TODO remove !!!!
-        EccairsService.loadEccairsModel();
     }
 
 
@@ -81,6 +79,7 @@ public class SempipesServiceController {
 
         OntologyDocumentManager ontoDocManager = OntoDocManager.getInstance();
         List<String> globalScripts = SempipesScriptManager.getGlobalScripts(ontoDocManager, scriptDirs);
+        OntoDocManager.registerAllSPINModules();
 
         scriptManager = new SempipesScriptManager(ontoDocManager, globalScripts);
 
@@ -126,7 +125,7 @@ public class SempipesServiceController {
     }
 
     @RequestMapping( //TODO remove old service
-            value = "/service-new",
+            value = "/service",
             method = RequestMethod.GET,
             produces = {
                     RDFMimeType.LD_JSON_STRING,
@@ -141,7 +140,7 @@ public class SempipesServiceController {
     }
 
     @RequestMapping(
-            value = "/service",
+            value = "/service-old",
             method = RequestMethod.GET,
             produces = {RDFMimeType.LD_JSON_STRING + ";charset=utf-8"}
     )
