@@ -124,7 +124,7 @@ public class SempipesServiceController {
         return run(inputModel, parameters);
     }
 
-    @RequestMapping( //TODO remove old service
+    @RequestMapping(
             value = "/service",
             method = RequestMethod.GET,
             produces = {
@@ -139,7 +139,22 @@ public class SempipesServiceController {
         return runService(ModelFactory.createDefaultModel(), parameters);
     }
 
-    @RequestMapping(
+    @RequestMapping( //TODO remove -- only to support compatibility with older version (used by RLP)
+            value = "/service-new",
+            method = RequestMethod.GET,
+            produces = {
+                    RDFMimeType.LD_JSON_STRING,
+                    RDFMimeType.N_TRIPLES_STRING,
+                    RDFMimeType.RDF_XML_STRING,
+                    RDFMimeType.TURTLE_STRING
+            }
+    )
+    public Model processServiceGetRequestCompat(@RequestParam MultiValueMap<String,String> parameters) {
+        LOG.info("Processing service GET request.");
+        return runService(ModelFactory.createDefaultModel(), parameters);
+    }
+
+    @RequestMapping( //TODO remove old service
             value = "/service-old",
             method = RequestMethod.GET,
             produces = {RDFMimeType.LD_JSON_STRING + ";charset=utf-8"}
