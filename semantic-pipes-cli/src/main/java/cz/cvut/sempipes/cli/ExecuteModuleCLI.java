@@ -122,6 +122,7 @@ public class ExecuteModuleCLI {
         // ----- load modules and functions
         LOG.debug("Loading  scripts ...");
         SempipesScriptManager scriptManager = scriptManager = createSempipesScriptManager();
+        OntoDocManager.registerAllSPINModules();
 
         // ----- load input bindings
         VariablesBinding inputVariablesBinding = new VariablesBinding();

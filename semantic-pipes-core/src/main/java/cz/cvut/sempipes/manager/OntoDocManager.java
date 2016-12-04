@@ -13,6 +13,7 @@ import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.topbraid.spin.system.SPINModuleRegistry;
 
 
 import java.io.FileInputStream;
@@ -53,6 +54,9 @@ import java.util.stream.Stream;
 public class OntoDocManager implements OntologyDocumentManager{
 
     private static final Logger LOG = LoggerFactory.getLogger(OntoDocManager.class);
+
+    // TODO remove !!!!!!! this is woraround for registering SPIN related things.
+    public static Model allLoadedFilesModel = ModelFactory.createDefaultModel();
 
 
     OntDocumentManager ontDocumentManager;
@@ -148,6 +152,10 @@ public class OntoDocManager implements OntologyDocumentManager{
                         LOG.debug("Loading model from file {} ...", file);
                         Model model = loadModel(file, lang);
 
+                        if (model != null) {
+                            OntoDocManager.addSPINRelevantModel(file.toAbsolutePath().toString(), model);
+                        }
+
                         file2Model.put(file.toString(), model);
 
                     });
@@ -157,6 +165,24 @@ public class OntoDocManager implements OntologyDocumentManager{
             LOG.error("Could not load ontologies from directory {} -- {} .", directoryOrFilePath, e);
         }
         return file2Model;
+    }
+
+    // TODO remove this method !!!
+    private static void addSPINRelevantModel(String fileName, Model model) {
+        String baseURI = JenaUtils.getBaseUri(model);
+
+        if (baseURI != null) {
+//            if (baseURI.contains("spin")
+//                    || baseURI.contains("w3.org")
+//                    || baseURI.contains("topbraid")
+//                    || baseURI.contains("ontologies.lib")
+//                    || baseURI.contains("function")
+//                    || baseURI.contains("lib")
+//                    ) {
+                //LOG.debug("Adding library ... " + baseURI);
+                allLoadedFilesModel.add(model);
+//            }
+        }
     }
 
 
@@ -304,5 +330,10 @@ public class OntoDocManager implements OntologyDocumentManager{
     }
     public static String getBaseUri(Model model) {
         return model.listResourcesWithProperty(RDF.type, OWL.Ontology).nextResource().toString();
+    }
+
+    public static void registerAllSPINModules() {
+        LOG.warn("Applying a workaround to register all SPIN modules ..."); // TODO remove this workaround
+        SPINModuleRegistry.get().registerAll(OntoDocManager.allLoadedFilesModel, null);
     }
 }
