@@ -61,7 +61,9 @@ public class ExecuteModuleCLI {
 //    private VariablesPatternStrategy variablesPatternStrategy; TODO
 
 
-
+   //TURTLE, N-TRIPLES, JSON-LD, RDF/XML, RDF/XML-ABBREV, N3, RDF/JSON
+    @Option(name = "-l", aliases = "--output-data-lang", metaVar = "OUTPUT_LANG", usage = "Output data lang (e.g. TURTLE, N-TRIPLES, JSON-LD, RDF/XML, RDF/XML-ABBREV, N3, RDF/JSON)")
+    private String langRdfFile;
 
     @Option(name = "-o", aliases = "--output-data-file", metaVar = "OUTPUT_FILE", usage = "Output data file")
     private File outputRdfFile;

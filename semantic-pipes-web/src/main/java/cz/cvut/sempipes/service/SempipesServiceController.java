@@ -189,7 +189,7 @@ public class SempipesServiceController {
         LOG.info("- parameters={}", parameters);
 
         if (parameters.containsKey("id")) { // TODO remove -- only for compatibility
-            parameters.add(P_ID, parameters.getFirst(P_ID));
+            parameters.add(P_ID, parameters.getFirst("id"));
         }
 
         if (!parameters.containsKey(P_ID)) {
