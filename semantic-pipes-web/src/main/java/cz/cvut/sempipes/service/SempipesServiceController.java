@@ -127,12 +127,13 @@ public class SempipesServiceController {
     @RequestMapping(
             value = "/service",
             method = RequestMethod.GET,
-            produces = {
-                    RDFMimeType.LD_JSON_STRING,
-                    RDFMimeType.N_TRIPLES_STRING,
-                    RDFMimeType.RDF_XML_STRING,
-                    RDFMimeType.TURTLE_STRING
-            }
+//            produces = {                      //TODO support other formats
+//                    RDFMimeType.LD_JSON_STRING,
+//                    RDFMimeType.N_TRIPLES_STRING,
+//                    RDFMimeType.RDF_XML_STRING,
+//                    RDFMimeType.TURTLE_STRING
+//            }
+            produces = {RDFMimeType.LD_JSON_STRING + ";charset=utf-8"}
     )
     public Model processServiceGetRequest(@RequestParam MultiValueMap<String,String> parameters) {
         LOG.info("Processing service GET request.");
@@ -186,6 +187,10 @@ public class SempipesServiceController {
     // TODO merge it with implementation in /module
     private Model runService(final Model inputDataModel, final MultiValueMap<String,String> parameters ) {
         LOG.info("- parameters={}", parameters);
+
+        if (parameters.containsKey("id")) { // TODO remove -- only for compatibility
+            parameters.add(P_ID, parameters.getFirst(P_ID));
+        }
 
         if (!parameters.containsKey(P_ID)) {
             throw new SempipesServiceException("Invalid/no module id supplied.");
