@@ -1,5 +1,6 @@
 package cz.cvut.sempipes.registry;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -48,11 +49,11 @@ public class StreamResourceRegistry {
         if (res == null) {
             return null;
         }
-        return new StringStreamResource(url, res.getContentAsString()); //TODO remove
+        return new StringStreamResource(url, res.getContent(), res.getContentType()); //TODO remove
     }
 
-    public void registerResource(String id, String content) {
-        StreamResource res = new StringStreamResource(id, content);
+    public void registerResource(String id, byte[] content, String contentType) {
+        StreamResource res = new StringStreamResource(id,  content, contentType);
         id2resourcesMap.put(id, res);
     }
 }
