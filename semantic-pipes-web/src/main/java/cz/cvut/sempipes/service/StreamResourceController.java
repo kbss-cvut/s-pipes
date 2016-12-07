@@ -44,6 +44,7 @@ public class StreamResourceController {
             method = RequestMethod.POST,
             consumes = {
                     MediaType.APPLICATION_XML_VALUE,
+                    MediaType.APPLICATION_OCTET_STREAM_VALUE,
 //                    MediaType.TEXT_XML_VALUE
             },
             produces = MediaType.APPLICATION_JSON_VALUE
