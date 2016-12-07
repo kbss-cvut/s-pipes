@@ -60,14 +60,14 @@ public class ModuleImportE5x extends AbstractModule {
         try {
             if ("text/xml".equals(e5xResource.getContentType()) || "application/xml".equals(e5xResource.getContentType())) {
                 LOG.debug("File considered XML (Content Type: {})", e5xResource.getContentType());
-                LOG.trace("- content: {}", new String(e5xResource.getContent()));
+                LOG.debug("- content: {}", new String(e5xResource.getContent()));
                 // create factory to parse eccairs values
                 final E5XXMLParser e5xXMLParser = new E5XXMLParser(eaf);
                 e5xXMLParser.parseDocument(e5xResourceStream);
                 r = e5xXMLParser.getReport();
             } else if ("application/zip".equals(e5xResource.getContentType()) || "application/octet-stream".equals(e5xResource.getContentType()) || e5xResource.getContentType() == null || e5xResource.getContentType().isEmpty()) {
                 LOG.debug("File considered ZIP (Content Type: {})", e5xResource.getContentType());
-                LOG.trace("- content: {}", new String(e5xResource.getContent()));
+                LOG.debug("- content: {}", new String(e5xResource.getContent()));
                 // ZIP by default
                 final E5XMLLoader loader = new E5XMLLoader(e5xResourceStream, eaf);
                 Stream<EccairsReport> s = loader.loadData();
