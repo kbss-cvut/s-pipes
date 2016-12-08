@@ -1,24 +1,13 @@
 package cz.cvut.sempipes.modules;
 
-import cz.cvut.sempipes.engine.ExecutionContext;
-import cz.cvut.sempipes.engine.ExecutionContextFactory;
-import cz.cvut.sempipes.registry.StreamResource;
-import cz.cvut.sempipes.registry.StringStreamResource;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
-
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Miroslav Blasko on 28.11.16.
@@ -30,7 +19,7 @@ public class ModuleImportE5XXMLTest extends ModuleImportE5XTest {
         super(path, contentType);
     }
 
-    @Parameterized.Parameters
+    @Parameterized.Parameters(name="e5x")
     public static Object[] generateTestData() {
         String dir = "data/e5x.xml";
         String contentType = "text/xml";
@@ -42,13 +31,12 @@ public class ModuleImportE5XXMLTest extends ModuleImportE5XTest {
             e.printStackTrace();
         }
 
-        Object[] data = files.stream().map((file) -> new Object[]{"/" + dir + "/" + file,  contentType}).toArray();
-        return data;
+        return files.stream().map((file) -> new Object[]{"/" + dir + "/" + file, contentType}).toArray();
     }
 
     @Override
     @Test
-    public void execute() throws Exception {
+    public void execute() {
         super.execute();
     }
 }
