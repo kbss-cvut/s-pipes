@@ -1,6 +1,5 @@
 package cz.cvut.sempipes.service;
 
-import cz.cvut.sempipes.eccairs.EccairsService;
 import cz.cvut.sempipes.registry.StreamResourceRegistry;
 import cz.cvut.sempipes.util.RestUtils;
 import org.apache.commons.io.IOUtils;
@@ -16,7 +15,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.annotation.PostConstruct;
-import javax.print.attribute.standard.Media;
 import java.io.*;
 import java.util.UUID;
 
@@ -65,11 +63,10 @@ public class StreamResourceController {
             data = IOUtils.toByteArray(body);
             StreamResourceRegistry.getInstance().registerResource(res.getId(), data, contentType);
             // TODO body
-            LOG.info("Resource content : {}", data);
+            LOG.info("Resource content size: {}, Resource content: {}", data.length, data);
         } catch (IOException e) {
             LOG.error("Unable to read payload: ", e);
         }
-
 
         final HttpHeaders headers = RestUtils.createLocationHeaderFromCurrentUri("/{id}", res.getId());
         return new ResponseEntity<StreamResourceDTO>(res, headers, HttpStatus.CREATED);
