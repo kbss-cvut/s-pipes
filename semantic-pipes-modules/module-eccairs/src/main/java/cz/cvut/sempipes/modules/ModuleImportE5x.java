@@ -56,7 +56,7 @@ public class ModuleImportE5x extends AbstractModule {
 
         EccairsReport r = null;
 
-        final NamedStream e5xResourceStream = new NamedStream(e5xResource.getUri(), new ByteArrayInputStream(e5xResource.getContent()));
+        final NamedStream e5xResourceStream = new NamedStream(e5xResource.getUri()+".e5x", new ByteArrayInputStream(e5xResource.getContent()));
 
         try {
             if ("text/xml".equals(e5xResource.getContentType()) || "application/xml".equals(e5xResource.getContentType())) {
