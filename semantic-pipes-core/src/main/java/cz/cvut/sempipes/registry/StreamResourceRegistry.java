@@ -59,8 +59,8 @@ public class StreamResourceRegistry {
 
     public void registerResource(String id, byte[] content, String contentType) {
         LOG.debug("Registering resource with id {}", id);
-        LOG.debug("- map content after registration: {}", id2resourcesMap);
         StreamResource res = new StringStreamResource(id,  content, contentType);
         id2resourcesMap.put(id, res);
+        LOG.debug("- map content after registration: {}", id2resourcesMap);
     }
 }
