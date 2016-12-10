@@ -3,7 +3,6 @@ package cz.cvut.sempipes.registry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -58,8 +57,8 @@ public class StreamResourceRegistry {
 
     public void registerResource(String id, byte[] content, String contentType) {
         LOG.debug("Registering resource with id {}", id);
+        LOG.debug("- map content after registration: {}", id2resourcesMap);
         StreamResource res = new StringStreamResource(id,  content, contentType);
         id2resourcesMap.put(id, res);
-        LOG.debug("- map content after registration: {}", id2resourcesMap);
     }
 }
