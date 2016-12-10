@@ -43,11 +43,13 @@ public class StreamResourceRegistry {
     }
 
     public StreamResource getResourceByUrl(String url) {
+        LOG.debug("Trying to find resource with url {}", url);
+        LOG.debug("- map content {}", id2resourcesMap);
         String id = resourcePrefixMap.stream()
                 .filter(url::startsWith)
                 .findAny().map(p -> url.substring(p.length()))
                 .orElse(null);
-
+        LOG.debug("- found {}", id);
         StreamResource res = id2resourcesMap.get(id);
         if (res == null) {
             return null;
