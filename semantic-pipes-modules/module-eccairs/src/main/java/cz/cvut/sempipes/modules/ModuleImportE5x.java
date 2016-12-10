@@ -71,10 +71,20 @@ public class ModuleImportE5x extends AbstractModule {
                 LOG.debug("- content length: {}, content (as byte array): {}",e5xResource.getContent().length, Arrays.toString(e5xResource.getContent()));
                 // ZIP by default
                 final E5XMLLoader loader = new E5XMLLoader(e5xResourceStream, eaf);
-                Stream<EccairsReport> s = loader.loadData();
-                r = s.findFirst().get();
+                LOG.debug("- loader created based on resource stream name:{}, email:{}, stream:{}, closed: {}", e5xResourceStream.getName(), e5xResourceStream.getEmailId(), e5xResourceStream.getContent(), e5xResourceStream.isCloased());
+                EccairsReport[] s = loader.loadData().toArray(EccairsReport[]::new);
+
+                LOG.debug("- found {} reports", s.length);
+                if ( s.length > 0 ) {
+                    r = s[0];
+                }
             } else {
                 LOG.debug("Unsupported Content Type {}", e5xResource.getContentType());
+                return outputExecutionContext;
+            }
+
+            if ( r == null ) {
+                LOG.debug("No report parsed, terminating.");
                 return outputExecutionContext;
             }
 
