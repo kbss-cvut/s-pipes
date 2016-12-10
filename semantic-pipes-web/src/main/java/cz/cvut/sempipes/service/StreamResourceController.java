@@ -56,7 +56,7 @@ public class StreamResourceController {
                 getRegisteredResourceLocation()
         );
 
-        LOG.info("Registering new stream resource with url {} " + res.getPersistentUri());
+        LOG.info("Registering new stream resource with id {} and url {} ", res.getId(), res.getPersistentUri());
 
         final byte[] data;
         try {

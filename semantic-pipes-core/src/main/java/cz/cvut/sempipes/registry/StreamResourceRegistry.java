@@ -1,5 +1,8 @@
 package cz.cvut.sempipes.registry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,6 +13,7 @@ import java.util.Set;
  * Created by Miroslav Blasko on 28.11.16.
  */
 public class StreamResourceRegistry {
+    private static final Logger LOG = LoggerFactory.getLogger(StreamResourceRegistry.class);
 
     private static StreamResourceRegistry instance;
     private Set<String> resourcePrefixMap = new HashSet<>();
@@ -53,7 +57,9 @@ public class StreamResourceRegistry {
     }
 
     public void registerResource(String id, byte[] content, String contentType) {
+        LOG.debug("Registering resource with id {}", id);
         StreamResource res = new StringStreamResource(id,  content, contentType);
         id2resourcesMap.put(id, res);
+        LOG.debug("- map content after registration: {}", id2resourcesMap);
     }
 }
