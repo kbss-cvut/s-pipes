@@ -1,6 +1,5 @@
 package cz.cvut.sempipes.service;
 
-import cz.cvut.sempipes.eccairs.EccairsService;
 import cz.cvut.sempipes.registry.StreamResourceRegistry;
 import cz.cvut.sempipes.util.RestUtils;
 import org.apache.commons.io.IOUtils;
@@ -16,10 +15,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.annotation.PostConstruct;
-import javax.print.attribute.standard.Media;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.UUID;
 
 /**
@@ -30,7 +26,6 @@ import java.util.UUID;
 public class StreamResourceController {
 
     private static final Logger LOG = LoggerFactory.getLogger(StreamResourceController.class);
-
 
 
     @PostConstruct
@@ -47,11 +42,13 @@ public class StreamResourceController {
             method = RequestMethod.POST,
             consumes = {
                     MediaType.APPLICATION_XML_VALUE,
+                    MediaType.APPLICATION_OCTET_STREAM_VALUE,
+                    "application/zip"
 //                    MediaType.TEXT_XML_VALUE
             },
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<StreamResourceDTO> registerStreamResource(@RequestBody String body) {
+    public ResponseEntity<StreamResourceDTO> registerStreamResource(@RequestHeader(value = "Content-type") String contentType, InputStream body) {
 
         StreamResourceDTO res = new StreamResourceDTO(
                 UUID.randomUUID().toString(),
@@ -59,9 +56,17 @@ public class StreamResourceController {
                 getRegisteredResourceLocation()
         );
 
-        LOG.info("Registering new stream resource with url {} " + res.getPersistentUri());
-        StreamResourceRegistry.getInstance().registerResource(res.getId(), body);
-        LOG.info("Resource content : {}", body);
+        LOG.info("Registering new stream resource with id {} and url {} ", res.getId(), res.getPersistentUri());
+
+        final byte[] data;
+        try {
+            data = IOUtils.toByteArray(body);
+            StreamResourceRegistry.getInstance().registerResource(res.getId(), data, contentType);
+            // TODO body
+            LOG.info("Resource content size: {}, Resource content: {}", data.length, data);
+        } catch (IOException e) {
+            LOG.error("Unable to read payload: ", e);
+        }
 
         final HttpHeaders headers = RestUtils.createLocationHeaderFromCurrentUri("/{id}", res.getId());
         return new ResponseEntity<StreamResourceDTO>(res, headers, HttpStatus.CREATED);
@@ -80,7 +85,7 @@ public class StreamResourceController {
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<StreamResourceDTO> registerStreamResource2(@RequestParam("file") MultipartFile file) throws IOException {
+    public ResponseEntity<StreamResourceDTO> registerStreamResource2(@RequestHeader(value = "Content-type") String contentType, @RequestParam("file") MultipartFile file) throws IOException {
         InputStream fis = file.getInputStream();
         String body = IOUtils.toString(fis, "UTF-8");
         IOUtils.closeQuietly(fis);
@@ -92,14 +97,13 @@ public class StreamResourceController {
         );
 
         LOG.info("Registering new stream resource with url {} " + res.getPersistentUri());
-        StreamResourceRegistry.getInstance().registerResource(res.getId(), body);
+        StreamResourceRegistry.getInstance().registerResource(res.getId(), IOUtils.toByteArray(fis), contentType);
         //LOG.debug("Resource content : {}", body);
 
         final HttpHeaders headers = RestUtils.createLocationHeaderFromCurrentUri("/{id}", res.getId());
         return new ResponseEntity<StreamResourceDTO>(res, headers, HttpStatus.CREATED);
 
     }
-
 
 
     /**

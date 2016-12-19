@@ -1,0 +1,77 @@
+<SET TaxonomyVersion="3.4.0.2" Domain="RIT" Version="1.0.0.0">
+  <Occurrence>
+    <ATTRIBUTES>
+      <ATM_Contribution attributeId="428">2</ATM_Contribution>
+      <Occurrence_Category attributeId="430">25</Occurrence_Category>
+      <Occurrence_Class attributeId="431">500</Occurrence_Class>
+      <Highest_Damage attributeId="432">98</Highest_Damage>
+      <Local_Date attributeId="433">03</Local_Date>
+      <Effect_On_ATM_Service attributeId="436">5</Effect_On_ATM_Service>
+      <Location_Name attributeId="440">TWR RuzynÄ›</Location_Name>
+      <Injury_Level attributeId="451">98</Injury_Level>
+      <Responsible_Entity attributeId="453">1046</Responsible_Entity>
+      <State_Area_Of_Occ attributeId="454" AdditionalTextEncoding="xs:string" AdditionalText="">63</State_Area_Of_Occ>
+      <Occurrence_Status attributeId="455">5</Occurrence_Status>
+      <Local_Time attributeId="457">06</Local_Time>
+      <Total_Fatalities_Ground attributeId="460">0</Total_Fatalities_Ground>
+      <Total_On_Board_A_C attributeId="462">0</Total_On_Board_A_C>
+      <Total_Injuries-Ground attributeId="463">0</Total_Injuries-Ground>
+      <Total_Minor_Injuries-Ground attributeId="469">0</Total_Minor_Injuries-Ground>
+      <Total_Serious_Injuries-Ground attributeId="472">0</Total_Serious_Injuries-Ground>
+      <UTC_Date attributeId="477">05</UTC_Date>
+      <UTC_Time attributeId="478">05</UTC_Time>
+      <Weather_Relevant attributeId="606">2</Weather_Relevant>
+      <Ground_Severity_Applied attributeId="1073">2</Ground_Severity_Applied>
+      <Overall_Severity_Applied attributeId="1076">2</Overall_Severity_Applied>
+      <Spec_Tech_Severity_Applied attributeId="1079">1</Spec_Tech_Severity_Applied>
+      <Spec_Tech_Severity attributeId="1080">6</Spec_Tech_Severity>
+      <Spec_Tech_Repeatability attributeId="1081">4</Spec_Tech_Repeatability>
+    </ATTRIBUTES>
+    <ENTITIES>
+      <Aerodrome_General>
+        <ATTRIBUTES>
+          <Location_Indicator attributeId="5" AdditionalText="" AdditionalTextEncoding="xs:string">52068</Location_Indicator>
+          <Location_On_Near_Aerodrome attributeId="641" AdditionalText="" AdditionalTextEncoding="xs:string">2</Location_On_Near_Aerodrome>
+        </ATTRIBUTES>
+      </Aerodrome_General>
+      <Air_Space ID="IDB678868504A64A059C049D6835B08677">
+        <ATTRIBUTES>
+          <Airspace_Class attributeId="13">4</Airspace_Class>
+          <Airspace_Type attributeId="15">4</Airspace_Type>
+        </ATTRIBUTES>
+        <LINKS>
+          <Aircraft REF="ID46250DF407E1E511B897002655546824" />
+        </LINKS>
+      </Air_Space>
+      <Aircraft ID="ID46250DF407E1E511B897002655546824">
+        <ATTRIBUTES>
+          <Manufacturer_Model attributeId="21" AdditionalTextEncoding="xs:string" AdditionalText="AT72">90001</Manufacturer_Model>
+          <Aircraft_Altitude attributeId="22" Unit="ft">20</Aircraft_Altitude>
+          <Aircraft_Category attributeId="32">8</Aircraft_Category>
+          <Cleared_Altitude attributeId="58" Unit="ft">40</Cleared_Altitude>
+          <Flight_Phase attributeId="121">6</Flight_Phase>
+          <Last_Departure_Point attributeId="167" AdditionalText="" AdditionalTextEncoding="xs:string">157045</Last_Departure_Point>
+          <Operation_Type attributeId="214">2</Operation_Type>
+          <Operator attributeId="215" AdditionalTextEncoding="xs:string" AdditionalText="CZECH AIRLINES J.S.C.">9999998</Operator>
+          <Planned_Destination attributeId="228" AdditionalText="" AdditionalTextEncoding="xs:string">52068</Planned_Destination>
+          <Propulsion_Type attributeId="232">2</Propulsion_Type>
+          <Mass_Group attributeId="319">3</Mass_Group>
+        </ATTRIBUTES>
+      </Aircraft>
+      <Air_Navigation_Service>
+        <ATTRIBUTES>
+          <ANSP_Name attributeId="372">TEST</ANSP_Name>
+        </ATTRIBUTES>
+      </Air_Navigation_Service>
+      <Events ID="IDF4BC95C61A92E511B897002655546824">
+        <ATTRIBUTES>
+          <Event_Type attributeId="390">4050400</Event_Type>
+        </ATTRIBUTES>
+      </Events>
+      <Factors>
+        <ATCContributingFactor>ATMspec / C. Equipment Factors / C-5. Automation Services / C-5-005. Flight Data Processing</ATCContributingFactor>
+        <ATCContributingFactor>ATMspec / C. Equipment Factors / C-5. Automation Services / C-5-013. Software</ATCContributingFactor>
+      </Factors>
+    </ENTITIES>
+  </Occurrence>
+  </SET>

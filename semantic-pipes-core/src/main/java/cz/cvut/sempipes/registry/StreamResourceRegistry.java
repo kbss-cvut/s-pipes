@@ -1,5 +1,8 @@
 package cz.cvut.sempipes.registry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -9,6 +12,7 @@ import java.util.Set;
  * Created by Miroslav Blasko on 28.11.16.
  */
 public class StreamResourceRegistry {
+    private static final Logger LOG = LoggerFactory.getLogger(StreamResourceRegistry.class);
 
     private static StreamResourceRegistry instance;
     private Set<String> resourcePrefixMap = new HashSet<>();
@@ -39,20 +43,24 @@ public class StreamResourceRegistry {
     }
 
     public StreamResource getResourceByUrl(String url) {
+        LOG.debug("Trying to find resource with url {}", url);
+        LOG.debug("- map content {}", id2resourcesMap);
         String id = resourcePrefixMap.stream()
                 .filter(url::startsWith)
                 .findAny().map(p -> url.substring(p.length()))
                 .orElse(null);
-
+        LOG.debug("- found {}", id);
         StreamResource res = id2resourcesMap.get(id);
         if (res == null) {
             return null;
         }
-        return new StringStreamResource(url, res.getContentAsString()); //TODO remove
+        return new StringStreamResource(url, res.getContent(), res.getContentType()); //TODO remove
     }
 
-    public void registerResource(String id, String content) {
-        StreamResource res = new StringStreamResource(id, content);
+    public void registerResource(String id, byte[] content, String contentType) {
+        LOG.debug("Registering resource with id {}", id);
+        StreamResource res = new StringStreamResource(id,  content, contentType);
         id2resourcesMap.put(id, res);
+        LOG.debug("- map content after registration: {}", id2resourcesMap);
     }
 }
