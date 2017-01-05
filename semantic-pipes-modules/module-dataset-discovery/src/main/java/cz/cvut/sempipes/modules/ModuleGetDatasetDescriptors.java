@@ -35,6 +35,14 @@ public class ModuleGetDatasetDescriptors extends AbstractModule {
         return ResourceFactory.createProperty(TYPE_URI + "/" + name);
     }
 
+    public String getpDatasetIRI() {
+        return pDatasetIRI;
+    }
+
+    public void setpDatasetIRI(String pDatasetIRI) {
+        this.pDatasetIRI = pDatasetIRI;
+    }
+
     @Override
     ExecutionContext executeSelf() {
         pDatasetIRI = executionContext.getVariablesBinding().getNode("p-dataset-iri").toString();
