@@ -180,7 +180,9 @@ public class OntoDocManager implements OntologyDocumentManager{
 //                    || baseURI.contains("lib")
 //                    ) {
                 //LOG.debug("Adding library ... " + baseURI);
-                allLoadedFilesModel.add(model);
+//                if (fileName.endsWith("spin-function.spin.ttl")) {
+                    allLoadedFilesModel.add(model);
+//                }
 //            }
         }
     }
@@ -334,6 +336,15 @@ public class OntoDocManager implements OntologyDocumentManager{
 
     public static void registerAllSPINModules() {
         LOG.warn("Applying a workaround to register all SPIN modules ..."); // TODO remove this workaround
-        SPINModuleRegistry.get().registerAll(OntoDocManager.allLoadedFilesModel, null);
+        if (SPINModuleRegistry.get().getFunctions().isEmpty()) {
+            //TODO remove !!!!
+            Model model = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
+            model.add(OntoDocManager.allLoadedFilesModel);
+            SPINModuleRegistry.get().init();
+            SPINModuleRegistry.get().registerAll(model, null);
+//        OntModel model = ModelFactory.createOntologyModel();
+//        model.add(OntoDocManager.allLoadedFilesModel);
+//        SPINModuleRegistry.get().registerAll(model, null);
+        }
     }
 }
