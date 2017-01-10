@@ -52,8 +52,12 @@ public class RDFMediaTypeConverter extends AbstractHttpMessageConverter {
 
     @Override
     protected void writeInternal(Object o, HttpOutputMessage httpOutputMessage) throws IOException, HttpMessageNotWritableException {
-        LOG.debug("Writing " + o + ", message: " + httpOutputMessage.getHeaders());
-        if ( ! ( o instanceof Model ) ) {
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Writing object " + o + ", message: " + httpOutputMessage.getHeaders());
+        }
+        if (o instanceof Model) {
+            LOG.debug("Writing model of size " + ((Model)o).size() + ", message: " + httpOutputMessage.getHeaders());
+        } else {
             throw new UnsupportedOperationException();
         }
         ((Model) o).write(httpOutputMessage.getBody(), getRDFLanguageForContentType(httpOutputMessage, RDFMimeType.LD_JSON_STRING));
