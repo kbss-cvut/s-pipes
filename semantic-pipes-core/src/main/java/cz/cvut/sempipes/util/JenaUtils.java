@@ -1,5 +1,6 @@
 package cz.cvut.sempipes.util;
 
+import cz.cvut.sempipes.manager.OntoDocManager;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.util.FileUtils;
@@ -7,6 +8,10 @@ import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -74,5 +79,16 @@ public class JenaUtils {
 
 
         return DigestUtils.md5Hex(modelMetadataBuff.toString());
+    }
+
+    public static void saveModelToTemporaryFile(Model model) {
+        try {
+            Path file = Files.createTempFile("model-output-", ".ttl");
+            System.out.println("Saving model to temporary file " + file.toString() + "...");
+            OntoDocManager.allLoadedFilesModel.write(new FileOutputStream(file.toFile()), FileUtils.langTurtle);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
