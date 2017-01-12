@@ -27,6 +27,7 @@ public class SM {
 
     public static final Resource Function = resource("Function");
     public static final Resource Module = resource("Module");
+    public static final Resource Modules = resource("Modules");
 
     /**
      returns the URI for this schema
