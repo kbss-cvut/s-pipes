@@ -1,10 +1,8 @@
 package cz.cvut.sempipes.manager;
 
-import cz.cvut.sempipes.constants.SM;
 import cz.cvut.sempipes.engine.PipelineFactory;
 import cz.cvut.sempipes.exception.ResourceNotFoundException;
 import cz.cvut.sempipes.exception.ResourceNotUniqueException;
-import cz.cvut.sempipes.modules.AbstractModule;
 import cz.cvut.sempipes.modules.Module;
 import cz.cvut.sempipes.registry.JenaResourceRegistry;
 import cz.cvut.sempipes.registry.ResourceRegistry;
@@ -13,13 +11,16 @@ import cz.cvut.sempipes.repository.ScriptCollectionRepository;
 import cz.cvut.sempipes.util.JenaPipelineUtils;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.util.LocationMapper;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Registers resources to contexts.
@@ -44,6 +45,7 @@ public class SempipesScriptManager {
     private final ScriptCollectionRepository scriptsRepository;
     private final ResourceRegistry functionRegistry;
     private final ResourceRegistry moduleRegistry;
+    private OntologyDocumentManager ontoDocManager;
 
     public SempipesScriptManager(OntologyDocumentManager ontoDocManager, Collection<String> globalScripts) {
 
@@ -54,6 +56,7 @@ public class SempipesScriptManager {
 //        });
 
 
+        this.ontoDocManager = ontoDocManager;
         scriptsRepository = new SMScriptCollectionRepository(ontoDocManager);
 
         this.globalScripts = new HashSet<>(globalScripts);
@@ -132,6 +135,14 @@ public class SempipesScriptManager {
     //TODO !!!! shold not be implemented here
     private Resource getReturnModule(Resource functionResource) {
         return JenaPipelineUtils.getAllFunctionsWithReturnModules(functionResource.getModel()).get(functionResource);
+    }
+
+    public OntologyDocumentManager getOntoDocManager() {
+        return ontoDocManager;
+    }
+
+    public Set<String> getGlobalScripts() {
+        return globalScripts;
     }
 
 

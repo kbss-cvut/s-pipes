@@ -1,27 +1,20 @@
 package cz.cvut.sempipes.service;
 
-import cz.cvut.sempipes.eccairs.ConfigProperies;
-import cz.cvut.sempipes.manager.OntoDocManager;
+import cz.cvut.sempipes.constants.SM;
+import cz.cvut.sempipes.engine.PipelineFactory;
 import cz.cvut.sempipes.manager.OntologyDocumentManager;
 import cz.cvut.sempipes.manager.SempipesScriptManager;
-import cz.cvut.sempipes.registry.StreamResourceRegistry;
+import cz.cvut.sempipes.util.JenaUtils;
 import cz.cvut.sempipes.util.RDFMimeType;
-import cz.cvut.sempipes.util.RestUtils;
-import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -38,18 +31,9 @@ public class SempipesContextController {
     private OntologyDocumentManager ontoDocManager;
 
     public SempipesContextController() {
-        // TODO use spring injection instead
-        List<Path> scriptDirs  = Arrays
-                .stream(ConfigProperies.get("scriptDirs").split(";"))
-                .map(path -> Paths.get(path))
-                .collect(Collectors.toList());
-
-        ontoDocManager = OntoDocManager.getInstance();
-        globalScripts = SempipesScriptManager.getGlobalScripts(ontoDocManager, scriptDirs);
-        OntoDocManager.registerAllSPINModules();
-
-        scriptManager = new SempipesScriptManager(ontoDocManager, globalScripts);
-
+        scriptManager = ScriptManagerFactory.getSingletonSPipesScriptManager();
+        ontoDocManager = scriptManager.getOntoDocManager();
+        globalScripts = new LinkedList<>(scriptManager.getGlobalScripts());
     }
 
     @RequestMapping(
@@ -67,9 +51,23 @@ public class SempipesContextController {
                 .orElseGet(() -> {return globalScripts.get(0);});
 
         //get(0);
-        Model model = ontoDocManager.getOntology(scriptUri);
-        model.add(ontoDocManager.getOntology(modulesUri));
+        Model inModel = ontoDocManager.getOntology(scriptUri);
+        inModel.add(ontoDocManager.getOntology(modulesUri));
 
-        return model;
+        Model outModel = ModelFactory.createDefaultModel();
+        outModel.add(inModel);
+        outModel.add(SempipesContextController.createInferences(inModel));
+
+        return outModel;
+    }
+
+
+     static List<Statement> createInferences(Model model) {
+
+        return PipelineFactory.getModuleTypes().keySet().stream()
+                .flatMap(mt -> model.listSubjectsWithProperty(RDF.type, mt).toSet().stream())
+                .map(m -> model.createStatement(
+                        m, RDF.type, SM.Modules
+                )).collect(Collectors.toList());
     }
 }

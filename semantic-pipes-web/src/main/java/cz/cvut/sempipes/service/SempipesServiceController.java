@@ -71,18 +71,8 @@ public class SempipesServiceController {
     public static final String P_OUTPUT_BINDING_URL = "_pOutputBindingURL";
 
     public SempipesServiceController() {
-        // TODO use spring injection instead
-        List<Path> scriptDirs  = Arrays
-                .stream(ConfigProperies.get("scriptDirs").split(";"))
-                .map(path -> Paths.get(path))
-                .collect(Collectors.toList());
-
-        OntologyDocumentManager ontoDocManager = OntoDocManager.getInstance();
-        List<String> globalScripts = SempipesScriptManager.getGlobalScripts(ontoDocManager, scriptDirs);
+        scriptManager = ScriptManagerFactory.getSingletonSPipesScriptManager();
         OntoDocManager.registerAllSPINModules();
-
-        scriptManager = new SempipesScriptManager(ontoDocManager, globalScripts);
-
     }
 
     @RequestMapping(

@@ -41,6 +41,10 @@ public class PipelineFactory {
         registerModuleTypesOnClassPath();
     }
 
+    public static Map<Resource, Class<? extends Module>> getModuleTypes() {
+        return moduleTypes;
+    }
+
     /**
      * @deprecated modules are loaded automatically
      */
