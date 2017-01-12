@@ -200,8 +200,8 @@ public abstract class AbstractModule implements Module {
             }
 
             if (constaintViolated) {
-                LOG.error("Validation of constraint failed -- \"{}\".", getQueryComment(spinQuery));
-                LOG.error("Failed validation constraint -- {}", spinQuery.toString());
+                LOG.error("Validation of constraint failed for the constraint \"{}\".", getQueryComment(spinQuery));
+                LOG.error("Failed validation constraint : \n {}", spinQuery.toString());
                 if (additionalInfo != null) {
                     LOG.error("Failed validation constraint info : ", additionalInfo);
                 }
