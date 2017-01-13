@@ -45,13 +45,11 @@ import java.util.stream.Stream;
 //            OntDocumentManager.getInstance().addModel(uri, model);
 
 /**
- *
  * manages mapping file --> ontology IRI
  * caches the files
  * manages prefixes
- *
  **/
-public class OntoDocManager implements OntologyDocumentManager{
+public class OntoDocManager implements OntologyDocumentManager {
 
     private static final Logger LOG = LoggerFactory.getLogger(OntoDocManager.class);
 
@@ -61,8 +59,7 @@ public class OntoDocManager implements OntologyDocumentManager{
 
     OntDocumentManager ontDocumentManager;
     static OntoDocManager sInstance;
-    static String[] SUPPORTED_FILE_EXTENSIONS =   { "n3", "nt", "ttl", "rdf", "owl" }; //TODO json-ld
-
+    static String[] SUPPORTED_FILE_EXTENSIONS = {"n3", "nt", "ttl", "rdf", "owl"}; //TODO json-ld
 
 
     public OntoDocManager() {
@@ -107,7 +104,7 @@ public class OntoDocManager implements OntologyDocumentManager{
 
     @Override
     public OntModel getOntology(String uri) {
-        return ontDocumentManager.getOntology(uri,OntModelSpec.OWL_MEM);
+        return ontDocumentManager.getOntology(uri, OntModelSpec.OWL_MEM);
     }
 
     @Override
@@ -128,11 +125,10 @@ public class OntoDocManager implements OntologyDocumentManager{
     }
 
 
-
     // -------------- PRIVATE METHODS -------------------
 
     private static boolean isFileNameSupported(String fileName) {
-        return  Arrays.stream(SUPPORTED_FILE_EXTENSIONS).anyMatch(ext -> fileName.endsWith("." + ext));
+        return Arrays.stream(SUPPORTED_FILE_EXTENSIONS).anyMatch(ext -> fileName.endsWith("." + ext));
     }
 
     public static Map<String, Model> getAllFile2Model(Path directoryOrFilePath) {
@@ -179,9 +175,9 @@ public class OntoDocManager implements OntologyDocumentManager{
 //                    || baseURI.contains("function")
 //                    || baseURI.contains("lib")
 //                    ) {
-                //LOG.debug("Adding library ... " + baseURI);
+            //LOG.debug("Adding library ... " + baseURI);
 //                if (fileName.endsWith("spin-function.spin.ttl")) {
-                    allLoadedFilesModel.add(model);
+            allLoadedFilesModel.add(model);
 //                }
 //            }
         }
@@ -208,9 +204,6 @@ public class OntoDocManager implements OntologyDocumentManager{
 
         return baseUri2file;
     }
-
-
-
 
 
     // ------------------------- TODO OLD -> REMOVE ------------------
@@ -265,9 +258,6 @@ public class OntoDocManager implements OntologyDocumentManager{
 //    public static Map<String, String> getAllBaseIris(String resourceDirPath, boolean recursive) {
 //        OntologyManager.class.getResource(resourceDirPath).getPath()
 //    }
-
-
-
 
 
     public static <T> List<T> toList(Iterable<T> directoryStream) {
@@ -330,21 +320,24 @@ public class OntoDocManager implements OntologyDocumentManager{
     public static void ignoreImport(String uri) {
         OntDocumentManager.getInstance().addIgnoreImport(uri);
     }
+
     public static String getBaseUri(Model model) {
         return model.listResourcesWithProperty(RDF.type, OWL.Ontology).nextResource().toString();
     }
 
     public static void registerAllSPINModules() {
-        LOG.warn("Applying a workaround to register all SPIN modules ..."); // TODO remove this workaround
-        if (SPINModuleRegistry.get().getFunctions().isEmpty()) {
-            //TODO remove !!!!
-            Model model = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
-            model.add(OntoDocManager.allLoadedFilesModel);
-            SPINModuleRegistry.get().init();
-            SPINModuleRegistry.get().registerAll(model, null);
+        LOG.warn("WORKAROUND -- Applying a workaround to register all SPIN modules ..."); // TODO remove this workaround
+        Model model = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
+        model.add(OntoDocManager.allLoadedFilesModel);
+        SPINModuleRegistry.get().reset();
+//        if (!SPINModuleRegistry.get().getFunctions().isEmpty()) {
+//            LOG.error("SPIN registry was not cleared.");
+//        }
+        SPINModuleRegistry.get().init();
+        SPINModuleRegistry.get().registerAll(model, null);
 //        OntModel model = ModelFactory.createOntologyModel();
 //        model.add(OntoDocManager.allLoadedFilesModel);
 //        SPINModuleRegistry.get().registerAll(model, null);
-        }
+
     }
 }

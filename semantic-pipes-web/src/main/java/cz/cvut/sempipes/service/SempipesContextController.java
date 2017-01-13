@@ -4,7 +4,8 @@ import cz.cvut.sempipes.constants.SM;
 import cz.cvut.sempipes.engine.PipelineFactory;
 import cz.cvut.sempipes.manager.OntologyDocumentManager;
 import cz.cvut.sempipes.manager.SempipesScriptManager;
-import cz.cvut.sempipes.util.JenaUtils;
+import cz.cvut.sempipes.service.util.ContextLoaderHelper;
+import cz.cvut.sempipes.service.util.ScriptManagerFactory;
 import cz.cvut.sempipes.util.RDFMimeType;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.RDF;
@@ -41,7 +42,9 @@ public class SempipesContextController {
             method = RequestMethod.GET,
             produces = RDFMimeType.TURTLE_STRING
     ) // TODO returns only sample script
-    public Model registerStreamResource(@PathVariable("id") String id) {
+    public Model retrieveContextData(@PathVariable("id") String id) {
+
+        ContextLoaderHelper.updateContextsIfNecessary(scriptManager);
 
         String scriptUri = globalScripts.stream()
                 .filter(uri -> uri.contains("fss") || uri.contains("eccairs")).findFirst()

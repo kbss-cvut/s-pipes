@@ -1,0 +1,69 @@
+package cz.cvut.sempipes.service.util;
+
+import cz.cvut.sempipes.util.ConfigProperies;
+import cz.cvut.sempipes.manager.OntoDocManager;
+import cz.cvut.sempipes.manager.OntologyDocumentManager;
+import cz.cvut.sempipes.manager.SempipesScriptManager;
+import org.apache.jena.util.LocationMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * Created by Miroslav Blasko on 13.1.17.
+ */
+public class ContextLoaderHelper {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ContextLoaderHelper.class);
+
+    // TODO should not point to scriptManager
+    public static void updateContextsIfNecessary(SempipesScriptManager scriptManager) {
+        if (isKeepUpdated()) {
+            LOG.warn("Updating contexts which is not thread safe -- don't use in in production environment.");
+            OntologyDocumentManager ontoDocManager = OntoDocManager.getInstance();
+            List<String> globalScripts = ContextLoaderHelper.registerGlobalScripts(ontoDocManager);
+            scriptManager.reloadScripts(globalScripts);
+        }
+    }
+
+    public static List<String> registerGlobalScripts(OntologyDocumentManager ontDocManager) {
+        List<Path> scriptDirs = ContextLoaderHelper.getScriptDirectories();
+        scriptDirs.forEach(
+                ontDocManager::registerDocuments
+        );
+
+        LocationMapper locMapper = ontDocManager.getOntDocumentManager().getFileManager().getLocationMapper();
+
+        List<String> _globalScripts = new LinkedList<>();
+
+        locMapper.listAltEntries().forEachRemaining(
+                ontoUri -> {
+                    String loc = locMapper.getAltEntry(ontoUri);
+                    if (loc.endsWith(".sms.ttl")) {
+                        LOG.info("Registering script from file " + loc + ".");
+                        _globalScripts.add(ontoUri);
+                    }
+                }
+        );
+        return _globalScripts;
+    }
+
+    public static List<Path> getScriptDirectories() {
+        List<Path> scriptDirs  = Arrays
+                .stream(ConfigProperies.get("scriptDirs").split(";"))
+                .map(path -> Paths.get(path))
+                .collect(Collectors.toList());
+        return scriptDirs;
+    }
+
+    public static boolean isKeepUpdated() {
+        return Boolean.parseBoolean(ConfigProperies.get("contextsLoader.data.keepUpdated"));
+    }
+
+}

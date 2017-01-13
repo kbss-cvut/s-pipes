@@ -1,4 +1,4 @@
-package cz.cvut.sempipes.service;
+package cz.cvut.sempipes.exception;
 
 public class SempipesServiceException extends RuntimeException {
     public SempipesServiceException(String message) {

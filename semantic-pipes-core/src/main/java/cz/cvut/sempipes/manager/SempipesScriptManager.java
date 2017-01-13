@@ -10,17 +10,12 @@ import cz.cvut.sempipes.repository.SMScriptCollectionRepository;
 import cz.cvut.sempipes.repository.ScriptCollectionRepository;
 import cz.cvut.sempipes.util.JenaPipelineUtils;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.util.LocationMapper;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.topbraid.spin.system.SPINModuleRegistry;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Registers resources to contexts.
@@ -42,52 +37,33 @@ public class SempipesScriptManager {
     private Set<String> globalScripts;
     ///private final Map<String, OntModel> globalScriptsMap = new LinkedHashMap<>();
     //private final OntologyDocumentManager ontoDocManager;
-    private final ScriptCollectionRepository scriptsRepository;
-    private final ResourceRegistry functionRegistry;
-    private final ResourceRegistry moduleRegistry;
+    private ScriptCollectionRepository scriptsRepository;
+    private ResourceRegistry functionRegistry;
+    private ResourceRegistry moduleRegistry;
     private OntologyDocumentManager ontoDocManager;
 
-    public SempipesScriptManager(OntologyDocumentManager ontoDocManager, Collection<String> globalScripts) {
-
-        //this.ontoDocManager = ontoDocManager;
-
-//        globalScripts.stream().forEach(scriptCtx -> {
-//            globalScriptsMap.put(scriptCtx, ontoDocManager.getOntology(scriptCtx));
-//        });
-
-
-        this.ontoDocManager = ontoDocManager;
-        scriptsRepository = new SMScriptCollectionRepository(ontoDocManager);
-
-        this.globalScripts = new HashSet<>(globalScripts);
-
+    private void registerAll(OntologyDocumentManager ontoDocManager, Collection<String> globalScripts) {
         List<Resource> functions = scriptsRepository.getFunctions(globalScripts);
         List<Resource> modules = scriptsRepository.getModules(globalScripts);
 
         functionRegistry = new JenaResourceRegistry(functions);
         moduleRegistry = new JenaResourceRegistry(modules);
+
+        OntoDocManager.registerAllSPINModules();
     }
 
-    // TODO !!! move functionality to separate class
-    public static List<String> getGlobalScripts(OntologyDocumentManager ontDocManager, Collection<Path> scriptDirs) {
-        scriptDirs.forEach(
-                ontDocManager::registerDocuments
-        );
+    public void reloadScripts(Collection<String> globalScript) {
+        this.globalScripts = new HashSet<String>(globalScript);
+        registerAll(ontoDocManager, this.globalScripts);
+    }
 
-        LocationMapper locMapper = ontDocManager.getOntDocumentManager().getFileManager().getLocationMapper();
+    public SempipesScriptManager(OntologyDocumentManager ontoDocManager, Collection<String> globalScripts) {
+        this.ontoDocManager = ontoDocManager;
+        scriptsRepository = new SMScriptCollectionRepository(ontoDocManager);
 
-        List<String> _globalScripts = new LinkedList<>();
+        this.globalScripts = new HashSet<>(globalScripts);
 
-        locMapper.listAltEntries().forEachRemaining(
-                ontoUri -> {
-                    String loc = locMapper.getAltEntry(ontoUri);
-                    if (loc.endsWith(".sms.ttl")) {
-                        LOG.info("Registering script from file " + loc + ".");
-                        _globalScripts.add(ontoUri);
-                    }
-                }
-        );
-        return _globalScripts;
+        registerAll(ontoDocManager, globalScripts);
     }
 
 

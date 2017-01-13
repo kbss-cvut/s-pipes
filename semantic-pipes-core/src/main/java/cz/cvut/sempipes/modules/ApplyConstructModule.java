@@ -135,6 +135,22 @@ public class ApplyConstructModule extends AbstractModule {
         }
     }
 
+    private Model execConstruct(Query query, Model model, QuerySolution bindings) {
+        // TODO NOT USABLE as bindings.toString() throws NULL pointer exception use some Utils.checkBindings()
+        // or even before it does not make sense to
+        QueryExecution execution = QueryExecutionFactory.create(query,
+                model, bindings);
+        try {
+            return execution.execConstruct();
+        } catch (RuntimeException ex) {
+            LOG.error("Coud not execute query : \"\n"
+                    + query
+                    + "\n\" with query bindings \"\n" + bindings + "\n\"");
+            throw ex;
+        }
+    }
+
+
 
     @Override
     public String getTypeURI() {

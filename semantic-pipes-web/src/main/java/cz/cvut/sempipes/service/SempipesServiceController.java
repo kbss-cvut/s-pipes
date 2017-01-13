@@ -1,12 +1,11 @@
 package cz.cvut.sempipes.service;
 
-import cz.cvut.sempipes.eccairs.ConfigProperies;
-import cz.cvut.sempipes.eccairs.EccairsService;
 import cz.cvut.sempipes.engine.*;
-import cz.cvut.sempipes.manager.OntoDocManager;
-import cz.cvut.sempipes.manager.OntologyDocumentManager;
+import cz.cvut.sempipes.exception.SempipesServiceException;
 import cz.cvut.sempipes.manager.SempipesScriptManager;
 import cz.cvut.sempipes.modules.Module;
+import cz.cvut.sempipes.service.util.ContextLoaderHelper;
+import cz.cvut.sempipes.service.util.ScriptManagerFactory;
 import cz.cvut.sempipes.util.RDFMimeType;
 import cz.cvut.sempipes.util.RawJson;
 import org.apache.jena.query.QuerySolution;
@@ -26,13 +25,9 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @EnableWebMvc
@@ -72,7 +67,6 @@ public class SempipesServiceController {
 
     public SempipesServiceController() {
         scriptManager = ScriptManagerFactory.getSingletonSPipesScriptManager();
-        OntoDocManager.registerAllSPINModules();
     }
 
     @RequestMapping(
@@ -143,16 +137,6 @@ public class SempipesServiceController {
     public Model processServiceGetRequestCompat(@RequestParam MultiValueMap<String,String> parameters) {
         LOG.info("Processing service GET request.");
         return runService(ModelFactory.createDefaultModel(), parameters);
-    }
-
-    @RequestMapping( //TODO remove old service
-            value = "/service-old",
-            method = RequestMethod.GET,
-            produces = {RDFMimeType.LD_JSON_STRING + ";charset=utf-8"}
-    )
-    public RawJson processServiceOldGetRequest(@RequestParam MultiValueMap parameters) {
-        LOG.info("Processing service GET request.");
-        return new RawJson(new EccairsService().run(new ByteArrayInputStream(new byte[]{}), "", parameters));
     }
 
     @ExceptionHandler
@@ -229,6 +213,8 @@ public class SempipesServiceController {
 
         // EXECUTE PIPELINE
         ExecutionEngine engine = ExecutionEngineFactory.createEngine();
+
+        ContextLoaderHelper.updateContextsIfNecessary(scriptManager);
         Module module = scriptManager.loadFunction(id);
 
 

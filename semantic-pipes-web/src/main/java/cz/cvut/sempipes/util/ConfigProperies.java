@@ -1,4 +1,4 @@
-package cz.cvut.sempipes.eccairs;
+package cz.cvut.sempipes.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +21,7 @@ public class ConfigProperies {
             InputStream is = ConfigProperies.class.getClassLoader().getResourceAsStream("config.properties");
             if (is != null) {
                 prop.load(is);
+                LOG.info("Loaded configuration from {} : \n {}", CONFIG_FILE, prop.entrySet());
             } else {
                 throw new FileNotFoundException("Property file '" + CONFIG_FILE + "' not found in the classpath");
             }
