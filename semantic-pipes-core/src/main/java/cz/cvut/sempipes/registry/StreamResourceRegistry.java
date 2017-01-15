@@ -19,9 +19,10 @@ public class StreamResourceRegistry {
     private static final String PERSISTENT_CONTEXT_PREFIX = "http://onto.fel.cvut.cz/resources/";
     private Map<String, StreamResource> id2resourcesMap = new HashMap<>();
 
-    private StreamResourceRegistry(){}
+    private StreamResourceRegistry() {
+    }
 
-    public static StreamResourceRegistry getInstance(){
+    public static StreamResourceRegistry getInstance() {
         if (instance == null) {
             instance = new StreamResourceRegistry();
             instance.resourcePrefixMap.add(PERSISTENT_CONTEXT_PREFIX);
@@ -44,7 +45,9 @@ public class StreamResourceRegistry {
 
     public StreamResource getResourceByUrl(String url) {
         LOG.debug("Trying to find resource with url {}", url);
-        LOG.debug("- map content {}", id2resourcesMap);
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Resource map content: {}", id2resourcesMap);
+        }
         String id = resourcePrefixMap.stream()
                 .filter(url::startsWith)
                 .findAny().map(p -> url.substring(p.length()))
@@ -59,8 +62,10 @@ public class StreamResourceRegistry {
 
     public void registerResource(String id, byte[] content, String contentType) {
         LOG.debug("Registering resource with id {}", id);
-        StreamResource res = new StringStreamResource(id,  content, contentType);
+        StreamResource res = new StringStreamResource(id, content, contentType);
         id2resourcesMap.put(id, res);
-        LOG.debug("- map content after registration: {}", id2resourcesMap);
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Resource map content after the registration: {}", id2resourcesMap);
+        }
     }
 }
