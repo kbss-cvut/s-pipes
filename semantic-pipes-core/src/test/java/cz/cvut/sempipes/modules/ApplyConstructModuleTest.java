@@ -99,26 +99,51 @@ public class ApplyConstructModuleTest extends AbstractModuleTestHelper {
     }
 
     @Test
-    public void executeConstructOneIteration() {
+    public void executeConstructOneIterationWithoutInputModel() {
         executeConstructIterations(1,1);
 
     }
 
     @Test
-    public void executeConstructTwoIterations() {
+    public void executeConstructTwoIterationsWithoutInputModel() {
         executeConstructIterations(2,2);
 
     }
 
     @Test
-    public void executeConstructThreeIterations() {
+    public void executeConstructThreeIterationsWithoutInputModel() {
         executeConstructIterations(3,2);
     }
 
-    public void executeConstructIterations(int n, int expectedNumberOfResults) {
+    @Test
+    public void executeConstructOneIterationWithModelReplace() {
+        executeConstructIterations(1,1, createSimpleModel(), true);
+    }
+
+    @Test
+    public void executeConstructTwoIterationWithModelReplace() {
+        executeConstructIterations(2,2, createSimpleModel(), true);
+    }
+
+    @Test
+    public void executeConstructOneIterationWithoutModelReplace() {
+        executeConstructIterations(1,2, createSimpleModel(),false);
+    }
+
+    @Test
+    public void executeConstructTwoIterationWithoutModelReplace() {
+        executeConstructIterations(2,3, createSimpleModel(), false);
+    }
+
+    private void executeConstructIterations(int n, int expectedNumberOfResults) {
+        executeConstructIterations(n, expectedNumberOfResults, ModelFactory.createDefaultModel(), false);
+    }
+
+    private void executeConstructIterations(int n, int expectedNumberOfResults, Model inputModel, boolean isReplace) {
         final ApplyConstructModule m = (ApplyConstructModule) getRootModule("iteration-config.ttl");
-        m.setInputContext( ExecutionContextFactory.createContext(ModelFactory.createDefaultModel()));
+        m.setInputContext( ExecutionContextFactory.createContext(inputModel));
         m.loadConfiguration();
+        m.setReplace(isReplace);
 
         m.setIterationCount(n);
 
