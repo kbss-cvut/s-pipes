@@ -67,7 +67,7 @@ public class JenaResourceRegistry implements  ResourceRegistry {
         if (isPrefixedEntityId(entityId)) {
             String prefix = getPrefix(entityId);
             String localName = getLocalName(entityId);
-            throw new NotImplementedException(); //TODO
+            throw new UnsupportedOperationException(); //TODO
         }
 
         throw new IllegalStateException();
@@ -100,7 +100,7 @@ public class JenaResourceRegistry implements  ResourceRegistry {
         }
 
         if (isPrefixedEntityId(entityId)) {
-            throw new NotImplementedException();
+            throw new UnsupportedOperationException();
         }
 
         throw new IllegalStateException();
