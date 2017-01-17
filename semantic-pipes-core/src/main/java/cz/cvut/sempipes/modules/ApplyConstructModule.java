@@ -128,10 +128,10 @@ public class ApplyConstructModule extends AbstractModule {
             nNew = inferredInSingleIterationModel.size();
         }
 
-        if (! isReplace) {
-            return ExecutionContextFactory.createContext(ModelFactory.createUnion(defaultModel, inferredModel));
-        } else {
+        if (isReplace) {
             return ExecutionContextFactory.createContext(inferredModel);
+        } else {
+            return ExecutionContextFactory.createContext(ModelFactory.createUnion(defaultModel, inferredModel));
         }
     }
 
