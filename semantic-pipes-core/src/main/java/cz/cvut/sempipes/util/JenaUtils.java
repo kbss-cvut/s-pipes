@@ -6,6 +6,8 @@ import org.apache.jena.rdf.model.*;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
@@ -20,6 +22,8 @@ import java.util.List;
  * Created by Miroslav Blasko on 30.7.16.
  */
 public class JenaUtils {
+
+    private static Logger LOG = LoggerFactory.getLogger(JenaUtils.class);
 
     public static Model readModelFromString(String modelText, String lang) {
         Model model = ModelFactory.createDefaultModel();
@@ -84,8 +88,8 @@ public class JenaUtils {
     public static void saveModelToTemporaryFile(Model model) {
         try {
             Path file = Files.createTempFile("model-output-", ".ttl");
-            System.out.println("Saving model to temporary file " + file.toString() + "...");
-            OntoDocManager.allLoadedFilesModel.write(new FileOutputStream(file.toFile()), FileUtils.langTurtle);
+            LOG.debug("Saving model to temporary file " + file.toString() + "...");
+            model.write(new FileOutputStream(file.toFile()), FileUtils.langTurtle);
         } catch (IOException e) {
             e.printStackTrace();
         }
