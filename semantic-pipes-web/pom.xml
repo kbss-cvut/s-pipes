@@ -19,13 +19,10 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!--<cz.cvut.kbss.jopa.version>0.7.0</cz.cvut.kbss.jopa.version>-->
-        <org.springframework.version>4.1.5.RELEASE</org.springframework.version>
-        <org.springframework.security.version>4.0.2.RELEASE</org.springframework.security.version>
         <!--<com.fasterxml.jackson.version>2.3.3</com.fasterxml.jackson.version>-->
         <!--<junit.version>4.12</junit.version>-->
         <ch.qos.logback.version>1.1.2</ch.qos.logback.version>
         <slf4j.version>1.7.12</slf4j.version>
-        <org.apache.jena>3.1.0</org.apache.jena>
         <!--<org.mapstruct.version>1.0.0.CR1</org.mapstruct.version>-->
     </properties>
 
@@ -67,6 +64,25 @@
             <version>2.0.1</version>
         </dependency>
 
+
+        <!--<dependency> &lt;!&ndash; TODO  should not be here !!!!!!!&ndash;&gt;-->
+            <!--<groupId>cz.cvut.inbas.eccairs</groupId>-->
+            <!--<artifactId>e5xml</artifactId>-->
+            <!--<version>1.0-SNAPSHOT</version>-->
+        <!--</dependency>-->
+        <!--<dependency> &lt;!&ndash; TODO  should not be here !!!!!!!&ndash;&gt;-->
+            <!--<groupId>org.openrdf.sesame</groupId>-->
+            <!--<artifactId>sesame-rio-rdfxml</artifactId>-->
+            <!--<version>2.8.9</version>-->
+        <!--</dependency>-->
+
+        <!--<dependency>&lt;!&ndash; TODO  should not be here !!!!!!!&ndash;&gt;-->
+            <!--<groupId>com.google.guava</groupId>-->
+            <!--<artifactId>guava</artifactId>-->
+            <!--<version>19.0</version>-->
+            <!--&lt;!&ndash; TODO should be only test dependency &ndash;&gt;-->
+            <!--&lt;!&ndash;<scope>test</scope>&ndash;&gt;-->
+        <!--</dependency>-->
 
         <!-- Logging -->
         <!--<dependency>-->
