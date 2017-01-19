@@ -281,17 +281,17 @@ public class ExecuteModuleCLI {
             );
         }
 
-
-        OntologyDocumentManager ontoDocManager = OntoDocManager.getInstance();
-        List<String> globalScripts = SempipesScriptManager.getGlobalScripts(ontoDocManager, scriptPaths);
-
         // load ontologies from config file
 
         // load ontologies from parameters
 
         // load ontologies from current working directory
 
-        return new SempipesScriptManager(ontoDocManager, globalScripts);
+            OntologyDocumentManager ontoDocManager = OntoDocManager.getInstance();
+            return new SempipesScriptManager(
+                    ontoDocManager,
+                    scriptPaths.stream().map(Path::toString).collect(Collectors.toList())
+            );
     }
 
 
