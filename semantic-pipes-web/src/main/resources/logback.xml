@@ -58,12 +58,17 @@
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <!-- By default, encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder -->
         <encoder>
+
+
             <pattern>%date{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{30} - %msg%n</pattern>
         </encoder>
     </appender>
 
     <!-- Logger for our app -->
     <logger name="cz.cvut.sempipes" level="TRACE" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    <logger name="cz.cvut.sempipes.config.RDFMediaTypeConverter" level="DEBUG" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
     <logger name="cz.cvut.sempipes.modules.BindWithConstantModule" level="TRACE" additivity="false">

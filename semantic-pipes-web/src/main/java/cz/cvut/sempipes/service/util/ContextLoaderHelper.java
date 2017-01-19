@@ -1,6 +1,7 @@
 package cz.cvut.sempipes.service.util;
 
-import cz.cvut.sempipes.util.ConfigProperies;
+import cz.cvut.sempipes.config.ContextLoaderConfig;
+import cz.cvut.sempipes.util.CoreConfigProperies;
 import cz.cvut.sempipes.manager.OntoDocManager;
 import cz.cvut.sempipes.manager.OntologyDocumentManager;
 import cz.cvut.sempipes.manager.SempipesScriptManager;
@@ -33,8 +34,8 @@ public class ContextLoaderHelper {
     }
 
     public static List<String> registerGlobalScripts(OntologyDocumentManager ontDocManager) {
-        List<Path> scriptDirs = ContextLoaderHelper.getScriptDirectories();
-        scriptDirs.forEach(
+        List<Path> scriptPaths = ContextLoaderConfig.getScriptPaths();
+        scriptPaths.forEach(
                 ontDocManager::registerDocuments
         );
 
@@ -54,16 +55,8 @@ public class ContextLoaderHelper {
         return _globalScripts;
     }
 
-    public static List<Path> getScriptDirectories() {
-        List<Path> scriptDirs  = Arrays
-                .stream(ConfigProperies.get("scriptDirs").split(";"))
-                .map(path -> Paths.get(path))
-                .collect(Collectors.toList());
-        return scriptDirs;
-    }
-
     public static boolean isKeepUpdated() {
-        return Boolean.parseBoolean(ConfigProperies.get("contextsLoader.data.keepUpdated"));
+        return Boolean.parseBoolean(CoreConfigProperies.get("contextsLoader.data.keepUpdated"));
     }
 
 }
