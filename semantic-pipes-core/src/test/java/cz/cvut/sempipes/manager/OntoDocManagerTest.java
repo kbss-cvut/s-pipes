@@ -55,7 +55,7 @@ public class OntoDocManagerTest {
 
         for (String ext : supportedFileExtensions) {
 
-            ontoDocManager = new OntoDocManager();
+            ontoDocManager = OntoDocManager.getInstance();
 
             assertEquals(0, getLocationMapperEntriesCount(ontoDocManager));
 

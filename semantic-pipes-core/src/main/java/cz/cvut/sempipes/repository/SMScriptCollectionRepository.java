@@ -38,7 +38,7 @@ public class SMScriptCollectionRepository implements ScriptCollectionRepository 
     @Override
     public @NotNull List<Resource> getModules(@Nullable Collection<String> contexts) {
         if (contexts == null) {
-            throw new NotImplementedException();
+            throw new UnsupportedOperationException();
         }
         return contexts.stream()
                 .map(ctx -> JenaPipelineUtils.getAllModulesWithTypes(getContextClosure(ctx)).keySet())
@@ -57,7 +57,7 @@ public class SMScriptCollectionRepository implements ScriptCollectionRepository 
     @Override
     public @NotNull List<Resource> getFunctions(@Nullable Collection<String> contexts) {
         if (contexts == null) {
-            throw new NotImplementedException();
+            throw new UnsupportedOperationException();
         }
         // TODO move implementation from JenaPipelinesUtils
         return contexts.stream()

@@ -1,5 +1,6 @@
 package cz.cvut.sempipes.modules;
 
+import cz.cvut.sempipes.config.AuditConfig;
 import cz.cvut.sempipes.constants.KBSS_MODULE;
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
@@ -53,16 +54,19 @@ public abstract class AbstractModule implements Module {
     @Override
     public ExecutionContext execute() {
         loadModuleFlags();
-        if (isInDebugMode) {
-            LOG.debug("Entering debug mode within this module.");
-        }
+//        if (isInDebugMode) {
+//            LOG.debug("Entering debug mode within this module.");
+//        }
         loadConfiguration();
         loadModuleConstraints();
         checkInputConstraints();
+        if (AuditConfig.isEnabled() || isInDebugMode) {
+            LOG.debug("Saving module execution input to file {}.", saveModelToTemporaryFile(executionContext.getDefaultModel()));
+        }
         outputContext = executeSelf();
         checkOutputConstraints();
-        if (isInDebugMode) {
-            LOG.debug("Saveing module execution output to file {}.", saveModelToTemporaryFile(outputContext.getDefaultModel()));
+        if (AuditConfig.isEnabled() || isInDebugMode) {
+            LOG.debug("Saving module execution output to file {}.", saveModelToTemporaryFile(outputContext.getDefaultModel()));
         }
         return  outputContext;
     }

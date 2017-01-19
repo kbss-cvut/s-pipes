@@ -54,7 +54,7 @@ public class OntoDocManager implements OntologyDocumentManager {
     private static final Logger LOG = LoggerFactory.getLogger(OntoDocManager.class);
 
     // TODO remove !!!!!!! this is woraround for registering SPIN related things.
-    public static Model allLoadedFilesModel = ModelFactory.createDefaultModel();
+    private static Model allLoadedFilesModel = ModelFactory.createDefaultModel();
 
 
     OntDocumentManager ontDocumentManager;
@@ -62,8 +62,9 @@ public class OntoDocManager implements OntologyDocumentManager {
     static String[] SUPPORTED_FILE_EXTENSIONS = {"n3", "nt", "ttl", "rdf", "owl"}; //TODO json-ld
 
 
-    public OntoDocManager() {
+    private OntoDocManager() {
         this(new OntDocumentManager());
+        clearSPINRelevantModel();
     }
 
     OntoDocManager(OntDocumentManager ontDocumentManager) {
@@ -145,7 +146,7 @@ public class OntoDocManager implements OntologyDocumentManager {
 
                         String lang = FileUtils.guessLang(file.getFileName().toString());
 
-                        LOG.debug("Loading model from file {} ...", file);
+                        LOG.debug("Loading model from {} ...", file.toUri().toString());
                         Model model = loadModel(file, lang);
 
                         if (model != null) {
@@ -183,6 +184,9 @@ public class OntoDocManager implements OntologyDocumentManager {
         }
     }
 
+    private static void clearSPINRelevantModel() {
+        allLoadedFilesModel = ModelFactory.createDefaultModel();
+    }
 
     static Map<String, String> getAllBaseIris(Path directoryPath) {
 
@@ -335,6 +339,7 @@ public class OntoDocManager implements OntologyDocumentManager {
 //        }
         SPINModuleRegistry.get().init();
         SPINModuleRegistry.get().registerAll(model, null);
+        clearSPINRelevantModel();
 //        OntModel model = ModelFactory.createOntologyModel();
 //        model.add(OntoDocManager.allLoadedFilesModel);
 //        SPINModuleRegistry.get().registerAll(model, null);

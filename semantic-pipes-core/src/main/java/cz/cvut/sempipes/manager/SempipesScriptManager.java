@@ -13,7 +13,6 @@ import org.apache.jena.rdf.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.topbraid.spin.system.SPINModuleRegistry;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.*;
 
@@ -73,7 +72,7 @@ public class SempipesScriptManager {
 
         // instantiate module type
         if (moduleId == null) {
-            throw new NotImplementedException();
+            throw new UnsupportedOperationException();
         }
 
         String resourceUri;
