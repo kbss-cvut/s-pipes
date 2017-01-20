@@ -62,9 +62,13 @@ class ExecutionEngineImpl implements ExecutionEngine {
                 module.setInputContext(context);
             }
             LOG.info(" ##### " + module.getLabel());
-            LOG.trace("Using input context {}", context.toSimpleString()); //TODO redundant code -> merge
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Using input context {}", context.toSimpleString()); //TODO redundant code -> merge
+            }
             ExecutionContext outputContext = module.execute();
-            LOG.trace("Returning output context {}", outputContext.toSimpleString());
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Returning output context {}", outputContext.toSimpleString());
+            }
             module.addOutputBindings(context.getVariablesBinding());
             return module.getOutputContext();
         }
@@ -74,12 +78,16 @@ class ExecutionEngineImpl implements ExecutionEngine {
 
         LOG.info(" ##### " + module.getLabel());
         ExecutionContext mergedContext = mergeContexts(resource2ContextMap);
-        LOG.trace("Using input merged context {}", mergedContext.toSimpleString());
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Using input merged context {}", mergedContext.toSimpleString());
+        }
 
         module.setInputContext(mergedContext);
 
         ExecutionContext outputContext = module.execute();
-        LOG.trace("Returning output context {}", outputContext.toSimpleString());
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Returning output context {}", outputContext.toSimpleString());
+        }
         module.addOutputBindings(mergedContext.getVariablesBinding());
         return module.getOutputContext();
     }
