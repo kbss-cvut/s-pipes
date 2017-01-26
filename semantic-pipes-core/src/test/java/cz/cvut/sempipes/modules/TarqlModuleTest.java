@@ -3,6 +3,8 @@ package cz.cvut.sempipes.modules;
 import cz.cvut.sempipes.TestConstants;
 import cz.cvut.sempipes.engine.*;
 import cz.cvut.sempipes.engine.PipelineFactory;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import java.nio.file.Paths;
 
@@ -13,7 +15,8 @@ public class TarqlModuleTest {
 
     String TARQL_MODULE_DIR = "module/tarql";
 
-    //@Test
+    @Ignore
+    @Test
     public void execute() throws Exception {
 
         ExecutionEngine e = ExecutionEngineFactory.createEngine();
