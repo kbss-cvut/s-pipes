@@ -12,15 +12,14 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.util.FileUtils;
+import org.deri.tarql.tarql;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.topbraid.spin.arq.ARQFactory;
 import org.topbraid.spin.model.Construct;
 import org.topbraid.spin.system.SPINModuleRegistry;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -30,6 +29,7 @@ import java.util.stream.Collectors;
 /**
  * Created by Miroslav Blasko on 26.5.16.
  */
+// TODO merge with ModuleTarql functionality
 public class TarqlModule extends AbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(TarqlModule.class);
@@ -49,8 +49,7 @@ public class TarqlModule extends AbstractModule {
     private String sourceFilePath;
 
     public TarqlModule() {
-        // TODO move elsewhere
-        SPINModuleRegistry.get().init();
+        //SPINModuleRegistry.get().init(); // TODO move elsewhere
     }
 
 
@@ -61,6 +60,10 @@ public class TarqlModule extends AbstractModule {
 
         // TODO full external context support
         // set variable binding
+
+        // TODO implement support for input graph
+        //      (naive solution would be to create s,p,o columns in new CSV file),
+        //      but this has problems with blank nodes
 
         Path p = Paths.get("/home/blcha/sempipes-log.txt");
 
@@ -77,28 +80,36 @@ public class TarqlModule extends AbstractModule {
 
             Query query = ARQFactory.get().createQuery(spinConstructRes);
 
-            // save string query to temporary file
-            File tempFile = ExecUtils.createTempFile();
             try {
-                Files.append(query.toString(), tempFile, Charset.defaultCharset());
+                // save string query to temporary file
+                final File queryFile = File.createTempFile("query", ".tarql");
+                final String queryString = query.toString();
+                //final String queryString = query.toString().replaceAll("\\?__FN__", "\"" + ontologyIRI + "\"");
+                Files.append(query.toString(), queryFile, Charset.defaultCharset());
+                //java.nio.file.Files.write(Paths.get(queryFile.toURI()), queryString.getBytes());
+
+                // execute tarql query.sparql table.csv
+                final File outputFile = File.createTempFile("output", ".ttl");
+
+                try (PrintStream s = new PrintStream(new FileOutputStream(outputFile))) {
+
+                    final PrintStream origStream = System.out;
+                    System.setOut(s);
+                    tarql.main(
+//                            "--ntriples",
+//                        noHeader ? "-H" : "",
+                            queryFile.getAbsolutePath(),
+                            sourceFilePath
+                    );
+                    System.setOut(origStream);
+
+                    // merge output to model
+                    mergedModel.read(new FileInputStream(outputFile), null, FileUtils.langTurtle);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            // execute tarql query.sparql table.csv
-            String[] programCall = new String[]{
-                    TARQL_PROGRAM,
-                    tempFile.getAbsolutePath(),
-                    Paths.get(sourceFilePath).toAbsolutePath().toString()
-            };
-
-
-            InputStream is = ExecUtils.execProgramWithoutExeption(programCall, null);
-
-            // merge output to model
-            mergedModel.read(is, null, FileUtils.langTurtle);
         }
-
         //newModel.write(System.out, FileUtils.langTurtle);
 
         //TODO should return only Model ???

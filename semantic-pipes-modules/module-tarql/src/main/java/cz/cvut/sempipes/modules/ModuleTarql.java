@@ -15,6 +15,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+@Deprecated //TODO merge with TarqlModule functionality
 public class ModuleTarql extends AbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(ModuleTarql.class);
