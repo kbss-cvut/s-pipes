@@ -22,7 +22,7 @@ public class ExecUtils {
         File tempFile = Files.createTempFile("execution-", ".txt").toFile();
 
         //tempFile.deleteOnExit();
-        LOG.debug("Using temporary file for input stream " + tempFile.getAbsolutePath());
+        LOG.trace("Using temporary file for input stream " + tempFile.getAbsolutePath());
         try (FileOutputStream out = new FileOutputStream(tempFile)) {
             IOUtils.copy(in, out);
         }
@@ -37,7 +37,7 @@ public class ExecUtils {
             e.printStackTrace();
         }
 
-        LOG.debug("Using temporary file for output stream " + tempFile.getAbsolutePath());
+        LOG.trace("Using temporary file for output stream " + tempFile.getAbsolutePath());
         return tempFile;
     }
 
@@ -72,7 +72,7 @@ public class ExecUtils {
     //TODO remove
     public static InputStream execProgramWithoutExeption(String[] programCall, InputStream inputStream) {
         String programCallStr = "\"" + Arrays.asList(programCall).stream().collect(Collectors.joining(" ")) + "\"" ;
-        LOG.trace("Executing -- " + programCallStr);
+        LOG.debug("Executing -- " + programCallStr);
         try {
             return execProgram(programCall, inputStream);
         } catch (IOException e) {
