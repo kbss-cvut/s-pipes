@@ -111,13 +111,12 @@ public class SempipesServiceController {
     @RequestMapping(
             value = "/service",
             method = RequestMethod.GET,
-//            produces = {                      //TODO support other formats
-//                    RDFMimeType.LD_JSON_STRING,
-//                    RDFMimeType.N_TRIPLES_STRING,
-//                    RDFMimeType.RDF_XML_STRING,
-//                    RDFMimeType.TURTLE_STRING
-//            }
-            produces = {RDFMimeType.LD_JSON_STRING + ";charset=utf-8"}
+            produces = {
+                    RDFMimeType.LD_JSON_STRING + ";charset=utf-8",
+                    RDFMimeType.N_TRIPLES_STRING,
+                    RDFMimeType.RDF_XML_STRING,
+                    RDFMimeType.TURTLE_STRING
+            }
     )
     public Model processServiceGetRequest(@RequestParam MultiValueMap<String,String> parameters) {
         LOG.info("Processing service GET request.");
