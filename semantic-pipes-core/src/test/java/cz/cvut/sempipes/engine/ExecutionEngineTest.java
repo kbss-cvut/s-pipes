@@ -5,6 +5,7 @@ import cz.cvut.sempipes.modules.Module;
 import cz.cvut.sempipes.modules.TarqlModule;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.sparql.pfunction.library.concat;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.LinkedList;
@@ -18,22 +19,22 @@ import static org.apache.jena.vocabulary.RDFSyntax.RDF;
 public class ExecutionEngineTest {
 
 
-
-    @Test
+    @Ignore
+    @Test //TODO remove
     public void executeModule() throws Exception {
 
-        // builder
-
-        RDFNode rdfNode = null; // sparql expression
-        BindWithConstantModule bindRepo = new BindWithConstantModule();
-       // bindRepo.setOutputVariable("repoUrl");
-        //bindRepo.setValue(rdfNode);
-
-        Module tarqlModule = new TarqlModule();
-
-        List<Module> inputModules = new LinkedList<>();
-        inputModules.add(bindRepo);
-        tarqlModule.setInputModules(inputModules);
+//        // builder
+//
+//        RDFNode rdfNode = null; // sparql expression
+//        BindWithConstantModule bindRepo = new BindWithConstantModule();
+//       // bindRepo.setOutputVariable("repoUrl");
+//        //bindRepo.setValue(rdfNode);
+//
+//        Module tarqlModule = new TarqlModule();
+//
+//        List<Module> inputModules = new LinkedList<>();
+//        inputModules.add(bindRepo);
+//        tarqlModule.setInputModules(inputModules);
 
 
 
