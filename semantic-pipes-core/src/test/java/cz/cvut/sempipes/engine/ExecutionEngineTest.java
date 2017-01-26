@@ -2,7 +2,6 @@ package cz.cvut.sempipes.engine;
 
 import cz.cvut.sempipes.modules.BindWithConstantModule;
 import cz.cvut.sempipes.modules.Module;
-import cz.cvut.sempipes.modules.TarqlModule;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.sparql.pfunction.library.concat;
 import org.junit.Ignore;
