@@ -10,10 +10,10 @@ import java.io.*;
 import java.util.List;
 
 @RunWith(Parameterized.class)
-public class ModuleImportE5XZIPTest extends ModuleImportE5XTest {
+public class ImportE5XZIPModuleTest extends ImportE5XModuleTest {
 
 
-    public ModuleImportE5XZIPTest(String path, String contentType) {
+    public ImportE5XZIPModuleTest(String path, String contentType) {
         super(path, contentType);
     }
 
@@ -24,7 +24,7 @@ public class ModuleImportE5XZIPTest extends ModuleImportE5XTest {
 
         List<String> files = null;
         try {
-            files = IOUtils.readLines((ModuleImportE5XZIPTest.class.getClassLoader().getResourceAsStream(dir)), Charsets.UTF_8);
+            files = IOUtils.readLines((ImportE5XZIPModuleTest.class.getClassLoader().getResourceAsStream(dir)), Charsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
         }

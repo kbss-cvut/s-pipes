@@ -5,14 +5,13 @@ import cz.cvut.sempipes.engine.ExecutionContextFactory;
 //import info.aduna.webapp.util.HttpServerUtil;
 import org.apache.jena.rdf.model.*;
 import org.junit.Ignore;
-import org.junit.Test;
 
-public class ModuleSesameTest {
+public class SesameModuleTest {
 
     @org.junit.Test
     @Ignore
     public void testDeployEmpty() throws Exception {
-        final ModuleSesame moduleSesame = new ModuleSesame();
+        final SesameModule moduleSesame = new SesameModule();
 
         final Model deployModel = ModelFactory.createDefaultModel();
         final Property resource = ResourceFactory.createProperty("http://a");
@@ -22,10 +21,10 @@ public class ModuleSesameTest {
 
         final Model model = ModelFactory.createDefaultModel();
         final Resource root = model.createResource();
-        model.add(root,ModuleSesame.P_IS_REPLACE_CONTEXT_IRI, model.createTypedLiteral(true));
-        model.add(root,ModuleSesame.P_SESAME_SERVER_URL, "http://localhost:18080/openrdf-sesame");
-        model.add(root,ModuleSesame.P_SESAME_REPOSITORY_NAME, "test-semantic-pipes");
-        model.add(root,ModuleSesame.P_SESAME_CONTEXT_IRI, "");
+        model.add(root, SesameModule.P_IS_REPLACE_CONTEXT_IRI, model.createTypedLiteral(true));
+        model.add(root, SesameModule.P_SESAME_SERVER_URL, "http://localhost:18080/openrdf-sesame");
+        model.add(root, SesameModule.P_SESAME_REPOSITORY_NAME, "test-semantic-pipes");
+        model.add(root, SesameModule.P_SESAME_CONTEXT_IRI, "");
 
         moduleSesame.setConfigurationResource(root);
 

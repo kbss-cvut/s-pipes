@@ -2,11 +2,7 @@ package cz.cvut.sempipes.modules;
 
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
-import cz.cvut.sempipes.engine.VariablesBinding;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.ResourceFactory;
-import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -15,7 +11,7 @@ import static org.junit.Assert.*;
 /**
  * Created by Miroslav Blasko on 5.1.17.
  */
-public class ModuleGetDatasetDescriptorsTest {
+public class GetDatasetDescriptorsModuleTest {
 
     @Test
     @Ignore
@@ -28,7 +24,7 @@ public class ModuleGetDatasetDescriptorsTest {
 //                ResourceFactory.createPlainLiteral("http://linked.opendata.cz/resource/dataset/vavai/tenders/vocabulary")
 //        ));
 
-        ModuleGetDatasetDescriptors m = new ModuleGetDatasetDescriptors();
+        GetDatasetDescriptorsModule m = new GetDatasetDescriptorsModule();
         m.setpDatasetIRI("http://linked.opendata.cz/resource/dataset/vavai/tenders/vocabulary");
 
         m.setInputContext(inCtx);

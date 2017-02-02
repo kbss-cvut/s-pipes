@@ -12,23 +12,23 @@ import java.nio.file.Paths;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-abstract class ModuleImportE5XTest {
+abstract class ImportE5XModuleTest {
     private String path;
 
     private String contentType;
 
-    public ModuleImportE5XTest(String path, String contentType) {
+    public ImportE5XModuleTest(String path, String contentType) {
         this.path = path;
         this.contentType = contentType;
     }
 
     public void execute() {
-        String e5xFilePath = ModuleImportE5XTest.class.getResource(path).getPath();
+        String e5xFilePath = ImportE5XModuleTest.class.getResource(path).getPath();
         try {
             byte[] file = Files.readAllBytes(Paths.get(e5xFilePath));
             StreamResource streamResouce = new StringStreamResource(e5xFilePath, file, contentType);
 
-            ModuleImportE5x module = new ModuleImportE5x();
+            ImportE5XModule module = new ImportE5XModule();
 
             module.setInputContext(ExecutionContextFactory.createEmptyContext());
             module.setE5xResource(streamResouce);

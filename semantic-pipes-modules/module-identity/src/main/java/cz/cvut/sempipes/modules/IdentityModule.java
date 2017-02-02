@@ -5,9 +5,9 @@ import cz.cvut.sempipes.engine.ExecutionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ModuleIdentity extends AbstractModule {
+public class IdentityModule extends AbstractModule {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ModuleIdentity.class);
+    private static final Logger LOG = LoggerFactory.getLogger(IdentityModule.class);
 
 
     @Override

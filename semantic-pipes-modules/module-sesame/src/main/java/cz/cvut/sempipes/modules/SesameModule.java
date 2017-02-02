@@ -20,9 +20,9 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 
-public class ModuleSesame extends AbstractModule {
+public class SesameModule extends AbstractModule {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ModuleSesame.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SesameModule.class);
 
     private static String TYPE_URI = KBSS_MODULE.getURI()+"deploy";
     private static String PROPERTY_PREFIX_URI = KBSS_MODULE.getURI()+"sesame";

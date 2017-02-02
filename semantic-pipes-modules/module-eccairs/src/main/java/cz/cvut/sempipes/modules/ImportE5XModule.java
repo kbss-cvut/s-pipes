@@ -32,11 +32,10 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.net.URI;
 import java.util.Arrays;
-import java.util.stream.Stream;
 
-public class ModuleImportE5x extends AbstractModule {
+public class ImportE5XModule extends AbstractModule {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ModuleImportE5x.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ImportE5XModule.class);
 
     StreamResource e5xResource;
 

@@ -2,8 +2,6 @@ package cz.cvut.sempipes.modules;
 
 import cz.cvut.sempipes.constants.KBSS_MODULE;
 import cz.cvut.sempipes.engine.ExecutionContext;
-import cz.cvut.sempipes.engine.ExecutionContextFactory;
-import cz.cvut.sempipes.engine.PipelineFactory;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.util.iterator.ExtendedIterator;
 //import org.ocpsoft.prettytime.nlp.PrettyTimeParser;
@@ -12,13 +10,11 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 
+public class NLPModule extends AbstractModule {
 
-public class ModuleNLP extends AbstractModule {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ModuleNLP.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NLPModule.class);
 
     final Property HAS_DATE = ResourceFactory.createProperty("http://kbss/has-date");
 

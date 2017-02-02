@@ -3,7 +3,6 @@ package cz.cvut.sempipes.modules;
 import cz.cvut.sempipes.constants.KBSS_MODULE;
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.modules.datasetdiscovery.model.generated.Vocabulary;
-import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.util.FileUtils;
@@ -19,9 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
 
-public class ModuleDatasetDiscovery extends AbstractModule {
+public class DatasetDiscoveryModule extends AbstractModule {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ModuleDatasetDiscovery.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DatasetDiscoveryModule.class);
 
     private static final String TYPE_URI = KBSS_MODULE.uri + "dataset-discovery-v1";
 

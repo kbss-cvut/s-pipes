@@ -1,6 +1,5 @@
 package cz.cvut.sempipes.modules;
 
-import cz.cvut.sempipes.constants.KBSS_MODULE;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
@@ -13,7 +12,7 @@ public class SU_TIME {
     /**
      * The namespace of the vocabulary as a string
      */
-    private static final String uri = ModuleSUTime.TYPE_URI;
+    private static final String uri = SUTimeModule.TYPE_URI;
 
     protected static final Resource resource(String local )
     { return ResourceFactory.createResource( uri + local ); }

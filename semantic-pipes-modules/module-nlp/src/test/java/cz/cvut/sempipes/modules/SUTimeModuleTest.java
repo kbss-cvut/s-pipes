@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 /**
  * Created by Miroslav Blasko on 10.10.16.
  */
-public class ModuleSUTimeTest {
+public class SUTimeModuleTest {
     @Test
     public void loadConfiguration() throws Exception {
     }

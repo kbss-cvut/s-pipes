@@ -14,9 +14,9 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.Collections;
 
-public class ModuleGetDatasetDescriptors extends AbstractModule {
+public class GetDatasetDescriptorsModule extends AbstractModule {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ModuleGetDatasetDescriptors.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GetDatasetDescriptorsModule.class);
 
     private static final String TYPE_URI = KBSS_MODULE.uri + "get-dataset-descriptors-v1";
 

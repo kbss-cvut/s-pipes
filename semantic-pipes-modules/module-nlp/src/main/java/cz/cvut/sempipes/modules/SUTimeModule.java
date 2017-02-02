@@ -1,7 +1,6 @@
 package cz.cvut.sempipes.modules;
 
 import cz.cvut.sempipes.constants.KBSS_MODULE;
-import cz.cvut.sempipes.constants.SML;
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
 import edu.stanford.nlp.ling.CoreAnnotations;
@@ -16,8 +15,6 @@ import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.LinkedList;
@@ -27,9 +24,9 @@ import java.util.Properties;
 /**
  * Created by Miroslav Blasko on 10.10.16.
  */
-public class ModuleSUTime extends AbstractModule {
+public class SUTimeModule extends AbstractModule {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ModuleSUTime.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SUTimeModule.class);
 
     public static final String TYPE_URI = KBSS_MODULE.getURI()+"su-time";
 
@@ -37,7 +34,7 @@ public class ModuleSUTime extends AbstractModule {
     private String documentDate; // TODO support other formats ?
 
 
-    public ModuleSUTime() {
+    public SUTimeModule() {
     }
 
     @Override

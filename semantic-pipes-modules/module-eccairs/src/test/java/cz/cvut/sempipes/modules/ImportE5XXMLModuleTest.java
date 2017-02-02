@@ -13,9 +13,9 @@ import java.util.List;
  * Created by Miroslav Blasko on 28.11.16.
  */
 @RunWith(Parameterized.class)
-public class ModuleImportE5XXMLTest extends ModuleImportE5XTest {
+public class ImportE5XXMLModuleTest extends ImportE5XModuleTest {
 
-    public ModuleImportE5XXMLTest(String path, String contentType) {
+    public ImportE5XXMLModuleTest(String path, String contentType) {
         super(path, contentType);
     }
 
@@ -26,7 +26,7 @@ public class ModuleImportE5XXMLTest extends ModuleImportE5XTest {
 
         List<String> files = null;
         try {
-            files = IOUtils.readLines((ModuleImportE5XXMLTest.class.getClassLoader().getResourceAsStream(dir)), Charsets.UTF_8);
+            files = IOUtils.readLines((ImportE5XXMLModuleTest.class.getClassLoader().getResourceAsStream(dir)), Charsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
         }
