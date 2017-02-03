@@ -10,6 +10,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import cz.cvut.kbss.util.CmdLineUtils;
+import cz.cvut.sempipes.config.ContextLoaderConfig;
 import cz.cvut.sempipes.constants.AppConstants;
 import cz.cvut.sempipes.constants.SM;
 import cz.cvut.sempipes.engine.*;
@@ -25,6 +26,7 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.util.FileUtils;
+import org.apache.jena.util.LocationMapper;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
@@ -288,11 +290,36 @@ public class ExecuteModuleCLI {
         // load ontologies from current working directory
 
             OntologyDocumentManager ontoDocManager = OntoDocManager.getInstance();
+            List<String> globalScripts = registerGlobalScripts(ontoDocManager, scriptPaths);
             return new SempipesScriptManager(
                     ontoDocManager,
-                    scriptPaths.stream().map(Path::toString).collect(Collectors.toList())
+                    globalScripts
             );
     }
+
+
+    // TODO merge with same method from ContextLoaderHelper !!!!!!!
+    public static List<String> registerGlobalScripts(OntologyDocumentManager ontDocManager, List<Path> scriptPaths) {
+        scriptPaths.forEach(
+                ontDocManager::registerDocuments
+        );
+
+        LocationMapper locMapper = ontDocManager.getOntDocumentManager().getFileManager().getLocationMapper();
+
+        List<String> _globalScripts = new LinkedList<>();
+
+        locMapper.listAltEntries().forEachRemaining(
+                ontoUri -> {
+                    String loc = locMapper.getAltEntry(ontoUri);
+                    if (loc.endsWith(".sms.ttl")) {
+                        LOG.info("Registering script from file " + loc + ".");
+                        _globalScripts.add(ontoUri);
+                    }
+                }
+        );
+        return _globalScripts;
+    }
+
 
 
     // TODO move
