@@ -275,7 +275,7 @@ public class ExecuteModuleCLI {
         LOG.debug("Loading scripts from system variable {} = {}", AppConstants.SYSVAR_SEMPIPES_ONTOLOGIES_PATH, sempipesOntologiesPathsStr);
         if (sempipesOntologiesPathsStr != null) {
             scriptPaths.addAll(
-                    Arrays.stream(sempipesOntologiesPathsStr.split(":"))
+                    Arrays.stream(sempipesOntologiesPathsStr.split(";"))
                     .map(path -> Paths.get(path))
                     .collect(Collectors.toList())
             );
