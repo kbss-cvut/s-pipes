@@ -135,17 +135,37 @@ public class ApplyConstructModuleTest extends AbstractModuleTestHelper {
         executeConstructIterations(2,3, createSimpleModel(), false);
     }
 
+    @Test
+    @Ignore
+    public void executeConstructStopsIfIterationDoesNotProduceNewTriples() {
+        executeConstructIterations(100,3, createSimpleModel(), false);
+        // TODO verify number of iterations with mockito
+    }
+
+    @Test
+    @Ignore
+    public void executeConstructWithBadSyntaxServiceCall() {
+        // TODO verify 400 exception and found diagnoses
+    }
+
+    @Test
+    @Ignore
+    public void executeConstructWithServiceNotFoundCall() {
+        // TODO verify exception and found diagnoses with simple query to check availability of the service
+    }
+
+
     private void executeConstructIterations(int n, int expectedNumberOfResults) {
         executeConstructIterations(n, expectedNumberOfResults, ModelFactory.createDefaultModel(), false);
     }
 
-    private void executeConstructIterations(int n, int expectedNumberOfResults, Model inputModel, boolean isReplace) {
+    private void executeConstructIterations(int iterationCount, int expectedNumberOfResults, Model inputModel, boolean isReplace) {
         final ApplyConstructModule m = (ApplyConstructModule) getRootModule("iteration-config.ttl");
         m.setInputContext( ExecutionContextFactory.createContext(inputModel));
         m.loadConfiguration();
         m.setReplace(isReplace);
 
-        m.setIterationCount(n);
+        m.setIterationCount(iterationCount);
 
         final ExecutionContext eo = m.executeSelf();
 

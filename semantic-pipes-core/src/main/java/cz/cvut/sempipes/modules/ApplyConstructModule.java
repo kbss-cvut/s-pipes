@@ -141,6 +141,7 @@ public class ApplyConstructModule extends AbstractModule {
         }
     }
 
+    // TODO move this to external utils
     private Model execConstruct(Query query, Model model, QuerySolution bindings) {
         try {
             return execConstruct(query, model, bindings, false);
