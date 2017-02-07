@@ -8,6 +8,9 @@ import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.sparql.engine.main.OpExecutor;
+import org.apache.jena.sparql.engine.main.OpExecutorFactory;
+import org.apache.jena.sparql.mgt.Explain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.topbraid.spin.arq.ARQFactory;
@@ -15,6 +18,9 @@ import org.topbraid.spin.model.Construct;
 import org.topbraid.spin.system.SPINModuleRegistry;
 import org.topbraid.spin.vocabulary.SP;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -117,10 +123,10 @@ public class ApplyConstructModule extends AbstractModule {
                 } else {
                     query = ARQFactory.get().createQuery(spinConstructRes);
                 }
-                QueryExecution execution = QueryExecutionFactory.create(query,
-                        ModelFactory.createUnion(defaultModel, inferredModel), bindings);
 
-                inferredInSingleIterationModel = ModelFactory.createUnion(inferredInSingleIterationModel, execution.execConstruct());
+                Model constructedModel = execConstruct(query, ModelFactory.createUnion(defaultModel, inferredModel), bindings);
+
+                inferredInSingleIterationModel = ModelFactory.createUnion(inferredInSingleIterationModel, constructedModel);
             }
 
             inferredModel = ModelFactory.createUnion(inferredModel, inferredInSingleIterationModel);
@@ -136,21 +142,35 @@ public class ApplyConstructModule extends AbstractModule {
     }
 
     private Model execConstruct(Query query, Model model, QuerySolution bindings) {
-        // TODO NOT USABLE as bindings.toString() throws NULL pointer exception use some Utils.checkBindings()
-        // or even before it does not make sense to
-        QueryExecution execution = QueryExecutionFactory.create(query,
-                model, bindings);
         try {
-            return execution.execConstruct();
+            return execConstruct(query, model, bindings, false);
         } catch (RuntimeException ex) {
-            LOG.error("Coud not execute query : \"\n"
-                    + query
-                    + "\n\" with query bindings \"\n" + bindings + "\n\"");
-            throw ex;
+            LOG.error("Failed execution of query [1] for binding [2], due to exception [3]. " +
+                    "The query [1] will be executed again with detailed logging turned on. " +
+                    "\n\t - query [1]: \"\n{}\n\"" +
+                    "\n\t - binding [2]: \"\n{}\n\"" +
+                    "\n\t - exception [3]: \"\n{}\n\""
+                    , query, bindings, getStackTrace(ex));
         }
+        LOG.error("Executing query [1] again to diagnose the cause ...");
+        return execConstruct(query, model, bindings, true);
     }
 
+    public static String getStackTrace(Throwable t) {
+        StringWriter sw = new StringWriter();
+        t.printStackTrace(new PrintWriter(sw));
+        return sw.toString();
+    }
 
+    private Model execConstruct(Query query, Model model, QuerySolution bindings, boolean isDebugEnabled) {
+        QueryExecution execution = QueryExecutionFactory.create(query,
+                model, bindings);
+
+        if (isDebugEnabled) {
+            execution.getContext().set(ARQ.symLogExec, Explain.InfoLevel.ALL);
+        }
+        return execution.execConstruct();
+    }
 
     @Override
     public String getTypeURI() {
