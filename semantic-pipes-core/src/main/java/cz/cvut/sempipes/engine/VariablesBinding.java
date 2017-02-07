@@ -6,6 +6,7 @@ import org.apache.jena.rdf.model.*;
 import org.apache.jena.riot.RDFLanguages;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.RDF;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,23 +25,32 @@ public class VariablesBinding {
     private static Logger LOG = LoggerFactory.getLogger(VariablesBinding.class);
     QuerySolutionMap binding = new QuerySolutionMap();
 
-    public VariablesBinding(){
+    public VariablesBinding() {
     }
 
     //TODO move to factory
     public VariablesBinding(QuerySolution querySolution) {
-        binding.addAll(querySolution);
+        querySolution.varNames().forEachRemaining(
+                key -> {
+                    RDFNode value = querySolution.get(key);
+                    if (value == null) {
+                        LOG.error("Ignoring variable binding with null value for the variable name \"{}\".", key);
+                    } else {
+                        binding.add(key, value);
+                    }
+                }
+        );
     }
 
-    public VariablesBinding(String varName, RDFNode node) {
+    public VariablesBinding(@NotNull String varName, @NotNull RDFNode node) {
         binding.add(varName, node);
     }
 
-    public RDFNode getNode(String varName) {
+    public RDFNode getNode(@NotNull String varName) {
         return binding.get(varName);
     }
 
-    public void add(String varName, RDFNode rdfNode) {
+    public void add(@NotNull String varName, @NotNull RDFNode rdfNode) {
         binding.add(varName, rdfNode);
     }
 
@@ -49,7 +59,7 @@ public class VariablesBinding {
     }
 
     public boolean isEmpty() {
-        return ! binding.varNames().hasNext();
+        return !binding.varNames().hasNext();
     }
 
     public Iterator<String> getVarNames() {
@@ -57,26 +67,26 @@ public class VariablesBinding {
     }
 
 
-
     /**
      * Extend this binding by provided binding.
+     *
      * @return Conflicting binding that was not possible to add to this binding due to inconsistency in values.
      */
     public VariablesBinding extendConsistently(VariablesBinding newVarsBinding) {
         VariablesBinding conflictingBinding = new VariablesBinding();
 
         newVarsBinding.getVarNames().forEachRemaining(
-            var -> {
-                RDFNode oldNode = this.getNode(var);
-                RDFNode newNode = newVarsBinding.getNode(var);
+                var -> {
+                    RDFNode oldNode = this.getNode(var);
+                    RDFNode newNode = newVarsBinding.getNode(var);
 
-                if ((oldNode != null) && (! oldNode.equals(newNode))) {
-                    conflictingBinding.add(var, newNode);
-                    LOG.warn("Variable \"{}\" have been bind to value \"{}\", ignoring assignment to value \"{}\".", var, oldNode, newNode);
-                } else {
-                    this.add(var, newNode);
+                    if ((oldNode != null) && (!oldNode.equals(newNode))) {
+                        conflictingBinding.add(var, newNode);
+                        LOG.warn("Variable \"{}\" have been bind to value \"{}\", ignoring assignment to value \"{}\".", var, oldNode, newNode);
+                    } else {
+                        this.add(var, newNode);
+                    }
                 }
-            }
         );
 
         return conflictingBinding;
@@ -84,44 +94,44 @@ public class VariablesBinding {
     }
 
     final String BASE_URI = "http://onto.fel.cvut.cz/ontologies/semantic-pipes/";
-    final String QUERY_SOLUTION = BASE_URI+"query_solution";
-    final String HAS_BINDING = BASE_URI+"has_binding";
-    final String HAS_BOUND_VARIABLE = BASE_URI+"has_bound_variable";
-    final String HAS_BOUND_VALUE = BASE_URI+"has_bound_value";
+    final String QUERY_SOLUTION = BASE_URI + "query_solution";
+    final String HAS_BINDING = BASE_URI + "has_binding";
+    final String HAS_BOUND_VARIABLE = BASE_URI + "has_bound_variable";
+    final String HAS_BOUND_VALUE = BASE_URI + "has_bound_value";
 
     private static Property p(String property) {
         return ResourceFactory.createProperty(property);
     }
 
-    public void save( final OutputStream os, final String lang) throws IOException {
+    public void save(final OutputStream os, final String lang) throws IOException {
         final Model model = ModelFactory.createDefaultModel();
 
-        final Resource rQuerySolution = model.createResource(QUERY_SOLUTION+"_"+new Date().getTime());
+        final Resource rQuerySolution = model.createResource(QUERY_SOLUTION + "_" + new Date().getTime());
         rQuerySolution.addProperty(RDF.type, model.createResource(QUERY_SOLUTION));
 
         final Iterator<String> iterator = binding.varNames();
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             final String varName = iterator.next();
 
-            final Resource rBinding = model.createResource(rQuerySolution.getURI()+"/"+varName);
+            final Resource rBinding = model.createResource(rQuerySolution.getURI() + "/" + varName);
             rQuerySolution.addProperty(p(HAS_BINDING), rBinding);
 
-            rBinding.addProperty(p(HAS_BOUND_VARIABLE),varName);
-            rBinding.addProperty(p(HAS_BOUND_VALUE),binding.get(varName));
+            rBinding.addProperty(p(HAS_BOUND_VARIABLE), varName);
+            rBinding.addProperty(p(HAS_BOUND_VALUE), binding.get(varName));
         }
 
-        model.write(os,lang);
+        model.write(os, lang);
     }
 
     /**
      * This method clears the current query solution and fills it with the solution read from the RDF file.
      */
-    public void load( final InputStream is, final String lang) throws IOException {
+    public void load(final InputStream is, final String lang) throws IOException {
         final Model model = ModelFactory.createDefaultModel();
         model.read(is, "", lang);
 
         final List<Resource> listQuerySolutions = model.listResourcesWithProperty(RDF.type, model.createResource(QUERY_SOLUTION)).toList();
-        if ( listQuerySolutions.size() != 1 ) {
+        if (listQuerySolutions.size() != 1) {
             throw new IOException("Found " + listQuerySolutions.size() + " query solutions, but 1 was expected.");
         }
 
@@ -130,7 +140,7 @@ public class VariablesBinding {
         final Resource rQuerySolution = listQuerySolutions.get(0);
 
         final List<Statement> listBindings = rQuerySolution.listProperties(ResourceFactory.createProperty(HAS_BINDING)).toList();
-        for(final Statement s : listBindings) {
+        for (final Statement s : listBindings) {
             binding.add(
                     s.getResource().getProperty(p(HAS_BOUND_VARIABLE)).getString(),
                     s.getResource().getProperty(p(HAS_BOUND_VALUE)).getObject()
