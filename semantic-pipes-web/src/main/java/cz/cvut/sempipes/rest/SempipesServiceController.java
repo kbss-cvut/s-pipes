@@ -1,13 +1,12 @@
-package cz.cvut.sempipes.service;
+package cz.cvut.sempipes.rest;
 
 import cz.cvut.sempipes.engine.*;
 import cz.cvut.sempipes.exception.SempipesServiceException;
 import cz.cvut.sempipes.manager.SempipesScriptManager;
 import cz.cvut.sempipes.modules.Module;
-import cz.cvut.sempipes.service.util.ContextLoaderHelper;
-import cz.cvut.sempipes.service.util.ScriptManagerFactory;
+import cz.cvut.sempipes.rest.util.ContextLoaderHelper;
+import cz.cvut.sempipes.rest.util.ScriptManagerFactory;
 import cz.cvut.sempipes.util.RDFMimeType;
-import cz.cvut.sempipes.util.RawJson;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.rdf.model.Model;

@@ -1,11 +1,11 @@
-package cz.cvut.sempipes.service;
+package cz.cvut.sempipes.rest;
 
 import cz.cvut.sempipes.constants.SM;
 import cz.cvut.sempipes.engine.PipelineFactory;
 import cz.cvut.sempipes.manager.OntologyDocumentManager;
 import cz.cvut.sempipes.manager.SempipesScriptManager;
-import cz.cvut.sempipes.service.util.ContextLoaderHelper;
-import cz.cvut.sempipes.service.util.ScriptManagerFactory;
+import cz.cvut.sempipes.rest.util.ContextLoaderHelper;
+import cz.cvut.sempipes.rest.util.ScriptManagerFactory;
 import cz.cvut.sempipes.util.RDFMimeType;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.RDF;

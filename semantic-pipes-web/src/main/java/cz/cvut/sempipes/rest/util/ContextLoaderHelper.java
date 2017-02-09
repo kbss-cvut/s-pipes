@@ -1,4 +1,4 @@
-package cz.cvut.sempipes.service.util;
+package cz.cvut.sempipes.rest.util;
 
 import cz.cvut.sempipes.config.ContextLoaderConfig;
 import cz.cvut.sempipes.util.CoreConfigProperies;
@@ -10,11 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by Miroslav Blasko on 13.1.17.

@@ -1,4 +1,4 @@
-package cz.cvut.sempipes.service;
+package cz.cvut.sempipes.rest;
 
 import cz.cvut.sempipes.registry.StreamResourceRegistry;
 import cz.cvut.sempipes.util.RestUtils;

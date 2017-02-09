@@ -2,7 +2,7 @@ package cz.cvut.sempipes.web;
 
 import cz.cvut.sempipes.config.WebAppConfig;
 import cz.cvut.sempipes.engine.VariablesBinding;
-import cz.cvut.sempipes.service.SempipesServiceController;
+import cz.cvut.sempipes.rest.SempipesServiceController;
 import cz.cvut.sempipes.util.RDFMimeType;
 import org.apache.jena.ext.com.google.common.collect.Lists;
 import org.apache.jena.rdf.model.Model;

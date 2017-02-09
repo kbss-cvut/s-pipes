@@ -1,8 +1,4 @@
-package cz.cvut.sempipes.service;
-
-import cz.cvut.sempipes.registry.StreamResourceRegistry;
-
-import java.util.UUID;
+package cz.cvut.sempipes.rest;
 
 /**
  * Created by Miroslav Blasko on 28.11.16.
