@@ -1,5 +1,6 @@
 package cz.cvut.sempipes.repository;
 
+import cz.cvut.sempipes.modules.ImportRDFFromWorkspaceModule;
 import util.JenaTestUtils;
 import cz.cvut.sempipes.manager.OntologyDocumentManager;
 import cz.cvut.sempipes.util.JenaUtils;
@@ -11,7 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Collections;
 import java.util.List;
