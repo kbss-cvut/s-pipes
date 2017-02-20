@@ -35,6 +35,7 @@ public class SML {
 
     public static final Resource ApplyConstruct = resource("ApplyConstruct");
     public static final Resource ExportToRDFFile = resource("ExportToRDFFile");
+    public static final Resource ImportRDFFromWorkspace = resource("ImportRDFFromWorkspace");
     public static final Resource ImportFileFromURL = resource("ImportFileFromURL");
     public static final Resource BindWithConstant = resource("BindWithConstant");
     public static final Resource BindBySelect = resource("BindBySelect");
