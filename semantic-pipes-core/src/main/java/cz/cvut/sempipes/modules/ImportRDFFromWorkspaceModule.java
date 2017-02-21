@@ -3,6 +3,7 @@ package cz.cvut.sempipes.modules;
 import cz.cvut.sempipes.constants.SML;
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
+import cz.cvut.sempipes.exception.ContextNotFoundException;
 import cz.cvut.sempipes.manager.OntoDocManager;
 import cz.cvut.sempipes.manager.OntologyDocumentManager;
 import org.apache.jena.rdf.model.Model;
@@ -23,6 +24,7 @@ public class ImportRDFFromWorkspaceModule extends AbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(ImportRDFFromWorkspaceModule.class);
 
+    //TODO refactor -> should be part of execution context
     OntologyDocumentManager ontologyDocumentManager = OntoDocManager.getInstance();
 
     // sml:baseURI : xsd:string
@@ -89,6 +91,10 @@ public class ImportRDFFromWorkspaceModule extends AbstractModule {
         }
 
         Model workspaceModel = ontologyDocumentManager.getModel(baseUri);
+
+        if (workspaceModel == null) {
+            throw new ContextNotFoundException(baseUri);
+        }
 
         return ExecutionContextFactory.createContext(workspaceModel);
 
