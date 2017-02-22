@@ -188,13 +188,13 @@ public class OntoDocManager implements OntologyDocumentManager {
         allLoadedFilesModel = ModelFactory.createDefaultModel();
     }
 
-    static Map<String, String> getAllBaseIris(Path directoryPath) {
+    static Map<String, String> getAllBaseIris(Path directoryorFilePath) {
 
         Map<String, String> baseUri2file = new HashMap<>();
 
-        getAllFile2Model(directoryPath).entrySet().forEach(e -> {
-            Model model = e.getValue();
+        getAllFile2Model(directoryorFilePath).entrySet().forEach(e -> {
             String file = e.getKey();
+            Model model = e.getValue();
 
             String baseURI = JenaUtils.getBaseUri(model);
 

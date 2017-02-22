@@ -8,6 +8,9 @@ import cz.cvut.sempipes.engine.ExecutionContext;
  */
 public class ExportToRDFFileModule extends AbstractModule {
 
+    //sml:baseURI
+    //sml:targetFilePath
+
     @Override
     public ExecutionContext executeSelf() {
         return null;
