@@ -88,7 +88,7 @@ public class JenaUtils {
     public static void saveModelToTemporaryFile(Model model) {
         try {
             Path file = Files.createTempFile("model-output-", ".ttl");
-            LOG.debug("Saving model to temporary file " + file.toString() + "...");
+            LOG.debug("Saving model to temporary file " + file.toString() + " ...");
             model.write(new FileOutputStream(file.toFile()), FileUtils.langTurtle);
         } catch (IOException e) {
             e.printStackTrace();

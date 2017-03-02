@@ -70,8 +70,8 @@ public class ImportRDFFromWorkspaceModule extends AbstractModule {
     @Override
     public void loadConfiguration() {
         baseUri = getStringPropertyValue(SML.baseURI);
-        getPropertyValue(SML.ignoreImports, false);
-        Path sourceFilePath = Optional.of(getEffectiveValue(SML.sourceFilePath))
+        isIgnoreImports = getPropertyValue(SML.ignoreImports, false);
+        sourceFilePath = Optional.ofNullable(getEffectiveValue(SML.sourceFilePath))
                         .filter(RDFNode::isLiteral)
                         .map(RDFNode::asLiteral)
                         .map(Object::toString)
@@ -90,7 +90,7 @@ public class ImportRDFFromWorkspaceModule extends AbstractModule {
             throw new IllegalArgumentException("Module property " + SML.sourceFilePath + " is not implemented." );
         }
 
-        Model workspaceModel = ontologyDocumentManager.getModel(baseUri);
+        Model workspaceModel = ontologyDocumentManager.getOntology(baseUri);
 
         if (workspaceModel == null) {
             throw new ContextNotFoundException(baseUri);

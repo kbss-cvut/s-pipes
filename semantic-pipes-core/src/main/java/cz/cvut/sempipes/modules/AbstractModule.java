@@ -18,7 +18,10 @@ import org.slf4j.LoggerFactory;
 import org.topbraid.spin.arq.ARQFactory;
 import org.topbraid.spin.constraints.ConstraintViolation;
 import org.topbraid.spin.constraints.SPINConstraints;
-import org.topbraid.spin.model.*;
+import org.topbraid.spin.model.Ask;
+import org.topbraid.spin.model.Construct;
+import org.topbraid.spin.model.SPINFactory;
+import org.topbraid.spin.model.Select;
 import org.topbraid.spin.util.SPINExpressions;
 import org.topbraid.spin.vocabulary.SP;
 
@@ -26,6 +29,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -284,8 +288,11 @@ public abstract class AbstractModule implements Module {
                 .collect(Collectors.toList());
     }
 
-    protected RDFNode getEffectiveValue(Property valueProperty) {
-        RDFNode valueNode = resource.getProperty(valueProperty).getObject();
+    protected RDFNode getEffectiveValue(@NotNull Property valueProperty) {
+        RDFNode valueNode = Optional.of(resource)
+                .map(r -> r.getProperty(valueProperty))
+                .map(Statement::getObject)
+                .orElse(null);
         if (SPINExpressions.isExpression(valueNode)) {
             Resource expr = (Resource) SPINFactory.asExpression(valueNode);
             QuerySolution bindings = executionContext.getVariablesBinding().asQuerySolution();
