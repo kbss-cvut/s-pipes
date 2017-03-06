@@ -1,10 +1,12 @@
 package cz.cvut.sempipes.modules;
 
 import cz.cvut.sempipes.config.AuditConfig;
+import cz.cvut.sempipes.config.DebugConfig;
 import cz.cvut.sempipes.constants.KBSS_MODULE;
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
 import cz.cvut.sempipes.engine.VariablesBinding;
+import cz.cvut.sempipes.exception.ValidationConstraintFailed;
 import org.apache.jena.atlas.lib.NotImplemented;
 import org.apache.jena.query.*;
 import org.apache.jena.query.Query;
@@ -27,6 +29,7 @@ import org.topbraid.spin.vocabulary.SP;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.text.MessageFormat;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -167,7 +170,7 @@ public abstract class AbstractModule implements Module {
         }
     }
 
-    private void checkInputConstraints() {
+    void checkInputConstraints() {
         Model defaultModel = executionContext.getDefaultModel();
 
         QuerySolution bindings = executionContext.getVariablesBinding().asQuerySolution();
@@ -195,7 +198,6 @@ public abstract class AbstractModule implements Module {
             QueryExecution execution = QueryExecutionFactory.create(query, model, bindings);
 
             boolean constaintViolated = false;
-            String additionalInfo = null;
 
             if (spinQuery instanceof Ask) {
                 constaintViolated = execution.execAsk();
@@ -208,10 +210,16 @@ public abstract class AbstractModule implements Module {
             }
 
             if (constaintViolated) {
-                LOG.error("Validation of constraint failed for the constraint \"{}\".", getQueryComment(spinQuery));
-                LOG.error("Failed validation constraint : \n {}", spinQuery.toString());
-                if (additionalInfo != null) {
-                    LOG.error("Failed validation constraint info : ", additionalInfo);
+
+                String mainErrorMsg = String.format("Validation of constraint failed for the constraint \"%s\".", getQueryComment(spinQuery));
+                String failedQueryMsg = String.format("Failed validation constraint : \n %s", spinQuery.toString());
+                String mergedMsg = new StringBuffer()
+                        .append(mainErrorMsg).append("\n")
+                        .append(failedQueryMsg).append("\n")
+                        .toString();
+                LOG.error(mergedMsg);
+                if (DebugConfig.isExitOnError()) {
+                    throw new ValidationConstraintFailed(mergedMsg, this);
                 }
             } else {
                 LOG.debug("Constraint validated -- \"{}\".", getQueryComment(spinQuery));

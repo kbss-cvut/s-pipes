@@ -7,6 +7,7 @@ import cz.cvut.sempipes.engine.VariablesBinding;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -38,5 +39,21 @@ public class AbstractModuleTest extends AbstractModuleTestHelper {
         assertEquals("Effective value computed incorrectly.", node, ResourceFactory.createPlainLiteral("Hello James"));
 
     }
+
+    @Ignore
+    @Test
+    public void throwValidationExceptionIfValidationConstrainFailsAndExitOnErrorIsTrue() {
+//        AbstractModule m = createModuleWithFailingValidationConstraint();
+//
+//        m.setInputContext(ExecutionContextFactory.createEmptyContext());
+//        m.checkInputConstraints();
+    }
+
+    @Ignore
+    @Test
+    public void throwNoValidationExceptionIfValidationConstrainFailsAndExitOnErrorIsFalse() {
+
+    }
+
 
 }
