@@ -31,7 +31,7 @@ public class BindBySelectModule extends AbstractModule  {
         VariablesBinding variablesBinding = new VariablesBinding();
 
         if (! resultSet.hasNext()) {
-            LOG.warn("\"{}\" query did not return any values.", getLabel());
+            LOG.debug("\"{}\" query did not return any values.", getLabel());
         } else {
             QuerySolution qs = resultSet.next();
 
