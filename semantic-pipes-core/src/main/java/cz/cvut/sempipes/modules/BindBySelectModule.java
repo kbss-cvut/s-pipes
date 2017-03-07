@@ -38,7 +38,7 @@ public class BindBySelectModule extends AbstractModule  {
             variablesBinding = new VariablesBinding(qs);
 
             if (resultSet.hasNext()) {
-                LOG.warn("\"{}\" query did not return unique value. Returning binding {}, ignoring binding {}", getLabel(), variablesBinding.asQuerySolution(), resultSet.next());
+                LOG.warn("\"{}\" query did not return unique value.  If it is correct, the query should be restricted by additional statement (e.g. \"LIMIT 1\"). Returning binding {}, ignoring binding {}", getLabel(), variablesBinding.asQuerySolution(), resultSet.next());
             }
         }
 
