@@ -222,7 +222,7 @@ public abstract class AbstractModule implements Module {
                     throw new ValidationConstraintFailed(mergedMsg, this);
                 }
             } else {
-                LOG.debug("Constraint validated -- \"{}\".", getQueryComment(spinQuery));
+                LOG.debug("Constraint validated for exception \"{}\".", getQueryComment(spinQuery));
             }
         }
 
