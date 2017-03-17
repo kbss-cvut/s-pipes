@@ -24,7 +24,9 @@ public class BindBySelectModule extends AbstractModule  {
 
         Query query = ARQFactory.get().createQuery(selectQuery);
 
-        QueryExecution execution = QueryExecutionFactory.create(query, executionContext.getDefaultModel());
+        QuerySolution inputBindings = executionContext.getVariablesBinding().asQuerySolution();
+
+        QueryExecution execution = QueryExecutionFactory.create(query, executionContext.getDefaultModel(), inputBindings);
 
         ResultSet resultSet = execution.execSelect();
 
