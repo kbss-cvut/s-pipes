@@ -16,48 +16,38 @@ public abstract class AnnotatedAbstractModule extends AbstractModule {
     @Override
     public void loadConfiguration() {
         final Map<String,Field> vars = new HashMap<>();
-        for(Field f: this.getClass().getDeclaredFields()) {
-            Parameter p = f.getAnnotation(Parameter.class);
+        for(final Field f: this.getClass().getDeclaredFields()) {
+            final Parameter p = f.getAnnotation(Parameter.class);
             if ( p == null ) {
                 continue;
+            } else if (vars.containsKey(p.name())) {
+                throw new RuntimeException(StringFormatter.format("Two parameters are named the same {}, except prefix", p.name()).getValue());
+            } else {
+                vars.put(p.name(), f);
             }
 
             LOG.trace("Processing parameter {} ", f.getName());
 
-            AnnotatedAbstractModule m = this;
-            this.getPropertyValue(ResourceFactory.createProperty(p.urlPrefix()+p.name())).visitWith(new RDFVisitor() {
-                @Override
-                public Object visitBlank(Resource r, AnonId id) {
-                    return null;
-                }
-
-                @Override
-                public Object visitURI(Resource r, String uri) {
-                    try {
-                        f.setAccessible(true);
-                        f.set(m, r);
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
+            RDFNode node = this.getPropertyValue(ResourceFactory.createProperty(p.urlPrefix()+p.name()));
+            if ( node != null ) {
+                final Object result = node.visitWith(new RDFVisitor() {
+                    @Override
+                    public Object visitBlank(Resource r, AnonId id) {
+                        return null;
                     }
-                    return null;
-                }
 
-                @Override
-                public Object visitLiteral(Literal l) {
-                    try {
-                        f.setAccessible(true);
-                        f.set(m, l.getValue());
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
-                    return null;
-                }
-            });
+                    @Override
+                    public Object visitURI(Resource r, String uri) { return r; }
 
-            if (vars.containsKey(p.name())) {
-                throw new RuntimeException(StringFormatter.format("Two parameters are named the same {}, except prefix", p.name()).getValue());
-            } else {
-                vars.put(p.name(), f);
+                    @Override
+                    public Object visitLiteral(Literal l) { return l.getValue(); }
+                });
+                try {
+                    f.setAccessible(true);
+                    f.set(this, result);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
