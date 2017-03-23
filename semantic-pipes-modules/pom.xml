@@ -21,7 +21,7 @@
         <module>module-nlp</module>
         <module>module-dataset-discovery</module>
         <module>module-eccairs</module>
-        <module>module-ckan-api-sparql</module>
+        <module>module-ckan2rdf</module>
     </modules>
 
     <dependencyManagement>

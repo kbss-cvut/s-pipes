@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>semantic-pipes-modules-ckan-sparql-wrapper</artifactId>
+    <artifactId>semantic-pipes-modules-ckan2rdf</artifactId>
     <name>Semantic Pipes Modules - CKAN SPARQL wrapper</name>
     <packaging>jar</packaging>
 
