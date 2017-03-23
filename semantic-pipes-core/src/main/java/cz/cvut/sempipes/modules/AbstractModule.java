@@ -255,7 +255,8 @@ public abstract class AbstractModule implements Module {
 
 
     RDFNode getPropertyValue(Property property) {
-        return resource.getProperty(property).getObject();
+        final Statement s = resource.getProperty(property);
+        return (s != null) ? s.getObject() : null;
     }
 
     int getPropertyValue(Property property, int defaultValue) {
