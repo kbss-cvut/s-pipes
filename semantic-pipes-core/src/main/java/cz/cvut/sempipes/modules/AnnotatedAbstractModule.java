@@ -28,7 +28,7 @@ public abstract class AnnotatedAbstractModule extends AbstractModule {
 
             LOG.trace("Processing parameter {} ", f.getName());
 
-            RDFNode node = this.getPropertyValue(ResourceFactory.createProperty(p.urlPrefix()+p.name()));
+            RDFNode node = this.getEffectiveValue(ResourceFactory.createProperty(p.urlPrefix()+p.name()));
             if ( node != null ) {
                 final Object result = node.visitWith(new RDFVisitor() {
                     @Override

@@ -58,5 +58,10 @@
             <artifactId>semantic-pipes-modules-eccairs</artifactId>
             <version>${semantic-pipes-modules.version}</version>
         </dependency>
+        <dependency>
+            <groupId>cz.cvut.kbss</groupId>
+            <artifactId>semantic-pipes-modules-ckan-sparql-wrapper</artifactId>
+            <version>${semantic-pipes-modules.version}</version>
+        </dependency>
     </dependencies>
 </project>

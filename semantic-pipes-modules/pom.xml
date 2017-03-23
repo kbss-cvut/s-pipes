@@ -21,6 +21,7 @@
         <module>module-nlp</module>
         <module>module-dataset-discovery</module>
         <module>module-eccairs</module>
+        <module>module-ckan-api-sparql</module>
     </modules>
 
     <dependencyManagement>
