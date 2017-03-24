@@ -53,7 +53,7 @@ public class OntoDocManager implements OntologyDocumentManager {
 
     private static final Logger LOG = LoggerFactory.getLogger(OntoDocManager.class);
 
-    // TODO remove !!!!!!! this is woraround for registering SPIN related things.
+    // TODO remove !!!!!!! this is workaround for registering SPIN related things.
     private static Model allLoadedFilesModel = ModelFactory.createDefaultModel();
 
 
