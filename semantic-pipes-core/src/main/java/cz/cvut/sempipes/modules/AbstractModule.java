@@ -162,11 +162,13 @@ public abstract class AbstractModule implements Module {
     private void checkOutputConstraints() {
         Model defaultModel = outputContext.getDefaultModel();
 
-        QuerySolution bindings = outputContext.getVariablesBinding().asQuerySolution();
+        // merge input and output execution context
+        VariablesBinding mergedVarsBinding = new VariablesBinding(executionContext.getVariablesBinding().asQuerySolution());
+        mergedVarsBinding.extendConsistently(outputContext.getVariablesBinding());
 
         if (! outputConstraintQueries.isEmpty()) {
             LOG.debug("Validating module's output constraints ...");
-            checkConstraints(defaultModel, bindings, outputConstraintQueries);
+            checkConstraints(defaultModel, mergedVarsBinding.asQuerySolution(), outputConstraintQueries);
         }
     }
 
@@ -202,6 +204,13 @@ public abstract class AbstractModule implements Module {
             if (spinQuery instanceof Ask) {
                 constaintViolated = execution.execAsk();
             } else if (spinQuery instanceof Select) { //TODO implement
+//                ResultSet rs = execution.execSelect();
+//                constaintViolated = rs.hasNext();
+//                String qs = spinQuery.getComment();
+//                if (qs == null) {
+//
+//                }
+//                String evidenceStr = "Evidence of the violation : ";
                 throw new NotImplemented("Constraints for objects " + query + " not implemented.");
             } else if (spinQuery instanceof Construct) {
                 throw new NotImplemented("Constraints for objects " + query + " not implemented.");
