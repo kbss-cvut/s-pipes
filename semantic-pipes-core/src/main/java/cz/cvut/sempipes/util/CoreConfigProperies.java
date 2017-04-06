@@ -38,4 +38,13 @@ public class CoreConfigProperies {
         }
         return value;
     }
+
+    public static String get(String name, String defaultValue) {
+        String value = prop.getProperty(name);
+        if (value == null) {
+            return defaultValue;
+        }
+        return value;
+    }
+
 }

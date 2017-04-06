@@ -1,7 +1,7 @@
 package cz.cvut.sempipes.modules;
 
 import cz.cvut.sempipes.config.AuditConfig;
-import cz.cvut.sempipes.config.DebugConfig;
+import cz.cvut.sempipes.config.ExecutionConfig;
 import cz.cvut.sempipes.constants.KBSS_MODULE;
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
@@ -18,8 +18,6 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.topbraid.spin.arq.ARQFactory;
-import org.topbraid.spin.constraints.ConstraintViolation;
-import org.topbraid.spin.constraints.SPINConstraints;
 import org.topbraid.spin.model.Ask;
 import org.topbraid.spin.model.Construct;
 import org.topbraid.spin.model.SPINFactory;
@@ -29,7 +27,6 @@ import org.topbraid.spin.vocabulary.SP;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.text.MessageFormat;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -66,12 +63,16 @@ public abstract class AbstractModule implements Module {
 //        }
         loadConfiguration();
         loadModuleConstraints();
-        checkInputConstraints();
+        if (ExecutionConfig.isCheckValidationConstrains()) {
+            checkInputConstraints();
+        }
         if (AuditConfig.isEnabled() || isInDebugMode) {
             LOG.debug("Saving module execution input to file {}.", saveModelToTemporaryFile(executionContext.getDefaultModel()));
         }
         outputContext = executeSelf();
-        checkOutputConstraints();
+        if (ExecutionConfig.isCheckValidationConstrains()) {
+            checkOutputConstraints();
+        }
         if (AuditConfig.isEnabled() || isInDebugMode) {
             LOG.debug("Saving module execution output to file {}.", saveModelToTemporaryFile(outputContext.getDefaultModel()));
         }
@@ -227,7 +228,7 @@ public abstract class AbstractModule implements Module {
                         .append(failedQueryMsg).append("\n")
                         .toString();
                 LOG.error(mergedMsg);
-                if (DebugConfig.isExitOnError()) {
+                if (ExecutionConfig.isExitOnError()) {
                     throw new ValidationConstraintFailed(mergedMsg, this);
                 }
             } else {
