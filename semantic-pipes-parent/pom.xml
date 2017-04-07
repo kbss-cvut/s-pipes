@@ -4,6 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>cz.cvut.kbss</groupId>
+        <artifactId>kbss-project-parent</artifactId>
+        <version>0.0.2</version>
+        <relativePath></relativePath>
+    </parent>
+
+
     <groupId>cz.cvut.kbss</groupId>
     <artifactId>semantic-pipes-parent</artifactId>
     <name>Semantic Pipes Parent</name>
