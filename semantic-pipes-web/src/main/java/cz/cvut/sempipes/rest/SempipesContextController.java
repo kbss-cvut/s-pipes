@@ -8,6 +8,7 @@ import cz.cvut.sempipes.rest.util.ContextLoaderHelper;
 import cz.cvut.sempipes.rest.util.ScriptManagerFactory;
 import cz.cvut.sempipes.util.RDFMimeType;
 import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,6 +61,8 @@ public class SempipesContextController {
         Model outModel = ModelFactory.createDefaultModel();
         outModel.add(inModel);
         outModel.add(SempipesContextController.createInferences(inModel));
+
+        outModel.add(SM.next, RDF.type, OWL.ObjectProperty);
 
         return outModel;
     }
