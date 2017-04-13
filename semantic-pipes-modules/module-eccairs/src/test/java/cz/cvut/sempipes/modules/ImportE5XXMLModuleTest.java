@@ -2,6 +2,7 @@ package cz.cvut.sempipes.modules;
 
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -19,6 +20,7 @@ public class ImportE5XXMLModuleTest extends ImportE5XModuleTest {
         super(path, contentType);
     }
 
+    @Ignore
     @Parameterized.Parameters(name="e5x")
     public static Object[] generateTestData() {
         String dir = "data/e5x.xml";
