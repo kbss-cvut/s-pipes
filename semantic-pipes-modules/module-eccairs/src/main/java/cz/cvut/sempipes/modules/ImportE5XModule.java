@@ -23,9 +23,9 @@ import cz.cvut.sempipes.registry.StreamResourceRegistry;
 import cz.cvut.sempipes.util.JenaUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.util.FileUtils;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryException;
 import org.jetbrains.annotations.NotNull;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -113,7 +113,6 @@ public class ImportE5XModule extends AbstractModule {
 //        r = em.find(EccairsReport.class, r.getUri());
 //        em.remove(r);
 //        em.getTransaction().commit();
-
             Repository sesameRepo = JopaPersistenceUtils.getRepository(em);
 
             String transformedModelText = SesameDataDao.getRepositoryData(sesameRepo, URI.create(reportContext));
