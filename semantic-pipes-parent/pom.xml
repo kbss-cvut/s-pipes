@@ -11,7 +11,6 @@
         <relativePath></relativePath>
     </parent>
 
-
     <groupId>cz.cvut.kbss</groupId>
     <artifactId>semantic-pipes-parent</artifactId>
     <name>Semantic Pipes Parent</name>
@@ -19,17 +18,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <!--<weld-version>1.1.10.Final</weld-version>-->
-        <!--<jersey-version>1.18</jersey-version>-->
-        <!--<jetty-version>8.1.9.v20130131</jetty-version>-->
-        <!--<owlapi-version>3.2.2</owlapi-version>-->
-        <!--<spring.version>3.0.7.RELEASE</spring.version>-->
-        <!--<cglib-nodep.version>2.2.2</cglib-nodep.version>-->
-        <!--<seam-spring-core.version>3.1.0.Final</seam-spring-core.version>-->
-        <!--<jsr299-api.version>1.0.0.PREVIEW1</jsr299-api.version>-->
-        <!--<headerDir>.</headerDir>-->
         <org.slf4j.version>1.7.20</org.slf4j.version>
-        <junit.version>4.12</junit.version>
         <ch.qos.logback.version>1.1.2</ch.qos.logback.version>
         <org.apache.jena>3.1.0</org.apache.jena>
         <org.springframework.version>4.1.5.RELEASE</org.springframework.version>
@@ -37,32 +26,12 @@
         <org.openrdf.sesame>2.8.9</org.openrdf.sesame>
     </properties>
 
-    <dependencies>
-
-    </dependencies>
-
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${junit.version}</version>
-                <scope>test</scope>
-            </dependency>
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-core</artifactId>
                 <version>${ch.qos.logback.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>${ch.qos.logback.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>${org.slf4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -73,12 +42,6 @@
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
                 <version>4.5.3</version>
-            </dependency>
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-core</artifactId>
-                <version>2.6.3</version>
-                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>com.github.jsonld-java</groupId>
