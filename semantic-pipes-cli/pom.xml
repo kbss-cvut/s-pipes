@@ -16,18 +16,8 @@
     <packaging>jar</packaging>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!--<cz.cvut.kbss.jopa.version>0.7.0</cz.cvut.kbss.jopa.version>-->
-        <!--<org.springframework.version>4.1.5.RELEASE</org.springframework.version>-->
-        <!--<org.springframework.security.version>4.0.2.RELEASE</org.springframework.security.version>-->
-        <!--<com.fasterxml.jackson.version>2.3.3</com.fasterxml.jackson.version>-->
-        <!--<junit.version>4.12</junit.version>-->
-        <ch.qos.logback.version>1.1.2</ch.qos.logback.version>
         <org.apache.jena>3.1.0</org.apache.jena>
-        <slf4j.version>1.7.12</slf4j.version>
-        <!--<org.mapstruct.version>1.0.0.CR1</org.mapstruct.version>-->
     </properties>
-
 
     <repositories>
         <repository>
@@ -61,7 +51,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -83,7 +72,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
             <scope>test</scope>
         </dependency>
 
@@ -93,254 +81,7 @@
             <artifactId>sesame-repository-http</artifactId>
             <version>2.8.9</version>
         </dependency>
-        <!--<dependency>-->
-        <!--<groupId>ch.qos.logback</groupId>-->
-        <!--<artifactId>logback-classic</artifactId>-->
-        <!--<version>${ch.qos.logback.version}</version>-->
-        <!--</dependency>-->
-
-        <!--&lt;!&ndash; Spring &ndash;&gt;-->
-        <!--<dependency>-->
-        <!--<groupId>org.springframework</groupId>-->
-        <!--<artifactId>spring-core</artifactId>-->
-        <!--<version>${org.springframework.version}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.springframework</groupId>-->
-        <!--<artifactId>spring-context</artifactId>-->
-        <!--<version>${org.springframework.version}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.springframework</groupId>-->
-        <!--<artifactId>spring-context-support</artifactId>-->
-        <!--<version>${org.springframework.version}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.springframework</groupId>-->
-        <!--<artifactId>spring-web</artifactId>-->
-        <!--<version>${org.springframework.version}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.springframework</groupId>-->
-        <!--<artifactId>spring-webmvc</artifactId>-->
-        <!--<version>${org.springframework.version}</version>-->
-        <!--</dependency>-->
-
-        <!--&lt;!&ndash; Spring Security &ndash;&gt;-->
-        <!--<dependency>-->
-        <!--<groupId>org.springframework.security</groupId>-->
-        <!--<artifactId>spring-security-config</artifactId>-->
-        <!--<version>${org.springframework.security.version}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.springframework.security</groupId>-->
-        <!--<artifactId>spring-security-core</artifactId>-->
-        <!--<version>${org.springframework.security.version}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.springframework.security</groupId>-->
-        <!--<artifactId>spring-security-web</artifactId>-->
-        <!--<version>${org.springframework.security.version}</version>-->
-        <!--</dependency>-->
-
-        <!--&lt;!&ndash; Jackson for JSON serialization &ndash;&gt;-->
-        <!--<dependency>-->
-        <!--<groupId>com.fasterxml.jackson.core</groupId>-->
-        <!--<artifactId>jackson-databind</artifactId>-->
-        <!--<version>${com.fasterxml.jackson.version}</version>-->
-        <!--</dependency>-->
-
-        <!--&lt;!&ndash; Servlet-API &ndash;&gt;-->
-        <!--<dependency>-->
-        <!--<groupId>javax.servlet</groupId>-->
-        <!--<artifactId>javax.servlet-api</artifactId>-->
-        <!--<version>3.1.0</version>-->
-        <!--<scope>provided</scope>-->
-        <!--</dependency>-->
-
-        <!--&lt;!&ndash; JOPA &ndash;&gt;-->
-        <!--<dependency>-->
-        <!--<groupId>cz.cvut.kbss.jopa</groupId>-->
-        <!--<artifactId>jopa-impl</artifactId>-->
-        <!--<version>${cz.cvut.kbss.jopa.version}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>cz.cvut.kbss.jopa</groupId>-->
-        <!--<artifactId>ontodriver-sesame</artifactId>-->
-        <!--<version>${cz.cvut.kbss.jopa.version}</version>-->
-        <!--</dependency>-->
-
-        <!--&lt;!&ndash; Sesame Data access &ndash;&gt;-->
-        <!--<dependency>-->
-        <!--<groupId>org.openrdf.sesame</groupId>-->
-        <!--<artifactId>sesame-rio-rdfxml</artifactId>-->
-        <!--<version>2.8.9</version>-->
-        <!--</dependency>-->
-
-        <!--&lt;!&ndash; Logging &ndash;&gt;-->
-        <!--<dependency>-->
-        <!--<groupId>org.slf4j</groupId>-->
-        <!--<artifactId>slf4j-api</artifactId>-->
-        <!--<version>1.7.12</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>ch.qos.logback</groupId>-->
-        <!--<artifactId>logback-core</artifactId>-->
-        <!--<version>${ch.qos.logback.version}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>ch.qos.logback</groupId>-->
-        <!--<artifactId>logback-classic</artifactId>-->
-        <!--<version>${ch.qos.logback.version}</version>-->
-        <!--</dependency>-->
-
-        <!--&lt;!&ndash; Map Struct for DTO <-> entities mapping &ndash;&gt;-->
-        <!--<dependency>-->
-        <!--<groupId>org.mapstruct</groupId>-->
-        <!--<artifactId>mapstruct-jdk8</artifactId>-->
-        <!--<version>${org.mapstruct.version}</version>-->
-        <!--</dependency>-->
-
-        <!--&lt;!&ndash; Test dependencies &ndash;&gt;-->
-        <!--<dependency>-->
-        <!--<groupId>junit</groupId>-->
-        <!--<artifactId>junit</artifactId>-->
-        <!--<version>${junit.version}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.springframework</groupId>-->
-        <!--<artifactId>spring-test</artifactId>-->
-        <!--<version>${org.springframework.version}</version>-->
-        <!--<scope>test</scope>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.mockito</groupId>-->
-        <!--<artifactId>mockito-core</artifactId>-->
-        <!--<version>1.10.19</version>-->
-        <!--<scope>test</scope>-->
-        <!--</dependency>-->
     </dependencies>
-
-    <!--<profiles>-->
-    <!--<profile>-->
-    <!--<id>dev</id>-->
-    <!--<build>-->
-    <!--<plugins>-->
-    <!--<plugin>-->
-    <!--<groupId>org.apache.maven.plugins</groupId>-->
-    <!--<artifactId>maven-war-plugin</artifactId>-->
-    <!--<version>2.4</version>-->
-    <!--<configuration>-->
-    <!--<failOnMissingWebXml>false</failOnMissingWebXml>-->
-    <!--</configuration>-->
-    <!--</plugin>-->
-    <!--</plugins>-->
-    <!--</build>-->
-    <!--</profile>-->
-
-    <!--<profile>-->
-    <!--<id>production</id>-->
-    <!--<activation>-->
-    <!--<activeByDefault>true</activeByDefault>-->
-    <!--</activation>-->
-    <!--<build>-->
-    <!--<plugins>-->
-    <!--<plugin>-->
-    <!--<groupId>org.codehaus.mojo</groupId>-->
-    <!--<artifactId>exec-maven-plugin</artifactId>-->
-    <!--<version>1.4.0</version>-->
-    <!--<executions>-->
-    <!--<execution>-->
-    <!--<id>npm-module-cleanup</id>-->
-    <!--<goals>-->
-    <!--<goal>exec</goal>-->
-    <!--</goals>-->
-    <!--<phase>compile</phase>-->
-    <!--<configuration>-->
-    <!--<workingDirectory>src/main/webapp/</workingDirectory>-->
-    <!--<executable>rm</executable>-->
-    <!--<arguments>-->
-    <!--<argument>-Rf</argument>-->
-    <!--<argument>node_modules</argument>-->
-    <!--</arguments>-->
-    <!--</configuration>-->
-    <!--</execution>-->
-    <!--<execution>-->
-    <!--<id>ui-build</id>-->
-    <!--<goals>-->
-    <!--<goal>exec</goal>-->
-    <!--</goals>-->
-    <!--<phase>compile</phase>-->
-    <!--<configuration>-->
-    <!--<workingDirectory>src/main/webapp/</workingDirectory>-->
-    <!--<executable>npm</executable>-->
-    <!--<arguments>-->
-    <!--<argument>run</argument>-->
-    <!--<argument>build</argument>-->
-    <!--</arguments>-->
-    <!--</configuration>-->
-    <!--</execution>-->
-    <!--<execution>-->
-    <!--<id>ui-test</id>-->
-    <!--<goals>-->
-    <!--<goal>exec</goal>-->
-    <!--</goals>-->
-    <!--<phase>test</phase>-->
-    <!--<configuration>-->
-    <!--<workingDirectory>src/main/webapp</workingDirectory>-->
-    <!--<executable>npm</executable>-->
-    <!--<arguments>-->
-    <!--<argument>test</argument>-->
-    <!--</arguments>-->
-    <!--</configuration>-->
-    <!--</execution>-->
-    <!--</executions>-->
-    <!--</plugin>-->
-    <!--<plugin>-->
-    <!--<groupId>com.google.code.maven-replacer-plugin</groupId>-->
-    <!--<artifactId>replacer</artifactId>-->
-    <!--<version>1.5.3</version>-->
-    <!--<executions>-->
-    <!--<execution>-->
-    <!--<phase>prepare-package</phase>-->
-    <!--<goals>-->
-    <!--<goal>replace</goal>-->
-    <!--</goals>-->
-    <!--</execution>-->
-    <!--</executions>-->
-    <!--<configuration>-->
-    <!--<ignoreMissingFile>false</ignoreMissingFile>-->
-    <!--<file>${project.basedir}/profiles/production/index.html</file>-->
-    <!--<outputFile>${project.basedir}/profiles/production/index.html</outputFile>-->
-    <!--<regex>false</regex>-->
-    <!--<token>$VERSION$</token>-->
-    <!--<value>${project.version}</value>-->
-    <!--</configuration>-->
-    <!--</plugin>-->
-    <!--<plugin>-->
-    <!--<groupId>org.apache.maven.plugins</groupId>-->
-    <!--<artifactId>maven-war-plugin</artifactId>-->
-    <!--<version>2.4</version>-->
-    <!--<configuration>-->
-    <!--<warName>inbas-reporting-tool</warName>-->
-    <!--<failOnMissingWebXml>false</failOnMissingWebXml>-->
-    <!--<webResources>-->
-    <!--<resource>-->
-    <!--<directory>profiles/production</directory>-->
-    <!--</resource>-->
-    <!--</webResources>-->
-    <!--<packagingExcludes>-->
-    <!--**/js/actions/,**/js/components/,**/js/constants/,**/js/stores/,**/js/utils/,**/js/model/,-->
-    <!--**/js/validation/, **/js/i18n/,-->
-    <!--**/js/app.js,**/js/bundle.js,**/js/.bundle.js,**/css/inbas-audit.css,tests/,node_modules/,-->
-    <!--package.json,TODO.txt,webpack.conf.js,.babelrc-->
-    <!--</packagingExcludes>-->
-    <!--</configuration>-->
-    <!--</plugin>-->
-    <!--</plugins>-->
-    <!--</build>-->
-    <!--</profile>-->
-    <!--</profiles>-->
 
     <build>
         <plugins>
@@ -380,83 +121,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
                 </configuration>
             </plugin>
-
         </plugins>
     </build>
-
-
-    <!--<build>-->
-    <!--<plugins>-->
-    <!--<plugin>-->
-    <!--<groupId>org.apache.maven.plugins</groupId>-->
-    <!--<artifactId>maven-compiler-plugin</artifactId>-->
-    <!--<version>3.1</version>-->
-    <!--<configuration>-->
-    <!--<source>1.8</source>-->
-    <!--<target>1.8</target>-->
-    <!--</configuration>-->
-    <!--</plugin>-->
-    <!--<plugin>-->
-    <!--<groupId>org.apache.maven.plugins</groupId>-->
-    <!--<artifactId>maven-surefire-plugin</artifactId>-->
-    <!--<version>2.17</version>-->
-    <!--</plugin>-->
-    <!--<plugin>-->
-    <!--<groupId>org.bsc.maven</groupId>-->
-    <!--<artifactId>maven-processor-plugin</artifactId>-->
-    <!--<version>2.2.4</version>-->
-    <!--<configuration>-->
-    <!--<defaultOutputDirectory>-->
-    <!--${project.basedir}/src/main/generated-sources-->
-    <!--</defaultOutputDirectory>-->
-    <!--<processors>-->
-    <!--<processor>org.mapstruct.ap.MappingProcessor</processor>-->
-    <!--</processors>-->
-    <!--</configuration>-->
-    <!--<executions>-->
-    <!--<execution>-->
-    <!--<id>process</id>-->
-    <!--<phase>generate-sources</phase>-->
-    <!--<goals>-->
-    <!--<goal>process</goal>-->
-    <!--</goals>-->
-    <!--</execution>-->
-    <!--</executions>-->
-    <!--<dependencies>-->
-    <!--<dependency>-->
-    <!--<groupId>org.mapstruct</groupId>-->
-    <!--<artifactId>mapstruct-processor</artifactId>-->
-    <!--<version>${org.mapstruct.version}</version>-->
-    <!--</dependency>-->
-    <!--</dependencies>-->
-    <!--</plugin>-->
-    <!--&lt;!&ndash; Code coverage plugin &ndash;&gt;-->
-    <!--<plugin>-->
-    <!--<groupId>org.jacoco</groupId>-->
-    <!--<artifactId>jacoco-maven-plugin</artifactId>-->
-    <!--<version>0.7.5.201505241946</version>-->
-    <!--<executions>-->
-    <!--<execution>-->
-    <!--<goals>-->
-    <!--<goal>prepare-agent</goal>-->
-    <!--</goals>-->
-    <!--</execution>-->
-    <!--<execution>-->
-    <!--<id>report</id>-->
-    <!--<phase>prepare-package</phase>-->
-    <!--<goals>-->
-    <!--<goal>report</goal>-->
-    <!--</goals>-->
-    <!--</execution>-->
-    <!--</executions>-->
-    <!--</plugin>-->
-    <!--</plugins>-->
-    <!--</build>-->
-
 </project>
