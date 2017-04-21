@@ -711,10 +711,6 @@
                                                                                owl:minQualifiedCardinality "2"^^xsd:nonNegativeInteger
                                                                              ] ,
                                                                              [ rdf:type owl:Restriction ;
-                                                                               owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.is-part-of> ;
-                                                                               owl:someValuesFrom <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data>
-                                                                             ] ,
-                                                                             [ rdf:type owl:Restriction ;
                                                                                owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.constitutes> ;
                                                                                owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot> ;
                                                                                owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
@@ -723,6 +719,10 @@
                                                                                owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/is-part-of> ;
                                                                                owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data> ;
                                                                                owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                                                             ] ,
+                                                                             [ rdf:type owl:Restriction ;
+                                                                               owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.is-part-of> ;
+                                                                               owl:someValuesFrom <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data>
                                                                              ] .
 
 
@@ -735,13 +735,13 @@
                                                                   
                                                                   rdfs:subClassOf owl:Thing ,
                                                                                   [ rdf:type owl:Restriction ;
-                                                                                    owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-member> ;
-                                                                                    owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data> ;
+                                                                                    owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-item> ;
+                                                                                    owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/single-item-selector> ;
                                                                                     owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                                                                   ] ,
                                                                                   [ rdf:type owl:Restriction ;
-                                                                                    owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-item> ;
-                                                                                    owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/single-item-selector> ;
+                                                                                    owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-member> ;
+                                                                                    owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data> ;
                                                                                     owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                                                                   ] .
 
@@ -755,13 +755,8 @@
                                                                 
                                                                 rdfs:subClassOf owl:Thing ,
                                                                                 [ rdf:type owl:Restriction ;
-                                                                                  owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-subdataset> ;
-                                                                                  owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset> ;
-                                                                                  owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                                                                ] ,
-                                                                                [ rdf:type owl:Restriction ;
-                                                                                  owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.offers-dataset> ;
-                                                                                  owl:someValuesFrom <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-source>
+                                                                                  owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-dataset> ;
+                                                                                  owl:someValuesFrom <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot>
                                                                                 ] ,
                                                                                 [ rdf:type owl:Restriction ;
                                                                                   owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-explored-dataset> ;
@@ -773,8 +768,13 @@
                                                                                   owl:minQualifiedCardinality "2"^^xsd:nonNegativeInteger
                                                                                 ] ,
                                                                                 [ rdf:type owl:Restriction ;
-                                                                                  owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-dataset> ;
-                                                                                  owl:someValuesFrom <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot>
+                                                                                  owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-subdataset> ;
+                                                                                  owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset> ;
+                                                                                  owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                                                                ] ,
+                                                                                [ rdf:type owl:Restriction ;
+                                                                                  owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.offers-dataset> ;
+                                                                                  owl:someValuesFrom <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-source>
                                                                                 ] .
 
 
@@ -787,13 +787,13 @@
                                                                            
                                                                            rdfs:subClassOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot> ,
                                                                                            [ rdf:type owl:Restriction ;
-                                                                                             owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-dataset-descriptor> ;
-                                                                                             owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/description> ;
+                                                                                             owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/describes> ;
+                                                                                             owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/described-data-artifact> ;
                                                                                              owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                                                                            ] ,
                                                                                            [ rdf:type owl:Restriction ;
-                                                                                             owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/describes> ;
-                                                                                             owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/described-data-artifact> ;
+                                                                                             owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-dataset-descriptor> ;
+                                                                                             owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/description> ;
                                                                                              owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                                                                            ] .
 
@@ -807,17 +807,17 @@
                                                                             
                                                                             rdfs:subClassOf owl:Thing ,
                                                                                             [ rdf:type owl:Restriction ;
-                                                                                              owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-dataset-explorer> ;
-                                                                                              owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-exploring-journalist> ;
-                                                                                              owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                                                                              owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/uses> ;
+                                                                                              owl:someValuesFrom <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/intent>
                                                                                             ] ,
                                                                                             [ rdf:type owl:Restriction ;
                                                                                               owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-explored-dataset> ;
                                                                                               owl:someValuesFrom <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset>
                                                                                             ] ,
                                                                                             [ rdf:type owl:Restriction ;
-                                                                                              owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/uses> ;
-                                                                                              owl:someValuesFrom <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/intent>
+                                                                                              owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-dataset-explorer> ;
+                                                                                              owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-exploring-journalist> ;
+                                                                                              owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                                                                             ] .
 
 
@@ -849,8 +849,9 @@
                                                                             
                                                                             rdfs:subClassOf owl:Thing ,
                                                                                             [ rdf:type owl:Restriction ;
-                                                                                              owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-source> ;
-                                                                                              owl:someValuesFrom <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/single-snapshot-dataset-source>
+                                                                                              owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-published-dataset-snapshot> ;
+                                                                                              owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot> ;
+                                                                                              owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                                                                             ] ,
                                                                                             [ rdf:type owl:Restriction ;
                                                                                               owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-publisher> ;
@@ -858,9 +859,8 @@
                                                                                               owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                                                                             ] ,
                                                                                             [ rdf:type owl:Restriction ;
-                                                                                              owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-published-dataset-snapshot> ;
-                                                                                              owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot> ;
-                                                                                              owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                                                                              owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-source> ;
+                                                                                              owl:someValuesFrom <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/single-snapshot-dataset-source>
                                                                                             ] .
 
 
@@ -883,8 +883,9 @@
                                                                          
                                                                          rdfs:subClassOf owl:Thing ,
                                                                                          [ rdf:type owl:Restriction ;
-                                                                                           owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/constitutes> ;
-                                                                                           owl:someValuesFrom <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data>
+                                                                                           owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-sub-dataset-snapshot> ;
+                                                                                           owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot> ;
+                                                                                           owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger
                                                                                          ] ,
                                                                                          [ rdf:type owl:Restriction ;
                                                                                            owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-sub-dataset-snapshot> ;
@@ -892,9 +893,8 @@
                                                                                            owl:minQualifiedCardinality "2"^^xsd:nonNegativeInteger
                                                                                          ] ,
                                                                                          [ rdf:type owl:Restriction ;
-                                                                                           owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-dataset> ;
-                                                                                           owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset> ;
-                                                                                           owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                                                                           owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/constitutes> ;
+                                                                                           owl:someValuesFrom <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data>
                                                                                          ] ,
                                                                                          [ rdf:type owl:Restriction ;
                                                                                            owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-published-dataset-snapshot> ;
@@ -902,9 +902,9 @@
                                                                                            owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                                                                          ] ,
                                                                                          [ rdf:type owl:Restriction ;
-                                                                                           owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-sub-dataset-snapshot> ;
-                                                                                           owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot> ;
-                                                                                           owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                                                                           owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-dataset> ;
+                                                                                           owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset> ;
+                                                                                           owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                                                                          ] .
 
 
@@ -971,8 +971,8 @@
                                                                     
                                                                     rdfs:subClassOf owl:Thing ,
                                                                                     [ rdf:type owl:Restriction ;
-                                                                                      owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/is-description-of> ;
-                                                                                      owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/described-data-artifact> ;
+                                                                                      owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-source> ;
+                                                                                      owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/single-snapshot-dataset-source> ;
                                                                                       owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                                                                     ] ,
                                                                                     [ rdf:type owl:Restriction ;
@@ -981,8 +981,8 @@
                                                                                       owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                                                                     ] ,
                                                                                     [ rdf:type owl:Restriction ;
-                                                                                      owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-source> ;
-                                                                                      owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/single-snapshot-dataset-source> ;
+                                                                                      owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/is-description-of> ;
+                                                                                      owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/described-data-artifact> ;
                                                                                       owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                                                                     ] .
 
@@ -1131,12 +1131,12 @@
                                                                                        rdfs:subClassOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-source> ,
                                                                                                        [ rdf:type owl:Restriction ;
                                                                                                          owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-source> ;
-                                                                                                         owl:someValuesFrom <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/description>
+                                                                                                         owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-publication> ;
+                                                                                                         owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                                                                                        ] ,
                                                                                                        [ rdf:type owl:Restriction ;
                                                                                                          owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-source> ;
-                                                                                                         owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-publication> ;
-                                                                                                         owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                                                                                         owl:someValuesFrom <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/description>
                                                                                                        ] .
 
 
@@ -1227,8 +1227,8 @@
                                                                        
                                                                        rdfs:subClassOf owl:Thing ,
                                                                                        [ rdf:type owl:Restriction ;
-                                                                                         owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-input> ;
-                                                                                         owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/source-dataset-snapshot> ;
+                                                                                         owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-output> ;
+                                                                                         owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/target-dataset-snapshot> ;
                                                                                          owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                                                                        ] ,
                                                                                        [ rdf:type owl:Restriction ;
@@ -1237,8 +1237,8 @@
                                                                                          owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger
                                                                                        ] ,
                                                                                        [ rdf:type owl:Restriction ;
-                                                                                         owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-output> ;
-                                                                                         owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/target-dataset-snapshot> ;
+                                                                                         owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-input> ;
+                                                                                         owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/source-dataset-snapshot> ;
                                                                                          owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger
                                                                                        ] .
 

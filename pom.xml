@@ -12,6 +12,7 @@
     <modules>
         <module>semantic-pipes-parent</module>
         <module>semantic-pipes-core</module>
+        <module>semantic-pipes-model</module>
         <module>semantic-pipes-cli</module>
         <module>semantic-pipes-web</module>
         <module>semantic-pipes-modules</module>

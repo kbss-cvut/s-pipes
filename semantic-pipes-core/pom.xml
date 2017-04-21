@@ -18,13 +18,12 @@
     <packaging>jar</packaging>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <aspectj.version>1.8.5</aspectj.version>
         <!--<cz.cvut.kbss.jopa.version>0.7.0</cz.cvut.kbss.jopa.version>-->
         <!--<org.springframework.version>4.1.5.RELEASE</org.springframework.version>-->
         <!--<org.springframework.security.version>4.0.2.RELEASE</org.springframework.security.version>-->
         <!--<com.fasterxml.jackson.version>2.3.3</com.fasterxml.jackson.version>-->
         <!--<org.mapstruct.version>1.0.0.CR1</org.mapstruct.version>-->
-        <java.version>1.8</java.version>
     </properties>
 
     <dependencies>
@@ -51,7 +50,7 @@
         <!--</dependency>-->
         <!--<dependency>-->
             <!--<groupId>org.springframework</groupId>-->
-            <!--<artifactId>spring-webmvc</artifactId>-->
+            <!--<artifact>spring-webmvc</artifactId>-->
             <!--<version>${org.springframework.version}</version>-->
         <!--</dependency>-->
 
@@ -105,7 +104,11 @@
             <!--<artifactId>sesame-rio-rdfxml</artifactId>-->
             <!--<version>2.8.9</version>-->
         <!--</dependency>-->
-
+        <dependency>
+            <groupId>cz.cvut.kbss</groupId>
+            <artifactId>semantic-pipes-model</artifactId>
+            <version>0.0.1</version>
+        </dependency>
         <!-- Logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -175,6 +178,27 @@
             <groupId>com.intellij</groupId>
             <artifactId>annotations</artifactId>
             <version>9.0.4</version>
+        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.aspectj</groupId>-->
+            <!--<artifactId>aspectjrt</artifactId>-->
+            <!--<version>${aspectj.version}</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.aspectj</groupId>-->
+            <!--<artifactId>aspectjweaver</artifactId>-->
+            <!--<version>${aspectj.version}</version>-->
+            <!--<scope>runtime</scope>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>cz.cvut.kbss.jopa</groupId>
+            <artifactId>jopa-impl</artifactId>
+            <version>0.9.5</version>
+        </dependency>
+        <dependency>
+            <groupId>cz.cvut.kbss.jopa</groupId>
+            <artifactId>ontodriver-sesame</artifactId>
+            <version>0.9.5</version>
         </dependency>
         <!--<dependency>-->
             <!--<groupId>org.springframework</groupId>-->
@@ -405,13 +429,12 @@
                     <!--</execution>-->
                 <!--</executions>-->
             <!--</plugin>-->
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -428,6 +451,42 @@
                         <phase>validate</phase>
                         <goals>
                             <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>aspectj-maven-plugin</artifactId>
+                <version>1.7</version>
+                <configuration>
+                    <complianceLevel>${jdk.version}</complianceLevel>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
+                    <sources>
+                        <source>
+                            <basedir>${basedir}/src/main/java</basedir>
+                            <includes>
+                                <include>**/LoggingAspect.java</include>
+                            </includes>
+                        </source>
+                    </sources>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjtools</artifactId>
+                        <version>${aspectj.version}</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>compile</goal>
+                            <!-- use this goal to weave all your main classes -->
+                            <goal>test-compile</goal>
+                            <!-- use this goal to weave all your test classes -->
                         </goals>
                     </execution>
                 </executions>

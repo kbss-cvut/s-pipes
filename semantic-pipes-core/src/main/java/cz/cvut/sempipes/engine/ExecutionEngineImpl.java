@@ -1,68 +1,91 @@
 package cz.cvut.sempipes.engine;
 
 import cz.cvut.sempipes.modules.Module;
+import java.time.Instant;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-import java.util.stream.Collectors;
-
 /**
  * Created by Miroslav Blasko on 30.5.16.
  */
 class ExecutionEngineImpl implements ExecutionEngine {
 
-
     private static Logger LOG = LoggerFactory.getLogger(ExecutionEngineImpl.class);
 
-    // TODO progress monitor
+    private Set<ProgressListener> listeners = new HashSet<>();
 
-    public ExecutionContext executePipeline(Module m, ExecutionContext context) {
-        LOG.info("Executing script {} with context {}.", m.getResource(), context.toSimpleString());
-        return _executePipeline(m, context);
+    public ExecutionContext executePipeline(final Module module, final ExecutionContext inputContext) {
+        LOG.info("Executing script {} with context {}.", module.getResource(), inputContext.toSimpleString());
+        final long pipelineExecutionId = Instant.now().getEpochSecond();
+
+        fire((l) -> {l.pipelineExecutionStarted(pipelineExecutionId); return null;});
+        ExecutionContext outputContext = _executePipeline(pipelineExecutionId, module, inputContext, null);
+        fire((l) -> {l.pipelineExecutionFinished(pipelineExecutionId); return null;});
+        return outputContext;
     }
 
-    private ExecutionContext _executePipeline(Module module, ExecutionContext context) {
+    private void fire(final Function<ProgressListener,Void> function) {
+        listeners.forEach( (listener) -> {
+            try {
+                function.apply(listener);
+            } catch(final Exception e) {
+                LOG.warn("Listener {} failed.", listener, e);
+            }
+        });
+    }
+
+    private ExecutionContext _executePipeline(long pipelineId, Module module, ExecutionContext context, String predecessorId) {
+        final String moduleExecutionId = pipelineId + "-"+module.hashCode() + "-"+context.hashCode();
+
 
         // module has run already
         if (module.getOutputContext() != null) {
             module.addOutputBindings(context.getVariablesBinding());
+            fire((l) -> {l.moduleExecutionFinished(pipelineId, moduleExecutionId, module); return null;});
             return module.getOutputContext();
-
-
         }
 
         // module has no predeccesor
         if (module.getInputModules().isEmpty()) {
+            fire((l) -> {l.moduleExecutionStarted(pipelineId, moduleExecutionId, module, context, predecessorId); return null;});
 
             if (module.getExecutionContext() != null) {
                 LOG.debug("Execution context for module {} already set.", module);
             } else {
                 module.setInputContext(context);
+
+                LOG.info(" ##### " + module.getLabel());
+                if (LOG.isTraceEnabled()) {
+                    LOG.trace("Using input context {}", context.toSimpleString()); //TODO redundant code -> merge
+                }
+                ExecutionContext outputContext = module.execute();
+                if (LOG.isTraceEnabled()) {
+                    LOG.trace("Returning output context {}", outputContext.toSimpleString());
+                }
+                module.addOutputBindings(context.getVariablesBinding());
             }
-            LOG.info(" ##### " + module.getLabel());
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("Using input context {}", context.toSimpleString()); //TODO redundant code -> merge
-            }
-            ExecutionContext outputContext = module.execute();
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("Returning output context {}", outputContext.toSimpleString());
-            }
-            module.addOutputBindings(context.getVariablesBinding());
+            fire((l) -> {l.moduleExecutionFinished(pipelineId, moduleExecutionId, module); return null;});
             return module.getOutputContext();
         }
 
         Map<Resource, ExecutionContext> resource2ContextMap = module.getInputModules().stream()
-                .collect(Collectors.toMap(Module::getResource, mod -> this._executePipeline(mod, context)));
+                .collect(Collectors.toMap(Module::getResource, mod -> this._executePipeline(pipelineId, mod, context, moduleExecutionId)));
+
 
         LOG.info(" ##### " + module.getLabel());
         ExecutionContext mergedContext = mergeContexts(resource2ContextMap);
         if (LOG.isTraceEnabled()) {
             LOG.trace("Using input merged context {}", mergedContext.toSimpleString());
         }
+        fire((l) -> {l.moduleExecutionStarted(pipelineId, moduleExecutionId, module, mergedContext, predecessorId); return null;});
 
         module.setInputContext(mergedContext);
 
@@ -71,6 +94,7 @@ class ExecutionEngineImpl implements ExecutionEngine {
             LOG.trace("Returning output context {}", outputContext.toSimpleString());
         }
         module.addOutputBindings(mergedContext.getVariablesBinding());
+        fire((l) -> {l.moduleExecutionFinished(pipelineId, moduleExecutionId, module); return null;});
         return module.getOutputContext();
     }
 
@@ -112,5 +136,17 @@ class ExecutionEngineImpl implements ExecutionEngine {
         return ExecutionContextFactory.createContext(newModel, variablesBinding);
     }
 
-}
+    @Override
+    public void addProgressListener(final ProgressListener listener) {
+        if (!listeners.contains(listener)) {
+            listeners.add(listener);
+        }
+    }
 
+    @Override
+    public void removeProgressListener(final ProgressListener listener) {
+        if (listeners.contains(listener)) {
+            listeners.remove(listener);
+        }
+    }
+}
