@@ -37,12 +37,6 @@ class ExecutionEngineImpl implements ExecutionEngine {
         return m.execute();
     }
 
-    @Override
-    public ExecutionContext executeModule(Module m) {
-        return executeModule(m, ExecutionContextFactory.createEmptyContext());
-    }
-
-
     private ExecutionContext _executePipeline(Module module, ExecutionContext context) {
 
         // module has run already

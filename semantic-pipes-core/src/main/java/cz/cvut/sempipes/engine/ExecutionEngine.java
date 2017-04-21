@@ -15,6 +15,4 @@ public interface ExecutionEngine {
 
     // TODO differentiate output, input modules ?
     ExecutionContext executeModule(Module m, ExecutionContext context);
-
-    ExecutionContext executeModule(Module m);
 }
