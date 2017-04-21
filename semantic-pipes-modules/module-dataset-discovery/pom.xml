@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>semantic-pipes-modules</artifactId>
@@ -14,7 +14,7 @@
     <packaging>jar</packaging>
 
     <properties>
-        <jopa-maven-plugin.version>0.7.11</jopa-maven-plugin.version>
+        <jopa.version>0.9.5</jopa.version>
     </properties>
 
     <dependencies>
@@ -32,14 +32,32 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <sourceDirectory>src/main/java</sourceDirectory>
+                    <failsOnError>false</failsOnError>
+                    <failOnViolation>false</failOnViolation>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>cz.cvut.kbss.jopa</groupId>
                 <artifactId>jopa-maven-plugin</artifactId>
-                <version>0.8.6</version>
+                <version>${jopa.version}</version>
                 <configuration>
                     <package>cz.cvut.sempipes.modules.datasetdiscovery.model.generated</package>
-                    <output-directory>${project.basedir}/src/main/java/</output-directory>
+                    <output-directory>${project.basedir}/src/main/java-generated/</output-directory>
                     <ontology-iri>http://onto.fel.cvut.cz/ontologies/dataset-descriptor</ontology-iri>
-                    <mapping-file>${project.basedir}/src/main/resources/mapping</mapping-file>
+                    <mapping-file>${project.basedir}/src/main/resources/dataset-descriptor-ontology/mapping</mapping-file>
                     <vocabulary-only>true</vocabulary-only>
                 </configuration>
                 <executions>
@@ -48,6 +66,25 @@
                         <goals>
                             <goal>owl2java-transform</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.10</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/main/java-generated</source>
+                            </sources>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

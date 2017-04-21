@@ -3,10 +3,9 @@ package cz.cvut.sempipes.modules;
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
 import org.apache.jena.rdf.model.Model;
+import static org.junit.Assert.assertTrue;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by Miroslav Blasko on 5.1.17.
@@ -25,13 +24,13 @@ public class GetDatasetDescriptorsModuleTest {
 //        ));
 
         GetDatasetDescriptorsModule m = new GetDatasetDescriptorsModule();
-        m.setpDatasetIRI("http://linked.opendata.cz/resource/dataset/vavai/tenders/vocabulary");
+        m.setPrpDatasetIri("http://linked.opendata.cz/resource/dataset/vavai/tenders/vocabulary");
 
         m.setInputContext(inCtx);
 
         ExecutionContext outCtx = m.executeSelf();
 
-        Model outModel  = outCtx.getDefaultModel();
+        Model outModel = outCtx.getDefaultModel();
 
         assertTrue(outModel.size() > 0);
 
