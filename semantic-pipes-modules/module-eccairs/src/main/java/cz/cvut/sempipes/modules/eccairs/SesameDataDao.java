@@ -1,12 +1,12 @@
 package cz.cvut.sempipes.modules.eccairs;
 
-import org.openrdf.model.ValueFactory;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.rio.RDFHandler;
-import org.openrdf.rio.RDFHandlerException;
-import org.openrdf.rio.rdfxml.util.RDFXMLPrettyWriter;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.rio.RDFHandler;
+import org.eclipse.rdf4j.rio.RDFHandlerException;
+import org.eclipse.rdf4j.rio.rdfxml.util.RDFXMLPrettyWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +49,7 @@ public class SesameDataDao {
             try {
                 final ValueFactory valueFactory = connection.getValueFactory();
                 if (contextUri != null) {
-                    connection.export(handler, valueFactory.createURI(contextUri.toString()));
+                    connection.export(handler, valueFactory.createIRI(contextUri.toString()));
                 } else {
                     connection.export(handler);
                 }

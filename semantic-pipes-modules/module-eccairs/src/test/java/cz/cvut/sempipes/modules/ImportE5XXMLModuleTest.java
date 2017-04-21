@@ -20,7 +20,6 @@ public class ImportE5XXMLModuleTest extends ImportE5XModuleTest {
         super(path, contentType);
     }
 
-    @Ignore
     @Parameterized.Parameters(name="e5x")
     public static Object[] generateTestData() {
         String dir = "data/e5x.xml";
