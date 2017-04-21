@@ -312,7 +312,7 @@ public class SempipesServiceController {
             throw new SempipesServiceException("Cannot load module with id="+id);
         }
 
-        outputExecutionContext = engine.executeModule(module, inputExecutionContext);
+        outputExecutionContext = engine.executePipeline(module,inputExecutionContext);
 //        } else {
 //            module = PipelineFactory.loadPipeline(configModel.createResource(asArgs.configResourceUri));
 //            outputExecutionContext = engine.executePipeline(module, inputExecutionContext);

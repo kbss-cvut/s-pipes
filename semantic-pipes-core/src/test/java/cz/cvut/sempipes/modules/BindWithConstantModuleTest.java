@@ -54,7 +54,7 @@ public class BindWithConstantModuleTest extends AbstractModuleTestHelper {
         ExecutionEngine e = ExecutionEngineFactory.createEngine();
         ExecutionContext context = ExecutionContextFactory.createContext(new VariablesBinding("name", ResourceFactory.createPlainLiteral("Miroslav")));
 
-        ExecutionContext newContext = e.executeModule(module, context);
+        ExecutionContext newContext = e.executePipeline(module,context);
 
         assertEquals("Output variable binding of this module is not correct",
                 "Hello Miroslav",

@@ -30,13 +30,6 @@ class ExecutionEngineImpl implements ExecutionEngine {
         return _executePipeline(m, context);
     }
 
-    // TODO differentiate output, input modules ?
-    public ExecutionContext executeModule(Module m, ExecutionContext context) {
-        m.setInputContext(context);
-        LOG.info("Executing module " + m.getResource());
-        return m.execute();
-    }
-
     private ExecutionContext _executePipeline(Module module, ExecutionContext context) {
 
         // module has run already

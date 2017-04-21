@@ -12,7 +12,4 @@ public interface ExecutionEngine {
 
     // TODO web service have injected execution context
     ExecutionContext executePipeline(Module m, ExecutionContext context);
-
-    // TODO differentiate output, input modules ?
-    ExecutionContext executeModule(Module m, ExecutionContext context);
 }
