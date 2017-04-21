@@ -13,14 +13,15 @@
     <name>Semantic Pipes Modules - Dataset Discovery</name>
     <packaging>jar</packaging>
 
-    <properties>
-        <jopa.version>0.9.5</jopa.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>cz.cvut.kbss</groupId>
             <artifactId>semantic-pipes-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cz.cvut.kbss</groupId>
+            <artifactId>semantic-pipes-model</artifactId>
+            <version>0.0.1</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -46,45 +47,6 @@
                         <goals>
                             <goal>check</goal>
                         </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>cz.cvut.kbss.jopa</groupId>
-                <artifactId>jopa-maven-plugin</artifactId>
-                <version>${jopa.version}</version>
-                <configuration>
-                    <package>cz.cvut.sempipes.modules.datasetdiscovery.model.generated</package>
-                    <output-directory>${project.basedir}/src/main/java-generated/</output-directory>
-                    <ontology-iri>http://onto.fel.cvut.cz/ontologies/dataset-descriptor</ontology-iri>
-                    <mapping-file>${project.basedir}/src/main/resources/dataset-descriptor-ontology/mapping</mapping-file>
-                    <vocabulary-only>true</vocabulary-only>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>owl2java-transform</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.10</version>
-                <executions>
-                    <execution>
-                        <id>add-source</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>src/main/java-generated</source>
-                            </sources>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>

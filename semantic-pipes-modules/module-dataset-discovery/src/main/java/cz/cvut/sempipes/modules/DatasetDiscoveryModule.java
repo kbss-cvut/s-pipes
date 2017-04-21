@@ -1,8 +1,8 @@
 package cz.cvut.sempipes.modules;
 
+import cz.cvut.sempipes.Vocabulary;
 import cz.cvut.sempipes.constants.KBSS_MODULE;
 import cz.cvut.sempipes.engine.ExecutionContext;
-import cz.cvut.sempipes.modules.datasetdiscovery.model.generated.Vocabulary;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
