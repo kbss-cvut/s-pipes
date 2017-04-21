@@ -8,8 +8,6 @@ import org.apache.jena.rdf.model.Model;
  */
 public interface ExecutionEngine {
 
-    void loadConfiguration(Model config);
-
     // TODO web service have injected execution context
     ExecutionContext executePipeline(Module m, ExecutionContext context);
 }

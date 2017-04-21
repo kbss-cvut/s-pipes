@@ -20,11 +20,6 @@ class ExecutionEngineImpl implements ExecutionEngine {
 
     // TODO progress monitor
 
-    public void loadConfiguration(Model config) {
-        return;
-    }
-
-
     public ExecutionContext executePipeline(Module m, ExecutionContext context) {
         LOG.info("Executing script {} with context {}.", m.getResource(), context.toSimpleString());
         return _executePipeline(m, context);
