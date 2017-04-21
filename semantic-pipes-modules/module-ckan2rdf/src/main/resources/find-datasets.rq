@@ -1,0 +1,20 @@
+PREFIX http: <http://onto.fel.cvut.cz/ontologies/http/>
+PREFIX dcat: <http://www.w3.org/ns/dcat#>
+PREFIX void: <http://rdfs.org/ns/void#>
+CONSTRUCT {
+  ?event http:has-dataset ?dsIRI .
+  ?dsIRI http:has-dataset-iri ?dsS ;
+       a ?datasetType .
+} WHERE {
+  {
+    ?ds a ?datasetType .
+    FILTER(?datasetType IN (dcat:Dataset, void:Dataset))
+    BIND(str(?ds) AS ?dsS)
+    BIND(iri(concat(str(http:),concat('dataset-',encode_for_uri(?dsS)))) AS ?dsIRI)
+  } UNION {
+    GRAPH ?ds { ?s ?p ?o }
+    BIND(str(?ds) AS ?dsS)
+    BIND(http:graph AS ?datasetType)
+    BIND(iri(concat(str(http:),concat('dataset-',encode_for_uri(?dsS)))) AS ?dsIRI)
+  }
+}

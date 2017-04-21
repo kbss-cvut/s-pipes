@@ -21,7 +21,6 @@ import cz.cvut.kbss.jopa.model.JOPAPersistenceProperties;
 import cz.cvut.kbss.jopa.model.JOPAPersistenceProvider;
 import cz.cvut.kbss.ontodriver.config.OntoDriverProperties;
 import cz.cvut.kbss.ontodriver.sesame.config.SesameOntoDriverProperties;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,10 +34,16 @@ public class PersistenceFactory {
         throw new AssertionError();
     }
 
-    public static void init(Map<String, String> properties) {
+    /**
+     * Supplies basic configuration to the persistence manager factory.
+     *
+     * @param properties default properties - overriding any other set up in this method
+     */
+    public static void init(final Map<String, String> properties) {
         final Map<String, String> props = new HashMap<>();
-        // Here we set up basic storage access properties - driver class, physical location of the storage
-        props.put(JOPAPersistenceProperties.DATA_SOURCE_CLASS, "cz.cvut.kbss.ontodriver.sesame.SesameDataSource");
+        // Basic storage access properties - driver class, physical location of the storage
+        props.put(JOPAPersistenceProperties.DATA_SOURCE_CLASS,
+            "cz.cvut.kbss.ontodriver.sesame.SesameDataSource");
         // View transactional changes during transaction
         props.put(OntoDriverProperties.USE_TRANSACTIONAL_ONTOLOGY, Boolean.TRUE.toString());
         // Use in-memory storage if not remote or local file path specified
@@ -51,12 +56,18 @@ public class PersistenceFactory {
             props.putAll(properties);
         }
         // Persistence provider name
-        props.put(JOPAPersistenceProperties.JPA_PERSISTENCE_PROVIDER, JOPAPersistenceProvider.class.getName());
+        props.put(JOPAPersistenceProperties.JPA_PERSISTENCE_PROVIDER,
+            JOPAPersistenceProvider.class.getName());
 
         emf = Persistence.createEntityManagerFactory("Jackan", props);
         initialized = true;
     }
 
+    /**
+     * Creates a new entity manager, provided the underlying EntityManagerFactory is initialized.
+     *
+     * @return a new EntityManager
+     */
     public static EntityManager createEntityManager() {
         if (!initialized) {
             throw new IllegalStateException("Factory has not been initialized.");

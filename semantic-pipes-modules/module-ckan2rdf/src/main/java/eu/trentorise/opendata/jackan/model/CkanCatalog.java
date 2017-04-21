@@ -3,8 +3,6 @@ package eu.trentorise.opendata.jackan.model;
 import cz.cvut.kbss.jopa.model.annotations.Id;
 import cz.cvut.kbss.jopa.model.annotations.OWLClass;
 import cz.cvut.kbss.jopa.model.annotations.OWLObjectProperty;
-import eu.trentorise.opendata.jackan.model.CkanDataset;
-
 import java.util.Set;
 
 @OWLClass(iri = "http://onto.fel.cvut.cz/ontologies/org/ckan/catalog")
