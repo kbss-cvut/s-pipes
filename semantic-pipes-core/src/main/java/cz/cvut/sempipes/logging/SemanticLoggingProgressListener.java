@@ -16,7 +16,6 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.nio.file.Files;
 import java.time.Instant;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class SemanticLoggingProgressListener implements ProgressListener {
-    private static final Logger LOG = LoggerFactory.getLogger(LoggingAspect.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SemanticLoggingProgressListener.class);
 
     /**
      * Maps pipeline executions and module executions to the transformation object.

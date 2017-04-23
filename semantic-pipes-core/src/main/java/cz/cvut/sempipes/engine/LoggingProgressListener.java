@@ -1,12 +1,11 @@
 package cz.cvut.sempipes.engine;
 
-import cz.cvut.sempipes.logging.LoggingAspect;
 import cz.cvut.sempipes.modules.Module;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class LoggingProgressListener implements ProgressListener {
-    private static final Logger LOG = LoggerFactory.getLogger(LoggingAspect.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LoggingProgressListener.class);
 
     @Override
     public void pipelineExecutionStarted(long pipelineId) {
