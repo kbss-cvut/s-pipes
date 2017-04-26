@@ -19,6 +19,7 @@ public class Vocabulary {
     public final static String s_c_dataset_selector = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-selector";
     public final static String s_p_inv_dot_constitutes = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.constitutes";
     public final static String s_p_inv_dot_has_dataset_explorer = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-dataset-explorer";
+    public final static String s_c_vocabulary_class_partition = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/vocabulary-class-partition";
     public final static String s_c_agent = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/agent";
     public final static String s_p_inv_dot_has_subdataset = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-subdataset";
     public final static String s_p_has_endpoint_url = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-endpoint-url";
@@ -27,6 +28,7 @@ public class Vocabulary {
     public final static String s_p_has_source = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-source";
     public final static String s_c_sparql_construct = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/sparql-construct";
     public final static String s_p_inv_dot_has_intent = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-intent";
+    public final static String s_c_vocabulary_property_partition = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/vocabulary-property-partition";
     public final static String s_p_has_dataset = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-dataset";
     public final static String s_p_describes = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/describes";
     public final static String s_p_inv_dot_has_dataset_descriptor = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-dataset-descriptor";
@@ -51,7 +53,6 @@ public class Vocabulary {
     public final static String s_p_has_sub_dataset_snapshot = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-sub-dataset-snapshot";
     public final static String s_p_inv_dot_has_dataset = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-dataset";
     public final static String s_p_is_part_of = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/is-part-of";
-    public final static String s_c_property_partition = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/property-partition";
     public final static String s_c_intent = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/intent";
     public final static String s_p_inv_dot_has_publisher = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-publisher";
     public final static String s_p_is_created_by = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/is-created-by";
@@ -66,7 +67,6 @@ public class Vocabulary {
     public final static String s_c_content_descriptor = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/content-descriptor";
     public final static String s_c_spo_summary_descriptor = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/spo-summary-descriptor";
     public final static String s_p_has_download_url = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-download-url";
-    public final static String s_c_class_partition = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/class-partition";
     public final static String s_c_vocabulary_instance = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/vocabulary-instance";
     public final static String s_c_execution_context_dataset_source = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/execution-context-dataset-source";
     public final static String s_c_entity_partition = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/entity-partition";
