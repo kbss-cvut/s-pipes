@@ -86,6 +86,12 @@ public class OntoDocManager implements OntologyDocumentManager {
 
     @Override
     public void registerDocuments(Path directoryOrFilePath) {
+
+        if (Files.isDirectory(directoryOrFilePath) && Files.isSymbolicLink(directoryOrFilePath)) {
+            LOG.warn("Ignoring to register documents from directory {}. Directories that are symbolic links " +
+                     "are not supported.", directoryOrFilePath );
+        }
+
         // get all baseIRIs
         Map<String, String> file2baseIRI = getAllBaseIris(directoryOrFilePath);
 
