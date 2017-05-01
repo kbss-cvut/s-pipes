@@ -22,6 +22,7 @@
         <module>module-dataset-discovery</module>
         <module>module-eccairs</module>
         <module>module-ckan2rdf</module>
+        <module>module-rdfstream</module>
     </modules>
 
     <dependencyManagement>
