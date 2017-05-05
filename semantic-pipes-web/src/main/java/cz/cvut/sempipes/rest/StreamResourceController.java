@@ -63,7 +63,8 @@ public class StreamResourceController {
             data = IOUtils.toByteArray(body);
             StreamResourceRegistry.getInstance().registerResource(res.getId(), data, contentType);
             // TODO body
-            LOG.info("Resource content size: {}, Resource content: {}", data.length, data);
+            LOG.info("Resource content size: {}", data.length);
+            LOG.trace("Resource content: {}",  data);
         } catch (IOException e) {
             LOG.error("Unable to read payload: ", e);
         }
