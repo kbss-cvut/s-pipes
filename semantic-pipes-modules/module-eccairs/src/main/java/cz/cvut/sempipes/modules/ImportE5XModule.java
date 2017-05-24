@@ -119,6 +119,8 @@ public class ImportE5XModule extends AbstractModule {
 
             Model outputModel = JenaUtils.readModelFromString(transformedModelText, FileUtils.langXML);
 
+            removeDefaultPrefix(outputModel);
+
             outputExecutionContext = ExecutionContextFactory.createContext(outputModel);
 
             sesameRepo.getConnection().close();
@@ -129,6 +131,10 @@ public class ImportE5XModule extends AbstractModule {
             LOG.warn("Failed to close sesame repository connection", e);
         }
         return outputExecutionContext;
+    }
+
+    private void removeDefaultPrefix(Model outputModel) {
+        outputModel.removeNsPrefix("");
     }
 
     @Override
