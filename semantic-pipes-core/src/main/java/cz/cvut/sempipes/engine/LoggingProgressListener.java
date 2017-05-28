@@ -9,22 +9,22 @@ public class LoggingProgressListener implements ProgressListener {
 
     @Override
     public void pipelineExecutionStarted(long pipelineId) {
-        LOG.info("pipelineExecutionStarted - pipelineId: {}", pipelineId);
+        LOG.debug("pipelineExecutionStarted - pipelineId: {}", pipelineId);
     }
 
     @Override
     public void pipelineExecutionFinished(long pipelineId) {
-        LOG.info("pipelineExecutionFinished - pipelineId: {}", pipelineId);
+        LOG.debug("pipelineExecutionFinished - pipelineId: {}", pipelineId);
     }
 
     @Override
     public void moduleExecutionStarted(long pipelineId, String moduleExecutionId, Module outputModule, ExecutionContext inputContext, String predecessorId) {
-        LOG.info("moduleExecutionStarted - pipelineId: {}, moduleExecutionId {}, inputContext: {}, predecessorId: {}", pipelineId,
+        LOG.debug("moduleExecutionStarted - pipelineId: {}, moduleExecutionId {}, inputContext: {}, predecessorId: {}", pipelineId,
             moduleExecutionId, inputContext, predecessorId);
     }
 
     @Override
     public void moduleExecutionFinished(long pipelineId, String moduleExecutionId, Module outputModule) {
-        LOG.info("moduleExecutionFinished - pipelineId: {}, moduleExecutionId: {}", pipelineId, moduleExecutionId);
+        LOG.debug("moduleExecutionFinished - pipelineId: {}, moduleExecutionId: {}", pipelineId, moduleExecutionId);
     }
 }
