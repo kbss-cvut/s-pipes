@@ -191,7 +191,7 @@ public class SempipesServiceControllerTest {
                 "/module-apply-construct/remote-query.ttl",
                 createSimpleModel(),
                 inputVariablesBinding,
-                null,
+                inputVariablesBinding,
                 0);
         // TODO check number based on service logic
     }
