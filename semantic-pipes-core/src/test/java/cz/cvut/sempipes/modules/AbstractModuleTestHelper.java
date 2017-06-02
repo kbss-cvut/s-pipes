@@ -1,11 +1,9 @@
 package cz.cvut.sempipes.modules;
 
 import cz.cvut.sempipes.engine.PipelineFactory;
-import org.apache.jena.ontology.OntDocumentManager;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.util.FileManager;
 import org.apache.jena.util.FileUtils;
 
 /**

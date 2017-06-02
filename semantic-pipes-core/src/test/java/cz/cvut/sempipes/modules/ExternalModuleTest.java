@@ -2,14 +2,10 @@ package cz.cvut.sempipes.modules;
 
 
 import cz.cvut.sempipes.util.ExecUtils;
-import org.junit.Test;
-import java.io.*;
-import java.nio.file.Files;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
-import static org.apache.jena.sparql.vocabulary.DOAP.os;
-import static org.junit.Assert.*;
 
 /**
  * Created by Miroslav Blasko on 26.5.16.

@@ -2,8 +2,6 @@ package cz.cvut.sempipes.engine;
 
 import org.apache.jena.rdf.model.Model;
 
-import java.util.Map;
-
 /**
  *
  * Created by blcha on 6.5.16.

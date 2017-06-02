@@ -1,13 +1,11 @@
 package cz.cvut.sempipes.engine;
 
-import util.JenaTestUtils;
 import cz.cvut.sempipes.modules.Module;
-import org.apache.jena.ontology.OntModel;
-import org.junit.Test;
-
 import java.util.List;
-
-import static org.junit.Assert.*;
+import org.apache.jena.ontology.OntModel;
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+import util.JenaTestUtils;
 
 /**
  * Created by Miroslav Blasko on 7.6.16.

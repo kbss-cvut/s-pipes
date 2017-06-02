@@ -2,7 +2,6 @@ package cz.cvut.sempipes.modules;
 
 import cz.cvut.sempipes.constants.KBSS_MODULE;
 import cz.cvut.sempipes.engine.ExecutionContext;
-import org.apache.jena.rdf.model.Resource;
 
 /**
  * Created by Miroslav Blasko on 26.5.16.

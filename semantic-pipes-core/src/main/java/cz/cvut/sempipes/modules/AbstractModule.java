@@ -7,10 +7,25 @@ import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
 import cz.cvut.sempipes.engine.VariablesBinding;
 import cz.cvut.sempipes.exception.ValidationConstraintFailed;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.apache.jena.atlas.lib.NotImplemented;
-import org.apache.jena.query.*;
 import org.apache.jena.query.Query;
-import org.apache.jena.rdf.model.*;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QuerySolution;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
@@ -24,13 +39,6 @@ import org.topbraid.spin.model.SPINFactory;
 import org.topbraid.spin.model.Select;
 import org.topbraid.spin.util.SPINExpressions;
 import org.topbraid.spin.vocabulary.SP;
-
-import java.io.*;
-import java.nio.file.Files;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Created by Miroslav Blasko on 10.5.16.

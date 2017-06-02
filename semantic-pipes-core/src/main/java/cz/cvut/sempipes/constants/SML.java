@@ -1,10 +1,8 @@
 package cz.cvut.sempipes.constants;
 
-import org.apache.jena.graph.Node;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
-import org.apache.jena.vocabulary.RDFS;
 
 /**
  * Created by Miroslav Blasko on 31.5.16.

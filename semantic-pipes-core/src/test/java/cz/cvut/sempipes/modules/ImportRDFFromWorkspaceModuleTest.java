@@ -4,24 +4,17 @@ import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.environment.generator.OntologyGenerator;
 import cz.cvut.sempipes.exception.ContextNotFoundException;
 import cz.cvut.sempipes.manager.OntoDocManager;
-import org.apache.jena.ontology.OntModel;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.Resource;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-
-import java.util.Collections;
-import java.util.List;
-
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.only;
+import org.mockito.Mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * Created by Miroslav Blasko on 20.2.17.

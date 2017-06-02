@@ -1,19 +1,21 @@
 package cz.cvut.sempipes.engine;
 
-import org.apache.jena.rdf.model.ResourceFactory;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-
+import org.apache.jena.rdf.model.ResourceFactory;
 import static org.hamcrest.CoreMatchers.containsString;
+import org.junit.Assert;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 public class VariablesBindingTest {
     @Rule

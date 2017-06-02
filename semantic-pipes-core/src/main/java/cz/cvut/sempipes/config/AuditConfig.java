@@ -1,7 +1,6 @@
 package cz.cvut.sempipes.config;
 
 import cz.cvut.sempipes.util.CoreConfigProperies;
-
 import java.nio.file.Path;
 import java.nio.file.Paths;
 

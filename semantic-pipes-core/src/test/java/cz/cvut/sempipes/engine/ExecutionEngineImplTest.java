@@ -2,8 +2,6 @@ package cz.cvut.sempipes.engine;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 /**
  * Created by Miroslav Blasko on 31.5.16.
  */

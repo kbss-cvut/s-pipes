@@ -6,10 +6,6 @@ package cz.cvut.sempipes.exception;
  * Created by Miroslav Blasko on 21.7.16.
  */
 
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 /**

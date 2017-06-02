@@ -7,10 +7,9 @@ import cz.cvut.sempipes.engine.VariablesBinding;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.ResourceFactory;
+import static org.junit.Assert.assertEquals;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by Miroslav Blasko on 8.6.16.

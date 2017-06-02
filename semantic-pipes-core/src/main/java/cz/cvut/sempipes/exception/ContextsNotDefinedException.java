@@ -6,8 +6,6 @@ package cz.cvut.sempipes.exception;
  * Created by Miroslav Blasko on 21.7.16.
  */
 
-import java.util.Set;
-
 /**
  *
  */

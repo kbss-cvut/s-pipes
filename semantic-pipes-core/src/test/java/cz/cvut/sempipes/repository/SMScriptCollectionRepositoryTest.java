@@ -1,26 +1,21 @@
 package cz.cvut.sempipes.repository;
 
-import cz.cvut.sempipes.modules.ImportRDFFromWorkspaceModule;
-import util.JenaTestUtils;
 import cz.cvut.sempipes.manager.OntologyDocumentManager;
 import cz.cvut.sempipes.util.JenaUtils;
+import java.util.Collections;
+import java.util.List;
+import static junit.framework.TestCase.assertEquals;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.RDF;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import static org.mockito.BDDMockito.given;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import java.util.Collections;
-import java.util.List;
-
-import static junit.framework.TestCase.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.BDDMockito.*;
+import util.JenaTestUtils;
 
 /**
  * Created by Miroslav Blasko on 31.7.16.

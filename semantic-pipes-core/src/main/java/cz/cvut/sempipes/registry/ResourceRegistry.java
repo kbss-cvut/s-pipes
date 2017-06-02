@@ -2,9 +2,8 @@ package cz.cvut.sempipes.registry;
 
 import cz.cvut.sempipes.exception.ResourceNotFoundException;
 import cz.cvut.sempipes.exception.ResourceNotUniqueException;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Set;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *

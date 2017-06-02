@@ -1,12 +1,12 @@
 package cz.cvut.sempipes.modules;
 
 import cz.cvut.sempipes.TestConstants;
-import cz.cvut.sempipes.engine.*;
+import cz.cvut.sempipes.engine.ExecutionContext;
+import cz.cvut.sempipes.engine.ExecutionEngine;
+import cz.cvut.sempipes.engine.ExecutionEngineFactory;
 import cz.cvut.sempipes.engine.PipelineFactory;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import java.nio.file.Paths;
 
 /**
  * Created by Miroslav Blasko on 26.5.16.

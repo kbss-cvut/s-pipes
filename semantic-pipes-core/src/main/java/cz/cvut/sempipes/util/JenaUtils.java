@@ -1,14 +1,5 @@
 package cz.cvut.sempipes.util;
 
-import cz.cvut.sempipes.manager.OntoDocManager;
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.jena.rdf.model.*;
-import org.apache.jena.util.FileUtils;
-import org.apache.jena.vocabulary.OWL;
-import org.apache.jena.vocabulary.RDF;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -17,6 +8,17 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.ResIterator;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.util.FileUtils;
+import org.apache.jena.vocabulary.OWL;
+import org.apache.jena.vocabulary.RDF;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by Miroslav Blasko on 30.7.16.

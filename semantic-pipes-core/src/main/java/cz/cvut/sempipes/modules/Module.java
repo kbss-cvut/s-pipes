@@ -2,9 +2,8 @@ package cz.cvut.sempipes.modules;
 
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.VariablesBinding;
-import org.apache.jena.rdf.model.Resource;
-
 import java.util.List;
+import org.apache.jena.rdf.model.Resource;
 
 /**
  * Module should be initialized with setConfigurationResource and setInputContext.

@@ -1,7 +1,5 @@
 package cz.cvut.sempipes.registry;
 
-import java.io.InputStream;
-
 /**
  * Created by Miroslav Blasko on 29.11.16.
  */

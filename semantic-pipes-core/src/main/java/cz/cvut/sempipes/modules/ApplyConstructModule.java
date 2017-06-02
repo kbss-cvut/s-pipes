@@ -4,12 +4,18 @@ import cz.cvut.sempipes.constants.KBSS_MODULE;
 import cz.cvut.sempipes.constants.SML;
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
-import org.apache.jena.query.*;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.List;
+import org.apache.jena.query.ARQ;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QueryFactory;
+import org.apache.jena.query.QuerySolution;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.sparql.engine.main.OpExecutor;
-import org.apache.jena.sparql.engine.main.OpExecutorFactory;
 import org.apache.jena.sparql.mgt.Explain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,11 +23,6 @@ import org.topbraid.spin.arq.ARQFactory;
 import org.topbraid.spin.model.Construct;
 import org.topbraid.spin.system.SPINModuleRegistry;
 import org.topbraid.spin.vocabulary.SP;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * TODO Order of queries is not enforced.   

@@ -6,16 +6,13 @@ import cz.cvut.sempipes.engine.ExecutionContextFactory;
 import cz.cvut.sempipes.exception.ContextNotFoundException;
 import cz.cvut.sempipes.manager.OntoDocManager;
 import cz.cvut.sempipes.manager.OntologyDocumentManager;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Optional;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Optional;
 
 /**
  * Created by Miroslav Blasko on 20.2.17.

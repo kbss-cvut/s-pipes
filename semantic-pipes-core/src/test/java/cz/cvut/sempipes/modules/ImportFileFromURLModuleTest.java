@@ -2,18 +2,6 @@ package cz.cvut.sempipes.modules;
 
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-//import org.junit.runner.RunWith;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.http.HttpMethod;
-//import org.springframework.http.MediaType;
-//import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-//import org.springframework.test.web.client.MockRestServiceServer;
-//import org.springframework.test.web.client.RequestMatcher;
-//import org.springframework.web.client.RestTemplate;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -22,8 +10,17 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
-import static org.junit.Assert.*;
+//import org.junit.runner.RunWith;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.http.HttpMethod;
+//import org.springframework.http.MediaType;
+//import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+//import org.springframework.test.web.client.MockRestServiceServer;
+//import org.springframework.test.web.client.RequestMatcher;
+//import org.springframework.web.client.RestTemplate;
 //import static org.springframework.test.web.client.match.MockRestRequestMatchers.*;
 //import static org.springframework.test.web.client.response.MockRestResponseCreators.withBadRequest;
 //import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;

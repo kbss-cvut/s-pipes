@@ -2,20 +2,22 @@ package cz.cvut.sempipes.util;
 
 import cz.cvut.sempipes.constants.SM;
 import cz.cvut.sempipes.manager.OntoDocManager;
-import org.apache.commons.io.IOUtils;
-import org.apache.jena.ontology.OntModel;
-import org.apache.jena.query.*;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.vocabulary.RDF;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.io.IOUtils;
+import org.apache.jena.ontology.OntModel;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QueryFactory;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.vocabulary.RDF;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by Miroslav Blasko on 18.5.16.

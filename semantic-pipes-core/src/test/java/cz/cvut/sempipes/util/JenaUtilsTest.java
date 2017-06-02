@@ -1,19 +1,15 @@
 package cz.cvut.sempipes.util;
 
+import java.net.URL;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.util.FileUtils;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
-
-import java.net.URL;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by Miroslav Blasko on 12.11.16.

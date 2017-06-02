@@ -9,12 +9,13 @@ import cz.cvut.sempipes.registry.ResourceRegistry;
 import cz.cvut.sempipes.repository.SMScriptCollectionRepository;
 import cz.cvut.sempipes.repository.ScriptCollectionRepository;
 import cz.cvut.sempipes.util.JenaPipelineUtils;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import org.apache.jena.rdf.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.topbraid.spin.system.SPINModuleRegistry;
-
-import java.util.*;
 
 /**
  * Registers resources to contexts.

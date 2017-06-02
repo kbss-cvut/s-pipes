@@ -4,14 +4,16 @@ package cz.cvut.sempipes.registry;
 import cz.cvut.sempipes.exception.ResourceNotFoundException;
 import cz.cvut.sempipes.exception.ResourceNotUniqueException;
 import cz.cvut.sempipes.util.JenaUtils;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.ResourceFactory;
 import org.jetbrains.annotations.NotNull;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * TODO id can be defined by some property related to the resource ?

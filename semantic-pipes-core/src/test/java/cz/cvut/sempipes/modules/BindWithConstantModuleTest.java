@@ -1,15 +1,19 @@
 package cz.cvut.sempipes.modules;
 
-import cz.cvut.sempipes.engine.*;
+import cz.cvut.sempipes.engine.ExecutionContext;
+import cz.cvut.sempipes.engine.ExecutionContextFactory;
+import cz.cvut.sempipes.engine.ExecutionEngine;
+import cz.cvut.sempipes.engine.ExecutionEngineFactory;
+import cz.cvut.sempipes.engine.PipelineFactory;
+import cz.cvut.sempipes.engine.VariablesBinding;
+import java.util.List;
+import java.util.Optional;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.ResourceFactory;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import org.junit.Test;
-
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by Miroslav Blasko on 1.6.16.

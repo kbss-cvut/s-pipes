@@ -1,7 +1,6 @@
 package cz.cvut.sempipes.modules;
 
 import cz.cvut.sempipes.constants.KBSS_MODULE;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

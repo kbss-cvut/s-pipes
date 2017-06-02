@@ -1,12 +1,11 @@
 package cz.cvut.sempipes.manager;
 
-import org.apache.jena.ontology.OntDocumentManager;
-import org.apache.jena.ontology.OntModel;
-import org.apache.jena.rdf.model.Model;
-
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
+import org.apache.jena.ontology.OntDocumentManager;
+import org.apache.jena.ontology.OntModel;
+import org.apache.jena.rdf.model.Model;
 
 /**
  * Keeps m

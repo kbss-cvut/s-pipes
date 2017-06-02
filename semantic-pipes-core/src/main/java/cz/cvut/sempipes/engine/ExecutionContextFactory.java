@@ -2,7 +2,6 @@ package cz.cvut.sempipes.engine;
 
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.RDFNode;
 
 /**
  * Created by Miroslav Blasko on 31.5.16.

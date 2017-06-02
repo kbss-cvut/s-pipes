@@ -1,24 +1,15 @@
 package cz.cvut.sempipes.manager;
 
 import cz.cvut.sempipes.TestConstants;
-import org.apache.jena.ontology.OntDocumentManager;
+import java.nio.file.Path;
+import java.util.List;
+import static junit.framework.TestCase.assertEquals;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.util.FileUtils;
 import org.apache.jena.util.LocationMapper;
+import static org.junit.Assert.assertTrue;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-
-import static junit.framework.TestCase.assertEquals;
-import static org.junit.Assert.*;
 
 /**
  * Created by Miroslav Blasko on 22.7.16.

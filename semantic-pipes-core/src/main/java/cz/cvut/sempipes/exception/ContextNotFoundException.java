@@ -1,7 +1,5 @@
 package cz.cvut.sempipes.exception;
 
-import java.util.Set;
-
 /**
  * Created by Miroslav Blasko on 21.2.17.
  */

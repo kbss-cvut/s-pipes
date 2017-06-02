@@ -1,9 +1,12 @@
 package cz.cvut.sempipes.repository;
 
-import cz.cvut.sempipes.manager.OntoDocManager;
 import cz.cvut.sempipes.manager.OntologyDocumentManager;
 import cz.cvut.sempipes.util.JenaPipelineUtils;
-import cz.cvut.sempipes.util.JenaUtils;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.Resource;
 import org.jetbrains.annotations.NotNull;
@@ -11,9 +14,6 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Know nothing about alternative entity ids -- e.g. prefixed-names, local-names.

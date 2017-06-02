@@ -1,10 +1,9 @@
 package cz.cvut.sempipes.exception;
 
 import cz.cvut.sempipes.modules.Module;
+import java.util.Optional;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Optional;
 
 /**
  * Created by Miroslav Blasko on 6.3.17.
