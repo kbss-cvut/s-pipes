@@ -103,7 +103,7 @@ public class Thing {
     @OWLObjectProperty(iri = Vocabulary.s_p_has_published_dataset_snapshot)
     protected Set<dataset_snapshot> has_published_dataset_snapshot;
     @OWLObjectProperty(iri = Vocabulary.s_p_inv_dot_has_source)
-    protected Set<cz.cvut.sempipes.model.description> inv_dot_has_source;
+    protected Set<dataset_publication> inv_dot_has_source;
     @OWLObjectProperty(iri = Vocabulary.s_p_inv_dot_has_sub_dataset_snapshot)
     protected Set<dataset_snapshot> inv_dot_has_sub_dataset_snapshot;
     @OWLObjectProperty(iri = Vocabulary.s_p_has_sub_dataset_snapshot)
@@ -443,11 +443,11 @@ public class Thing {
         return has_published_dataset_snapshot;
     }
 
-    public void setInv_dot_has_source(Set<cz.cvut.sempipes.model.description> inv_dot_has_source) {
+    public void setInv_dot_has_source(Set<dataset_publication> inv_dot_has_source) {
         this.inv_dot_has_source = inv_dot_has_source;
     }
 
-    public Set<cz.cvut.sempipes.model.description> getInv_dot_has_source() {
+    public Set<dataset_publication> getInv_dot_has_source() {
         return inv_dot_has_source;
     }
 
