@@ -4,6 +4,7 @@ import java.io.InputStream;
 import org.apache.jena.ontology.OntDocumentManager;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
+import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.util.FileManager;
 import org.apache.jena.util.FileUtils;
@@ -31,5 +32,18 @@ public class JenaTestUtils {
 
         dm.loadImports(ontModel);
         return ontModel;
+    }
+
+    public static Model laodModelFromResource(String path) {
+        InputStream inputStream = JenaTestUtils.class.getResourceAsStream(path);
+        if (inputStream == null) {
+            throw new IllegalArgumentException("Cannot find resource with path \"" + path + "\".");
+        }
+
+        Model model = ModelFactory.createDefaultModel();
+
+        model.read(inputStream, null, FileUtils.langTurtle);
+
+        return model;
     }
 }
