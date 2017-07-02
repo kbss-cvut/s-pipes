@@ -1,17 +1,16 @@
 package cz.cvut.sempipes.rest.util;
 
 import cz.cvut.sempipes.config.ContextLoaderConfig;
-import cz.cvut.sempipes.util.CoreConfigProperies;
 import cz.cvut.sempipes.manager.OntoDocManager;
 import cz.cvut.sempipes.manager.OntologyDocumentManager;
 import cz.cvut.sempipes.manager.SempipesScriptManager;
-import org.apache.jena.util.LocationMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import cz.cvut.sempipes.util.CoreConfigProperies;
 import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.List;
+import org.apache.jena.util.LocationMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by Miroslav Blasko on 13.1.17.
