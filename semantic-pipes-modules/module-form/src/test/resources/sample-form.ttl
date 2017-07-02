@@ -1,0 +1,81 @@
+@prefix aviation-safety: <http://onto.fel.cvut.cz/ontologies/aviation-safety/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix doc: <http://onto.fel.cvut.cz/ontologies/documentation/> .
+@prefix ff: <http://vfn.cz/ontologies/fss-form/> .
+@prefix form: <http://onto.fel.cvut.cz/ontologies/form/> .
+@prefix form-lt: <http://onto.fel.cvut.cz/ontologies/form-layout/> .
+@prefix stm: <http://vfn.cz/ontologies/study-model/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ufo: <http://onto.fel.cvut.cz/ontologies/ufo/> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+
+ff:fertility-saving-study-q
+  rdf:type doc:question ;
+  doc:has_related_question ff:inclusion-criteria-q ;
+  doc:has_related_question ff:patient-data-q ;
+  form-lt:has-layout-class "form" ;
+  form:has-question-origin stm:study ;
+  rdfs:comment "General information and classification of the occurrence."@en ;
+  rdfs:label "Fertility saving study"@en ;
+.
+
+ff:inclusion-criteria-q
+  rdf:type doc:question ;
+  doc:has_related_question ff:inclusion-criteria-cervical-cancer-q ;
+  doc:has_related_question ff:inclusion-criteria-fertility-sparing-treatment-q ;
+  form-lt:has-layout-class "section" ;
+  form-lt:has-layout-class "wizard-step" ;
+  form:has-question-origin stm:inclusion-criteria ;
+  rdfs:label "Inclusion critera" ;
+.
+ff:inclusion-criteria-cervical-cancer-q
+  rdf:type doc:question ;
+  form-lt:has-layout-class "checkbox" ;
+  form:has-question-origin stm:inclusion-criteria-1 ;
+  form:requires-answer "true"^^xsd:boolean ;
+  rdfs:comment "Location of occurrence should be the name of the closest settled area or geographical feature."@en ;
+  rdfs:label "Cervical cancer (any histology, any stage from T1a1)"@en ;
+.
+ff:inclusion-criteria-fertility-sparing-treatment-q
+  rdf:type doc:question ;
+  form-lt:has-layout-class "checkbox" ;
+  form:has-preceding-question ff:inclusion-criteria-cervical-cancer-q ;
+  form:has-question-origin stm:inclusion-criteria-2 ;
+  form:requires-answer "true"^^xsd:boolean ;
+  rdfs:comment "The local time of the occurrence time entered using the 24 hour clock e.g. 23:59."@en ;
+  rdfs:label "Fertility sparing treatment (FST) with the aim to preserve uterus (any procedure, at least attempt)"@en ;
+.
+
+ff:patient-data-q
+  rdf:type doc:question ;
+  doc:has_related_question ff:patient-data-date-of-birth-q ;
+  form-lt:has-layout-class "section" ;
+  form-lt:has-layout-class "wizard-step" ;
+  form:has-preceding-question ff:inclusion-criteria-q ;
+  form:is-relevant-if [
+      rdf:type form:condition ;
+      form:accepts-validation-value "true" ;
+      form:has-tested-question ff:inclusion-criteria-q ;
+    ] ;
+  dc:description "Patient's characteristics" ;
+  rdfs:label "Patient's data" ;
+.
+
+ff:patient-data-date-of-birth-q
+  rdf:type doc:question ;
+  form-lt:has-layout-class "masked-input" ;
+  form:has-input-mask "MM/YYYY" ;
+  form:requires-answer "true"^^xsd:boolean ;
+  rdfs:label "Date of birth (month/year)"@en ;
+.
+
+
+
+
+
+
+
