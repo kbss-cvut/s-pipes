@@ -23,6 +23,7 @@
         <module>module-eccairs</module>
         <module>module-ckan2rdf</module>
         <module>module-rdfstream</module>
+		<module>module-form</module>
     </modules>
 
     <dependencyManagement>
