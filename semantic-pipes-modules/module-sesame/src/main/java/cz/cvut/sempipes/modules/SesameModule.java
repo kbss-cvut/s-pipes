@@ -60,6 +60,7 @@ public class SesameModule extends AbstractModule {
         // TODO use org.openrdf.repository.manager.RepositoryProvider.getRepository()
         final Repository repository = new HTTPRepository(sesameServerURL, sesameRepositoryName );
         RepositoryConnection connection = null;
+        LOG.debug("Deploying data into context {} of sesame repository {}/{}.", sesameContextIRI, sesameServerURL, sesameRepositoryName);
 
         try {
             repository.initialize();

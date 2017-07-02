@@ -5,7 +5,7 @@ import cz.cvut.sempipes.engine.ExecutionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class IdentityModule extends AbstractModule {
+public class IdentityModule extends AnnotatedAbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(IdentityModule.class);
 
