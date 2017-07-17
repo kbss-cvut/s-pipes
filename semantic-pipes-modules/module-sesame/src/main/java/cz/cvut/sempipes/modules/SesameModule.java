@@ -55,6 +55,38 @@ public class SesameModule extends AbstractModule {
     static final Property P_IS_REPLACE_CONTEXT_IRI = getParameter("p-is-replace");
     private boolean isReplaceContext;
 
+    public String getSesameServerURL() {
+        return sesameServerURL;
+    }
+
+    public void setSesameServerURL(String sesameServerURL) {
+        this.sesameServerURL = sesameServerURL;
+    }
+
+    public String getSesameRepositoryName() {
+        return sesameRepositoryName;
+    }
+
+    public void setSesameRepositoryName(String sesameRepositoryName) {
+        this.sesameRepositoryName = sesameRepositoryName;
+    }
+
+    public String getSesameContextIRI() {
+        return sesameContextIRI;
+    }
+
+    public void setSesameContextIRI(String sesameContextIRI) {
+        this.sesameContextIRI = sesameContextIRI;
+    }
+
+    public boolean isReplaceContext() {
+        return isReplaceContext;
+    }
+
+    public void setReplaceContext(boolean replaceContext) {
+        isReplaceContext = replaceContext;
+    }
+
     @Override
     ExecutionContext executeSelf() {
         // TODO use org.openrdf.repository.manager.RepositoryProvider.getRepository()
