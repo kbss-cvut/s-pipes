@@ -1,7 +1,6 @@
 package cz.cvut.sempipes.modules;
 
 import com.opencsv.CSVWriter;
-import com.opencsv.bean.*;
 import cz.cvut.sempipes.constants.KBSS_MODULE;
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
@@ -20,12 +19,9 @@ import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.RDF;
 import org.eclipse.rdf4j.query.algebra.Str;
-import org.joda.time.DateTime;
-import org.springframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
@@ -34,8 +30,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.time.*;
-
-import static org.springframework.util.StringUtils.hasText;
 
 public class AnalyzeTemporalModule extends AbstractModule {
 
@@ -290,19 +284,12 @@ public class AnalyzeTemporalModule extends AbstractModule {
 
             }
 
-//            writeArrtoCSVFile(AnnAll,"./testtt.csv");
-
         }
 
         return afmArr;
 
     }
 
-    public void writeArrtoCSVFile(List<String[]> arr, String file) throws IOException {
-        CSVWriter csvWriter = new CSVWriter(new FileWriter(file), ',');
-        csvWriter.writeAll(arr);
-        csvWriter.close();
-    }
 
     public void writeDatesToFile(ArrayList<LocalDate> arr, String file) throws IOException {
         FileWriter fileWriter = new FileWriter(file, true);
@@ -315,22 +302,6 @@ public class AnalyzeTemporalModule extends AbstractModule {
 
         fileWriter.flush();
         fileWriter.close();
-    }
-
-    public ArrayList<Date> convertStringToDate(ArrayList<String> arr){
-        ArrayList<Date> arr2 = new ArrayList<>();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        for (String dateString : arr) {
-            try {
-                //if(){
-                    arr2.add(simpleDateFormat.parse(dateString));
-               // }
-
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-        return arr2;
     }
 
 
