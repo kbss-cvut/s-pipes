@@ -3,6 +3,7 @@ package cz.cvut.sempipes.modules;
 import cz.cvut.sempipes.utils.EndpointTestUtils;
 import org.apache.jena.rdf.model.Model;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -11,6 +12,7 @@ import org.junit.Test;
 public class RetrieveNamedGraphTest {
 
 
+    @Ignore
     @Test
     public void executeSelf() throws Exception {
         RetrieveNamedGraph module = new RetrieveNamedGraph();
