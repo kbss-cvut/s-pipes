@@ -18,6 +18,9 @@
     <logger name="cz.cvut.sempipes.modules.BindWithConstantModule" level="TRACE" additivity="false">
     <appender-ref ref="STDOUT"/>
     </logger>
+    <logger name="cz.cvut.sempipes.config.RDFMediaTypeConverter" level="DEBUG" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
 
 
     <!-- Restrict logging of the Sesame HTTP client (used to connect to remote repositories -->
