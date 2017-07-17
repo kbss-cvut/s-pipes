@@ -44,6 +44,12 @@
             <version>3.6.0</version>
             <classifier>models</classifier>
         </dependency>
+        <dependency>
+            <groupId>cz.cvut.kbss</groupId>
+            <artifactId>semantic-pipes-modules-sesame</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <repositories>
