@@ -370,6 +370,8 @@
   { ruleType: "time", pattern: /MM?-dd?-(yyyy|yy)/ }
   { ruleType: "time", pattern: /HH?:mm(:ss)?(Z)?/ }
   { ruleType: "time", pattern: /yyyy-MM/ }
+  { ruleType: "time", pattern: /dd\/MM\/yyyy/ }
+  { ruleType: "time", pattern: /dd-MM-yyyy/ }
 
   # Euro - Ambiguous pattern - interpret as dd.MM.yy(yy)
   { ruleType: "time", pattern: /dd?\.MM?\.(yyyy|yy)/ }
@@ -757,7 +759,7 @@
 
   { name: "composite-time-expression-2",
     pattern: (  (?$minute /a/? /quarter/ | /a/? /half/ | [ $INT & { numcompvalue<=60 } ] /minutes?/? )
-		        (?$rel /past|after|before|to|until/)
+		        (?$rel /past|after|before|to|until|till/)
 				(?: (?$time [ { temporal::IS_TIMEX_TIME } ]) | (?$hour [ $INT & { numcompvalue<=24 } ]))
              ),
 	result: TemporalCompose(
