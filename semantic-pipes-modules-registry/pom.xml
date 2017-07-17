@@ -40,8 +40,13 @@
         </dependency>
         <dependency>
             <groupId>cz.cvut.kbss</groupId>
-            <artifactId>semantic-pipes-modules-nlp</artifactId>
+            <artifactId>semantic-pipes-modules-sparql-endpoint</artifactId>
             <version>${semantic-pipes-modules.version}</version>
+        </dependency>
+        <dependency>
+        <groupId>cz.cvut.kbss</groupId>
+        <artifactId>semantic-pipes-modules-nlp</artifactId>
+        <version>${semantic-pipes-modules.version}</version>
         </dependency>
         <!--<dependency>-->
             <!--<groupId>cz.cvut.kbss</groupId>-->
