@@ -1,6 +1,5 @@
 package cz.cvut.sempipes.modules;
 
-import com.opencsv.CSVWriter;
 import cz.cvut.sempipes.constants.KBSS_MODULE;
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
