@@ -24,6 +24,7 @@
         <module>module-ckan2rdf</module>
         <module>module-rdfstream</module>
 		<module>module-form</module>
+		<module>module-sparql-endpoint</module>
     </modules>
 
     <dependencyManagement>
