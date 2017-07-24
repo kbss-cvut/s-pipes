@@ -7,6 +7,7 @@ import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.ResultSetFormatter;
 import org.apache.jena.rdf.model.*;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -18,6 +19,7 @@ import java.io.IOException;
 public class AnalyzeTemporalModuleTest {
 
 
+    @Ignore
     @Test
     public void executeSelf() throws Exception {
 
@@ -121,6 +123,7 @@ public class AnalyzeTemporalModuleTest {
         }
     }
 
+    @Ignore
     @Test
     public void testAccuracy(){
         String ep = "http://linked.opendata.cz/sparql/";
