@@ -24,7 +24,7 @@ import org.topbraid.spin.model.Construct;
 import org.topbraid.spin.system.SPINModuleRegistry;
 import org.topbraid.spin.vocabulary.SP;
 
-public abstract class ApplyConstructAbstractModule extends AnnotatedAbstractModule {
+public abstract class  ApplyConstructAbstractModule extends AnnotatedAbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplyConstructAbstractModule.class);
 
@@ -153,7 +153,10 @@ public abstract class ApplyConstructAbstractModule extends AnnotatedAbstractModu
             }
 
             previousInferredModel = inferredModel;
-            inferredModel = ModelFactory.createUnion(inferredModel, inferredInSingleIterationModel);
+//            inferredModel = ModelFactory.createUnion(inferredModel, inferredInSingleIterationModel);
+            Model newModel = ModelFactory.createDefaultModel();
+            newModel.add(inferredModel).add(inferredInSingleIterationModel);
+            inferredModel = newModel;
 
         }
 
