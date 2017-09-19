@@ -20,34 +20,34 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 
-public class SesameModule extends AbstractModule {
+public class Rdf4jModule extends AbstractModule {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SesameModule.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Rdf4jModule.class);
 
     private static String TYPE_URI = KBSS_MODULE.getURI()+"deploy";
-    private static String PROPERTY_PREFIX_URI = KBSS_MODULE.getURI()+"sesame";
+    private static String PROPERTY_PREFIX_URI = KBSS_MODULE.getURI()+"rdf4j";
 
     private static Property getParameter(final String name) {
         return ResourceFactory.createProperty(PROPERTY_PREFIX_URI + "/" + name);
     }
 
     /**
-     * URL of the Sesame server
+     * URL of the Rdf4j server
      */
-    static final Property P_SESAME_SERVER_URL = getParameter("p-sesame-server-url");
-    private String sesameServerURL;
+    static final Property P_RDF4J_SERVER_URL = getParameter("p-rdf4j-server-url");
+    private String rdf4jServerURL;
 
     /**
-     * Sesame repository ID
+     * Rdf4j repository ID
      */
-    static final Property P_SESAME_REPOSITORY_NAME = getParameter("p-sesame-repository-name");
-    private String sesameRepositoryName;
+    static final Property P_RDF4J_REPOSITORY_NAME = getParameter("p-rdf4j-repository-name");
+    private String rdf4jRepositoryName;
 
     /**
      * IRI of the context that should be used for deployment
      */
-    static final Property P_SESAME_CONTEXT_IRI = getParameter("p-sesame-context-iri");
-    private String sesameContextIRI;
+    static final Property P_RDF4J_CONTEXT_IRI = getParameter("p-rdf4j-context-iri");
+    private String rdf4jContextIRI;
 
     /**
      * Whether the context should be replaced (true) or just enriched (false).
@@ -55,28 +55,28 @@ public class SesameModule extends AbstractModule {
     static final Property P_IS_REPLACE_CONTEXT_IRI = getParameter("p-is-replace");
     private boolean isReplaceContext;
 
-    public String getSesameServerURL() {
-        return sesameServerURL;
+    public String getRdf4jServerURL() {
+        return rdf4jServerURL;
     }
 
-    public void setSesameServerURL(String sesameServerURL) {
-        this.sesameServerURL = sesameServerURL;
+    public void setRdf4jServerURL(String rdf4jServerURL) {
+        this.rdf4jServerURL = rdf4jServerURL;
     }
 
-    public String getSesameRepositoryName() {
-        return sesameRepositoryName;
+    public String getRdf4jRepositoryName() {
+        return rdf4jRepositoryName;
     }
 
-    public void setSesameRepositoryName(String sesameRepositoryName) {
-        this.sesameRepositoryName = sesameRepositoryName;
+    public void setRdf4jRepositoryName(String rdf4jRepositoryName) {
+        this.rdf4jRepositoryName = rdf4jRepositoryName;
     }
 
-    public String getSesameContextIRI() {
-        return sesameContextIRI;
+    public String getRdf4jContextIRI() {
+        return rdf4jContextIRI;
     }
 
-    public void setSesameContextIRI(String sesameContextIRI) {
-        this.sesameContextIRI = sesameContextIRI;
+    public void setRdf4jContextIRI(String rdf4jContextIRI) {
+        this.rdf4jContextIRI = rdf4jContextIRI;
     }
 
     public boolean isReplaceContext() {
@@ -90,25 +90,25 @@ public class SesameModule extends AbstractModule {
     @Override
     ExecutionContext executeSelf() {
         // TODO use org.openrdf.repository.manager.RepositoryProvider.getRepository()
-        final Repository repository = new HTTPRepository(sesameServerURL, sesameRepositoryName );
+        final Repository repository = new HTTPRepository(rdf4jServerURL, rdf4jRepositoryName);
         RepositoryConnection connection = null;
-        LOG.debug("Deploying data into context {} of sesame repository {}/{}.", sesameContextIRI, sesameServerURL, sesameRepositoryName);
+        LOG.debug("Deploying data into context {} of rdf4j server repository {}/{}.", rdf4jContextIRI, rdf4jServerURL, rdf4jRepositoryName);
 
         try {
             repository.initialize();
             connection = repository.getConnection();
 
-            final Resource sesameContextIRIResource = (sesameContextIRI == null || sesameContextIRI.isEmpty()) ? null : connection.getValueFactory().createURI(sesameContextIRI);
+            final Resource rdf4jContextIRIResource = (rdf4jContextIRI == null || rdf4jContextIRI.isEmpty()) ? null : connection.getValueFactory().createURI(rdf4jContextIRI);
 
             connection.begin();
             if (isReplaceContext) {
-                connection.clear( sesameContextIRIResource );
+                connection.clear( rdf4jContextIRIResource );
             }
 
             StringWriter w = new StringWriter();
             executionContext.getDefaultModel().write(w, RDFLanguages.NTRIPLES.getName());
 
-            connection.add(new StringReader(w.getBuffer().toString()), "", RDFFormat.N3, sesameContextIRIResource);
+            connection.add(new StringReader(w.getBuffer().toString()), "", RDFFormat.N3, rdf4jContextIRIResource);
             connection.commit();
         } catch (final RepositoryException | RDFParseException | IOException e) {
             LOG.error(e.getMessage(),e);
@@ -140,9 +140,9 @@ public class SesameModule extends AbstractModule {
 
     @Override
     public void loadConfiguration() {
-        sesameServerURL = getEffectiveValue(P_SESAME_SERVER_URL).asLiteral().getString();
-        sesameRepositoryName = getEffectiveValue(P_SESAME_REPOSITORY_NAME).asLiteral().getString();
-        sesameContextIRI = getEffectiveValue(P_SESAME_CONTEXT_IRI).asLiteral().getString();
+        rdf4jServerURL = getEffectiveValue(P_RDF4J_SERVER_URL).asLiteral().getString();
+        rdf4jRepositoryName = getEffectiveValue(P_RDF4J_REPOSITORY_NAME).asLiteral().getString();
+        rdf4jContextIRI = getEffectiveValue(P_RDF4J_CONTEXT_IRI).asLiteral().getString();
         isReplaceContext = this.getPropertyValue(P_IS_REPLACE_CONTEXT_IRI, false);
     }
 }

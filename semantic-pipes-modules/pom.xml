@@ -15,7 +15,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>module-sesame</module>
+        <module>module-rdf4j</module>
         <module>module-tarql</module>
         <module>module-identity</module>
         <module>module-nlp</module>

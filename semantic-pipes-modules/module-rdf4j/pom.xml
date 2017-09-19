@@ -9,8 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>semantic-pipes-modules-sesame</artifactId>
-    <name>Semantic Pipes Modules - Sesame</name>
+    <artifactId>semantic-pipes-modules-rdf4j</artifactId>
+    <name>Semantic Pipes Modules - Rdf4j</name>
     <packaging>jar</packaging>
 
     <dependencies>
