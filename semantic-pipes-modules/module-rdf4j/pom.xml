@@ -15,16 +15,21 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-repository-http</artifactId>
-            <version>${org.openrdf.sesame}</version>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-repository-http</artifactId>
+            <version>${rdf4j.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-http-server-spring</artifactId>
-            <version>${org.openrdf.sesame}</version>
-            <scope>test</scope>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.openrdf.rdf4j</groupId>-->
+            <!--<artifactId>rdf4j-sail-nativerdf</artifactId>-->
+            <!--<version>${rdf4j.version}</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.openrdf.rdf4j</groupId>-->
+            <!--<artifactId>rdf4j-http-server-spring</artifactId>-->
+            <!--<version>RELEASE</version>-->
+            <!--<scope>test</scope>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>cz.cvut.kbss</groupId>
             <artifactId>semantic-pipes-core</artifactId>
@@ -36,16 +41,16 @@
         </dependency>
 
         <!-- TODO needed -->
-        <dependency>
-            <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-runtime</artifactId>
-            <version>${org.openrdf.sesame}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-repository-manager</artifactId>
-            <version>${org.openrdf.sesame}</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.eclipse.rdf4j</groupId>-->
+            <!--<artifactId>rdf4j-runtime</artifactId>-->
+            <!--<version>2.2.2</version>-->
+            <!--<scope>test</scope>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.eclipse.rdf4j</groupId>-->
+            <!--<artifactId>rdfj-repository-manager</artifactId>-->
+            <!--<version>RELEASE</version>-->
+        <!--</dependency>-->
     </dependencies>
 </project>

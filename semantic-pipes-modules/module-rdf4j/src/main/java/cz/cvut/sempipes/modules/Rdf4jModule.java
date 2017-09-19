@@ -6,13 +6,18 @@ import cz.cvut.sempipes.engine.ExecutionContextFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.riot.RDFLanguages;
-import org.openrdf.model.Resource;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.repository.http.HTTPRepository;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFParseException;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.repository.config.RepositoryConfig;
+import org.eclipse.rdf4j.repository.config.RepositoryConfigException;
+import org.eclipse.rdf4j.repository.manager.RepositoryManager;
+import org.eclipse.rdf4j.repository.manager.RepositoryProvider;
+import org.eclipse.rdf4j.repository.sail.config.SailRepositoryConfig;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFParseException;
+import org.eclipse.rdf4j.sail.nativerdf.config.NativeStoreConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,12 +94,22 @@ public class Rdf4jModule extends AbstractModule {
 
     @Override
     ExecutionContext executeSelf() {
-        // TODO use org.openrdf.repository.manager.RepositoryProvider.getRepository()
-        final Repository repository = new HTTPRepository(rdf4jServerURL, rdf4jRepositoryName);
         RepositoryConnection connection = null;
+        Repository repository = null;
         LOG.debug("Deploying data into context {} of rdf4j server repository {}/{}.", rdf4jContextIRI, rdf4jServerURL, rdf4jRepositoryName);
 
         try {
+            RepositoryManager repositoryManager = RepositoryProvider.getRepositoryManager(rdf4jServerURL);
+            repository = repositoryManager.getRepository(rdf4jRepositoryName);
+            if (repository == null) {
+                LOG.info("Creating new repository {} within rdf4j server {} ...",
+                    rdf4jServerURL, rdf4jRepositoryName);
+                RepositoryConfig repConfig = new RepositoryConfig(rdf4jRepositoryName);
+                SailRepositoryConfig config = new SailRepositoryConfig(new NativeStoreConfig());
+                repConfig.setRepositoryImplConfig(config);
+                repositoryManager.addRepositoryConfig(repConfig);
+                repository = repositoryManager.getRepository(rdf4jRepositoryName);
+            }
             repository.initialize();
             connection = repository.getConnection();
 
@@ -110,7 +125,7 @@ public class Rdf4jModule extends AbstractModule {
 
             connection.add(new StringReader(w.getBuffer().toString()), "", RDFFormat.N3, rdf4jContextIRIResource);
             connection.commit();
-        } catch (final RepositoryException | RDFParseException | IOException e) {
+        } catch (final RepositoryException | RDFParseException | RepositoryConfigException | IOException e) {
             LOG.error(e.getMessage(),e);
         } finally {
             try {
@@ -120,7 +135,7 @@ public class Rdf4jModule extends AbstractModule {
             } catch (RepositoryException e) {
                 LOG.error(e.getMessage(), e);
             } finally {
-                if (repository.isInitialized()) {
+                if ((repository != null) && (repository.isInitialized())) {
                     try {
                         repository.shutDown();
                     } catch (RepositoryException e) {
