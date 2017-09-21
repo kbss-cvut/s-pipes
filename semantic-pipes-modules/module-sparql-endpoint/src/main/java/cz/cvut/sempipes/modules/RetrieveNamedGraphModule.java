@@ -9,9 +9,9 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RetrieveNamedGraph extends AnnotatedAbstractModule {
+public class RetrieveNamedGraphModule extends AnnotatedAbstractModule {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RetrieveNamedGraph.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RetrieveNamedGraphModule.class);
 
     private static final String TYPE_URI = KBSS_MODULE.uri + "sparql-endpoint-retrieve-graph";
     private static final String TYPE_PREFIX = TYPE_URI + "/";

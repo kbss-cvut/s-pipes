@@ -9,13 +9,13 @@ import org.junit.Test;
 /**
  * Created by Miroslav Blasko on 17.7.17.
  */
-public class RetrieveNamedGraphTest {
+public class RetrieveNamedGraphModuleTest {
 
 
     @Ignore
     @Test
     public void executeSelf() throws Exception {
-        RetrieveNamedGraph module = new RetrieveNamedGraph();
+        RetrieveNamedGraphModule module = new RetrieveNamedGraphModule();
 
         String endpointUrl = "https://linked.opendata.cz/sparql";
         String namedGraphUri = "http://linked.opendata.cz/resource/dataset/mfcr/rozvaha";
