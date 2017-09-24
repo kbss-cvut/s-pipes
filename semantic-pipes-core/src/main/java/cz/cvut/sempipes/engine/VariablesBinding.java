@@ -109,6 +109,10 @@ public class VariablesBinding {
     }
 
     public void save(final OutputStream os, final String lang) throws IOException {
+        getModel().write(os, lang);
+    }
+
+    public Model getModel() {
         final Model model = ModelFactory.createDefaultModel();
 
         final Resource rQuerySolution = model.createResource(QUERY_SOLUTION + "_" + new Date().getTime());
@@ -124,8 +128,7 @@ public class VariablesBinding {
             rBinding.addProperty(p(HAS_BOUND_VARIABLE), varName);
             rBinding.addProperty(p(HAS_BOUND_VALUE), binding.get(varName));
         }
-
-        model.write(os, lang);
+        return model;
     }
 
     /**
