@@ -1,17 +1,28 @@
 package cz.cvut.sempipes.util;
 
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
+import org.apache.jena.query.ARQ;
 import org.apache.jena.query.ParameterizedSparqlString;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
+import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.sparql.mgt.Explain;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class QueryUtils {
 
+    private static final Logger LOG = LoggerFactory.getLogger(QueryUtils.class);
 
     /**
      * Returns new query by substituting marker within given query with given value.
@@ -82,5 +93,46 @@ public class QueryUtils {
         );
         return row;
     }
+
+
+    /**
+     * Executes construct query and if it fails executes it with additional debugging information.
+     * @param query
+     * @param model
+     * @param bindings
+     * @return
+     */
+    public static Model execConstruct(Query query, Model model, QuerySolution bindings) {
+        try {
+            return QueryUtils.execConstruct(query, model, bindings, false);
+        } catch (RuntimeException ex) {
+            LOG.error("Failed execution of query [1] for binding [2], due to exception [3]. " +
+                    "The query [1] will be executed again with detailed logging turned on. " +
+                    "\n\t - query [1]: \"\n{}\n\"" +
+                    "\n\t - binding [2]: \"\n{}\n\"" +
+                    "\n\t - exception [3]: \"\n{}\n\""
+                , query, bindings, getStackTrace(ex));
+        }
+        LOG.error("Executing query [1] again to diagnose the cause ...");
+        return execConstruct(query, model, bindings, true);
+    }
+
+
+    private static Model execConstruct(Query query, Model model, QuerySolution bindings, boolean isDebugEnabled) {
+        QueryExecution execution = QueryExecutionFactory.create(query,
+            model, bindings);
+
+        if (isDebugEnabled) {
+            execution.getContext().set(ARQ.symLogExec, Explain.InfoLevel.ALL);
+        }
+        return execution.execConstruct();
+    }
+
+    private static String getStackTrace(Throwable t) {
+        StringWriter sw = new StringWriter();
+        t.printStackTrace(new PrintWriter(sw));
+        return sw.toString();
+    }
+
 
 }

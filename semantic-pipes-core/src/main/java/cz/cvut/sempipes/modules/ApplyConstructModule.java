@@ -4,6 +4,7 @@ import cz.cvut.sempipes.constants.KBSS_MODULE;
 import cz.cvut.sempipes.constants.SML;
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
+import cz.cvut.sempipes.util.QueryUtils;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
@@ -125,7 +126,7 @@ public class ApplyConstructModule extends AbstractModule {
                     query = ARQFactory.get().createQuery(spinConstructRes);
                 }
 
-                Model constructedModel = execConstruct(query, ModelFactory.createUnion(defaultModel, inferredModel), bindings);
+                Model constructedModel = QueryUtils.execConstruct(query, ModelFactory.createUnion(defaultModel, inferredModel), bindings);
 
                 inferredInSingleIterationModel = ModelFactory.createUnion(inferredInSingleIterationModel, constructedModel);
             }
@@ -143,36 +144,11 @@ public class ApplyConstructModule extends AbstractModule {
     }
 
     // TODO move this to external utils
-    private Model execConstruct(Query query, Model model, QuerySolution bindings) {
-        try {
-            return execConstruct(query, model, bindings, false);
-        } catch (RuntimeException ex) {
-            LOG.error("Failed execution of query [1] for binding [2], due to exception [3]. " +
-                    "The query [1] will be executed again with detailed logging turned on. " +
-                    "\n\t - query [1]: \"\n{}\n\"" +
-                    "\n\t - binding [2]: \"\n{}\n\"" +
-                    "\n\t - exception [3]: \"\n{}\n\""
-                    , query, bindings, getStackTrace(ex));
-        }
-        LOG.error("Executing query [1] again to diagnose the cause ...");
-        return execConstruct(query, model, bindings, true);
-    }
 
-    public static String getStackTrace(Throwable t) {
-        StringWriter sw = new StringWriter();
-        t.printStackTrace(new PrintWriter(sw));
-        return sw.toString();
-    }
 
-    private Model execConstruct(Query query, Model model, QuerySolution bindings, boolean isDebugEnabled) {
-        QueryExecution execution = QueryExecutionFactory.create(query,
-                model, bindings);
 
-        if (isDebugEnabled) {
-            execution.getContext().set(ARQ.symLogExec, Explain.InfoLevel.ALL);
-        }
-        return execution.execConstruct();
-    }
+
+
 
     @Override
     public String getTypeURI() {
