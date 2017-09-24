@@ -103,8 +103,36 @@ public class QueryUtils {
      * @return
      */
     public static Model execConstruct(Query query, Model model, QuerySolution bindings) {
+        return execQuery(
+            QueryExecution::execConstruct,
+            query,
+            model,
+            bindings
+        );
+    }
+
+    /**
+     * Executes select query and if it fails executes it with additional debugging information.
+     * @param query
+     * @param model
+     * @param bindings
+     * @return
+     */
+    public static ResultSet execSelect(Query query, Model model, QuerySolution bindings) {
+        return execQuery(
+            QueryExecution::execSelect,
+            query,
+            model,
+            bindings
+        );
+    }
+
+    private static <T >T execQuery(QueryExecutor<T>  queryExecutor, Query query, Model model, QuerySolution bindings) {
         try {
-            return QueryUtils.execConstruct(query, model, bindings, false);
+            return execQuery(
+                queryExecutor,
+                QueryExecutionFactory.create(query, model, bindings),
+                false);
         } catch (RuntimeException ex) {
             LOG.error("Failed execution of query [1] for binding [2], due to exception [3]. " +
                     "The query [1] will be executed again with detailed logging turned on. " +
@@ -114,18 +142,18 @@ public class QueryUtils {
                 , query, bindings, getStackTrace(ex));
         }
         LOG.error("Executing query [1] again to diagnose the cause ...");
-        return execConstruct(query, model, bindings, true);
+        return execQuery(
+            queryExecutor,
+            QueryExecutionFactory.create(query, model, bindings),
+            true);
     }
 
-
-    private static Model execConstruct(Query query, Model model, QuerySolution bindings, boolean isDebugEnabled) {
-        QueryExecution execution = QueryExecutionFactory.create(query,
-            model, bindings);
+    private static <T> T execQuery(QueryExecutor<T>  queryExecutor, QueryExecution execution, boolean isDebugEnabled) {
 
         if (isDebugEnabled) {
             execution.getContext().set(ARQ.symLogExec, Explain.InfoLevel.ALL);
         }
-        return execution.execConstruct();
+        return queryExecutor.execQuery(execution);
     }
 
     private static String getStackTrace(Throwable t) {
@@ -134,5 +162,8 @@ public class QueryUtils {
         return sw.toString();
     }
 
+    private interface QueryExecutor<T> {
+        T execQuery(QueryExecution execution);
+    }
 
 }
