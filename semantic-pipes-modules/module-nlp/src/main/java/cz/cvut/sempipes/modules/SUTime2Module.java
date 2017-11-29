@@ -78,7 +78,7 @@ public class SUTime2Module extends AbstractModule {
         AnnotationPipeline pipeline = loadPipeline();
 
 
-        ArrayList<LocalDate> allStsDates = new ArrayList<>();
+       // ArrayList<LocalDate> allStsDates = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         List<ReifiedStatement> temporalAnnotationStmts = new LinkedList<>();
         m.listStatements()
@@ -90,24 +90,24 @@ public class SUTime2Module extends AbstractModule {
                 ReifiedStatement reifiedSt = m.createReifiedStatement(st);
                 try {
                     ArrayList<AnnforModel> singleStDates = temporalAnalysis(pipeline, objectStr);
-                    ArrayList<LocalDate> singleStAllDates = new ArrayList<>();
+                   // ArrayList<LocalDate> singleStAllDates = new ArrayList<>();
                     for(AnnforModel s:singleStDates){
 
                         String begin = s.getDateBegin();
                         String end = s.getDateEnd();
-                        LocalDate beginLocalDate;
-                        LocalDate endLocalDate;
-                        try {
-                            if (!begin.equals("")) {
-                                beginLocalDate = LocalDate.parse(begin, formatter);
-                                singleStAllDates.add(beginLocalDate);
-                            }
-                            if (!end.equals("")) {
-                                endLocalDate = LocalDate.parse(end, formatter);
-                                singleStAllDates.add(endLocalDate);
-                            }
-                        } catch (DateTimeParseException e){
-                        }
+                       // LocalDate beginLocalDate;
+                        //LocalDate endLocalDate;
+//                        try {
+//                            if (!begin.equals("")) {
+//                               // beginLocalDate = LocalDate.parse(begin, formatter);
+//                               // singleStAllDates.add(beginLocalDate);
+//                            }
+//                            if (!end.equals("")) {
+//                                //endLocalDate = LocalDate.parse(end, formatter);
+//                                //singleStAllDates.add(endLocalDate);
+//                            }
+//                        } catch (DateTimeParseException e){
+//                        }
 
                         reifiedSt.addProperty(RDF.type, MySUTime.sutime_extraction);
 
@@ -120,7 +120,7 @@ public class SUTime2Module extends AbstractModule {
                     }
 
 
-                    allStsDates.addAll(singleStAllDates);
+                  //  allStsDates.addAll(singleStAllDates);
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -128,8 +128,8 @@ public class SUTime2Module extends AbstractModule {
 
             });
 
-        Collections.sort(allStsDates);
-        LOG.trace("All extracted date : ", allStsDates);
+        //Collections.sort(allStsDates);
+        //LOG.trace("All extracted date : ", allStsDates);
 
         Model outputModel = ModelFactory.createDefaultModel();
         temporalAnnotationStmts.forEach(
@@ -154,7 +154,7 @@ public class SUTime2Module extends AbstractModule {
 
         List<CoreMap> timexAnnsAll = annotation.get(TimeAnnotations.TimexAnnotations.class);
         if (!timexAnnsAll.isEmpty()) {
-            System.out.println(annotation.get(CoreAnnotations.TextAnnotation.class));
+            //System.out.println(annotation.get(CoreAnnotations.TextAnnotation.class));
 
             for (CoreMap cm : timexAnnsAll) {
                 List<CoreLabel> tokens = cm.get(CoreAnnotations.TokensAnnotation.class);
@@ -211,6 +211,7 @@ public class SUTime2Module extends AbstractModule {
 
     private AnnotationPipeline loadPipeline() {
         Properties props = new Properties();
+        props.setProperty("sutime.includeRange", "true");
         props.setProperty("sutime.rules", "sutime/defs.txt, sutime/defs.sutime.txt, sutime/english.holidays.sutime.txt, sutime/english.sutime.txt");
         AnnotationPipeline pipeline = new AnnotationPipeline();
         pipeline.addAnnotator(new TokenizerAnnotator(false));
