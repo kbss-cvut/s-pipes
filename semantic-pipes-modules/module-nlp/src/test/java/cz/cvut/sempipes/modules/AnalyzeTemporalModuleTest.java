@@ -123,6 +123,7 @@ public class AnalyzeTemporalModuleTest {
         }
     }
 
+    @Ignore
     @Test
     public void testAccuracy(){
         String ep = "http://linked.opendata.cz/sparql/";
