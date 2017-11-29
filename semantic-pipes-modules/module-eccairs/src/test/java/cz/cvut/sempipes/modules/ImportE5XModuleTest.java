@@ -4,8 +4,10 @@ import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
 import cz.cvut.sempipes.registry.StreamResource;
 import cz.cvut.sempipes.registry.StringStreamResource;
+import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -23,9 +25,10 @@ abstract class ImportE5XModuleTest {
     }
 
     public void execute() {
-        String e5xFilePath = ImportE5XModuleTest.class.getResource(path).getPath();
+        URL e5xFileResource = ImportE5XModuleTest.class.getResource(path);
+        String e5xFilePath = e5xFileResource.getPath();
         try {
-            byte[] file = Files.readAllBytes(Paths.get(e5xFilePath));
+            byte[] file = IOUtils.toByteArray(e5xFileResource);
             StreamResource streamResouce = new StringStreamResource(e5xFilePath, file, contentType);
 
             ImportE5XModule module = new ImportE5XModule();
