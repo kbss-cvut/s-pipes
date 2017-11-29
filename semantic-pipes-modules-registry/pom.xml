@@ -11,7 +11,6 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>cz.cvut.kbss</groupId>
     <artifactId>semantic-pipes-modules-registry</artifactId>
     <name>Semantic Pipes Modules Registry</name>
     <description>This module aggregates all available modules developed within the main project.</description>
@@ -35,7 +34,7 @@
         </dependency>
         <dependency>
             <groupId>cz.cvut.kbss</groupId>
-            <artifactId>semantic-pipes-modules-sesame</artifactId>
+            <artifactId>semantic-pipes-modules-rdf4j</artifactId>
             <version>${semantic-pipes-modules.version}</version>
         </dependency>
         <dependency>
@@ -44,9 +43,9 @@
             <version>${semantic-pipes-modules.version}</version>
         </dependency>
         <dependency>
-        <groupId>cz.cvut.kbss</groupId>
-        <artifactId>semantic-pipes-modules-nlp</artifactId>
-        <version>${semantic-pipes-modules.version}</version>
+            <groupId>cz.cvut.kbss</groupId>
+            <artifactId>semantic-pipes-modules-nlp</artifactId>
+            <version>${semantic-pipes-modules.version}</version>
         </dependency>
         <!--<dependency>-->
             <!--<groupId>cz.cvut.kbss</groupId>-->

@@ -6,12 +6,12 @@ import cz.cvut.sempipes.engine.ExecutionContextFactory;
 import org.apache.jena.rdf.model.*;
 import org.junit.Ignore;
 
-public class SesameModuleTest {
+public class Rdf4jModuleTest {
 
     @org.junit.Test
     @Ignore
     public void testDeployEmpty() throws Exception {
-        final SesameModule moduleSesame = new SesameModule();
+        final Rdf4jModule moduleRdf4j = new Rdf4jModule();
 
         final Model deployModel = ModelFactory.createDefaultModel();
         final Property resource = ResourceFactory.createProperty("http://a");
@@ -21,15 +21,15 @@ public class SesameModuleTest {
 
         final Model model = ModelFactory.createDefaultModel();
         final Resource root = model.createResource();
-        model.add(root, SesameModule.P_IS_REPLACE_CONTEXT_IRI, model.createTypedLiteral(true));
-        model.add(root, SesameModule.P_SESAME_SERVER_URL, "http://localhost:18080/openrdf-sesame");
-        model.add(root, SesameModule.P_SESAME_REPOSITORY_NAME, "test-semantic-pipes");
-        model.add(root, SesameModule.P_SESAME_CONTEXT_IRI, "");
+        model.add(root, Rdf4jModule.P_IS_REPLACE_CONTEXT_IRI, model.createTypedLiteral(true));
+        model.add(root, Rdf4jModule.P_RDF4J_SERVER_URL, "http://localhost:18080/rdf4j-server");
+        model.add(root, Rdf4jModule.P_RDF4J_REPOSITORY_NAME, "test-semantic-pipes");
+        model.add(root, Rdf4jModule.P_RDF4J_CONTEXT_IRI, "");
 
-        moduleSesame.setConfigurationResource(root);
+        moduleRdf4j.setConfigurationResource(root);
 
         // TODO: currently running server is needed;
-        moduleSesame.setInputContext(executionContext);
-        moduleSesame.execute();
+        moduleRdf4j.setInputContext(executionContext);
+        moduleRdf4j.execute();
     }
 }

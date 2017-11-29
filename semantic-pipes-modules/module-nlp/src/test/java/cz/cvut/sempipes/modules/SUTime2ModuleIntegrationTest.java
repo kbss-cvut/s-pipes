@@ -62,11 +62,11 @@ public class SUTime2ModuleIntegrationTest {
     }
 
     private void deployModel(Model model, String outputSesameServerUrl, String outputRepositoryName, String namedGraphUri) {
-        SesameModule m = new SesameModule();
+        Rdf4jModule m = new Rdf4jModule();
         m.setInputContext(ExecutionContextFactory.createContext(model));
-        m.setSesameServerURL(outputSesameServerUrl);
-        m.setSesameRepositoryName(outputRepositoryName);
-        m.setSesameContextIRI(namedGraphUri);
+        m.setRdf4jServerURL(outputSesameServerUrl);
+        m.setRdf4jRepositoryName(outputRepositoryName);
+        m.setRdf4jContextIRI(namedGraphUri);
         m.setReplaceContext(true);
         m.executeSelf();
     }

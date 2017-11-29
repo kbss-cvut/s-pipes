@@ -46,7 +46,7 @@
         </dependency>
         <dependency>
             <groupId>cz.cvut.kbss</groupId>
-            <artifactId>semantic-pipes-modules-sesame</artifactId>
+            <artifactId>semantic-pipes-modules-rdf4j</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
