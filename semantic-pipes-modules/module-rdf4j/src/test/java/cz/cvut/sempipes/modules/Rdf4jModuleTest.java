@@ -2,13 +2,19 @@ package cz.cvut.sempipes.modules;
 
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
-//import info.aduna.webapp.util.HttpServerUtil;
-import org.apache.jena.rdf.model.*;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.ResourceFactory;
 import org.junit.Ignore;
+import org.junit.Test;
+
+//import info.aduna.webapp.util.HttpServerUtil;
 
 public class Rdf4jModuleTest {
 
-    @org.junit.Test
+    @Test
     @Ignore
     public void testDeployEmpty() throws Exception {
         final Rdf4jModule moduleRdf4j = new Rdf4jModule();
