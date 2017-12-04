@@ -1,0 +1,14 @@
+PREFIX :<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+
+SELECT ?p ?sType ?oType ?pattern ?originalWeight
+WHERE {
+    ?pattern rdf:subject/a ?sType ;
+         rdf:predicate ?p ;
+         rdf:object/a ?oType ;
+         :hasWeight ?originalWeight .
+    FILTER(?sType = owl:Thing || ?oType = owl:Thing)
+}
+ORDER BY ?p ?sType ?oType

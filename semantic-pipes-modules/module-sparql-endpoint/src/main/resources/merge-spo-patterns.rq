@@ -1,0 +1,31 @@
+PREFIX :<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX ld-cube: <http://purl.org/linked-data/cube#>
+PREFIX ddo: <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/>
+
+CONSTRUCT{
+ ?di rdf:subject _:s;
+    rdf:predicate ?p;
+    rdf:object _:v.
+    _:s a ?sType.
+    _:v a ?oType.
+    ?di :hasWeight ?w.
+}
+WHERE {
+      {
+        BIND(STRUUID() as ?executionId)
+      }
+      {
+        SELECT ?p ?sType ?oType (SUM(?patternWeight) as ?w)
+         {
+               ?pattern rdf:subject/a ?sType;
+                  rdf:predicate ?p;
+                  rdf:object/a ?oType ;
+                  :hasWeight ?patternWeight.
+         }
+         GROUP BY ?p ?sType ?oType
+      }
+      BIND(IRI(CONCAT("http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/di-",MD5(CONCAT(str(?p),str(?sType),str(?oType),?executionId)))) as ?di) .
+}

@@ -1,0 +1,901 @@
+# baseURI: http://onto.fel.cvut.cz/ontologies/lib/module/improve-spo-with-marginals-defs
+# imports: http://spinrdf.org/spin
+
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sp: <http://spinrdf.org/sp#> .
+@prefix spo-marginal-ext: <http://onto.fel.cvut.cz/ontologies/lib/module/improve-spo-with-marginals/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://onto.fel.cvut.cz/ontologies/lib/module/improve-spo-with-marginals>
+  rdf:type rdfs:Resource ;
+  spo-marginal-ext:filter-out-breakable-patterns [
+      rdf:type sp:Construct ;
+      sp:templates (
+          [
+            sp:object [
+                sp:varName "s"^^xsd:string ;
+              ] ;
+            sp:predicate rdf:subject ;
+            sp:subject [
+                sp:varName "di"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "p"^^xsd:string ;
+              ] ;
+            sp:predicate rdf:predicate ;
+            sp:subject [
+                sp:varName "di"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "o"^^xsd:string ;
+              ] ;
+            sp:predicate rdf:object ;
+            sp:subject [
+                sp:varName "di"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "sType"^^xsd:string ;
+              ] ;
+            sp:predicate rdf:type ;
+            sp:subject [
+                sp:varName "s"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "oType"^^xsd:string ;
+              ] ;
+            sp:predicate rdf:type ;
+            sp:subject [
+                sp:varName "o"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "w"^^xsd:string ;
+              ] ;
+            sp:predicate <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/hasWeight> ;
+            sp:subject [
+                sp:varName "di"^^xsd:string ;
+              ] ;
+          ]
+        ) ;
+      sp:text """PREFIX :<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+PREFIX owl: <http://www.w3.org/2002/07/owl#> 
+
+CONSTRUCT {
+    ?di rdf:subject ?s;
+    	  rdf:predicate ?p;
+          rdf:object ?o.
+    ?s a ?sType.
+    ?o a ?oType.
+    ?di :hasWeight ?w.
+}
+WHERE {
+	?di rdf:subject ?s;
+    	  rdf:predicate ?p;
+          rdf:object ?o.
+    ?s a ?sType.
+    ?o a ?oType.
+    ?di :hasWeight ?w.
+    FILTER(?sType != owl:Thing && ?oType != owl:Thing)
+}"""^^xsd:string ;
+      sp:where (
+          [
+            sp:object [
+                sp:varName "s"^^xsd:string ;
+              ] ;
+            sp:predicate rdf:subject ;
+            sp:subject [
+                sp:varName "di"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "p"^^xsd:string ;
+              ] ;
+            sp:predicate rdf:predicate ;
+            sp:subject [
+                sp:varName "di"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "o"^^xsd:string ;
+              ] ;
+            sp:predicate rdf:object ;
+            sp:subject [
+                sp:varName "di"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "sType"^^xsd:string ;
+              ] ;
+            sp:predicate rdf:type ;
+            sp:subject [
+                sp:varName "s"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "oType"^^xsd:string ;
+              ] ;
+            sp:predicate rdf:type ;
+            sp:subject [
+                sp:varName "o"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "w"^^xsd:string ;
+              ] ;
+            sp:predicate <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/hasWeight> ;
+            sp:subject [
+                sp:varName "di"^^xsd:string ;
+              ] ;
+          ]
+          [
+            rdf:type sp:Filter ;
+            sp:expression [
+                rdf:type sp:and ;
+                sp:arg1 [
+                    rdf:type sp:ne ;
+                    sp:arg1 [
+                        sp:varName "sType"^^xsd:string ;
+                      ] ;
+                    sp:arg2 owl:Thing ;
+                  ] ;
+                sp:arg2 [
+                    rdf:type sp:ne ;
+                    sp:arg1 [
+                        sp:varName "oType"^^xsd:string ;
+                      ] ;
+                    sp:arg2 owl:Thing ;
+                  ] ;
+              ] ;
+          ]
+        ) ;
+    ] ;
+  spo-marginal-ext:get-breakable-patterns [
+      rdf:type sp:Select ;
+      sp:orderBy (
+          [
+            sp:varName "p"^^xsd:string ;
+          ]
+          [
+            sp:varName "sType"^^xsd:string ;
+          ]
+          [
+            sp:varName "oType"^^xsd:string ;
+          ]
+        ) ;
+      sp:resultVariables (
+          [
+            sp:varName "p"^^xsd:string ;
+          ]
+          [
+            sp:varName "sType"^^xsd:string ;
+          ]
+          [
+            sp:varName "oType"^^xsd:string ;
+          ]
+          [
+            sp:varName "pattern"^^xsd:string ;
+          ]
+          [
+            sp:varName "originalWeight"^^xsd:string ;
+          ]
+        ) ;
+      sp:text """PREFIX :<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+
+SELECT ?p ?sType ?oType ?pattern ?originalWeight
+WHERE {
+    ?pattern rdf:subject/a ?sType ;
+         rdf:predicate ?p ;
+         rdf:object/a ?oType ;
+         :hasWeight ?originalWeight .
+    FILTER(?sType = owl:Thing || ?oType = owl:Thing)
+}
+ORDER BY ?p ?sType ?oType"""^^xsd:string ;
+      sp:where (
+          [
+            rdf:type sp:TriplePath ;
+            sp:object [
+                sp:varName "sType"^^xsd:string ;
+              ] ;
+            sp:path [
+                rdf:type sp:SeqPath ;
+                sp:path1 rdf:subject ;
+                sp:path2 rdf:type ;
+              ] ;
+            sp:subject [
+                sp:varName "pattern"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "p"^^xsd:string ;
+              ] ;
+            sp:predicate rdf:predicate ;
+            sp:subject [
+                sp:varName "pattern"^^xsd:string ;
+              ] ;
+          ]
+          [
+            rdf:type sp:TriplePath ;
+            sp:object [
+                sp:varName "oType"^^xsd:string ;
+              ] ;
+            sp:path [
+                rdf:type sp:SeqPath ;
+                sp:path1 rdf:object ;
+                sp:path2 rdf:type ;
+              ] ;
+            sp:subject [
+                sp:varName "pattern"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "originalWeight"^^xsd:string ;
+              ] ;
+            sp:predicate <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/hasWeight> ;
+            sp:subject [
+                sp:varName "pattern"^^xsd:string ;
+              ] ;
+          ]
+          [
+            rdf:type sp:Filter ;
+            sp:expression [
+                rdf:type sp:or ;
+                sp:arg1 [
+                    rdf:type sp:eq ;
+                    sp:arg1 [
+                        sp:varName "sType"^^xsd:string ;
+                      ] ;
+                    sp:arg2 owl:Thing ;
+                  ] ;
+                sp:arg2 [
+                    rdf:type sp:eq ;
+                    sp:arg1 [
+                        sp:varName "oType"^^xsd:string ;
+                      ] ;
+                    sp:arg2 owl:Thing ;
+                  ] ;
+              ] ;
+          ]
+        ) ;
+    ] ;
+  spo-marginal-ext:get-marginal-types [
+      rdf:type sp:Construct ;
+      sp:templates (
+          [
+            sp:object [
+                sp:varName "resourceType"^^xsd:string ;
+              ] ;
+            sp:predicate rdf:type ;
+            sp:subject [
+                sp:varName "resource"^^xsd:string ;
+              ] ;
+          ]
+        ) ;
+      sp:text """PREFIX :<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+PREFIX owl: <http://www.w3.org/2002/07/owl#> 
+PREFIX ld-cube: <http://purl.org/linked-data/cube#>
+PREFIX ddo: <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/> 
+
+CONSTRUCT {
+    ?resource a ?resourceType .
+}
+WHERE {
+     ?pattern rdf:subject|rdf:object ?resource .
+     ?observation ddo:weakly-described-resource ?resource ;
+                            ddo:type ?resourceType .
+}"""^^xsd:string ;
+      sp:where (
+          [
+            rdf:type sp:TriplePath ;
+            sp:object [
+                sp:varName "resource"^^xsd:string ;
+              ] ;
+            sp:path [
+                rdf:type sp:AltPath ;
+                sp:path1 rdf:subject ;
+                sp:path2 rdf:object ;
+              ] ;
+            sp:subject [
+                sp:varName "pattern"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "resource"^^xsd:string ;
+              ] ;
+            sp:predicate <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/weakly-described-resource> ;
+            sp:subject [
+                sp:varName "observation"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "resourceType"^^xsd:string ;
+              ] ;
+            sp:predicate <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/type> ;
+            sp:subject [
+                sp:varName "observation"^^xsd:string ;
+              ] ;
+          ]
+        ) ;
+    ] ;
+  spo-marginal-ext:get-spo-pattern-data [
+      rdf:type sp:Construct ;
+      sp:templates (
+          [
+            sp:object [
+                sp:varName "s"^^xsd:string ;
+              ] ;
+            sp:predicate rdf:subject ;
+            sp:subject [
+                sp:varName "pattern"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "p"^^xsd:string ;
+              ] ;
+            sp:predicate rdf:predicate ;
+            sp:subject [
+                sp:varName "pattern"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "o"^^xsd:string ;
+              ] ;
+            sp:predicate rdf:object ;
+            sp:subject [
+                sp:varName "pattern"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "sType"^^xsd:string ;
+              ] ;
+            sp:predicate rdf:type ;
+            sp:subject [
+                sp:varName "s"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "oType"^^xsd:string ;
+              ] ;
+            sp:predicate rdf:type ;
+            sp:subject [
+                sp:varName "o"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "originalWeight"^^xsd:string ;
+              ] ;
+            sp:predicate <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/hasWeight> ;
+            sp:subject [
+                sp:varName "pattern"^^xsd:string ;
+              ] ;
+          ]
+        ) ;
+      sp:text """PREFIX :<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/>
+PREFIX spo-sum-desc:<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/spo-summary-descriptor/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+
+CONSTRUCT{
+    ?pattern rdf:subject ?s;
+        rdf:predicate ?p;
+        rdf:object ?o.
+    ?s a ?sType.
+    ?o a ?oType.
+    ?pattern :hasWeight ?originalWeight.
+}
+WHERE {
+  	 SERVICE ?dataServiceUrl {
+        {
+#         bind  ?p ?sType ?oType ?pattern ?originalWeight
+#         ${VALUES}
+        }
+  		{
+  		    SELECT ?s ?o  {
+				?s ?p ?o .
+				FILTER(isIRI(?o))
+				{
+					FILTER(?sType != owl:Thing)
+                    ?s a ?sType .
+                } UNION {
+                    FILTER(?sType = owl:Thing)
+                    OPTIONAL {
+                         ?s a ?sTopType .
+                    }
+					FILTER((! bound(?sTopType)) || (?sTopType in ( owl:Thing, rdfs:Resource )))
+                }
+				{
+					FILTER(?oType != owl:Thing)
+                    ?o a ?oType .
+                } UNION {
+                    FILTER(?oType = owl:Thing)
+                    OPTIONAL {
+                         ?o a ?oTopType .
+                    }
+					FILTER((! bound(?oTopType)) || (?oTopType in ( owl:Thing, rdfs:Resource )))
+                }
+            }
+#           ${LIMIT_OFFSET}
+        }
+     }
+}"""^^xsd:string ;
+      sp:where (
+          [
+            rdf:type sp:Service ;
+            sp:elements (
+                ()
+                [
+                  rdf:type sp:SubQuery ;
+                  sp:query [
+                      rdf:type sp:Select ;
+                      sp:resultVariables (
+                          [
+                            sp:varName "s"^^xsd:string ;
+                          ]
+                          [
+                            sp:varName "o"^^xsd:string ;
+                          ]
+                        ) ;
+                      sp:where (
+                          [
+                            sp:object [
+                                sp:varName "o"^^xsd:string ;
+                              ] ;
+                            sp:predicate [
+                                sp:varName "p"^^xsd:string ;
+                              ] ;
+                            sp:subject [
+                                sp:varName "s"^^xsd:string ;
+                              ] ;
+                          ]
+                          [
+                            rdf:type sp:Filter ;
+                            sp:expression [
+                                rdf:type sp:isIRI ;
+                                sp:arg1 [
+                                    sp:varName "o"^^xsd:string ;
+                                  ] ;
+                              ] ;
+                          ]
+                          [
+                            rdf:type sp:Union ;
+                            sp:elements (
+                                (
+                                  [
+                                    rdf:type sp:Filter ;
+                                    sp:expression [
+                                        rdf:type sp:ne ;
+                                        sp:arg1 [
+                                            sp:varName "sType"^^xsd:string ;
+                                          ] ;
+                                        sp:arg2 owl:Thing ;
+                                      ] ;
+                                  ]
+                                  [
+                                    sp:object [
+                                        sp:varName "sType"^^xsd:string ;
+                                      ] ;
+                                    sp:predicate rdf:type ;
+                                    sp:subject [
+                                        sp:varName "s"^^xsd:string ;
+                                      ] ;
+                                  ]
+                                )
+                                (
+                                  [
+                                    rdf:type sp:Filter ;
+                                    sp:expression [
+                                        rdf:type sp:eq ;
+                                        sp:arg1 [
+                                            sp:varName "sType"^^xsd:string ;
+                                          ] ;
+                                        sp:arg2 owl:Thing ;
+                                      ] ;
+                                  ]
+                                  [
+                                    rdf:type sp:Optional ;
+                                    sp:elements (
+                                        [
+                                          sp:object [
+                                              sp:varName "sTopType"^^xsd:string ;
+                                            ] ;
+                                          sp:predicate rdf:type ;
+                                          sp:subject [
+                                              sp:varName "s"^^xsd:string ;
+                                            ] ;
+                                        ]
+                                      ) ;
+                                  ]
+                                  [
+                                    rdf:type sp:Filter ;
+                                    sp:expression [
+                                        rdf:type sp:or ;
+                                        sp:arg1 [
+                                            rdf:type sp:not ;
+                                            sp:arg1 [
+                                                rdf:type sp:bound ;
+                                                sp:arg1 [
+                                                    sp:varName "sTopType"^^xsd:string ;
+                                                  ] ;
+                                              ] ;
+                                          ] ;
+                                        sp:arg2 [
+                                            rdf:type sp:in ;
+                                            sp:arg1 [
+                                                sp:varName "sTopType"^^xsd:string ;
+                                              ] ;
+                                            sp:arg2 owl:Thing ;
+                                            sp:arg3 rdfs:Resource ;
+                                          ] ;
+                                      ] ;
+                                  ]
+                                )
+                              ) ;
+                          ]
+                          [
+                            rdf:type sp:Union ;
+                            sp:elements (
+                                (
+                                  [
+                                    rdf:type sp:Filter ;
+                                    sp:expression [
+                                        rdf:type sp:ne ;
+                                        sp:arg1 [
+                                            sp:varName "oType"^^xsd:string ;
+                                          ] ;
+                                        sp:arg2 owl:Thing ;
+                                      ] ;
+                                  ]
+                                  [
+                                    sp:object [
+                                        sp:varName "oType"^^xsd:string ;
+                                      ] ;
+                                    sp:predicate rdf:type ;
+                                    sp:subject [
+                                        sp:varName "o"^^xsd:string ;
+                                      ] ;
+                                  ]
+                                )
+                                (
+                                  [
+                                    rdf:type sp:Filter ;
+                                    sp:expression [
+                                        rdf:type sp:eq ;
+                                        sp:arg1 [
+                                            sp:varName "oType"^^xsd:string ;
+                                          ] ;
+                                        sp:arg2 owl:Thing ;
+                                      ] ;
+                                  ]
+                                  [
+                                    rdf:type sp:Optional ;
+                                    sp:elements (
+                                        [
+                                          sp:object [
+                                              sp:varName "oTopType"^^xsd:string ;
+                                            ] ;
+                                          sp:predicate rdf:type ;
+                                          sp:subject [
+                                              sp:varName "o"^^xsd:string ;
+                                            ] ;
+                                        ]
+                                      ) ;
+                                  ]
+                                  [
+                                    rdf:type sp:Filter ;
+                                    sp:expression [
+                                        rdf:type sp:or ;
+                                        sp:arg1 [
+                                            rdf:type sp:not ;
+                                            sp:arg1 [
+                                                rdf:type sp:bound ;
+                                                sp:arg1 [
+                                                    sp:varName "oTopType"^^xsd:string ;
+                                                  ] ;
+                                              ] ;
+                                          ] ;
+                                        sp:arg2 [
+                                            rdf:type sp:in ;
+                                            sp:arg1 [
+                                                sp:varName "oTopType"^^xsd:string ;
+                                              ] ;
+                                            sp:arg2 owl:Thing ;
+                                            sp:arg3 rdfs:Resource ;
+                                          ] ;
+                                      ] ;
+                                  ]
+                                )
+                              ) ;
+                          ]
+                        ) ;
+                    ] ;
+                ]
+              ) ;
+            sp:serviceURI [
+                sp:varName "dataServiceUrl"^^xsd:string ;
+              ] ;
+          ]
+        ) ;
+    ] ;
+  spo-marginal-ext:x_2 [
+      rdf:type sp:Construct ;
+      sp:templates (
+          [
+            sp:object _:b30059 ;
+            sp:predicate rdf:subject ;
+            sp:subject [
+                sp:varName "di"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "p"^^xsd:string ;
+              ] ;
+            sp:predicate rdf:predicate ;
+            sp:subject [
+                sp:varName "di"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object _:b60369 ;
+            sp:predicate rdf:object ;
+            sp:subject [
+                sp:varName "di"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "sType"^^xsd:string ;
+              ] ;
+            sp:predicate rdf:type ;
+            sp:subject _:b30059 ;
+          ]
+          [
+            sp:object [
+                sp:varName "oType"^^xsd:string ;
+              ] ;
+            sp:predicate rdf:type ;
+            sp:subject _:b60369 ;
+          ]
+          [
+            sp:object [
+                sp:varName "w"^^xsd:string ;
+              ] ;
+            sp:predicate <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/hasWeight> ;
+            sp:subject [
+                sp:varName "di"^^xsd:string ;
+              ] ;
+          ]
+        ) ;
+      sp:text """PREFIX :<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX ld-cube: <http://purl.org/linked-data/cube#>
+PREFIX ddo: <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/>
+
+CONSTRUCT{
+ ?di rdf:subject _:s;
+ rdf:predicate ?p;
+ rdf:object _:v.
+ _:s a ?sType.
+ _:v a ?oType.
+ ?di :hasWeight ?w.
+} # FROM $GRAPH
+WHERE {
+ {
+        BIND(STRUUID() as ?executionId)
+      {
+        SELECT ?p ?sType ?oType (COUNT(DISTINCT *) as ?w)
+         {
+              ?s ?p ?o.
+
+              ?s a ?sType .
+              ?o a ?oType .
+
+              FILTER(?p in ( rdf:subject, rdf:predicate, rdf:object, :hasWeight ))
+         }
+         GROUP BY ?p ?sType ?oType
+         }
+      }
+        BIND(IRI(CONCAT(\"http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/di-\",MD5(CONCAT(str(?p),str(?sType),str(?oType),?executionId)))) as ?di) .
+}"""^^xsd:string ;
+      sp:where (
+          (
+            [
+              rdf:type sp:Bind ;
+              sp:expression [
+                  rdf:type sp:struuid ;
+                ] ;
+              sp:variable [
+                  sp:varName "executionId"^^xsd:string ;
+                ] ;
+            ]
+            [
+              rdf:type sp:SubQuery ;
+              sp:query [
+                  rdf:type sp:Select ;
+                  sp:groupBy (
+                      [
+                        sp:varName "p"^^xsd:string ;
+                      ]
+                      [
+                        sp:varName "sType"^^xsd:string ;
+                      ]
+                      [
+                        sp:varName "oType"^^xsd:string ;
+                      ]
+                    ) ;
+                  sp:resultVariables (
+                      [
+                        sp:varName "p"^^xsd:string ;
+                      ]
+                      [
+                        sp:varName "sType"^^xsd:string ;
+                      ]
+                      [
+                        sp:varName "oType"^^xsd:string ;
+                      ]
+                      [
+                        sp:expression [
+                            rdf:type sp:Count ;
+                            sp:distinct "true"^^xsd:boolean ;
+                          ] ;
+                        sp:varName "w"^^xsd:string ;
+                      ]
+                    ) ;
+                  sp:where (
+                      [
+                        sp:object [
+                            sp:varName "o"^^xsd:string ;
+                          ] ;
+                        sp:predicate [
+                            sp:varName "p"^^xsd:string ;
+                          ] ;
+                        sp:subject [
+                            sp:varName "s"^^xsd:string ;
+                          ] ;
+                      ]
+                      [
+                        sp:object [
+                            sp:varName "sType"^^xsd:string ;
+                          ] ;
+                        sp:predicate rdf:type ;
+                        sp:subject [
+                            sp:varName "s"^^xsd:string ;
+                          ] ;
+                      ]
+                      [
+                        sp:object [
+                            sp:varName "oType"^^xsd:string ;
+                          ] ;
+                        sp:predicate rdf:type ;
+                        sp:subject [
+                            sp:varName "o"^^xsd:string ;
+                          ] ;
+                      ]
+                      [
+                        rdf:type sp:Filter ;
+                        sp:expression [
+                            rdf:type sp:in ;
+                            sp:arg1 [
+                                sp:varName "p"^^xsd:string ;
+                              ] ;
+                            sp:arg2 rdf:subject ;
+                            sp:arg3 rdf:predicate ;
+                            sp:arg4 rdf:object ;
+                            sp:arg5 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/hasWeight> ;
+                          ] ;
+                      ]
+                    ) ;
+                ] ;
+            ]
+          )
+          [
+            rdf:type sp:Bind ;
+            sp:expression [
+                rdf:type sp:iri ;
+                sp:arg1 [
+                    rdf:type sp:concat ;
+                    sp:arg1 "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/di-" ;
+                    sp:arg2 [
+                        rdf:type sp:md5 ;
+                        sp:arg1 [
+                            rdf:type sp:concat ;
+                            sp:arg1 [
+                                rdf:type sp:str ;
+                                sp:arg1 [
+                                    sp:varName "p"^^xsd:string ;
+                                  ] ;
+                              ] ;
+                            sp:arg2 [
+                                rdf:type sp:str ;
+                                sp:arg1 [
+                                    sp:varName "sType"^^xsd:string ;
+                                  ] ;
+                              ] ;
+                            sp:arg3 [
+                                rdf:type sp:str ;
+                                sp:arg1 [
+                                    sp:varName "oType"^^xsd:string ;
+                                  ] ;
+                              ] ;
+                            sp:arg4 [
+                                sp:varName "executionId"^^xsd:string ;
+                              ] ;
+                          ] ;
+                      ] ;
+                  ] ;
+              ] ;
+            sp:variable [
+                sp:varName "di"^^xsd:string ;
+              ] ;
+          ]
+        ) ;
+    ] ;
+.
+<http://onto.fel.cvut.cz/ontologies/lib/module/improve-spo-with-marginals-defs>
+  rdf:type owl:Ontology ;
+  owl:imports <http://spinrdf.org/spin> ;
+  owl:versionInfo "Created with TopBraid Composer" ;
+.
+spo-marginal-ext:filter-out-breakable-patterns
+  rdf:type rdf:Property ;
+  rdfs:range sp:Construct ;
+.
+spo-marginal-ext:get-breakable-patterns
+  rdf:type rdf:Property ;
+  rdfs:range sp:Select ;
+.
+spo-marginal-ext:get-marginal-types
+  rdf:type rdf:Property ;
+  rdfs:range sp:Construct ;
+.
+spo-marginal-ext:get-spo-pattern-data
+  rdf:type rdf:Property ;
+  rdfs:label "retrieve-remote-spo-pattern"^^xsd:string ;
+  rdfs:range sp:Construct ;
+.
+spo-marginal-ext:split-spo-patterns
+  rdf:type rdf:Property ;
+  rdfs:range sp:Construct ;
+.
+spo-marginal-ext:x
+  rdf:type rdf:Property ;
+  rdfs:range sp:Construct ;
+.
+spo-marginal-ext:x_2
+  rdf:type rdf:Property ;
+  rdfs:range sp:Construct ;
+.

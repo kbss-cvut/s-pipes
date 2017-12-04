@@ -1,0 +1,49 @@
+PREFIX :<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/>
+PREFIX spo-sum-desc:<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/spo-summary-descriptor/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+
+CONSTRUCT{
+#    ?pattern rdf:subject ?s;
+#        rdf:predicate ?p;
+#        rdf:object ?o.
+    _:x :subject ?s ;
+        :predicate ?p ;
+        :object ?o .
+    ?s a ?sType.
+    ?o a ?oType.
+    ?s ?p ?o .
+#    ?pattern :hasWeight ?originalWeight.
+}
+WHERE {
+
+  	 SERVICE ?dataServiceUrl {
+       		    SELECT ?s ?o ?p ?sType ?oType  {
+     				{
+#         bind  ?p ?sType ?oType ?pattern ?originalWeight
+#         ${VALUES}
+             		}
+
+     				?s ?p ?o .
+     				FILTER(isIRI(?o))
+
+     				OPTIONAL {
+                              ?s a ?sTopType .
+                     }
+     				FILTER(
+     						( (?sType = owl:Thing) && ( (! bound(?sTopType)) || (?sTopType in ( owl:Thing, rdfs:Resource )) ))
+     						|| ((?sType != owl:Thing) && (?sType = ?sTopType))
+     				)
+
+     				OPTIONAL {
+                              ?o a ?oTopType .
+                     }
+     				FILTER(
+     						( (?oType = owl:Thing) && ( (! bound(?oTopType)) || (?oTopType in ( owl:Thing, rdfs:Resource )) ))
+     						|| ((?oType != owl:Thing) && (?oType = ?oTopType))
+     				)
+                 }
+     #           ${LIMIT_OFFSET}
+     }
+}
