@@ -24,6 +24,7 @@
         <org.springframework.version>4.1.5.RELEASE</org.springframework.version>
         <org.springframework.security.version>4.0.2.RELEASE</org.springframework.security.version>
         <rdf4j.version>2.2</rdf4j.version>
+        <jopa.version>0.9.12</jopa.version>
     </properties>
 
     <dependencyManagement>
@@ -77,6 +78,16 @@
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>
                 <version>2.7.4</version>
+            </dependency>
+            <dependency>
+                <groupId>cz.cvut.kbss.jopa</groupId>
+                <artifactId>jopa-api</artifactId>
+                <version>${jopa.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cz.cvut.kbss.jopa</groupId>
+                <artifactId>jopa-impl</artifactId>
+                <version>${jopa.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

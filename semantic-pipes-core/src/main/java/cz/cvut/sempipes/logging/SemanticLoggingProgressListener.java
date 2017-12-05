@@ -6,8 +6,9 @@ import cz.cvut.kbss.jopa.model.descriptors.EntityDescriptor;
 import cz.cvut.sempipes.Vocabulary;
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ProgressListener;
+import cz.cvut.sempipes.model.SourceDatasetSnapshot;
 import cz.cvut.sempipes.model.Thing;
-import cz.cvut.sempipes.model.transformation;
+import cz.cvut.sempipes.model.Transformation;
 import cz.cvut.sempipes.modules.Module;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -100,13 +101,13 @@ public class SemanticLoggingProgressListener implements ProgressListener {
                                        final Module outputModule,
                                        final ExecutionContext inputContext,
                                        final String predecessorId) {
-        transformation moduleExecution = new transformation();
+        Transformation moduleExecution = new Transformation();
         moduleExecution.setId(getModuleExecutionIri(moduleId));
         executionMap.put(moduleExecution.getId(), moduleExecution);
 
-        Thing input = new Thing();
+        SourceDatasetSnapshot input = new SourceDatasetSnapshot();
         input.setId(saveModelToTemporaryFile(inputContext.getDefaultModel()));
-        moduleExecution.setHas_input(Collections.singleton(input));
+        moduleExecution.setHas_input(input);
 
         if (predecessorId != null) {
             Map<String, Set<String>> properties2 = new HashMap<>();
@@ -121,10 +122,10 @@ public class SemanticLoggingProgressListener implements ProgressListener {
                                         final String moduleId,
                                         final Module module) {
         final EntityManager em = entityManagerMap.get(getPipelineIri(pipelineId));
-        transformation moduleExecution = (transformation) executionMap
+        Transformation moduleExecution = (Transformation) executionMap
             .get(getModuleExecutionIri(moduleId));
 
-        final transformation pipelineExecution = em.find(transformation.class,
+        final Transformation pipelineExecution = em.find(Transformation.class,
             getPipelineIri(pipelineId));
         Map<String, Set<String>> properties = new HashMap<>();
         properties.put(P_HAS_PART, Collections.singleton(moduleExecution.getId()));
@@ -143,7 +144,7 @@ public class SemanticLoggingProgressListener implements ProgressListener {
             em.merge(next, new EntityDescriptor(URI.create(moduleExecution.getId())));
         }
 
-        Thing input = moduleExecution.getHas_input().iterator().next();
+        Thing input = moduleExecution.getHas_input();
         em.merge(input, new EntityDescriptor(URI.create(moduleExecution.getId())));
         em.merge(output, new EntityDescriptor(URI.create(moduleExecution.getId())));
         em.merge(moduleExecution, new EntityDescriptor(URI.create(moduleExecution.getId())));

@@ -17,15 +17,10 @@
     <version>0.0.1</version>
     <packaging>jar</packaging>
 
-    <properties>
-        <jopa.version>0.9.5</jopa.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>cz.cvut.kbss.jopa</groupId>
             <artifactId>jopa-api</artifactId>
-            <version>${jopa.version}</version>
         </dependency>
     </dependencies>
 
