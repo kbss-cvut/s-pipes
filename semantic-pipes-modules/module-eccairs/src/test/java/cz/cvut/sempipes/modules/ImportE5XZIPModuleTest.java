@@ -2,6 +2,7 @@ package cz.cvut.sempipes.modules;
 
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -33,6 +34,7 @@ public class ImportE5XZIPModuleTest extends ImportE5XModuleTest {
     }
 
     @Override
+    @Ignore
     @Test
     public void execute() {
         super.execute();

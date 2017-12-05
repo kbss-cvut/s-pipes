@@ -36,6 +36,7 @@ public class ImportE5XXMLModuleTest extends ImportE5XModuleTest {
     }
 
     @Override
+    @Ignore
     @Test
     public void execute() {
         super.execute();
