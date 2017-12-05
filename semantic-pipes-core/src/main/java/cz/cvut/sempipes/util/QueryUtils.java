@@ -77,23 +77,15 @@ public class QueryUtils {
             QuerySolution querySolution = resultSet.next();
 
             valuesBuffer.append(
-                getResultRow(querySolution).stream()
-                    .map(r -> serializeToSparql(r))
+                resultSet.getResultVars().stream()
+                    .map(querySolution::get)
+                    .map(QueryUtils::serializeToSparql)
                     .collect(Collectors.joining(" ", "  (", ")\n"))
             );
         }
 
         return  valuesBuffer.toString();
     }
-
-    private static List<RDFNode> getResultRow(QuerySolution querySolution) {
-        List<RDFNode> row = new LinkedList<>();
-        querySolution.varNames().forEachRemaining(
-            s -> row.add(querySolution.get(s))
-        );
-        return row;
-    }
-
 
     /**
      * Executes construct query and if it fails executes it with additional debugging information.
