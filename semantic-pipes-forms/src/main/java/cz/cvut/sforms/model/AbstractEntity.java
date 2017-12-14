@@ -1,4 +1,4 @@
-package cz.cvut.sempipes.model;
+package cz.cvut.sforms.model;
 
 import cz.cvut.kbss.jopa.model.annotations.Id;
 import cz.cvut.kbss.jopa.model.annotations.MappedSuperclass;

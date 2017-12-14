@@ -3,14 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.cvut.sempipes.model.qam;
+package cz.cvut.sforms.model;
 
 import cz.cvut.kbss.jopa.model.annotations.OWLClass;
 import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
 import cz.cvut.kbss.jopa.model.annotations.OWLObjectProperty;
 import cz.cvut.kbss.jopa.model.annotations.Types;
-import cz.cvut.sempipes.Vocabulary;
-import cz.cvut.sempipes.model.AbstractEntity;
+import cz.cvut.sforms.Vocabulary;
 import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;

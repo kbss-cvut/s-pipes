@@ -1,4 +1,4 @@
-package cz.cvut.sempipes.model;
+package cz.cvut.sforms.model;
 
 import java.net.URI;
 

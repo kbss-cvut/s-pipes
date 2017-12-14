@@ -1,8 +1,8 @@
 package cz.cvut.sempipes.transform;
 
-import cz.cvut.sempipes.VocabularyJena;
+import cz.cvut.sforms.VocabularyJena;
 import cz.cvut.sempipes.constants.SML;
-import cz.cvut.sempipes.model.qam.Question;
+import cz.cvut.sempipes.model.form.Question;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;

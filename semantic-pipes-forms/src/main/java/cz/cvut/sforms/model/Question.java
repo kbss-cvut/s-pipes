@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.cvut.sempipes.model.qam;
+package cz.cvut.sforms.model;
 
 import cz.cvut.kbss.jopa.model.annotations.CascadeType;
 import cz.cvut.kbss.jopa.model.annotations.FetchType;
@@ -12,8 +12,7 @@ import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
 import cz.cvut.kbss.jopa.model.annotations.OWLObjectProperty;
 import cz.cvut.kbss.jopa.model.annotations.Properties;
 import cz.cvut.kbss.jopa.model.annotations.Types;
-import cz.cvut.sempipes.Vocabulary;
-import cz.cvut.sempipes.model.AbstractEntity;
+import cz.cvut.sforms.Vocabulary;
 import java.net.URI;
 import java.util.HashSet;
 import java.util.Map;
@@ -27,16 +26,7 @@ public class Question extends AbstractEntity {
     @OWLDataProperty(iri = Vocabulary.s_p_label)
     private String label;
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     @OWLDataProperty(iri = Vocabulary.s_p_description)
-
     private String description;
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_related_question, cascade = {CascadeType.MERGE,
@@ -46,7 +36,6 @@ public class Question extends AbstractEntity {
     @OWLObjectProperty(iri = Vocabulary.s_p_has_preceding_question, cascade = {CascadeType.MERGE,
         CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private Set<Question> precedingQuestions = new HashSet<>();
-
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_answer, cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     private Set<Answer> answers = new HashSet<>();
@@ -60,6 +49,13 @@ public class Question extends AbstractEntity {
     @Properties
     private Map<String, Set<String>> properties;
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public String getLabel() {
         return label;

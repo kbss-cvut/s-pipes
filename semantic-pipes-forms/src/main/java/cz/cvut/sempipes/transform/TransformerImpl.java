@@ -1,11 +1,9 @@
 package cz.cvut.sempipes.transform;
 
-import cz.cvut.sempipes.VocabularyJena;
-import cz.cvut.sempipes.model.qam.Answer;
-import cz.cvut.sempipes.model.qam.Question;
-import cz.cvut.sempipes.model.spipes.Module;
-import cz.cvut.sempipes.model.spipes.ModuleType;
+import cz.cvut.sforms.VocabularyJena;
 import static cz.cvut.sempipes.transform.SPipesUtil.isSPipesTerm;
+import cz.cvut.sforms.model.Answer;
+import cz.cvut.sforms.model.Question;
 import java.net.URI;
 import java.util.Collections;
 import java.util.HashSet;
@@ -37,10 +35,7 @@ public class TransformerImpl implements Transformer {
 
         formRootQ.setLabel("Module of type " + moduleType.getProperty(RDFS.label).getString());
         formRootQ.setOrigin(toUri(module));
-        // layout section
-        // layout wizzard-step
 
-        List<Statement> valueStatements = module.listProperties().filterDrop(st -> isSPipesTerm(st.getPredicate())).toList();
         List<Question> subQuestions = new LinkedList<>();
         Question labelQ = null;
         final Question idQ = new Question();
@@ -92,7 +87,6 @@ public class TransformerImpl implements Transformer {
 
 
         final Question lQ = labelQ;
-        // preceding question
         labelQ.setPrecedingQuestions(Collections.singleton(idQ));
         subQuestions.stream()
             .filter(q -> q != lQ)
@@ -102,7 +96,6 @@ public class TransformerImpl implements Transformer {
 
         subQuestions.add(idQ);
 
-        // populate questions based on module values
         formRootQ.setSubQuestions(new HashSet<>(subQuestions));
         return formRootQ;
     }

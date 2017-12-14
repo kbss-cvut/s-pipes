@@ -1,5 +1,5 @@
 
-package cz.cvut.sempipes;
+package cz.cvut.sforms;
 
 
 public class Vocabulary {
