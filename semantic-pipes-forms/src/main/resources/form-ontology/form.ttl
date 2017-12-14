@@ -9,6 +9,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
 
 <http://onto.fel.cvut.cz/ontologies/documentation/answer>
   rdf:type owl:Class ;
@@ -17,6 +18,10 @@
 <http://onto.fel.cvut.cz/ontologies/documentation/todo>
   rdf:type owl:DatatypeProperty ;
 .
+dc:description
+  rdf:type owl:DatatypeProperty ;
+.
+
 <http://onto.fel.cvut.cz/ontologies/form>
   rdf:type owl:Ontology ;
   rdfs:comment "Represent form data." ;

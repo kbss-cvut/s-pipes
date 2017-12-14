@@ -1,0 +1,483 @@
+@prefix : <http://onto.fel.cvut.cz/ontologies/documentation> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix documentation: <http://onto.fel.cvut.cz/ontologies/aviation/documentation/> .
+@prefix swrlb: <http://www.w3.org/2003/11/swrlb#> .
+@prefix swrl: <http://www.w3.org/2003/11/swrl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix doc: <http://onto.fel.cvut.cz/ontologies/documentation/> .
+@prefix aviation: <http://onto.fel.cvut.cz/ontologies/aviation/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix aviation-safety: <http://onto.fel.cvut.cz/ontologies/aviation-safety/> .
+
+<http://onto.fel.cvut.cz/ontologies/documentation> a owl:Ontology ;
+	owl:imports <http://onto.fel.cvut.cz/ontologies/ufo> .
+
+aviation:documentationTODO a owl:AnnotationProperty .
+
+documentation:TODO a owl:AnnotationProperty .
+
+aviation-safety:relates_to a owl:ObjectProperty .
+
+doc:based_on a owl:ObjectProperty ;
+	rdfs:label "based on"@en ;
+	rdfs:subPropertyOf aviation-safety:relates_to .
+
+doc:created_from a owl:ObjectProperty ;
+	rdfs:label "created from"@en ;
+	rdfs:subPropertyOf aviation-safety:relates_to .
+
+doc:based_on_event a owl:ObjectProperty ;
+	rdfs:subPropertyOf doc:based_on .
+
+doc:based_on_occurrence a owl:ObjectProperty ;
+	rdfs:subPropertyOf doc:based_on_event .
+
+doc:documented-by a owl:ObjectProperty ;
+	rdfs:label "documented by"@en ;
+	rdfs:subPropertyOf aviation-safety:relates_to ;
+	owl:inverseOf doc:documents ;
+	rdfs:range doc:logical_record ;
+	rdfs:domain <http://onto.fel.cvut.cz/ontologies/ufo/Entity> .
+
+doc:documents a owl:ObjectProperty ;
+	rdfs:label "documents"@en ;
+	rdfs:subPropertyOf aviation-safety:relates_to ;
+	rdfs:domain doc:logical_record ;
+	rdfs:range <http://onto.fel.cvut.cz/ontologies/ufo/Entity> .
+
+doc:has-author a owl:ObjectProperty ;
+	rdfs:label "has author"@en ;
+	rdfs:subPropertyOf aviation-safety:relates_to ;
+	rdfs:domain doc:logical_record ;
+	rdfs:range <http://onto.fel.cvut.cz/ontologies/ufo/Agent> .
+
+doc:has-document-snapshots a owl:ObjectProperty ;
+	rdfs:label "has document snapshots"@en ;
+	rdfs:subPropertyOf aviation-safety:relates_to ;
+	rdfs:domain doc:logical_document .
+
+doc:has-editor a owl:ObjectProperty ;
+	rdfs:label "has editor"@en ;
+	rdfs:subPropertyOf doc:has-author .
+
+doc:hasConsumer a owl:ObjectProperty ;
+	rdfs:comment "This relates an EntityDocumentation object with an Agent which is interested in this type of EntityDocuement."@en ;
+	rdfs:subPropertyOf aviation-safety:relates_to ;
+	rdfs:domain doc:logical_record ;
+	rdfs:range <http://onto.fel.cvut.cz/ontologies/ufo/Agent> .
+
+doc:has_answer a owl:ObjectProperty ;
+	rdfs:label "má odpověd"@cs , "has answer"@en ;
+	rdfs:subPropertyOf aviation-safety:relates_to ;
+	owl:inverseOf doc:has_question ;
+	rdfs:range doc:logical_record ;
+	rdfs:domain doc:logical_record .
+
+doc:has_documentation_part a owl:ObjectProperty ;
+	rdfs:label "má dokumentační část"@cs , "has documentation part"@en ;
+	rdfs:domain doc:logical_record ;
+	rdfs:range doc:logical_record ;
+	rdfs:subPropertyOf <http://onto.fel.cvut.cz/ontologies/ufo/has_object_part> .
+
+doc:has_last_editor a owl:ObjectProperty ;
+	rdfs:label "has last editor"@en ;
+	rdfs:subPropertyOf doc:has-editor .
+
+doc:has_object_value a owl:ObjectProperty ;
+	rdfs:label "má objektovou hodnotu"@cs , "has object value"@en ;
+	rdfs:domain doc:answer ;
+	rdfs:range <http://onto.fel.cvut.cz/ontologies/ufo/Entity> .
+
+doc:has_option a owl:ObjectProperty ;
+	rdfs:label "má volbu"@cs , "has option"@en ;
+	rdfs:comment "This property links a multiple-choice question with its possible values."@en ;
+	rdfs:subPropertyOf aviation-safety:relates_to ;
+	rdfs:range doc:option ;
+	rdfs:domain doc:question .
+
+doc:has_question a owl:ObjectProperty ;
+	rdfs:label "má otázku"@cs , "has question"@en ;
+	rdfs:subPropertyOf aviation-safety:relates_to ;
+	rdfs:domain doc:logical_record ;
+	rdfs:range doc:logical_record .
+
+doc:has_related_question a owl:ObjectProperty ;
+	rdfs:label "has related question"@en ;
+	rdfs:subPropertyOf <http://onto.fel.cvut.cz/ontologies/ufo/has_part> .
+
+doc:has_reporting_phase a owl:ObjectProperty ;
+	rdfs:range doc:document_phase ;
+	rdfs:domain doc:logical_document .
+
+doc:has_responsible_agent a owl:ObjectProperty ;
+	rdfs:subPropertyOf aviation-safety:relates_to .
+
+doc:has_responsible_organization a owl:ObjectProperty ;
+	rdfs:subPropertyOf doc:has_responsible_agent .
+
+doc:has_responsible_person a owl:ObjectProperty ;
+	rdfs:subPropertyOf doc:has_responsible_agent .
+
+doc:has_revision a owl:ObjectProperty ;
+	rdfs:label "has revision"@en ;
+	rdfs:subPropertyOf aviation-safety:relates_to .
+
+doc:is_higher_than a owl:ObjectProperty ;
+	rdfs:range doc:document_phase ;
+	rdfs:domain doc:document_phase .
+
+doc:is_realization_of a owl:ObjectProperty ;
+	rdfs:label "je realizací"@cs , "is realization of"@en .
+
+doc:not_known a owl:ObjectProperty ;
+	rdfs:comment "This is used to express that something is not known by a something else. The way that it is used in the document ontology is to express that a collection of terms does not know abobut a given term."@en ;
+	rdfs:domain doc:concept_term_collection ;
+	rdfs:range doc:unknown_concept_term .
+
+doc:represented_using a owl:ObjectProperty ;
+	rdfs:comment "this property is used to state that some document, or its part is represented by using a specific descriptive language, e.g. a specific language as RDF or OWL but also a specific vocabulary which might be represented_using the RDF language and its RDF/XML syntax."@en ;
+	rdfs:subPropertyOf aviation-safety:relates_to .
+
+doc:has-id a owl:DatatypeProperty .
+
+doc:has-name a owl:DatatypeProperty .
+
+doc:has_data_value a owl:DatatypeProperty ;
+	rdfs:label "má datovou hodnotu"@cs , "has data value"@en ;
+	rdfs:domain doc:answer ;
+	rdfs:range rdfs:Literal .
+
+doc:has_file_number a owl:DatatypeProperty ;
+	rdfs:label "has file number"@en .
+
+doc:has_key a owl:DatatypeProperty ;
+	rdfs:label "has key"@en .
+
+aviation-safety:attribute_type a owl:Class ;
+	rdfs:label "Typ atributu"@cs , "Attribute type"@en ;
+	rdfs:subClassOf <http://onto.fel.cvut.cz/ontologies/ufo/power-type> .
+
+<http://onto.fel.cvut.cz/ontologies/aviation/documentation#Resource> a owl:Class ;
+	rdfs:subClassOf doc:SimpleDocumentation .
+
+doc:AtomicStatements a owl:Class ;
+	rdfs:subClassOf doc:Statement .
+
+doc:AudioData a owl:Class ;
+	rdfs:subClassOf doc:SensoryData .
+
+doc:ChangeStatement a owl:Class ;
+	rdfs:subClassOf doc:FactualStatements .
+
+doc:CompositeManifestation a owl:Class ;
+	rdfs:label "CompositeManifestation" ;
+	rdfs:subClassOf <http://onto.fel.cvut.cz/ontologies/ufo/Object> , _:node1c1ar784ux1 .
+
+_:node1c1ar784ux1 a owl:Restriction ;
+	owl:onProperty <http://onto.fel.cvut.cz/ontologies/ufo/has_part> ;
+	owl:someValuesFrom doc:logical_record .
+
+doc:CompositeManifestation aviation:documentationTODO "physical document"@en .
+
+doc:Data a owl:Class ;
+	rdfs:subClassOf doc:logical_record .
+
+doc:Diagrams a owl:Class ;
+	rdfs:subClassOf doc:Statement .
+
+doc:ExistentialStatement a owl:Class ;
+	rdfs:subClassOf doc:FactualStatements .
+
+doc:FactualStatements a owl:Class ;
+	rdfs:subClassOf doc:AtomicStatements .
+
+doc:ImageData a owl:Class ;
+	rdfs:subClassOf doc:SensoryData .
+
+doc:ImperativeStatement a owl:Class ;
+	rdfs:subClassOf doc:AtomicStatements .
+
+doc:NaturalLanguage a owl:Class ;
+	rdfs:subClassOf doc:Statement .
+
+doc:NegationStatement a owl:Class ;
+	rdfs:subClassOf doc:FactualStatements .
+
+doc:OWL a owl:Class ;
+	rdfs:subClassOf doc:Structured .
+
+doc:Relational a owl:Class ;
+	rdfs:subClassOf doc:Structured .
+
+doc:RuleStatement a owl:Class ;
+	rdfs:subClassOf doc:AtomicStatements .
+
+doc:SensoryData a owl:Class ;
+	rdfs:subClassOf doc:SimpleDocumentation .
+
+doc:SimpleDocumentation a owl:Class ;
+	rdfs:subClassOf doc:logical_record .
+
+doc:Statement a owl:Class ;
+	rdfs:subClassOf doc:SimpleDocumentation .
+
+doc:Structured a owl:Class ;
+	rdfs:subClassOf doc:Statement .
+
+doc:Tabular a owl:Class ;
+	rdfs:subClassOf doc:Structured .
+
+doc:TropeAttributionStatement a owl:Class ;
+	rdfs:subClassOf doc:FactualStatements .
+
+doc:VideoData a owl:Class ;
+	rdfs:subClassOf doc:SensoryData .
+
+doc:answer a owl:Class ;
+	rdfs:label "Odpověd"@cs , "Answer"@en ;
+	rdfs:subClassOf doc:logical_record , _:node1c1ar784ux2 .
+
+_:node1c1ar784ux2 a owl:Restriction ;
+	owl:onProperty doc:is_realization_of ;
+	owl:someValuesFrom doc:question .
+
+doc:checklist a owl:Class ;
+	rdfs:label "Kontrolní list"@cs , "Checklist"@en ;
+	rdfs:subClassOf doc:logical_form .
+
+doc:choice_question a owl:Class ;
+	rdfs:label "Choice question"@en ;
+	rdfs:subClassOf doc:simple_attribute .
+
+doc:composite_attribute a owl:Class ;
+	rdfs:label "Složená otázka"@cs , "Composite question"@en ;
+	rdfs:subClassOf doc:question , _:node1c1ar784ux3 .
+
+_:node1c1ar784ux3 a owl:Restriction ;
+	owl:onProperty <http://onto.fel.cvut.cz/ontologies/ufo/has_object_part> ;
+	owl:someValuesFrom doc:question .
+
+doc:concept_term a owl:Class ;
+	rdfs:subClassOf doc:term ;
+	rdfs:comment "A concept term is an object used in descriptive languages (languages that can be used to describe parts of reality) to refer to a concept or object. For example the word car might reffere to the concept of car, the word weather might reffers to the todays weather." .
+
+doc:concept_term_collection a owl:Class ;
+	rdfs:subClassOf doc:logical_document .
+
+doc:data_attribute_value a owl:Class ;
+	rdfs:label "Datová hodnota atributu"@cs , "Data attribute value"@en ;
+	owl:equivalentClass _:node1c1ar784ux4 .
+
+_:node1c1ar784ux4 a owl:Class ;
+	owl:intersectionOf _:node1c1ar784ux5 .
+
+_:node1c1ar784ux5 rdf:first doc:answer ;
+	rdf:rest _:node1c1ar784ux7 .
+
+_:node1c1ar784ux7 rdf:first _:node1c1ar784ux6 .
+
+_:node1c1ar784ux6 a owl:Restriction ;
+	owl:onProperty doc:has_data_value ;
+	owl:someValuesFrom rdfs:Literal .
+
+_:node1c1ar784ux7 rdf:rest rdf:nil .
+
+doc:data_attribute_value rdfs:subClassOf doc:answer .
+
+doc:database a owl:Class ;
+	rdfs:subClassOf doc:document-collection .
+
+doc:default_phase a owl:Class ;
+	rdfs:subClassOf doc:document_phase .
+
+doc:document-collection a owl:Class ;
+	rdfs:subClassOf doc:logical_document .
+
+doc:document_phase a owl:Class ;
+	rdfs:subClassOf <http://onto.fel.cvut.cz/ontologies/ufo/Event> .
+
+doc:document_section a owl:Class ;
+	rdfs:label "Sekce dokumentu"@cs , "Document section"@en ;
+	rdfs:subClassOf doc:logical_record ;
+	rdfs:comment "Any logical record that can be identified by a title/name - e.g. real sections/subsections"@en .
+
+doc:electronic-document a owl:Class ;
+	rdfs:subClassOf doc:logical_document .
+
+doc:email-box a owl:Class ;
+	rdfs:subClassOf doc:document-collection .
+
+doc:filled_form a owl:Class ;
+	rdfs:label "Vyplněný formulář"@cs , "Filled form"@en ;
+	rdfs:subClassOf doc:logical_document , _:node1c1ar784ux8 .
+
+_:node1c1ar784ux8 a owl:Restriction ;
+	owl:onProperty doc:is_realization_of ;
+	owl:someValuesFrom doc:logical_form .
+
+doc:filled_form aviation:documentationTODO "Form instance"@cs .
+
+doc:form a owl:Class ;
+	rdfs:label "form"@en ;
+	rdfs:subClassOf doc:logical_form .
+
+doc:literal_term a owl:Class ;
+	rdfs:subClassOf doc:term .
+
+doc:logical_document a owl:Class ;
+	rdfs:label "Logický dokument"@cs , "Logical document"@en ;
+	rdfs:subClassOf doc:logical_record ;
+	rdfs:comment """Dokument reprezentuje sadu tvrzení (statementů), která je logicky kompaktní, samonosná a identifikovatelná. 
+
+Příkladem dokumentu je Předpis L13, Dodatek N předpisu L13, nebo Nařízení 376/2014."""@cs .
+
+doc:logical_form a owl:Class ;
+	rdfs:label "Logický formulář"@cs , "Logical form"@en ;
+	rdfs:subClassOf doc:logical_document , _:node1c1ar784ux9 .
+
+_:node1c1ar784ux9 a owl:Restriction ;
+	owl:onProperty doc:has_question ;
+	owl:someValuesFrom doc:question .
+
+doc:logical_form rdfs:comment """Tato entita označuje informační artefakt s jednoznačnou identifikací, který sdružuje požadavky (otázky), typicky vyplývající z legislativy.
+
+Příklady zahrnují definice checklistů, definice reportovacích formulářů"""@cs .
+
+doc:logical_record a owl:Class ;
+	rdfs:label "Logický zápis"@cs , "Logical record"@en ;
+	rdfs:subClassOf <http://onto.fel.cvut.cz/ontologies/ufo/Object> , _:node1c1ar784ux10 .
+
+_:node1c1ar784ux10 a owl:Restriction ;
+	owl:onProperty doc:documents ;
+	owl:someValuesFrom <http://onto.fel.cvut.cz/ontologies/ufo/Entity> .
+
+doc:not_processed a owl:Class ;
+	rdfs:subClassOf doc:document_phase .
+
+doc:object_attribute_value a owl:Class ;
+	rdfs:label "Objektová hodnota atributu"@cs , "Object attribute value"@en ;
+	owl:equivalentClass _:node1c1ar784ux11 .
+
+_:node1c1ar784ux11 a owl:Class ;
+	owl:intersectionOf _:node1c1ar784ux12 .
+
+_:node1c1ar784ux12 rdf:first doc:answer ;
+	rdf:rest _:node1c1ar784ux14 .
+
+_:node1c1ar784ux14 rdf:first _:node1c1ar784ux13 .
+
+_:node1c1ar784ux13 a owl:Restriction ;
+	owl:onProperty doc:has_object_value ;
+	owl:someValuesFrom owl:Thing .
+
+_:node1c1ar784ux14 rdf:rest rdf:nil .
+
+doc:object_attribute_value rdfs:subClassOf doc:answer .
+
+doc:possible_concept_term a owl:Class ;
+	rdfs:subClassOf doc:term ;
+	rdfs:comment "The possible concept term is a term that might be a concept term but there is not enough information to determine that it is one and it is not a litera term." .
+
+doc:processed a owl:Class ;
+	rdfs:subClassOf doc:document_phase .
+
+doc:option a owl:Class ;
+	rdfs:label "Volba"@cs , "Option"@en ;
+	rdfs:subClassOf doc:logical_record , _:node1c1ar784ux15 .
+
+_:node1c1ar784ux15 a owl:Restriction ;
+	owl:onProperty _:node1c1ar784ux16 .
+
+_:node1c1ar784ux16 owl:inverseOf doc:has_option .
+
+_:node1c1ar784ux15 owl:someValuesFrom doc:question .
+
+doc:option rdfs:comment "An option represents a part of a question."@en .
+
+doc:question a owl:Class ;
+	rdfs:label "Otázka"@cs , "Question"@en ;
+	rdfs:subClassOf doc:logical_record ;
+	rdfs:comment "Otázka představuje část formuláře, na kterou se očekává vstup od reportéra. Otázka má typ (string, datum, integer, číslo mezi 1 a 5, vyplnění seznamu podotázek atd.)."@cs ;
+	aviation:documentationTODO "vztah mezi otázkou a atributem."@cs .
+
+doc:regulation_document a owl:Class ;
+	rdfs:label "Regulační dokument"@cs , "Regulation document"@en ;
+	rdfs:subClassOf doc:logical_document .
+
+doc:report a owl:Class ;
+	rdfs:label "Zpráva"@cs , "Report"@en ;
+	rdfs:subClassOf doc:logical_document .
+
+doc:root-folder a owl:Class ;
+	rdfs:subClassOf doc:document-collection .
+
+doc:sent_to_sag a owl:Class ;
+	rdfs:subClassOf doc:document_phase .
+
+doc:short_answer_question a owl:Class ;
+	rdfs:label "Short answer question"@en ;
+	rdfs:subClassOf doc:simple_attribute .
+
+doc:simple_attribute a owl:Class ;
+	rdfs:label "Jednoduchá otázka"@cs , "Simple question"@en ;
+	rdfs:subClassOf doc:question .
+
+doc:term a owl:Class ;
+	rdfs:subClassOf doc:logical_record .
+
+doc:unknown_concept_term a owl:Class ;
+	rdfs:subClassOf doc:term ;
+	rdfs:comment "An unknown concept term is a concept term which is not known with respect to a given concept term collection." .
+
+doc:xml a owl:Class ;
+	rdfs:subClassOf doc:electronic-document .
+
+doc:zip a owl:Class ;
+	rdfs:subClassOf doc:electronic-document .
+
+<http://onto.fel.cvut.cz/ontologies/ufo/power-type> a owl:Class .
+
+aviation-safety:ae_long_text a owl:NamedIndividual , aviation-safety:attribute_type ;
+	rdfs:label "Atribut dlouhého textového vstupu"@cs , "Long text attribute"@en .
+
+aviation-safety:ae_selection a owl:NamedIndividual , aviation-safety:attribute_type ;
+	rdfs:label "Atribut výběru"@cs , "Selection attribute"@en .
+
+aviation-safety:ae_short_text a owl:NamedIndividual , aviation-safety:attribute_type ;
+	rdfs:label "Atribut krátkého textového vstupu"@cs , "Short text attribute"@en .
+
+<urn:swrl#x> a swrl:Variable .
+
+<urn:swrl#y> a swrl:Variable .
+
+_:node1c1ar784ux17 a swrl:Imp ;
+	swrl:body _:node1c1ar784ux18 .
+
+_:node1c1ar784ux18 a swrl:AtomList ;
+	rdf:first _:node1c1ar784ux19 .
+
+_:node1c1ar784ux19 a swrl:ClassAtom ;
+	swrl:classPredicate doc:logical_form ;
+	swrl:argument1 <urn:swrl#x> .
+
+_:node1c1ar784ux18 rdf:rest _:node1c1ar784ux20 .
+
+_:node1c1ar784ux20 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node1c1ar784ux21 .
+
+_:node1c1ar784ux21 a swrl:IndividualPropertyAtom ;
+	swrl:propertyPredicate <http://onto.fel.cvut.cz/ontologies/ufo/has_object_part> ;
+	swrl:argument1 <urn:swrl#x> ;
+	swrl:argument2 <urn:swrl#y> .
+
+_:node1c1ar784ux17 swrl:head _:node1c1ar784ux22 .
+
+_:node1c1ar784ux22 a swrl:AtomList ;
+	rdf:rest rdf:nil ;
+	rdf:first _:node1c1ar784ux23 .
+
+_:node1c1ar784ux23 a swrl:ClassAtom ;
+	swrl:classPredicate doc:question ;
+	swrl:argument1 <urn:swrl#y> .

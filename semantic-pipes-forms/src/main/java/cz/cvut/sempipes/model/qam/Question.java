@@ -27,9 +27,26 @@ public class Question extends AbstractEntity {
     @OWLDataProperty(iri = Vocabulary.s_p_label)
     private String label;
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @OWLDataProperty(iri = Vocabulary.s_p_description)
+
+    private String description;
+
     @OWLObjectProperty(iri = Vocabulary.s_p_has_related_question, cascade = {CascadeType.MERGE,
             CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private Set<Question> subQuestions = new HashSet<>();
+
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_preceding_question, cascade = {CascadeType.MERGE,
+        CascadeType.REMOVE}, fetch = FetchType.EAGER)
+    private Set<Question> precedingQuestions = new HashSet<>();
+
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_answer, cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     private Set<Answer> answers = new HashSet<>();
@@ -67,6 +84,15 @@ public class Question extends AbstractEntity {
         }
         this.origin = other.origin;
     }
+
+    public Set<Question> getPrecedingQuestions() {
+        return precedingQuestions;
+    }
+
+    public void setPrecedingQuestions(Set<Question> precedingQuestions) {
+        this.precedingQuestions = precedingQuestions;
+    }
+
 
     public Set<Question> getSubQuestions() {
         return subQuestions;

@@ -1,0 +1,71 @@
+@prefix :      <http://fel.cvut.cz/ontologies/s-pipes-editor/sample-script> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix fn:    <http://www.w3.org/2005/xpath-functions#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix smf:   <http://topbraid.org/sparqlmotionfunctions#> .
+@prefix spif:  <http://spinrdf.org/spif#> .
+@prefix sml:   <http://topbraid.org/sparqlmotionlib#> .
+@prefix arg:   <http://spinrdf.org/arg#> .
+@prefix sm:    <http://topbraid.org/sparqlmotion#> .
+@prefix sp:    <http://spinrdf.org/sp#> .
+@prefix kbss-module: <http://onto.fel.cvut.cz/ontologies/lib/module/> .
+@prefix km-param: <http://onto.fel.cvut.cz/ontologies/lib/module-param/> .
+@prefix afn:   <http://jena.hpl.hp.com/ARQ/function#> .
+@prefix spl:   <http://spinrdf.org/spl#> .
+@prefix daml:  <http://www.daml.org/2001/03/daml+oil#> .
+@prefix spr:   <http://spinrdf.org/spr#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix spin:  <http://spinrdf.org/spin#> .
+@prefix doc:   <http://onto.fel.cvut.cz/ontologies/documentation/> .
+
+
+:bind-salutation
+        a                   sm:Modules , sml:BindWithConstant ;
+        rdfs:label          "Bind salutation" ;
+        sm:next             :bind-greeting-message ;
+        sm:outputVariable   "salutation" ;
+        sml:value           "Hello" .
+
+:bind-person
+        a                   sm:Modules , sml:BindWithConstant ;
+        rdfs:label          "Bind person" ;
+        sm:next             :bind-greeting-message ;
+        sm:outputVariable   "person" ;
+        sml:value           "Robert Plant" .
+
+:bind-greeting-message
+        a                   sm:Modules , sml:BindWithConstant ;
+        rdfs:label          "Bind greeting message" ;
+        sm:next             :bind-greeting-message ;
+        sm:outputVariable   "salutation" ;
+        sml:value [ a        sp:concat ;
+                                    sp:arg1   [ sp:varName  "salutation" ] ;
+                                    sp:arg2   [ sp:varName  " " ] ;
+                                    sp:arg3   [ sp:varName  "person" ] ;
+                                    sp:arg4   [ sp:varName  "." ] ;
+                                  ] .
+
+
+
+sml:BindWithConstant  a  sm:Module ;
+                                  	    sm:icon	         "bath" ;
+                                          rdfs:comment     "Binds a variable with a given RDF node." ;
+                                          rdfs:label       "Bind with constant" ;
+                                          rdfs:subClassOf  sml:ControlFlowModules ;
+                                          spin:constraint  [ a              spl:Argument ;
+                                                             rdfs:comment   "The constant value (either a resource or a literal)." ;
+                                                             spl:predicate  sml:value
+                                                           ] ;
+                                          spin:constraint  [ a                 spl:Argument ;
+                                                             rdfs:comment      "The name of the variable that will hold the constant. Default: text." ;
+                                                             spl:defaultValue  "text" ;
+                                                             spl:predicate     sm:outputVariable
+                                                           ] .
+sm:outputVariable  a  rdf:Property ;
+                                          rdfs:comment  "The name of the declared output variable of a module. This is typically used by modules to enable script users to bind the output of a module with matching variables in the target module." ;
+                                          rdfs:label    "outputVariable" ;
+                                          rdfs:range    xsd:string .
+
+sml:value  a        rdf:Property ;
+        rdfs:label  "value" .

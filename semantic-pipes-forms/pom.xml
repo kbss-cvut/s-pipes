@@ -102,7 +102,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <ontology-iri>http://onto.fel.cvut.cz/ontologies/form</ontology-iri>
+                    <ontology-iri>http://onto.fel.cvut.cz/ontologies/s-pipes-forms</ontology-iri>
                     <package>cz.cvut.sempipes</package>
                     <output-directory>${project.basedir}/src/main/java</output-directory>
                     <mapping-file>${project.basedir}/src/main/resources/form-ontology/mapping</mapping-file>
