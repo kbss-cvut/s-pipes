@@ -183,7 +183,7 @@ public class SempipesServiceControllerTest {
     public void testRunApplyConstructQueryWithVariable() throws Exception {
         VariablesBinding inputVariablesBinding = new VariablesBinding(
                 "sampleServiceUri",
-                ResourceFactory.createResource("http://martin.inbas.cz/openrdf-sesame/repositories/form-generator?default-graph-uri=http://www.inbas.cz/ontologies/reporting-tool/formGen-307795792")
+                ResourceFactory.createResource("http://martin.inbas.cz/rdf4j-server/repositories/form-generator?default-graph-uri=http://www.inbas.cz/ontologies/reporting-tool/formGen-307795792")
         );
 
         testModule(
