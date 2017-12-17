@@ -179,6 +179,7 @@ public class SempipesServiceControllerTest {
                 2);
     }
 
+    @Ignore // works only within fell vpn
     @Test
     public void testRunApplyConstructQueryWithVariable() throws Exception {
         VariablesBinding inputVariablesBinding = new VariablesBinding(
@@ -196,7 +197,7 @@ public class SempipesServiceControllerTest {
         // TODO check number based on service logic
     }
 
-    @Ignore
+    @Ignore // works only within fel vpn
     @Test
     public void testByReportingTool() throws Exception {
         VariablesBinding inputVariablesBinding = new VariablesBinding();
