@@ -8,6 +8,7 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.RDFS;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.InputStream;
@@ -36,6 +37,7 @@ public class TransformerImplTest {
                 .anyMatch(s -> RDFS.Resource.getURI().equals(s.getOrigin().toString())));
     }
 
+    @Ignore
     @Test
     public void script2FormOrdersQuestionsCorrectly() {
         Question root = generateRootQuestion();
