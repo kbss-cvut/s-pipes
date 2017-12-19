@@ -1,6 +1,5 @@
 package cz.cvut.sempipes.transform;
 
-import cz.cvut.sforms.VocabularyJena;
 import cz.cvut.sempipes.constants.SML;
 import cz.cvut.sforms.model.Question;
 import org.apache.jena.rdf.model.Model;
@@ -8,7 +7,6 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.RDFS;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.InputStream;
@@ -37,15 +35,15 @@ public class TransformerImplTest {
                 .anyMatch(s -> RDFS.Resource.getURI().equals(s.getOrigin().toString())));
     }
 
-    @Ignore
     @Test
     public void script2FormOrdersQuestionsCorrectly() {
         Question root = generateRootQuestion();
         Question idQuestion = root.getSubQuestions().stream()
                 .filter(s -> RDFS.Resource.getURI().equals(s.getOrigin().toString()))
                 .collect(Collectors.toList()).get(0);
+
         Optional<Question> labelQuestion = root.getSubQuestions().stream()
-                .filter(s -> s.getOrigin().toString().startsWith(VocabularyJena.s_c_question_origin.toString()))
+                .filter(s -> s.getOrigin().toString().equals(RDFS.label.toString()))
                 .findFirst();
 
         assertTrue(root.getSubQuestions().stream().
@@ -57,6 +55,12 @@ public class TransformerImplTest {
                         .filter(question -> !labelQuestion.get().equals(question))
                         .allMatch((question -> isPrecedingQuestion(labelQuestion.get(), question))) &&
                         isPrecedingQuestion(idQuestion, labelQuestion.get()));
+    }
+
+    @Test
+    public void script2FormAllQuestionsHaveAnswer() {
+        Question root = generateRootQuestion();
+        assertTrue(root.getSubQuestions().stream().allMatch((q) -> q.getAnswers() != null && !q.getAnswers().isEmpty()));
     }
 
     private Question generateRootQuestion() {
