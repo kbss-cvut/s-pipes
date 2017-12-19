@@ -1,28 +1,19 @@
 package cz.cvut.sempipes.transform;
 
 import cz.cvut.sforms.VocabularyJena;
-import static cz.cvut.sempipes.transform.SPipesUtil.isSPipesTerm;
 import cz.cvut.sforms.model.Answer;
 import cz.cvut.sforms.model.Question;
-import java.net.URI;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.ResourceFactory;
-import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.URI;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static cz.cvut.sempipes.transform.SPipesUtil.isSPipesTerm;
 
 public class TransformerImpl implements Transformer {
 
@@ -41,17 +32,17 @@ public class TransformerImpl implements Transformer {
         final Question idQ = new Question();
         idQ.setOrigin(URI.create(RDFS.Resource.getURI()));
         idQ.getAnswers().add(
-            new Answer() {{
-                setCodeValue(URI.create(module.getURI()));
-            }}
+                new Answer() {{
+                    setCodeValue(URI.create(module.getURI()));
+                }}
         );
 
         Set<Resource> processedPredicates = new HashSet<>();
 
-        Map<URI, Statement> origin2st = getOrigin2StatementMap(module);
+        Map<OriginPair<URI, URI>, Statement> origin2st = getOrigin2StatementMap(module);
 
-        for (Map.Entry<URI, Statement> e : origin2st.entrySet()) {
-            URI key = e.getKey();
+        for (Map.Entry<OriginPair<URI, URI>, Statement> e : origin2st.entrySet()) {
+            OriginPair<URI, URI> key = e.getKey();
             Statement st = e.getValue();
 
             Resource p = st.getPredicate();
@@ -59,8 +50,11 @@ public class TransformerImpl implements Transformer {
             processedPredicates.add(p);
             Question subQ = createQuestion(p);
 
-            subQ.getAnswers().add(getAnswer(st.getObject()));
-            subQ.setOrigin(key);
+            Answer a = getAnswer(st.getObject());
+            a.setOrigin(key.a);
+
+            subQ.getAnswers().add(a);
+            subQ.setOrigin(key.q);
 
             if (RDFS.label.equals(st.getPredicate())) {
                 labelQ = subQ;
@@ -70,7 +64,7 @@ public class TransformerImpl implements Transformer {
         }
 
         List<Statement> typeDefinitionStatements = moduleType.listProperties().filterKeep(
-            st -> st.getPredicate().hasURI(VocabularyJena.s_p_constraint.getURI())).toList();
+                st -> st.getPredicate().hasURI(VocabularyJena.s_p_constraint.getURI())).toList();
         for (Statement st : typeDefinitionStatements) {
             Resource p = st.getObject().asResource().getPropertyResourceValue(VocabularyJena.s_p_predicate_A);
 
@@ -89,10 +83,10 @@ public class TransformerImpl implements Transformer {
         final Question lQ = labelQ;
         labelQ.setPrecedingQuestions(Collections.singleton(idQ));
         subQuestions.stream()
-            .filter(q -> q != lQ)
-            .filter(q -> q != idQ)
-            .forEach(
-                q -> q.setPrecedingQuestions(Collections.singleton(lQ)));
+                .filter(q -> q != lQ)
+                .filter(q -> q != idQ)
+                .forEach(
+                        q -> q.setPrecedingQuestions(Collections.singleton(lQ)));
 
         subQuestions.add(idQ);
 
@@ -108,27 +102,27 @@ public class TransformerImpl implements Transformer {
 
         Resource module = outputScript.getResource(form.getOrigin().toString());
 
-        Map<URI, Statement> hashes = getOrigin2StatementMap(module);
+        Map<OriginPair<URI, URI>, Statement> questionStatements = getOrigin2StatementMap(module);
         form.getSubQuestions().forEach((q) -> {
-            Statement s = hashes.get(q.getOrigin());
+            OriginPair<URI, URI> originPair = new OriginPair<>(q.getOrigin(), getAnswer(q).map(Answer::getOrigin).orElse(null));
+            Statement s = questionStatements.get(originPair);
             if (Objects.nonNull(s)) {
                 outputScript.remove(s);
             }
-            RDFNode answer = getAnswerNode(getAnswer(q));
-            if (answer != null) {
-                outputScript.add(s.getSubject(), s.getPredicate(), answer);
+            RDFNode answerNode = getAnswerNode(getAnswer(q).orElse(null));
+            if (answerNode != null) {
+                outputScript.add(s.getSubject(), s.getPredicate(), answerNode);
             }
         });
 
         return outputScript;
     }
 
-
-    private Answer getAnswer(Question q) {
+    private Optional<Answer> getAnswer(Question q) {
         if (q.getAnswers() == null || q.getAnswers().isEmpty()) {
-            return null;
+            return Optional.empty();
         }
-        return new LinkedList<>(q.getAnswers()).get(0);
+        return Optional.of(q.getAnswers().iterator().next());
     }
 
     private RDFNode getAnswerNode(Answer a) {
@@ -148,31 +142,34 @@ public class TransformerImpl implements Transformer {
         Answer a = new Answer();
         if (node.isURIResource()) {
             a.setCodeValue(URI.create(node.asResource().getURI()));
-        } else if (node.isLiteral()) {
+        }
+        else if (node.isLiteral()) {
             a.setTextValue(node.asLiteral().getString());
-        } else {
+        }
+        else {
             throw new IllegalArgumentException("RDFNode " + node + " is wrong");
         }
         return a;
     }
 
-    private Map<URI, Statement> getOrigin2StatementMap(Resource module) {
+    private Map<OriginPair<URI, URI>, Statement> getOrigin2StatementMap(Resource module) {
         return module.listProperties()
-            .filterDrop(st -> isSPipesTerm(st.getPredicate()))
-            .toList().stream()
-            .collect(Collectors.toMap(this::createOrigin, st -> st));
+                .filterDrop(st -> isSPipesTerm(st.getPredicate()))
+                .toList().stream()
+                .collect(Collectors.toMap(st -> new OriginPair<>(createQuestionOrigin(st), createAnswerOrigin(st)), st -> st));
     }
 
     private URI toUri(Resource resource) {
         return URI.create(resource.toString());
     }
 
-    private URI createOrigin(Statement statement) {
-        return URI.create(
-            VocabularyJena.s_c_question_origin.toString()
-                + "/"
-                + createMd5Hash(statement.getPredicate().toString() + statement.getObject().toString())
-        );
+    private URI createQuestionOrigin(Statement statement) {
+        return URI.create(statement.getPredicate().toString());
+    }
+
+    private URI createAnswerOrigin(Statement statement) {
+        return URI.create(VocabularyJena.s_p_has_answer_origin.toString() +
+                "/" + createMd5Hash(statement.getObject().toString()));
     }
 
     private String createMd5Hash(String text) {
@@ -190,5 +187,13 @@ public class TransformerImpl implements Transformer {
         return q;
     }
 
+    public static class OriginPair<Q, A> {
+        public final Q q;
+        public final A a;
 
+        public OriginPair(Q q, A a) {
+            this.q = q;
+            this.a = a;
+        }
+    }
 }
