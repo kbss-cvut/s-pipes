@@ -15,10 +15,6 @@
     <artifactId>semantic-pipes-cli</artifactId>
     <packaging>jar</packaging>
 
-    <properties>
-        <org.apache.jena>3.1.0</org.apache.jena>
-    </properties>
-
     <repositories>
         <repository>
             <id>krizik</id>

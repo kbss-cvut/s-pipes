@@ -13,7 +13,6 @@
     <name>Semantic Pipes Modules - CKAN SPARQL wrapper</name>
     <properties>
         <jopa.version>0.9.5</jopa.version>
-        <rdf4j.version>2.2</rdf4j.version>
     </properties>
     <packaging>jar</packaging>
 
