@@ -23,13 +23,26 @@ public class TransformerImpl implements Transformer {
     public Question script2Form(Model script, Resource module, Resource moduleType) {
 
         Question formRootQ = new Question();
-
+        initializeQuestionUri(formRootQ);
         formRootQ.setLabel("Module of type " + moduleType.getProperty(RDFS.label).getString());
         formRootQ.setOrigin(toUri(module));
+        Set<String> rootLayoutClass = new HashSet<>();
+        rootLayoutClass.add("form");
+        formRootQ.setLayoutClass(rootLayoutClass);
+
+        Question wizardStepQ = new Question();
+        initializeQuestionUri(wizardStepQ);
+        wizardStepQ.setLabel("Module configuration");
+        wizardStepQ.setOrigin(toUri(module));
+        Set<String> wizardStepLayoutClass = new HashSet<>();
+        wizardStepLayoutClass.add("wizard-step");
+        wizardStepLayoutClass.add("section");
+        wizardStepQ.setLayoutClass(wizardStepLayoutClass);
 
         List<Question> subQuestions = new LinkedList<>();
         Question labelQ = null;
         final Question idQ = new Question();
+        initializeQuestionUri(idQ);
         idQ.setOrigin(URI.create(RDFS.Resource.getURI()));
         idQ.getAnswers().add(
                 new Answer() {{
@@ -90,7 +103,8 @@ public class TransformerImpl implements Transformer {
 
         subQuestions.add(idQ);
 
-        formRootQ.setSubQuestions(new HashSet<>(subQuestions));
+        wizardStepQ.setSubQuestions(new HashSet<>(subQuestions));
+        formRootQ.setSubQuestions(Collections.singleton(wizardStepQ));
         return formRootQ;
     }
 
@@ -176,9 +190,13 @@ public class TransformerImpl implements Transformer {
         return DigestUtils.md5Hex(text);
     }
 
+    private void initializeQuestionUri(Question q) {
+        q.setUri(URI.create(VocabularyJena.s_c_question + "-" + UUID.randomUUID().toString()));
+    }
+
     private Question createQuestion(Resource property) {
         Question q = new Question();
-
+        initializeQuestionUri(q);
         q.setLabel(property.getURI());
         Statement labelSt = property.getProperty(RDFS.label);
         if (labelSt != null) {

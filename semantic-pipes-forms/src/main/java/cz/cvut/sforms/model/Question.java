@@ -5,14 +5,9 @@
  */
 package cz.cvut.sforms.model;
 
-import cz.cvut.kbss.jopa.model.annotations.CascadeType;
-import cz.cvut.kbss.jopa.model.annotations.FetchType;
-import cz.cvut.kbss.jopa.model.annotations.OWLClass;
-import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
-import cz.cvut.kbss.jopa.model.annotations.OWLObjectProperty;
-import cz.cvut.kbss.jopa.model.annotations.Properties;
-import cz.cvut.kbss.jopa.model.annotations.Types;
+import cz.cvut.kbss.jopa.model.annotations.*;
 import cz.cvut.sforms.Vocabulary;
+
 import java.net.URI;
 import java.util.HashSet;
 import java.util.Map;
@@ -40,7 +35,10 @@ public class Question extends AbstractEntity {
     @OWLObjectProperty(iri = Vocabulary.s_p_has_answer, cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     private Set<Answer> answers = new HashSet<>();
 
-    @OWLObjectProperty(iri = Vocabulary.s_p_has_question_origin)
+    @OWLDataProperty(iri = Vocabulary.s_p_has_layout_class)
+    private Set<String> layoutClass = new HashSet<>();
+
+    @OWLDataProperty(iri = Vocabulary.s_p_has_question_origin)
     private URI origin;
 
     @Types
@@ -122,9 +120,17 @@ public class Question extends AbstractEntity {
         this.types = types;
     }
 
+    public Set<String> getLayoutClass() {
+        return layoutClass;
+    }
+
+    public void setLayoutClass(Set<String> layoutClass) {
+        this.layoutClass = layoutClass;
+    }
+
     @Override
     public String toString() {
-        return "Question (" + types + "){" +
+        return "Question (" + "){" +
                 "answers=" + answers +
                 ", subQuestions=" + subQuestions +
                 '}';
