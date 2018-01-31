@@ -44,6 +44,19 @@
         </plugins>
     </build>
 
+    <scm>
+        <url>https://kbss.felk.cvut.cz/gitblit/summary/semantic-pipes.git</url>
+        <connection>scm:git:https://kbss.felk.cvut.cz/git/semantic-pipes.git</connection>
+    </scm>
+
+    <distributionManagement>
+        <repository>
+            <id>kbss</id>
+            <name>KBSS Maven 2 Repository</name>
+            <url>scp://kbss.felk.cvut.cz/var/www/m2repo</url>
+        </repository>
+    </distributionManagement>
+
     <developers>
         <developer>
             <name>Petr Křemen</name>
