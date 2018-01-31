@@ -21,6 +21,14 @@
     </modules>
 
     <build>
+        <extensions>
+            <!--  Enabling the use of FTP  -->
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh</artifactId>
+                <version>2.12</version>
+            </extension>
+        </extensions>
         <plugins>
             <!-- use mvn license:check to check for missing license headers, mvn license:format to add license headers -->
             <plugin>
