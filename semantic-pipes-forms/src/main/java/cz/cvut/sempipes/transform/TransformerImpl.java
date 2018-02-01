@@ -94,12 +94,12 @@ public class TransformerImpl implements Transformer {
 
 
         final Question lQ = labelQ;
-        labelQ.setPrecedingQuestions(Collections.singleton(idQ));
-        subQuestions.stream()
-                .filter(q -> q != lQ)
-                .filter(q -> q != idQ)
-                .forEach(
-                        q -> q.setPrecedingQuestions(Collections.singleton(lQ)));
+//        labelQ.setPrecedingQuestions(Collections.singleton(idQ));
+//        subQuestions.stream()
+//                .filter(q -> q != lQ)
+//                .filter(q -> q != idQ)
+//                .forEach(
+//                        q -> q.setPrecedingQuestions(Collections.singleton(lQ)));
 
         subQuestions.add(idQ);
 
