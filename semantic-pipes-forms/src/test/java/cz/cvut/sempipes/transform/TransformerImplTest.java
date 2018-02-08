@@ -7,6 +7,7 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.RDFS;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.InputStream;
@@ -81,6 +82,7 @@ public class TransformerImplTest {
         assertTrue(root.getSubQuestions().stream().flatMap((q) -> q.getSubQuestions().stream()).allMatch((q) -> q.getAnswers() != null && !q.getAnswers().isEmpty()));
     }
 
+    @Ignore
     @Test
     public void form2ScriptDoesSomething() {
         Question q = new Question();
