@@ -29,9 +29,7 @@ public class TransformerImpl implements Transformer {
         initializeQuestionUri(formRootQ);
         formRootQ.setLabel("Module of type " + moduleType.getProperty(RDFS.label).getString());
         formRootQ.setOrigin(toUri(module));
-        Set<String> rootLayoutClass = new HashSet<>();
-        rootLayoutClass.add("form");
-        formRootQ.setLayoutClass(rootLayoutClass);
+        formRootQ.setLayoutClass(Collections.singleton("form"));
 
         Question wizardStepQ = new Question();
         initializeQuestionUri(wizardStepQ);
