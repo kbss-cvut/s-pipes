@@ -97,8 +97,17 @@ public class TransformerImpl implements Transformer {
         }
 
 
-        final Question lQ = labelQ;
-        labelQ.setPrecedingQuestions(Collections.singleton(idQ));
+        final Question lQ;
+        if (labelQ == null) {
+            lQ = new Question();
+            initializeQuestionUri(lQ);
+            lQ.setOrigin(URI.create(RDFS.label.getURI()));
+            lQ.setLabel(RDFS.label.getURI());
+            subQuestions.add(lQ);
+        }
+            else
+                lQ = labelQ;
+        lQ.setPrecedingQuestions(Collections.singleton(idQ));
         subQuestions.stream()
                 .filter(q -> q != lQ)
                 .filter(q -> q != idQ)
