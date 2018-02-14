@@ -27,6 +27,7 @@ public class VocabularyJena {
     public static Resource s_c_question = getProperty(cz.cvut.sforms.Vocabulary.s_c_question);
     public static Resource s_c_answer = getProperty(cz.cvut.sforms.Vocabulary.s_c_answer);
     public static Resource s_c_question_origin = getProperty(Vocabulary.s_c_question_origin);
+    public static Resource s_c_answer_origin = getProperty(Vocabulary.s_c_answer_origin);
 
 
     static Property getProperty(String url) {

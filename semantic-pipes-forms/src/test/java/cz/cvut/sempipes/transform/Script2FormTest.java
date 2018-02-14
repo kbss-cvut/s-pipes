@@ -7,20 +7,21 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.RDFS;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.InputStream;
-import java.net.URI;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-public class TransformerImplTest {
-
+/**
+ * Created by Yan Doroshenko (yandoroshenko@protonmail.com) on 14.02.2018.
+ */
+public class Script2FormTest {
     @Test
     public void script2FormCreatesSubQuestions() {
         assertEquals(1, generateRootQuestion().getSubQuestions().size());
@@ -80,24 +81,6 @@ public class TransformerImplTest {
     public void script2FormAllQuestionsHaveAnswer() {
         Question root = generateRootQuestion();
         assertTrue(root.getSubQuestions().stream().flatMap((q) -> q.getSubQuestions().stream()).allMatch((q) -> q.getAnswers() != null && !q.getAnswers().isEmpty()));
-    }
-
-    @Ignore
-    @Test
-    public void form2ScriptDoesSomething() {
-        Question q = new Question();
-        q.setUri(URI.create("https://uri.net/uri"));
-        q.setOrigin(URI.create("https://uri.net/origin"));
-        q.setSubQuestions(new HashSet<Question>() {{
-            add(new Question() {{
-                setUri(URI.create("https://uri.net/subquestion"));
-                setOrigin(URI.create("https://uri.net/subquestion/origin"));
-            }});
-        }});
-        Model out = new TransformerImpl().form2Script(ModelFactory.createDefaultModel(), q);
-        assertFalse(out.listSubjects().toList().isEmpty());
-        assertFalse(out.listObjects().toList().isEmpty());
-        assertFalse(out.listStatements().toList().isEmpty());
     }
 
     private Question generateRootQuestion() {

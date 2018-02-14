@@ -1,10 +1,13 @@
 package cz.cvut.sempipes.transform;
 
+import cz.cvut.sforms.FormUtils;
 import cz.cvut.sforms.VocabularyJena;
 import cz.cvut.sforms.model.Answer;
 import cz.cvut.sforms.model.Question;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.jena.rdf.model.*;
+import org.apache.jena.util.ResourceUtils;
+import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +46,7 @@ public class TransformerImpl implements Transformer {
         Question labelQ = null;
         final Question idQ = new Question();
         initializeQuestionUri(idQ);
+        idQ.setLabel("URI");
         idQ.setOrigin(URI.create(RDFS.Resource.getURI()));
         idQ.getAnswers().add(
                 new Answer() {{
@@ -117,7 +121,7 @@ public class TransformerImpl implements Transformer {
         Resource module = outputScript.getResource(form.getOrigin().toString());
 
         Map<OriginPair<URI, URI>, Statement> questionStatements = getOrigin2StatementMap(module);
-        form.getSubQuestions().forEach((q) -> {
+        findRegularQ(form).forEach((q) -> {
             OriginPair<URI, URI> originPair = new OriginPair<>(q.getOrigin(), getAnswer(q).map(Answer::getOrigin).orElse(null));
             Statement s = questionStatements.get(originPair);
             if (Objects.nonNull(s)) {
@@ -129,7 +133,24 @@ public class TransformerImpl implements Transformer {
             }
         });
 
+        Question uriQ = findUriQ(form);
+        ResourceUtils.renameResource(module, new ArrayList<>(uriQ.getAnswers()).get(0).getCodeValue().toString());
+
         return outputScript;
+    }
+
+    private Question findUriQ(Question root) {
+        Optional<Question> uriQ = FormUtils.flatten(root).stream().filter((q) -> RDFS.Resource.getURI().equals(q.getOrigin().toString())).findFirst();
+        if (uriQ.isPresent())
+            return uriQ.get();
+        throw new IllegalArgumentException("Root question has no subquestion that maps to URI");
+    }
+
+    private Set<Question> findRegularQ(Question root) {
+        return FormUtils.flatten(root).stream()
+                .filter((q) -> q.getSubQuestions() == null || q.getSubQuestions().isEmpty())
+                .filter((q) -> !RDFS.Resource.getURI().equals(q.getOrigin().toString()))
+                .collect(Collectors.toSet());
     }
 
     private Optional<Answer> getAnswer(Question q) {
@@ -182,7 +203,7 @@ public class TransformerImpl implements Transformer {
     }
 
     private URI createAnswerOrigin(Statement statement) {
-        return URI.create(VocabularyJena.s_p_has_answer_origin.toString() +
+        return URI.create(VocabularyJena.s_c_answer_origin.toString() +
                 "/" + createMd5Hash(statement.getObject().toString()));
     }
 
@@ -212,6 +233,23 @@ public class TransformerImpl implements Transformer {
         public OriginPair(Q q, A a) {
             this.q = q;
             this.a = a;
+        }
+
+        @Override
+        public int hashCode() {
+            if (q == null)
+                return a.hashCode();
+            if (a == null)
+                return q.hashCode();
+            return (q.hashCode() + a.hashCode()) % 21;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (!(o instanceof OriginPair))
+                return false;
+            OriginPair p = (OriginPair) o;
+            return Objects.equals(q, p.q) && Objects.equals(a, p.a);
         }
     }
 }
