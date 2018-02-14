@@ -1,4 +1,4 @@
-@prefix :      <http://fel.cvut.cz/ontologies/s-pipes-editor/sample-script> .
+@prefix :      <http://fel.cvut.cz/ontologies/s-pipes-editor/sample-script/> .
 @prefix owl:   <http://www.w3.org/2002/07/owl#> .
 @prefix fn:    <http://www.w3.org/2005/xpath-functions#> .
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
