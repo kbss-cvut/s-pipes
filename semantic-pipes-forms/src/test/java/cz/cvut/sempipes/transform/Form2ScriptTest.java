@@ -7,6 +7,7 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.RDFS;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.InputStream;
@@ -21,12 +22,17 @@ import static org.junit.Assert.assertTrue;
 public class Form2ScriptTest {
 
     private Transformer t = new TransformerImpl();
+    private InputStream sampleScriptIS = getClass().getResourceAsStream("/hello-world-script.ttl");
+    private Model sampleScript = ModelFactory.createDefaultModel().read(sampleScriptIS, null, FileUtils.langTurtle);
+    private Question form;
+
+    @Before
+    public void initForm(){
+        form = getForm();
+    }
 
     @Test
     public void form2ScriptRegularStatementUpdate() {
-        InputStream sampleScriptIS = getClass().getResourceAsStream("/hello-world-script.ttl");
-        Model sampleScript = ModelFactory.createDefaultModel().read(sampleScriptIS, null, FileUtils.langTurtle);
-        Question form = getForm();
         Optional<Question> labelQ = form.getSubQuestions().stream()
                 .flatMap((q) -> q.getSubQuestions().stream())
                 .filter((q) -> q.getAnswers().stream()
@@ -47,16 +53,11 @@ public class Form2ScriptTest {
 
     @Test
     public void form2ScriptModuleURIUpdate() {
-        InputStream sampleScriptIS = getClass().getResourceAsStream("/hello-world-script.ttl");
-        Model sampleScript = ModelFactory.createDefaultModel().read(sampleScriptIS, null, FileUtils.langTurtle);
         Resource bindPerson = sampleScript.getResource("http://fel.cvut.cz/ontologies/s-pipes-editor/sample-script/bind-person");
         int initialSize = bindPerson.listProperties().toList().size();
 
         assertEquals("Bind person", bindPerson.getProperty(RDFS.label).getString());
 
-        Transformer t = new TransformerImpl();
-
-        Question form = t.script2Form(sampleScript, bindPerson, sampleScript.getResource("http://topbraid.org/sparqlmotionlib#BindWithConstant"));
         Optional<Question> uriQ = form.getSubQuestions().stream()
                 .flatMap((q) -> q.getSubQuestions().stream())
                 .filter((q) -> q.getAnswers().stream()
