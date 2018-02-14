@@ -2,9 +2,7 @@ package cz.cvut.sempipes.transform;
 
 import cz.cvut.sforms.model.Answer;
 import cz.cvut.sforms.model.Question;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.*;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.RDFS;
 import org.junit.Before;
@@ -12,9 +10,7 @@ import org.junit.Test;
 
 import java.io.InputStream;
 import java.net.URI;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -27,12 +23,30 @@ public class Form2ScriptTest {
     private Question form;
 
     @Before
-    public void initForm(){
+    public void initForm() {
         form = getForm();
     }
 
     @Test
-    public void form2ScriptRegularStatementUpdate() {
+    public void basicTransformation() {
+        Model m = t.form2Script(sampleScript, form);
+        assertTrue(m.listSubjects().toList().stream().anyMatch((s) -> Objects.equals("http://fel.cvut.cz/ontologies/s-pipes-editor/sample-script/bind-person", s.getURI())));
+        List<Statement> ps = m.listStatements().toList();
+        assertTrue(ps.stream().anyMatch((s) -> Objects.equals(RDFS.label, s.getPredicate())));
+        assertTrue(ps.stream().anyMatch((s) -> Objects.equals(
+                "http://topbraid.org/sparqlmotionlib#value",
+                s.getPredicate().getURI())));
+        assertTrue(ps.stream().anyMatch((s) -> Objects.equals(
+                "http://topbraid.org/sparqlmotion#outputVariable",
+                s.getPredicate().getURI())));
+        List<RDFNode> os = m.listObjects().toList();
+        assertTrue(os.stream().anyMatch((o) -> o.isLiteral() && Objects.equals("Bind person", o.asLiteral().getString())));
+        assertTrue(os.stream().anyMatch((o) -> o.isLiteral() && Objects.equals("person", o.asLiteral().getString())));
+        assertTrue(os.stream().anyMatch((o) -> o.isLiteral() && Objects.equals("Robert Plant", o.asLiteral().getString())));
+    }
+
+    @Test
+    public void regularStatementUpdate() {
         Optional<Question> labelQ = form.getSubQuestions().stream()
                 .flatMap((q) -> q.getSubQuestions().stream())
                 .filter((q) -> q.getAnswers().stream()
@@ -52,7 +66,7 @@ public class Form2ScriptTest {
     }
 
     @Test
-    public void form2ScriptModuleURIUpdate() {
+    public void moduleURIUpdate() {
         Resource bindPerson = sampleScript.getResource("http://fel.cvut.cz/ontologies/s-pipes-editor/sample-script/bind-person");
         int initialSize = bindPerson.listProperties().toList().size();
 
@@ -86,7 +100,7 @@ public class Form2ScriptTest {
         uriQ.setAnswers(Collections.singleton(uriAnswer));
 
         Question labelQ = new Question();
-        labelQ.setUri(URI.create("http://onto.fel.cvut.cz/ontologies/documentation/question-74219998-8fbd-401b-ab3a-806938a4103c"));
+        labelQ.setUri(URI.create("http://onto.fel.cvut.cz/ontologies/documentation/question-74219998-8fbd-401b-ab3a-806938a4103c1"));
         labelQ.setLabel("http://www.w3.org/2000/01/rdf-schema#label");
         labelQ.setOrigin(URI.create("http://www.w3.org/2000/01/rdf-schema#label"));
         labelQ.setPrecedingQuestions(Collections.singleton(uriQ));
@@ -96,7 +110,7 @@ public class Form2ScriptTest {
         labelQ.setAnswers(Collections.singleton(labelAnswer));
 
         Question valueQ = new Question();
-        valueQ.setUri(URI.create("http://onto.fel.cvut.cz/ontologies/documentation/question-74219998-8fbd-401b-ab3a-806938a4103c"));
+        valueQ.setUri(URI.create("http://onto.fel.cvut.cz/ontologies/documentation/question-74219998-8fbd-401b-ab3a-806938a4103c2"));
         valueQ.setLabel("http://topbraid.org/sparqlmotionlib#value");
         valueQ.setDescription("value");
         valueQ.setOrigin(URI.create("http://topbraid.org/sparqlmotionlib#value"));
@@ -107,7 +121,7 @@ public class Form2ScriptTest {
         valueQ.setAnswers(Collections.singleton(valueAnswer));
 
         Question outputVariableQ = new Question();
-        outputVariableQ.setUri(URI.create("http://onto.fel.cvut.cz/ontologies/documentation/question-74219998-8fbd-401b-ab3a-806938a4103c"));
+        outputVariableQ.setUri(URI.create("http://onto.fel.cvut.cz/ontologies/documentation/question-74219998-8fbd-401b-ab3a-806938a4103c3"));
         outputVariableQ.setLabel("http://topbraid.org/sparqlmotion#outputVariable");
         outputVariableQ.setDescription("outputVariable");
         outputVariableQ.setOrigin(URI.create("http://topbraid.org/sparqlmotion#outputVariable"));
