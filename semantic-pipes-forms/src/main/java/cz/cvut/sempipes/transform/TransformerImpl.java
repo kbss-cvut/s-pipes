@@ -7,7 +7,6 @@ import cz.cvut.sforms.model.Question;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.util.ResourceUtils;
-import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,11 +45,9 @@ public class TransformerImpl implements Transformer {
         initializeQuestionUri(idQ);
         idQ.setLabel("URI");
         idQ.setOrigin(URI.create(RDFS.Resource.getURI()));
-        idQ.getAnswers().add(
-                new Answer() {{
-                    setCodeValue(URI.create(module.getURI()));
-                }}
-        );
+        Answer idAnswer = new Answer();
+        idAnswer.setCodeValue(URI.create(module.getURI()));
+        idQ.getAnswers().add(idAnswer);
 
         Set<Resource> processedPredicates = new HashSet<>();
 
@@ -103,8 +100,8 @@ public class TransformerImpl implements Transformer {
             lQ.setLabel(RDFS.label.getURI());
             subQuestions.add(lQ);
         }
-            else
-                lQ = labelQ;
+        else
+            lQ = labelQ;
         lQ.setPrecedingQuestions(Collections.singleton(idQ));
         subQuestions.stream()
                 .filter(q -> q != lQ)
