@@ -24,6 +24,13 @@ public class TransformerImpl implements Transformer {
     @Override
     public Question script2Form(Model script, Resource module, Resource moduleType) {
 
+        if (! URI.create(module.getURI()).isAbsolute()) {
+            throw new IllegalArgumentException("Module uri '" + module.getURI() + "' is not absolute.");
+        }
+        if (! URI.create(moduleType.getURI()).isAbsolute()) {
+            throw new IllegalArgumentException("Module type uri '" + module.getURI() + "' is not absolute.");
+        }
+
         Question formRootQ = new Question();
         initializeQuestionUri(formRootQ);
         formRootQ.setLabel("Module of type " + moduleType.getProperty(RDFS.label).getString());

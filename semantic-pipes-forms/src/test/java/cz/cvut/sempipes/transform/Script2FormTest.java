@@ -8,15 +8,12 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.RDFS;
-import org.hamcrest.CustomTypeSafeMatcher;
-import org.hamcrest.core.IsCollectionContaining;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -26,6 +23,30 @@ import org.junit.Test;
  * Created by Yan Doroshenko (yandoroshenko@protonmail.com) on 14.02.2018.
  */
 public class Script2FormTest {
+
+
+    @Test(expected = IllegalArgumentException.class)
+    public void script2FormWithLocalModuleUriThrowsException()  {
+        Model sampleScript = getScript("/hello-world-script.ttl");
+
+        Resource bindWithConstant = sampleScript.getResource("http://topbraid.org/sparqlmotionlib#BindWithConstant");
+
+        Resource bindFirstName = sampleScript.getResource("null");
+
+       new TransformerImpl().script2Form(sampleScript, bindFirstName, bindWithConstant);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void script2FormWithLocalModuleTypeUriThrowsException()  {
+        Model sampleScript = getScript("/hello-world-script.ttl");
+
+        Resource bindWithConstant = sampleScript.getResource("null");
+
+        Resource bindFirstName = sampleScript.getResource("http://fel.cvut.cz/ontologies/s-pipes-editor/sample-script/bind-first-name");
+
+        new TransformerImpl().script2Form(sampleScript, bindFirstName, bindWithConstant);
+    }
+
 
 
     @Test
@@ -170,7 +191,7 @@ public class Script2FormTest {
     private Model getScript(String resourcePath) {
         InputStream sampleScriptIS = getClass().getResourceAsStream(resourcePath);
 
-        return ModelFactory.createDefaultModel().read(sampleScriptIS, null, FileUtils.langTurtle);
+        return ModelFactory.createDefaultModel().read(sampleScriptIS, "http://myexample/", FileUtils.langTurtle);
     }
 
 }
