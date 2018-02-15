@@ -1,27 +1,89 @@
 package cz.cvut.sempipes.transform;
 
 import cz.cvut.sempipes.constants.SML;
+import cz.cvut.sforms.FormUtils;
 import cz.cvut.sforms.model.Question;
+import java.io.InputStream;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.RDFS;
-import org.junit.Test;
-
-import java.io.InputStream;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
+import org.hamcrest.CustomTypeSafeMatcher;
+import org.hamcrest.core.IsCollectionContaining;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import org.junit.Test;
 
 /**
  * Created by Yan Doroshenko (yandoroshenko@protonmail.com) on 14.02.2018.
  */
 public class Script2FormTest {
+
+
+    @Test
+    public void script2FormWithNoDataCreatesIRIQuestion() {
+        Model sampleScript = getScript("/hello-world-script.ttl");
+
+        Resource bindWithConstant = sampleScript.getResource("http://topbraid.org/sparqlmotionlib#BindWithConstant");
+
+        Resource bindFirstName = sampleScript.getResource("http://fel.cvut.cz/ontologies/s-pipes-editor/sample-script/bind-first-name");
+
+        Question rootQ = new TransformerImpl().script2Form(sampleScript, bindFirstName, bindWithConstant);
+
+        Question iriQuestion = FormUtils.flatten(rootQ).stream().
+            filter(q -> RDFS.Resource.getURI().equals(q.getOrigin().toString()))
+            .findAny().orElse(null);
+
+        assertNotNull(iriQuestion);
+
+        assertTrue(iriQuestion.getAnswers().stream()
+            .anyMatch(a -> bindFirstName.toString().equals(a.getCodeValue().toString())));
+    }
+
+    @Test
+    public void script2FormWithNoDataCreatesLabelQuestion() {
+        Model sampleScript = getScript("/hello-world-script.ttl");
+
+        Resource bindWithConstant = sampleScript.getResource("http://topbraid.org/sparqlmotionlib#BindWithConstant");
+
+        Resource bindFirstName = sampleScript.getResource("http://fel.cvut.cz/ontologies/s-pipes-editor/sample-script/bind-first-name");
+
+        Question rootQ = new TransformerImpl().script2Form(sampleScript, bindFirstName, bindWithConstant);
+
+        assertTrue(FormUtils.flatten(rootQ).stream().
+            anyMatch(q -> RDFS.label.getURI().equals(q.getOrigin().toString())));
+    }
+
+
+    @Test
+    public void script2FormWithNoDataCreatesFormForType() {
+        Model sampleScript = getScript("/hello-world-script.ttl");
+
+        Resource bindWithConstant = sampleScript.getResource("http://topbraid.org/sparqlmotionlib#BindWithConstant");
+
+        Resource bindFirstName = sampleScript.getResource("http://fel.cvut.cz/ontologies/s-pipes-editor/sample-script/bind-first-name");
+
+        Question rootQ = new TransformerImpl().script2Form(sampleScript, bindFirstName, bindWithConstant);
+
+        assertEquals(bindFirstName.toString(), rootQ.getOrigin().toString());
+
+        List<Question> leafQuestions = FormUtils.flatten(rootQ).stream()
+            .filter(q -> q.getSubQuestions().isEmpty())
+            .collect(Collectors.toList());
+
+        assertEquals( 4, leafQuestions.size());
+    }
+
+
+
     @Test
     public void script2FormCreatesSubQuestions() {
         assertEquals(1, generateRootQuestion().getSubQuestions().size());
@@ -84,9 +146,7 @@ public class Script2FormTest {
     }
 
     private Question generateRootQuestion() {
-        InputStream sampleScriptIS = getClass().getResourceAsStream("/hello-world-script.ttl");
-
-        Model sampleScript = ModelFactory.createDefaultModel().read(sampleScriptIS, null, FileUtils.langTurtle);
+        Model sampleScript = getScript("/hello-world-script.ttl");
 
         Resource module = sampleScript.listSubjects().filterKeep(s ->
                 s.getURI() != null && s.getURI().endsWith("bind-person")
@@ -106,4 +166,11 @@ public class Script2FormTest {
         }
         return false;
     }
+
+    private Model getScript(String resourcePath) {
+        InputStream sampleScriptIS = getClass().getResourceAsStream(resourcePath);
+
+        return ModelFactory.createDefaultModel().read(sampleScriptIS, null, FileUtils.langTurtle);
+    }
+
 }
