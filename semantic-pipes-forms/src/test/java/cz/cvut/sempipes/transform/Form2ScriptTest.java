@@ -29,7 +29,7 @@ public class Form2ScriptTest {
 
     @Test
     public void basicTransformation() {
-        Model m = t.form2Script(sampleScript, form);
+        Model m = t.form2Script(sampleScript, form, "http://topbraid.org/sparqlmotionlib#BindWithConstant");
         assertTrue(m.listSubjects().toList().stream().anyMatch((s) -> Objects.equals("http://fel.cvut.cz/ontologies/s-pipes-editor/sample-script/bind-person", s.getURI())));
         List<Statement> ps = m.listStatements().toList();
         assertTrue(ps.stream().anyMatch((s) -> Objects.equals(RDFS.label, s.getPredicate())));
@@ -57,7 +57,7 @@ public class Form2ScriptTest {
 
         labelQ.get().getAnswers().forEach((a) -> a.setTextValue("NEW Bind person"));
 
-        Model outputScript = t.form2Script(sampleScript, form);
+        Model outputScript = t.form2Script(sampleScript, form, "http://topbraid.org/sparqlmotionlib#BindWithConstant");
 
         assertEquals("NEW Bind person", outputScript
                 .getResource("http://fel.cvut.cz/ontologies/s-pipes-editor/sample-script/bind-person")
@@ -82,7 +82,7 @@ public class Form2ScriptTest {
 
         uriQ.get().getAnswers().forEach((a) -> a.setCodeValue(URI.create("http://fel.cvut.cz/ontologies/s-pipes-editor/sample-script/new-bind-person")));
 
-        Model outputScript = t.form2Script(sampleScript, form);
+        Model outputScript = t.form2Script(sampleScript, form, "http://topbraid.org/sparqlmotionlib#BindWithConstant");
         Resource newBindPerson = outputScript.getResource("http://fel.cvut.cz/ontologies/s-pipes-editor/sample-script/new-bind-person");
 
         assertTrue(outputScript.getResource(bindPerson.getURI()).listProperties().toList().isEmpty());

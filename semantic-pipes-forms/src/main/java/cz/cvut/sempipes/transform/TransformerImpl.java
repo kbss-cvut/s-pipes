@@ -6,7 +6,9 @@ import cz.cvut.sforms.model.Answer;
 import cz.cvut.sforms.model.Question;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.jena.rdf.model.*;
+import org.apache.jena.rdf.model.impl.PropertyImpl;
 import org.apache.jena.util.ResourceUtils;
+import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,10 +26,10 @@ public class TransformerImpl implements Transformer {
     @Override
     public Question script2Form(Model script, Resource module, Resource moduleType) {
 
-        if (! URI.create(module.getURI()).isAbsolute()) {
+        if (!URI.create(module.getURI()).isAbsolute()) {
             throw new IllegalArgumentException("Module uri '" + module.getURI() + "' is not absolute.");
         }
-        if (! URI.create(moduleType.getURI()).isAbsolute()) {
+        if (!URI.create(moduleType.getURI()).isAbsolute()) {
             throw new IllegalArgumentException("Module type uri '" + module.getURI() + "' is not absolute.");
         }
 
@@ -54,7 +56,7 @@ public class TransformerImpl implements Transformer {
         idQ.setOrigin(URI.create(RDFS.Resource.getURI()));
         Answer idAnswer = new Answer();
         idAnswer.setCodeValue(URI.create(module.getURI()));
-        idQ.getAnswers().add(idAnswer);
+        idQ.setAnswers(Collections.singleton(idAnswer));
 
         Set<Resource> processedPredicates = new HashSet<>();
 
@@ -94,6 +96,7 @@ public class TransformerImpl implements Transformer {
             Question subQ = createQuestion(p);
 
             subQ.setOrigin(URI.create(p.getURI()));
+            subQ.setAnswers(Collections.singleton(new Answer()));
 
             subQuestions.add(subQ);
         }
@@ -105,6 +108,7 @@ public class TransformerImpl implements Transformer {
             initializeQuestionUri(lQ);
             lQ.setOrigin(URI.create(RDFS.label.getURI()));
             lQ.setLabel(RDFS.label.getURI());
+            lQ.setAnswers(Collections.singleton(new Answer()));
             subQuestions.add(lQ);
         }
         else
@@ -124,28 +128,41 @@ public class TransformerImpl implements Transformer {
     }
 
     @Override
-    public Model form2Script(Model inputScript, Question form) {
+    public Model form2Script(Model inputScript, Question form, String moduleType) {
 
         Model outputScript = ModelFactory.createDefaultModel();
         outputScript.add(inputScript);
 
         Resource module = outputScript.getResource(form.getOrigin().toString());
 
-        Map<OriginPair<URI, URI>, Statement> questionStatements = getOrigin2StatementMap(module);
-        findRegularQ(form).forEach((q) -> {
-            OriginPair<URI, URI> originPair = new OriginPair<>(q.getOrigin(), getAnswer(q).map(Answer::getOrigin).orElse(null));
-            Statement s = questionStatements.get(originPair);
-            if (Objects.nonNull(s)) {
-                outputScript.remove(s);
-            }
-            RDFNode answerNode = getAnswerNode(getAnswer(q).orElse(null));
-            if (answerNode != null) {
-                outputScript.add(s.getSubject(), s.getPredicate(), answerNode);
-            }
-        });
-
         Question uriQ = findUriQ(form);
-        ResourceUtils.renameResource(module, new ArrayList<>(uriQ.getAnswers()).get(0).getCodeValue().toString());
+        URI newUri = new ArrayList<>(uriQ.getAnswers()).get(0).getCodeValue();
+
+        if (module.listProperties().hasNext()) {
+            Map<OriginPair<URI, URI>, Statement> questionStatements = getOrigin2StatementMap(module);
+            findRegularQ(form).forEach((q) -> {
+                OriginPair<URI, URI> originPair = new OriginPair<>(q.getOrigin(), getAnswer(q).map(Answer::getOrigin).orElse(null));
+                Statement s = questionStatements.get(originPair);
+                if (Objects.nonNull(s)) {
+                    outputScript.remove(s);
+                }
+                RDFNode answerNode = getAnswerNode(getAnswer(q).orElse(null));
+                if (answerNode != null) {
+                    outputScript.add(s.getSubject(), s.getPredicate(), answerNode);
+                }
+            });
+        }
+        else {
+            outputScript.add(outputScript.getResource(newUri.toString()), RDF.type, outputScript.getResource(moduleType));
+            findRegularQ(form).forEach((q) -> {
+                RDFNode answerNode = getAnswerNode(getAnswer(q).orElse(null));
+                if (answerNode != null) {
+                    outputScript.add(outputScript.getResource(newUri.toString()), new PropertyImpl(q.getOrigin().toString()), answerNode);
+                }
+            });
+        }
+
+        ResourceUtils.renameResource(module, newUri.toString());
 
         return outputScript;
     }
@@ -193,7 +210,7 @@ public class TransformerImpl implements Transformer {
             a.setTextValue(node.asLiteral().getString());
         }
         else {
-            throw new IllegalArgumentException("RDFNode " + node + " is wrong");
+            throw new IllegalArgumentException("RDFNode " + node + " is neither literal, nor resource");
         }
         return a;
     }
