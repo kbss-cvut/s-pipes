@@ -34,16 +34,16 @@ public class DatasetExploringJournalist
     protected String id;
     @Properties
     protected Map<String, Set<String>> properties;
-    @OWLObjectProperty(iri = Vocabulary.s_p_inv_dot_has_dataset_explorer)
-    @ParticipationConstraints({
-        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_dataset_exploration, min = 1, max = 1)
-    })
-    protected DatasetExploration inv_dot_has_dataset_explorer;
     @OWLObjectProperty(iri = Vocabulary.s_p_has_intent)
     @ParticipationConstraints({
         @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_intent, min = 1)
     })
     protected Set<Intent> has_intent;
+    @OWLObjectProperty(iri = Vocabulary.s_p_inv_dot_has_dataset_explorer)
+    @ParticipationConstraints({
+        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_dataset_exploration, min = 1, max = 1)
+    })
+    protected DatasetExploration inv_dot_has_dataset_explorer;
 
     public void setName(String name) {
         this.name = name;
@@ -85,20 +85,20 @@ public class DatasetExploringJournalist
         return properties;
     }
 
-    public void setInv_dot_has_dataset_explorer(DatasetExploration inv_dot_has_dataset_explorer) {
-        this.inv_dot_has_dataset_explorer = inv_dot_has_dataset_explorer;
-    }
-
-    public DatasetExploration getInv_dot_has_dataset_explorer() {
-        return inv_dot_has_dataset_explorer;
-    }
-
     public void setHas_intent(Set<Intent> has_intent) {
         this.has_intent = has_intent;
     }
 
     public Set<Intent> getHas_intent() {
         return has_intent;
+    }
+
+    public void setInv_dot_has_dataset_explorer(DatasetExploration inv_dot_has_dataset_explorer) {
+        this.inv_dot_has_dataset_explorer = inv_dot_has_dataset_explorer;
+    }
+
+    public DatasetExploration getInv_dot_has_dataset_explorer() {
+        return inv_dot_has_dataset_explorer;
     }
 
 }

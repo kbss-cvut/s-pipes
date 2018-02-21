@@ -34,21 +34,21 @@ public class DatasetPublication
     protected String id;
     @Properties
     protected Map<String, Set<String>> properties;
-    @OWLObjectProperty(iri = Vocabulary.s_p_has_source)
-    @ParticipationConstraints({
-        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_single_snapshot_dataset_source, min = 1)
-    })
-    protected Set<Thing> has_source;
-    @OWLObjectProperty(iri = Vocabulary.s_p_has_publisher)
-    @ParticipationConstraints({
-        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_publisher, min = 1, max = 1)
-    })
-    protected Set<Thing> has_publisher;
     @OWLObjectProperty(iri = Vocabulary.s_p_has_published_dataset_snapshot)
     @ParticipationConstraints({
         @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_dataset_snapshot, min = 1, max = 1)
     })
     protected DatasetSnapshot has_published_dataset_snapshot;
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_publisher)
+    @ParticipationConstraints({
+        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_publisher, min = 1, max = 1)
+    })
+    protected Set<Thing> has_publisher;
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_source)
+    @ParticipationConstraints({
+        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_single_snapshot_dataset_source, min = 1)
+    })
+    protected Set<Thing> has_source;
 
     public void setName(String name) {
         this.name = name;
@@ -90,12 +90,12 @@ public class DatasetPublication
         return properties;
     }
 
-    public void setHas_source(Set<Thing> has_source) {
-        this.has_source = has_source;
+    public void setHas_published_dataset_snapshot(DatasetSnapshot has_published_dataset_snapshot) {
+        this.has_published_dataset_snapshot = has_published_dataset_snapshot;
     }
 
-    public Set<Thing> getHas_source() {
-        return has_source;
+    public DatasetSnapshot getHas_published_dataset_snapshot() {
+        return has_published_dataset_snapshot;
     }
 
     public void setHas_publisher(Set<Thing> has_publisher) {
@@ -106,12 +106,12 @@ public class DatasetPublication
         return has_publisher;
     }
 
-    public void setHas_published_dataset_snapshot(DatasetSnapshot has_published_dataset_snapshot) {
-        this.has_published_dataset_snapshot = has_published_dataset_snapshot;
+    public void setHas_source(Set<Thing> has_source) {
+        this.has_source = has_source;
     }
 
-    public DatasetSnapshot getHas_published_dataset_snapshot() {
-        return has_published_dataset_snapshot;
+    public Set<Thing> getHas_source() {
+        return has_source;
     }
 
 }

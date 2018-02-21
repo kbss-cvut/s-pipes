@@ -34,16 +34,16 @@ public class DataItem
     protected String id;
     @Properties
     protected Map<String, Set<String>> properties;
-    @OWLObjectProperty(iri = Vocabulary.s_p_inv_dot_has_member)
-    @ParticipationConstraints({
-        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_data, min = 1, max = 1)
-    })
-    protected Set<Thing> inv_dot_has_member;
     @OWLObjectProperty(iri = Vocabulary.s_p_inv_dot_has_item)
     @ParticipationConstraints({
         @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_single_item_selector, min = 1, max = 1)
     })
     protected Set<Thing> inv_dot_has_item;
+    @OWLObjectProperty(iri = Vocabulary.s_p_inv_dot_has_member)
+    @ParticipationConstraints({
+        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_data, min = 1, max = 1)
+    })
+    protected Set<Thing> inv_dot_has_member;
 
     public void setName(String name) {
         this.name = name;
@@ -85,20 +85,20 @@ public class DataItem
         return properties;
     }
 
-    public void setInv_dot_has_member(Set<Thing> inv_dot_has_member) {
-        this.inv_dot_has_member = inv_dot_has_member;
-    }
-
-    public Set<Thing> getInv_dot_has_member() {
-        return inv_dot_has_member;
-    }
-
     public void setInv_dot_has_item(Set<Thing> inv_dot_has_item) {
         this.inv_dot_has_item = inv_dot_has_item;
     }
 
     public Set<Thing> getInv_dot_has_item() {
         return inv_dot_has_item;
+    }
+
+    public void setInv_dot_has_member(Set<Thing> inv_dot_has_member) {
+        this.inv_dot_has_member = inv_dot_has_member;
+    }
+
+    public Set<Thing> getInv_dot_has_member() {
+        return inv_dot_has_member;
     }
 
 }

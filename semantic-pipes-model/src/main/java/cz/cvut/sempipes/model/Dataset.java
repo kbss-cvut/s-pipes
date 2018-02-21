@@ -39,26 +39,26 @@ public class Dataset
         @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_dataset, min = 2)
     })
     protected Set<Dataset> has_subdataset;
-    @OWLObjectProperty(iri = Vocabulary.s_p_inv_dot_offers_dataset)
-    @ParticipationConstraints({
-        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_dataset_source, min = 1)
-    })
-    protected Set<DatasetSource> inv_dot_offers_dataset;
-    @OWLObjectProperty(iri = Vocabulary.s_p_inv_dot_has_subdataset)
-    @ParticipationConstraints({
-        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_dataset, min = 1, max = 1)
-    })
-    protected Dataset inv_dot_has_subdataset;
-    @OWLObjectProperty(iri = Vocabulary.s_p_inv_dot_has_explored_dataset)
-    @ParticipationConstraints({
-        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_dataset_exploration, min = 1)
-    })
-    protected Set<DatasetExploration> inv_dot_has_explored_dataset;
     @OWLObjectProperty(iri = Vocabulary.s_p_inv_dot_has_dataset)
     @ParticipationConstraints({
         @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_dataset_snapshot, min = 1)
     })
     protected Set<DatasetSnapshot> inv_dot_has_dataset;
+    @OWLObjectProperty(iri = Vocabulary.s_p_inv_dot_has_explored_dataset)
+    @ParticipationConstraints({
+        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_dataset_exploration, min = 1)
+    })
+    protected Set<DatasetExploration> inv_dot_has_explored_dataset;
+    @OWLObjectProperty(iri = Vocabulary.s_p_inv_dot_has_subdataset)
+    @ParticipationConstraints({
+        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_dataset, min = 1, max = 1)
+    })
+    protected Dataset inv_dot_has_subdataset;
+    @OWLObjectProperty(iri = Vocabulary.s_p_inv_dot_offers_dataset)
+    @ParticipationConstraints({
+        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_dataset_source, min = 1)
+    })
+    protected Set<DatasetSource> inv_dot_offers_dataset;
 
     public void setName(String name) {
         this.name = name;
@@ -108,20 +108,12 @@ public class Dataset
         return has_subdataset;
     }
 
-    public void setInv_dot_offers_dataset(Set<DatasetSource> inv_dot_offers_dataset) {
-        this.inv_dot_offers_dataset = inv_dot_offers_dataset;
+    public void setInv_dot_has_dataset(Set<DatasetSnapshot> inv_dot_has_dataset) {
+        this.inv_dot_has_dataset = inv_dot_has_dataset;
     }
 
-    public Set<DatasetSource> getInv_dot_offers_dataset() {
-        return inv_dot_offers_dataset;
-    }
-
-    public void setInv_dot_has_subdataset(Dataset inv_dot_has_subdataset) {
-        this.inv_dot_has_subdataset = inv_dot_has_subdataset;
-    }
-
-    public Dataset getInv_dot_has_subdataset() {
-        return inv_dot_has_subdataset;
+    public Set<DatasetSnapshot> getInv_dot_has_dataset() {
+        return inv_dot_has_dataset;
     }
 
     public void setInv_dot_has_explored_dataset(Set<DatasetExploration> inv_dot_has_explored_dataset) {
@@ -132,12 +124,20 @@ public class Dataset
         return inv_dot_has_explored_dataset;
     }
 
-    public void setInv_dot_has_dataset(Set<DatasetSnapshot> inv_dot_has_dataset) {
-        this.inv_dot_has_dataset = inv_dot_has_dataset;
+    public void setInv_dot_has_subdataset(Dataset inv_dot_has_subdataset) {
+        this.inv_dot_has_subdataset = inv_dot_has_subdataset;
     }
 
-    public Set<DatasetSnapshot> getInv_dot_has_dataset() {
-        return inv_dot_has_dataset;
+    public Dataset getInv_dot_has_subdataset() {
+        return inv_dot_has_subdataset;
+    }
+
+    public void setInv_dot_offers_dataset(Set<DatasetSource> inv_dot_offers_dataset) {
+        this.inv_dot_offers_dataset = inv_dot_offers_dataset;
+    }
+
+    public Set<DatasetSource> getInv_dot_offers_dataset() {
+        return inv_dot_offers_dataset;
     }
 
 }

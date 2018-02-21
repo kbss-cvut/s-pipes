@@ -39,16 +39,16 @@ public class Transformation
         @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_source_dataset_snapshot, min = 1, max = 1)
     })
     protected SourceDatasetSnapshot has_input;
-    @OWLObjectProperty(iri = Vocabulary.s_p_inv_dot_is_created_by)
-    @ParticipationConstraints({
-        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_execution_context_dataset_source, max = 1)
-    })
-    protected ExecutionContextDatasetSource inv_dot_is_created_by;
     @OWLObjectProperty(iri = Vocabulary.s_p_has_output)
     @ParticipationConstraints({
         @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_target_dataset_snapshot, min = 1, max = 1)
     })
     protected Set<Thing> has_output;
+    @OWLObjectProperty(iri = Vocabulary.s_p_inv_dot_is_created_by)
+    @ParticipationConstraints({
+        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_execution_context_dataset_source, max = 1)
+    })
+    protected ExecutionContextDatasetSource inv_dot_is_created_by;
 
     public void setName(String name) {
         this.name = name;
@@ -98,20 +98,20 @@ public class Transformation
         return has_input;
     }
 
-    public void setInv_dot_is_created_by(ExecutionContextDatasetSource inv_dot_is_created_by) {
-        this.inv_dot_is_created_by = inv_dot_is_created_by;
-    }
-
-    public ExecutionContextDatasetSource getInv_dot_is_created_by() {
-        return inv_dot_is_created_by;
-    }
-
     public void setHas_output(Set<Thing> has_output) {
         this.has_output = has_output;
     }
 
     public Set<Thing> getHas_output() {
         return has_output;
+    }
+
+    public void setInv_dot_is_created_by(ExecutionContextDatasetSource inv_dot_is_created_by) {
+        this.inv_dot_is_created_by = inv_dot_is_created_by;
+    }
+
+    public ExecutionContextDatasetSource getInv_dot_is_created_by() {
+        return inv_dot_is_created_by;
     }
 
 }

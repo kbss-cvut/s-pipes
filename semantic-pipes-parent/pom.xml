@@ -24,7 +24,7 @@
         <org.springframework.version>4.1.5.RELEASE</org.springframework.version>
         <org.springframework.security.version>4.0.2.RELEASE</org.springframework.security.version>
         <rdf4j.version>2.2</rdf4j.version>
-        <jopa.version>0.9.12</jopa.version>
+        <jopa.version>0.9.15</jopa.version>
     </properties>
 
     <dependencyManagement>

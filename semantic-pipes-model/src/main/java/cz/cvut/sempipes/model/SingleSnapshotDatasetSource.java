@@ -36,8 +36,8 @@ public class SingleSnapshotDatasetSource
     protected Map<String, Set<String>> properties;
     @OWLObjectProperty(iri = Vocabulary.s_p_inv_dot_has_source)
     @ParticipationConstraints({
-        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_dataset_publication, min = 1, max = 1),
-        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_description, min = 1)
+        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_description, min = 1),
+        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_dataset_publication, min = 1, max = 1)
     })
     protected DatasetPublication inv_dot_has_source;
 

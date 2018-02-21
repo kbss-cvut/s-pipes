@@ -43,7 +43,7 @@ public class DescribedDataArtifact
     @ParticipationConstraints({
         @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_description, min = 1)
     })
-    protected Set<Description> inv_dot_is_description_of;
+    protected Set<Thing> inv_dot_is_description_of;
 
     public void setName(String name) {
         this.name = name;
@@ -93,11 +93,11 @@ public class DescribedDataArtifact
         return inv_dot_describes;
     }
 
-    public void setInv_dot_is_description_of(Set<Description> inv_dot_is_description_of) {
+    public void setInv_dot_is_description_of(Set<Thing> inv_dot_is_description_of) {
         this.inv_dot_is_description_of = inv_dot_is_description_of;
     }
 
-    public Set<Description> getInv_dot_is_description_of() {
+    public Set<Thing> getInv_dot_is_description_of() {
         return inv_dot_is_description_of;
     }
 

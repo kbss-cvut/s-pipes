@@ -34,31 +34,31 @@ public class DatasetSnapshot
     protected String id;
     @Properties
     protected Map<String, Set<String>> properties;
-    @OWLObjectProperty(iri = Vocabulary.s_p_has_dataset)
-    @ParticipationConstraints({
-        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_dataset, min = 1, max = 1)
-    })
-    protected Set<Thing> has_dataset;
-    @OWLObjectProperty(iri = Vocabulary.s_p_inv_dot_has_published_dataset_snapshot)
-    @ParticipationConstraints({
-        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_dataset_publication, min = 1, max = 1)
-    })
-    protected DatasetPublication inv_dot_has_published_dataset_snapshot;
     @OWLObjectProperty(iri = Vocabulary.s_p_constitutes)
     @ParticipationConstraints({
         @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_data, min = 1)
     })
     protected Set<Thing> constitutes;
-    @OWLObjectProperty(iri = Vocabulary.s_p_inv_dot_has_sub_dataset_snapshot)
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_dataset)
     @ParticipationConstraints({
-        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_dataset_snapshot, max = 1)
+        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_dataset, min = 1, max = 1)
     })
-    protected DatasetSnapshot inv_dot_has_sub_dataset_snapshot;
+    protected Set<Thing> has_dataset;
     @OWLObjectProperty(iri = Vocabulary.s_p_has_sub_dataset_snapshot)
     @ParticipationConstraints({
         @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_dataset_snapshot, min = 2)
     })
     protected Set<Thing> has_sub_dataset_snapshot;
+    @OWLObjectProperty(iri = Vocabulary.s_p_inv_dot_has_published_dataset_snapshot)
+    @ParticipationConstraints({
+        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_dataset_publication, min = 1, max = 1)
+    })
+    protected DatasetPublication inv_dot_has_published_dataset_snapshot;
+    @OWLObjectProperty(iri = Vocabulary.s_p_inv_dot_has_sub_dataset_snapshot)
+    @ParticipationConstraints({
+        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_dataset_snapshot, max = 1)
+    })
+    protected DatasetSnapshot inv_dot_has_sub_dataset_snapshot;
 
     public void setName(String name) {
         this.name = name;
@@ -100,12 +100,28 @@ public class DatasetSnapshot
         return properties;
     }
 
+    public void setConstitutes(Set<Thing> constitutes) {
+        this.constitutes = constitutes;
+    }
+
+    public Set<Thing> getConstitutes() {
+        return constitutes;
+    }
+
     public void setHas_dataset(Set<Thing> has_dataset) {
         this.has_dataset = has_dataset;
     }
 
     public Set<Thing> getHas_dataset() {
         return has_dataset;
+    }
+
+    public void setHas_sub_dataset_snapshot(Set<Thing> has_sub_dataset_snapshot) {
+        this.has_sub_dataset_snapshot = has_sub_dataset_snapshot;
+    }
+
+    public Set<Thing> getHas_sub_dataset_snapshot() {
+        return has_sub_dataset_snapshot;
     }
 
     public void setInv_dot_has_published_dataset_snapshot(DatasetPublication inv_dot_has_published_dataset_snapshot) {
@@ -116,28 +132,12 @@ public class DatasetSnapshot
         return inv_dot_has_published_dataset_snapshot;
     }
 
-    public void setConstitutes(Set<Thing> constitutes) {
-        this.constitutes = constitutes;
-    }
-
-    public Set<Thing> getConstitutes() {
-        return constitutes;
-    }
-
     public void setInv_dot_has_sub_dataset_snapshot(DatasetSnapshot inv_dot_has_sub_dataset_snapshot) {
         this.inv_dot_has_sub_dataset_snapshot = inv_dot_has_sub_dataset_snapshot;
     }
 
     public DatasetSnapshot getInv_dot_has_sub_dataset_snapshot() {
         return inv_dot_has_sub_dataset_snapshot;
-    }
-
-    public void setHas_sub_dataset_snapshot(Set<Thing> has_sub_dataset_snapshot) {
-        this.has_sub_dataset_snapshot = has_sub_dataset_snapshot;
-    }
-
-    public Set<Thing> getHas_sub_dataset_snapshot() {
-        return has_sub_dataset_snapshot;
     }
 
 }
