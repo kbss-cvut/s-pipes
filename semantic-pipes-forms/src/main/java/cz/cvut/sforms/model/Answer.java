@@ -10,6 +10,7 @@ import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
 import cz.cvut.kbss.jopa.model.annotations.OWLObjectProperty;
 import cz.cvut.kbss.jopa.model.annotations.Types;
 import cz.cvut.sforms.Vocabulary;
+
 import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;

@@ -1,6 +1,7 @@
 package cz.cvut.sempipes.transform;
 
 import cz.cvut.sforms.FormUtils;
+import cz.cvut.sforms.Vocabulary;
 import cz.cvut.sforms.VocabularyJena;
 import cz.cvut.sforms.model.Answer;
 import cz.cvut.sforms.model.Question;
@@ -154,6 +155,7 @@ public class TransformerImpl implements Transformer {
         }
         else {
             outputScript.add(outputScript.getResource(newUri.toString()), RDF.type, outputScript.getResource(moduleType));
+            outputScript.add(outputScript.getResource(newUri.toString()), RDF.type, outputScript.getResource(Vocabulary.s_c_Modules_A));
             findRegularQ(form).forEach((q) -> {
                 RDFNode answerNode = getAnswerNode(getAnswer(q).orElse(null));
                 if (answerNode != null) {

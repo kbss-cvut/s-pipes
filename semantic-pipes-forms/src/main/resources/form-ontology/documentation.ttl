@@ -10,8 +10,8 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix aviation-safety: <http://onto.fel.cvut.cz/ontologies/aviation-safety/> .
 
-<http://onto.fel.cvut.cz/ontologies/documentation> a owl:Ontology ;
-	owl:imports <http://onto.fel.cvut.cz/ontologies/ufo> .
+<http://onto.fel.cvut.cz/ontologies/documentation> a owl:Ontology .
+#	owl:imports <http://onto.fel.cvut.cz/ontologies/ufo> .
 
 aviation:documentationTODO a owl:AnnotationProperty .
 

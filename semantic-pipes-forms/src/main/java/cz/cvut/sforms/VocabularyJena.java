@@ -1,6 +1,5 @@
 package cz.cvut.sforms;
 
-import cz.cvut.sforms.Vocabulary;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;

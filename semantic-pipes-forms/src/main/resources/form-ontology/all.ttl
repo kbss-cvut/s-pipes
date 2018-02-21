@@ -5,4 +5,5 @@
   owl:imports <http://spinrdf.org/spin> ;
   owl:imports <http://spinrdf.org/spl> ;
   owl:imports <http://onto.fel.cvut.cz/ontologies/documentation> ;
+  owl:imports <http://onto.fel.cvut.cz/ontologies/s-pipes/model> ;
 .
