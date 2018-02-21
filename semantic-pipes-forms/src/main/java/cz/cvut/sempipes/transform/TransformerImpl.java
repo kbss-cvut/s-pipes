@@ -87,7 +87,7 @@ public class TransformerImpl implements Transformer {
         List<Statement> typeDefinitionStatements = moduleType.listProperties().filterKeep(
                 st -> st.getPredicate().hasURI(VocabularyJena.s_p_constraint.getURI())).toList();
         for (Statement st : typeDefinitionStatements) {
-            Resource p = st.getObject().asResource().getPropertyResourceValue(VocabularyJena.s_p_predicate_A);
+            Resource p = st.getObject().asResource().getPropertyResourceValue(VocabularyJena.s_p_predicate_A_A);
 
             if (processedPredicates.contains(p)) {
                 continue;

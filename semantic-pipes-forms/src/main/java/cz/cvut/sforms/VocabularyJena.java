@@ -13,7 +13,7 @@ public class VocabularyJena {
     public static Property s_p_constraint = getProperty(cz.cvut.sforms.Vocabulary.s_p_constraint);
     public static Property s_p_defaultValue = getProperty(cz.cvut.sforms.Vocabulary.s_p_defaultValue);
     public static Property s_p_optional = getProperty(cz.cvut.sforms.Vocabulary.s_p_optional);
-    public static Property s_p_predicate_A = getProperty(cz.cvut.sforms.Vocabulary.s_p_predicate_A);
+    public static Property s_p_predicate_A_A = getProperty(Vocabulary.s_p_predicate_A_A);
     public static Property s_p_valueType = getProperty(cz.cvut.sforms.Vocabulary.s_p_valueType);
     public static Property s_p_minCount = getProperty(cz.cvut.sforms.Vocabulary.s_p_minCount);
     public static Property s_p_maxCount = getProperty(cz.cvut.sforms.Vocabulary.s_p_maxCount);
