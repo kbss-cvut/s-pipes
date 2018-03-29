@@ -1,5 +1,6 @@
 package cz.cvut.sempipes.modules;
 
+import cz.cvut.sempipes.ModelLogger;
 import cz.cvut.sempipes.constants.KBSS_MODULE;
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
@@ -10,6 +11,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -37,27 +42,27 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
     private static final String TYPE_URI = KBSS_MODULE.uri + MODULE_ID;
     private static final String TYPE_PREFIX = TYPE_URI + "/";
 
-//    @Parameter(urlPrefix = TYPE_PREFIX, name = "marginal-constraint")
+    //@Parameter(urlPrefix = TYPE_PREFIX, name = "marginal-constraint")
     private String marginalConstraint;
 
-//    @Parameter(urlPrefix = TYPE_PREFIX, name = "marginals-defs-file-url")
+    //@Parameter(urlPrefix = TYPE_PREFIX, name = "marginals-defs-file-url")
     private String marginalsDefsFileUrl;
 
-//    @Parameter(urlPrefix = TYPE_PREFIX, name = "data-service-url")
+    //@Parameter(urlPrefix = TYPE_PREFIX, name = "data-service-url")
     private String dataServiceUrl;
 
-    // TODO remove
-    public static Model marginalDefsModelSingleton = null;
+    private static Map<String,Model> marginalDefsModelCache = new HashMap<>();
 
     @Override
     ExecutionContext executeSelf() {
-        Model inputModel = executionContext.getDefaultModel();
-        saveModelToTemporaryFile(inputModel, "input.ttl");
+        final ModelLogger mLOG = new ModelLogger(MODULE_ID, LOG);
+
+        final Model inputModel = executionContext.getDefaultModel();
         VariablesBinding inputVariableBinding = executionContext.getVariablesBinding();
 
         LOG.debug("Loading marginal definitions ...");
         Model marginalDefsModel = loadModelFromFile(marginalsDefsFileUrl);
-//        saveModelToTemporaryFile(marginalDefsModel, "marginal-defs.ttl");
+        mLOG.trace("marginal-defs", marginalDefsModel);
 
         String spoPatternDataQueryTemplate = loadQueryStringFromFile("/get-spo-pattern-data.rq");
         spoPatternDataQueryTemplate = QueryUtils.substituteMarkers("MARGINAL_CONSTRAINT", marginalConstraint, spoPatternDataQueryTemplate);
@@ -77,27 +82,25 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
 
             // get pattern data
             Model patternDataModel = getPatternData(breakablePatternsRS, spoPatternDataQueryTemplate);
-            saveModelToTemporaryFile(patternDataModel, "pattern-data-" + i + ".ttl");
+            mLOG.trace("pattern-data-" + i , patternDataModel);
 
             // extract appropriate marginals
             Model marginalTypesModel = computeMarginalTypesModel(patternDataModel, marginalDefsModel);
-            saveModelToTemporaryFile(marginalTypesModel, "marginal-types-" + i + ".ttl");
+            mLOG.trace("marginal-types-" + i , marginalTypesModel);
 
             Model spoPatternDataWithMarginalsModel = ModelFactory.createUnion(patternDataModel, marginalTypesModel);
-            saveModelToTemporaryFile(spoPatternDataWithMarginalsModel, "pattern-data-with-marginals.ttl");
+            mLOG.trace("pattern-data-with-marginals" , spoPatternDataWithMarginalsModel);
+
             Model brakedPatternModel = computeSPO(spoPatternDataWithMarginalsModel);
-            saveModelToTemporaryFile(brakedPatternModel, "braked-pattern-" + i + ".ttl");
+            mLOG.trace("braked-pattern-" + i , brakedPatternModel);
 
             brakedPatternsOutputModel.add(brakedPatternModel);
-
         }
 
         Model nonBreakablePatternsModel = getNonBreakablePatterns(inputModel);
-        saveModelToTemporaryFile(nonBreakablePatternsModel, "non-breakable-patterns.ttl");
+        mLOG.trace("non-breakable-patterns", nonBreakablePatternsModel);
 
         Model outputModel = mergePatterns(ModelFactory.createUnion(brakedPatternsOutputModel, nonBreakablePatternsModel));
-        saveModelToTemporaryFile(outputModel, "output.ttl");
-
         return ExecutionContextFactory.createContext(outputModel);
     }
 
@@ -137,12 +140,12 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
 
     private Model computeSPO(Model spoPatternDataWithMarginalsModel) {
         LOG.debug("Computing SPO for pattern data with marginals ...");
-        Model marginalTypesModel = QueryUtils.execConstruct(
+        Model spoModel = QueryUtils.execConstruct(
             loadQueryFromFile("/compute-spo.rq"),
             spoPatternDataWithMarginalsModel,
             new QuerySolutionMap()
         );
-        return marginalTypesModel;
+        return spoModel;
     }
 
 
@@ -196,17 +199,34 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
         this.dataServiceUrl = dataServiceUrl;
     }
 
+    // TODO fix ad-hoc cache through static field
     private Model loadModelFromFile(String marginalsFilePath) {
-        LOG.warn("Using singleton binding marginal file path {}", marginalsFilePath );
-        if (marginalDefsModelSingleton == null) {
-            marginalDefsModelSingleton = ModelFactory.createDefaultModel();
-            marginalDefsModelSingleton.read(marginalsFilePath);
+        // clear cache if too big
+        if (marginalDefsModelCache.size() > 10) {
+            marginalDefsModelCache.clear();
         }
-//        Model model = ModelFactory.createDefaultModel();
-//        model.read(marginalsFilePath);
-        return marginalDefsModelSingleton;
+
+        String key = computeFileContentHashKey(marginalsFilePath);
+        Model cachedModel = marginalDefsModelCache.get(key);
+
+        if (cachedModel == null) {
+            cachedModel = ModelFactory.createDefaultModel();
+            cachedModel.read(marginalsFilePath);
+            marginalDefsModelCache.put(key, cachedModel);
+        } else {
+            LOG.debug("Using cached model of file {}", marginalsFilePath);
+        }
+        return cachedModel;
     }
 
+    private String computeFileContentHashKey(String filePath)  {
+        try {
+            return filePath + " -- " + Files.getLastModifiedTime(Paths.get(URI.create(filePath))).toMillis();
+        } catch (IOException e) {
+            LOG.warn("Could not access file from path " + filePath + ": " + e);
+            throw new IllegalArgumentException("Could not access modification time of file from path " + filePath, e);
+        }
+    }
 
 
     private String loadQueryStringFromFile(String resourcePath) {
@@ -273,13 +293,10 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
         }
     }
 
-
-
     @Override
     public String getTypeURI() {
         return TYPE_URI;
     }
-
 
     @Override
     public void loadConfiguration() {
