@@ -21,9 +21,11 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.util.FileUtils;
 import org.eclipse.rdf4j.common.io.GZipUtil;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class ImproveSPOWithMarginalsModuleTest {
+    @Ignore
     @Test
     public void executeSelf() throws Exception {
 
