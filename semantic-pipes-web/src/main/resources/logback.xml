@@ -68,6 +68,9 @@
     <logger name="cz.cvut.sempipes" level="TRACE" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
+    <logger name="cz.cvut.sempipes.modules.ImproveSPOWithMarginalsModule" level="DEBUG" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
     <logger name="cz.cvut.sempipes.config.RDFMediaTypeConverter" level="DEBUG" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
