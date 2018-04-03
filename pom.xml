@@ -17,7 +17,7 @@
         <module>semantic-pipes-web</module>
         <module>semantic-pipes-modules</module>
         <module>semantic-pipes-modules-registry</module>
-        <!--<module>semantic-pipes-forms</module>-->
+        <module>semantic-pipes-forms</module>
     </modules>
 
     <build>
