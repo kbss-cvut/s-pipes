@@ -1,4 +1,4 @@
-package cz.cvut.sempipes.modules;
+package cz.cvut.sempipes.sutime;
 
 
 import java.util.Calendar;

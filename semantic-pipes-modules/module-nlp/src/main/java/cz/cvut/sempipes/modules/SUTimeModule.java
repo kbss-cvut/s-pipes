@@ -3,6 +3,8 @@ package cz.cvut.sempipes.modules;
 import cz.cvut.sempipes.constants.KBSS_MODULE;
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
+import cz.cvut.sempipes.sutime.AnnforModel;
+import cz.cvut.sempipes.sutime.DescriptorModel;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.*;
@@ -10,6 +12,12 @@ import edu.stanford.nlp.time.TimeAnnotations;
 import edu.stanford.nlp.time.TimeAnnotator;
 import edu.stanford.nlp.time.TimeExpression;
 import edu.stanford.nlp.util.CoreMap;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
@@ -17,18 +25,13 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Properties;
 
-/**
- * Created by Miroslav Blasko on 10.10.16.
- */
+
 public class SUTimeModule extends AbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(SUTimeModule.class);
 
-    public static final String TYPE_URI = KBSS_MODULE.getURI()+"su-time";
+    public static final String TYPE_URI = KBSS_MODULE.getURI() + "temporal-v1";
 
     private List<Path> ruleFilePaths = new LinkedList<>();
     private String documentDate; // TODO support other formats ?
@@ -45,83 +48,144 @@ public class SUTimeModule extends AbstractModule {
     @Override
     public void loadConfiguration() {
 
-        if (this.resource.getProperty(SU_TIME.has_document_date) != null) { // TODO set current date if not specified
-            documentDate = getEffectiveValue(SU_TIME.has_document_date).asLiteral().toString();
+        if (this.resource.getProperty(DescriptorModel.has_document_date) != null) { // TODO set current date if not specified
+            documentDate = getEffectiveValue(DescriptorModel.has_document_date).asLiteral().toString();
         }
 
-        if (this.resource.getProperty(SU_TIME.has_rule_file) != null) { //TODO support more rule files
-            ruleFilePaths.add(Paths.get(getEffectiveValue(SU_TIME.has_rule_file).asLiteral().toString()));
+        if (this.resource.getProperty(DescriptorModel.has_rule_file) != null) { //TODO support more rule files
+            ruleFilePaths.add(Paths.get(getEffectiveValue(DescriptorModel.has_rule_file).asLiteral().toString()));
         }
     }
 
     @Override
 
     ExecutionContext executeSelf() {
-        Model defaultModel = executionContext.getDefaultModel();
+        Model inputModel = executionContext.getDefaultModel();
+
+        return ExecutionContextFactory.createContext(analyzeModel(inputModel));
+    }
+
+    private Model analyzeModel(Model m) {
+
+
 
         AnnotationPipeline pipeline = loadPipeline();
-        documentDate = "2016-10-10"; //TODO remove
 
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         List<ReifiedStatement> temporalAnnotationStmts = new LinkedList<>();
+        m.listStatements()
+            .filterDrop(st -> !st.getObject().isLiteral())
+            .toList().forEach(
+            st -> {
+                String objectStr = st.getObject().asLiteral().getLexicalForm();
 
-        defaultModel.listStatements()
-                .filterDrop(st -> !st.getObject().isLiteral())
-                .toList().forEach(
-                st -> {
-                    String objectStr = st.getObject().asLiteral().getLexicalForm();
+                ReifiedStatement reifiedSt = m.createReifiedStatement(st);
+                try {
+                    ArrayList<AnnforModel> singleStDates = temporalAnalysis(pipeline, objectStr);
+                    for(AnnforModel s:singleStDates){
 
-                    Annotation annotation = new Annotation(objectStr);
-                    annotation.set(CoreAnnotations.DocDateAnnotation.class, "2016-10-10");
-                    pipeline.annotate(annotation);
+                        Model  mm = ModelFactory.createDefaultModel();
 
-                    List<CoreMap> timexAnnsAll = annotation.get(TimeAnnotations.TimexAnnotations.class);
-                    for (CoreMap cm : timexAnnsAll) {
-                        List<CoreLabel> tokens = cm.get(CoreAnnotations.TokensAnnotation.class);
+                        Literal beginLiteral = mm.createTypedLiteral(s.getDateBegin());
+                        Literal endLiteral = mm.createTypedLiteral(s.getDateEnd());
+                        reifiedSt.addProperty(RDF.type, DescriptorModel.sutime_extraction);
 
-                        // create reification
-                        ReifiedStatement reifiedSt = defaultModel.createReifiedStatement(st);
-
-                        reifiedSt.addProperty(RDF.type, SU_TIME.sutime_extraction);
-                        reifiedSt.addProperty(SU_TIME.has_character_offset_begin,
-                                tokens.get(0).get(CoreAnnotations.CharacterOffsetBeginAnnotation.class).toString()); // TODO make xsd:int
-                        reifiedSt.addProperty(SU_TIME.has_character_offset_end,
-                                tokens.get(tokens.size() - 1).get(CoreAnnotations.CharacterOffsetEndAnnotation.class).toString());
-                        reifiedSt.addProperty(SU_TIME.has_core_map,
-                                cm.toString());
-                        reifiedSt.addProperty(SU_TIME.has_temporal_expression,
-                                cm.get(TimeExpression.Annotation.class).getTemporal().toString());
+                        reifiedSt.addProperty(DescriptorModel.extracted, s.getDateExtracted());
+                        reifiedSt.addProperty(DescriptorModel.beginDate, beginLiteral);
+                        reifiedSt.addProperty(DescriptorModel.endDate, endLiteral);
+                        reifiedSt.addProperty(DescriptorModel.type, s.getDateType());
 
                         temporalAnnotationStmts.add(reifiedSt);
-
-//                            LOG.trace("Recognized output: " + cm.get(TimeExpression.Annotation.class).getTemporal() + "<-- [from char offset " +
-//                                    tokens.get(0).get(CoreAnnotations.CharacterOffsetBeginAnnotation.class) +
-//                                    " to " + tokens.get(tokens.size() - 1).get(CoreAnnotations.CharacterOffsetEndAnnotation.class) + ']' +
-//                                    " of string -- " + objectStr);
-
-
-//                            LOG.trace("Recognized: " + objectStr + " [from char offset " +
-//                                    tokens.get(0).get(CoreAnnotations.CharacterOffsetBeginAnnotation.class) +
-//                                    " to " + tokens.get(tokens.size() - 1).get(CoreAnnotations.CharacterOffsetEndAnnotation.class) + ']' +
-//                                    " --> " + cm.get(TimeExpression.Annotation.class).getTemporal());
                     }
 
 
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-        );
 
+            });
 
-        // TODO add "replace" attribute as in ApplyConstruct
         Model outputModel = ModelFactory.createDefaultModel();
         temporalAnnotationStmts.forEach(
-                st -> outputModel.add(st.listProperties())
+            st -> outputModel.add(st.listProperties())
         );
+        return outputModel;
 
-        return ExecutionContextFactory.createContext(outputModel);
+
     }
 
+    private ArrayList<AnnforModel> temporalAnalysis(AnnotationPipeline pipeline, String s) throws IOException {
+
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Annotation annotation = new Annotation(s);
+        annotation.set(CoreAnnotations.DocDateAnnotation.class, sdf.format(cal.getTime()));
+        pipeline.annotate(annotation);
+
+        ArrayList<AnnforModel> afmArr = new ArrayList<>();
+
+        List<CoreMap> timexAnnsAll = annotation.get(TimeAnnotations.TimexAnnotations.class);
+        if (!timexAnnsAll.isEmpty()) {
+
+            for (CoreMap cm : timexAnnsAll) {
+                List<CoreLabel> tokens = cm.get(CoreAnnotations.TokensAnnotation.class);
+
+                edu.stanford.nlp.time.SUTime.Temporal temporal = cm.get(TimeExpression.Annotation.class).getTemporal();
+
+                if (!temporal.getTimexType().toString().equals("DURATION") && !temporal.getTimexType().toString().equals("SET")) {
+                    String extractionDateforModel = cm.toString();
+
+                    edu.stanford.nlp.time.SUTime.Time suTimeBegin;
+                    edu.stanford.nlp.time.SUTime.Time suTimeEnd;
+                    String typeDateforModel = temporal.getTimexType().toString();
+
+                    Calendar beginDateforModel = GregorianCalendar.getInstance();
+                    Calendar endDateforModel = GregorianCalendar.getInstance();
+                    Date date;
+                    AnnforModel afm = null;
+
+                    try {
+                        suTimeBegin = temporal.getRange().beginTime();
+                        suTimeEnd = temporal.getRange().endTime();
+
+                        if ((!suTimeBegin.toString().equals("PRESENT_REF")) && (!suTimeBegin.toString().contains("X")) && (!suTimeBegin.toString().contains("UNKNOWN")) && (!suTimeBegin.toString().contains("REF")) && (!suTimeBegin.toString().contains("x")) && (suTimeBegin != null)) {
+
+                            if (sdf.parse(suTimeBegin.toString()) != null) {
+                                date = sdf.parse(suTimeBegin.toString());
+                                beginDateforModel.setTime(date);
+                            }
+                        }
+                        if ((!suTimeEnd.toString().equals("PRESENT_REF")) && (!suTimeEnd.toString().contains("X")) && (!suTimeEnd.toString().contains("UNKNOWN")) && (!suTimeEnd.toString().contains("REF")) && (!suTimeEnd.toString().contains("x")) && (suTimeEnd != null)) {
+
+                            if (sdf.parse(suTimeEnd.toString()) != null) {
+                                date = sdf.parse(suTimeEnd.toString());
+                                endDateforModel.setTime(date);
+
+                            }
+                        }
+
+                        afm = new AnnforModel(beginDateforModel, endDateforModel, typeDateforModel, extractionDateforModel);
+
+                    } catch (NullPointerException e) {
+                        LOG.info("catched in temporalAnalyze " + e.getMessage());
+
+                    } catch (ParseException e) {
+                        LOG.info("catched in parse exception " + e.getMessage());
+                    }
+                    afmArr = new ArrayList<>();
+                    afmArr.add(afm);
+                }
+            }
+        }
+
+        return afmArr;
+
+    }
 
     private AnnotationPipeline loadPipeline() {
         Properties props = new Properties();
+        props.setProperty("sutime.includeRange", "true");
         props.setProperty("sutime.rules", "sutime/defs.txt, sutime/defs.sutime.txt, sutime/english.holidays.sutime.txt, sutime/english.sutime.txt");
         AnnotationPipeline pipeline = new AnnotationPipeline();
         pipeline.addAnnotator(new TokenizerAnnotator(false));
@@ -130,4 +194,8 @@ public class SUTimeModule extends AbstractModule {
         pipeline.addAnnotator(new TimeAnnotator("sutime", props));
         return pipeline;
     }
+
+
+
+
 }

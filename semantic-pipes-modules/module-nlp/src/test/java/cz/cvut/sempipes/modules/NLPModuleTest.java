@@ -20,7 +20,7 @@ public class NLPModuleTest {
     @Test
     public void executeSelf() throws Exception {
 
-        SUTime2Module nlpModule = new SUTime2Module();
+        SUTimeModule nlpModule = new SUTimeModule();
 
         // load input rdf
         Model model = ModelFactory.createDefaultModel();

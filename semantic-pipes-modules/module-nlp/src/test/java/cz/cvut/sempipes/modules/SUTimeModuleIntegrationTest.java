@@ -10,7 +10,7 @@ import org.junit.Test;
 /**
  * Created by Miroslav Blasko on 10.10.16.
  */
-public class SUTime2ModuleIntegrationTest {
+public class SUTimeModuleIntegrationTest {
 
     /********************
      * Use for manual tests
@@ -51,7 +51,7 @@ public class SUTime2ModuleIntegrationTest {
 
         Model inputModel = getModel(inputEndpointUrl, namedGraphUri);
 
-        SUTime2Module module = new SUTime2Module();
+        SUTimeModule module = new SUTimeModule();
 
         module.setInputContext(ExecutionContextFactory.createContext(inputModel));
 
