@@ -1,28 +1,47 @@
 package cz.cvut.sempipes.modules;
 
 
+import java.util.Calendar;
+
 public class AnnforModel {
-    public String getDateBegin() {
+
+    private Calendar dateBegin;
+    private Calendar dateEnd;
+    private String dateType;
+    private String dateExtracted;
+
+    public Calendar getDateBegin() {
         return dateBegin;
     }
 
-    public void setDateBegin(String dateBegin) {
+    public void setDateBegin(Calendar dateBegin) {
         this.dateBegin = dateBegin;
     }
 
-    public String getDateEnd() {
+    public Calendar getDateEnd() {
         return dateEnd;
     }
 
-    public void setDateEnd(String dateEnd) {
+    public void setDateEnd(Calendar dateEnd) {
         this.dateEnd = dateEnd;
     }
 
-    public AnnforModel(String dateBegin, String dateEnd, String dateType, String dateExtraction) {
+    public AnnforModel(Calendar dateBegin, Calendar dateEnd, String dateType, String dateExtracted) {
+
         this.dateBegin = dateBegin;
         this.dateEnd = dateEnd;
         this.dateType = dateType;
-        this.dateExtracted = dateExtraction;
+        this.dateExtracted = dateExtracted;
+    }
+
+    @Override
+    public String toString() {
+        return "AnnforModel{" +
+                "dateBegin=" + dateBegin +
+                ", dateEnd=" + dateEnd +
+                ", dateType='" + dateType + '\'' +
+                ", dateExtracted='" + dateExtracted + '\'' +
+                '}';
     }
 
     public String getDateType() {
@@ -33,10 +52,6 @@ public class AnnforModel {
         this.dateType = dateType;
     }
 
-    private String dateBegin;
-    private String dateEnd;
-    private String dateType;
-    private String dateExtracted;
 
     public String getDateExtracted() {
         return dateExtracted;

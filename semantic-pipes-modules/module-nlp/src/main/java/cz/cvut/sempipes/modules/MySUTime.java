@@ -9,7 +9,7 @@ public class MySUTime {
     /**
      * The namespace of the vocabulary as a string
      */
-    private static final String uri = AnalyzeTemporalModule.TYPE_URI;
+    private static final String uri = SUTime2Module.TYPE_URI;
 
     protected static final Resource resource(String local )
     { return ResourceFactory.createResource( uri + local ); }

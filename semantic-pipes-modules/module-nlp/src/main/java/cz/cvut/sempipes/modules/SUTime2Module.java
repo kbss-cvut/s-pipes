@@ -12,13 +12,11 @@ import edu.stanford.nlp.time.TimeAnnotator;
 import edu.stanford.nlp.time.TimeExpression;
 import edu.stanford.nlp.util.CoreMap;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
+import java.util.*;
+
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
@@ -26,18 +24,13 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Properties;
 
-/**
- * Created by Miroslav Blasko on 10.10.16.
- */
+
 public class SUTime2Module extends AbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(SUTime2Module.class);
 
-    public static final String TYPE_URI = KBSS_MODULE.getURI() + "su-time-v2";
+    public static final String TYPE_URI = KBSS_MODULE.getURI() + "temporal-v1";
 
     private List<Path> ruleFilePaths = new LinkedList<>();
     private String documentDate; // TODO support other formats ?
@@ -54,12 +47,12 @@ public class SUTime2Module extends AbstractModule {
     @Override
     public void loadConfiguration() {
 
-        if (this.resource.getProperty(SU_TIME.has_document_date) != null) { // TODO set current date if not specified
-            documentDate = getEffectiveValue(SU_TIME.has_document_date).asLiteral().toString();
+        if (this.resource.getProperty(MySUTime.has_document_date) != null) { // TODO set current date if not specified
+            documentDate = getEffectiveValue(MySUTime.has_document_date).asLiteral().toString();
         }
 
-        if (this.resource.getProperty(SU_TIME.has_rule_file) != null) { //TODO support more rule files
-            ruleFilePaths.add(Paths.get(getEffectiveValue(SU_TIME.has_rule_file).asLiteral().toString()));
+        if (this.resource.getProperty(MySUTime.has_rule_file) != null) { //TODO support more rule files
+            ruleFilePaths.add(Paths.get(getEffectiveValue(MySUTime.has_rule_file).asLiteral().toString()));
         }
     }
 
@@ -78,7 +71,6 @@ public class SUTime2Module extends AbstractModule {
         AnnotationPipeline pipeline = loadPipeline();
 
 
-       // ArrayList<LocalDate> allStsDates = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         List<ReifiedStatement> temporalAnnotationStmts = new LinkedList<>();
         m.listStatements()
@@ -90,46 +82,28 @@ public class SUTime2Module extends AbstractModule {
                 ReifiedStatement reifiedSt = m.createReifiedStatement(st);
                 try {
                     ArrayList<AnnforModel> singleStDates = temporalAnalysis(pipeline, objectStr);
-                   // ArrayList<LocalDate> singleStAllDates = new ArrayList<>();
                     for(AnnforModel s:singleStDates){
 
-                        String begin = s.getDateBegin();
-                        String end = s.getDateEnd();
-                       // LocalDate beginLocalDate;
-                        //LocalDate endLocalDate;
-//                        try {
-//                            if (!begin.equals("")) {
-//                               // beginLocalDate = LocalDate.parse(begin, formatter);
-//                               // singleStAllDates.add(beginLocalDate);
-//                            }
-//                            if (!end.equals("")) {
-//                                //endLocalDate = LocalDate.parse(end, formatter);
-//                                //singleStAllDates.add(endLocalDate);
-//                            }
-//                        } catch (DateTimeParseException e){
-//                        }
+                        Model  mm = ModelFactory.createDefaultModel();
 
+                        Literal beginLiteral = mm.createTypedLiteral(s.getDateBegin());
+                        Literal endLiteral = mm.createTypedLiteral(s.getDateEnd());
                         reifiedSt.addProperty(RDF.type, MySUTime.sutime_extraction);
 
                         reifiedSt.addProperty(MySUTime.extracted, s.getDateExtracted());
-                        reifiedSt.addProperty(MySUTime.beginDate, begin);
-                        reifiedSt.addProperty(MySUTime.endDate, end);
+                        reifiedSt.addProperty(MySUTime.beginDate, beginLiteral);
+                        reifiedSt.addProperty(MySUTime.endDate, endLiteral);
                         reifiedSt.addProperty(MySUTime.type, s.getDateType());
 
                         temporalAnnotationStmts.add(reifiedSt);
                     }
 
 
-                  //  allStsDates.addAll(singleStAllDates);
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
             });
-
-        //Collections.sort(allStsDates);
-        //LOG.trace("All extracted date : ", allStsDates);
 
         Model outputModel = ModelFactory.createDefaultModel();
         temporalAnnotationStmts.forEach(
@@ -148,66 +122,65 @@ public class SUTime2Module extends AbstractModule {
         annotation.set(CoreAnnotations.DocDateAnnotation.class, sdf.format(cal.getTime()));
         pipeline.annotate(annotation);
 
-        ArrayList<SUTime.Time>  allDatesArr = new ArrayList<>();
         ArrayList<AnnforModel> afmArr = new ArrayList<>();
-//
 
         List<CoreMap> timexAnnsAll = annotation.get(TimeAnnotations.TimexAnnotations.class);
         if (!timexAnnsAll.isEmpty()) {
-            //System.out.println(annotation.get(CoreAnnotations.TextAnnotation.class));
 
             for (CoreMap cm : timexAnnsAll) {
                 List<CoreLabel> tokens = cm.get(CoreAnnotations.TokensAnnotation.class);
 
-                String startOffset = tokens.get(0).get(CoreAnnotations.CharacterOffsetBeginAnnotation.class).toString();
-
-                String endOffset = tokens.get(tokens.size() - 1).get(CoreAnnotations.CharacterOffsetEndAnnotation.class).toString();
-
-                //System.out.println("----------------------");
                 SUTime.Temporal temporal = cm.get(TimeExpression.Annotation.class).getTemporal();
-                String extractionDateforModel = cm.toString();
 
-                SUTime.Time beginTime;
-                SUTime.Time endTime;
-                String typeDateforModel = temporal.getTimexType().toString();
+                if (!temporal.getTimexType().toString().equals("DURATION") && !temporal.getTimexType().toString().equals("SET")) {
+                    String extractionDateforModel = cm.toString();
 
-                String beginDateforModel = "";
-                String endDateforModel = "";
-                AnnforModel afm = new AnnforModel("", "", "", "");
+                    SUTime.Time suTimeBegin;
+                    SUTime.Time suTimeEnd;
+                    String typeDateforModel = temporal.getTimexType().toString();
 
-                try {
-                    beginTime = temporal.getRange().beginTime();
-                    endTime = temporal.getRange().endTime();
-                    if ((!beginTime.toString().equals("PRESENT_REF")) && (!beginTime.toString().contains("X")) && (!beginTime.toString().contains("UNKNOWN")) && (!beginTime.toString().contains("REF")) && (!beginTime.toString().contains("x"))) {
-                        allDatesArr.add(beginTime);
-                        beginDateforModel = beginTime.toString();
+                    Calendar beginDateforModel = GregorianCalendar.getInstance();
+                    Calendar endDateforModel = GregorianCalendar.getInstance();
+                    Date date;
+                    AnnforModel afm = null;
+
+                    try {
+                        suTimeBegin = temporal.getRange().beginTime();
+                        suTimeEnd = temporal.getRange().endTime();
+
+                        if ((!suTimeBegin.toString().equals("PRESENT_REF")) && (!suTimeBegin.toString().contains("X")) && (!suTimeBegin.toString().contains("UNKNOWN")) && (!suTimeBegin.toString().contains("REF")) && (!suTimeBegin.toString().contains("x")) && (suTimeBegin != null)) {
+
+                            if (sdf.parse(suTimeBegin.toString()) != null) {
+                                date = sdf.parse(suTimeBegin.toString());
+                                beginDateforModel.setTime(date);
+                            }
+                        }
+                        if ((!suTimeEnd.toString().equals("PRESENT_REF")) && (!suTimeEnd.toString().contains("X")) && (!suTimeEnd.toString().contains("UNKNOWN")) && (!suTimeEnd.toString().contains("REF")) && (!suTimeEnd.toString().contains("x")) && (suTimeEnd != null)) {
+
+                            if (sdf.parse(suTimeEnd.toString()) != null) {
+                                date = sdf.parse(suTimeEnd.toString());
+                                endDateforModel.setTime(date);
+
+                            }
+                        }
+
+                        afm = new AnnforModel(beginDateforModel, endDateforModel, typeDateforModel, extractionDateforModel);
+
+                    } catch (NullPointerException e) {
+                        LOG.info("catched in temporalAnalyze " + e.getMessage());
+
+                    } catch (ParseException e) {
+                        LOG.info("catched in parse exception " + e.getMessage());
                     }
-                    if ((!endTime.toString().equals("PRESENT_REF")) && (!endTime.toString().contains("X")) && (!endTime.toString().contains("UNKNOWN")) && (!endTime.toString().contains("REF")) && (!endTime.toString().contains("x"))) {
-                        allDatesArr.add(endTime);
-                        endDateforModel = endTime.toString();
-                    }
-
-                    afm = new AnnforModel(beginDateforModel, endDateforModel, typeDateforModel, extractionDateforModel);
-
-                } catch (NullPointerException e) {
-
+                    afmArr = new ArrayList<>();
+                    afmArr.add(afm);
                 }
-                afmArr = new ArrayList<>();
-                afmArr.add(afm);
             }
         }
 
         return afmArr;
 
     }
-
-    private boolean containsString(Object time, String str) {
-        if (time == null) {
-            return false;
-        }
-        return ! time.toString().contains(str);
-    }
-
 
     private AnnotationPipeline loadPipeline() {
         Properties props = new Properties();
