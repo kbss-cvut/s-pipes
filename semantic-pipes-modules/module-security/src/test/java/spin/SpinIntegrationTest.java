@@ -12,6 +12,7 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.sparql.function.FunctionRegistry;
 import org.apache.jena.util.FileUtils;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.topbraid.spin.model.SPINFactory;
 import org.topbraid.spin.util.SPINExpressions;
@@ -46,6 +47,6 @@ public class SpinIntegrationTest {
 
         RDFNode node = SPINExpressions.evaluate(callExpr, callExpr.getModel(), bindings); //TODO resource.getModel() should be part o context
 
-        assertEquals(node.toString(), plainPassword + "ahoj" );
+        assertTrue("Output does not seem to be encoded password.", node.toString().startsWith("$"));
     }
 }
