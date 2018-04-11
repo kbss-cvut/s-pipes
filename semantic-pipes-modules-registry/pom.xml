@@ -72,5 +72,10 @@
             <artifactId>semantic-pipes-modules-form</artifactId>
             <version>${semantic-pipes-modules.version}</version>
         </dependency>
+        <dependency>
+                <groupId>cz.cvut.kbss</groupId>
+                <artifactId>semantic-pipes-modules-security</artifactId>
+                <version>${semantic-pipes-modules.version}</version>
+        </dependency>
     </dependencies>
 </project>

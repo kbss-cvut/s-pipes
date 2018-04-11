@@ -25,6 +25,7 @@
         <module>module-rdfstream</module>
 		<module>module-form</module>
 		<module>module-sparql-endpoint</module>
+		<module>module-security</module>
     </modules>
 
     <dependencyManagement>
