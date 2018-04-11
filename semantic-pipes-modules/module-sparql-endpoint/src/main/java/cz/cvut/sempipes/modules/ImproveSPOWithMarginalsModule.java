@@ -58,7 +58,6 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
         final ModelLogger mLOG = new ModelLogger(MODULE_ID, LOG);
 
         final Model inputModel = executionContext.getDefaultModel();
-        VariablesBinding inputVariableBinding = executionContext.getVariablesBinding();
 
         LOG.debug("Loading marginal definitions ...");
         Model marginalDefsModel = loadModelFromFile(marginalsDefsFileUrl);
@@ -129,8 +128,8 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
 
         Query patternDataQuery = parseQuery(patternDataQueryStr);
         VariablesBinding variablesBinding = new VariablesBinding("dataServiceUrl", ResourceFactory.createResource(dataServiceUrl));
-//        LOG.trace("Pattern data query:\n" + patternDataQueryStr);
-//        LOG.trace("Variables bindings:" + variablesBinding);
+        LOG.trace("Pattern data query:\n" + patternDataQueryStr);
+        LOG.trace("Variables bindings:" + variablesBinding);
         Model patternDataModel = QueryUtils.execConstruct(// TODO !? implement scrollable cursor
             patternDataQuery,
             ModelFactory.createDefaultModel(),

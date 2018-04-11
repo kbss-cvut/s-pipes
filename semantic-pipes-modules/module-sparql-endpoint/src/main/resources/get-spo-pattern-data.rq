@@ -1,3 +1,12 @@
+# gets concrete data annotated and its reification based on input spo-summary pattern
+#
+# input binding:
+#    ?dataServiceUrl
+# input placeholders:
+#    binding of spo varialbes: ?p ?sType ?oType
+#    limit + offset for data retrieval
+
+
 PREFIX :<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/>
 PREFIX spo-sum-desc:<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/spo-summary-descriptor/>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -21,8 +30,8 @@ WHERE {
   	 SERVICE ?dataServiceUrl {
        		    SELECT ?s ?o ?p ?sType ?oType  {
      				{
-#         bind  ?p ?sType ?oType ?pattern ?originalWeight
-#         ${VALUES}
+#                       bind  ?p ?sType ?oType ?pattern ?originalWeight
+#                       ${VALUES}
              		}
 
      				?s ?p ?o .
@@ -30,7 +39,7 @@ WHERE {
 
      				OPTIONAL {
                               ?s a ?sTopType .
-                     }
+                    }
      				FILTER(
      						( (?sType = owl:Thing) && ( (! bound(?sTopType)) || (?sTopType in ( owl:Thing, rdfs:Resource )) ))
      						|| ((?sType != owl:Thing) && (?sType = ?sTopType))
@@ -38,12 +47,12 @@ WHERE {
 
      				OPTIONAL {
                               ?o a ?oTopType .
-                     }
+                    }
      				FILTER(
      						( (?oType = owl:Thing) && ( (! bound(?oTopType)) || (?oTopType in ( owl:Thing, rdfs:Resource )) ))
      						|| ((?oType != owl:Thing) && (?oType = ?oTopType))
      				)
                  }
-     #           ${LIMIT_OFFSET}
+#                ${LIMIT_OFFSET}
      }
 }
