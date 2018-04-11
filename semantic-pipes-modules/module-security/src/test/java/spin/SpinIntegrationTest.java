@@ -20,9 +20,8 @@ import org.topbraid.spin.vocabulary.SP;
 
 public class SpinIntegrationTest {
 
-    @Test
+    @Test //todo rather move to sempipes-core, but create example function
     public void executeSPINExpressionWithCustomJavaFunction() {
-
 
         // load custom function definition
         Model funcDefModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
