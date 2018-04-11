@@ -7,7 +7,7 @@ import org.apache.jena.rdf.model.Resource;
  */
 public interface Function {
 
-    public Resource getResource();
-    public void setResource(Resource resource);
+    Resource getResource();
+    void setResource(Resource resource);
 
 }

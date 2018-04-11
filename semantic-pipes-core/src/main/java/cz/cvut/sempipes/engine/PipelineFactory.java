@@ -1,6 +1,7 @@
 package cz.cvut.sempipes.engine;
 
 import cz.cvut.sempipes.constants.SM;
+import cz.cvut.sempipes.function.ARQFunction;
 import cz.cvut.sempipes.modules.Module;
 import cz.cvut.sempipes.util.JenaPipelineUtils;
 import java.io.FileInputStream;
@@ -16,6 +17,8 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.sparql.function.Function;
+import org.apache.jena.sparql.function.FunctionRegistry;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.RDF;
 import org.jetbrains.annotations.NotNull;
@@ -39,6 +42,7 @@ public class PipelineFactory {
     //TODO move to ModuleRegistry
     static {
         registerModuleTypesOnClassPath();
+        registerFunctionsOnClassPath();
     }
 
     public static Map<Resource, Class<? extends Module>> getModuleTypes() {
@@ -54,9 +58,15 @@ public class PipelineFactory {
     }
 
     private static void _registerModuleType(Resource moduleType, Class<? extends Module> moduleClass) {
-        LOG.info("Registering url to module: {} -> {}", moduleType, moduleClass);
+        LOG.info(" module: {} -> {}", moduleType, moduleClass);
         moduleTypes.put(moduleType, moduleClass);
     }
+
+    private static void _registerFunctionType(Resource functionType, Class<? extends ARQFunction> functionClass) {
+        LOG.info(" function: {} -> {}", functionType, functionClass);
+        FunctionRegistry.get().put(functionType.getURI(), functionClass);
+    }
+
 
     public static void registerModuleTypesOnClassPath() {
 
@@ -78,6 +88,28 @@ public class PipelineFactory {
         );
 
     }
+
+    public static void registerFunctionsOnClassPath() {
+
+        Reflections reflections = new Reflections(
+            new ConfigurationBuilder()
+                .setUrls(ClasspathHelper.forPackage("cz.cvut.sempipes.function"))
+                .setScanners(new SubTypesScanner())
+        );
+
+        List<Class<? extends ARQFunction>> functionClasses = reflections.getSubTypesOf(ARQFunction.class).stream().filter(
+            c -> !Modifier.isAbstract(c.getModifiers())
+        ).collect(Collectors.toList());
+
+        functionClasses.forEach(
+            fClass -> {
+                String uri = instantiateFunction(fClass).getTypeURI();
+                _registerFunctionType(ResourceFactory.createResource(uri), fClass);//TODO ?
+            }
+        );
+
+    }
+
 
 
     //TODO not here ?!
@@ -188,6 +220,15 @@ public class PipelineFactory {
             throw new IllegalArgumentException("Could not instantiate module of type " +  moduleClass);
         }
     }
+
+    public static ARQFunction instantiateFunction(Class<? extends ARQFunction> functionClass) {
+        try {
+            return functionClass.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new IllegalArgumentException("Could not instantiate function of type " +  functionClass);
+        }
+    }
+
 
     public static Module loadModule(@NotNull Path configFilePath, @NotNull String moduleResourceUri) {
         // load config file
