@@ -96,7 +96,10 @@ public class Rdf4jModule extends AbstractModule {
     ExecutionContext executeSelf() {
         RepositoryConnection connection = null;
         Repository repository = null;
-        LOG.debug("Deploying data into context {} of rdf4j server repository {}/{}.", rdf4jContextIRI, rdf4jServerURL, rdf4jRepositoryName);
+        LOG.debug("Deploying data into {} of rdf4j server repository {}/{}.",
+            isRdf4jContextIRIDefined() ? "context " + rdf4jContextIRI : "default context",
+            rdf4jServerURL,
+            rdf4jRepositoryName);
 
         try {
             RepositoryManager repositoryManager = RepositoryProvider.getRepositoryManager(rdf4jServerURL);
@@ -113,7 +116,8 @@ public class Rdf4jModule extends AbstractModule {
             repository.initialize();
             connection = repository.getConnection();
 
-            final Resource rdf4jContextIRIResource = (rdf4jContextIRI == null || rdf4jContextIRI.isEmpty()) ? null : connection.getValueFactory().createURI(rdf4jContextIRI);
+            final Resource rdf4jContextIRIResource =
+                isRdf4jContextIRIDefined() ? connection.getValueFactory().createIRI(rdf4jContextIRI) : null;
 
             connection.begin();
             if (isReplaceContext) {
@@ -157,7 +161,13 @@ public class Rdf4jModule extends AbstractModule {
     public void loadConfiguration() {
         rdf4jServerURL = getEffectiveValue(P_RDF4J_SERVER_URL).asLiteral().getString();
         rdf4jRepositoryName = getEffectiveValue(P_RDF4J_REPOSITORY_NAME).asLiteral().getString();
-        rdf4jContextIRI = getEffectiveValue(P_RDF4J_CONTEXT_IRI).asLiteral().getString();
+        if (this.getPropertyValue(P_RDF4J_CONTEXT_IRI) != null) {
+            rdf4jContextIRI = getEffectiveValue(P_RDF4J_CONTEXT_IRI).asLiteral().getString();
+        }
         isReplaceContext = this.getPropertyValue(P_IS_REPLACE_CONTEXT_IRI, false);
+    }
+
+    private boolean isRdf4jContextIRIDefined() {
+        return (rdf4jContextIRI != null) && (!rdf4jContextIRI.isEmpty());
     }
 }
