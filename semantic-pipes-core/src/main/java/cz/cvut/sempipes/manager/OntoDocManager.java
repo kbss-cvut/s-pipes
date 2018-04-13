@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
+import org.apache.jena.atlas.web.HttpException;
 import org.apache.jena.ontology.OntDocumentManager;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
@@ -76,6 +77,7 @@ public class OntoDocManager implements OntologyDocumentManager {
 
     OntoDocManager(OntDocumentManager ontDocumentManager) {
         this.ontDocumentManager = ontDocumentManager;
+        ontDocumentManager.setReadFailureHandler(new OntologyReadFailureHandler());
     }
 
     public static OntologyDocumentManager getInstance() {
@@ -357,5 +359,19 @@ public class OntoDocManager implements OntologyDocumentManager {
 //        model.add(OntoDocManager.allLoadedFilesModel);
 //        SPINModuleRegistry.get().registerAll(model, null);
 
+    }
+    class OntologyReadFailureHandler implements OntDocumentManager.ReadFailureHandler {
+        @Override
+        public void handleFailedRead(String url, Model model, Exception e) {
+
+            if (e instanceof HttpException) {
+                int responseCode = ((HttpException) e).getResponseCode();
+                if (responseCode == 404) {
+                    LOG.warn("Attempt to read ontology from {} returned HTTP code '404 - Not Found'.", url);
+                    return;
+                }
+            }
+            LOG.warn("Attempt to read ontology from {} failed. Msg was {}. {}", url, e.getMessage(), e);
+        }
     }
 }
