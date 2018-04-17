@@ -36,10 +36,9 @@ public class SingleSnapshotDatasetSource
     protected Map<String, Set<String>> properties;
     @OWLObjectProperty(iri = Vocabulary.s_p_inv_dot_has_source)
     @ParticipationConstraints({
-        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_description, min = 1),
-        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_dataset_publication, min = 1, max = 1)
+        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_dataset_publication, max = 1)
     })
-    protected DatasetPublication inv_dot_has_source;
+    protected Set<Description> inv_dot_has_source;
 
     public void setName(String name) {
         this.name = name;
@@ -81,11 +80,11 @@ public class SingleSnapshotDatasetSource
         return properties;
     }
 
-    public void setInv_dot_has_source(DatasetPublication inv_dot_has_source) {
+    public void setInv_dot_has_source(Set<Description> inv_dot_has_source) {
         this.inv_dot_has_source = inv_dot_has_source;
     }
 
-    public DatasetPublication getInv_dot_has_source() {
+    public Set<Description> getInv_dot_has_source() {
         return inv_dot_has_source;
     }
 

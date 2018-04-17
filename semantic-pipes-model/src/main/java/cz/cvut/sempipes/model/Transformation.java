@@ -36,12 +36,12 @@ public class Transformation
     protected Map<String, Set<String>> properties;
     @OWLObjectProperty(iri = Vocabulary.s_p_has_input)
     @ParticipationConstraints({
-        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_source_dataset_snapshot, min = 1, max = 1)
+        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_source_dataset_snapshot, max = 1)
     })
     protected SourceDatasetSnapshot has_input;
     @OWLObjectProperty(iri = Vocabulary.s_p_has_output)
     @ParticipationConstraints({
-        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_target_dataset_snapshot, min = 1, max = 1)
+        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_target_dataset_snapshot, max = 1)
     })
     protected Set<Thing> has_output;
     @OWLObjectProperty(iri = Vocabulary.s_p_inv_dot_is_created_by)

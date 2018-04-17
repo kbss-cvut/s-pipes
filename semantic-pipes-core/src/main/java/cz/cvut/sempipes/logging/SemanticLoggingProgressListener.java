@@ -32,8 +32,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class SemanticLoggingProgressListener implements ProgressListener {
-    private static final Logger LOG
-        = LoggerFactory.getLogger(SemanticLoggingProgressListener.class);
+    private static final Logger LOG =
+        LoggerFactory.getLogger(SemanticLoggingProgressListener.class);
 
     /**
      * Maps pipeline executions and module executions to the transformation object.
@@ -42,10 +42,10 @@ public class SemanticLoggingProgressListener implements ProgressListener {
 
     private static final Map<String, EntityManager> entityManagerMap = new HashMap<>();
 
-    private static final String P_HAS_PART
-        = Vocabulary.ONTOLOGY_IRI_dataset_descriptor + "/has-part";
-    private static final String P_HAS_NEXT
-        = Vocabulary.ONTOLOGY_IRI_dataset_descriptor + "/has-next";
+    private static final String P_HAS_PART =
+        Vocabulary.ONTOLOGY_IRI_dataset_descriptor + "/has-part";
+    private static final String P_HAS_NEXT =
+        Vocabulary.ONTOLOGY_IRI_dataset_descriptor + "/has-next";
 
     static {
         final Map<String, String> props = new HashMap<>();
@@ -54,53 +54,53 @@ public class SemanticLoggingProgressListener implements ProgressListener {
         PersistenceFactory.init(props);
     }
 
-    @Override
-    public void pipelineExecutionStarted(final long pipelineId) {
+    @Override public void pipelineExecutionStarted(final long pipelineId) {
         Thing pipelineExecution = new Thing();
         pipelineExecution.setId(getPipelineIri(pipelineId));
         pipelineExecution.setTypes(Collections.singleton(Vocabulary.s_c_transformation));
 
-        final EntityManager em = PersistenceFactory.createEntityManager();
         executionMap.put(pipelineExecution.getId(), pipelineExecution);
-        entityManagerMap.put(pipelineExecution.getId(), em);
 
-        em.getTransaction().begin();
-        em.merge(pipelineExecution, new EntityDescriptor(URI.create(pipelineExecution.getId())));
-        em.getTransaction().commit();
-    }
-
-    @Override
-    public void pipelineExecutionFinished(final long pipelineId) {
-        final EntityManager em = entityManagerMap.get(getPipelineIri(pipelineId));
-        final TurtleWriterFactory factory = new TurtleWriterFactory();
-        try {
-            FileOutputStream fos = new FileOutputStream(
-                Files.createTempFile(
-                    Instant.now().toString() + "-pipeline-execution-", ".ttl")
-                    .toFile()
-            );
-            final TurtleWriter writer = (TurtleWriter) factory.getWriter(fos);
-            writer.startRDF();
-            final RepositoryResult<Statement> res = em.unwrap(SailRepository.class)
-                .getConnection().getStatements(null, null, null, true);
-            while (res.hasNext()) {
-                writer.handleStatement(res.next());
-            }
-            writer.endRDF();
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        final EntityManager em = PersistenceFactory.createEntityManager();
+        synchronized (em) {
+            entityManagerMap.put(pipelineExecution.getId(), em);
+            em.getTransaction().begin();
+            em.merge(pipelineExecution,
+                new EntityDescriptor(URI.create(pipelineExecution.getId())));
+            em.getTransaction().commit();
         }
-        entityManagerMap.remove(em);
-        em.close();
     }
 
-    @Override
-    public void moduleExecutionStarted(final long pipelineId,
-                                       final String moduleId,
-                                       final Module outputModule,
-                                       final ExecutionContext inputContext,
-                                       final String predecessorId) {
+    @Override public void pipelineExecutionFinished(final long pipelineId) {
+        final EntityManager em = entityManagerMap.get(getPipelineIri(pipelineId));
+        synchronized (em) {
+            if (em.isOpen()) {
+                final TurtleWriterFactory factory = new TurtleWriterFactory();
+                try (FileOutputStream fos = new FileOutputStream(
+                    Files.createTempFile(Instant.now().toString() + "-pipeline-execution-", ".ttl")
+                         .toFile())) {
+                    final TurtleWriter writer = (TurtleWriter) factory.getWriter(fos);
+                    writer.startRDF();
+                    final RepositoryResult<Statement> res =
+                        em.unwrap(SailRepository.class).getConnection()
+                          .getStatements(null, null, null, true);
+                    while (res.hasNext()) {
+                        writer.handleStatement(res.next());
+                    }
+                    writer.endRDF();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                entityManagerMap.remove(em);
+                em.close();
+            }
+        }
+    }
+
+    @Override public void moduleExecutionStarted(final long pipelineId, final String moduleId,
+                                                 final Module outputModule,
+                                                 final ExecutionContext inputContext,
+                                                 final String predecessorId) {
         Transformation moduleExecution = new Transformation();
         moduleExecution.setId(getModuleExecutionIri(moduleId));
         executionMap.put(moduleExecution.getId(), moduleExecution);
@@ -111,52 +111,57 @@ public class SemanticLoggingProgressListener implements ProgressListener {
 
         if (predecessorId != null) {
             Map<String, Set<String>> properties2 = new HashMap<>();
-            properties2.put(P_HAS_NEXT,
-                Collections.singleton(getModuleExecutionIri(predecessorId)));
+            properties2
+                .put(P_HAS_NEXT, Collections.singleton(getModuleExecutionIri(predecessorId)));
             moduleExecution.setProperties(properties2);
         }
     }
 
-    @Override
-    public void moduleExecutionFinished(long pipelineId,
-                                        final String moduleId,
-                                        final Module module) {
+    @Override public void moduleExecutionFinished(long pipelineId, final String moduleId,
+                                                  final Module module) {
         final EntityManager em = entityManagerMap.get(getPipelineIri(pipelineId));
-        Transformation moduleExecution = (Transformation) executionMap
-            .get(getModuleExecutionIri(moduleId));
+        Transformation moduleExecution =
+            (Transformation) executionMap.get(getModuleExecutionIri(moduleId));
 
-        final Transformation pipelineExecution = em.find(Transformation.class,
-            getPipelineIri(pipelineId));
         Map<String, Set<String>> properties = new HashMap<>();
         properties.put(P_HAS_PART, Collections.singleton(moduleExecution.getId()));
-        pipelineExecution.setProperties(properties);
 
         Thing output = new Thing();
         output.setId(saveModelToTemporaryFile(module.getOutputContext().getDefaultModel()));
         moduleExecution.setHas_output(Collections.singleton(output));
+        final EntityDescriptor md = new EntityDescriptor(URI.create(moduleExecution.getId()));
 
-        em.getTransaction().begin();
-        if (moduleExecution.getProperties() != null && moduleExecution.getProperties()
-            .containsKey(P_HAS_NEXT)) {
-            String nextId = moduleExecution.getProperties().get(P_HAS_NEXT).iterator().next();
-            Thing next = new Thing();
-            next.setId(nextId);
-            em.merge(next, new EntityDescriptor(URI.create(moduleExecution.getId())));
+        synchronized (em) {
+            if (em.isOpen()) {
+                em.getTransaction().begin();
+                final Transformation pipelineExecution =
+                    em.find(Transformation.class, getPipelineIri(pipelineId));
+                pipelineExecution.setProperties(properties);
+                if (moduleExecution.getProperties() != null && moduleExecution.getProperties().containsKey(
+                    P_HAS_NEXT)) {
+                    String nextId = moduleExecution.getProperties().get(P_HAS_NEXT).iterator()
+                                                   .next();
+                    Thing next = new Thing();
+                    next.setId(nextId);
+                    em.merge(next, md);
+                }
+
+                final EntityDescriptor pd = new EntityDescriptor(URI.create(pipelineExecution.getId()));
+                final Thing input = moduleExecution.getHas_input();
+                em.merge(input, md);
+                em.merge(output, md);
+                em.merge(moduleExecution, md);
+                em.merge(pipelineExecution, pd);
+                em.getTransaction().commit();
+            }
         }
-
-        Thing input = moduleExecution.getHas_input();
-        em.merge(input, new EntityDescriptor(URI.create(moduleExecution.getId())));
-        em.merge(output, new EntityDescriptor(URI.create(moduleExecution.getId())));
-        em.merge(moduleExecution, new EntityDescriptor(URI.create(moduleExecution.getId())));
-        em.merge(pipelineExecution, new EntityDescriptor(URI.create(pipelineExecution.getId())));
-        em.getTransaction().commit();
     }
 
     private String saveModelToTemporaryFile(Model model) {
         File tempFile = null;
         try {
-            tempFile = Files.createTempFile(Instant.now().toString()
-                + "-dataset-snapshot-", ".ttl").toFile();
+            tempFile = Files.createTempFile(Instant.now().toString() + "-dataset-snapshot-", ".ttl")
+                            .toFile();
         } catch (IOException e) {
             LOG.error("Error during temporary file creation.", e);
             return null;

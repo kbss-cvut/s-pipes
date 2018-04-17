@@ -36,12 +36,12 @@ public class Intent
     protected Map<String, Set<String>> properties;
     @OWLObjectProperty(iri = Vocabulary.s_p_inv_dot_has_intent)
     @ParticipationConstraints({
-        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_dataset_exploring_journalist, min = 1, max = 1)
+        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_dataset_exploring_journalist, max = 1)
     })
-    protected Set<Thing> inv_dot_has_intent;
+    protected DatasetExploringJournalist inv_dot_has_intent;
     @OWLObjectProperty(iri = Vocabulary.s_p_inv_dot_uses)
     @ParticipationConstraints({
-        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_dataset_exploration, min = 1, max = 1)
+        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_dataset_exploration, max = 1)
     })
     protected DatasetExploration inv_dot_uses;
 
@@ -85,11 +85,11 @@ public class Intent
         return properties;
     }
 
-    public void setInv_dot_has_intent(Set<Thing> inv_dot_has_intent) {
+    public void setInv_dot_has_intent(DatasetExploringJournalist inv_dot_has_intent) {
         this.inv_dot_has_intent = inv_dot_has_intent;
     }
 
-    public Set<Thing> getInv_dot_has_intent() {
+    public DatasetExploringJournalist getInv_dot_has_intent() {
         return inv_dot_has_intent;
     }
 

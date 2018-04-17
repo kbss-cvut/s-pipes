@@ -36,9 +36,9 @@ public class SingleItemSelector
     protected Map<String, Set<String>> properties;
     @OWLObjectProperty(iri = Vocabulary.s_p_has_item)
     @ParticipationConstraints({
-        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_data_item, min = 1, max = 1)
+        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_data_item, max = 1)
     })
-    protected DataItem has_item;
+    protected Set<Thing> has_item;
 
     public void setName(String name) {
         this.name = name;
@@ -80,11 +80,11 @@ public class SingleItemSelector
         return properties;
     }
 
-    public void setHas_item(DataItem has_item) {
+    public void setHas_item(Set<Thing> has_item) {
         this.has_item = has_item;
     }
 
-    public DataItem getHas_item() {
+    public Set<Thing> getHas_item() {
         return has_item;
     }
 

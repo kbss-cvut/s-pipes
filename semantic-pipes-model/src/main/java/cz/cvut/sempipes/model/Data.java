@@ -36,19 +36,14 @@ public class Data
     protected Map<String, Set<String>> properties;
     @OWLObjectProperty(iri = Vocabulary.s_p_has_member)
     @ParticipationConstraints({
-        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_data_item, min = 2)
+        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_data_item, max = -1)
     })
     protected Set<Thing> has_member;
     @OWLObjectProperty(iri = Vocabulary.s_p_inv_dot_constitutes)
     @ParticipationConstraints({
-        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_dataset_snapshot, min = 1, max = 1)
+        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_dataset_snapshot, max = 1)
     })
     protected DatasetSnapshot inv_dot_constitutes;
-    @OWLObjectProperty(iri = Vocabulary.s_p_inv_dot_is_part_of)
-    @ParticipationConstraints({
-        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_data, min = 1)
-    })
-    protected Set<Data> inv_dot_is_part_of;
     @OWLObjectProperty(iri = Vocabulary.s_p_is_part_of)
     @ParticipationConstraints({
         @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_data, max = 1)
@@ -109,14 +104,6 @@ public class Data
 
     public DatasetSnapshot getInv_dot_constitutes() {
         return inv_dot_constitutes;
-    }
-
-    public void setInv_dot_is_part_of(Set<Data> inv_dot_is_part_of) {
-        this.inv_dot_is_part_of = inv_dot_is_part_of;
-    }
-
-    public Set<Data> getInv_dot_is_part_of() {
-        return inv_dot_is_part_of;
     }
 
     public void setIs_part_of(Set<Thing> is_part_of) {

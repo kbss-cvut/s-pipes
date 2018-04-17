@@ -36,19 +36,9 @@ public class DatasetExploration
     protected Map<String, Set<String>> properties;
     @OWLObjectProperty(iri = Vocabulary.s_p_has_dataset_explorer)
     @ParticipationConstraints({
-        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_dataset_exploring_journalist, min = 1, max = 1)
+        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_dataset_exploring_journalist, max = 1)
     })
-    protected Set<Thing> has_dataset_explorer;
-    @OWLObjectProperty(iri = Vocabulary.s_p_has_explored_dataset)
-    @ParticipationConstraints({
-        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_dataset, min = 1)
-    })
-    protected Set<Dataset> has_explored_dataset;
-    @OWLObjectProperty(iri = Vocabulary.s_p_uses)
-    @ParticipationConstraints({
-        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_intent, min = 1)
-    })
-    protected Set<Thing> uses;
+    protected DatasetExploringJournalist has_dataset_explorer;
 
     public void setName(String name) {
         this.name = name;
@@ -90,28 +80,12 @@ public class DatasetExploration
         return properties;
     }
 
-    public void setHas_dataset_explorer(Set<Thing> has_dataset_explorer) {
+    public void setHas_dataset_explorer(DatasetExploringJournalist has_dataset_explorer) {
         this.has_dataset_explorer = has_dataset_explorer;
     }
 
-    public Set<Thing> getHas_dataset_explorer() {
+    public DatasetExploringJournalist getHas_dataset_explorer() {
         return has_dataset_explorer;
-    }
-
-    public void setHas_explored_dataset(Set<Dataset> has_explored_dataset) {
-        this.has_explored_dataset = has_explored_dataset;
-    }
-
-    public Set<Dataset> getHas_explored_dataset() {
-        return has_explored_dataset;
-    }
-
-    public void setUses(Set<Thing> uses) {
-        this.uses = uses;
-    }
-
-    public Set<Thing> getUses() {
-        return uses;
     }
 
 }

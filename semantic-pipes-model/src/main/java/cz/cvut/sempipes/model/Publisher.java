@@ -7,9 +7,6 @@ import cz.cvut.kbss.jopa.CommonVocabulary;
 import cz.cvut.kbss.jopa.model.annotations.Id;
 import cz.cvut.kbss.jopa.model.annotations.OWLAnnotationProperty;
 import cz.cvut.kbss.jopa.model.annotations.OWLClass;
-import cz.cvut.kbss.jopa.model.annotations.OWLObjectProperty;
-import cz.cvut.kbss.jopa.model.annotations.ParticipationConstraint;
-import cz.cvut.kbss.jopa.model.annotations.ParticipationConstraints;
 import cz.cvut.kbss.jopa.model.annotations.Properties;
 import cz.cvut.kbss.jopa.model.annotations.Types;
 import cz.cvut.sempipes.Vocabulary;
@@ -34,11 +31,6 @@ public class Publisher
     protected String id;
     @Properties
     protected Map<String, Set<String>> properties;
-    @OWLObjectProperty(iri = Vocabulary.s_p_inv_dot_has_publisher)
-    @ParticipationConstraints({
-        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_dataset_publication, min = 1)
-    })
-    protected Set<Thing> inv_dot_has_publisher;
 
     public void setName(String name) {
         this.name = name;
@@ -78,14 +70,6 @@ public class Publisher
 
     public Map<String, Set<String>> getProperties() {
         return properties;
-    }
-
-    public void setInv_dot_has_publisher(Set<Thing> inv_dot_has_publisher) {
-        this.inv_dot_has_publisher = inv_dot_has_publisher;
-    }
-
-    public Set<Thing> getInv_dot_has_publisher() {
-        return inv_dot_has_publisher;
     }
 
 }

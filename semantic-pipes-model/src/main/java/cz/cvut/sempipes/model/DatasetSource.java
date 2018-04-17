@@ -7,9 +7,6 @@ import cz.cvut.kbss.jopa.CommonVocabulary;
 import cz.cvut.kbss.jopa.model.annotations.Id;
 import cz.cvut.kbss.jopa.model.annotations.OWLAnnotationProperty;
 import cz.cvut.kbss.jopa.model.annotations.OWLClass;
-import cz.cvut.kbss.jopa.model.annotations.OWLObjectProperty;
-import cz.cvut.kbss.jopa.model.annotations.ParticipationConstraint;
-import cz.cvut.kbss.jopa.model.annotations.ParticipationConstraints;
 import cz.cvut.kbss.jopa.model.annotations.Properties;
 import cz.cvut.kbss.jopa.model.annotations.Types;
 import cz.cvut.sempipes.Vocabulary;
@@ -34,11 +31,6 @@ public class DatasetSource
     protected String id;
     @Properties
     protected Map<String, Set<String>> properties;
-    @OWLObjectProperty(iri = Vocabulary.s_p_offers_dataset)
-    @ParticipationConstraints({
-        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_dataset, min = 1)
-    })
-    protected Set<Dataset> offers_dataset;
 
     public void setName(String name) {
         this.name = name;
@@ -78,14 +70,6 @@ public class DatasetSource
 
     public Map<String, Set<String>> getProperties() {
         return properties;
-    }
-
-    public void setOffers_dataset(Set<Dataset> offers_dataset) {
-        this.offers_dataset = offers_dataset;
-    }
-
-    public Set<Dataset> getOffers_dataset() {
-        return offers_dataset;
     }
 
 }

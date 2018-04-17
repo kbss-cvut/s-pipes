@@ -36,12 +36,12 @@ public class DatasetDescriptor
     protected Map<String, Set<String>> properties;
     @OWLObjectProperty(iri = Vocabulary.s_p_describes)
     @ParticipationConstraints({
-        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_described_data_artifact, min = 1, max = 1)
+        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_described_data_artifact, max = 1)
     })
     protected DescribedDataArtifact describes;
     @OWLObjectProperty(iri = Vocabulary.s_p_inv_dot_has_dataset_descriptor)
     @ParticipationConstraints({
-        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_description, min = 1, max = 1)
+        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_description, max = 1)
     })
     protected Description inv_dot_has_dataset_descriptor;
 

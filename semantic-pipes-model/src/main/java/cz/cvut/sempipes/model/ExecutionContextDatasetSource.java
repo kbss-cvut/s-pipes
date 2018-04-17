@@ -36,7 +36,7 @@ public class ExecutionContextDatasetSource
     protected Map<String, Set<String>> properties;
     @OWLObjectProperty(iri = Vocabulary.s_p_is_created_by)
     @ParticipationConstraints({
-        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_transformation, min = 1, max = 1)
+        @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_transformation, max = 1)
     })
     protected Set<Thing> is_created_by;
 
