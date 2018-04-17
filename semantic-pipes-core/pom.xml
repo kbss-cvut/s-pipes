@@ -471,9 +471,16 @@
                 <artifactId>aspectj-maven-plugin</artifactId>
                 <version>1.7</version>
                 <configuration>
+                    <aspectLibraries>
+                        <aspectLibrary>
+                            <groupId>cz.cvut.kbss.jopa</groupId>
+                            <artifactId>jopa-impl</artifactId>
+                        </aspectLibrary>
+                    </aspectLibraries>
                     <complianceLevel>${jdk.version}</complianceLevel>
                     <source>${jdk.version}</source>
                     <target>${jdk.version}</target>
+                    <showWeaveInfo>true</showWeaveInfo>
                     <sources>
                         <source>
                             <basedir>${basedir}/src/main/java</basedir>
@@ -487,6 +494,11 @@
                     <dependency>
                         <groupId>org.aspectj</groupId>
                         <artifactId>aspectjtools</artifactId>
+                        <version>${aspectj.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjrt</artifactId>
                         <version>${aspectj.version}</version>
                     </dependency>
                 </dependencies>
