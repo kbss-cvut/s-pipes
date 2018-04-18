@@ -13,8 +13,6 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.RDFS;
 import org.junit.Test;
 
-import static org.junit.Assert.fail;
-
 public class LoggingTest {
 
     @Test public void testSingleRun() {
@@ -37,7 +35,7 @@ public class LoggingTest {
     }
 
     private void logNoOp3() {
-        for(int i =0; i < 100;i++) {
+        for(int i = 0; i < 100;i++) {
             testSingleRun();
         }
     }

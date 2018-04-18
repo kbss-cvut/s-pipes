@@ -22,9 +22,11 @@ class ExecutionEngineImpl implements ExecutionEngine {
 
     private Set<ProgressListener> listeners = new HashSet<>();
 
+    private static int i = 0 ;
+
     public ExecutionContext executePipeline(final Module module, final ExecutionContext inputContext) {
         LOG.info("Executing script {} with context {}.", module.getResource(), inputContext.toSimpleString());
-        final long pipelineExecutionId = Instant.now().getEpochSecond();
+        final long pipelineExecutionId = Instant.now().toEpochMilli()*1000+(i++);
 
         fire((l) -> {l.pipelineExecutionStarted(pipelineExecutionId); return null;});
         ExecutionContext outputContext = _executePipeline(pipelineExecutionId, module, inputContext, null);

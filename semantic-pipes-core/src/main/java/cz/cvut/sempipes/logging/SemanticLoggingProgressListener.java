@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,6 +25,8 @@ import java.util.Set;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.util.FileUtils;
 import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryResult;
 import org.eclipse.rdf4j.repository.sail.SailRepository;
 import org.eclipse.rdf4j.rio.turtle.TurtleWriter;
@@ -35,12 +38,16 @@ public class SemanticLoggingProgressListener implements ProgressListener {
     private static final Logger LOG =
         LoggerFactory.getLogger(SemanticLoggingProgressListener.class);
 
+    private static Path root;
+
     /**
      * Maps pipeline executions and module executions to the transformation object.
      */
     private static final Map<String, Object> executionMap = new HashMap<>();
 
     private static final Map<String, EntityManager> entityManagerMap = new HashMap<>();
+
+    private static final Map<Long, Path> logDir= new HashMap<>();
 
     private static final String P_HAS_PART =
         Vocabulary.ONTOLOGY_IRI_dataset_descriptor + "/has-part";
@@ -52,14 +59,22 @@ public class SemanticLoggingProgressListener implements ProgressListener {
         props.put(JOPAPersistenceProperties.SCAN_PACKAGE, "cz.cvut.sempipes.model");
         props.put(JOPAPersistenceProperties.ONTOLOGY_PHYSICAL_URI_KEY, "spipes");
         PersistenceFactory.init(props);
+        try {
+            root = Files.createTempDirectory(Instant.now() + "-s-pipes-log-");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    @Override public void pipelineExecutionStarted(final long pipelineId) {
+    @Override public void pipelineExecutionStarted(final long pipelineExecutionId) {
         Thing pipelineExecution = new Thing();
-        pipelineExecution.setId(getPipelineIri(pipelineId));
+        pipelineExecution.setId(getPipelineIri(pipelineExecutionId));
         pipelineExecution.setTypes(Collections.singleton(Vocabulary.s_c_transformation));
 
         executionMap.put(pipelineExecution.getId(), pipelineExecution);
+        final Path pipelineExecutionDir = root.resolve("pipeline-execution-" + pipelineExecutionId);
+        pipelineExecutionDir.toFile().mkdir();
+        logDir.put(pipelineExecutionId, pipelineExecutionDir);
 
         final EntityManager em = PersistenceFactory.createEntityManager();
         synchronized (em) {
@@ -71,19 +86,19 @@ public class SemanticLoggingProgressListener implements ProgressListener {
         }
     }
 
-    @Override public void pipelineExecutionFinished(final long pipelineId) {
-        final EntityManager em = entityManagerMap.get(getPipelineIri(pipelineId));
+    @Override public void pipelineExecutionFinished(final long pipelineExecutionId) {
+        final EntityManager em = entityManagerMap.get(getPipelineIri(pipelineExecutionId));
         synchronized (em) {
             if (em.isOpen()) {
                 final TurtleWriterFactory factory = new TurtleWriterFactory();
                 try (FileOutputStream fos = new FileOutputStream(
-                    Files.createTempFile(Instant.now().toString() + "-pipeline-execution-", ".ttl")
-                         .toFile())) {
+                    Files.createFile(getDir(pipelineExecutionId).resolve("log.ttl")).toFile())) {
                     final TurtleWriter writer = (TurtleWriter) factory.getWriter(fos);
                     writer.startRDF();
-                    final RepositoryResult<Statement> res =
-                        em.unwrap(SailRepository.class).getConnection()
-                          .getStatements(null, null, null, true);
+                    RepositoryConnection con = em.unwrap(SailRepository.class).getConnection();
+                    final ValueFactory f = con.getValueFactory();
+                    final RepositoryResult<Statement> res = con
+                          .getStatements(null, null, null, true, f.createIRI(getPipelineIri(pipelineExecutionId)));
                     while (res.hasNext()) {
                         writer.handleStatement(res.next());
                     }
@@ -93,6 +108,7 @@ public class SemanticLoggingProgressListener implements ProgressListener {
                 }
                 entityManagerMap.remove(em);
                 em.close();
+                logDir.remove(pipelineExecutionId);
             }
         }
     }
@@ -106,7 +122,8 @@ public class SemanticLoggingProgressListener implements ProgressListener {
         executionMap.put(moduleExecution.getId(), moduleExecution);
 
         SourceDatasetSnapshot input = new SourceDatasetSnapshot();
-        input.setId(saveModelToTemporaryFile(inputContext.getDefaultModel()));
+        input.setId(
+            saveModelToFile(getDir(pipelineId), "module-" + moduleId + "-input.ttl", inputContext.getDefaultModel()));
         moduleExecution.setHas_input(input);
 
         if (predecessorId != null) {
@@ -127,15 +144,16 @@ public class SemanticLoggingProgressListener implements ProgressListener {
         properties.put(P_HAS_PART, Collections.singleton(moduleExecution.getId()));
 
         Thing output = new Thing();
-        output.setId(saveModelToTemporaryFile(module.getOutputContext().getDefaultModel()));
+        output.setId(saveModelToFile(getDir(pipelineId), "module-" + moduleId + "-output.ttl", module.getOutputContext().getDefaultModel()));
         moduleExecution.setHas_output(Collections.singleton(output));
-        final EntityDescriptor md = new EntityDescriptor(URI.create(moduleExecution.getId()));
 
         synchronized (em) {
             if (em.isOpen()) {
                 em.getTransaction().begin();
                 final Transformation pipelineExecution =
                     em.find(Transformation.class, getPipelineIri(pipelineId));
+                final EntityDescriptor pd = new EntityDescriptor(URI.create(pipelineExecution.getId()));
+
                 pipelineExecution.setProperties(properties);
                 if (moduleExecution.getProperties() != null && moduleExecution.getProperties().containsKey(
                     P_HAS_NEXT)) {
@@ -143,32 +161,35 @@ public class SemanticLoggingProgressListener implements ProgressListener {
                                                    .next();
                     Thing next = new Thing();
                     next.setId(nextId);
-                    em.merge(next, md);
+                    em.merge(next, pd);
                 }
 
-                final EntityDescriptor pd = new EntityDescriptor(URI.create(pipelineExecution.getId()));
                 final Thing input = moduleExecution.getHas_input();
-                em.merge(input, md);
-                em.merge(output, md);
-                em.merge(moduleExecution, md);
+                em.merge(input, pd);
+                em.merge(output, pd);
+                em.merge(moduleExecution, pd);
                 em.merge(pipelineExecution, pd);
                 em.getTransaction().commit();
             }
         }
     }
 
-    private String saveModelToTemporaryFile(Model model) {
-        File tempFile = null;
+    private Path getDir(final long pipelineExecutionId) {
+        return logDir.get(pipelineExecutionId);
+    }
+
+    private String saveModelToFile(Path dir, String fileName, Model model) {
+        File file = null;
         try {
-            tempFile = Files.createTempFile(Instant.now().toString() + "-dataset-snapshot-", ".ttl")
-                            .toFile();
+            file =
+                Files.createFile(dir.resolve(Instant.now().toString()+fileName)).toFile();
         } catch (IOException e) {
-            LOG.error("Error during temporary file creation.", e);
+            LOG.error("Error during file creation.", e);
             return null;
         }
-        try (OutputStream tempFileIs = new FileOutputStream(tempFile)) {
-            model.write(tempFileIs, FileUtils.langTurtle);
-            return tempFile.toURI().toURL().toString();
+        try (OutputStream fileIs = new FileOutputStream(file)) {
+            model.write(fileIs, FileUtils.langTurtle);
+            return file.toURI().toURL().toString();
         } catch (IOException e) {
             LOG.error("Error during dataset snapshot saving.", e);
             return null;
