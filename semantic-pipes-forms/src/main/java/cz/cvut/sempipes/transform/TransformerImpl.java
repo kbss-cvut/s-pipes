@@ -13,6 +13,7 @@ import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.topbraid.spin.system.SPINModuleRegistry;
 
 import java.net.URI;
 import java.util.*;
@@ -23,6 +24,10 @@ import static cz.cvut.sempipes.transform.SPipesUtil.isSPipesTerm;
 public class TransformerImpl implements Transformer {
 
     private static final Logger LOG = LoggerFactory.getLogger(TransformerImpl.class);
+
+    public TransformerImpl() {
+        SPINModuleRegistry.get().init();
+    }
 
     @Override
     public Question script2Form(Model script, Resource module, Resource moduleType) {
@@ -211,8 +216,11 @@ public class TransformerImpl implements Transformer {
         else if (node.isLiteral()) {
             a.setTextValue(node.asLiteral().getString());
         }
+        else if (node.isAnon()) {
+            a.setTextValue(AnonNodeTransformer.serialize(node));
+        }
         else {
-            throw new IllegalArgumentException("RDFNode " + node + " is neither literal, nor resource");
+            throw new IllegalArgumentException("RDFNode " + node + " should be a literal, a URI resource or an anonymous node of a known type");
         }
         return a;
     }
