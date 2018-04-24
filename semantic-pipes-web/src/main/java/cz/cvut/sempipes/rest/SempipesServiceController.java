@@ -1,12 +1,27 @@
 package cz.cvut.sempipes.rest;
 
-import cz.cvut.sempipes.engine.*;
+import cz.cvut.sempipes.engine.ExecutionContext;
+import cz.cvut.sempipes.engine.ExecutionContextFactory;
+import cz.cvut.sempipes.engine.ExecutionEngine;
+import cz.cvut.sempipes.engine.ExecutionEngineFactory;
+import cz.cvut.sempipes.engine.PipelineFactory;
+import cz.cvut.sempipes.engine.VariablesBinding;
 import cz.cvut.sempipes.exception.SempipesServiceException;
 import cz.cvut.sempipes.manager.SempipesScriptManager;
 import cz.cvut.sempipes.modules.Module;
 import cz.cvut.sempipes.rest.util.ContextLoaderHelper;
 import cz.cvut.sempipes.rest.util.ScriptManagerFactory;
 import cz.cvut.sempipes.util.RDFMimeType;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.PostConstruct;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.rdf.model.Model;
@@ -16,17 +31,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-
-import javax.annotation.PostConstruct;
-import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @EnableWebMvc
@@ -39,28 +51,26 @@ public class SempipesServiceController {
     void init() {
     }
 
-
-
     /**
      * Request parameter - 'id' of the module to be executed
      */
     public static final String P_ID = "_pId";
-
+    /**
+     * Request parameter - 'id' of the module to be executed, in case when '_pId' is not specified. Otherwise it is regular service parameter.
+     */
+    public static final String P_ID_ALTERNATIVE = "id";
     /**
      * Request parameter - URL of the resource containing configuration
-     * TODO redesign
      */
     public static final String P_CONFIG_URL = "_pConfigURL";
 
     /**
      * Input binding - URL of the file where input bindings are stored
-     * TODO redesign
      */
     public static final String P_INPUT_BINDING_URL = "_pInputBindingURL";
 
     /**
      * Output binding - URL of the file where output bindings are stored
-     * TODO redesign
      */
     public static final String P_OUTPUT_BINDING_URL = "_pOutputBindingURL";
 
@@ -122,7 +132,7 @@ public class SempipesServiceController {
         return runService(ModelFactory.createDefaultModel(), parameters);
     }
 
-    @RequestMapping( //TODO remove -- only to support compatibility with older version (used by RLP)
+    @RequestMapping(
             value = "/service-new",
             method = RequestMethod.GET,
             produces = {
@@ -132,6 +142,7 @@ public class SempipesServiceController {
                     RDFMimeType.TURTLE_STRING
             }
     )
+    @Deprecated //TODO remove -- only to support compatibility with older version (used by RLP)
     public Model processServiceGetRequestCompat(@RequestParam MultiValueMap<String,String> parameters) {
         LOG.info("Processing service GET request.");
         return runService(ModelFactory.createDefaultModel(), parameters);
@@ -196,13 +207,13 @@ public class SempipesServiceController {
                 vb2.load(inputBindingURL.openStream(), "TURTLE");
                 VariablesBinding vb3 = inputVariablesBinding.extendConsistently(vb2);
                 if (vb3.isEmpty()) {
-                    LOG.info("- no conflict between bindings loaded from '" + P_INPUT_BINDING_URL + "' and those provided in query string.");
+                    LOG.debug("- no conflict between bindings loaded from '" + P_INPUT_BINDING_URL + "' and those provided in query string.");
                 } else {
                     LOG.info("- conflicts found between bindings loaded from '" + P_INPUT_BINDING_URL + "' and those provided in query string: " + vb3.toString());
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.warn("Could not read data from parameter {}={}, caused by: {}", P_INPUT_BINDING_URL ,inputBindingURL, e);
         }
         LOG.info("- input variable binding ={}", inputVariablesBinding);
 
