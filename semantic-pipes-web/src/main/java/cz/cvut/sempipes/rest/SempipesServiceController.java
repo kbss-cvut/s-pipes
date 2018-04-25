@@ -11,6 +11,7 @@ import cz.cvut.sempipes.manager.SempipesScriptManager;
 import cz.cvut.sempipes.modules.Module;
 import cz.cvut.sempipes.rest.util.ContextLoaderHelper;
 import cz.cvut.sempipes.rest.util.ScriptManagerFactory;
+import cz.cvut.sempipes.rest.util.ServiceParametersHelper;
 import cz.cvut.sempipes.util.RDFMimeType;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -27,6 +28,8 @@ import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.util.FileUtils;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -44,13 +47,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @EnableWebMvc
 public class SempipesServiceController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SempipesServiceController.class);
-    private SempipesScriptManager scriptManager;
-
-    @PostConstruct
-    void init() {
-    }
-
     /**
      * Request parameter - 'id' of the module to be executed
      */
@@ -63,94 +59,98 @@ public class SempipesServiceController {
      * Request parameter - URL of the resource containing configuration
      */
     public static final String P_CONFIG_URL = "_pConfigURL";
-
     /**
      * Input binding - URL of the file where input bindings are stored
      */
     public static final String P_INPUT_BINDING_URL = "_pInputBindingURL";
-
     /**
      * Output binding - URL of the file where output bindings are stored
      */
     public static final String P_OUTPUT_BINDING_URL = "_pOutputBindingURL";
+    private static final Logger LOG = LoggerFactory.getLogger(SempipesServiceController.class);
+    private SempipesScriptManager scriptManager;
 
     public SempipesServiceController() {
         scriptManager = ScriptManagerFactory.getSingletonSPipesScriptManager();
     }
 
-    @RequestMapping(
-            value = "/module",
-            method = RequestMethod.GET,
-            produces = {
-                    RDFMimeType.LD_JSON_STRING,
-                    RDFMimeType.N_TRIPLES_STRING,
-                    RDFMimeType.RDF_XML_STRING,
-                    RDFMimeType.TURTLE_STRING
-            }
-    )
-    public Model processGetRequest(@RequestParam MultiValueMap<String,String> parameters) {
-        LOG.info("Processing GET request.");
-        return run(ModelFactory.createDefaultModel(), parameters);
+    @PostConstruct
+    void init() {
     }
 
     @RequestMapping(
-            value = "/module",
-            method = RequestMethod.POST
-            ,
-            consumes = {
-                    RDFMimeType.LD_JSON_STRING,
-                    RDFMimeType.N_TRIPLES_STRING,
-                    RDFMimeType.RDF_XML_STRING,
-                    RDFMimeType.TURTLE_STRING
-            },
-            produces = {
-                    RDFMimeType.LD_JSON_STRING,
-                    RDFMimeType.N_TRIPLES_STRING,
-                    RDFMimeType.RDF_XML_STRING,
-                    RDFMimeType.TURTLE_STRING
-            }
+        value = "/module",
+        method = RequestMethod.GET,
+        produces = {
+            RDFMimeType.LD_JSON_STRING,
+            RDFMimeType.N_TRIPLES_STRING,
+            RDFMimeType.RDF_XML_STRING,
+            RDFMimeType.TURTLE_STRING
+        }
+    )
+    public Model processGetRequest(@RequestParam MultiValueMap<String, String> parameters) {
+        LOG.info("Processing GET request.");
+        return runModule(ModelFactory.createDefaultModel(), parameters);
+    }
+
+    @RequestMapping(
+        value = "/module",
+        method = RequestMethod.POST
+        ,
+        consumes = {
+            RDFMimeType.LD_JSON_STRING,
+            RDFMimeType.N_TRIPLES_STRING,
+            RDFMimeType.RDF_XML_STRING,
+            RDFMimeType.TURTLE_STRING
+        },
+        produces = {
+            RDFMimeType.LD_JSON_STRING,
+            RDFMimeType.N_TRIPLES_STRING,
+            RDFMimeType.RDF_XML_STRING,
+            RDFMimeType.TURTLE_STRING
+        }
     )
     public Model processPostRequest(@RequestBody Model inputModel,
-                                    @RequestParam MultiValueMap<String,String> parameters
+                                    @RequestParam MultiValueMap<String, String> parameters
     ) {
         LOG.info("Processing POST request.");
-        return run(inputModel, parameters);
+        return runModule(inputModel, parameters);
     }
 
     @RequestMapping(
-            value = "/service",
-            method = RequestMethod.GET,
-            produces = {
-                    RDFMimeType.LD_JSON_STRING + ";charset=utf-8",
-                    RDFMimeType.N_TRIPLES_STRING,
-                    RDFMimeType.RDF_XML_STRING,
-                    RDFMimeType.TURTLE_STRING
-            }
+        value = "/service",
+        method = RequestMethod.GET,
+        produces = {
+            RDFMimeType.LD_JSON_STRING + ";charset=utf-8",
+            RDFMimeType.N_TRIPLES_STRING,
+            RDFMimeType.RDF_XML_STRING,
+            RDFMimeType.TURTLE_STRING
+        }
     )
-    public Model processServiceGetRequest(@RequestParam MultiValueMap<String,String> parameters) {
+    public Model processServiceGetRequest(@RequestParam MultiValueMap<String, String> parameters) {
         LOG.info("Processing service GET request.");
         return runService(ModelFactory.createDefaultModel(), parameters);
     }
 
     @RequestMapping(
-            value = "/service-new",
-            method = RequestMethod.GET,
-            produces = {
-                    RDFMimeType.LD_JSON_STRING,
-                    RDFMimeType.N_TRIPLES_STRING,
-                    RDFMimeType.RDF_XML_STRING,
-                    RDFMimeType.TURTLE_STRING
-            }
+        value = "/service-new",
+        method = RequestMethod.GET,
+        produces = {
+            RDFMimeType.LD_JSON_STRING,
+            RDFMimeType.N_TRIPLES_STRING,
+            RDFMimeType.RDF_XML_STRING,
+            RDFMimeType.TURTLE_STRING
+        }
     )
     @Deprecated //TODO remove -- only to support compatibility with older version (used by RLP)
-    public Model processServiceGetRequestCompat(@RequestParam MultiValueMap<String,String> parameters) {
+    public Model processServiceGetRequestCompat(@RequestParam MultiValueMap<String, String> parameters) {
         LOG.info("Processing service GET request.");
         return runService(ModelFactory.createDefaultModel(), parameters);
     }
 
     @ExceptionHandler
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public Map<String, String> notFoundHandler(SempipesServiceException e){
+    public Map<String, String> notFoundHandler(SempipesServiceException e) {
         return Collections.singletonMap("message", e.getMessage());
     }
 
@@ -168,30 +168,21 @@ public class SempipesServiceController {
 
 
     // TODO merge it with implementation in /module
-    private Model runService(final Model inputDataModel, final MultiValueMap<String,String> parameters ) {
+    private Model runService(final Model inputDataModel, final MultiValueMap<String, String> parameters) {
         LOG.info("- parameters={}", parameters);
 
-        if (parameters.containsKey("id")) { // TODO remove -- only for compatibility
-            parameters.add(P_ID, parameters.getFirst("id"));
-        }
+        ServiceParametersHelper paramHelper = new ServiceParametersHelper(parameters);
 
-        if (!parameters.containsKey(P_ID)) {
-            throw new SempipesServiceException("Invalid/no module id supplied.");
-        }
-        final String id = parameters.getFirst(P_ID);
-        LOG.info("- id={}", id);
+        // LOAD MODULE ID
+        final String id = getId(paramHelper);
+        logParam(P_ID, id);
 
 
         // FILE WHERE TO GET INPUT BINDING
         URL inputBindingURL = null;
         if (parameters.containsKey(P_INPUT_BINDING_URL)) {
-            try {
-                inputBindingURL = new URL(parameters.getFirst(P_INPUT_BINDING_URL));
-            } catch (MalformedURLException e) {
-                throw new SempipesServiceException("Invalid input binding URL supplied.",e);
-            }
-
-            LOG.info("- input binding URL={}", inputBindingURL);
+            inputBindingURL = paramHelper.parseParameterValueAsUrl(P_INPUT_BINDING_URL);
+            logParam(P_INPUT_BINDING_URL, inputBindingURL.toString());
         }
 
         parameters.remove(P_ID);
@@ -201,19 +192,8 @@ public class SempipesServiceController {
 
         // END OF PARAMETER PROCESSING
         final VariablesBinding inputVariablesBinding = new VariablesBinding(transform(parameters));
-        try {
-            if (inputBindingURL != null) {
-                final VariablesBinding vb2 = new VariablesBinding();
-                vb2.load(inputBindingURL.openStream(), "TURTLE");
-                VariablesBinding vb3 = inputVariablesBinding.extendConsistently(vb2);
-                if (vb3.isEmpty()) {
-                    LOG.debug("- no conflict between bindings loaded from '" + P_INPUT_BINDING_URL + "' and those provided in query string.");
-                } else {
-                    LOG.info("- conflicts found between bindings loaded from '" + P_INPUT_BINDING_URL + "' and those provided in query string: " + vb3.toString());
-                }
-            }
-        } catch (IOException e) {
-            LOG.warn("Could not read data from parameter {}={}, caused by: {}", P_INPUT_BINDING_URL ,inputBindingURL, e);
+        if (inputBindingURL != null) {
+            extendBindingFromURL(inputVariablesBinding, inputBindingURL);
         }
         LOG.info("- input variable binding ={}", inputVariablesBinding);
 
@@ -227,8 +207,8 @@ public class SempipesServiceController {
         Module module = scriptManager.loadFunction(id);
 
 
-        if ( module == null ) {
-            throw new SempipesServiceException("Cannot load module with id="+id);
+        if (module == null) {
+            throw new SempipesServiceException("Cannot load module with id=" + id);
         }
         ExecutionContext outputExecutionContext = engine.executePipeline(module, inputExecutionContext);
 
@@ -236,54 +216,32 @@ public class SempipesServiceController {
         return outputExecutionContext.getDefaultModel();
     }
 
-    private Model run(final Model inputDataModel, final MultiValueMap<String,String> parameters ) {
+    private Model runModule(final Model inputDataModel, final MultiValueMap<String, String> parameters) {
         LOG.info("- parameters={}", parameters);
 
-        if (!parameters.containsKey(P_ID)) {
-            throw new SempipesServiceException("Invalid/no module id supplied.");
-        }
-        final String id = parameters.getFirst(P_ID);
-        LOG.info("- id={}", id);
+        ServiceParametersHelper paramHelper = new ServiceParametersHelper(parameters);
+
+        // LOAD MODULE ID
+        final String id = getId(paramHelper);
+        logParam(P_ID, id);
 
         // LOAD MODULE CONFIGURATION
-        if (!parameters.containsKey(P_CONFIG_URL)) {
-            throw new SempipesServiceException("No config URL supplied.");
-        }
-        final String configURL = parameters.getFirst(P_CONFIG_URL);
-        LOG.info("- config URL={}", configURL);
-        final Model configModel = ModelFactory.createDefaultModel();
-        try {
-            configModel.read(configURL, "TURTLE");
-        } catch(Exception e) {
-            throw new SempipesServiceException("No config URL supplied.");
-        }
+        final String configURL = paramHelper.getRequiredParameterValue(P_CONFIG_URL);
+        logParam(P_CONFIG_URL, configURL);
+        final Model configModel = loadModelFromUrl(configURL);
 
         // FILE WHERE TO GET INPUT BINDING
         URL inputBindingURL = null;
-        if (parameters.containsKey(P_INPUT_BINDING_URL)) {
-            try {
-                inputBindingURL = new URL(parameters.getFirst(P_INPUT_BINDING_URL));
-            } catch (MalformedURLException e) {
-                throw new SempipesServiceException("Invalid input binding URL supplied.",e);
-            }
-
-            LOG.info("- input binding URL={}", inputBindingURL);
+        if (paramHelper.hasParameterValue(P_INPUT_BINDING_URL)) {
+            inputBindingURL = paramHelper.parseParameterValueAsUrl(P_INPUT_BINDING_URL);
+            logParam(P_INPUT_BINDING_URL, inputBindingURL.toString());
         }
 
         // FILE WHERE TO SAVE OUTPUT BINDING
         File outputBindingPath = null;
-        if (parameters.containsKey(P_OUTPUT_BINDING_URL)) {
-            try {
-                final URL outputBindingURL = new URL(parameters.getFirst(P_OUTPUT_BINDING_URL));
-                if (!outputBindingURL.getProtocol().equals("file")) {
-                    throw new SempipesServiceException("Invalid output binding URL schema - currently only file: URLs are supported.");
-                }
-                outputBindingPath = new File(outputBindingURL.toURI());
-            } catch (MalformedURLException | URISyntaxException e) {
-                throw new SempipesServiceException("Invalid output binding URL supplied.",e);
-            }
-
-            LOG.info("- output binding FILE={}", outputBindingPath);
+        if (paramHelper.hasParameterValue(P_OUTPUT_BINDING_URL)) {
+            outputBindingPath = getOutputBindingFile(paramHelper.getParameterValue(P_OUTPUT_BINDING_URL));
+            logParam(P_OUTPUT_BINDING_URL, outputBindingPath.toString());
         }
 
         parameters.remove(P_ID);
@@ -293,19 +251,8 @@ public class SempipesServiceController {
 
         // END OF PARAMETER PROCESSING
         final VariablesBinding inputVariablesBinding = new VariablesBinding(transform(parameters));
-        try {
-            if (inputBindingURL != null) {
-                final VariablesBinding vb2 = new VariablesBinding();
-                vb2.load(inputBindingURL.openStream(), "TURTLE");
-                VariablesBinding vb3 = inputVariablesBinding.extendConsistently(vb2);
-                if (vb3.isEmpty()) {
-                    LOG.info("- no conflict between bindings loaded from '" + P_INPUT_BINDING_URL + "' and those provided in query string.");
-                } else {
-                    LOG.info("- conflicts found between bindings loaded from '" + P_INPUT_BINDING_URL + "' and those provided in query string: " + vb3.toString());
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (inputBindingURL != null) {
+            extendBindingFromURL(inputVariablesBinding, inputBindingURL);
         }
         LOG.info("- input variable binding ={}", inputVariablesBinding);
 
@@ -319,25 +266,83 @@ public class SempipesServiceController {
 //        if (asArgs.isExecuteModuleOnly) {
         module = PipelineFactory.loadModule(configModel.createResource(id));
 
-        if ( module == null ) {
-            throw new SempipesServiceException("Cannot load module with id="+id);
+        if (module == null) {
+            throw new SempipesServiceException("Cannot load module with id=" + id);
         }
 
-        outputExecutionContext = engine.executePipeline(module,inputExecutionContext);
+        outputExecutionContext = engine.executePipeline(module, inputExecutionContext);
 //        } else {
 //            module = PipelineFactory.loadPipeline(configModel.createResource(asArgs.configResourceUri));
 //            outputExecutionContext = engine.executePipeline(module, inputExecutionContext);
 //        }
 
-        if ( outputBindingPath != null ) {
+        if (outputBindingPath != null) {
             try {
-                outputExecutionContext.getVariablesBinding().save(new FileOutputStream(outputBindingPath), "TURTLE");
+                outputExecutionContext.getVariablesBinding().save(new FileOutputStream(outputBindingPath), FileUtils.langTurtle);
             } catch (IOException e) {
-                throw new SempipesServiceException("Cannot save output binding.",e);
+                throw new SempipesServiceException("Cannot save output binding.", e);
             }
         }
 
         LOG.info("Processing successfully finished.");
         return outputExecutionContext.getDefaultModel();
     }
+
+    private void logParam(String parameterKey, String parameterValue) {
+        LOG.info("- {}={}", parameterKey, parameterValue);
+    }
+
+    private @NotNull
+    String getId(@NotNull final ServiceParametersHelper paramHelper) {
+
+        if (!paramHelper.hasParameterValue(P_ID)) {
+            return paramHelper.getParameterValue(P_ID);
+        } else if (!paramHelper.hasParameterValue(P_ID_ALTERNATIVE)) {
+            LOG.debug("Parameter '{}' is used instead of parameter '{}', which is missing.", P_ID_ALTERNATIVE, P_ID);
+            return paramHelper.getParameterValue(P_ID_ALTERNATIVE);
+        }
+
+        throw new SempipesServiceException("Invalid/no module id supplied.");
+    }
+
+    private @NotNull
+    Model loadModelFromUrl(@NotNull String modelUrl) {
+        final Model outputModel = ModelFactory.createDefaultModel();
+        try {
+            outputModel.read(modelUrl, FileUtils.langTurtle);
+        } catch (Exception e) {
+            throw new SempipesServiceException("Could not load model from URL " + modelUrl + ".");
+        }
+        return outputModel;
+    }
+
+    private @NotNull
+    File getOutputBindingFile(@NotNull String outputBindingURL) {
+        try {
+            final URL resOutputBindingURL = new URL(outputBindingURL);
+            if (!resOutputBindingURL.getProtocol().equals("file")) {
+                throw new SempipesServiceException("Invalid output binding URL schema - currently only file: URLs are supported.");
+            }
+            return new File(resOutputBindingURL.toURI());
+        } catch (MalformedURLException | URISyntaxException e) {
+            throw new SempipesServiceException("Invalid output binding URL supplied.", e);
+        }
+    }
+
+    private void extendBindingFromURL(VariablesBinding inputVariablesBinding, URL inputBindingURL) {
+        try {
+            final VariablesBinding vb2 = new VariablesBinding();
+            vb2.load(inputBindingURL.openStream(), FileUtils.langTurtle);
+            VariablesBinding vb3 = inputVariablesBinding.extendConsistently(vb2);
+            if (vb3.isEmpty()) {
+                LOG.debug("- no conflict between bindings loaded from '" + P_INPUT_BINDING_URL + "' and those provided in query string.");
+            } else {
+                LOG.info("- conflicts found between bindings loaded from '" + P_INPUT_BINDING_URL + "' and those provided in query string: " + vb3.toString());
+            }
+        } catch (IOException e) {
+            LOG.warn("Could not read data from parameter {}={}, caused by: {}", P_INPUT_BINDING_URL, inputBindingURL, e);
+        }
+
+    }
+
 }
