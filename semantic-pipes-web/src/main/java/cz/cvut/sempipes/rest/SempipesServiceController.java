@@ -183,6 +183,9 @@ public class SempipesServiceController {
             logParam(P_INPUT_BINDING_URL, inputBindingURL.toString());
         }
 
+        if (!paramHelper.hasParameterValue(P_ID)) {
+            parameters.remove(P_ID_ALTERNATIVE);
+        }
         parameters.remove(P_ID);
         parameters.remove(P_CONFIG_URL);
         parameters.remove(P_INPUT_BINDING_URL);
@@ -242,6 +245,9 @@ public class SempipesServiceController {
             logParam(P_OUTPUT_BINDING_URL, outputBindingPath.toString());
         }
 
+        if (!paramHelper.hasParameterValue(P_ID)) {
+            parameters.remove(P_ID_ALTERNATIVE);
+        }
         parameters.remove(P_ID);
         parameters.remove(P_CONFIG_URL);
         parameters.remove(P_INPUT_BINDING_URL);
@@ -293,9 +299,9 @@ public class SempipesServiceController {
     private @NotNull
     String getId(@NotNull final ServiceParametersHelper paramHelper) {
 
-        if (!paramHelper.hasParameterValue(P_ID)) {
+        if (paramHelper.hasParameterValue(P_ID)) {
             return paramHelper.getParameterValue(P_ID);
-        } else if (!paramHelper.hasParameterValue(P_ID_ALTERNATIVE)) {
+        } else if (paramHelper.hasParameterValue(P_ID_ALTERNATIVE)) {
             LOG.debug("Parameter '{}' is used instead of parameter '{}', which is missing.", P_ID_ALTERNATIVE, P_ID);
             return paramHelper.getParameterValue(P_ID_ALTERNATIVE);
         }
