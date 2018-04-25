@@ -68,7 +68,7 @@ public class SemanticLoggingProgressListener implements ProgressListener {
 
     @Override public void pipelineExecutionStarted(final long pipelineExecutionId) {
         Thing pipelineExecution = new Thing();
-        pipelineExecution.setId(getPipelineIri(pipelineExecutionId));
+        pipelineExecution.setId(getPipelineExecutionIri(pipelineExecutionId));
         pipelineExecution.setTypes(Collections.singleton(Vocabulary.s_c_transformation));
 
         executionMap.put(pipelineExecution.getId(), pipelineExecution);
@@ -87,7 +87,7 @@ public class SemanticLoggingProgressListener implements ProgressListener {
     }
 
     @Override public void pipelineExecutionFinished(final long pipelineExecutionId) {
-        final EntityManager em = entityManagerMap.get(getPipelineIri(pipelineExecutionId));
+        final EntityManager em = entityManagerMap.get(getPipelineExecutionIri(pipelineExecutionId));
         synchronized (em) {
             if (em.isOpen()) {
                 final TurtleWriterFactory factory = new TurtleWriterFactory();
@@ -98,7 +98,7 @@ public class SemanticLoggingProgressListener implements ProgressListener {
                     RepositoryConnection con = em.unwrap(SailRepository.class).getConnection();
                     final ValueFactory f = con.getValueFactory();
                     final RepositoryResult<Statement> res = con
-                          .getStatements(null, null, null, true, f.createIRI(getPipelineIri(pipelineExecutionId)));
+                          .getStatements(null, null, null, true, f.createIRI(getPipelineExecutionIri(pipelineExecutionId)));
                     while (res.hasNext()) {
                         writer.handleStatement(res.next());
                     }
@@ -136,7 +136,7 @@ public class SemanticLoggingProgressListener implements ProgressListener {
 
     @Override public void moduleExecutionFinished(long pipelineExecutionId, final String moduleExecutionId,
                                                   final Module module) {
-        final EntityManager em = entityManagerMap.get(getPipelineIri(pipelineExecutionId));
+        final EntityManager em = entityManagerMap.get(getPipelineExecutionIri(pipelineExecutionId));
         Transformation moduleExecution =
             (Transformation) executionMap.get(getModuleExecutionIri(moduleExecutionId));
 
@@ -151,7 +151,7 @@ public class SemanticLoggingProgressListener implements ProgressListener {
             if (em.isOpen()) {
                 em.getTransaction().begin();
                 final Transformation pipelineExecution =
-                    em.find(Transformation.class, getPipelineIri(pipelineExecutionId));
+                    em.find(Transformation.class, getPipelineExecutionIri(pipelineExecutionId));
                 final EntityDescriptor pd = new EntityDescriptor(URI.create(pipelineExecution.getId()));
 
                 pipelineExecution.setProperties(properties);
@@ -196,7 +196,7 @@ public class SemanticLoggingProgressListener implements ProgressListener {
         }
     }
 
-    private String getPipelineIri(final long pipelineId) {
+    private String getPipelineExecutionIri(final long pipelineId) {
         return Vocabulary.s_c_transformation + "/" + pipelineId;
     }
 
