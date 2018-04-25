@@ -3,7 +3,9 @@ package cz.cvut.sempipes.manager;
 import cz.cvut.sempipes.TestConstants;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import static junit.framework.TestCase.assertEquals;
+import org.apache.jena.ontology.OntDocumentManager;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.util.LocationMapper;
@@ -80,6 +82,33 @@ public class OntoDocManagerTest {
         assertTrue(loadedClassNames.contains("IndirectImportTestClass"));
         assertEquals(3, loadedClassNames.size());
     }
+
+    @Ignore
+    @Test //TODO move to a "jena experiment project"
+    public void registerDocumentsToLoadImportClosure2() {
+
+        OntDocumentManager docManager = OntDocumentManager.getInstance();
+
+
+        String dirPath = "file:///home/blcha/projects/kbss/git/semantic-pipes/semantic-pipes-core/src/test/resources/manager/import-closure";
+
+        docManager.addAltEntry("http://onto.fel.cvut.cz/ontologies/test/direct-import-test", dirPath + "/" + "direct-import.ttl");
+        docManager.addAltEntry("http://onto.fel.cvut.cz/ontologies/test/indirect-import-test", dirPath + "/" + "indirect-import.ttl");
+        docManager.addAltEntry("http://onto.fel.cvut.cz/ontologies/test/loading-test", dirPath + "/" + "loading-test.ttl");
+
+        OntModel model = docManager.getOntology("http://onto.fel.cvut.cz/ontologies/test/loading-test", OntModelSpec.OWL_MEM);
+
+        model.loadImports();
+
+        List<String> loadedClassNames = model.listClasses().mapWith(c -> c.asResource().getLocalName()).toList();
+
+        assertTrue(loadedClassNames.contains("LoadedTestClass"));
+        assertTrue(loadedClassNames.contains("DirectImportTestClass"));
+        assertTrue(loadedClassNames.contains("IndirectImportTestClass"));
+        assertEquals(3, loadedClassNames.size());
+    }
+
+
 
     private int getLocationMapperEntriesCount(OntologyDocumentManager ontoDocManager) {
         return getLocationMapperEntriesCount(ontoDocManager.getOntDocumentManager().getFileManager().getLocationMapper());
