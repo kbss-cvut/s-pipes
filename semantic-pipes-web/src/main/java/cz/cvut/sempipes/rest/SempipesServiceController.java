@@ -16,8 +16,6 @@ import cz.cvut.sempipes.util.RDFMimeType;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
@@ -240,7 +238,7 @@ public class SempipesServiceController {
         // FILE WHERE TO SAVE OUTPUT BINDING
         File outputBindingPath = null;
         if (paramHelper.hasParameterValue(P_OUTPUT_BINDING_URL)) {
-            outputBindingPath = getOutputBindingFile(paramHelper.getParameterValue(P_OUTPUT_BINDING_URL));
+            outputBindingPath = paramHelper.parseParameterValueAsFilePath(P_OUTPUT_BINDING_URL).toFile();
             logParam(P_OUTPUT_BINDING_URL, outputBindingPath.toString());
         }
 
@@ -314,19 +312,6 @@ public class SempipesServiceController {
             throw new SempipesServiceException("Could not load model from URL " + modelUrl + ".");
         }
         return outputModel;
-    }
-
-    private @NotNull
-    File getOutputBindingFile(@NotNull String outputBindingURL) {
-        try {
-            final URL resOutputBindingURL = new URL(outputBindingURL);
-            if (!resOutputBindingURL.getProtocol().equals("file")) {
-                throw new SempipesServiceException("Invalid output binding URL schema - currently only file: URLs are supported.");
-            }
-            return new File(resOutputBindingURL.toURI());
-        } catch (MalformedURLException | URISyntaxException e) {
-            throw new SempipesServiceException("Invalid output binding URL supplied.", e);
-        }
     }
 
     private void extendBindingFromURL(VariablesBinding inputVariablesBinding, URL inputBindingURL) {

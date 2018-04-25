@@ -60,8 +60,8 @@ public class ServiceParametersHelper {
         return parameters.containsKey(parameterKey);
     }
 
-    private @NotNull
-    Path parseParameterValueAsPath(@NotNull final String parameterKey) {
+    public @NotNull
+    Path parseParameterValueAsFilePath(@NotNull final String parameterKey) {
         try {
             final URL outputBindingURL = new URL(getParameterValue(parameterKey));
             if (!outputBindingURL.getProtocol().equals("file")) {
