@@ -44,20 +44,20 @@ class ExecutionEngineImpl implements ExecutionEngine {
         });
     }
 
-    private ExecutionContext _executePipeline(long pipelineId, Module module, ExecutionContext context, String predecessorId) {
-        final String moduleExecutionId = pipelineId + "-"+module.hashCode() + "-"+context.hashCode();
+    private ExecutionContext _executePipeline(long pipelineExecutionId, Module module, ExecutionContext context, String predecessorId) {
+        final String moduleExecutionId = pipelineExecutionId + "-"+module.hashCode() + "-"+context.hashCode();
 
 
         // module has run already
         if (module.getOutputContext() != null) {
             module.addOutputBindings(context.getVariablesBinding());
-            fire((l) -> {l.moduleExecutionFinished(pipelineId, moduleExecutionId, module); return null;});
+            fire((l) -> {l.moduleExecutionFinished(pipelineExecutionId, moduleExecutionId, module); return null;});
             return module.getOutputContext();
         }
 
         // module has no predeccesor
         if (module.getInputModules().isEmpty()) {
-            fire((l) -> {l.moduleExecutionStarted(pipelineId, moduleExecutionId, module, context, predecessorId); return null;});
+            fire((l) -> {l.moduleExecutionStarted(pipelineExecutionId, moduleExecutionId, module, context, predecessorId); return null;});
 
             if (module.getExecutionContext() != null) {
                 LOG.debug("Execution context for module {} already set.", module);
@@ -74,12 +74,12 @@ class ExecutionEngineImpl implements ExecutionEngine {
                 }
                 module.addOutputBindings(context.getVariablesBinding());
             }
-            fire((l) -> {l.moduleExecutionFinished(pipelineId, moduleExecutionId, module); return null;});
+            fire((l) -> {l.moduleExecutionFinished(pipelineExecutionId, moduleExecutionId, module); return null;});
             return module.getOutputContext();
         }
 
         Map<Resource, ExecutionContext> resource2ContextMap = module.getInputModules().stream()
-                .collect(Collectors.toMap(Module::getResource, mod -> this._executePipeline(pipelineId, mod, context, moduleExecutionId)));
+                .collect(Collectors.toMap(Module::getResource, mod -> this._executePipeline(pipelineExecutionId, mod, context, moduleExecutionId)));
 
 
         LOG.info(" ##### " + module.getLabel());
@@ -87,7 +87,7 @@ class ExecutionEngineImpl implements ExecutionEngine {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Using input merged context {}", mergedContext.toSimpleString());
         }
-        fire((l) -> {l.moduleExecutionStarted(pipelineId, moduleExecutionId, module, mergedContext, predecessorId); return null;});
+        fire((l) -> {l.moduleExecutionStarted(pipelineExecutionId, moduleExecutionId, module, mergedContext, predecessorId); return null;});
 
         module.setInputContext(mergedContext);
 
@@ -96,7 +96,7 @@ class ExecutionEngineImpl implements ExecutionEngine {
             LOG.trace("Returning output context {}", outputContext.toSimpleString());
         }
         module.addOutputBindings(mergedContext.getVariablesBinding());
-        fire((l) -> {l.moduleExecutionFinished(pipelineId, moduleExecutionId, module); return null;});
+        fire((l) -> {l.moduleExecutionFinished(pipelineExecutionId, moduleExecutionId, module); return null;});
         return module.getOutputContext();
     }
 

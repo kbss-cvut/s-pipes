@@ -8,23 +8,23 @@ public class LoggingProgressListener implements ProgressListener {
     private static final Logger LOG = LoggerFactory.getLogger(LoggingProgressListener.class);
 
     @Override
-    public void pipelineExecutionStarted(long pipelineId) {
-        LOG.debug("pipelineExecutionStarted - pipelineId: {}", pipelineId);
+    public void pipelineExecutionStarted(long pipelineExecutionId) {
+        LOG.debug("pipelineExecutionStarted - pipelineExecutionId: {}", pipelineExecutionId);
     }
 
     @Override
-    public void pipelineExecutionFinished(long pipelineId) {
-        LOG.debug("pipelineExecutionFinished - pipelineId: {}", pipelineId);
+    public void pipelineExecutionFinished(long pipelineExecutionId) {
+        LOG.debug("pipelineExecutionFinished - pipelineExecutionId: {}", pipelineExecutionId);
     }
 
     @Override
-    public void moduleExecutionStarted(long pipelineId, String moduleExecutionId, Module outputModule, ExecutionContext inputContext, String predecessorId) {
-        LOG.debug("moduleExecutionStarted - pipelineId: {}, moduleExecutionId {}, inputContext: {}, predecessorId: {}", pipelineId,
-            moduleExecutionId, inputContext, predecessorId);
+    public void moduleExecutionStarted(long pipelineExecutionId, String moduleExecutionId, Module outputModule, ExecutionContext inputContext, String predecessorModuleExecutionId) {
+        LOG.debug("moduleExecutionStarted - pipelineExecutionId: {}, moduleExecutionId {}, inputContext: {}, predecessorModuleExecutionId: {}", pipelineExecutionId,
+            moduleExecutionId, inputContext, predecessorModuleExecutionId);
     }
 
     @Override
-    public void moduleExecutionFinished(long pipelineId, String moduleExecutionId, Module outputModule) {
-        LOG.debug("moduleExecutionFinished - pipelineId: {}, moduleExecutionId: {}", pipelineId, moduleExecutionId);
+    public void moduleExecutionFinished(long pipelineExecutionId, String moduleExecutionId, Module outputModule) {
+        LOG.debug("moduleExecutionFinished - pipelineExecutionId: {}, moduleExecutionId: {}", pipelineExecutionId, moduleExecutionId);
     }
 }

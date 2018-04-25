@@ -113,45 +113,45 @@ public class SemanticLoggingProgressListener implements ProgressListener {
         }
     }
 
-    @Override public void moduleExecutionStarted(final long pipelineId, final String moduleId,
+    @Override public void moduleExecutionStarted(final long pipelineExecutionId, final String moduleExecutionId,
                                                  final Module outputModule,
                                                  final ExecutionContext inputContext,
-                                                 final String predecessorId) {
+                                                 final String predecessorModuleExecutionId) {
         Transformation moduleExecution = new Transformation();
-        moduleExecution.setId(getModuleExecutionIri(moduleId));
+        moduleExecution.setId(getModuleExecutionIri(moduleExecutionId));
         executionMap.put(moduleExecution.getId(), moduleExecution);
 
         SourceDatasetSnapshot input = new SourceDatasetSnapshot();
         input.setId(
-            saveModelToFile(getDir(pipelineId), "module-" + moduleId + "-input.ttl", inputContext.getDefaultModel()));
+            saveModelToFile(getDir(pipelineExecutionId), "module-" + moduleExecutionId + "-input.ttl", inputContext.getDefaultModel()));
         moduleExecution.setHas_input(input);
 
-        if (predecessorId != null) {
+        if (predecessorModuleExecutionId != null) {
             Map<String, Set<String>> properties2 = new HashMap<>();
             properties2
-                .put(P_HAS_NEXT, Collections.singleton(getModuleExecutionIri(predecessorId)));
+                .put(P_HAS_NEXT, Collections.singleton(getModuleExecutionIri(predecessorModuleExecutionId)));
             moduleExecution.setProperties(properties2);
         }
     }
 
-    @Override public void moduleExecutionFinished(long pipelineId, final String moduleId,
+    @Override public void moduleExecutionFinished(long pipelineExecutionId, final String moduleExecutionId,
                                                   final Module module) {
-        final EntityManager em = entityManagerMap.get(getPipelineIri(pipelineId));
+        final EntityManager em = entityManagerMap.get(getPipelineIri(pipelineExecutionId));
         Transformation moduleExecution =
-            (Transformation) executionMap.get(getModuleExecutionIri(moduleId));
+            (Transformation) executionMap.get(getModuleExecutionIri(moduleExecutionId));
 
         Map<String, Set<String>> properties = new HashMap<>();
         properties.put(P_HAS_PART, Collections.singleton(moduleExecution.getId()));
 
         Thing output = new Thing();
-        output.setId(saveModelToFile(getDir(pipelineId), "module-" + moduleId + "-output.ttl", module.getOutputContext().getDefaultModel()));
+        output.setId(saveModelToFile(getDir(pipelineExecutionId), "module-" + moduleExecutionId + "-output.ttl", module.getOutputContext().getDefaultModel()));
         moduleExecution.setHas_output(Collections.singleton(output));
 
         synchronized (em) {
             if (em.isOpen()) {
                 em.getTransaction().begin();
                 final Transformation pipelineExecution =
-                    em.find(Transformation.class, getPipelineIri(pipelineId));
+                    em.find(Transformation.class, getPipelineIri(pipelineExecutionId));
                 final EntityDescriptor pd = new EntityDescriptor(URI.create(pipelineExecution.getId()));
 
                 pipelineExecution.setProperties(properties);
