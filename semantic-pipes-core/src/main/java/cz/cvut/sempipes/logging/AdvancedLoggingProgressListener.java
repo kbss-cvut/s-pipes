@@ -144,7 +144,9 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
         em.getTransaction().begin();
 
         // new
-        addProperty(pipelineExecution, SPIPES.has_pipeline_execution_start_date, new Date());
+        Date startDate = new Date();
+        addProperty(pipelineExecution, SPIPES.has_pipeline_execution_start_date, startDate);
+        addProperty(pipelineExecution, SPIPES.has_pipeline_execution_start_date_unix, startDate.getTime());
         if (pipelineExecutionGroupId != null) {
             addProperty(pipelineExecution, PIPELINE_EXECUTION_GROUP_ID, pipelineExecutionGroupId);
         }
@@ -196,6 +198,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
             // new
             Date startDate = (Date) getSingletonPropertyValue(pipelineExecution, SPIPES.has_pipeline_execution_start_date);
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_finish_date, finishDate);
+            addProperty(pipelineExecution, SPIPES.has_pipeline_execution_finish_date_unix, finishDate.getTime());
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_duration, computeDuration(startDate, finishDate));
 
             em.getTransaction().commit();
@@ -254,7 +257,9 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
         // new
         addProperty(moduleExecution, SPIPES.has_module_id, URI.create(outputModule.getResource().getURI()));
         addProperty(moduleExecution, SPIPES.has_module_type, URI.create(outputModule.getTypeURI()));
-        addProperty(moduleExecution, SPIPES.has_module_execution_start_date, new Date());
+        Date startDate = new Date();
+        addProperty(moduleExecution, SPIPES.has_module_execution_start_date, startDate);
+        addProperty(moduleExecution, SPIPES.has_module_execution_start_date_unix, startDate.getTime());
 
         // put model to map
         executionMap.put(moduleExecution.getId(), moduleExecution);
@@ -310,6 +315,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
                 // new
                 Date startDate = (Date) getSingletonPropertyValue(moduleExecution, SPIPES.has_module_execution_start_date);
                 addProperty(moduleExecution, SPIPES.has_module_execution_finish_date, finishDate);
+                addProperty(moduleExecution, SPIPES.has_module_execution_finish_date_unix, finishDate.getTime());
                 addProperty(moduleExecution, SPIPES.has_module_execution_duration, computeDuration(startDate, finishDate));
 
                 // input binding
