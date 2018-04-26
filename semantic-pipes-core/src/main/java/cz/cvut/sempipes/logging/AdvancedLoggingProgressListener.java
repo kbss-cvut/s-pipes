@@ -347,7 +347,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
         }
 
         // save data
-        saveModelToFile(output.getId(), module.getOutputContext().getDefaultModel());
+//        saveModelToFile(output.getId(), module.getOutputContext().getDefaultModel());
     }
 
     private void writeRawData(EntityManager em, URI contextUri, Model model) {
