@@ -33,7 +33,7 @@ public class ExecutionContextDatasetSource
     @Id(generated = true)
     protected String id;
     @Properties
-    protected Map<String, Set<String>> properties;
+    protected Map<String, Set<Object>> properties;
     @OWLObjectProperty(iri = Vocabulary.s_p_is_created_by)
     @ParticipationConstraints({
         @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_transformation, max = 1)
@@ -72,11 +72,11 @@ public class ExecutionContextDatasetSource
         return id;
     }
 
-    public void setProperties(Map<String, Set<String>> properties) {
+    public void setProperties(Map<String, Set<Object>> properties) {
         this.properties = properties;
     }
 
-    public Map<String, Set<String>> getProperties() {
+    public Map<String, Set<Object>> getProperties() {
         return properties;
     }
 

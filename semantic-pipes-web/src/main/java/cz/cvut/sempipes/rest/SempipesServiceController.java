@@ -10,6 +10,7 @@ import cz.cvut.sempipes.exception.SempipesServiceException;
 import cz.cvut.sempipes.manager.SempipesScriptManager;
 import cz.cvut.sempipes.modules.Module;
 import cz.cvut.sempipes.rest.util.ContextLoaderHelper;
+import cz.cvut.sempipes.rest.util.ProgressListenerLoader;
 import cz.cvut.sempipes.rest.util.ScriptManagerFactory;
 import cz.cvut.sempipes.rest.util.ServiceParametersHelper;
 import cz.cvut.sempipes.util.RDFMimeType;
@@ -175,6 +176,9 @@ public class SempipesServiceController {
         final String id = getId(paramHelper);
         logParam(P_ID, id);
 
+        // LOAD CONFIGURATION
+        final String configURL = paramHelper.getRequiredParameterValue(P_CONFIG_URL);
+        logParam(P_CONFIG_URL, configURL);
 
         // FILE WHERE TO GET INPUT BINDING
         URL inputBindingURL = null;
@@ -183,10 +187,14 @@ public class SempipesServiceController {
             logParam(P_INPUT_BINDING_URL, inputBindingURL.toString());
         }
 
+        // TODO included P_ID
+        //      -- commented out to be available to semantic logging listener (engine should provide it instead)
         if (!paramHelper.hasParameterValue(P_ID)) {
+            parameters.add(P_ID, paramHelper.getParameterValue(P_ID_ALTERNATIVE));
             parameters.remove(P_ID_ALTERNATIVE);
         }
-        parameters.remove(P_ID);
+
+        // parameters.remove(P_ID);
         parameters.remove(P_CONFIG_URL);
         parameters.remove(P_INPUT_BINDING_URL);
         parameters.remove(P_OUTPUT_BINDING_URL);
@@ -198,12 +206,17 @@ public class SempipesServiceController {
         }
         LOG.info("- input variable binding ={}", inputVariablesBinding);
 
+        // CONFIGURE ENGINE
+        final Model configModel = loadModelFromUrl(configURL);
+        ExecutionEngine engine = ExecutionEngineFactory.createEngine();
+        ProgressListenerLoader.createListeners(configModel).forEach(
+            engine::addProgressListener
+        );
+
         // LOAD INPUT DATA
         ExecutionContext inputExecutionContext = ExecutionContextFactory.createContext(inputDataModel, inputVariablesBinding);
 
         // EXECUTE PIPELINE
-        ExecutionEngine engine = ExecutionEngineFactory.createEngine();
-
         ContextLoaderHelper.updateContextsIfNecessary(scriptManager);
         Module module = scriptManager.loadFunction(id);
 
@@ -229,7 +242,6 @@ public class SempipesServiceController {
         // LOAD MODULE CONFIGURATION
         final String configURL = paramHelper.getRequiredParameterValue(P_CONFIG_URL);
         logParam(P_CONFIG_URL, configURL);
-        final Model configModel = loadModelFromUrl(configURL);
 
         // FILE WHERE TO GET INPUT BINDING
         URL inputBindingURL = null;
@@ -245,10 +257,14 @@ public class SempipesServiceController {
             logParam(P_OUTPUT_BINDING_URL, outputBindingPath.toString());
         }
 
+        // TODO included P_ID
+        //      -- commented out to be available to semantic logging listener (engine should provide it instead)
         if (!paramHelper.hasParameterValue(P_ID)) {
+            parameters.add(P_ID, paramHelper.getParameterValue(P_ID_ALTERNATIVE));
             parameters.remove(P_ID_ALTERNATIVE);
         }
-        parameters.remove(P_ID);
+
+        // parameters.remove(P_ID);
         parameters.remove(P_CONFIG_URL);
         parameters.remove(P_INPUT_BINDING_URL);
         parameters.remove(P_OUTPUT_BINDING_URL);
@@ -260,10 +276,17 @@ public class SempipesServiceController {
         }
         LOG.info("- input variable binding ={}", inputVariablesBinding);
 
+        // CONFIGURE ENGINE
+        final Model configModel = loadModelFromUrl(configURL);
+        ExecutionEngine engine = ExecutionEngineFactory.createEngine();
+        ProgressListenerLoader.createListeners(configModel).forEach(
+            engine::addProgressListener
+        );
+
         // LOAD INPUT DATA
         ExecutionContext inputExecutionContext = ExecutionContextFactory.createContext(inputDataModel, inputVariablesBinding);
 
-        ExecutionEngine engine = ExecutionEngineFactory.createEngine();
+
         ExecutionContext outputExecutionContext;
         Module module;
         // should execute module only

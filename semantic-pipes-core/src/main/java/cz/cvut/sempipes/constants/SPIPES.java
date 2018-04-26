@@ -20,9 +20,21 @@ public class SPIPES {
     protected static final Property property(String local )
     { return ResourceFactory.createProperty( uri, local ); }
 
-    public static final Resource LoggingProgressListener = resource("logging-progress-listener");
+    public static final Resource ProgressListener = resource("progress-listener");
 
     public static final Property has_classname = property("has-classname");
+
+    public static final Property has_module_execution_start_date = property("has-module-execution-start-date");
+    public static final Property has_module_execution_finish_date = property("has-module-execution-finish-date");
+    public static final Property has_module_execution_duration = property("has-module-execution-duration");
+    public static final Property has_pipeline_execution_start_date = property("has-pipeline-execution-start-date");
+    public static final Property has_pipeline_execution_finish_date = property("has-pipeline-execution-finish-date");
+    public static final Property has_pipeline_execution_duration = property("has-pipeline-execution-duration");
+
+    public static final Property has_module_type = property("has-module-type");
+    public static final Property has_module_id = property("has-module-id");
+    public static final Property has_pipeline_input_binding = property("has-pipeline-input-binding");
+
 
     /**
      returns the URI for this schema

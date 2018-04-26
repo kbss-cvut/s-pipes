@@ -33,7 +33,7 @@ public class Intent
     @Id(generated = true)
     protected String id;
     @Properties
-    protected Map<String, Set<String>> properties;
+    protected Map<String, Set<Object>> properties;
     @OWLObjectProperty(iri = Vocabulary.s_p_inv_dot_has_intent)
     @ParticipationConstraints({
         @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_dataset_exploring_journalist, max = 1)
@@ -77,11 +77,11 @@ public class Intent
         return id;
     }
 
-    public void setProperties(Map<String, Set<String>> properties) {
+    public void setProperties(Map<String, Set<Object>> properties) {
         this.properties = properties;
     }
 
-    public Map<String, Set<String>> getProperties() {
+    public Map<String, Set<Object>> getProperties() {
         return properties;
     }
 

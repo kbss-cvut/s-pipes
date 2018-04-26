@@ -33,7 +33,7 @@ public class Description
     @Id(generated = true)
     protected String id;
     @Properties
-    protected Map<String, Set<String>> properties;
+    protected Map<String, Set<Object>> properties;
     @OWLObjectProperty(iri = Vocabulary.s_p_has_dataset_descriptor)
     @ParticipationConstraints({
         @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_dataset_descriptor, max = 1)
@@ -82,11 +82,11 @@ public class Description
         return id;
     }
 
-    public void setProperties(Map<String, Set<String>> properties) {
+    public void setProperties(Map<String, Set<Object>> properties) {
         this.properties = properties;
     }
 
-    public Map<String, Set<String>> getProperties() {
+    public Map<String, Set<Object>> getProperties() {
         return properties;
     }
 

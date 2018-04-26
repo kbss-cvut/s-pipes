@@ -30,7 +30,7 @@ public class DescribedDatasetSnapshot
     @Id(generated = true)
     protected String id;
     @Properties
-    protected Map<String, Set<String>> properties;
+    protected Map<String, Set<Object>> properties;
 
     public void setName(String name) {
         this.name = name;
@@ -64,11 +64,11 @@ public class DescribedDatasetSnapshot
         return id;
     }
 
-    public void setProperties(Map<String, Set<String>> properties) {
+    public void setProperties(Map<String, Set<Object>> properties) {
         this.properties = properties;
     }
 
-    public Map<String, Set<String>> getProperties() {
+    public Map<String, Set<Object>> getProperties() {
         return properties;
     }
 

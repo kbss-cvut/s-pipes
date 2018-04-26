@@ -1,6 +1,7 @@
 package cz.cvut.sempipes.logging;
 
 import cz.cvut.kbss.jopa.model.EntityManager;
+import cz.cvut.kbss.jopa.model.IRI;
 import cz.cvut.kbss.jopa.model.JOPAPersistenceProperties;
 import cz.cvut.kbss.jopa.model.descriptors.EntityDescriptor;
 import cz.cvut.sempipes.Vocabulary;
@@ -127,9 +128,9 @@ public class SemanticLoggingProgressListener implements ProgressListener {
         moduleExecution.setHas_input(input);
 
         if (predecessorModuleExecutionId != null) {
-            Map<String, Set<String>> properties2 = new HashMap<>();
+            Map<String, Set<Object>> properties2 = new HashMap<>();
             properties2
-                .put(P_HAS_NEXT, Collections.singleton(getModuleExecutionIri(predecessorModuleExecutionId)));
+                .put(P_HAS_NEXT, Collections.singleton(URI.create(getModuleExecutionIri(predecessorModuleExecutionId))));
             moduleExecution.setProperties(properties2);
         }
     }
@@ -140,8 +141,8 @@ public class SemanticLoggingProgressListener implements ProgressListener {
         Transformation moduleExecution =
             (Transformation) executionMap.get(getModuleExecutionIri(moduleExecutionId));
 
-        Map<String, Set<String>> properties = new HashMap<>();
-        properties.put(P_HAS_PART, Collections.singleton(moduleExecution.getId()));
+        Map<String, Set<Object>> properties = new HashMap<>();
+        properties.put(P_HAS_PART, Collections.singleton(URI.create(moduleExecution.getId())));
 
         Thing output = new Thing();
         output.setId(saveModelToFile(getDir(pipelineExecutionId), "module-" + moduleExecutionId + "-output.ttl", module.getOutputContext().getDefaultModel()));
@@ -158,7 +159,7 @@ public class SemanticLoggingProgressListener implements ProgressListener {
                 if (moduleExecution.getProperties() != null && moduleExecution.getProperties().containsKey(
                     P_HAS_NEXT)) {
                     String nextId = moduleExecution.getProperties().get(P_HAS_NEXT).iterator()
-                                                   .next();
+                                                   .next().toString();
                     Thing next = new Thing();
                     next.setId(nextId);
                     em.merge(next, pd);
