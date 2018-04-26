@@ -177,8 +177,11 @@ public class SempipesServiceController {
         logParam(P_ID, id);
 
         // LOAD CONFIGURATION
-        final String configURL = paramHelper.getRequiredParameterValue(P_CONFIG_URL);
-        logParam(P_CONFIG_URL, configURL);
+        String configURL = null;
+        if (paramHelper.hasParameterValue(P_CONFIG_URL)) {
+            configURL = paramHelper.getRequiredParameterValue(P_CONFIG_URL);
+            logParam(P_CONFIG_URL, configURL);
+        }
 
         // FILE WHERE TO GET INPUT BINDING
         URL inputBindingURL = null;
@@ -207,11 +210,14 @@ public class SempipesServiceController {
         LOG.info("- input variable binding ={}", inputVariablesBinding);
 
         // CONFIGURE ENGINE
-        final Model configModel = loadModelFromUrl(configURL);
+
         ExecutionEngine engine = ExecutionEngineFactory.createEngine();
-        ProgressListenerLoader.createListeners(configModel).forEach(
-            engine::addProgressListener
-        );
+        if (configURL != null) {
+            final Model configModel = loadModelFromUrl(configURL);
+            ProgressListenerLoader.createListeners(configModel).forEach(
+                engine::addProgressListener
+            );
+        }
 
         // LOAD INPUT DATA
         ExecutionContext inputExecutionContext = ExecutionContextFactory.createContext(inputDataModel, inputVariablesBinding);
