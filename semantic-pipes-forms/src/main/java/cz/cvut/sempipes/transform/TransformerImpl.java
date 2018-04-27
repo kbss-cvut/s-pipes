@@ -6,13 +6,18 @@ import cz.cvut.sforms.VocabularyJena;
 import cz.cvut.sforms.model.Answer;
 import cz.cvut.sforms.model.Question;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.jena.graph.Graph;
+import org.apache.jena.ontology.OntModel;
+import org.apache.jena.query.Query;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.rdf.model.impl.PropertyImpl;
 import org.apache.jena.util.ResourceUtils;
+import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.topbraid.spin.arq.ARQ2SPIN;
 import org.topbraid.spin.system.SPINModuleRegistry;
 
 import java.net.URI;
@@ -77,6 +82,8 @@ public class TransformerImpl implements Transformer {
             processedPredicates.add(p);
             Question subQ = createQuestion(p);
 
+            subQ.setProperties(extractQuestionMetadata(st));
+
             Answer a = getAnswer(st.getObject());
             a.setOrigin(key.a);
 
@@ -100,6 +107,8 @@ public class TransformerImpl implements Transformer {
             }
 
             Question subQ = createQuestion(p);
+
+            subQ.setProperties(extractQuestionMetadata(st));
 
             subQ.setOrigin(URI.create(p.getURI()));
             subQ.setAnswers(Collections.singleton(new Answer()));
@@ -145,16 +154,23 @@ public class TransformerImpl implements Transformer {
         URI newUri = new ArrayList<>(uriQ.getAnswers()).get(0).getCodeValue();
 
         if (module.listProperties().hasNext()) {
-            Map<OriginPair<URI, URI>, Statement> questionStatements = getOrigin2StatementMap(module);
+            Map<OriginPair<URI, URI>, Statement> questionStatements = getOrigin2StatementMap(module); // Created answer origin is different from the actual one
             findRegularQ(form).forEach((q) -> {
                 OriginPair<URI, URI> originPair = new OriginPair<>(q.getOrigin(), getAnswer(q).map(Answer::getOrigin).orElse(null));
                 Statement s = questionStatements.get(originPair);
                 if (Objects.nonNull(s)) {
                     outputScript.remove(s);
                 }
-                RDFNode answerNode = getAnswerNode(getAnswer(q).orElse(null));
-                if (answerNode != null) {
-                    outputScript.add(s.getSubject(), s.getPredicate(), answerNode);
+                if (isSupportedAnon(q)) {
+                    Query query = AnonNodeTransformer.parse(q, inputScript);
+                    org.topbraid.spin.model.Query spinQuery = ARQ2SPIN.parseQuery(query.serialize(), inputScript);
+                    outputScript.add(spinQuery.getModel());
+                }
+                else {
+                    RDFNode answerNode = getAnswerNode(getAnswer(q).orElse(null));
+                    if (answerNode != null) {
+                        outputScript.add(s.getSubject(), s.getPredicate(), answerNode);
+                    }
                 }
             });
         }
@@ -241,8 +257,11 @@ public class TransformerImpl implements Transformer {
     }
 
     private URI createAnswerOrigin(Statement statement) {
+        if (!statement.getObject().isAnon())
+            return URI.create(VocabularyJena.s_c_answer_origin.toString() +
+                    "/" + createMd5Hash(statement.getObject().toString()));
         return URI.create(VocabularyJena.s_c_answer_origin.toString() +
-                "/" + createMd5Hash(statement.getObject().toString()));
+                "/" + createMd5Hash(AnonNodeTransformer.serialize(statement.getObject())));
     }
 
     private String createMd5Hash(String text) {
@@ -262,6 +281,15 @@ public class TransformerImpl implements Transformer {
             q.setDescription(labelSt.getString());
         }
         return q;
+    }
+
+    private Map<String, Set<String>> extractQuestionMetadata(Statement st) {
+        Map<String, Set<String>> p = new HashMap<>();
+        if (st.getPredicate().hasProperty(RDFS.range))
+            p.put(Vocabulary.s_p_has_answer_value_type, Collections.singleton(st.getPredicate().getProperty(RDFS.range).getObject().asResource().getURI()));
+        Model m = extractModel(st);
+        p.put(Vocabulary.s_p_has_origin_context, Collections.singleton(m.listStatements(null, RDF.type, OWL.Ontology).next().getSubject().getURI()));
+        return p;
     }
 
     public static class OriginPair<Q, A> {
@@ -289,5 +317,36 @@ public class TransformerImpl implements Transformer {
             OriginPair p = (OriginPair) o;
             return Objects.equals(q, p.q) && Objects.equals(a, p.a);
         }
+    }
+
+    private boolean isSupportedAnon(Question q) {
+        if (q.getProperties().containsKey(Vocabulary.s_p_has_answer_value_type)) {
+            Set<String> types = q.getProperties().get(Vocabulary.s_p_has_answer_value_type);
+            return types.contains(Vocabulary.s_c_Ask) ||
+                    types.contains(Vocabulary.s_c_Construct) ||
+                    types.contains(Vocabulary.s_c_Describe) ||
+                    types.contains(Vocabulary.s_c_Select);
+        }
+        return false;
+    }
+
+    Model extractModel(Statement st) {
+        Model model = st.getModel(); // Iterate through subgraphs and find model defining st and return it (or IRI)
+        return find(st, model.getGraph(), Optional.empty()).orElse(null);
+    }
+
+    private Optional<Model> find(Statement st, Graph graph, Optional<Model> res) {
+        if (res.isPresent())
+            return res;
+        Model m = ModelFactory.createModelForGraph(graph);
+        if (m.contains(st))
+            return find(st, graph, Optional.of(m));
+        if (m instanceof OntModel) {
+            OntModel ontM = (OntModel) m;
+            Optional<Optional<Model>> o = ontM.getSubGraphs().stream().map(g -> find(st, g, res)).filter(Optional::isPresent).findFirst();
+            if (o.isPresent())
+                return o.get();
+        }
+        return Optional.empty();
     }
 }

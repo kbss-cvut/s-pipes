@@ -1,0 +1,540 @@
+@prefix : <http://onto.fel.cvut.cz/ontologies/test/> .
+@prefix descriptor: <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/> .
+@prefix kbss-module: <http://onto.fel.cvut.cz/ontologies/lib/module/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sml: <http://topbraid.org/sparqlmotionlib#> .
+@prefix sp: <http://spinrdf.org/sp#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:example-construct
+  sml:constructQuery [
+      rdf:type sp:Construct ;
+      sp:templates (
+          [
+            sp:object descriptor:spo-summary-descriptor ;
+            sp:predicate rdf:type ;
+            sp:subject [
+                sp:varName "descriptor"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "description"^^xsd:string ;
+              ] ;
+            sp:predicate <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-dataset-descriptor> ;
+            sp:subject [
+                sp:varName "descriptor"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object descriptor:description ;
+            sp:predicate rdf:type ;
+            sp:subject [
+                sp:varName "description"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "datasetSnapshot"^^xsd:string ;
+              ] ;
+            sp:predicate descriptor:is-description-of ;
+            sp:subject [
+                sp:varName "description"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object descriptor:described-dataset-snapshot ;
+            sp:predicate rdf:type ;
+            sp:subject [
+                sp:varName "datasetSnapshot"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "snapshotHash"^^xsd:string ;
+              ] ;
+            sp:predicate descriptor:has-data-hash ;
+            sp:subject [
+                sp:varName "datasetSnapshot"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "snapshotRetrievalDate"^^xsd:string ;
+              ] ;
+            sp:predicate descriptor:has-retrieval-date ;
+            sp:subject [
+                sp:varName "datasetSnapshot"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "dataset"^^xsd:string ;
+              ] ;
+            sp:predicate descriptor:has-dataset ;
+            sp:subject [
+                sp:varName "datasetSnapshot"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object descriptor:dataset ;
+            sp:predicate rdf:type ;
+            sp:subject [
+                sp:varName "dataset"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "datasetSource"^^xsd:string ;
+              ] ;
+            sp:predicate descriptor:has-source ;
+            sp:subject [
+                sp:varName "description"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "datasetSourceType"^^xsd:string ;
+              ] ;
+            sp:predicate rdf:type ;
+            sp:subject [
+                sp:varName "datasetSource"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "snapshotDownloadUrl_"^^xsd:string ;
+              ] ;
+            sp:predicate descriptor:has-download-url ;
+            sp:subject [
+                sp:varName "datasetSource"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "datasetEndpointUrl"^^xsd:string ;
+              ] ;
+            sp:predicate descriptor:has-endpoint-url ;
+            sp:subject [
+                sp:varName "datasetSource"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "snapshotGraphId"^^xsd:string ;
+              ] ;
+            sp:predicate descriptor:has-graph-id ;
+            sp:subject [
+                sp:varName "datasetSource"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "eventsDate"^^xsd:string ;
+              ] ;
+            sp:predicate descriptor:has-creation-date ;
+            sp:subject [
+                sp:varName "description"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "datasetSnapshot"^^xsd:string ;
+              ] ;
+            sp:predicate descriptor:describes ;
+            sp:subject [
+                sp:varName "descriptor"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "publication"^^xsd:string ;
+              ] ;
+            sp:predicate <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-published-dataset-snapshot> ;
+            sp:subject [
+                sp:varName "descriptor"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object descriptor:dataset-publication ;
+            sp:predicate rdf:type ;
+            sp:subject [
+                sp:varName "publication"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "eventsDate"^^xsd:string ;
+              ] ;
+            sp:predicate descriptor:has-creation-date ;
+            sp:subject [
+                sp:varName "publication"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "descriptorSource"^^xsd:string ;
+              ] ;
+            sp:predicate descriptor:has-source ;
+            sp:subject [
+                sp:varName "publication"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object descriptor:named-graph-sparql-endpoint-dataset-source ;
+            sp:predicate rdf:type ;
+            sp:subject [
+                sp:varName "descriptorSource"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "descriptorDownloadUrl_"^^xsd:string ;
+              ] ;
+            sp:predicate descriptor:has-download-url ;
+            sp:subject [
+                sp:varName "descriptorSource"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "descriptorEndpointUrl"^^xsd:string ;
+              ] ;
+            sp:predicate descriptor:has-endpoint-url ;
+            sp:subject [
+                sp:varName "descriptorSource"^^xsd:string ;
+              ] ;
+          ]
+          [
+            sp:object [
+                sp:varName "descriptorGraphId"^^xsd:string ;
+              ] ;
+            sp:predicate descriptor:has-graph-id ;
+            sp:subject [
+                sp:varName "descriptorSource"^^xsd:string ;
+              ] ;
+          ]
+        ) ;
+      sp:text """CONSTRUCT
+  { ?descriptor rdf:type descriptor:spo-summary-descriptor .
+    ?descriptor descriptor:inv.has-dataset-descriptor ?description .
+    ?description rdf:type descriptor:description .
+    ?description descriptor:is-description-of ?datasetSnapshot .
+    ?datasetSnapshot rdf:type descriptor:described-dataset-snapshot .
+    ?datasetSnapshot descriptor:has-data-hash ?snapshotHash .
+    ?datasetSnapshot descriptor:has-retrieval-date ?snapshotRetrievalDate .
+    ?datasetSnapshot descriptor:has-dataset ?dataset .
+    ?dataset rdf:type descriptor:dataset .
+    ?description descriptor:has-source ?datasetSource .
+    ?datasetSource rdf:type ?datasetSourceType .
+    ?datasetSource descriptor:has-download-url ?snapshotDownloadUrl_ .
+    ?datasetSource descriptor:has-endpoint-url ?datasetEndpointUrl .
+    ?datasetSource descriptor:has-graph-id ?snapshotGraphId .
+    ?description descriptor:has-creation-date ?eventsDate .
+    ?descriptor descriptor:describes ?datasetSnapshot .
+    ?descriptor descriptor:inv.has-published-dataset-snapshot ?publication .
+    ?publication rdf:type descriptor:dataset-publication .
+    ?publication descriptor:has-creation-date ?eventsDate .
+    ?publication descriptor:has-source ?descriptorSource .
+    ?descriptorSource rdf:type descriptor:named-graph-sparql-endpoint-dataset-source .
+    ?descriptorSource descriptor:has-download-url ?descriptorDownloadUrl_ .
+    ?descriptorSource descriptor:has-endpoint-url ?descriptorEndpointUrl .
+    ?descriptorSource descriptor:has-graph-id ?descriptorGraphId .}
+WHERE
+ {
+    BIND(now() AS ?eventsDate)
+    BIND(iri(CONCAT(str(?descriptorType), \"--\", ?snapshotHash)) AS ?descriptor)
+    BIND(iri(concat(str(descriptor:description), \"--\", MD5(concat(?transformationHash, str(?eventsDate))))) AS ?description)
+    BIND(iri(concat(str(descriptor:dataset-snapshot), \"--\", ?snapshotHash)) AS ?datasetSnapshot)
+    BIND(COALESCE(iri(?oldDatasetSource), iri(concat(str(descriptor:dataset-source), \"--\", ?datasetSourceHash))) AS ?datasetSource)
+    BIND(IF(bound(?snapshotGraphId),descriptor:named-graph-sparql-endpoint-dataset-source, descriptor:sparql-endpoint-dataset-source) as ?datasetSourceType)
+    BIND(iri(concat(str(descriptor:dataset), \"--\", ?datasetSourceHash)) AS ?dataset)
+    BIND(iri(concat(str(descriptor:dataset-publication), \"--\", MD5(concat(?transformationHash, str(?eventsDate))))) AS ?publication)
+    BIND(MD5(concat(?descriptorEndpointUrl, ?descriptorGraphId)) AS ?descriptorSourceHash)
+    BIND(COALESCE(iri(?oldDescriptorSource), iri(concat(str(descriptor:dataset-source), \"--\", ?descriptorSourceHash))) AS ?descriptorSource)
+    BIND(iri(?datasetEndpointUrl) AS ?datasetEndpointUrl_)
+    BIND(iri(?snapshotDownloadUrl) AS ?snapshotDownloadUrl_)
+    BIND(iri(?descriptorEndpointUrl) AS ?descriptorEndpointUrl_)
+    BIND(iri(?descriptorDownloadUrl) AS ?descriptorDownloadUrl_)
+}
+"""^^xsd:string ;
+      sp:where (
+          [
+            rdf:type sp:Bind ;
+            sp:expression [
+                rdf:type sp:now ;
+              ] ;
+            sp:variable [
+                sp:varName "eventsDate"^^xsd:string ;
+              ] ;
+          ]
+          [
+            rdf:type sp:Bind ;
+            sp:expression [
+                rdf:type sp:iri ;
+                sp:arg1 [
+                    rdf:type sp:concat ;
+                    sp:arg1 [
+                        rdf:type sp:str ;
+                        sp:arg1 [
+                            sp:varName "descriptorType"^^xsd:string ;
+                          ] ;
+                      ] ;
+                    sp:arg2 "--" ;
+                    sp:arg3 [
+                        sp:varName "snapshotHash"^^xsd:string ;
+                      ] ;
+                  ] ;
+              ] ;
+            sp:variable [
+                sp:varName "descriptor"^^xsd:string ;
+              ] ;
+          ]
+          [
+            rdf:type sp:Bind ;
+            sp:expression [
+                rdf:type sp:iri ;
+                sp:arg1 [
+                    rdf:type sp:concat ;
+                    sp:arg1 [
+                        rdf:type sp:str ;
+                        sp:arg1 descriptor:description ;
+                      ] ;
+                    sp:arg2 "--" ;
+                    sp:arg3 [
+                        rdf:type sp:md5 ;
+                        sp:arg1 [
+                            rdf:type sp:concat ;
+                            sp:arg1 [
+                                sp:varName "transformationHash"^^xsd:string ;
+                              ] ;
+                            sp:arg2 [
+                                rdf:type sp:str ;
+                                sp:arg1 [
+                                    sp:varName "eventsDate"^^xsd:string ;
+                                  ] ;
+                              ] ;
+                          ] ;
+                      ] ;
+                  ] ;
+              ] ;
+            sp:variable [
+                sp:varName "description"^^xsd:string ;
+              ] ;
+          ]
+          [
+            rdf:type sp:Bind ;
+            sp:expression [
+                rdf:type sp:iri ;
+                sp:arg1 [
+                    rdf:type sp:concat ;
+                    sp:arg1 [
+                        rdf:type sp:str ;
+                        sp:arg1 descriptor:dataset-snapshot ;
+                      ] ;
+                    sp:arg2 "--" ;
+                    sp:arg3 [
+                        sp:varName "snapshotHash"^^xsd:string ;
+                      ] ;
+                  ] ;
+              ] ;
+            sp:variable [
+                sp:varName "datasetSnapshot"^^xsd:string ;
+              ] ;
+          ]
+          [
+            rdf:type sp:Bind ;
+            sp:expression [
+                rdf:type sp:coalesce ;
+                sp:arg1 [
+                    rdf:type sp:iri ;
+                    sp:arg1 [
+                        sp:varName "oldDatasetSource"^^xsd:string ;
+                      ] ;
+                  ] ;
+                sp:arg2 [
+                    rdf:type sp:iri ;
+                    sp:arg1 [
+                        rdf:type sp:concat ;
+                        sp:arg1 [
+                            rdf:type sp:str ;
+                            sp:arg1 descriptor:dataset-source ;
+                          ] ;
+                        sp:arg2 "--" ;
+                        sp:arg3 [
+                            sp:varName "datasetSourceHash"^^xsd:string ;
+                          ] ;
+                      ] ;
+                  ] ;
+              ] ;
+            sp:variable [
+                sp:varName "datasetSource"^^xsd:string ;
+              ] ;
+          ]
+          [
+            rdf:type sp:Bind ;
+            sp:expression [
+                rdf:type sp:if ;
+                sp:arg1 [
+                    rdf:type sp:bound ;
+                    sp:arg1 [
+                        sp:varName "snapshotGraphId"^^xsd:string ;
+                      ] ;
+                  ] ;
+                sp:arg2 descriptor:named-graph-sparql-endpoint-dataset-source ;
+                sp:arg3 descriptor:sparql-endpoint-dataset-source ;
+              ] ;
+            sp:variable [
+                sp:varName "datasetSourceType"^^xsd:string ;
+              ] ;
+          ]
+          [
+            rdf:type sp:Bind ;
+            sp:expression [
+                rdf:type sp:iri ;
+                sp:arg1 [
+                    rdf:type sp:concat ;
+                    sp:arg1 [
+                        rdf:type sp:str ;
+                        sp:arg1 descriptor:dataset ;
+                      ] ;
+                    sp:arg2 "--" ;
+                    sp:arg3 [
+                        sp:varName "datasetSourceHash"^^xsd:string ;
+                      ] ;
+                  ] ;
+              ] ;
+            sp:variable [
+                sp:varName "dataset"^^xsd:string ;
+              ] ;
+          ]
+          [
+            rdf:type sp:Bind ;
+            sp:expression [
+                rdf:type sp:iri ;
+                sp:arg1 [
+                    rdf:type sp:concat ;
+                    sp:arg1 [
+                        rdf:type sp:str ;
+                        sp:arg1 descriptor:dataset-publication ;
+                      ] ;
+                    sp:arg2 "--" ;
+                    sp:arg3 [
+                        rdf:type sp:md5 ;
+                        sp:arg1 [
+                            rdf:type sp:concat ;
+                            sp:arg1 [
+                                sp:varName "transformationHash"^^xsd:string ;
+                              ] ;
+                            sp:arg2 [
+                                rdf:type sp:str ;
+                                sp:arg1 [
+                                    sp:varName "eventsDate"^^xsd:string ;
+                                  ] ;
+                              ] ;
+                          ] ;
+                      ] ;
+                  ] ;
+              ] ;
+            sp:variable [
+                sp:varName "publication"^^xsd:string ;
+              ] ;
+          ]
+          [
+            rdf:type sp:Bind ;
+            sp:expression [
+                rdf:type sp:md5 ;
+                sp:arg1 [
+                    rdf:type sp:concat ;
+                    sp:arg1 [
+                        sp:varName "descriptorEndpointUrl"^^xsd:string ;
+                      ] ;
+                    sp:arg2 [
+                        sp:varName "descriptorGraphId"^^xsd:string ;
+                      ] ;
+                  ] ;
+              ] ;
+            sp:variable [
+                sp:varName "descriptorSourceHash"^^xsd:string ;
+              ] ;
+          ]
+          [
+            rdf:type sp:Bind ;
+            sp:expression [
+                rdf:type sp:coalesce ;
+                sp:arg1 [
+                    rdf:type sp:iri ;
+                    sp:arg1 [
+                        sp:varName "oldDescriptorSource"^^xsd:string ;
+                      ] ;
+                  ] ;
+                sp:arg2 [
+                    rdf:type sp:iri ;
+                    sp:arg1 [
+                        rdf:type sp:concat ;
+                        sp:arg1 [
+                            rdf:type sp:str ;
+                            sp:arg1 descriptor:dataset-source ;
+                          ] ;
+                        sp:arg2 "--" ;
+                        sp:arg3 [
+                            sp:varName "descriptorSourceHash"^^xsd:string ;
+                          ] ;
+                      ] ;
+                  ] ;
+              ] ;
+            sp:variable [
+                sp:varName "descriptorSource"^^xsd:string ;
+              ] ;
+          ]
+          [
+            rdf:type sp:Bind ;
+            sp:expression [
+                rdf:type sp:iri ;
+                sp:arg1 [
+                    sp:varName "datasetEndpointUrl"^^xsd:string ;
+                  ] ;
+              ] ;
+            sp:variable [
+                sp:varName "datasetEndpointUrl_"^^xsd:string ;
+              ] ;
+          ]
+          [
+            rdf:type sp:Bind ;
+            sp:expression [
+                rdf:type sp:iri ;
+                sp:arg1 [
+                    sp:varName "snapshotDownloadUrl"^^xsd:string ;
+                  ] ;
+              ] ;
+            sp:variable [
+                sp:varName "snapshotDownloadUrl_"^^xsd:string ;
+              ] ;
+          ]
+          [
+            rdf:type sp:Bind ;
+            sp:expression [
+                rdf:type sp:iri ;
+                sp:arg1 [
+                    sp:varName "descriptorEndpointUrl"^^xsd:string ;
+                  ] ;
+              ] ;
+            sp:variable [
+                sp:varName "descriptorEndpointUrl_"^^xsd:string ;
+              ] ;
+          ]
+          [
+            rdf:type sp:Bind ;
+            sp:expression [
+                rdf:type sp:iri ;
+                sp:arg1 [
+                    sp:varName "descriptorDownloadUrl"^^xsd:string ;
+                  ] ;
+              ] ;
+            sp:variable [
+                sp:varName "descriptorDownloadUrl_"^^xsd:string ;
+              ] ;
+          ]
+        ) ;
+    ] ;
+.

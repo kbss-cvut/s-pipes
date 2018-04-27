@@ -128,6 +128,14 @@ public class Question extends AbstractEntity {
         this.layoutClass = layoutClass;
     }
 
+    public Map<String, Set<String>> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Map<String, Set<String>> properties) {
+        this.properties = properties;
+    }
+
     @Override
     public String toString() {
         return "Question (" + "){" +
