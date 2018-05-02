@@ -34,6 +34,8 @@ public class SPIPES {
     public static final Property has_pipeline_execution_finish_date = property("has-pipeline-execution-finish-date");
     public static final Property has_pipeline_execution_finish_date_unix = property("has-pipeline-execution-finish-date-unix");
     public static final Property has_pipeline_execution_duration = property("has-pipeline-execution-duration");
+    public static final Property has_input_model_triple_count = property("has-input-model-triple-count");
+    public static final Property has_output_model_triple_count = property("has-output-model-triple-count");
 
     public static final Property has_module_type = property("has-module-type");
     public static final Property has_module_id = property("has-module-id");
