@@ -260,6 +260,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
         Date startDate = new Date();
         addProperty(moduleExecution, SPIPES.has_module_execution_start_date, startDate);
         addProperty(moduleExecution, SPIPES.has_module_execution_start_date_unix, startDate.getTime());
+        addProperty(moduleExecution, SPIPES.has_input_model_triple_count, inputContext.getDefaultModel().size());
 
         // put model to map
         executionMap.put(moduleExecution.getId(), moduleExecution);
@@ -317,6 +318,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
                 addProperty(moduleExecution, SPIPES.has_module_execution_finish_date, finishDate);
                 addProperty(moduleExecution, SPIPES.has_module_execution_finish_date_unix, finishDate.getTime());
                 addProperty(moduleExecution, SPIPES.has_module_execution_duration, computeDuration(startDate, finishDate));
+                addProperty(moduleExecution, SPIPES.has_output_model_triple_count, module.getOutputContext().getDefaultModel().size());
 
                 // input binding
                 SourceDatasetSnapshot inputBindings = new SourceDatasetSnapshot(); //TODO type is not saved
