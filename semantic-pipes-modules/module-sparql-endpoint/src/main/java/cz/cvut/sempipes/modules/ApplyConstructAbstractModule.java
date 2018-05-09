@@ -4,20 +4,15 @@ import cz.cvut.sempipes.constants.KBSS_MODULE;
 import cz.cvut.sempipes.constants.SML;
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
+import cz.cvut.sempipes.util.JenaUtils;
 import cz.cvut.sempipes.util.QueryUtils;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.List;
-import org.apache.jena.query.ARQ;
 import org.apache.jena.query.Query;
-import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.sparql.mgt.Explain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.topbraid.spin.arq.ARQFactory;
@@ -25,7 +20,7 @@ import org.topbraid.spin.model.Construct;
 import org.topbraid.spin.system.SPINModuleRegistry;
 import org.topbraid.spin.vocabulary.SP;
 
-public abstract class  ApplyConstructAbstractModule extends AnnotatedAbstractModule {
+public abstract class ApplyConstructAbstractModule extends AnnotatedAbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplyConstructAbstractModule.class);
 
@@ -95,7 +90,6 @@ public abstract class  ApplyConstructAbstractModule extends AnnotatedAbstractMod
     }
 
 
-
     protected QuerySolution generateIterationBinding(int currentIteration, QuerySolution globalBinding) {
         return globalBinding;
     }
@@ -116,7 +110,6 @@ public abstract class  ApplyConstructAbstractModule extends AnnotatedAbstractMod
     public abstract String getTypeURI();
 
 
-
     public ExecutionContext executeSelf() {
 
         Model defaultModel = executionContext.getDefaultModel();
@@ -128,7 +121,7 @@ public abstract class  ApplyConstructAbstractModule extends AnnotatedAbstractMod
         Model inferredModel = ModelFactory.createDefaultModel();
         Model previousInferredModel = ModelFactory.createDefaultModel();
 
-        while (! shouldTerminate(count, previousInferredModel, inferredModel)) {
+        while (!shouldTerminate(count, previousInferredModel, inferredModel)) {
             count++;
 
             Model inferredInSingleIterationModel = ModelFactory.createDefaultModel();
@@ -147,18 +140,17 @@ public abstract class  ApplyConstructAbstractModule extends AnnotatedAbstractMod
                     query = ARQFactory.get().createQuery(spinConstructRes);
                 }
 
-                Model constructedModel = QueryUtils.execConstruct(query,
-                    ModelFactory.createUnion(defaultModel, inferredModel), currentIterationBindings);
+                Model constructedModel = QueryUtils.execConstruct(
+                    query,
+                    JenaUtils.createUnion(defaultModel, inferredModel),
+                    currentIterationBindings
+                );
 
-                inferredInSingleIterationModel = ModelFactory.createUnion(inferredInSingleIterationModel, constructedModel);
+                inferredInSingleIterationModel = JenaUtils.createUnion(inferredInSingleIterationModel, constructedModel);
             }
 
             previousInferredModel = inferredModel;
-//            inferredModel = ModelFactory.createUnion(inferredModel, inferredInSingleIterationModel);
-            Model newModel = ModelFactory.createDefaultModel();
-            newModel.add(inferredModel).add(inferredInSingleIterationModel);
-            inferredModel = newModel;
-
+            inferredModel = JenaUtils.createUnion(inferredModel, inferredInSingleIterationModel);
         }
 
         if (isReplace) {
@@ -189,8 +181,6 @@ public abstract class  ApplyConstructAbstractModule extends AnnotatedAbstractMod
         parseText = this.getPropertyValue(KBSS_MODULE.is_parse_text, false);
         iterationCount = this.getPropertyValue(KBSS_MODULE.has_max_iteration_count, -1);
     }
-
-
 
 
 }
