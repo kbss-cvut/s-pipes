@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -49,9 +50,10 @@ public class JenaUtils {
     /**
      * Compute hash of an dataset considering semantics of RDF,
      * i.e. hashes of two RDF models are same iff RDF models are isomorphic.
-     *
+     * <p>
      * TODO this does not implement correct algorithm (different graphs might return same hash),
      * although should suffice in many real cases. See  http://aidanhogan.com/skolem/ to find more reliable algorithm.
+     *
      * @param model RDF graph to compute hash
      * @return computed hash
      */
@@ -59,32 +61,41 @@ public class JenaUtils {
         StringBuilder modelMetadataBuff = new StringBuilder();
 
         Comparator<? super Resource> uriComparator =
-                (r1, r2) -> {
-                    return r1.getURI().compareTo(r2.getURI());
-                };
+            (r1, r2) -> {
+                return r1.getURI().compareTo(r2.getURI());
+            };
 
         long statementsSize = model.size();
         List<Resource> subjectResources = new ArrayList<>(
-                model.listSubjects()
-                        .filterKeep(RDFNode::isURIResource)
-                        .toList()
+            model.listSubjects()
+                .filterKeep(RDFNode::isURIResource)
+                .toList()
         );
         subjectResources.sort(uriComparator);
         List<Resource> objectResources = new ArrayList<>(
-                model.listObjects()
-                        .filterKeep(RDFNode::isURIResource)
-                        .mapWith(RDFNode::asResource)
-                        .toList()
+            model.listObjects()
+                .filterKeep(RDFNode::isURIResource)
+                .mapWith(RDFNode::asResource)
+                .toList()
         );
         objectResources.sort(uriComparator);
 
         modelMetadataBuff
-                .append("No. of statements: ").append(statementsSize).append("\n")
-                .append("Subjects: ").append(subjectResources.toString()).append("\n")
-                .append("Objects: ").append(objectResources.toString()).append("\n");
+            .append("No. of statements: ").append(statementsSize).append("\n")
+            .append("Subjects: ").append(subjectResources.toString()).append("\n")
+            .append("Objects: ").append(objectResources.toString()).append("\n");
 
 
         return DigestUtils.md5Hex(modelMetadataBuff.toString());
+    }
+
+    // TODO  due to performance issues ModelFactory.createUnion is not used (see jena-experiments) repository
+    public static Model createUnion(Model... model) {
+        Model outputModel = ModelFactory.createDefaultModel();
+        Stream.of(model).forEach(
+            m -> outputModel.add(m)
+        );
+        return outputModel;
     }
 
     public static void saveModelToTemporaryFile(Model model) {
