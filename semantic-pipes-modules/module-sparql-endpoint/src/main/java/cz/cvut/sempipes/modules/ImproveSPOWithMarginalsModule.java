@@ -13,7 +13,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -41,17 +40,32 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
     private static final String MODULE_ID = "improve-spo-with-marginals";
     private static final String TYPE_URI = KBSS_MODULE.uri + MODULE_ID;
     private static final String TYPE_PREFIX = TYPE_URI + "/";
-
+    private static Map<String, Model> marginalDefsModelCache = new HashMap<>();
     //@Parameter(urlPrefix = TYPE_PREFIX, name = "marginal-constraint")
     private String marginalConstraint;
-
     //@Parameter(urlPrefix = TYPE_PREFIX, name = "marginals-defs-file-url")
     private String marginalsDefsFileUrl;
-
     //@Parameter(urlPrefix = TYPE_PREFIX, name = "data-service-url")
     private String dataServiceUrl;
 
-    private static Map<String,Model> marginalDefsModelCache = new HashMap<>();
+    private static Query parseQuery(String queryStr) {
+        Query query = QueryFactory.create();
+        return QueryFactory.parse(
+            query,
+            queryStr,
+            "",
+            Syntax.syntaxSPARQL_11);
+    }
+
+    private static Model loadModelFromTemporaryFile(String fileName) {
+        String filePath = "/home/blcha/projects/gacr/git/16gacr-model/descriptor/marginals/" + fileName;
+        try {
+            return ModelFactory.createDefaultModel().read(new FileInputStream(filePath), "", FileUtils.langTurtle);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            throw new IllegalStateException(e);
+        }
+    }
 
     @Override
     ExecutionContext executeSelf() {
@@ -81,17 +95,17 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
 
             // get pattern data
             Model patternDataModel = getPatternData(breakablePatternsRS, spoPatternDataQueryTemplate);
-            mLOG.trace("pattern-data-" + i , patternDataModel);
+            mLOG.trace("pattern-data-" + i, patternDataModel);
 
             // extract appropriate marginals
             Model marginalTypesModel = computeMarginalTypesModel(patternDataModel, marginalDefsModel);
-            mLOG.trace("marginal-types-" + i , marginalTypesModel);
+            mLOG.trace("marginal-types-" + i, marginalTypesModel);
 
             Model spoPatternDataWithMarginalsModel = ModelFactory.createUnion(patternDataModel, marginalTypesModel);
-            mLOG.trace("pattern-data-with-marginals" , spoPatternDataWithMarginalsModel);
+            mLOG.trace("pattern-data-with-marginals", spoPatternDataWithMarginalsModel);
 
             Model brakedPatternModel = computeSPO(spoPatternDataWithMarginalsModel);
-            mLOG.trace("braked-pattern-" + i , brakedPatternModel);
+            mLOG.trace("braked-pattern-" + i, brakedPatternModel);
 
             brakedPatternsOutputModel.add(brakedPatternModel);
         }
@@ -147,7 +161,6 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
         return spoModel;
     }
 
-
     private Model computeMarginalTypesModel(Model patternDataModel, Model marginalDefsModel) {
         LOG.debug("Executing query to get typed marginals ...");
         Model marginalTypesModel = QueryUtils.execConstruct(
@@ -172,7 +185,6 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
         );
         return map;
     }
-
 
     public String getMarginalConstraint() {
         return marginalConstraint;
@@ -218,7 +230,7 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
         return cachedModel;
     }
 
-    private String computeFileContentHashKey(String filePath)  {
+    private String computeFileContentHashKey(String filePath) {
         try {
             return filePath + " -- " + Files.getLastModifiedTime(Paths.get(URI.create(filePath))).toMillis();
         } catch (IOException e) {
@@ -226,7 +238,6 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
             throw new IllegalArgumentException("Could not access modification time of file from path " + filePath, e);
         }
     }
-
 
     private String loadQueryStringFromFile(String resourcePath) {
         String queryString;
@@ -237,15 +248,6 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
             throw new IllegalStateException("Could not load query from resource path " + resourcePath, e);
         }
         return queryString;
-    }
-
-    private static Query parseQuery(String queryStr) {
-        Query query = QueryFactory.create();
-        return QueryFactory.parse(
-            query,
-            queryStr,
-            "",
-            Syntax.syntaxSPARQL_11);
     }
 
     private Query loadQueryFromFile(String resourcePath) {
@@ -259,11 +261,12 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
         return query;
     }
 
-    private void filterRelevantMarginalDefs(){
+    private void filterRelevantMarginalDefs() {
 
     }
+
     private String getFilePrefix() {
-        String id = dataServiceUrl.replaceAll("^https://", "s-").replaceAll("^http://","").replaceAll( "[^a-zA-Z0-9-]", "_");
+        String id = dataServiceUrl.replaceAll("^https://", "s-").replaceAll("^http://", "").replaceAll("[^a-zA-Z0-9-]", "_");
         String directoryPath = "/home/blcha/projects/gacr/git/16gacr-model/descriptor/marginals/" + id;
 
         File directory = new File(directoryPath);
@@ -282,16 +285,6 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
 
     }
 
-    private static Model loadModelFromTemporaryFile(String fileName) {
-        String filePath = "/home/blcha/projects/gacr/git/16gacr-model/descriptor/marginals/" + fileName;
-        try {
-            return ModelFactory.createDefaultModel().read(new FileInputStream(filePath), "", FileUtils.langTurtle);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            throw new IllegalStateException(e);
-        }
-    }
-
     @Override
     public String getTypeURI() {
         return TYPE_URI;
@@ -308,5 +301,4 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
     private String getEffectiveStringValue(String propertyUrl) {
         return getEffectiveValue(ResourceFactory.createProperty(propertyUrl)).asLiteral().toString();
     }
-
 }
