@@ -19,6 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.topbraid.spin.arq.ARQ2SPIN;
 import org.topbraid.spin.system.SPINModuleRegistry;
+import org.topbraid.spin.vocabulary.SPIN;
+import org.topbraid.spin.vocabulary.SPL;
 
 import java.net.URI;
 import java.util.*;
@@ -188,6 +190,60 @@ public class TransformerImpl implements Transformer {
         ResourceUtils.renameResource(module, newUri.toString());
 
         return outputScript;
+    }
+
+    @Override
+    public Question functionToForm(Model script, Resource function) {
+        if (!URI.create(function.getURI()).isAbsolute()) {
+            throw new IllegalArgumentException("Function uri '" + function.getURI() + "' is not absolute.");
+        }
+
+        Question formRootQ = new Question();
+        initializeQuestionUri(formRootQ);
+        formRootQ.setLabel("");
+        formRootQ.setLayoutClass(Collections.singleton("form"));
+
+        Answer executionId = new Answer();
+        executionId.setTextValue(UUID.randomUUID().toString());
+        formRootQ.setAnswers(Collections.singleton(executionId));
+
+        Question wizardStepQ = new Question();
+        initializeQuestionUri(wizardStepQ);
+        wizardStepQ.setLabel("Function call");
+        Set<String> wizardStepLayoutClass = new HashSet<>();
+        wizardStepLayoutClass.add("wizard-step");
+        wizardStepLayoutClass.add("section");
+        wizardStepQ.setLayoutClass(wizardStepLayoutClass);
+
+        List<Question> subQuestions = new LinkedList<>();
+
+        Question functionQ = new Question();
+        initializeQuestionUri(functionQ);
+        functionQ.setLabel("URI");
+        functionQ.setDescription("URI of the function that will be called");
+        functionQ.setOrigin(URI.create(RDF.uri));
+        Answer functionAnswer = new Answer();
+        functionAnswer.setTextValue(function.getURI());
+        functionQ.setAnswers(Collections.singleton(functionAnswer));
+
+        subQuestions.add(functionQ);
+
+        for (Statement st : function.listProperties(SPIN.constraint).toList().stream().map(s -> s.getObject().asResource().listProperties(SPL.predicate).nextStatement()).collect(Collectors.toList())) {
+
+            Question q = new Question();
+            initializeQuestionUri(q);
+            q.setLabel(st.getObject().asResource().getURI());
+            q.setDescription(st.getObject().asResource().getLocalName());
+
+            q.setProperties(extractQuestionMetadata(st));
+
+            q.setPrecedingQuestions(Collections.singleton(functionQ));
+            subQuestions.add(q);
+        }
+
+        wizardStepQ.setSubQuestions(new HashSet<>(subQuestions));
+        formRootQ.setSubQuestions(Collections.singleton(wizardStepQ));
+        return formRootQ;
     }
 
     private Question findUriQ(Question root) {

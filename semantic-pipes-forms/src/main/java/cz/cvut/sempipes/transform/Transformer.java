@@ -9,4 +9,6 @@ public interface Transformer {
     Question script2Form(Model script, Resource module, Resource moduleType);
 
     Model form2Script(Model inputScript, Question form, String moduleType);
+
+    Question functionToForm(Model script, Resource function);
 }
