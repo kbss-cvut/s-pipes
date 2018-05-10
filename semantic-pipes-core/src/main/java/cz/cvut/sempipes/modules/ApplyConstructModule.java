@@ -4,6 +4,7 @@ import cz.cvut.sempipes.constants.KBSS_MODULE;
 import cz.cvut.sempipes.constants.SML;
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
+import cz.cvut.sempipes.util.JenaUtils;
 import cz.cvut.sempipes.util.QueryUtils;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -115,6 +116,7 @@ public class ApplyConstructModule extends AbstractModule {
             //      set up variable bindings
 
             Model inferredInSingleIterationModel = ModelFactory.createDefaultModel();
+            Model extendedInferredModel = JenaUtils.createUnion(defaultModel, inferredModel);
 
             for (Resource constructQueryRes : constructQueries) {
                 Construct spinConstructRes = constructQueryRes.as(Construct.class);
@@ -126,12 +128,12 @@ public class ApplyConstructModule extends AbstractModule {
                     query = ARQFactory.get().createQuery(spinConstructRes);
                 }
 
-                Model constructedModel = QueryUtils.execConstruct(query, ModelFactory.createUnion(defaultModel, inferredModel), bindings);
+                Model constructedModel = QueryUtils.execConstruct(query, extendedInferredModel, bindings);
 
                 inferredInSingleIterationModel = ModelFactory.createUnion(inferredInSingleIterationModel, constructedModel);
             }
 
-            inferredModel = ModelFactory.createUnion(inferredModel, inferredInSingleIterationModel);
+            inferredModel = JenaUtils.createUnion(inferredModel, inferredInSingleIterationModel);
 
             nNew = inferredInSingleIterationModel.size();
         }
@@ -139,7 +141,7 @@ public class ApplyConstructModule extends AbstractModule {
         if (isReplace) {
             return ExecutionContextFactory.createContext(inferredModel);
         } else {
-            return ExecutionContextFactory.createContext(ModelFactory.createUnion(defaultModel, inferredModel));
+            return ExecutionContextFactory.createContext(JenaUtils.createUnion(defaultModel, inferredModel));
         }
     }
 
