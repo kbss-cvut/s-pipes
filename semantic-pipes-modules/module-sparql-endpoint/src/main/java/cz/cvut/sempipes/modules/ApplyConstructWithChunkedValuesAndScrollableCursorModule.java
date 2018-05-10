@@ -30,7 +30,7 @@ public class ApplyConstructWithChunkedValuesAndScrollableCursorModule extends Ap
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplyConstructWithChunkedValuesAndScrollableCursorModule.class);
 
-    private static final String TYPE_URI = KBSS_MODULE.uri + "apply-contruct-with-chunk-values-and-scrollable-cursor";
+    private static final String TYPE_URI = KBSS_MODULE.uri + "apply-construct-with-chunked-values-and-scrollable-cursor";
     private static final String TYPE_PREFIX = TYPE_URI + "/";
     private static final int DEFAULT_CHUNK_SIZE = 10;
     private static final int DEFAULT_PAGE_SIZE = 10000;
