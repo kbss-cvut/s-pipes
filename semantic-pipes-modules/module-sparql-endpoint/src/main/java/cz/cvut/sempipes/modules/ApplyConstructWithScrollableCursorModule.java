@@ -17,7 +17,7 @@ public class ApplyConstructWithScrollableCursorModule extends ApplyConstructAbst
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplyConstructWithScrollableCursorModule.class);
 
-    private static final String TYPE_URI = KBSS_MODULE.uri + "apply-contruct-with-scrollable-cursor";
+    private static final String TYPE_URI = KBSS_MODULE.uri + "apply-construct-with-scrollable-cursor";
     private static final String TYPE_PREFIX = TYPE_URI + "/";
     private static final int DEFAULT_PAGE_SIZE = 10000;
     private static final String LIMIT_OFFSET_CLAUSE_MARKER_NAME = "LIMIT_OFFSET";

@@ -26,7 +26,7 @@ public class ApplyConstructWithChunkedValuesModule extends ApplyConstructAbstrac
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplyConstructWithChunkedValuesModule.class);
 
-    private static final String TYPE_URI = KBSS_MODULE.uri + "apply-contruct-with-chunked-values";
+    private static final String TYPE_URI = KBSS_MODULE.uri + "apply-construct-with-chunked-values";
     private static final String TYPE_PREFIX = TYPE_URI + "/";
     private static final int DEFAULT_CHUNK_SIZE = 10;
     private static final String VALUES_CLAUSE_MARKER_NAME = "VALUES";
