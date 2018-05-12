@@ -6,7 +6,6 @@ import cz.cvut.sforms.VocabularyJena;
 import cz.cvut.sforms.model.Answer;
 import cz.cvut.sforms.model.Question;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.jena.graph.Graph;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.query.Query;
 import org.apache.jena.rdf.model.*;
@@ -54,7 +53,7 @@ public class TransformerImpl implements Transformer {
 
         Question wizardStepQ = new Question();
         initializeQuestionUri(wizardStepQ);
-        wizardStepQ.setLabel("Module configuration");
+        wizardStepQ.setLabel("Module of type " + moduleType.getProperty(RDFS.label).getString() + " (" + moduleType.getURI() + ")");
         wizardStepQ.setOrigin(toUri(module));
         Set<String> wizardStepLayoutClass = new HashSet<>();
         wizardStepLayoutClass.add("wizard-step");
@@ -145,12 +144,11 @@ public class TransformerImpl implements Transformer {
     }
 
     @Override
-    public Model form2Script(Model inputScript, Question form, String moduleType) {
+    public Collection<Model> form2Script(Model inputScript, Question form, String moduleType) {
 
-        Model outputScript = ModelFactory.createDefaultModel();
-        outputScript.add(inputScript);
+        Map<String, Model> changed = new HashMap<>();
 
-        Resource module = outputScript.getResource(form.getOrigin().toString());
+        Resource module = inputScript.getResource(form.getOrigin().toString());
 
         Question uriQ = findUriQ(form);
         URI newUri = new ArrayList<>(uriQ.getAnswers()).get(0).getCodeValue();
@@ -160,36 +158,42 @@ public class TransformerImpl implements Transformer {
             findRegularQ(form).forEach((q) -> {
                 OriginPair<URI, URI> originPair = new OriginPair<>(q.getOrigin(), getAnswer(q).map(Answer::getOrigin).orElse(null));
                 Statement s = questionStatements.get(originPair);
-                if (Objects.nonNull(s)) {
-                    outputScript.remove(s);
-                }
+                Model m = extractModel(s);
+                String uri = ((OntModel) inputScript).getBaseModel().listStatements(null, RDF.type, OWL.Ontology).next().getSubject().getURI();
+                if (!changed.containsKey(uri))
+                    changed.put(uri, ModelFactory.createDefaultModel().add(m instanceof OntModel ? ((OntModel) m).getBaseModel() : m));
+                Model changingModel = changed.get(uri);
+
+                changingModel.remove(s);
                 if (isSupportedAnon(q)) {
                     Query query = AnonNodeTransformer.parse(q, inputScript);
                     org.topbraid.spin.model.Query spinQuery = ARQ2SPIN.parseQuery(query.serialize(), inputScript);
-                    outputScript.add(spinQuery.getModel());
+                    changingModel.add(spinQuery.getModel());
                 }
                 else {
                     RDFNode answerNode = getAnswerNode(getAnswer(q).orElse(null));
                     if (answerNode != null) {
-                        outputScript.add(s.getSubject(), s.getPredicate(), answerNode);
+                        changingModel.add(s.getSubject(), s.getPredicate(), answerNode);
                     }
                 }
             });
         }
         else {
-            outputScript.add(outputScript.getResource(newUri.toString()), RDF.type, outputScript.getResource(moduleType));
-            outputScript.add(outputScript.getResource(newUri.toString()), RDF.type, outputScript.getResource(Vocabulary.s_c_Modules_A));
+            Model m = ModelFactory.createDefaultModel().add(inputScript);
+            m.add(m.getResource(newUri.toString()), RDF.type, m.getResource(moduleType));
+            m.add(m.getResource(newUri.toString()), RDF.type, m.getResource(Vocabulary.s_c_Modules_A));
             findRegularQ(form).forEach((q) -> {
                 RDFNode answerNode = getAnswerNode(getAnswer(q).orElse(null));
                 if (answerNode != null) {
-                    outputScript.add(outputScript.getResource(newUri.toString()), new PropertyImpl(q.getOrigin().toString()), answerNode);
+                    m.add(m.getResource(newUri.toString()), new PropertyImpl(q.getOrigin().toString()), answerNode);
                 }
             });
+            changed.put(((OntModel) inputScript).getBaseModel().listStatements(null, RDF.type, OWL.Ontology).next().getSubject().getURI(), m);
         }
 
         ResourceUtils.renameResource(module, newUri.toString());
 
-        return outputScript;
+        return changed.values();
     }
 
     @Override
@@ -388,21 +392,21 @@ public class TransformerImpl implements Transformer {
 
     Model extractModel(Statement st) {
         Model model = st.getModel(); // Iterate through subgraphs and find model defining st and return it (or IRI)
-        return find(st, model.getGraph(), Optional.empty()).orElse(null);
+        return find(st, model, Optional.empty()).orElse(null);
     }
 
-    private Optional<Model> find(Statement st, Graph graph, Optional<Model> res) {
+    private Optional<Model> find(Statement st, Model m, Optional<Model> res) {
         if (res.isPresent())
             return res;
-        Model m = ModelFactory.createModelForGraph(graph);
-        if (m.contains(st))
-            return find(st, graph, Optional.of(m));
-        if (m instanceof OntModel) {
-            OntModel ontM = (OntModel) m;
-            Optional<Optional<Model>> o = ontM.getSubGraphs().stream().map(g -> find(st, g, res)).filter(Optional::isPresent).findFirst();
+        if (!m.contains(st))
+            return Optional.empty();
+        if (m instanceof OntModel && ((OntModel) m).listSubModels().toList().stream().anyMatch(sm -> sm.contains(st))) {
+            Optional<Optional<Model>> o = ((OntModel) (m)).listSubModels().toList().stream().map(sm -> find(st, sm, res)).filter(Optional::isPresent).findFirst();
             if (o.isPresent())
                 return o.get();
         }
+        else
+            return Optional.of(m);
         return Optional.empty();
     }
 }
