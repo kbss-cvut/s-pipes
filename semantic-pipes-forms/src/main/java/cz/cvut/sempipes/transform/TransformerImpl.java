@@ -47,7 +47,6 @@ public class TransformerImpl implements Transformer {
 
         Question formRootQ = new Question();
         initializeQuestionUri(formRootQ);
-        formRootQ.setLabel("Module of type " + moduleType.getProperty(RDFS.label).getString());
         formRootQ.setOrigin(toUri(module));
         formRootQ.setLayoutClass(Collections.singleton("form"));
 
@@ -234,11 +233,7 @@ public class TransformerImpl implements Transformer {
 
         for (Statement st : function.listProperties(SPIN.constraint).toList().stream().map(s -> s.getObject().asResource().listProperties(SPL.predicate).nextStatement()).collect(Collectors.toList())) {
 
-            Question q = new Question();
-            initializeQuestionUri(q);
-            q.setLabel(st.getObject().asResource().getURI());
-            q.setDescription(st.getObject().asResource().getLocalName());
-
+            Question q = createQuestion(st.getObject().asResource());
             q.setProperties(extractQuestionMetadata(st));
 
             q.setPrecedingQuestions(Collections.singleton(functionQ));
@@ -332,14 +327,22 @@ public class TransformerImpl implements Transformer {
         q.setUri(URI.create(VocabularyJena.s_c_question + "-" + UUID.randomUUID().toString()));
     }
 
-    private Question createQuestion(Resource property) {
+    private Question createQuestion(Resource resource) {
         Question q = new Question();
         initializeQuestionUri(q);
-        q.setLabel(property.getURI());
-        Statement labelSt = property.getProperty(RDFS.label);
-        if (labelSt != null) {
-            q.setDescription(labelSt.getString());
+        q.setLabel(resource.getURI());
+
+        StringBuilder descriptionBuilder = new StringBuilder();
+        StmtIterator labelIt = resource.listProperties(RDFS.label);
+        if (labelIt.hasNext()) {
+            descriptionBuilder.append(labelIt.nextStatement().getObject().asLiteral().getString());
+            descriptionBuilder.append("\n\n");
         }
+        StmtIterator descriptionIt = resource.listProperties(ResourceFactory.createProperty(Vocabulary.s_p_description));
+        if (descriptionIt.hasNext())
+            descriptionBuilder.append(descriptionIt.nextStatement().getObject().asLiteral().getString());
+
+        q.setDescription(descriptionBuilder.toString());
         return q;
     }
 
