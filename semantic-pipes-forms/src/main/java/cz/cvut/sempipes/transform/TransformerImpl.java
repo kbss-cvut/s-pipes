@@ -338,7 +338,7 @@ public class TransformerImpl implements Transformer {
             descriptionBuilder.append(labelIt.nextStatement().getObject().asLiteral().getString());
             descriptionBuilder.append("\n\n");
         }
-        StmtIterator descriptionIt = resource.listProperties(ResourceFactory.createProperty(Vocabulary.s_p_description));
+        StmtIterator descriptionIt = resource.listProperties(RDFS.comment);
         if (descriptionIt.hasNext())
             descriptionBuilder.append(descriptionIt.nextStatement().getObject().asLiteral().getString());
 
