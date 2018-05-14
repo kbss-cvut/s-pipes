@@ -32,6 +32,9 @@ public class CombinedQueryTemplateRecursionProvider implements QueryTemplateRecu
         checkRecursionProviderLinearCalls(currentIteration);
         if (isParentLevelIteration) {
             parentIteration++;
+            if (parentIteration != 0) {
+                childIteration = 0;
+            }
         }
         childIteration++;
         LOG.debug("Executing iteration {} --> ({}, {}).", currentIteration, parentIteration, childIteration);
@@ -56,22 +59,18 @@ public class CombinedQueryTemplateRecursionProvider implements QueryTemplateRecu
         boolean childShouldTerminate = childProvder.shouldTerminate(childIteration, previousInferredModel, currentInferredModel);
 
         // set up next iteration
-        if (childIteration == 1) {
+        if (childShouldTerminate) {
+            isParentLevelIteration = true;
+        } else if (childIteration == 1) {
             isParentLevelIteration = false;
         }
-
-        if (childShouldTerminate) {
-            childIteration = 0;
-            isParentLevelIteration = true;
-        }
-
         return false;
     }
 
     @Override
     public String substituteQueryMarkers(int currentIteration, String queryStr) {
         String parentQueryStr = null;
-        if (isParentLevelIteration) {
+        if (childIteration == 1) {
             parentQueryStr = parentProvider.substituteQueryMarkers(parentIteration, queryStr);
             parentTemplate2Query.put(queryStr, parentQueryStr);
         } else {

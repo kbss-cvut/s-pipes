@@ -28,6 +28,10 @@ public class ScrollableCursorProvider implements QueryTemplateRecursionProvider 
             return true;
         }
 
+        if (currentIteration == 1) {
+            return false;
+        }
+
         if ((currentIteration > 0) && (previousInferredModel.size() == currentInferredModel.size())) {
             return true;
         }
