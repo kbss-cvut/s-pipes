@@ -121,36 +121,37 @@ public abstract class ApplyConstructAbstractModule extends AnnotatedAbstractModu
         Model inferredModel = ModelFactory.createDefaultModel();
         Model previousInferredModel = ModelFactory.createDefaultModel();
 
-        while (!shouldTerminate(count, previousInferredModel, inferredModel)) {
-            count++;
+        if (!shouldTerminate(0, previousInferredModel, inferredModel)) {
+            while (!shouldTerminate(++count, previousInferredModel, inferredModel)) {
 
-            Model inferredInSingleIterationModel = ModelFactory.createDefaultModel();
+                Model inferredInSingleIterationModel = ModelFactory.createDefaultModel();
 
 
-            QuerySolution currentIterationBindings = generateIterationBinding(count, bindings);
+                QuerySolution currentIterationBindings = generateIterationBinding(count, bindings);
 
-            for (Resource constructQueryRes : constructQueries) {
-                Construct spinConstructRes = constructQueryRes.as(Construct.class);
+                for (Resource constructQueryRes : constructQueries) {
+                    Construct spinConstructRes = constructQueryRes.as(Construct.class);
 
-                Query query;
-                if (parseText) {
-                    String queryStr = spinConstructRes.getProperty(SP.text).getLiteral().getString();
-                    query = QueryFactory.create(substituteQueryMarkers(count, queryStr));
-                } else {
-                    query = ARQFactory.get().createQuery(spinConstructRes);
+                    Query query;
+                    if (parseText) {
+                        String queryStr = spinConstructRes.getProperty(SP.text).getLiteral().getString();
+                        query = QueryFactory.create(substituteQueryMarkers(count, queryStr));
+                    } else {
+                        query = ARQFactory.get().createQuery(spinConstructRes);
+                    }
+
+                    Model constructedModel = QueryUtils.execConstruct(
+                        query,
+                        JenaUtils.createUnion(defaultModel, inferredModel),
+                        currentIterationBindings
+                    );
+
+                    inferredInSingleIterationModel = JenaUtils.createUnion(inferredInSingleIterationModel, constructedModel);
                 }
 
-                Model constructedModel = QueryUtils.execConstruct(
-                    query,
-                    JenaUtils.createUnion(defaultModel, inferredModel),
-                    currentIterationBindings
-                );
-
-                inferredInSingleIterationModel = JenaUtils.createUnion(inferredInSingleIterationModel, constructedModel);
+                previousInferredModel = inferredModel;
+                inferredModel = JenaUtils.createUnion(inferredModel, inferredInSingleIterationModel);
             }
-
-            previousInferredModel = inferredModel;
-            inferredModel = JenaUtils.createUnion(inferredModel, inferredInSingleIterationModel);
         }
 
         if (isReplace) {
