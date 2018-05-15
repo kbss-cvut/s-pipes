@@ -4,14 +4,17 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX ld-cube: <http://purl.org/linked-data/cube#>
 PREFIX ddo: <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/>
+PREFIX enh-spo-sum-desc: <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/spo-summary-with-marginals/model/>
 
 CONSTRUCT{
- ?di rdf:subject _:s;
-    rdf:predicate ?p;
-    rdf:object _:v.
-    _:s a ?sType.
-    _:v a ?oType.
-    ?di :hasWeight ?w.
+ ?di rdf:subject ?sRepresentant ;
+    rdf:predicate ?p ;
+    rdf:object ?oRepresentant ;
+    :hasWeight ?w.
+    ?sRepresentant a ?sType ;
+         enh-spo-sum-desc:hasDatasetSource ?sTypeDatasetSource .
+    ?oRepresentant a ?oType ;
+          enh-spo-sum-desc:hasDatasetSource ?oTypeDatasetSource .
 }
 WHERE {
       {
@@ -27,5 +30,30 @@ WHERE {
          }
          GROUP BY ?p ?sType ?oType
       }
-      BIND(IRI(CONCAT("http://onto.fel.cvut.cz/ontologies/dataset-descriptor/spo-summary-descriptor/di-",MD5(CONCAT(str(?p),str(?sType),str(?oType),?executionId)))) as ?di) .
+      {
+         SELECT ?p2 ?sType2 ?oType2 ?sTypeDatasetSource ?oTypeDatasetSource
+           {
+                ?pattern2 rdf:subject ?s;
+                          rdf:predicate ?p2;
+                          rdf:object ?o ;
+                          :hasWeight ?patternWeight2 .
+                ?s a ?sType2 .
+                ?o a ?oType2 .
+
+                OPTIONAL {
+                   ?s enh-spo-sum-desc:hasDatasetSource ?sTypeDatasetSource .
+                }
+                OPTIONAL {
+                   ?o enh-spo-sum-desc:hasDatasetSource ?oTypeDatasetSource .
+                }
+           }
+      }
+      FILTER(?p = ?p2)
+      FILTER(?sType = ?sType2)
+      FILTER(?oType = ?oType2)
+
+      BIND(MD5(CONCAT(str(?p),str(?sType),str(?oType),?executionId)) as ?patternHash)
+      BIND(IRI(CONCAT("http://onto.fel.cvut.cz/ontologies/dataset-descriptor/spo-summary-descriptor/di-", ?patternHash)) as ?di)
+      BIND(IRI(CONCAT(str(?di), "/subject")) as ?sRepresentant)
+      BIND(IRI(CONCAT(str(?di), "/object")) as ?oRepresentant)
 }
