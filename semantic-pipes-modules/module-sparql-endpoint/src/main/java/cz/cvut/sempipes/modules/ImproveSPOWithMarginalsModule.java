@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Set;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
+import org.apache.jena.query.QueryParseException;
 import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.Syntax;
@@ -252,12 +253,15 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
 
     private Query loadQueryFromFile(String resourcePath) {
         Query query = QueryFactory.create();
-        QueryFactory.parse(
-            query,
-            loadQueryStringFromFile(resourcePath),
-            "",
-            Syntax.syntaxSPARQL_11);
-
+        try {
+            QueryFactory.parse(
+                query,
+                loadQueryStringFromFile(resourcePath),
+                "",
+                Syntax.syntaxSPARQL_11);
+        } catch (QueryParseException e) {
+            throw new IllegalStateException("Could not parse query from resource path " + resourcePath, e);
+        }
         return query;
     }
 
