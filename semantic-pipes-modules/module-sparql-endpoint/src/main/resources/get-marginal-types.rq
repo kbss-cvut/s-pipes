@@ -4,9 +4,12 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX ld-cube: <http://purl.org/linked-data/cube#>
 PREFIX ddo: <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/>
+PREFIX enh-spo-sum-desc: <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/spo-summary-with-marginals/model/>
+
 
 CONSTRUCT {
-     ?resource a ?resourceType .
+     ?resource a ?resourceType ;
+               enh-spo-sum-desc:hasDatasetSource ?datasetSnapshot .
 } WHERE {
 #      ?pattern :hasWeight ?w .
        {
@@ -16,5 +19,6 @@ CONSTRUCT {
        }
 
       ?observation ddo:weakly-described-resource ?resource ;
-                   ddo:type ?resourceType .
+                   ddo:type ?resourceType ;
+                   ddo:definition-dataset-snapshot ?datasetSnapshot .
 }
