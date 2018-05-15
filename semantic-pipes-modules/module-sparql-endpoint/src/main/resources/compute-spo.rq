@@ -18,7 +18,7 @@ WHERE {
         BIND(STRUUID() as ?executionId)
       }
       {
-        SELECT ?p ?sType ?oType (COUNT(DISTINCT *) as ?w)
+        SELECT ?p ?sType ?oType (COUNT(*) as ?w)
          {
               ?s ?p ?o.
 
