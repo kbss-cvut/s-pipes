@@ -103,7 +103,7 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
             mLOG.trace("marginal-types-" + i, marginalTypesModel);
 
             Model spoPatternDataWithMarginalsModel = ModelFactory.createUnion(patternDataModel, marginalTypesModel);
-            mLOG.trace("pattern-data-with-marginals", spoPatternDataWithMarginalsModel);
+            mLOG.trace("pattern-data-with-marginals-" + i, spoPatternDataWithMarginalsModel);
 
             Model brakedPatternModel = computeSPO(spoPatternDataWithMarginalsModel);
             mLOG.trace("braked-pattern-" + i, brakedPatternModel);
