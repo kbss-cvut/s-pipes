@@ -13,9 +13,7 @@ import org.junit.Test;
 
 import java.io.InputStream;
 import java.net.URI;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -24,7 +22,7 @@ public class Form2ScriptTest {
 
     private Transformer t = new TransformerImpl();
     private InputStream sampleScriptIS = getClass().getResourceAsStream("/hello-world-script.ttl");
-    private Model sampleScript = ModelFactory.createDefaultModel().read(sampleScriptIS, null, FileUtils.langTurtle);
+    private Model sampleScript = ModelFactory.createOntologyModel().read(sampleScriptIS, null, FileUtils.langTurtle);
     private Question form;
 
     @Before
@@ -51,7 +49,6 @@ public class Form2ScriptTest {
         assertTrue(os.stream().anyMatch((o) -> o.isLiteral() && Objects.equals("Robert Plant", o.asLiteral().getString())));*/
     }
 
-    @Ignore
     @Test
     public void regularStatementUpdate() {
         Optional<Question> labelQ = form.getSubQuestions().stream()
@@ -64,15 +61,15 @@ public class Form2ScriptTest {
 
         labelQ.get().getAnswers().forEach((a) -> a.setTextValue("NEW Bind person"));
 
-//        Model outputScript = t.form2Script(sampleScript, form, "http://topbraid.org/sparqlmotionlib#BindWithConstant");
+        Collection<Model> outputs = t.form2Script(sampleScript, form, "http://topbraid.org/sparqlmotionlib#BindWithConstant");
 
-        /*assertEquals("NEW Bind person", outputScript
+
+        assertEquals("NEW Bind person", new LinkedList<>(outputs).get(0)
                 .getResource("http://fel.cvut.cz/ontologies/s-pipes-editor/sample-script/bind-person")
                 .getProperty(RDFS.label)
-                .getString());*/
+                .getString());
     }
 
-    @Ignore
     @Test
     public void moduleURIUpdate() {
         Resource bindPerson = sampleScript.getResource("http://fel.cvut.cz/ontologies/s-pipes-editor/sample-script/bind-person");
