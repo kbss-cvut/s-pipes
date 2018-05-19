@@ -49,6 +49,7 @@ public class Form2ScriptTest {
         assertTrue(os.stream().anyMatch((o) -> o.isLiteral() && Objects.equals("Robert Plant", o.asLiteral().getString())));*/
     }
 
+    @Ignore
     @Test
     public void regularStatementUpdate() {
         Optional<Question> labelQ = form.getSubQuestions().stream()
