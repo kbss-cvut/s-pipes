@@ -103,6 +103,24 @@ public class QueryUtils {
         );
     }
 
+
+    /**
+     * Executes construct query and if it fails executes it with additional debugging information.
+     * @param query Query to be executed.
+     * @param inputModel Model that is queried.
+     * @param bindings Input binding used wihin the query.
+     * @param outputModel Model where the output of the query will be stored.
+     * @return
+     */
+    public static Model execConstruct(Query query, Model inputModel, QuerySolution bindings, Model outputModel) {
+        return execQuery(
+            qe -> qe.execConstruct(outputModel),
+            query,
+            inputModel,
+            bindings
+        );
+    }
+
     /**
      * Executes select query and if it fails executes it with additional debugging information.
      * @param query
