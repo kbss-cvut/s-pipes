@@ -6,6 +6,7 @@ import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
 import cz.cvut.sempipes.engine.VariablesBinding;
 import cz.cvut.sempipes.util.QueryUtils;
+import cz.cvut.sempipes.util.TDBTempFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -145,10 +146,12 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
         VariablesBinding variablesBinding = new VariablesBinding("dataServiceUrl", ResourceFactory.createResource(dataServiceUrl));
         LOG.trace("Pattern data query:\n" + patternDataQueryStr);
         LOG.trace("Variables bindings:" + variablesBinding);
-        Model patternDataModel = QueryUtils.execConstruct(// TODO !? implement scrollable cursor
+        Model patternDataModel = TDBTempFactory.createTDBModel();
+        patternDataModel = QueryUtils.execConstruct(// TODO !? implement scrollable cursor
             patternDataQuery,
             ModelFactory.createDefaultModel(),
-            variablesBinding.asQuerySolution());
+            variablesBinding.asQuerySolution(),
+            patternDataModel);
         return patternDataModel;
     }
 
@@ -222,7 +225,7 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
         Model cachedModel = marginalDefsModelCache.get(key);
 
         if (cachedModel == null) {
-            cachedModel = ModelFactory.createDefaultModel();
+            cachedModel = TDBTempFactory.createTDBModel();
             cachedModel.read(marginalsFilePath);
             marginalDefsModelCache.put(key, cachedModel);
         } else {
