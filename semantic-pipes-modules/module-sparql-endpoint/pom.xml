@@ -19,6 +19,13 @@
             <artifactId>semantic-pipes-core</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>jena-tdb</artifactId>
+            <version>${org.apache.jena}</version>
+        </dependency>
+
+        <!-- Testing -->
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
