@@ -28,8 +28,10 @@ import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.Syntax;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.util.FileUtils;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,11 +82,11 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
 
         LOG.debug("Loading marginals ...");
         Model marginalsModel = loadModelFromFile(marginalsFileUrl);
-//        mLOG.trace("marginals", marginalsModel);
+        mLOG.trace("marginals", marginalsModel);
 
         LOG.debug("Loading marginal definitions ...");
         Model marginalDefsModel = loadModelFromFile(marginalsDefsFileUrl);
-//        mLOG.trace("marginal-defs", marginalDefsModel);
+        mLOG.trace("marginal-defs", marginalDefsModel);
 
         Model marginalsWithDefsModel = ModelFactory.createUnion(marginalsModel, marginalDefsModel);
 
@@ -329,7 +331,14 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
         dataServiceUrl = getEffectiveStringValue(TYPE_PREFIX + "data-service-url");
     }
 
-    private String getEffectiveStringValue(String propertyUrl) {
+    private @NotNull
+    String getEffectiveStringValue(String propertyUrl) {
+        RDFNode value = getEffectiveValue(ResourceFactory.createProperty(propertyUrl));
+        if (value == null) {
+            throw new RuntimeException(
+                String.format("Module's parameter '%s' returned value 'null' which is not allowed.", propertyUrl)
+            );
+        }
         return getEffectiveValue(ResourceFactory.createProperty(propertyUrl)).asLiteral().toString();
     }
 }
