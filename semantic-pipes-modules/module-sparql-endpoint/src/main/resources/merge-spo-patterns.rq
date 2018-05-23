@@ -12,9 +12,9 @@ CONSTRUCT{
     rdf:object ?oRepresentant ;
     :hasWeight ?w.
     ?sRepresentant a ?sType ;
-         enh-spo-sum-desc:hasDatasetSource ?sTypeDatasetSource .
+         enh-spo-sum-desc:hasDatasetSnapshot ?sTypeDatasetSnapshot .
     ?oRepresentant a ?oType ;
-          enh-spo-sum-desc:hasDatasetSource ?oTypeDatasetSource .
+          enh-spo-sum-desc:hasDatasetSnapshot ?oTypeDatasetSnapshot .
 }
 WHERE {
       {
@@ -31,7 +31,7 @@ WHERE {
          GROUP BY ?p ?sType ?oType
       }
       {
-         SELECT ?p2 ?sType2 ?oType2 ?sTypeDatasetSource ?oTypeDatasetSource
+         SELECT ?p2 ?sType2 ?oType2 ?sTypeDatasetSnapshot ?oTypeDatasetSnapshot
            {
                 ?pattern2 rdf:subject ?s;
                           rdf:predicate ?p2;
@@ -41,10 +41,10 @@ WHERE {
                 ?o a ?oType2 .
 
                 OPTIONAL {
-                   ?s enh-spo-sum-desc:hasDatasetSource ?sTypeDatasetSource .
+                   ?s enh-spo-sum-desc:hasDatasetSnapshot ?sTypeDatasetSnapshot .
                 }
                 OPTIONAL {
-                   ?o enh-spo-sum-desc:hasDatasetSource ?oTypeDatasetSource .
+                   ?o enh-spo-sum-desc:hasDatasetSnapshot ?oTypeDatasetSnapshot .
                 }
            }
       }

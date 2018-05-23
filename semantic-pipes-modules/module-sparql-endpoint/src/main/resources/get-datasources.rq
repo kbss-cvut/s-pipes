@@ -1,0 +1,18 @@
+PREFIX :<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX ld-cube: <http://purl.org/linked-data/cube#>
+PREFIX ddo: <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/>
+PREFIX enh-spo-sum-desc: <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/spo-summary-with-marginals/model/>
+
+CONSTRUCT {
+    ?representant enh-spo-sum-desc:hasDatasetSource ?typeDatasetSource .
+} WHERE  {
+    ?representant enh-spo-sum-desc:hasDatasetSnapshot ?typeDatasetSnapshot .
+    SERVICE <http://onto.fel.cvut.cz/rdf4j-server/repositories/ddo-metadata-noinfer> {
+         ?typeDatasetSnapshot ddo:has-dataset ?typeDataset .
+         ?typeDatasetSource ddo:offers-dataset ?typeDataset .
+    }
+}
+

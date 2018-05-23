@@ -12,9 +12,9 @@ CONSTRUCT{
     rdf:object ?oRepresentant ;
         :hasWeight ?w.
     ?sRepresentant a ?sType ;
-         enh-spo-sum-desc:hasDatasetSource ?sTypeDatasetSource .
+         enh-spo-sum-desc:hasDatasetSnapshot ?sTypeDatasetSnapshot .
     ?oRepresentant a ?oType ;
-          enh-spo-sum-desc:hasDatasetSource ?oTypeDatasetSource .
+          enh-spo-sum-desc:hasDatasetSnapshot ?oTypeDatasetSnapshot .
 }
 WHERE {
       {
@@ -36,21 +36,21 @@ WHERE {
               BIND(COALESCE(?sTypeConcrete, owl:Thing) as ?sType)
               BIND(COALESCE(?oTypeConcrete, owl:Thing) as ?oType)
 
-              FILTER(?p not in ( rdf:subject, rdf:predicate, rdf:object, :hasWeight, rdf:type, :subject, :object, :predicate, enh-spo-sum-desc:hasDatasetSource ))
+              FILTER(?p not in ( rdf:subject, rdf:predicate, rdf:object, :hasWeight, rdf:type, :subject, :object, :predicate, enh-spo-sum-desc:hasDatasetSource, enh-spo-sum-desc:hasDatasetSnapshot ))
          }
          GROUP BY ?p ?sType ?oType
       }
 
       {
-        SELECT ?p2 ?sType2 ?oType2 ?sTypeDatasetSource ?oTypeDatasetSource
+        SELECT ?p2 ?sType2 ?oType2 ?sTypeDatasetSnapshot ?oTypeDatasetSnapshot
          {
               ?s ?p2 ?o.
 
               OPTIONAL {
-                ?s enh-spo-sum-desc:hasDatasetSource ?sTypeDatasetSource .
+                ?s enh-spo-sum-desc:hasDatasetSnapshot ?sTypeDatasetSnapshot .
               }
               OPTIONAL {
-                ?o enh-spo-sum-desc:hasDatasetSource ?oTypeDatasetSource .
+                ?o enh-spo-sum-desc:hasDatasetSnapshot ?oTypeDatasetSnapshot .
               }
 
               OPTIONAL {
@@ -64,7 +64,7 @@ WHERE {
               BIND(COALESCE(?sTypeConcrete, owl:Thing) as ?sType2)
               BIND(COALESCE(?oTypeConcrete, owl:Thing) as ?oType2)
 
-              FILTER(?p2 not in ( rdf:subject, rdf:predicate, rdf:object, :hasWeight, rdf:type, :subject, :object, :predicate, enh-spo-sum-desc:hasDatasetSource ))
+              FILTER(?p2 not in ( rdf:subject, rdf:predicate, rdf:object, :hasWeight, rdf:type, :subject, :object, :predicate, enh-spo-sum-desc:hasDatasetSource, enh-spo-sum-desc:hasDatasetSnapshot ))
          }
       }
 
