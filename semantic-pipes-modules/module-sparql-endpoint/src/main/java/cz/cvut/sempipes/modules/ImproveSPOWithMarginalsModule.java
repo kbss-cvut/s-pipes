@@ -5,6 +5,7 @@ import cz.cvut.sempipes.constants.KBSS_MODULE;
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
 import cz.cvut.sempipes.engine.VariablesBinding;
+import cz.cvut.sempipes.util.JenaUtils;
 import cz.cvut.sempipes.util.QueryUtils;
 import cz.cvut.sempipes.util.TDBTempFactory;
 import java.io.File;
@@ -47,6 +48,8 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
     private String marginalConstraint;
     //@Parameter(urlPrefix = TYPE_PREFIX, name = "marginals-defs-file-url")
     private String marginalsDefsFileUrl;
+    //@Parameter(urlPrefix = TYPE_PREFIX, name = "marginals-file-url")
+    private String marginalsFileUrl;
     //@Parameter(urlPrefix = TYPE_PREFIX, name = "data-service-url")
     private String dataServiceUrl;
 
@@ -75,9 +78,15 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
 
         final Model inputModel = executionContext.getDefaultModel();
 
+        LOG.debug("Loading marginals ...");
+        Model marginalsModel = loadModelFromFile(marginalsFileUrl);
+//        mLOG.trace("marginals", marginalsModel);
+
         LOG.debug("Loading marginal definitions ...");
         Model marginalDefsModel = loadModelFromFile(marginalsDefsFileUrl);
-        mLOG.trace("marginal-defs", marginalDefsModel);
+//        mLOG.trace("marginal-defs", marginalDefsModel);
+
+        Model marginalsWithDefsModel = ModelFactory.createUnion(marginalsModel, marginalDefsModel);
 
         String spoPatternDataQueryTemplate = loadQueryStringFromFile("/get-spo-pattern-data.rq");
         spoPatternDataQueryTemplate = QueryUtils.substituteMarkers("MARGINAL_CONSTRAINT", marginalConstraint, spoPatternDataQueryTemplate);
@@ -100,7 +109,7 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
             mLOG.trace("pattern-data-" + i, patternDataModel);
 
             // extract appropriate marginals
-            Model marginalTypesModel = computeMarginalTypesModel(patternDataModel, marginalDefsModel);
+            Model marginalTypesModel = computeMarginalTypesModel(patternDataModel, marginalsWithDefsModel);
             mLOG.trace("marginal-types-" + i, marginalTypesModel);
 
             Model spoPatternDataWithMarginalsModel = ModelFactory.createUnion(patternDataModel, marginalTypesModel);
@@ -115,8 +124,22 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
         Model nonBreakablePatternsModel = getNonBreakablePatterns(inputModel);
         mLOG.trace("non-breakable-patterns", nonBreakablePatternsModel);
 
-        Model outputModel = mergePatterns(ModelFactory.createUnion(brakedPatternsOutputModel, nonBreakablePatternsModel));
+        Model mergedPatternsModel = mergePatterns(ModelFactory.createUnion(brakedPatternsOutputModel, nonBreakablePatternsModel));
+        mLOG.trace("merged-patterns", mergedPatternsModel);
+
+        Model dataSourcesModel = getDatasources(mergedPatternsModel);
+        mLOG.trace("datasources", dataSourcesModel);
+
+        Model outputModel = JenaUtils.createUnion(mergedPatternsModel, dataSourcesModel);
         return ExecutionContextFactory.createContext(outputModel);
+    }
+
+    private Model getDatasources(Model spoModel) {
+        return QueryUtils.execConstruct(
+            loadQueryFromFile("/get-datasources.rq"),
+            spoModel,
+            new QuerySolutionMap()
+        );
     }
 
     private Model mergePatterns(Model patternsModel) {
@@ -165,11 +188,11 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
         return spoModel;
     }
 
-    private Model computeMarginalTypesModel(Model patternDataModel, Model marginalDefsModel) {
+    private Model computeMarginalTypesModel(Model patternDataModel, Model marginalWithDefsModel) {
         LOG.debug("Executing query to get typed marginals ...");
         Model marginalTypesModel = QueryUtils.execConstruct(
             loadQueryFromFile("/get-marginal-types.rq"),
-            ModelFactory.createUnion(patternDataModel, marginalDefsModel),
+            ModelFactory.createUnion(patternDataModel, marginalWithDefsModel),
             new QuerySolutionMap()
         );
         return marginalTypesModel;
@@ -302,6 +325,7 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
         super.loadConfiguration();
         marginalConstraint = getEffectiveStringValue(TYPE_PREFIX + "marginal-constraint");
         marginalsDefsFileUrl = getEffectiveStringValue(TYPE_PREFIX + "marginals-defs-file-url");
+        marginalsFileUrl = getEffectiveStringValue(TYPE_PREFIX + "marginals-file-url");
         dataServiceUrl = getEffectiveStringValue(TYPE_PREFIX + "data-service-url");
     }
 

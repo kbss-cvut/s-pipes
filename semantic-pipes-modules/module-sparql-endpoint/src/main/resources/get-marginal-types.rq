@@ -9,7 +9,8 @@ PREFIX enh-spo-sum-desc: <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/
 
 CONSTRUCT {
      ?resource a ?resourceType ;
-               enh-spo-sum-desc:hasDatasetSource ?datasetSnapshot .
+               enh-spo-sum-desc:hasDatasetSnapshot ?datasetSnapshot .
+
 } WHERE {
 #      ?pattern :hasWeight ?w .
        {
@@ -21,4 +22,5 @@ CONSTRUCT {
       ?observation ddo:weakly-described-resource ?resource ;
                    ddo:type ?resourceType ;
                    ddo:definition-dataset-snapshot ?datasetSnapshot .
+      ?resource    ddo:is-weakly-described-in  <http://vocabulary.wolterskluwer.de/PoolParty/sparql/arbeitsrecht/dataset/snapshot> .
 }

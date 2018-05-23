@@ -30,7 +30,7 @@ public class TDBTempFactory {
 
     private static Path getTempDir() {
         try {
-            Path tempDir = Files.createTempDirectory("junit-tdb-");
+            Path tempDir = Files.createTempDirectory("tdb-");
             System.out.println("Using temporary TDB at " + tempDir);
             return tempDir;
         } catch (IOException e) {
