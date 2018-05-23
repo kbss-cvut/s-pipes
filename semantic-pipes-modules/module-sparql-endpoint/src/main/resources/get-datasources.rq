@@ -10,6 +10,7 @@ CONSTRUCT {
     ?representant enh-spo-sum-desc:hasDatasetSource ?typeDatasetSource .
 } WHERE  {
     ?representant enh-spo-sum-desc:hasDatasetSnapshot ?typeDatasetSnapshot .
+    # TODO set ddo-metadata by param
     SERVICE <http://onto.fel.cvut.cz/rdf4j-server/repositories/ddo-metadata-noinfer> {
          ?typeDatasetSnapshot ddo:has-dataset ?typeDataset .
          ?typeDatasetSource ddo:offers-dataset ?typeDataset .
