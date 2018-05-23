@@ -22,5 +22,6 @@ CONSTRUCT {
       ?observation ddo:weakly-described-resource ?resource ;
                    ddo:type ?resourceType ;
                    ddo:definition-dataset-snapshot ?datasetSnapshot .
-      ?resource    ddo:is-weakly-described-in  <http://vocabulary.wolterskluwer.de/PoolParty/sparql/arbeitsrecht/dataset/snapshot> .
+      ?resource    ddo:is-weakly-described-in  ?relevantSnapshot .
+      ?config :is-relevant-snapshot ?relevantSnapshot .
 }

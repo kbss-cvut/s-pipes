@@ -1,0 +1,38 @@
+PREFIX :<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX ld-cube: <http://purl.org/linked-data/cube#>
+PREFIX ddo: <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/>
+PREFIX enh-spo-sum-desc: <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/spo-summary-with-marginals/model/>
+
+CONSTRUCT {
+   ?configRoot :is-relevant-snapshot ?relevantDatasetSnapshot .
+} WHERE  {
+     # {
+	#	 BIND("http://linked.opendata.cz/resource/dataset/vavai/programmes" as ?snapshotGraphId)
+	#    BIND("http://202.45.139.84:10035/catalogs/fao/repositories/agrovoc" as ?datasetEndpointUrl)
+     # }
+
+
+    {
+            BIND(STRUUID() as ?executionId)
+    }
+
+    #TODO remove concrete ddo-metadata repo reference
+    SERVICE <http://onto.fel.cvut.cz/rdf4j-server/repositories/ddo-metadata-noinfer> {
+
+        ?relevantDatasetSnapshot ddo:has-dataset ?relevantDataset .
+        ?relevantDatasetSource ddo:offers-dataset ?relevantDataset .
+        ?relevantDatasetSource ddo:has-endpoint-url ?datasetEndpointUrl .
+    #    ?relevantDatasetSource ddo:has-graph-id ?snapshotGraphId .
+    #     {
+    #      FILTER(!bound(?snapshotGraphId))
+    #     } UNION {
+    #      FILTER(bound(?snapshotGraphId))
+    #       ?relevantDatasetSource ddo:has-graph-id ?snapshotGraphId .
+    #    }
+    }
+
+    BIND(IRI(CONCAT(STR(:config), "-", ?executionId)) as ?configRoot)
+}

@@ -80,6 +80,11 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
 
         final Model inputModel = executionContext.getDefaultModel();
 
+        LOG.debug("Retrieving relevant snapshots ...");
+        // TODO it should be taken from parameter somehow
+        Model relevantSnapshotsModel = retrieveRelevantSnapshots(executionContext.getVariablesBinding());
+        mLOG.trace("relevant-snapshots", relevantSnapshotsModel);
+
         LOG.debug("Loading marginals ...");
         Model marginalsModel = loadModelFromFile(marginalsFileUrl);
         mLOG.trace("marginals", marginalsModel);
@@ -88,7 +93,10 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
         Model marginalDefsModel = loadModelFromFile(marginalsDefsFileUrl);
         mLOG.trace("marginal-defs", marginalDefsModel);
 
-        Model marginalsWithDefsModel = ModelFactory.createUnion(marginalsModel, marginalDefsModel);
+        Model marginalsWithDefsModel = ModelFactory.createUnion(
+            relevantSnapshotsModel,
+            ModelFactory.createUnion(marginalsModel, marginalDefsModel)
+        );
 
         String spoPatternDataQueryTemplate = loadQueryStringFromFile("/get-spo-pattern-data.rq");
         spoPatternDataQueryTemplate = QueryUtils.substituteMarkers("MARGINAL_CONSTRAINT", marginalConstraint, spoPatternDataQueryTemplate);
@@ -134,6 +142,14 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
 
         Model outputModel = JenaUtils.createUnion(mergedPatternsModel, dataSourcesModel);
         return ExecutionContextFactory.createContext(outputModel);
+    }
+
+    private Model retrieveRelevantSnapshots(VariablesBinding variablesBinding) {
+        return QueryUtils.execConstruct(
+            loadQueryFromFile("/get-relevant-snapshots.rq"),
+            ModelFactory.createDefaultModel(),
+            variablesBinding.asQuerySolution()
+        );
     }
 
     private Model getDatasources(Model spoModel) {
