@@ -40,18 +40,10 @@ WHERE {
          }
          GROUP BY ?p ?sType ?oType
       }
-
       {
-        SELECT ?p2 ?sType2 ?oType2 ?sTypeDatasetSnapshot ?oTypeDatasetSnapshot
+        SELECT ?p ?sType ?oType ?sTypeDatasetSnapshot ?oTypeDatasetSnapshot
          {
-              ?s ?p2 ?o.
-
-              OPTIONAL {
-                ?s enh-spo-sum-desc:hasDatasetSnapshot ?sTypeDatasetSnapshot .
-              }
-              OPTIONAL {
-                ?o enh-spo-sum-desc:hasDatasetSnapshot ?oTypeDatasetSnapshot .
-              }
+              ?s ?p ?o.
 
               OPTIONAL {
                 ?s a ?sTypeConcrete .
@@ -61,16 +53,20 @@ WHERE {
                 ?o a ?oTypeConcrete .
                 FILTER(?oTypeConcrete != owl:Thing)
               }
-              BIND(COALESCE(?sTypeConcrete, owl:Thing) as ?sType2)
-              BIND(COALESCE(?oTypeConcrete, owl:Thing) as ?oType2)
+              OPTIONAL {
+                              ?s enh-spo-sum-desc:hasDatasetSnapshot ?sTypeDatasetSnapshot .
+                            }
+              OPTIONAL {
+                              ?o enh-spo-sum-desc:hasDatasetSnapshot ?oTypeDatasetSnapshot .
+                            }
+              BIND(COALESCE(?sTypeConcrete, owl:Thing) as ?sType)
+              BIND(COALESCE(?oTypeConcrete, owl:Thing) as ?oType)
 
-              FILTER(?p2 not in ( rdf:subject, rdf:predicate, rdf:object, :hasWeight, rdf:type, :subject, :object, :predicate, enh-spo-sum-desc:hasDatasetSource, enh-spo-sum-desc:hasDatasetSnapshot ))
+              FILTER(?p not in ( rdf:subject, rdf:predicate, rdf:object, :hasWeight, rdf:type, :subject, :object, :predicate, enh-spo-sum-desc:hasDatasetSource, enh-spo-sum-desc:hasDatasetSnapshot ))
          }
+         GROUP BY ?p ?sType ?oType ?sTypeDatasetSnapshot ?oTypeDatasetSnapshot
       }
 
-      FILTER(?p = ?p2)
-      FILTER(?sType = ?sType2)
-      FILTER(?oType = ?oType2)
 
       BIND(MD5(CONCAT(str(?p),str(?sType),str(?oType),?executionId)) as ?patternHash)
       BIND(IRI(CONCAT("http://onto.fel.cvut.cz/ontologies/dataset-descriptor/spo-summary-descriptor/di-", ?patternHash)) as ?di)
