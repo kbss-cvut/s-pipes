@@ -3,7 +3,7 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
 
-SELECT ?p ?sType ?oType ?pattern ?originalWeight
+SELECT DISTINCT ?p ?sType ?oType ?pattern ?originalWeight
 WHERE {
     ?pattern rdf:subject/a ?sType ;
          rdf:predicate ?p ;
