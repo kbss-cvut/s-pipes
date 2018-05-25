@@ -7,7 +7,7 @@ PREFIX ddo: <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/>
 PREFIX enh-spo-sum-desc: <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/spo-summary-with-marginals/model/>
 
 CONSTRUCT {
-   ?configRoot :is-relevant-snapshot <http://onto.fel.cvut.cz/ontologies/wdr-example/pba/snapshot> .
+   ?configRoot :is-relevant-snapshot ?relevantDatasetSnapshot .
 } WHERE  {
      # {
 	#	 BIND("http://linked.opendata.cz/resource/dataset/vavai/programmes" as ?snapshotGraphId)
