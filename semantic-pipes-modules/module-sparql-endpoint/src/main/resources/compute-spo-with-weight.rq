@@ -6,25 +6,22 @@ PREFIX ld-cube: <http://purl.org/linked-data/cube#>
 PREFIX ddo: <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/>
 PREFIX enh-spo-sum-desc: <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/spo-summary-with-marginals/model/>
 
-CONSTRUCT{
+CONSTRUCT {
  ?di rdf:subject ?sRepresentant ;
     rdf:predicate ?p ;
     rdf:object ?oRepresentant ;
         :hasWeight ?w.
-    ?sRepresentant a ?sType ;
-         enh-spo-sum-desc:hasDatasetSnapshot ?sTypeDatasetSnapshot .
-    ?oRepresentant a ?oType ;
-          enh-spo-sum-desc:hasDatasetSnapshot ?oTypeDatasetSnapshot .
+ ?sRepresentant a ?sType .
+ ?oRepresentant a ?oType .
 }
 WHERE {
       {
         BIND(COALESCE(?executionId, STRUUID()) as ?localExecutionId)
       }
       {
-        SELECT ?p ?sType ?oType (COUNT(*) as ?w)
-         {
+        SELECT ?p ?sType ?oType (COUNT(*) as ?w) {
               ?s ?p ?o.
-
+              FILTER(?p not in ( rdf:subject, rdf:predicate, rdf:object, :hasWeight, rdf:type, :subject, :object, :predicate, enh-spo-sum-desc:hasDatasetSource, enh-spo-sum-desc:hasDatasetSnapshot ))
               OPTIONAL {
                 ?s a ?sTypeConcrete .
                 FILTER(?sTypeConcrete != owl:Thing)
@@ -35,38 +32,9 @@ WHERE {
               }
               BIND(COALESCE(?sTypeConcrete, owl:Thing) as ?sType)
               BIND(COALESCE(?oTypeConcrete, owl:Thing) as ?oType)
-
-              FILTER(?p not in ( rdf:subject, rdf:predicate, rdf:object, :hasWeight, rdf:type, :subject, :object, :predicate, enh-spo-sum-desc:hasDatasetSource, enh-spo-sum-desc:hasDatasetSnapshot ))
          }
          GROUP BY ?p ?sType ?oType
       }
-      {
-        SELECT ?p ?sType ?oType ?sTypeDatasetSnapshot ?oTypeDatasetSnapshot
-         {
-              ?s ?p ?o.
-
-              OPTIONAL {
-                ?s a ?sTypeConcrete .
-                FILTER(?sTypeConcrete != owl:Thing)
-              }
-              OPTIONAL {
-                ?o a ?oTypeConcrete .
-                FILTER(?oTypeConcrete != owl:Thing)
-              }
-              OPTIONAL {
-                              ?s enh-spo-sum-desc:hasDatasetSnapshot ?sTypeDatasetSnapshot .
-                            }
-              OPTIONAL {
-                              ?o enh-spo-sum-desc:hasDatasetSnapshot ?oTypeDatasetSnapshot .
-                            }
-              BIND(COALESCE(?sTypeConcrete, owl:Thing) as ?sType)
-              BIND(COALESCE(?oTypeConcrete, owl:Thing) as ?oType)
-
-              FILTER(?p not in ( rdf:subject, rdf:predicate, rdf:object, :hasWeight, rdf:type, :subject, :object, :predicate, enh-spo-sum-desc:hasDatasetSource, enh-spo-sum-desc:hasDatasetSnapshot ))
-         }
-         GROUP BY ?p ?sType ?oType ?sTypeDatasetSnapshot ?oTypeDatasetSnapshot
-      }
-
 
       BIND(MD5(CONCAT(str(?p),str(?sType),str(?oType),?localExecutionId)) as ?patternHash)
       BIND(IRI(CONCAT("http://onto.fel.cvut.cz/ontologies/dataset-descriptor/spo-summary-descriptor/di-", ?patternHash)) as ?di)
