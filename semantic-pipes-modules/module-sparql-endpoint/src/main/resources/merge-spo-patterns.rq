@@ -18,7 +18,7 @@ CONSTRUCT{
 }
 WHERE {
       {
-        BIND(STRUUID() as ?executionId)
+        BIND(COALESCE(?executionId, STRUUID()) as ?localExecutionId)
       }
       {
         SELECT ?p ?sType ?oType (SUM(?patternWeight) as ?w)
@@ -52,7 +52,7 @@ WHERE {
       FILTER(?sType = ?sType2)
       FILTER(?oType = ?oType2)
 
-      BIND(MD5(CONCAT(str(?p),str(?sType),str(?oType),?executionId)) as ?patternHash)
+      BIND(MD5(CONCAT(str(?p),str(?sType),str(?oType),?localExecutionId)) as ?patternHash)
       BIND(IRI(CONCAT("http://onto.fel.cvut.cz/ontologies/dataset-descriptor/spo-summary-descriptor/di-", ?patternHash)) as ?di)
       BIND(IRI(CONCAT(str(?di), "/subject")) as ?sRepresentant)
       BIND(IRI(CONCAT(str(?di), "/object")) as ?oRepresentant)
