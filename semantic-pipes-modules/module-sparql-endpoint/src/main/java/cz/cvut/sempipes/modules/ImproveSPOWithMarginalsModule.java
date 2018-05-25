@@ -125,7 +125,13 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
             Model spoPatternDataWithMarginalsModel = ModelFactory.createUnion(patternDataModel, marginalTypesModel);
             mLOG.trace("pattern-data-with-marginals-" + i, spoPatternDataWithMarginalsModel);
 
-            Model brakedPatternModel = computeSPO(spoPatternDataWithMarginalsModel);
+            Model spoWithWeight = computeSPOWithWeight(spoPatternDataWithMarginalsModel);
+            mLOG.trace("spo-pattern-with-weight-" + i, spoWithWeight);
+
+            Model spoWithSnapshots = computeSPOWithSnapshots(spoPatternDataWithMarginalsModel);
+            mLOG.trace("spo-pattern-with-snapshosts-" + i, spoWithSnapshots);
+
+            Model brakedPatternModel = ModelFactory.createUnion(spoWithWeight, spoWithSnapshots);
             mLOG.trace("braked-pattern-" + i, brakedPatternModel);
 
             brakedPatternsOutputModel.add(brakedPatternModel);
@@ -196,10 +202,21 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
         return patternDataModel;
     }
 
-    private Model computeSPO(Model spoPatternDataWithMarginalsModel) {
-        LOG.debug("Computing SPO for pattern data with marginals ...");
+
+    private Model computeSPOWithWeight(Model spoPatternDataWithMarginalsModel) {
+        LOG.debug("Computing SPO with weight for pattern data with marginals ...");
         Model spoModel = QueryUtils.execConstruct(
-            loadQueryFromFile("/compute-spo.rq"),
+            loadQueryFromFile("/compute-spo-with-weight.rq"),
+            spoPatternDataWithMarginalsModel,
+            new QuerySolutionMap()
+        );
+        return spoModel;
+    }
+
+    private Model computeSPOWithSnapshots(Model spoPatternDataWithMarginalsModel) {
+        LOG.debug("Computing SPO with snapshots for pattern data with marginals ...");
+        Model spoModel = QueryUtils.execConstruct(
+            loadQueryFromFile("/compute-spo-with-snapshots.rq"),
             spoPatternDataWithMarginalsModel,
             new QuerySolutionMap()
         );
