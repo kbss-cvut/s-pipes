@@ -9,30 +9,25 @@ PREFIX enh-spo-sum-desc: <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/
 CONSTRUCT {
    ?configRoot :is-relevant-snapshot ?relevantDatasetSnapshot .
 } WHERE  {
-     # {
-	#	 BIND("http://linked.opendata.cz/resource/dataset/vavai/programmes" as ?snapshotGraphId)
-	#    BIND("http://202.45.139.84:10035/catalogs/fao/repositories/agrovoc" as ?datasetEndpointUrl)
-     # }
-
-
     {
-            BIND(STRUUID() as ?executionId)
+            BIND(COALESCE(?executionId, STRUUID()) as ?localExecutionId)
+    }
+    {
+        SELECT ?relevantDatasetSnapshot  ?snapshotGraphId2 ?datasetEndpointUrl2
+        WHERE {
+          SERVICE <http://onto.fel.cvut.cz/rdf4j-server/repositories/ddo-metadata-noinfer> {
+              ?relevantDatasetSnapshot ddo:has-dataset ?relevantDataset .
+              ?relevantDatasetSource ddo:offers-dataset ?relevantDataset .
+              ?relevantDatasetSource ddo:has-endpoint-url ?datasetEndpointUrl2 .
+              OPTIONAL {
+                  ?relevantDatasetSource ddo:has-graph-id ?snapshotGraphId2 .
+              }
+          }
+        }
     }
 
-    #TODO remove concrete ddo-metadata repo reference
-    SERVICE <http://onto.fel.cvut.cz/rdf4j-server/repositories/ddo-metadata-noinfer> {
+    FILTER(?datasetEndpointUrl = ?datasetEndpointUrl2)
+    FILTER((!bound(?snapshotGraphId)) || (?snapshotGraphId = ?snapshotGraphId2))
 
-        ?relevantDatasetSnapshot ddo:has-dataset ?relevantDataset .
-        ?relevantDatasetSource ddo:offers-dataset ?relevantDataset .
-        ?relevantDatasetSource ddo:has-endpoint-url ?datasetEndpointUrl .
-    #    ?relevantDatasetSource ddo:has-graph-id ?snapshotGraphId .
-    #     {
-    #      FILTER(!bound(?snapshotGraphId))
-    #     } UNION {
-    #      FILTER(bound(?snapshotGraphId))
-    #       ?relevantDatasetSource ddo:has-graph-id ?snapshotGraphId .
-    #    }
-    }
-
-    BIND(IRI(CONCAT(STR(:config), "-", ?executionId)) as ?configRoot)
+    BIND(IRI(CONCAT(STR(:config), "-", ?localExecutionId)) as ?configRoot)
 }
