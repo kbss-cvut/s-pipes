@@ -23,6 +23,7 @@ import java.util.Set;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.QueryParseException;
+import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.Syntax;
@@ -79,6 +80,7 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
         final ModelLogger mLOG = new ModelLogger(MODULE_ID, LOG);
 
         final Model inputModel = executionContext.getDefaultModel();
+        final QuerySolution inputQS = executionContext.getVariablesBinding().asQuerySolution();
 
         LOG.debug("Retrieving relevant snapshots ...");
         // TODO it should be taken from parameter somehow
@@ -125,14 +127,14 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
             Model spoPatternDataWithMarginalsModel = ModelFactory.createUnion(patternDataModel, marginalTypesModel);
             mLOG.trace("pattern-data-with-marginals-" + i, spoPatternDataWithMarginalsModel);
 
-            Model spoWithWeight = computeSPOWithWeight(spoPatternDataWithMarginalsModel);
+            Model spoWithWeight = computeSPOWithWeight(spoPatternDataWithMarginalsModel, inputQS);
             mLOG.trace("spo-pattern-with-weight-" + i, spoWithWeight);
 
-            Model spoWithSnapshots = computeSPOWithSnapshots(spoPatternDataWithMarginalsModel);
+            Model spoWithSnapshots = computeSPOWithSnapshots(spoPatternDataWithMarginalsModel, inputQS);
             mLOG.trace("spo-pattern-with-snapshosts-" + i, spoWithSnapshots);
 
             Model brakedPatternModel = ModelFactory.createUnion(spoWithWeight, spoWithSnapshots);
-            mLOG.trace("braked-pattern-" + i, brakedPatternModel);
+            mLOG.trace("breaked-pattern-" + i, brakedPatternModel);
 
             brakedPatternsOutputModel.add(brakedPatternModel);
         }
@@ -203,22 +205,22 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
     }
 
 
-    private Model computeSPOWithWeight(Model spoPatternDataWithMarginalsModel) {
+    private Model computeSPOWithWeight(Model spoPatternDataWithMarginalsModel, QuerySolution querySolution) {
         LOG.debug("Computing SPO with weight for pattern data with marginals ...");
         Model spoModel = QueryUtils.execConstruct(
             loadQueryFromFile("/compute-spo-with-weight.rq"),
             spoPatternDataWithMarginalsModel,
-            new QuerySolutionMap()
+            querySolution
         );
         return spoModel;
     }
 
-    private Model computeSPOWithSnapshots(Model spoPatternDataWithMarginalsModel) {
+    private Model computeSPOWithSnapshots(Model spoPatternDataWithMarginalsModel, QuerySolution querySolution) {
         LOG.debug("Computing SPO with snapshots for pattern data with marginals ...");
         Model spoModel = QueryUtils.execConstruct(
             loadQueryFromFile("/compute-spo-with-snapshots.rq"),
             spoPatternDataWithMarginalsModel,
-            new QuerySolutionMap()
+            querySolution
         );
         return spoModel;
     }
