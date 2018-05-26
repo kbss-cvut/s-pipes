@@ -8,6 +8,7 @@ import cz.cvut.sempipes.engine.VariablesBinding;
 import cz.cvut.sempipes.util.JenaUtils;
 import cz.cvut.sempipes.util.QueryUtils;
 import cz.cvut.sempipes.util.TDBTempFactory;
+import static cz.cvut.sempipes.util.VariableBindingUtils.restrict;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -23,7 +24,6 @@ import java.util.Set;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.QueryParseException;
-import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.Syntax;
@@ -56,6 +56,8 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
     //@Parameter(urlPrefix = TYPE_PREFIX, name = "data-service-url")
     private String dataServiceUrl;
 
+    private static final String VAR_EXECUTION_ID = "executionId";
+
     private static Query parseQuery(String queryStr) {
         Query query = QueryFactory.create();
         return QueryFactory.parse(
@@ -80,7 +82,7 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
         final ModelLogger mLOG = new ModelLogger(MODULE_ID, LOG);
 
         final Model inputModel = executionContext.getDefaultModel();
-        final QuerySolution inputQS = executionContext.getVariablesBinding().asQuerySolution();
+        final VariablesBinding inputVB = executionContext.getVariablesBinding();
 
         LOG.debug("Retrieving relevant snapshots ...");
         // TODO it should be taken from parameter somehow
@@ -127,10 +129,16 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
             Model spoPatternDataWithMarginalsModel = ModelFactory.createUnion(patternDataModel, marginalTypesModel);
             mLOG.trace("pattern-data-with-marginals-" + i, spoPatternDataWithMarginalsModel);
 
-            Model spoWithWeight = computeSPOWithWeight(spoPatternDataWithMarginalsModel, inputQS);
+            Model spoWithWeight = computeSPOWithWeight(
+                spoPatternDataWithMarginalsModel,
+                restrict(inputVB, VAR_EXECUTION_ID)
+            );
             mLOG.trace("spo-pattern-with-weight-" + i, spoWithWeight);
 
-            Model spoWithSnapshots = computeSPOWithSnapshots(spoPatternDataWithMarginalsModel, inputQS);
+            Model spoWithSnapshots = computeSPOWithSnapshots(
+                spoPatternDataWithMarginalsModel,
+                restrict(inputVB, VAR_EXECUTION_ID)
+            );
             mLOG.trace("spo-pattern-with-snapshosts-" + i, spoWithSnapshots);
 
             Model brokenPatternModel = ModelFactory.createUnion(spoWithWeight, spoWithSnapshots);
@@ -205,22 +213,22 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
     }
 
 
-    private Model computeSPOWithWeight(Model spoPatternDataWithMarginalsModel, QuerySolution querySolution) {
+    private Model computeSPOWithWeight(Model spoPatternDataWithMarginalsModel, VariablesBinding variablesBinding) {
         LOG.debug("Computing SPO with weight for pattern data with marginals ...");
         Model spoModel = QueryUtils.execConstruct(
             loadQueryFromFile("/compute-spo-with-weight.rq"),
             spoPatternDataWithMarginalsModel,
-            querySolution
+            variablesBinding.asQuerySolution()
         );
         return spoModel;
     }
 
-    private Model computeSPOWithSnapshots(Model spoPatternDataWithMarginalsModel, QuerySolution querySolution) {
+    private Model computeSPOWithSnapshots(Model spoPatternDataWithMarginalsModel, VariablesBinding variablesBinding) {
         LOG.debug("Computing SPO with snapshots for pattern data with marginals ...");
         Model spoModel = QueryUtils.execConstruct(
             loadQueryFromFile("/compute-spo-with-snapshots.rq"),
             spoPatternDataWithMarginalsModel,
-            querySolution
+            variablesBinding.asQuerySolution()
         );
         return spoModel;
     }
