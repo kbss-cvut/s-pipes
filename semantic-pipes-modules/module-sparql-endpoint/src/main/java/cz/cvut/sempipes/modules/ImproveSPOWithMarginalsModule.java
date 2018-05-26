@@ -133,10 +133,10 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
             Model spoWithSnapshots = computeSPOWithSnapshots(spoPatternDataWithMarginalsModel, inputQS);
             mLOG.trace("spo-pattern-with-snapshosts-" + i, spoWithSnapshots);
 
-            Model brakedPatternModel = ModelFactory.createUnion(spoWithWeight, spoWithSnapshots);
-            mLOG.trace("breaked-pattern-" + i, brakedPatternModel);
+            Model brokenPatternModel = ModelFactory.createUnion(spoWithWeight, spoWithSnapshots);
+            mLOG.trace("broken-pattern-" + i, brokenPatternModel);
 
-            brakedPatternsOutputModel.add(brakedPatternModel);
+            brakedPatternsOutputModel.add(brokenPatternModel);
         }
 
         Model nonBreakablePatternsModel = getNonBreakablePatterns(inputModel);
