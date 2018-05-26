@@ -3,6 +3,7 @@ package cz.cvut.sempipes.engine;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -17,6 +18,7 @@ import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.vocabulary.RDF;
 import org.jetbrains.annotations.NotNull;
+import org.mapdb.Atomic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -97,6 +99,35 @@ public class VariablesBinding {
         return conflictingBinding;
 
     }
+
+    /**
+     * Returns new binding restricted to listed variables.
+     * @param varNames Names of variables that should be copied from source binding.
+     * @return new binding
+     */
+    public VariablesBinding restrictTo(@NotNull List<String> varNames) {
+        VariablesBinding newBinding = new VariablesBinding();
+        varNames.forEach(
+            var -> {
+                RDFNode oldNode = this.getNode(var);
+
+                if (oldNode != null) {
+                    newBinding.add(var, oldNode);
+                }
+            }
+        );
+        return newBinding;
+    }
+
+    /**
+     * Returns new binding restricted to listed variables.
+     * @param varNames Names of variables that should be copied from source binding.
+     * @return new binding
+     */
+    public VariablesBinding restrictTo(@NotNull String ... varNames) {
+        return restrictTo(Arrays.asList(varNames));
+    }
+
 
     final String BASE_URI = "http://onto.fel.cvut.cz/ontologies/semantic-pipes/";
     final String QUERY_SOLUTION = BASE_URI + "query_solution";
