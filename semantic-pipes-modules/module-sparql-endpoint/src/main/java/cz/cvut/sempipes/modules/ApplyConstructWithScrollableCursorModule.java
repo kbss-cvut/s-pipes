@@ -1,9 +1,7 @@
 package cz.cvut.sempipes.modules;
 
 import cz.cvut.sempipes.constants.KBSS_MODULE;
-import cz.cvut.sempipes.engine.VariablesBinding;
 import cz.cvut.sempipes.util.QueryUtils;
-import org.apache.jena.query.QuerySolution;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResourceFactory;
