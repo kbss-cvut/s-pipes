@@ -1,0 +1,1177 @@
+@prefix ddo: <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/> .
+
+_:genid-c155e95c4742410dbaee550fa8b53434-0BAB3EFF417CE101C26AF3AE4D0C89A6 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/61985902/2012-01-01> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-c155e95c4742410dbaee550fa8b53434-20F6E1A908FD9E7F5F92ED24912C86A5 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/61985899/2009-12-31> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/mfcr/monitor/ciselniky/UcetniJednotka> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-c155e95c4742410dbaee550fa8b53434-243FCD28304E792760A4EC0C56864658 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/61985881/2011-01-01> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/mfcr/monitor/ciselniky/UcetniJednotka> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-c155e95c4742410dbaee550fa8b53434-24EF13431F350979FDF10BCED37461AE a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/61985902/2009-12-31> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/mfcr/monitor/ciselniky/UcetniJednotka> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-c155e95c4742410dbaee550fa8b53434-265FB0544A76701AF17245FCA07947C4 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/61985899/2011-01-01> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/mfcr/monitor/ciselniky/UcetniJednotka> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-c155e95c4742410dbaee550fa8b53434-296A81BD0341F73E22E3DFACE9F14F28 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/61985881/2009-12-31> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-c155e95c4742410dbaee550fa8b53434-3421ADFC819C7332E65A8DB46669A960 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/61985902/2009-12-31> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-c155e95c4742410dbaee550fa8b53434-35E62E2E53B2817C5105017129C3F0A7 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/61985872/2012-01-01> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/mfcr/monitor/ciselniky/UcetniJednotka> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-c155e95c4742410dbaee550fa8b53434-3786B54DEA77DB51E415F4C63E14AC4F a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/61985881/2011-01-01> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-c155e95c4742410dbaee550fa8b53434-3E55B317A1D14EF56E7EDF721E81D7D0 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/61985899/2011-01-01> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-c155e95c4742410dbaee550fa8b53434-487E4085A1517D7C1EF870239D36E511 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/61985902/2011-01-01> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-c155e95c4742410dbaee550fa8b53434-612ED79AE86F3EB5DCC6F68E095F0294 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/61985881/2009-12-31> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/mfcr/monitor/ciselniky/UcetniJednotka> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-c155e95c4742410dbaee550fa8b53434-77CF4AC022ED10AACED506419B13D66B a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/61985902/2011-01-01> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/mfcr/monitor/ciselniky/UcetniJednotka> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-c155e95c4742410dbaee550fa8b53434-7E365679DF3892AA7A00ECF735032691 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/61985902/2012-01-01> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/mfcr/monitor/ciselniky/UcetniJednotka> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-c155e95c4742410dbaee550fa8b53434-8D9C057FDD7D149C05E555C09F33F86A a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/61985899/2012-01-01> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/mfcr/monitor/ciselniky/UcetniJednotka> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-c155e95c4742410dbaee550fa8b53434-9C6DBE4A361A664B898692422D612B72 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/61985881/2012-01-01> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/mfcr/monitor/ciselniky/UcetniJednotka> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-c155e95c4742410dbaee550fa8b53434-A64782DCBB13E50F4D5F862523722CFE a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/61985881/2012-01-01> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-c155e95c4742410dbaee550fa8b53434-AF0CF6D1D989B3AAA2761324A4EBC060 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/61985872/2012-01-01> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-c155e95c4742410dbaee550fa8b53434-CE4A0A0B85A7A7624CCECF8C2F4C78B5 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/61985899/2009-12-31> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-c155e95c4742410dbaee550fa8b53434-DFEDB57A19BE1DFB742FC15551B46296 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/61985899/2012-01-01> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-37ee920d557345b6a1ad53eb78f14d68-04E729A442100A27E0043F36F112747A a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25669869> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-37ee920d557345b6a1ad53eb78f14d68-1EE92694CAB9FE67EF737E0D062E4EDE a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25667548> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-37ee920d557345b6a1ad53eb78f14d68-28F3BEA66FC38724BBB2A91E36D72783 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25667548> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-37ee920d557345b6a1ad53eb78f14d68-2B32E1E6F1C0919AA6275AC3EBF01E5B a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25669869> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-37ee920d557345b6a1ad53eb78f14d68-3FDFC1D9A1F06FE624F9DE1202EF0730 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25669265> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-37ee920d557345b6a1ad53eb78f14d68-4521896EBBD285B5EE16888085A7C911 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25671588> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-37ee920d557345b6a1ad53eb78f14d68-6335278B54AFCAB8F75E27D94A16B3AA a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25669036> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-37ee920d557345b6a1ad53eb78f14d68-66E7A9CB89B6C3DD46F5872262F35066 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25671529> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-37ee920d557345b6a1ad53eb78f14d68-6C5565C89374743F3ED34E0CA44AA46D a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25671227> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-37ee920d557345b6a1ad53eb78f14d68-6E6DD2251079CFA530D3B625A5370ED2 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25669036> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-37ee920d557345b6a1ad53eb78f14d68-707157EF0F9C454C03B8C507A91F036B a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25672479> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-37ee920d557345b6a1ad53eb78f14d68-7440A714A692B9D11BA1C849829137FC a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25669982> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-37ee920d557345b6a1ad53eb78f14d68-A01B974F66B544D52D0A1A24EB970747 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25672142> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-37ee920d557345b6a1ad53eb78f14d68-AE895CC1E96B596199FB9D4EC13B0EE6 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25669265> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-37ee920d557345b6a1ad53eb78f14d68-B8BABA8A9C73FFA1BB7D8F4A901F5F0A a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25671529> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-37ee920d557345b6a1ad53eb78f14d68-C8CF4C8F95556919C3BB93EC5399543C a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25671227> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-37ee920d557345b6a1ad53eb78f14d68-DAB0D03FD8F80FA612FC63D467C2646F a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25672142> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-37ee920d557345b6a1ad53eb78f14d68-E86A1AE1BF8EC5F39070A32D198EDD75 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25669982> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-37ee920d557345b6a1ad53eb78f14d68-F30284D58D432B15035AF22A0B2E7D65 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25671588> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-37ee920d557345b6a1ad53eb78f14d68-FA40C68BBB492F4DBB9709F17F41968C a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25672479> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-b3831f7c7e464e63a052b0043a35bb9c-04BB3B904F30B094B89D7F149FBD145A a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F68407700%3A21610%2F10%3A00169430%21RIV13-MSM-21610___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/vavai/Vysledek> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-b3831f7c7e464e63a052b0043a35bb9c-080CB63D55A3253FDF0FB60D0897B3A6 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F68407700%3A21610%2F10%3A00169432%21RIV13-MSM-21610___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-b3831f7c7e464e63a052b0043a35bb9c-11315B5EC25478444CD3F2319FA1A356 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F68407700%3A21610%2F10%3A00169156%21RIV13-MSM-21610___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-b3831f7c7e464e63a052b0043a35bb9c-13551F43D1981B893E34C49DFEC59F72 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F68407700%3A21610%2F10%3A00168520%21RIV13-MSM-21610___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/vavai/Vysledek> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-b3831f7c7e464e63a052b0043a35bb9c-144BA3F84CF029EC0E057226FD9A7A64 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F68407700%3A21610%2F10%3A00169430%21RIV13-MSM-21610___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-b3831f7c7e464e63a052b0043a35bb9c-18566035BA8BC36E08B9045285BCF245 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F68407700%3A21610%2F10%3A00169432%21RIV13-MSM-21610___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/vavai/Vysledek> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-b3831f7c7e464e63a052b0043a35bb9c-189C6E660B9F26636A3713715C156FF2 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F68407700%3A21610%2F10%3A00178504%21RIV13-MSM-21610___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/vavai/Vysledek> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-b3831f7c7e464e63a052b0043a35bb9c-2585379222C5E1C57B0900D9C1973D2E a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F68407700%3A21610%2F10%3A00169162%21RIV13-MSM-21610___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-b3831f7c7e464e63a052b0043a35bb9c-3B0CA961ECA82391A171B252F0BEE4D1 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F68407700%3A21610%2F10%3A00169158%21RIV13-MSM-21610___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-b3831f7c7e464e63a052b0043a35bb9c-4514575CCC0BA72A609F082C0017D5C9 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F68407700%3A21610%2F10%3A00169162%21RIV13-MSM-21610___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/vavai/Vysledek> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-b3831f7c7e464e63a052b0043a35bb9c-4C48E039F8DDAFDBE3C5BF9F180EE714 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F68407700%3A21610%2F10%3A00169166%21RIV13-MSM-21610___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-b3831f7c7e464e63a052b0043a35bb9c-606CCA9A06B834060FEC65D96E70F0FB a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F68407700%3A21610%2F10%3A00169156%21RIV13-MSM-21610___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/vavai/Vysledek> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-b3831f7c7e464e63a052b0043a35bb9c-BE93C0A333C5DAE9B919E407ACFA2FEE a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F68407700%3A21610%2F10%3A00169165%21RIV13-MSM-21610___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/vavai/Vysledek> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-b3831f7c7e464e63a052b0043a35bb9c-BF49B22DB7B792B78FDB0B4A7A4CC519 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F68407700%3A21610%2F10%3A00169166%21RIV13-MSM-21610___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/vavai/Vysledek> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-b3831f7c7e464e63a052b0043a35bb9c-E0F7F26A84BEA7CD1EE05E5F238CACFB a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F68407700%3A21610%2F10%3A00178504%21RIV13-MSM-21610___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-b3831f7c7e464e63a052b0043a35bb9c-E73098032083BE5951575D299413FA53 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F68407700%3A21610%2F10%3A00168520%21RIV13-MSM-21610___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-b3831f7c7e464e63a052b0043a35bb9c-ED5998666477F833E6737CAB15A591B6 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F68407700%3A21610%2F10%3A00169165%21RIV13-MSM-21610___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-b3831f7c7e464e63a052b0043a35bb9c-F786C282A16D2F8033285F1B7B70E366 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F68407700%3A21610%2F10%3A00169158%21RIV13-MSM-21610___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/vavai/Vysledek> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-fede06d298f94a71a77272d956004889-157E83B5255A0597F2B0F0CF01ED37A7 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/04302338> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-fede06d298f94a71a77272d956004889-1885E24E5DE775C48946E2E818D7EB92 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/04300009> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-fede06d298f94a71a77272d956004889-19C8AA4972D8CF6D43F3B15D578A281F a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/04306112> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-fede06d298f94a71a77272d956004889-1D1AAB0FEB1299413C8B343891E531C4 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/04305892> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-fede06d298f94a71a77272d956004889-278937568EA4B5BB67C73001DCCA1C47 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/04302877> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-fede06d298f94a71a77272d956004889-27FF9B2BB6EE95DD37332EF9987854E2 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/04305973> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-fede06d298f94a71a77272d956004889-354328F520EABBE46B910BA36ADD82D5 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/04305892> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-fede06d298f94a71a77272d956004889-359EF7A3834ACBA81AE3C313C3743D46 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/04298667> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-fede06d298f94a71a77272d956004889-479653002FA99CFF0C7D958B75B2470C a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/04307721> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-fede06d298f94a71a77272d956004889-6DBD9FE407B4E2C3346F233BDB8CD874 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/04306112> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-fede06d298f94a71a77272d956004889-8752AEEAB0F4F7D9DD2849B855111AD3 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/04298527> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-fede06d298f94a71a77272d956004889-92B5D24A49A1E1DF160CCA4C2F4E54B6 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/04305973> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-fede06d298f94a71a77272d956004889-94CDB0A3BC4E32812F5377B24D9BAFF8 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/04302338> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-fede06d298f94a71a77272d956004889-99D727691FB2BCC7CC5BAD963013C6B8 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/04298527> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-fede06d298f94a71a77272d956004889-A3BA2B0F9887E2B11B14304F73F10A7B a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/04307721> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-fede06d298f94a71a77272d956004889-B98FE777295CA5ADE93A6C55633F960C a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/04297938> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-fede06d298f94a71a77272d956004889-BF11C4B3BA3676902C347C26F035A332 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/04297938> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-fede06d298f94a71a77272d956004889-D1984FED47363DE94629AB43AFCC44ED a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/04302877> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-fede06d298f94a71a77272d956004889-D80B78B6ED784BA3694FDFFD5B57F7BB a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/04298667> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-fede06d298f94a71a77272d956004889-EDB2D72DC37711D84C472E7D8FE3CBD0 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/04300009> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-1bd12c33c7d846efbf4d43ff4af6e0be-06413BC24C62DA1F47D29E611DA52F2A a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/47973056> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-1bd12c33c7d846efbf4d43ff4af6e0be-15649F133D0B89701BB604E808566CFB a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/47917091> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-1bd12c33c7d846efbf4d43ff4af6e0be-1FBC6B6B13AFD6550C9B56A8BE41323E a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/47972173> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-1bd12c33c7d846efbf4d43ff4af6e0be-3B31A335A1DCE30D9D93BBF6F7224021 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/47915480> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-1bd12c33c7d846efbf4d43ff4af6e0be-49B50F11CC8E261C50325862C9445EB3 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/47917091> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-1bd12c33c7d846efbf4d43ff4af6e0be-4D9853A1EFE293D8D7FD2027623E25B6 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/47917393> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-1bd12c33c7d846efbf4d43ff4af6e0be-4E0E8A8DB18815660D1B4F0F59A32E94 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/47972017> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-1bd12c33c7d846efbf4d43ff4af6e0be-69EDB51BE9550992BFAD6B0484FC101C a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/47916079> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-1bd12c33c7d846efbf4d43ff4af6e0be-7BE6A973E2918C8D08C1499CEA018B4E a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/47915544> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-1bd12c33c7d846efbf4d43ff4af6e0be-7C62D06F4097D9D26AC9C4342E5F4D5D a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/47917393> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-1bd12c33c7d846efbf4d43ff4af6e0be-87489C4618B481CBE9808BCE8B26ADF8 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/47917652> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-1bd12c33c7d846efbf4d43ff4af6e0be-A9717CF202101EBF09783FF308A6ADDC a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/47972173> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-1bd12c33c7d846efbf4d43ff4af6e0be-BE89565F5A15CF2AB679A47FB84FAABF a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/47916079> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-1bd12c33c7d846efbf4d43ff4af6e0be-C61689D875D69EB646363403ECB5EDED a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/47917652> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-1bd12c33c7d846efbf4d43ff4af6e0be-D1524776114AFFF1250B9A91F1E529D5 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/47974222> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-1bd12c33c7d846efbf4d43ff4af6e0be-D4BB21A62ED5C39ECB57D415F20DF495 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/47915544> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-1bd12c33c7d846efbf4d43ff4af6e0be-D8CE2F5EDD2700D7C34C323D3BCA2752 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/47974222> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-1bd12c33c7d846efbf4d43ff4af6e0be-E08A2F6B90126CB83C1C5B95A7877C6B a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/47915480> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-1bd12c33c7d846efbf4d43ff4af6e0be-EB2A2DB36923BC48F2952CFC03EF5205 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/47972017> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-1bd12c33c7d846efbf4d43ff4af6e0be-F1F07BE06C6CFB584E953678109C3BC9 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/47973056> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-bf64b08722854d6eb61d978bca60d75a-13561F90CDD5C20E86D1CA00366B053A a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://data.coi.cz/resource/check-action/301410020022201> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/coi.cz/zamereni> ;
+	ddo:type <http://schema.org/CheckAction> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-bf64b08722854d6eb61d978bca60d75a-14B38768D7CFD2DBC3B53FE41824566F a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://data.coi.cz/resource/check-action/301410030701801> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/coi.cz/zamereni> ;
+	ddo:type <http://schema.org/CheckAction> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-bf64b08722854d6eb61d978bca60d75a-1ADC83624F0183C76042874C407B172B a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://data.coi.cz/resource/check-action/301410020800101> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/coi.cz/kontroly> ;
+	ddo:type <http://schema.org/CheckAction> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-bf64b08722854d6eb61d978bca60d75a-2B31912BC2AEDEFEB2171929CB345574 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://data.coi.cz/resource/check-action/301410010808101> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/coi.cz/zamereni> ;
+	ddo:type <http://schema.org/CheckAction> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-bf64b08722854d6eb61d978bca60d75a-2CD9BECD6DF055A6D5D893DF1A355A36 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://data.coi.cz/resource/check-action/301410030701801> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/coi.cz/kontroly> ;
+	ddo:type <http://schema.org/CheckAction> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-bf64b08722854d6eb61d978bca60d75a-3341E70CAB80805BC53686CFA4FCF18A a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://data.coi.cz/resource/check-action/301410010702102> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/coi.cz/kontroly> ;
+	ddo:type <http://schema.org/CheckAction> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-bf64b08722854d6eb61d978bca60d75a-59151753C863C6E4144ECFFDACF0212F a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://data.coi.cz/resource/check-action/301410030035101> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/coi.cz/zamereni> ;
+	ddo:type <http://schema.org/CheckAction> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-bf64b08722854d6eb61d978bca60d75a-5E03614A114BFBB1A1C609D47E2655BC a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://data.coi.cz/resource/check-action/301410020800101> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/coi.cz/zamereni> ;
+	ddo:type <http://schema.org/CheckAction> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-bf64b08722854d6eb61d978bca60d75a-6E6D1083444220F1F707BD2551399364 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://data.coi.cz/resource/check-action/301410020022201> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/coi.cz/kontroly> ;
+	ddo:type <http://schema.org/CheckAction> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-bf64b08722854d6eb61d978bca60d75a-79548BF912F90346A3FA1AFA30694EF6 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://data.coi.cz/resource/check-action/301410010704101> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/coi.cz/zamereni> ;
+	ddo:type <http://schema.org/CheckAction> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-bf64b08722854d6eb61d978bca60d75a-895A174F7C81B7ECD18A61B7D38FA081 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://data.coi.cz/resource/check-action/301410010704101> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/coi.cz/kontroly> ;
+	ddo:type <http://schema.org/CheckAction> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-bf64b08722854d6eb61d978bca60d75a-8C9558E8EF6AFA0E5037724ADA095012 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://data.coi.cz/resource/check-action/301410020702801> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/coi.cz/zamereni> ;
+	ddo:type <http://schema.org/CheckAction> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-bf64b08722854d6eb61d978bca60d75a-8EFF103887A12D99EA0BDCB4373BD2B7 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://data.coi.cz/resource/check-action/301410010800101> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/coi.cz/zamereni> ;
+	ddo:type <http://schema.org/CheckAction> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-bf64b08722854d6eb61d978bca60d75a-A1AE7EF36801D497C631357FFA2E7A44 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://data.coi.cz/resource/check-action/301410010800101> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/coi.cz/kontroly> ;
+	ddo:type <http://schema.org/CheckAction> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-bf64b08722854d6eb61d978bca60d75a-A5A39B7D34685DB221E919C6D5E43C1A a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://data.coi.cz/resource/check-action/301410010702102> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/coi.cz/zamereni> ;
+	ddo:type <http://schema.org/CheckAction> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-bf64b08722854d6eb61d978bca60d75a-AC0D8B9B5EC94C0CE4FF4A3144605081 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://data.coi.cz/resource/check-action/301410020700401> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/coi.cz/zamereni> ;
+	ddo:type <http://schema.org/CheckAction> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-bf64b08722854d6eb61d978bca60d75a-CCAE535DB5C483CBE66DF10357F762C0 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://data.coi.cz/resource/check-action/301410020700401> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/coi.cz/kontroly> ;
+	ddo:type <http://schema.org/CheckAction> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-bf64b08722854d6eb61d978bca60d75a-D245CEDB08B06513431F3E72420FFDED a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://data.coi.cz/resource/check-action/301410020702801> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/coi.cz/kontroly> ;
+	ddo:type <http://schema.org/CheckAction> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-bf64b08722854d6eb61d978bca60d75a-E8F91C75A0EA2C46EF8F8DA98124B2D8 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://data.coi.cz/resource/check-action/301410030035101> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/coi.cz/kontroly> ;
+	ddo:type <http://schema.org/CheckAction> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-bf64b08722854d6eb61d978bca60d75a-ED212EC85CF984034F943871B7BC79BE a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://data.coi.cz/resource/check-action/301410010808101> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/coi.cz/kontroly> ;
+	ddo:type <http://schema.org/CheckAction> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-5d31e53adc4147d2bc9363a2c9ceda1c-09E6F5EC5F369E8021AD495806FA813E a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/00248665/2009-12-31> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-5d31e53adc4147d2bc9363a2c9ceda1c-0D6F988F44B230D346E5C7AAE6E85B2B a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/00248746/2012-01-01> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/mfcr/monitor/ciselniky/UcetniJednotka> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-5d31e53adc4147d2bc9363a2c9ceda1c-1F15A924BE6DCA0A555921C7AC4F93E3 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/00248738/2012-01-01> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-5d31e53adc4147d2bc9363a2c9ceda1c-2DF6C1B2AD7C01B583A8775243BEF76D a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/00248665/2012-01-01> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/mfcr/monitor/ciselniky/UcetniJednotka> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-5d31e53adc4147d2bc9363a2c9ceda1c-3863A201FE8CD066BA55CD9647C55AE6 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/00248673/2009-12-31> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-5d31e53adc4147d2bc9363a2c9ceda1c-4517C549F70681162C7DF65B90913922 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/00248720/2009-12-31> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/mfcr/monitor/ciselniky/UcetniJednotka> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-5d31e53adc4147d2bc9363a2c9ceda1c-4D1F1ED6A6D4AF90A1DD02EDD498C09A a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/00248738/2009-12-31> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-5d31e53adc4147d2bc9363a2c9ceda1c-5EFC14BD224C4DC7545F7BA6120FCEFA a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/00248665/2009-12-31> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/mfcr/monitor/ciselniky/UcetniJednotka> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-5d31e53adc4147d2bc9363a2c9ceda1c-686569A73EB4A3032B6CC298BD0B4BAD a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/00248665/2012-01-01> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-5d31e53adc4147d2bc9363a2c9ceda1c-7FB4388C9A09F0DE5D7CF228CD4A8026 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/00248673/2009-12-31> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/mfcr/monitor/ciselniky/UcetniJednotka> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-5d31e53adc4147d2bc9363a2c9ceda1c-89C208AE5AD9CB2E065FE0A3A76A428B a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/00248720/2012-01-01> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-5d31e53adc4147d2bc9363a2c9ceda1c-8B2188828B2679927F881BCB7E4AFE25 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/00248720/2009-12-31> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-5d31e53adc4147d2bc9363a2c9ceda1c-9F14FDB3EF172ED373FA01CDE853B02A a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/00248738/2009-12-31> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/mfcr/monitor/ciselniky/UcetniJednotka> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-5d31e53adc4147d2bc9363a2c9ceda1c-CBEC05B362B1E4F51446DB640C5DF764 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/00248738/2012-01-01> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/mfcr/monitor/ciselniky/UcetniJednotka> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-5d31e53adc4147d2bc9363a2c9ceda1c-D5B8D34643E5388D7F3F95B448314444 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/00248720/2012-01-01> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/mfcr/monitor/ciselniky/UcetniJednotka> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-5d31e53adc4147d2bc9363a2c9ceda1c-D656CA0315CD7E5AF74E216915CD2026 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/00248673/2012-01-01> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-5d31e53adc4147d2bc9363a2c9ceda1c-DCB0A6863ACC4EE01D3BBCEE230C2165 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/00248746/2012-01-01> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-5d31e53adc4147d2bc9363a2c9ceda1c-E7EB357EF64B6BD9CF21169CE884E38B a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/00248746/2009-12-31> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-5d31e53adc4147d2bc9363a2c9ceda1c-EB5F31A47A05355522F64FAE367A99FB a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/00248746/2009-12-31> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/mfcr/monitor/ciselniky/UcetniJednotka> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-5d31e53adc4147d2bc9363a2c9ceda1c-FE0B12F8C175AEA230C6C605B10DBD82 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/mfcr/monitor/ciselniky/UcetniJednotka/00248673/2012-01-01> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/mfcr/ciselniky> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/mfcr/monitor/ciselniky/UcetniJednotka> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-2fd1e71846bb4b7199f005d209c0f20b-086E6C51EEEF6D5699DCA65F03E114E5 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25149415> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-2fd1e71846bb4b7199f005d209c0f20b-0BA28578A41022F73C77F18FD227F482 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25149423> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-2fd1e71846bb4b7199f005d209c0f20b-18C10D72D98B7873793CC9E11012B747 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25149237> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-2fd1e71846bb4b7199f005d209c0f20b-1F3BCD1B5EA27300AABBCA95C4290BFA a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25149253> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-2fd1e71846bb4b7199f005d209c0f20b-2114B8F0756BA56AEE86346CDB9E854A a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25149253> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-2fd1e71846bb4b7199f005d209c0f20b-3E355E457BBFE1F4315FA55D0F43107B a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25149181> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-2fd1e71846bb4b7199f005d209c0f20b-3FD68056E892D9D5735147C32E43654E a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25149181> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-2fd1e71846bb4b7199f005d209c0f20b-45A370E2F2429AB44F6751FECFBAD6A6 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25149334> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-2fd1e71846bb4b7199f005d209c0f20b-69F8E7C16841E73127EA1D010261BEA9 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25149334> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-2fd1e71846bb4b7199f005d209c0f20b-6E214C8F0BDAA5FBE4F376E144D7DBE5 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25149148> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-2fd1e71846bb4b7199f005d209c0f20b-70057726EA2B10D0FD0A41639CDCDC1E a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25149415> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-2fd1e71846bb4b7199f005d209c0f20b-825B7A8C5EAE42B40AAFE28A5E6B6CF2 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25149377> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-2fd1e71846bb4b7199f005d209c0f20b-85DAE0767D9C8F7F828A1E135311F3C6 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25149148> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-2fd1e71846bb4b7199f005d209c0f20b-B66A55D77A9C307E07AE1CBCEEEFFE68 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25149164> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-2fd1e71846bb4b7199f005d209c0f20b-BF1F9C6E51CC2514455596D763D0BF30 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25149156> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-2fd1e71846bb4b7199f005d209c0f20b-E01D539FF760DFF17DFA29822BFF41D0 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25149164> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-2fd1e71846bb4b7199f005d209c0f20b-E6BFAAB23E3B7CFB01F3A6D7106435CC a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25149237> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-2fd1e71846bb4b7199f005d209c0f20b-F019444FCBDC21CD2ECC2C336DB6B3F6 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25149156> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-2fd1e71846bb4b7199f005d209c0f20b-F4F97F98126D3155E2F094507535F5E0 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25149423> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://purl.org/goodrelations/v1#BusinessEntity> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-2fd1e71846bb4b7199f005d209c0f20b-F79F3229A612C3CE7309FB888B9D56A4 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <https://linked.opendata.cz/zdroj/ekonomický-subjekt/25149377> ;
+	ddo:definition-dataset <https://linked.opendata.cz/zdroj/datová-sada/seznam-ič> ;
+	ddo:type <http://schema.org/Organization> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-226dabb9b3cf4cf99b7e8d2fa9bae732-0B7368B5D8F3C9952B5D36446DF4DD99 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F00027073%3A_____%2F11%3A%230001067%21RIV12-MZP-00027073> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/vavai/Vysledek> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-226dabb9b3cf4cf99b7e8d2fa9bae732-0DE7BB34443F116F168DCC189DAF0292 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F00027073%3A_____%2F11%3A%230001063%21RIV12-MZP-00027073> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/vavai/Vysledek> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-226dabb9b3cf4cf99b7e8d2fa9bae732-12EBED0EBA557718DB1B11AD2AF315E7 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F00027073%3A_____%2F11%3A%230001069%21RIV12-MZP-00027073> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-226dabb9b3cf4cf99b7e8d2fa9bae732-16ADD5537E62BEAF151ADB2D4AFCF820 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F00027073%3A_____%2F11%3A%230001066%21RIV12-MZP-00027073> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-226dabb9b3cf4cf99b7e8d2fa9bae732-17FC97BEE01484D9D2FAD29429B456C3 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F00027073%3A_____%2F11%3A%230001068%21RIV12-MZP-00027073> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-226dabb9b3cf4cf99b7e8d2fa9bae732-46B3FDE1A83B9B15FFF41B57E5383BEB a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F00027073%3A_____%2F11%3A%230001062%21RIV12-MZP-00027073> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/vavai/Vysledek> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-226dabb9b3cf4cf99b7e8d2fa9bae732-5495BC140293B81B902888A748AA1622 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F00027073%3A_____%2F11%3A%230001068%21RIV12-MZP-00027073> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/vavai/Vysledek> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-226dabb9b3cf4cf99b7e8d2fa9bae732-668CFAAB01F021E6F5EB0F43F98C9E6B a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F00027073%3A_____%2F11%3A%230001065%21RIV12-MZP-00027073> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/vavai/Vysledek> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-226dabb9b3cf4cf99b7e8d2fa9bae732-6A19C1BF561867F47D4391AEAD5FD81B a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F00027073%3A_____%2F11%3A%230001067%21RIV12-MZP-00027073> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-226dabb9b3cf4cf99b7e8d2fa9bae732-6DF1B194E4086D210F80562254D9D512 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F00027073%3A_____%2F11%3A%230001069%21RIV12-MZP-00027073> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/vavai/Vysledek> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-226dabb9b3cf4cf99b7e8d2fa9bae732-7BB00CA9C0D4C7BFC6315797D504D9AE a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F00027073%3A_____%2F11%3A%230001066%21RIV12-MZP-00027073> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/vavai/Vysledek> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-226dabb9b3cf4cf99b7e8d2fa9bae732-869AAA6B958291B11DD67D9F9E20D5CC a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F00027073%3A_____%2F11%3A%230001071%21RIV12-MZP-00027073> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-226dabb9b3cf4cf99b7e8d2fa9bae732-A8B899527B2E7F876B2C35226DE60541 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F00027073%3A_____%2F11%3A%230001064%21RIV12-MZP-00027073> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-226dabb9b3cf4cf99b7e8d2fa9bae732-ADD91098C45694B161ED2BE3C8BFFD0E a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F00027073%3A_____%2F11%3A%230001065%21RIV12-MZP-00027073> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-226dabb9b3cf4cf99b7e8d2fa9bae732-B0E3B70021968CF249F4081C53C0B444 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F00027073%3A_____%2F11%3A%230001064%21RIV12-MZP-00027073> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/vavai/Vysledek> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-226dabb9b3cf4cf99b7e8d2fa9bae732-C069A6FBA122CA12EB6716D162D144EB a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F00027073%3A_____%2F11%3A%230001070%21RIV12-MZP-00027073> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-226dabb9b3cf4cf99b7e8d2fa9bae732-D2B290CADF885EBDDFFBF36539AAB551 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F00027073%3A_____%2F11%3A%230001063%21RIV12-MZP-00027073> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-226dabb9b3cf4cf99b7e8d2fa9bae732-DC3550221D3972A01D0D0D6EFD9457DE a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F00027073%3A_____%2F11%3A%230001071%21RIV12-MZP-00027073> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/vavai/Vysledek> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-226dabb9b3cf4cf99b7e8d2fa9bae732-EFDE6F00CEA0B4F9B19A08B6C27CE040 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F00027073%3A_____%2F11%3A%230001062%21RIV12-MZP-00027073> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-226dabb9b3cf4cf99b7e8d2fa9bae732-F38B07FE29FD195E763B9580705D872F a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F00027073%3A_____%2F11%3A%230001070%21RIV12-MZP-00027073> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/vavai/Vysledek> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-10ff6abff6064fbd833fa1732c4be0ce-1BCB199C448CD34438C2B428417B232A a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F61384399%3A31120%2F05%3A00022872%21RIV06-GA0-31120___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/vavai/Vysledek> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-10ff6abff6064fbd833fa1732c4be0ce-3B8E19CAC28B6DB16168B371A2742A22 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F61384399%3A31120%2F05%3A00022871%21RIV06-GA0-31120___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/vavai/Vysledek> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-10ff6abff6064fbd833fa1732c4be0ce-3E1EFB46E99F9AF67B45EB4730E8B249 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F61384399%3A31120%2F05%3A00022870%21RIV06-GA0-31120___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-10ff6abff6064fbd833fa1732c4be0ce-49549550B2218007AC6FD467F42ECE2D a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F61384399%3A31120%2F05%3A00022873%21RIV06-GA0-31120___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-10ff6abff6064fbd833fa1732c4be0ce-5844D44A0797FEBA735B088AFBC0615B a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F61384399%3A31120%2F05%3A00022868%21RIV06-GA0-31120___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-10ff6abff6064fbd833fa1732c4be0ce-5CEF969A18EE7401840730E3C41E769A a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F61384399%3A31120%2F05%3A00022873%21RIV06-GA0-31120___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/vavai/Vysledek> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-10ff6abff6064fbd833fa1732c4be0ce-644B787056B9784AD2B3DDD9B5ADDC0F a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F61384399%3A31120%2F05%3A00022868%21RIV06-GA0-31120___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/vavai/Vysledek> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-10ff6abff6064fbd833fa1732c4be0ce-7EFA387BB1F6831C36BF28D9769F42D5 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F61384399%3A31120%2F05%3A00022872%21RIV06-GA0-31120___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-10ff6abff6064fbd833fa1732c4be0ce-810D52A407AF9C41944D2D94C557AA39 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F61384399%3A31120%2F05%3A00022871%21RIV06-GA0-31120___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-10ff6abff6064fbd833fa1732c4be0ce-95DCD58D82593F33B076962254562C37 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F61384399%3A31120%2F05%3A00022869%21RIV06-GA0-31120___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-10ff6abff6064fbd833fa1732c4be0ce-AC712A451392EA97C77ACE5A01EB18AD a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F61384399%3A31120%2F05%3A00022869%21RIV06-GA0-31120___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/vavai/Vysledek> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-10ff6abff6064fbd833fa1732c4be0ce-B1D337E42D818BFDC7A8FF3CD04B8563 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F61384399%3A31120%2F05%3A00022874%21RIV06-GA0-31120___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-10ff6abff6064fbd833fa1732c4be0ce-BA5BD6C5754DB0101E7AA50B14BB31ED a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F61384399%3A31120%2F05%3A00022864%21RIV06-MZV-31120___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/vavai/Vysledek> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-10ff6abff6064fbd833fa1732c4be0ce-BC74AE2E1EA9CD4727FD467F9B72A009 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F61384399%3A31120%2F05%3A00022874%21RIV06-GA0-31120___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/vavai/Vysledek> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-10ff6abff6064fbd833fa1732c4be0ce-BEF35071BA2C6AF7AA17637DCAC91F7B a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F61384399%3A31120%2F05%3A00022867%21RIV06-GA0-31120___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/vavai/Vysledek> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-10ff6abff6064fbd833fa1732c4be0ce-C7FDCC2FE025A4EA736A0D8300B05DB9 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F61384399%3A31120%2F05%3A00022866%21RIV06-GA0-31120___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-10ff6abff6064fbd833fa1732c4be0ce-DEC599566AA0CBAAB9CA865E5B38B597 a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F61384399%3A31120%2F05%3A00022864%21RIV06-MZV-31120___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://www.w3.org/2004/02/skos/core#Concept> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
+
+_:genid-10ff6abff6064fbd833fa1732c4be0ce-EF779D80F840E90EAEFD2FAA0A2970FC a <http://purl.org/linked-data/cube#Observation> ;
+	ddo:weakly-described-resource <http://linked.opendata.cz/resource/domain/vavai/vysledek/RIV%2F61384399%3A31120%2F05%3A00022866%21RIV06-GA0-31120___> ;
+	ddo:definition-dataset <http://linked.opendata.cz/resource/dataset/vavai/results> ;
+	ddo:type <http://linked.opendata.cz/ontology/domain/vavai/Vysledek> ;
+	<http://purl.org/linked-data/cube#dataSet> ddo:index-of-weakly-described-resources .
