@@ -2,7 +2,7 @@ package cz.cvut.sempipes.modules;
 
 import cz.cvut.sempipes.utils.EndpointTestUtils;
 import org.apache.jena.rdf.model.Model;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import org.junit.Ignore;
 import org.junit.Test;
 

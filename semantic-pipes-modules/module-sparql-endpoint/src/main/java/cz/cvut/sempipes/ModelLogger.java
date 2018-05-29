@@ -1,10 +1,8 @@
 package cz.cvut.sempipes;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.util.FileUtils;
 import org.slf4j.Logger;
