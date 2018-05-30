@@ -25,11 +25,11 @@ public class TDBTempFactory {
     private static final Set<TDBModelFinalizer> references = ConcurrentHashMap.newKeySet();
 
     public static Model createTDBModel() {
+        finalizePhantomModels();
         Path tempDir = getTempDir();
         LOG.debug("Creating temporary TDB dataset at directory {}.", tempDir);
         Dataset ds = TDBFactory.createDataset(tempDir.toString());
         Model outModel = ds.getNamedModel(getRandomModelUri());
-        finalizePhantomModels();
         setUpFinalization(outModel);
         return ds.getNamedModel(getRandomModelUri());
     }
