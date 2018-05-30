@@ -50,7 +50,7 @@ public class TDBTempFactory {
     }
 
     private static void setUpFinalization(Model tdbModel) {
-        String modelLocation = ((GraphTDB) tdbModel.getGraph()).getDSG().getLocation().getDirectoryPath().replaceAll("/$", "");
+        String modelLocation = TDBModelHelper.getLocation(tdbModel);
         LOG.trace("Scheduling removal of directory {} on JVM exit.", modelLocation);
         Runtime.getRuntime().addShutdownHook(new Thread(() -> FileUtils.deleteQuietly(new File(modelLocation))));
         references.add(new TDBModelFinalizer(tdbModel, referenceQueue));

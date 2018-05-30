@@ -17,7 +17,7 @@ public class TDBModelFinalizer extends PhantomReference<Model> {
 
     public TDBModelFinalizer(Model referent, ReferenceQueue<? super Model> q) {
         super(referent, q);
-        this.datasetLocation = ((GraphTDB) referent.getGraph()).getDSG().getLocation().getDirectoryPath();
+        this.datasetLocation = TDBModelHelper.getLocation(referent);
     }
 
     public void finalizeResources() {
