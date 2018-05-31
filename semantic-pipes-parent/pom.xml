@@ -21,7 +21,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jdk.version>1.8</jdk.version>
         <org.apache.jena>3.1.0</org.apache.jena>
-        <org.springframework.version>4.1.5.RELEASE</org.springframework.version>
+        <org.springframework.version>4.1.6.RELEASE</org.springframework.version>
         <org.springframework.security.version>4.0.2.RELEASE</org.springframework.security.version>
         <rdf4j.version>2.2</rdf4j.version>
         <jopa.version>0.10.0</jopa.version>
