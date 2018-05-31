@@ -1,11 +1,18 @@
 package cz.cvut.sempipes.config;
 
 import cz.cvut.sempipes.util.CoreConfigProperies;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Optional;
 
 /**
  * Created by Miroslav Blasko on 6.3.17.
  */
 public class ExecutionConfig {
+
+    public static Path getTempDirectoryPath() {
+        return Paths.get(CoreConfigProperies.get("execution.tempDirectoryPath", System.getProperty("java.io.tmpdir")));
+    }
 
     public static boolean isExitOnError() {
         return Boolean.parseBoolean(CoreConfigProperies.get(
