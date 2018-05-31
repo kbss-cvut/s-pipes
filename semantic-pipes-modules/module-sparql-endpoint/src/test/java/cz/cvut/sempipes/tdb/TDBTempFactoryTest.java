@@ -1,4 +1,4 @@
-package cz.cvut.sempipes.util;
+package cz.cvut.sempipes.tdb;
 
 import java.nio.file.Files;
 import java.nio.file.Path;

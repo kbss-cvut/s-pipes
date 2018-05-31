@@ -1,4 +1,4 @@
-package cz.cvut.sempipes.util;
+package cz.cvut.sempipes.tdb;
 
 import java.io.File;
 import java.io.IOException;

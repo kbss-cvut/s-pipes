@@ -1,4 +1,4 @@
-package cz.cvut.sempipes.util;
+package cz.cvut.sempipes.tdb;
 
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.tdb.store.GraphTDB;
