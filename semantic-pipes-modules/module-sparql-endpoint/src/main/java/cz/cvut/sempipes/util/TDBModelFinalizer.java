@@ -6,7 +6,6 @@ import java.lang.ref.PhantomReference;
 import java.lang.ref.ReferenceQueue;
 import org.apache.commons.io.FileUtils;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.tdb.store.GraphTDB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

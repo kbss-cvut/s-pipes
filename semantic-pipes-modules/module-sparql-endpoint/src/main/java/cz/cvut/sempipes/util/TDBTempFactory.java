@@ -1,5 +1,6 @@
 package cz.cvut.sempipes.util;
 
+import cz.cvut.sempipes.config.ExecutionConfig;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.Reference;
@@ -14,7 +15,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.tdb.TDBFactory;
-import org.apache.jena.tdb.store.GraphTDB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +41,7 @@ public class TDBTempFactory {
 
     private static Path getTempDir() {
         try {
-            Path tempDir = Files.createTempDirectory("tdb-");
+            Path tempDir = Files.createTempDirectory(ExecutionConfig.getTempDirectoryPath(), "tdb-");
             return tempDir;
         } catch (IOException e) {
             e.printStackTrace();
