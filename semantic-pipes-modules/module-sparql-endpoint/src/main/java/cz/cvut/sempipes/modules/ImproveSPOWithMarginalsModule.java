@@ -7,7 +7,7 @@ import cz.cvut.sempipes.engine.ExecutionContextFactory;
 import cz.cvut.sempipes.engine.VariablesBinding;
 import cz.cvut.sempipes.util.JenaUtils;
 import cz.cvut.sempipes.util.QueryUtils;
-import cz.cvut.sempipes.util.TDBTempFactory;
+import cz.cvut.sempipes.tdb.TDBTempFactory;
 import static cz.cvut.sempipes.util.VariableBindingUtils.restrict;
 import java.io.File;
 import java.io.FileInputStream;
