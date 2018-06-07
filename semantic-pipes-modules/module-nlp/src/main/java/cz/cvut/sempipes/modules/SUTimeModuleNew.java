@@ -120,7 +120,7 @@ public class SUTimeModuleNew extends AbstractModule {
 
         boolean queriedModelIsEmpty = false;
 
-        while (! queriedModelIsEmpty) {
+        while (!queriedModelIsEmpty) {
 
             count++;
             Model inferredInSingleIterationModel = ModelFactory.createDefaultModel();
@@ -166,39 +166,43 @@ public class SUTimeModuleNew extends AbstractModule {
 
     private Model analyzeModel(Model m) {
 
+        LOG.debug("Extracting temporal information from model of size {}", m.size());
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         List<ReifiedStatement> temporalAnnotationStmts = new LinkedList<>();
         m.listStatements()
             .filterDrop(st -> !st.getObject().isLiteral())
-            .toList().forEach(
-            st -> {
-                String objectStr = st.getObject().asLiteral().getLexicalForm();
+            .forEachRemaining(
+                st -> {
+                    String objectStr = st.getObject().asLiteral().getLexicalForm();
 
-                ReifiedStatement reifiedSt = m.createReifiedStatement(st);
-                try {
-                    ArrayList<AnnforModel> singleStDates = temporalAnalysis(pipeline, objectStr);
-                    for (AnnforModel s : singleStDates) {
+                    try {
+                        ArrayList<AnnforModel> singleStDates = temporalAnalysis(pipeline, objectStr);
 
-                        Model mm = ModelFactory.createDefaultModel();
+                        if (!singleStDates.isEmpty()) {
+                            Model mm = ModelFactory.createDefaultModel();
+                            ReifiedStatement reifiedSt = mm.createReifiedStatement(st);
 
-                        Literal beginLiteral = mm.createTypedLiteral(s.getDateBegin());
-                        Literal endLiteral = mm.createTypedLiteral(s.getDateEnd());
-                        reifiedSt.addProperty(RDF.type, DescriptorModel.sutime_extraction);
+                            for (AnnforModel s : singleStDates) {
 
-                        reifiedSt.addProperty(DescriptorModel.extracted, s.getDateExtracted());
-                        reifiedSt.addProperty(DescriptorModel.beginDate, beginLiteral);
-                        reifiedSt.addProperty(DescriptorModel.endDate, endLiteral);
-                        reifiedSt.addProperty(DescriptorModel.type, s.getDateType());
+                                Literal beginLiteral = mm.createTypedLiteral(s.getDateBegin());
+                                Literal endLiteral = mm.createTypedLiteral(s.getDateEnd());
+                                reifiedSt.addProperty(RDF.type, DescriptorModel.sutime_extraction);
 
-                        temporalAnnotationStmts.add(reifiedSt);
+                                reifiedSt.addProperty(DescriptorModel.extracted, s.getDateExtracted());
+                                reifiedSt.addProperty(DescriptorModel.beginDate, beginLiteral);
+                                reifiedSt.addProperty(DescriptorModel.endDate, endLiteral);
+                                reifiedSt.addProperty(DescriptorModel.type, s.getDateType());
+
+                                temporalAnnotationStmts.add(reifiedSt);
+                            }
+
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
 
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            });
+                });
 
         Model outputModel = ModelFactory.createDefaultModel();
         temporalAnnotationStmts.forEach(
