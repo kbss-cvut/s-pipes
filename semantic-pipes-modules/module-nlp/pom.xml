@@ -18,6 +18,11 @@
             <groupId>cz.cvut.kbss</groupId>
             <artifactId>semantic-pipes-core</artifactId>
         </dependency>
+        <dependency> <!-- TODO extract to separate lib -->
+            <groupId>cz.cvut.kbss</groupId>
+            <artifactId>semantic-pipes-modules-sparql-endpoint</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
         <!--<dependency>-->
             <!--<groupId>org.ocpsoft.prettytime</groupId>-->
             <!--<artifactId>prettytime-nlp</artifactId>-->
