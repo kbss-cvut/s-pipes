@@ -1,43 +1,80 @@
 package cz.cvut.sempipes.modules;
 
 import cz.cvut.sempipes.constants.KBSS_MODULE;
+import cz.cvut.sempipes.constants.SML;
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
 import cz.cvut.sempipes.sutime.AnnforModel;
 import cz.cvut.sempipes.sutime.DescriptorModel;
+import cz.cvut.sempipes.util.JenaUtils;
+import cz.cvut.sempipes.util.QueryUtils;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreLabel;
-import edu.stanford.nlp.pipeline.*;
+import edu.stanford.nlp.pipeline.Annotation;
+import edu.stanford.nlp.pipeline.AnnotationPipeline;
+import edu.stanford.nlp.pipeline.POSTaggerAnnotator;
+import edu.stanford.nlp.pipeline.TokenizerAnnotator;
+import edu.stanford.nlp.pipeline.WordsToSentencesAnnotator;
 import edu.stanford.nlp.time.TimeAnnotations;
 import edu.stanford.nlp.time.TimeAnnotator;
 import edu.stanford.nlp.time.TimeExpression;
 import edu.stanford.nlp.util.CoreMap;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
-
-import org.apache.jena.rdf.model.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Properties;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryFactory;
+import org.apache.jena.query.QuerySolution;
+import org.apache.jena.rdf.model.Literal;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.ReifiedStatement;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.topbraid.spin.arq.ARQFactory;
+import org.topbraid.spin.model.Construct;
+import org.topbraid.spin.vocabulary.SP;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
+public class SUTimeModuleNew extends AbstractModule {
 
-public class SUTimeModule extends AbstractModule {
+    private static final Logger LOG = LoggerFactory.getLogger(SUTimeModuleNew.class);
 
-    private static final Logger LOG = LoggerFactory.getLogger(SUTimeModule.class);
+    private static final String TYPE_URI = KBSS_MODULE.getURI() + "temporal-v1";
+    private static final String TYPE_PREFIX = TYPE_URI + "/";
+    private static final int DEFAULT_PAGE_SIZE = 10000;
+    private static final String LIMIT_OFFSET_CLAUSE_MARKER_NAME = "LIMIT_OFFSET";
+    private static final Property P_PAGE_SIZE = ResourceFactory.createProperty(TYPE_PREFIX + "page-size");
+    private Integer pageSize = DEFAULT_PAGE_SIZE;
+    private List<Resource> constructQueries;
+    //sml:replace
+    private boolean isReplace;
 
-    public static final String TYPE_URI = KBSS_MODULE.getURI() + "temporal-v0.1";
-
+    //kbss:parseText
+    /**
+     * Whether the query should be taken from sp:text property instead of from SPIN serialization
+     */
+    private boolean parseText;
     private List<Path> ruleFilePaths = new LinkedList<>();
     private String documentDate; // TODO support other formats ?
+    private AnnotationPipeline pipeline;
 
-
-    public SUTimeModule() {
+    public SUTimeModuleNew() {
+        pipeline = loadPipeline();
     }
 
     @Override
@@ -45,9 +82,16 @@ public class SUTimeModule extends AbstractModule {
         return TYPE_URI;
     }
 
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
+
     @Override
     public void loadConfiguration() {
-
         if (this.resource.getProperty(DescriptorModel.has_document_date) != null) { // TODO set current date if not specified
             documentDate = getEffectiveValue(DescriptorModel.has_document_date).asLiteral().toString();
         }
@@ -55,22 +99,72 @@ public class SUTimeModule extends AbstractModule {
         if (this.resource.getProperty(DescriptorModel.has_rule_file) != null) { //TODO support more rule files
             ruleFilePaths.add(Paths.get(getEffectiveValue(DescriptorModel.has_rule_file).asLiteral().toString()));
         }
+        parseText = this.getPropertyValue(KBSS_MODULE.is_parse_text, true);
+        pageSize = this.getPropertyValue(P_PAGE_SIZE, DEFAULT_PAGE_SIZE);
+        constructQueries = getResourcesByProperty(SML.constructQuery);
+
+        isReplace = this.getPropertyValue(SML.replace, false);
     }
 
     @Override
+    public ExecutionContext executeSelf() {
 
-    ExecutionContext executeSelf() {
-        Model inputModel = executionContext.getDefaultModel();
+        Model defaultModel = executionContext.getDefaultModel();
 
-        return ExecutionContextFactory.createContext(analyzeModel(inputModel));
+        QuerySolution bindings = executionContext.getVariablesBinding().asQuerySolution();
+
+        int count = 0;
+
+        Model inferredModel = ModelFactory.createDefaultModel();
+        Model previousInferredModel = ModelFactory.createDefaultModel();
+
+        boolean queriedModelIsEmpty = false;
+
+        while (! queriedModelIsEmpty) {
+
+            count++;
+            Model inferredInSingleIterationModel = ModelFactory.createDefaultModel();
+
+            queriedModelIsEmpty = true;
+
+            for (Resource constructQueryRes : constructQueries) {
+                Construct spinConstructRes = constructQueryRes.as(Construct.class);
+
+                Query query;
+                if (parseText) {
+                    String queryStr = spinConstructRes.getProperty(SP.text).getLiteral().getString();
+                    query = QueryFactory.create(substituteQueryMarkers(count, queryStr));
+                } else {
+                    query = ARQFactory.get().createQuery(spinConstructRes);
+                }
+
+                Model queriedModel = QueryUtils.execConstruct(
+                    query,
+                    defaultModel,
+                    bindings
+                );
+
+                if (queriedModel.size() > 0) {
+                    queriedModelIsEmpty = false;
+                }
+
+                Model constructedModel = analyzeModel(queriedModel);
+
+                inferredInSingleIterationModel = JenaUtils.createUnion(inferredInSingleIterationModel, constructedModel);
+            }
+
+            previousInferredModel = inferredModel;
+            inferredModel = JenaUtils.createUnion(inferredModel, inferredInSingleIterationModel);
+        }
+
+        if (isReplace) {
+            return ExecutionContextFactory.createContext(inferredModel);
+        } else {
+            return ExecutionContextFactory.createContext(ModelFactory.createUnion(defaultModel, inferredModel));
+        }
     }
 
     private Model analyzeModel(Model m) {
-
-
-
-        AnnotationPipeline pipeline = loadPipeline();
-
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         List<ReifiedStatement> temporalAnnotationStmts = new LinkedList<>();
@@ -83,9 +177,9 @@ public class SUTimeModule extends AbstractModule {
                 ReifiedStatement reifiedSt = m.createReifiedStatement(st);
                 try {
                     ArrayList<AnnforModel> singleStDates = temporalAnalysis(pipeline, objectStr);
-                    for(AnnforModel s:singleStDates){
+                    for (AnnforModel s : singleStDates) {
 
-                        Model  mm = ModelFactory.createDefaultModel();
+                        Model mm = ModelFactory.createDefaultModel();
 
                         Literal beginLiteral = mm.createTypedLiteral(s.getDateBegin());
                         Literal endLiteral = mm.createTypedLiteral(s.getDateEnd());
@@ -195,7 +289,15 @@ public class SUTimeModule extends AbstractModule {
         return pipeline;
     }
 
+    private String substituteQueryMarkers(int currentIteration, String queryStr) {
+        int offset = pageSize * (currentIteration - 1);
 
+        LOG.debug("Creating query with LIMIT {} for OFFSET {}.", pageSize, offset);
+        String markerValue = "\n" + "OFFSET " + offset
+            + "\n" + "LIMIT " + pageSize + "\n";
 
+        return QueryUtils
+            .substituteMarkers(LIMIT_OFFSET_CLAUSE_MARKER_NAME, markerValue, queryStr);
+    }
 
 }
