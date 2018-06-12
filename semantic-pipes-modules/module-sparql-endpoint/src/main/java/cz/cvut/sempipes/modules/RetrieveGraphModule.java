@@ -9,16 +9,16 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RetrieveNamedGraphModule extends AnnotatedAbstractModule {
+public class RetrieveGraphModule extends AnnotatedAbstractModule {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RetrieveNamedGraphModule.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RetrieveGraphModule.class);
 
     private static final String TYPE_URI = KBSS_MODULE.uri + "sparql-endpoint-retrieve-graph";
     private static final String TYPE_PREFIX = TYPE_URI + "/";
     private static final int DEFAULT_PAGE_SIZE = 10000;
 
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "named-graph-uri")
-    private String namedGrapheUri;
+    @Parameter(urlPrefix = TYPE_PREFIX, name = "named-graph-id")
+    private String namedGrapheId;
 
     @Parameter(urlPrefix = TYPE_PREFIX, name = "endpoint-url")
     private String endpointUrl;
@@ -51,12 +51,12 @@ public class RetrieveNamedGraphModule extends AnnotatedAbstractModule {
         return QueryExecutionFactory.sparqlService(endpointUrl, query).execConstruct();
     }
 
-    public String getNamedGrapheUri() {
-        return namedGrapheUri;
+    public String getNamedGrapheId() {
+        return namedGrapheId;
     }
 
-    public void setNamedGrapheUri(String namedGrapheUri) {
-        this.namedGrapheUri = namedGrapheUri;
+    public void setNamedGrapheId(String namedGrapheId) {
+        this.namedGrapheId = namedGrapheId;
     }
 
     @Override
@@ -82,7 +82,11 @@ public class RetrieveNamedGraphModule extends AnnotatedAbstractModule {
 
     private String getInnerSelect() {
         // TODO do we needed ordering ? ORDER BY ASC(?s) ASC(?p) ASC(?o)
-        return "SELECT ?s ?p ?o WHERE { GRAPH <" + this.namedGrapheUri + "> { ?s ?p ?o } }";
+        if(this.namedGrapheId == null){
+            return "SELECT ?s ?p ?o WHERE { GRAPH <" + this.namedGrapheId + "> { ?s ?p ?o } }";
+        }else{
+            return "SELECT ?s ?p ?o WHERE { ?s ?p ?o }";
+        }
     }
 
     private String getOuterConstruct() {
