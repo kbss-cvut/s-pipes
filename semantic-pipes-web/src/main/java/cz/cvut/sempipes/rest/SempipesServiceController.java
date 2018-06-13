@@ -228,7 +228,7 @@ public class SempipesServiceController {
 
 
         if (module == null) {
-            throw new SempipesServiceException("Cannot load module with id=" + id);
+            throw new SempipesServiceException("Cannot load return module for a function with id=" + id);
         }
         ExecutionContext outputExecutionContext = engine.executePipeline(module, inputExecutionContext);
 
