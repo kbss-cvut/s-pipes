@@ -13,6 +13,7 @@ import cz.cvut.sempipes.model.Thing;
 import cz.cvut.sempipes.model.Transformation;
 import cz.cvut.sempipes.modules.Module;
 import cz.cvut.sempipes.util.Rdf4jUtils;
+import cz.cvut.sempipes.util.TempFileUtils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -24,7 +25,6 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.Instant;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -83,7 +83,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
         props.put(JOPAPersistenceProperties.ONTOLOGY_PHYSICAL_URI_KEY, "spipes");
         PersistenceFactory.init(props);
         try {
-            root = Files.createTempDirectory(Instant.now() + "-s-pipes-log-");
+            root = Files.createTempDirectory(TempFileUtils.createTimestampFileName("-s-pipes-log-"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -380,7 +380,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
 
     String getModulesSourceDatasetSnapshotUrl(final long pipelineExecutionId, final String moduleExecutionId, SnapshotRole snapshotRole) {
         try {
-            return new File(getDir(pipelineExecutionId) + "/" + Instant.now().toString() + "-module-" + moduleExecutionId + "-" + snapshotRole + ".ttl").toURI().toURL().toString();
+            return new File(getDir(pipelineExecutionId) + "/" + TempFileUtils.createTimestampFileName("-module-" + moduleExecutionId + "-" + snapshotRole + ".ttl")).toURI().toURL().toString();
         } catch (MalformedURLException e) {
             throw new IllegalStateException(e);
         }
@@ -394,7 +394,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
         File file = null;
         try {
             file =
-                Files.createFile(dir.resolve(Instant.now().toString() + fileName)).toFile();
+                Files.createFile(dir.resolve(TempFileUtils.createTimestampFileName(fileName))).toFile();
         } catch (IOException e) {
             LOG.error("Error during file creation.", e);
             return null;

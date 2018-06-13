@@ -15,16 +15,16 @@ public class RetrieveNamedGraphModuleTest {
     @Ignore
     @Test
     public void executeSelf() throws Exception {
-        RetrieveNamedGraphModule module = new RetrieveNamedGraphModule();
+        RetrieveGraphModule module = new RetrieveGraphModule();
 
         String endpointUrl = "https://linked.opendata.cz/sparql";
-        String namedGraphUri = "http://linked.opendata.cz/resource/dataset/mfcr/rozvaha";
+        String namedGraphId = "http://linked.opendata.cz/resource/dataset/mfcr/rozvaha";
 
         module.setEndpointUrl(endpointUrl);
-        module.setNamedGrapheUri(namedGraphUri);
+        module.setNamedGrapheId(namedGraphId);
         module.setPageSize(100000);
         Model model = module.executeSelf().getDefaultModel();
-        long queriedTriplesCount = EndpointTestUtils.getNumberOfTriples(endpointUrl, namedGraphUri);
+        long queriedTriplesCount = EndpointTestUtils.getNumberOfTriples(endpointUrl, namedGraphId);
         long retrievedTriplesCount = model.size();
 
         System.out.println("Output model size : " + model.size());
