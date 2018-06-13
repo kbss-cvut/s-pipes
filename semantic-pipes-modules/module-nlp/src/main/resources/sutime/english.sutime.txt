@@ -248,10 +248,10 @@
   { (/nighttimes?|nights?|overnights?/) => NIGHT }
 
   # Seasons
-  { (/summers?/) => SUMMER }
-  { (/winters?/) => WINTER }
-  { (/falls?|autumns?/) => FALL }
-  { (/springs?/) => SPRING }
+  #{ (/summers?/) => SUMMER }
+  #{ (/winters?/) => WINTER }
+  #{ (/falls?|autumns?/) => FALL }
+  #{ (/springs?/) => SPRING }
 
   # Relative times
   { (/yesterdays?/) => YESTERDAY }
