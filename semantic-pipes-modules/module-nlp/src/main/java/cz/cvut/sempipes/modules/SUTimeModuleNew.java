@@ -167,7 +167,7 @@ public class SUTimeModuleNew extends AbstractModule {
     private Model analyzeModel(Model m) {
 
         LOG.debug("Extracting temporal information from model of size {}", m.size());
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         List<ReifiedStatement> temporalAnnotationStmts = new LinkedList<>();
         m.listStatements()
             .filterDrop(st -> !st.getObject().isLiteral())
@@ -184,8 +184,8 @@ public class SUTimeModuleNew extends AbstractModule {
 
                             for (AnnforModel s : singleStDates) {
 
-                                Literal beginLiteral = mm.createTypedLiteral(s.getDateBegin());
-                                Literal endLiteral = mm.createTypedLiteral(s.getDateEnd());
+                                Literal beginLiteral = mm.createTypedLiteral(sdf.format(s.getDateBegin().getTime()));
+                                Literal endLiteral = mm.createTypedLiteral(sdf.format(s.getDateEnd().getTime()));
                                 reifiedSt.addProperty(RDF.type, DescriptorModel.sutime_extraction);
 
                                 reifiedSt.addProperty(DescriptorModel.extracted, s.getDateExtracted());
@@ -238,8 +238,8 @@ public class SUTimeModuleNew extends AbstractModule {
                     edu.stanford.nlp.time.SUTime.Time suTimeEnd;
                     String typeDateforModel = temporal.getTimexType().toString();
 
-                    Calendar beginDateforModel = GregorianCalendar.getInstance();
-                    Calendar endDateforModel = GregorianCalendar.getInstance();
+                    Calendar beginDateforModel = Calendar.getInstance();
+                    Calendar endDateforModel = Calendar.getInstance();
                     Date date;
                     AnnforModel afm = null;
 
