@@ -273,7 +273,7 @@ public class TransformerImpl implements Transformer {
         if (a.getCodeValue() != null) {
             return ResourceFactory.createResource(a.getCodeValue().toString());
         }
-        if (a.getTextValue() != null) {
+        if (a.getTextValue() != null && !a.getTextValue().isEmpty()) {
             return ResourceFactory.createStringLiteral(a.getTextValue());
         }
         return null;
