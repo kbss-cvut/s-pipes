@@ -1,6 +1,5 @@
 package cz.cvut.sempipes.impl;
 
-import cz.cvut.sempipes.modules.DownloadGraph;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.rdf.model.Model;
 import org.slf4j.Logger;
@@ -8,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 public abstract class GraphChunkedDownload {
     
-    private static final Logger LOG = LoggerFactory.getLogger(DownloadGraph.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GraphChunkedDownload.class);
 
     private static final int DEFAULT_PAGE_SIZE = 10000;
 
@@ -18,11 +17,11 @@ public abstract class GraphChunkedDownload {
     
     private Integer pageSize = DEFAULT_PAGE_SIZE;
 
-    public GraphChunkedDownload(String namedGrapheId, String endpointUrl) {
-        this(namedGrapheId, endpointUrl, DEFAULT_PAGE_SIZE);
+    public GraphChunkedDownload(String endpointUrl, String namedGrapheId) {
+        this(endpointUrl, namedGrapheId, DEFAULT_PAGE_SIZE);
     }
     
-    public GraphChunkedDownload(String namedGrapheId, String endpointUrl, int pageSize) {
+    public GraphChunkedDownload(String endpointUrl, String namedGrapheId, int pageSize) {
         this.namedGrapheId = namedGrapheId;
         this.endpointUrl = endpointUrl;
         this.pageSize = pageSize;
@@ -44,7 +43,7 @@ public abstract class GraphChunkedDownload {
     }
     
     /**
-     * Implement this method to 
+     * Method called whenever partial model is constructed.
      * @param partialModel 
      */
     protected abstract void processPartialModel(Model partialModel);
@@ -80,7 +79,7 @@ public abstract class GraphChunkedDownload {
     }
 
     private String getInnerSelect() {
-        if(this.namedGrapheId == null){
+        if(this.namedGrapheId != null){
             return "SELECT ?s ?p ?o WHERE { GRAPH <" + this.namedGrapheId + "> { ?s ?p ?o } }";
         }else{
             return "SELECT ?s ?p ?o WHERE { ?s ?p ?o }";

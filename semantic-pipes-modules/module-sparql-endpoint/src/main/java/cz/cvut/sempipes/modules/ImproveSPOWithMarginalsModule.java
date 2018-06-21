@@ -5,9 +5,9 @@ import cz.cvut.sempipes.constants.KBSS_MODULE;
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
 import cz.cvut.sempipes.engine.VariablesBinding;
+import cz.cvut.sempipes.tdb.TDBTempFactory;
 import cz.cvut.sempipes.util.JenaUtils;
 import cz.cvut.sempipes.util.QueryUtils;
-import cz.cvut.sempipes.tdb.TDBTempFactory;
 import static cz.cvut.sempipes.util.VariableBindingUtils.restrict;
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,6 +24,7 @@ import java.util.Set;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.QueryParseException;
+import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.Syntax;
@@ -117,6 +118,11 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
         while (breakablePatternsRS.hasNext()) { // TODO !? bindings -> group of bindings
 
             i++;
+
+            QuerySolution bp = breakablePatternsRS.next();
+            if (!bp.get("pattern").toString().equals("http://onto.fel.cvut.cz/ontologies/dataset-descriptor/spo-summary/di-b364a27fa33296eb3bb27bfa9b3cab9c")) {
+                continue;
+            }
 
             // get pattern data
             Model patternDataModel = getPatternData(breakablePatternsRS, spoPatternDataQueryTemplate);
