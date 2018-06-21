@@ -18,7 +18,7 @@ public abstract class AbstractGraphChunckedDownload extends AnnotatedAbstractMod
     @Parameter(urlPrefix = TYPE_PREFIX, name = "endpoint-url")
     private String endpointUrl;
     
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "http://topbraid.org/sparqlmotion#outputVariable")
+    @Parameter(urlPrefix = "http://topbraid.org/sparqlmotion#", name = "outputVariable")
     private String outputVariable;
 
     @Parameter(urlPrefix = TYPE_PREFIX, name = "page-size")
