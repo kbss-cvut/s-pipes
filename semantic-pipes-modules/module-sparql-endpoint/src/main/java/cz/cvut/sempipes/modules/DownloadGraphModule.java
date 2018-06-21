@@ -64,12 +64,20 @@ public class DownloadGraphModule extends AnnotatedAbstractModule {
         this.pageSize = pageSize;
     }
 
+    public String getOutputResourceVariable() {
+        return outputResourceVariable;
+    }
+
+    public void setOutputResourceVariable(String outputResourceVariable) {
+        this.outputResourceVariable = outputResourceVariable;
+    }
+
     @Override
     ExecutionContext executeSelf() {
 
-        Path file = null;
-        try (OutputStream os = new FileOutputStream(outputResourceVariable)) {
-            file = Files.createTempFile("downloaded-graph", ".nt", null);
+        Path file = createTempFile();
+
+        try (OutputStream os = new FileOutputStream(file.toString())) {
 
             GraphChunkedDownload downlaoder = new GraphChunkedDownload(namedGrapheId, endpointUrl, pageSize) {
                 @Override
@@ -90,6 +98,16 @@ public class DownloadGraphModule extends AnnotatedAbstractModule {
         } catch (IOException e) {
             throw new RuntimeException("Could not save data into temporary file " + file + ".", e);
         }
+    }
+
+    private Path createTempFile() {
+        Path file;
+        try {
+            file = Files.createTempFile("downloaded-graph-", ".nt");
+        } catch (IOException e) {
+            throw new RuntimeException("Could not create temporary file.", e);
+        }
+        return file;
     }
 
 }
