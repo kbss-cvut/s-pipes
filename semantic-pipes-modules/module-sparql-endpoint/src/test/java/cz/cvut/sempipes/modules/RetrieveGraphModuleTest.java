@@ -1,5 +1,6 @@
 package cz.cvut.sempipes.modules;
 
+import cz.cvut.sempipes.engine.ExecutionContextFactory;
 import cz.cvut.sempipes.utils.EndpointTestUtils;
 import org.apache.jena.rdf.model.Model;
 import static org.junit.Assert.assertEquals;
@@ -9,7 +10,7 @@ import org.junit.Test;
 /**
  * Created by Miroslav Blasko on 17.7.17.
  */
-public class RetrieveNamedGraphModuleTest {
+public class RetrieveGraphModuleTest {
 
 
     @Ignore
@@ -18,8 +19,9 @@ public class RetrieveNamedGraphModuleTest {
         RetrieveGraphModule module = new RetrieveGraphModule();
 
         String endpointUrl = "https://linked.opendata.cz/sparql";
-        String namedGraphId = "http://linked.opendata.cz/resource/dataset/mfcr/rozvaha";
+        String namedGraphId = "http://linked.opendata.cz/resource/dataset/vavai/programmes";
 
+        module.setInputContext(ExecutionContextFactory.createEmptyContext());
         module.setEndpointUrl(endpointUrl);
         module.setNamedGrapheId(namedGraphId);
         module.setPageSize(100000);
@@ -30,12 +32,4 @@ public class RetrieveNamedGraphModuleTest {
         System.out.println("Output model size : " + model.size());
         assertEquals("Size of retrieved and queried model differs : ", queriedTriplesCount, retrievedTriplesCount);
     }
-
-
-//        module.setEndpointUrl("http://onto.fel.cvut.cz/rdf4j-sesame/repositories/europeana.eu");
-//        module.setNamedGrapheUri("http://data.europeana.eu/");
-//
-//    String endpointUrl = "http://onto.fel.cvut.cz/rdf4j-server/repositories/freeclassowl_v1";
-//    String namedGraphUri = "http://www.freeclass.eu/freeclass_v1.owl";
-
 }

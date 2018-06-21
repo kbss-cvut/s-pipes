@@ -5,8 +5,9 @@ import cz.cvut.sempipes.constants.SML;
 import cz.cvut.sempipes.engine.ExecutionContext;
 import cz.cvut.sempipes.engine.ExecutionContextFactory;
 import cz.cvut.sempipes.util.ExecUtils;
-import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -24,21 +25,33 @@ public class ExternalSchemExModule extends AbstractModule {
     @Override
     ExecutionContext executeSelf() {
 
-        File tempFile = ExecUtils.createTempFile();
+        Path outputDir = getOutputDirectory();
 
-        // execute tarql query.sparql table.csv
         String[] programCall = new String[] {
             SCHEMEX_PROGRAM,
-            tempFile.getAbsolutePath(),
-            sourceFilePath.toAbsolutePath().toString()
+            "-f",
+            sourceFilePath.toString(),
+            "-o",
+            outputDir.toString()
         };
 
+        ExecUtils.execProgramWithoutExeption(programCall, null);
 
-        InputStream is = ExecUtils.execProgramWithoutExeption(programCall, null);
-
+        InputStream is = null;
         return ExecutionContextFactory.createContext(
             ModelFactory.createDefaultModel().read(is, null, FileUtils.langTurtle)
         );
+    }
+
+    private Path getOutputDirectory() {
+        Path outputDir = null;
+        try {
+            outputDir = Files.createTempFile("schemex-", "");
+
+        } catch (IOException e) {
+            new RuntimeException("Could not create temporary directory " + outputDir + ".", e);
+        }
+        return outputDir;
     }
 
     @Override
