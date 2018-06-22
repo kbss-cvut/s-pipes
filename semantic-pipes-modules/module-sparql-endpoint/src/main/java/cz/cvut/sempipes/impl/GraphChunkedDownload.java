@@ -11,19 +11,22 @@ public abstract class GraphChunkedDownload {
 
     private static final int DEFAULT_PAGE_SIZE = 10000;
 
-    private String namedGrapheId;
-
     private String endpointUrl;
-    
+
+    private String namedGraphId;
+
     private Integer pageSize = DEFAULT_PAGE_SIZE;
+
+    public GraphChunkedDownload() {
+    }
 
     public GraphChunkedDownload(String endpointUrl, String namedGrapheId) {
         this(endpointUrl, namedGrapheId, DEFAULT_PAGE_SIZE);
     }
-    
+
     public GraphChunkedDownload(String endpointUrl, String namedGrapheId, int pageSize) {
-        this.namedGrapheId = namedGrapheId;
         this.endpointUrl = endpointUrl;
+        this.namedGraphId = namedGrapheId;
         this.pageSize = pageSize;
                  
     }
@@ -32,7 +35,8 @@ public abstract class GraphChunkedDownload {
         long offset = 0;
         while (true) {
             LOG.debug("Executing query for offset: {}", offset);
-            Model model = executeQuery(offset);
+            String query = prepareQuery(offset);
+            Model model = executeQuery(query);
             if (model.isEmpty()) {
                 break;
             } else {
@@ -48,17 +52,21 @@ public abstract class GraphChunkedDownload {
      */
     protected abstract void processPartialModel(Model partialModel);
 
-    private Model executeQuery(long offset) {
-        String query = prepareQuery(offset);
+    /**
+     * Implementation specific.
+     * @param query
+     * @return
+     */
+    protected Model executeQuery(String query) {
         return QueryExecutionFactory.sparqlService(endpointUrl, query).execConstruct();
     }
 
-    public String getNamedGrapheId() {
-        return namedGrapheId;
+    public String getNamedGraphId() {
+        return namedGraphId;
     }
 
-    public void setNamedGrapheId(String namedGrapheId) {
-        this.namedGrapheId = namedGrapheId;
+    public void setNamedGraphId(String namedGraphId) {
+        this.namedGraphId = namedGraphId;
     }
 
 
@@ -78,9 +86,13 @@ public abstract class GraphChunkedDownload {
         this.pageSize = pageSize;
     }
 
-    private String getInnerSelect() {
-        if(this.namedGrapheId != null){
-            return "SELECT ?s ?p ?o WHERE { GRAPH <" + this.namedGrapheId + "> { ?s ?p ?o } }";
+    /**
+     * Implementation specific.
+     * @return
+     */
+    protected String getInnerSelect() {
+        if(this.namedGraphId != null){
+            return "SELECT ?s ?p ?o WHERE { GRAPH <" + this.namedGraphId + "> { ?s ?p ?o } }";
         }else{
             return "SELECT ?s ?p ?o WHERE { ?s ?p ?o }";
         }
@@ -90,7 +102,12 @@ public abstract class GraphChunkedDownload {
         return "?s ?p ?o";
     }
 
-    private String prepareQuery(long offset) {
+    /**
+     * Implementation specific.
+     * @param offset
+     * @return
+     */
+    protected String prepareQuery(long offset) {
         return "CONSTRUCT {\n" +
             getOuterConstruct() + "\n } WHERE { {" +
             getInnerSelect() +
