@@ -25,7 +25,7 @@ public class DownloadGraphModule extends AnnotatedAbstractModule {
     private static final Logger LOG = LoggerFactory.getLogger(DownloadGraphModule.class);
 
     @Parameter(urlPrefix = TYPE_PREFIX, name = "named-graph-id")
-    private String namedGrapheId;
+    private String namedGraphId;
 
     @Parameter(urlPrefix = TYPE_PREFIX, name = "endpoint-url")
     private String endpointUrl;
@@ -36,12 +36,14 @@ public class DownloadGraphModule extends AnnotatedAbstractModule {
     @Parameter(urlPrefix = TYPE_PREFIX, name = "page-size")
     private Integer pageSize = DEFAULT_PAGE_SIZE;
 
-    public String getNamedGrapheId() {
-        return namedGrapheId;
+    protected long numberOfDownloadedTriples;
+
+    public String getNamedGraphId() {
+        return namedGraphId;
     }
 
-    public void setNamedGrapheId(String namedGrapheId) {
-        this.namedGrapheId = namedGrapheId;
+    public void setNamedGraphId(String namedGraphId) {
+        this.namedGraphId = namedGraphId;
     }
 
     public String getTypeURI() {
@@ -72,6 +74,14 @@ public class DownloadGraphModule extends AnnotatedAbstractModule {
         this.outputResourceVariable = outputResourceVariable;
     }
 
+    public long getNumberOfDownloadedTriples() {
+        return numberOfDownloadedTriples;
+    }
+
+    public void setNumberOfDownloadedTriples(long numberOfDownloadedTriples) {
+        this.numberOfDownloadedTriples = numberOfDownloadedTriples;
+    }
+
     @Override
     ExecutionContext executeSelf() {
 
@@ -79,10 +89,13 @@ public class DownloadGraphModule extends AnnotatedAbstractModule {
 
         try (OutputStream os = new FileOutputStream(file.toString())) {
 
-            GraphChunkedDownload downlaoder = new GraphChunkedDownload(namedGrapheId, endpointUrl, pageSize) {
+            GraphChunkedDownload downlaoder = new GraphChunkedDownload(endpointUrl, namedGraphId, pageSize) {
                 @Override
                 protected void processPartialModel(Model partialModel) {
-                    RDFDataMgr.write(os, partialModel, Lang.N3);
+                    numberOfDownloadedTriples += partialModel.size();
+                    LOG.trace("persisting partial download, {} triples from (<{}>,<{}>)",
+                            partialModel.size(), endpointUrl, namedGraphId);
+                    RDFDataMgr.write(os, partialModel, Lang.NTRIPLES);
                 }
             };
             downlaoder.execute();
@@ -104,6 +117,7 @@ public class DownloadGraphModule extends AnnotatedAbstractModule {
         Path file;
         try {
             file = Files.createTempFile("downloaded-graph-", ".nt");
+            LOG.trace("persisting downloaded graph (<{}>,<{}>), to file \"{}\"", endpointUrl, namedGraphId, file.toString());
         } catch (IOException e) {
             throw new RuntimeException("Could not create temporary file.", e);
         }
