@@ -12,19 +12,18 @@ import org.junit.Test;
  */
 public class RetrieveGraphModuleTest {
 
-
-    @Ignore
+//    @Ignore // integration test
     @Test
     public void executeSelf() throws Exception {
         RetrieveGraphModule module = new RetrieveGraphModule();
 
         String endpointUrl = "https://linked.opendata.cz/sparql";
-        String namedGraphId = "http://linked.opendata.cz/resource/dataset/vavai/programmes";
+        String namedGraphId = "http://linked.opendata.cz/resource/dataset/gregorian-day-labels";
 
         module.setInputContext(ExecutionContextFactory.createEmptyContext());
         module.setEndpointUrl(endpointUrl);
-        module.setNamedGrapheId(namedGraphId);
-        module.setPageSize(100000);
+        module.setNamedGraphId(namedGraphId);
+        module.setPageSize(10);
         Model model = module.executeSelf().getDefaultModel();
         long queriedTriplesCount = EndpointTestUtils.getNumberOfTriples(endpointUrl, namedGraphId);
         long retrievedTriplesCount = model.size();

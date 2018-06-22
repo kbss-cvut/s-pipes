@@ -17,7 +17,7 @@ public class RetrieveGraphModule extends AnnotatedAbstractModule {
     private static final int DEFAULT_PAGE_SIZE = 10000;
 
     @Parameter(urlPrefix = TYPE_PREFIX, name = "named-graph-id")
-    private String namedGrapheId;
+    private String namedGraphId;
 
     @Parameter(urlPrefix = TYPE_PREFIX, name = "endpoint-url")
     private String endpointUrl;
@@ -25,12 +25,12 @@ public class RetrieveGraphModule extends AnnotatedAbstractModule {
     @Parameter(urlPrefix = TYPE_PREFIX, name = "page-size")
     private Integer pageSize = DEFAULT_PAGE_SIZE;
 
-    public String getNamedGrapheId() {
-        return namedGrapheId;
+    public String getNamedGraphId() {
+        return namedGraphId;
     }
 
-    public void setNamedGrapheId(String namedGrapheId) {
-        this.namedGrapheId = namedGrapheId;
+    public void setNamedGraphId(String namedGraphId) {
+        this.namedGraphId = namedGraphId;
     }
 
     public String getTypeURI() {
@@ -49,21 +49,23 @@ public class RetrieveGraphModule extends AnnotatedAbstractModule {
         return pageSize;
     }
 
+
     public void setPageSize(int pageSize) {
         this.pageSize = pageSize;
     }
 
-
     @Override
     ExecutionContext executeSelf() {
         Model outputModel = ModelFactory.createDefaultModel();
-        GraphChunkedDownload downlaoder = new GraphChunkedDownload(namedGrapheId, endpointUrl, pageSize) {
+        GraphChunkedDownload downloader = new GraphChunkedDownload(endpointUrl, namedGraphId, pageSize) {
             @Override
             protected void processPartialModel(Model partialModel) {
+                LOG.trace("persisting partial download, {} triples from (<{}>,<{}>)",
+                        partialModel.size(), endpointUrl, namedGraphId);
                 outputModel.add(partialModel);
             }
         };
-        downlaoder.execute();
+        downloader.execute();
         return ExecutionContextFactory.createContext(outputModel);
     }
 }
