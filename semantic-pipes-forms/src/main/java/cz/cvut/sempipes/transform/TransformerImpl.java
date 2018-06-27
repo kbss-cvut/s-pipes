@@ -114,6 +114,8 @@ public class TransformerImpl implements Transformer {
             subQ.setAnswers(Collections.singleton(new Answer()));
 
             subQuestions.add(subQ);
+
+            processedPredicates.add(p);
         }
 
 
