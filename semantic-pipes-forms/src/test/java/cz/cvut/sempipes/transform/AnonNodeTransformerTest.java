@@ -6,6 +6,7 @@ import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.util.FileUtils;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
@@ -22,6 +23,7 @@ public class AnonNodeTransformerTest {
         String nodeStr = AnonNodeTransformer.serialize(node);
 
         assertTrue(nodeStr.contains("?descriptorType"));
+        assertFalse(nodeStr.contains("spinrdf"));
     }
 
     @Test
