@@ -6,14 +6,20 @@ import cz.cvut.sforms.VocabularyJena;
 import cz.cvut.sforms.model.Answer;
 import cz.cvut.sforms.model.Question;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.jena.ontology.OntModel;
+import org.apache.jena.query.Query;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.rdf.model.impl.PropertyImpl;
 import org.apache.jena.util.ResourceUtils;
+import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.topbraid.spin.arq.ARQ2SPIN;
 import org.topbraid.spin.system.SPINModuleRegistry;
+import org.topbraid.spin.vocabulary.SPIN;
+import org.topbraid.spin.vocabulary.SPL;
 
 import java.net.URI;
 import java.util.*;
@@ -41,13 +47,12 @@ public class TransformerImpl implements Transformer {
 
         Question formRootQ = new Question();
         initializeQuestionUri(formRootQ);
-        formRootQ.setLabel("Module of type " + moduleType.getProperty(RDFS.label).getString());
         formRootQ.setOrigin(toUri(module));
         formRootQ.setLayoutClass(Collections.singleton("form"));
 
         Question wizardStepQ = new Question();
         initializeQuestionUri(wizardStepQ);
-        wizardStepQ.setLabel("Module configuration");
+        wizardStepQ.setLabel("Module of type " + moduleType.getProperty(RDFS.label).getString() + " (" + moduleType.getURI() + ")");
         wizardStepQ.setOrigin(toUri(module));
         Set<String> wizardStepLayoutClass = new HashSet<>();
         wizardStepLayoutClass.add("wizard-step");
@@ -77,6 +82,8 @@ public class TransformerImpl implements Transformer {
             processedPredicates.add(p);
             Question subQ = createQuestion(p);
 
+            subQ.setProperties(extractQuestionMetadata(st));
+
             Answer a = getAnswer(st.getObject());
             a.setOrigin(key.a);
 
@@ -101,10 +108,14 @@ public class TransformerImpl implements Transformer {
 
             Question subQ = createQuestion(p);
 
+            subQ.setProperties(extractQuestionMetadata(st));
+
             subQ.setOrigin(URI.create(p.getURI()));
             subQ.setAnswers(Collections.singleton(new Answer()));
 
             subQuestions.add(subQ);
+
+            processedPredicates.add(p);
         }
 
 
@@ -134,44 +145,106 @@ public class TransformerImpl implements Transformer {
     }
 
     @Override
-    public Model form2Script(Model inputScript, Question form, String moduleType) {
+    public Collection<Model> form2Script(Model inputScript, Question form, String moduleType) {
 
-        Model outputScript = ModelFactory.createDefaultModel();
-        outputScript.add(inputScript);
+        Map<String, Model> changed = new HashMap<>();
 
-        Resource module = outputScript.getResource(form.getOrigin().toString());
+        Resource module = inputScript.getResource(form.getOrigin().toString());
 
         Question uriQ = findUriQ(form);
         URI newUri = new ArrayList<>(uriQ.getAnswers()).get(0).getCodeValue();
 
         if (module.listProperties().hasNext()) {
-            Map<OriginPair<URI, URI>, Statement> questionStatements = getOrigin2StatementMap(module);
+            Map<OriginPair<URI, URI>, Statement> questionStatements = getOrigin2StatementMap(module); // Created answer origin is different from the actual one
             findRegularQ(form).forEach((q) -> {
                 OriginPair<URI, URI> originPair = new OriginPair<>(q.getOrigin(), getAnswer(q).map(Answer::getOrigin).orElse(null));
                 Statement s = questionStatements.get(originPair);
-                if (Objects.nonNull(s)) {
-                    outputScript.remove(s);
+                Model m = extractModel(s);
+                String uri = ((OntModel) inputScript).getBaseModel().listStatements(null, RDF.type, OWL.Ontology).next().getSubject().getURI();
+                if (!changed.containsKey(uri))
+                    changed.put(uri, ModelFactory.createDefaultModel().add(m instanceof OntModel ? ((OntModel) m).getBaseModel() : m));
+                Model changingModel = changed.get(uri);
+
+                changingModel.remove(s);
+                if (isSupportedAnon(q)) {
+                    Query query = AnonNodeTransformer.parse(q, inputScript);
+                    org.topbraid.spin.model.Query spinQuery = ARQ2SPIN.parseQuery(query.serialize(), inputScript);
+                    changingModel.add(spinQuery.getModel());
                 }
-                RDFNode answerNode = getAnswerNode(getAnswer(q).orElse(null));
-                if (answerNode != null) {
-                    outputScript.add(s.getSubject(), s.getPredicate(), answerNode);
+                else {
+                    RDFNode answerNode = getAnswerNode(getAnswer(q).orElse(null));
+                    if (answerNode != null) {
+                        changingModel.add(s.getSubject(), s.getPredicate(), answerNode);
+                    }
                 }
             });
         }
         else {
-            outputScript.add(outputScript.getResource(newUri.toString()), RDF.type, outputScript.getResource(moduleType));
-            outputScript.add(outputScript.getResource(newUri.toString()), RDF.type, outputScript.getResource(Vocabulary.s_c_Modules_A));
+            Model m = ModelFactory.createDefaultModel().add(inputScript);
+            m.add(m.getResource(newUri.toString()), RDF.type, m.getResource(moduleType));
+            m.add(m.getResource(newUri.toString()), RDF.type, m.getResource(Vocabulary.s_c_Modules_A));
             findRegularQ(form).forEach((q) -> {
                 RDFNode answerNode = getAnswerNode(getAnswer(q).orElse(null));
                 if (answerNode != null) {
-                    outputScript.add(outputScript.getResource(newUri.toString()), new PropertyImpl(q.getOrigin().toString()), answerNode);
+                    m.add(m.getResource(newUri.toString()), new PropertyImpl(q.getOrigin().toString()), answerNode);
                 }
             });
+            changed.put(((OntModel) inputScript).getBaseModel().listStatements(null, RDF.type, OWL.Ontology).next().getSubject().getURI(), m);
         }
 
         ResourceUtils.renameResource(module, newUri.toString());
 
-        return outputScript;
+        return changed.values();
+    }
+
+    @Override
+    public Question functionToForm(Model script, Resource function) {
+        if (!URI.create(function.getURI()).isAbsolute()) {
+            throw new IllegalArgumentException("Function uri '" + function.getURI() + "' is not absolute.");
+        }
+
+        Question formRootQ = new Question();
+        initializeQuestionUri(formRootQ);
+        formRootQ.setLabel("");
+        formRootQ.setLayoutClass(Collections.singleton("form"));
+
+        Answer executionId = new Answer();
+        executionId.setTextValue(UUID.randomUUID().toString());
+        formRootQ.setAnswers(Collections.singleton(executionId));
+
+        Question wizardStepQ = new Question();
+        initializeQuestionUri(wizardStepQ);
+        wizardStepQ.setLabel("Function call");
+        Set<String> wizardStepLayoutClass = new HashSet<>();
+        wizardStepLayoutClass.add("wizard-step");
+        wizardStepLayoutClass.add("section");
+        wizardStepQ.setLayoutClass(wizardStepLayoutClass);
+
+        List<Question> subQuestions = new LinkedList<>();
+
+        Question functionQ = new Question();
+        initializeQuestionUri(functionQ);
+        functionQ.setLabel("URI");
+        functionQ.setDescription("URI of the function that will be called");
+        functionQ.setOrigin(URI.create(RDF.uri));
+        Answer functionAnswer = new Answer();
+        functionAnswer.setTextValue(function.getURI());
+        functionQ.setAnswers(Collections.singleton(functionAnswer));
+
+        subQuestions.add(functionQ);
+
+        for (Statement st : function.listProperties(SPIN.constraint).toList().stream().map(s -> s.getObject().asResource().listProperties(SPL.predicate).nextStatement()).collect(Collectors.toList())) {
+
+            Question q = createQuestion(st.getObject().asResource());
+            q.setProperties(extractQuestionMetadata(st));
+
+            q.setPrecedingQuestions(Collections.singleton(functionQ));
+            subQuestions.add(q);
+        }
+
+        wizardStepQ.setSubQuestions(new HashSet<>(subQuestions));
+        formRootQ.setSubQuestions(Collections.singleton(wizardStepQ));
+        return formRootQ;
     }
 
     private Question findUriQ(Question root) {
@@ -202,7 +275,7 @@ public class TransformerImpl implements Transformer {
         if (a.getCodeValue() != null) {
             return ResourceFactory.createResource(a.getCodeValue().toString());
         }
-        if (a.getTextValue() != null) {
+        if (a.getTextValue() != null && !a.getTextValue().isEmpty()) {
             return ResourceFactory.createStringLiteral(a.getTextValue());
         }
         return null;
@@ -241,8 +314,11 @@ public class TransformerImpl implements Transformer {
     }
 
     private URI createAnswerOrigin(Statement statement) {
+        if (!statement.getObject().isAnon())
+            return URI.create(VocabularyJena.s_c_answer_origin.toString() +
+                    "/" + createMd5Hash(statement.getObject().toString()));
         return URI.create(VocabularyJena.s_c_answer_origin.toString() +
-                "/" + createMd5Hash(statement.getObject().toString()));
+                "/" + createMd5Hash(AnonNodeTransformer.serialize(statement.getObject())));
     }
 
     private String createMd5Hash(String text) {
@@ -253,15 +329,32 @@ public class TransformerImpl implements Transformer {
         q.setUri(URI.create(VocabularyJena.s_c_question + "-" + UUID.randomUUID().toString()));
     }
 
-    private Question createQuestion(Resource property) {
+    private Question createQuestion(Resource resource) {
         Question q = new Question();
         initializeQuestionUri(q);
-        q.setLabel(property.getURI());
-        Statement labelSt = property.getProperty(RDFS.label);
-        if (labelSt != null) {
-            q.setDescription(labelSt.getString());
+        q.setLabel(resource.getURI());
+
+        StringBuilder descriptionBuilder = new StringBuilder();
+        StmtIterator labelIt = resource.listProperties(RDFS.label);
+        if (labelIt.hasNext()) {
+            descriptionBuilder.append(labelIt.nextStatement().getObject().asLiteral().getString());
+            descriptionBuilder.append("\n\n");
         }
+        StmtIterator descriptionIt = resource.listProperties(RDFS.comment);
+        if (descriptionIt.hasNext())
+            descriptionBuilder.append(descriptionIt.nextStatement().getObject().asLiteral().getString());
+
+        q.setDescription(descriptionBuilder.toString());
         return q;
+    }
+
+    private Map<String, Set<String>> extractQuestionMetadata(Statement st) {
+        Map<String, Set<String>> p = new HashMap<>();
+        if (st.getPredicate().hasProperty(RDFS.range))
+            p.put(Vocabulary.s_p_has_answer_value_type, Collections.singleton(st.getPredicate().getProperty(RDFS.range).getObject().asResource().getURI()));
+        Model m = extractModel(st);
+        p.put(Vocabulary.s_p_has_origin_context, Collections.singleton(m.listStatements(null, RDF.type, OWL.Ontology).next().getSubject().getURI()));
+        return p;
     }
 
     public static class OriginPair<Q, A> {
@@ -289,5 +382,36 @@ public class TransformerImpl implements Transformer {
             OriginPair p = (OriginPair) o;
             return Objects.equals(q, p.q) && Objects.equals(a, p.a);
         }
+    }
+
+    private boolean isSupportedAnon(Question q) {
+        if (q.getProperties().containsKey(Vocabulary.s_p_has_answer_value_type)) {
+            Set<String> types = q.getProperties().get(Vocabulary.s_p_has_answer_value_type);
+            return types.contains(Vocabulary.s_c_Ask) ||
+                    types.contains(Vocabulary.s_c_Construct) ||
+                    types.contains(Vocabulary.s_c_Describe) ||
+                    types.contains(Vocabulary.s_c_Select);
+        }
+        return false;
+    }
+
+    Model extractModel(Statement st) {
+        Model model = st.getModel(); // Iterate through subgraphs and find model defining st and return it (or IRI)
+        return find(st, model, Optional.empty()).orElse(null);
+    }
+
+    private Optional<Model> find(Statement st, Model m, Optional<Model> res) {
+        if (res.isPresent())
+            return res;
+        if (!m.contains(st))
+            return Optional.empty();
+        if (m instanceof OntModel && ((OntModel) m).listSubModels().toList().stream().anyMatch(sm -> sm.contains(st))) {
+            Optional<Optional<Model>> o = ((OntModel) (m)).listSubModels().toList().stream().map(sm -> find(st, sm, res)).filter(Optional::isPresent).findFirst();
+            if (o.isPresent())
+                return o.get();
+        }
+        else
+            return Optional.of(m);
+        return Optional.empty();
     }
 }

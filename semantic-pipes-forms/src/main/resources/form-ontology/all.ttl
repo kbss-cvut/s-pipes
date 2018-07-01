@@ -1,6 +1,7 @@
 <http://onto.fel.cvut.cz/ontologies/s-pipes-forms>
   rdf:type owl:Ontology ;
   owl:imports <http://onto.fel.cvut.cz/ontologies/form> ;
+  owl:imports <http://onto.fel.cvut.cz/ontologies/form-spin> ;
   owl:imports <http://onto.fel.cvut.cz/ontologies/form-layout> ;
   owl:imports <http://spinrdf.org/spin> ;
   owl:imports <http://spinrdf.org/spl> ;
