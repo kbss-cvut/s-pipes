@@ -244,8 +244,9 @@ public class SUTimeModuleNew extends AbstractModule {
                     AnnforModel afm = null;
 
                     try {
-                        suTimeBegin = temporal.getRange().beginTime();
-                        suTimeEnd = temporal.getRange().endTime();
+                        if(((temporal.getRange().beginTime().getTimexValue()) != null) || ((temporal.getRange().endTime().getTimexValue()) != null)) {
+                            suTimeBegin = temporal.getRange().beginTime();
+                            suTimeEnd = temporal.getRange().endTime();
 
                         if ((!suTimeBegin.toString().equals("PRESENT_REF")) && (!suTimeBegin.toString().contains("X")) && (!suTimeBegin.toString().contains("UNKNOWN")) && (!suTimeBegin.toString().contains("REF")) && (!suTimeBegin.toString().contains("x")) && (suTimeBegin != null)) {
 
@@ -260,6 +261,7 @@ public class SUTimeModuleNew extends AbstractModule {
                                 date = sdf.parse(suTimeEnd.toString());
                                 endDateforModel.setTime(date);
 
+                                }
                             }
                         }
 
