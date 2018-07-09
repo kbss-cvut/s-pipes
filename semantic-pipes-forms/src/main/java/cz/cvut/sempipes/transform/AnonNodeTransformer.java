@@ -5,8 +5,10 @@ import cz.cvut.sforms.model.Question;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.*;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.shared.impl.PrefixMappingImpl;
 import org.topbraid.spin.arq.ARQFactory;
-import org.topbraid.spin.model.SPINFactory;
+import org.topbraid.spin.model.*;
 import org.topbraid.spin.util.SPINExpressions;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -17,6 +19,8 @@ import java.util.Map;
  */
 public class AnonNodeTransformer {
 
+    private static final Class[] SPIN_QUERY_CLASSES = {Ask.class, Construct.class, Describe.class, Select.class};
+
     public static String serialize(RDFNode node) {
         Resource r = node.asResource();
         Property text = ResourceFactory.createProperty(Vocabulary.s_p_text);
@@ -24,9 +28,12 @@ public class AnonNodeTransformer {
         if (r.getProperty(text) != null) {
             return r.getProperty(text).getLiteral().getString();
         }
-        else if (SPINExpressions.isExpression(r)) {
+        if (SPINExpressions.isExpression(r)) {
             return SPINFactory.asExpression(r).toString();
         }
+        for (Class c : SPIN_QUERY_CLASSES)
+            if (r.canAs(c))
+                return getFromQuery(r, c);
         return ARQFactory.get().createExpressionString(r);
     }
 
@@ -53,5 +60,14 @@ public class AnonNodeTransformer {
         });
         b.append(s);
         return QueryFactory.create(b.toString());
+    }
+
+    private static <T extends org.topbraid.spin.model.Query> String getFromQuery(Resource r, Class<T> resClass) {
+        Query q = ARQFactory.get().createQuery(r.as(resClass));
+        Model m = r.getModel();
+        PrefixMapping mapping = new PrefixMappingImpl();
+        mapping.setNsPrefixes(m.getNsPrefixMap());
+        q.setPrefixMapping(mapping);
+        return q.serialize().replaceAll("(?m)^PREFIX.*\n", "").trim();
     }
 }
