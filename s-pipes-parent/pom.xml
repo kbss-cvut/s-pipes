@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>cz.cvut.kbss</groupId>
+        <artifactId>kbss-project-parent</artifactId>
+        <version>0.0.4</version>
+        <relativePath></relativePath>
+    </parent>
+
+    <groupId>cz.cvut.kbss</groupId>
+    <artifactId>s-pipes-parent</artifactId>
+    <name>SPipes Parent</name>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jdk.version>1.8</jdk.version>
+        <org.apache.jena>3.1.0</org.apache.jena>
+        <org.springframework.version>4.1.6.RELEASE</org.springframework.version>
+        <org.springframework.security.version>4.0.2.RELEASE</org.springframework.security.version>
+        <rdf4j.version>2.2</rdf4j.version>
+        <jopa.version>0.10.0</jopa.version>
+        <aspectj.version>1.8.12</aspectj.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <version>${ch.qos.logback.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>jcl-over-slf4j</artifactId>
+                <version>${org.slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>4.5.3</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.jsonld-java</groupId>
+                <artifactId>jsonld-java</artifactId>
+                <version>0.9.0</version>
+            </dependency>
+            <dependency>
+                <groupId>xerces</groupId>
+                <artifactId>xercesImpl</artifactId>
+                <version>2.11.0</version>
+            </dependency>
+            <dependency>
+                <groupId>xml-apis</groupId>
+                <artifactId>xml-apis</artifactId>
+                <version>1.4.01</version>
+            </dependency>
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>2.9</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>2.5</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>18.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>2.7.4</version>
+            </dependency>
+            <dependency>
+                <groupId>cz.cvut.kbss.jopa</groupId>
+                <artifactId>jopa-api</artifactId>
+                <version>${jopa.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cz.cvut.kbss.jopa</groupId>
+                <artifactId>jopa-impl</artifactId>
+                <version>${jopa.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <repositories>
+        <repository>
+            <id>kbss</id>
+            <name>KBSS Maven 2 Repository</name>
+            <url>http://kbss.felk.cvut.cz/m2repo</url>
+            <snapshots>
+                <checksumPolicy>warn</checksumPolicy>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+            <releases>
+                <checksumPolicy>warn</checksumPolicy>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </releases>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>kbss</id>
+            <name>KBSS Maven 2 Repository</name>
+            <url>http://kbss.felk.cvut.cz/m2repo</url>
+            <snapshots>
+                <checksumPolicy>warn</checksumPolicy>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+            <releases>
+                <checksumPolicy>warn</checksumPolicy>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
+</project>

@@ -1,0 +1,1 @@
+@prefix sp: <http://onto.fel.cvut.cz/ontologies/s-pipes/> .

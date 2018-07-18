@@ -1,4 +1,0 @@
-@prefix sp: <http://onto.fel.cvut.cz/ontologies/semantic-pipes/> .
-
-sp:query_solution_1 a sp:query_solution .
-sp:query_solution_2 a sp:query_solution .

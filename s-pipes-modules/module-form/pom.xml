@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>s-pipes-modules</artifactId>
+        <groupId>cz.cvut.kbss</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>s-pipes-modules-form</artifactId>
+    <name>SPipes Modules - Form</name>
+    <packaging>jar</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>cz.cvut.kbss.jopa</groupId>
+            <artifactId>jopa-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cz.cvut.kbss</groupId>
+            <artifactId>s-pipes-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>cz.cvut.kbss</groupId>
+            <artifactId>s-pipes-core</artifactId>
+            <version>0.1.0</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>cz.cvut.kbss.jopa</groupId>
+                <artifactId>jopa-maven-plugin</artifactId>
+                <version>${jopa.version}</version>
+                <executions>
+                    <execution>
+                        <id>generate-sources</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>owl2java-transform</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <ontology-iri>http://onto.fel.cvut.cz/ontologies/form</ontology-iri>
+                    <package>cz.cvut.sempipes</package>
+                    <output-directory>${project.basedir}/src/main/java</output-directory>
+                    <mapping-file>${project.basedir}/src/main/resources/form-ontology/mapping</mapping-file>
+                    <whole-ontology-as-ics>true</whole-ontology-as-ics>
+                    <vocabulary-only>true</vocabulary-only>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

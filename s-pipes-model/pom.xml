@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+
+    <parent>
+        <relativePath>../s-pipes-parent</relativePath>
+        <groupId>cz.cvut.kbss</groupId>
+        <artifactId>s-pipes-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <name>SPipes Model</name>
+    <artifactId>s-pipes-model</artifactId>
+    <version>0.0.1</version>
+    <packaging>jar</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>cz.cvut.kbss.jopa</groupId>
+            <artifactId>jopa-impl</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>cz.cvut.kbss.jopa</groupId>
+                <artifactId>jopa-maven-plugin</artifactId>
+                <version>${jopa.version}</version>
+                <executions>
+                    <execution>
+                        <id>generate-sources</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>owl2java-transform</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <ontology-iri>http://onto.fel.cvut.cz/ontologies/dataset-descriptor</ontology-iri>
+                    <package>cz.cvut.sempipes</package>
+                    <output-directory>${project.basedir}/src/main/java</output-directory>
+                    <mapping-file>${project.basedir}/src/main/resources/dataset-descriptor-ontology/mapping</mapping-file>
+                    <whole-ontology-as-ics>true</whole-ontology-as-ics>
+                    <vocabulary-only>true</vocabulary-only>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>aspectj-maven-plugin</artifactId>
+                <version>1.7</version>
+                <configuration>
+                    <complianceLevel>${jdk.version}</complianceLevel>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
+                    <showWeaveInfo>true</showWeaveInfo>
+                    <aspectLibraries>
+                        <aspectLibrary>
+                            <groupId>cz.cvut.kbss.jopa</groupId>
+                            <artifactId>jopa-impl</artifactId>
+                        </aspectLibrary>
+                    </aspectLibraries>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjtools</artifactId>
+                        <version>${aspectj.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjrt</artifactId>
+                        <version>${aspectj.version}</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>compile</goal>
+                            <!-- use this goal to weave all your main classes -->
+                            <goal>test-compile</goal>
+                            <!-- use this goal to weave all your test classes -->
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -5,19 +5,19 @@
 
     <groupId>cz.cvut.kbss</groupId>
     <version>1.0-SNAPSHOT</version>
-    <artifactId>semantic-pipes</artifactId>
+    <artifactId>s-pipes</artifactId>
     <packaging>pom</packaging>
     <name>S-Pipes (Semantic Pipelines)</name>
 
     <modules>
-        <module>semantic-pipes-parent</module>
-        <module>semantic-pipes-core</module>
-        <module>semantic-pipes-model</module>
-        <module>semantic-pipes-cli</module>
-        <module>semantic-pipes-web</module>
-        <module>semantic-pipes-modules</module>
-        <module>semantic-pipes-modules-registry</module>
-        <module>semantic-pipes-forms</module>
+        <module>s-pipes-parent</module>
+        <module>s-pipes-core</module>
+        <module>s-pipes-model</module>
+        <module>s-pipes-cli</module>
+        <module>s-pipes-web</module>
+        <module>s-pipes-modules</module>
+        <module>s-pipes-modules-registry</module>
+        <module>s-pipes-forms</module>
     </modules>
 
     <build>
@@ -81,8 +81,8 @@
     </build>
 
     <scm>
-        <url>https://kbss.felk.cvut.cz/gitblit/summary/semantic-pipes.git</url>
-        <connection>scm:git:https://kbss.felk.cvut.cz/git/semantic-pipes.git</connection>
+        <url>https://kbss.felk.cvut.cz/gitblit/summary/s-pipes.git</url>
+        <connection>scm:git:https://kbss.felk.cvut.cz/git/s-pipes.git</connection>
     </scm>
 
     <distributionManagement>
