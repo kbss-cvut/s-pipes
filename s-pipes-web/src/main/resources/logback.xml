@@ -8,7 +8,7 @@
 
     <!--<appender name="FILELOG"-->
               <!--class="ch.qos.logback.core.rolling.RollingFileAppender">-->
-        <!--<file>${PORTAL_LOG_HOME}/sempipes-debug.log</file>-->
+        <!--<file>${PORTAL_LOG_HOME}/spipes-debug.log</file>-->
         <!--<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">-->
             <!--<Pattern>-->
                 <!--%d{yyyy-MM-dd HH:mm:ss} - %msg%n-->
@@ -17,7 +17,7 @@
 
         <!--<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
             <!--&lt;!&ndash; rollover daily &ndash;&gt;-->
-            <!--<fileNamePattern>${PORTAL_LOG_HOME}/archived/sempipes-debug.%d{yyyy-MM-dd}.%i.log-->
+            <!--<fileNamePattern>${PORTAL_LOG_HOME}/archived/spipes-debug.%d{yyyy-MM-dd}.%i.log-->
             <!--</fileNamePattern>-->
             <!--<timeBasedFileNamingAndTriggeringPolicy-->
                     <!--class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">-->
@@ -26,10 +26,10 @@
         <!--</rollingPolicy>-->
     <!--</appender>-->
 
-    <!--<logger name="cz.cvut.sempipes" level="TRACE" additivity="false">-->
+    <!--<logger name="cz.cvut.spipes" level="TRACE" additivity="false">-->
         <!--<appender-ref ref="FILELOG"/>-->
     <!--</logger>-->
-    <!--<logger name="cz.cvut.sempipes.modules.BindWithConstantModule" level="TRACE" additivity="false">-->
+    <!--<logger name="cz.cvut.spipes.modules.BindWithConstantModule" level="TRACE" additivity="false">-->
         <!--<appender-ref ref="FILELOG"/>-->
     <!--</logger>-->
 
@@ -65,16 +65,16 @@
     </appender>
 
     <!-- Logger for our app -->
-    <logger name="cz.cvut.sempipes" level="TRACE" additivity="false">
+    <logger name="cz.cvut.spipes" level="TRACE" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
-    <logger name="cz.cvut.sempipes.modules.ImproveSPOWithMarginalsModule" level="DEBUG" additivity="false">
+    <logger name="cz.cvut.spipes.modules.ImproveSPOWithMarginalsModule" level="DEBUG" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
-    <logger name="cz.cvut.sempipes.config.RDFMediaTypeConverter" level="DEBUG" additivity="false">
+    <logger name="cz.cvut.spipes.config.RDFMediaTypeConverter" level="DEBUG" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
-    <logger name="cz.cvut.sempipes.modules.BindWithConstantModule" level="TRACE" additivity="false">
+    <logger name="cz.cvut.spipes.modules.BindWithConstantModule" level="TRACE" additivity="false">
     <appender-ref ref="STDOUT"/>
     </logger>
 

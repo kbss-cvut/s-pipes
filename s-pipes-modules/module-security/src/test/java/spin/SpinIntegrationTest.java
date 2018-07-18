@@ -1,6 +1,6 @@
 package spin;
 
-import cz.cvut.sempipes.function.EncodePassword;
+import cz.cvut.spipes.function.EncodePassword;
 import java.io.InputStream;
 import static junit.framework.Assert.assertEquals;
 import org.apache.jena.ontology.OntModelSpec;
@@ -20,7 +20,7 @@ import org.topbraid.spin.vocabulary.SP;
 
 public class SpinIntegrationTest {
 
-    @Test //todo rather move to sempipes-core, but create example function
+    @Test //todo rather move to s-pipes-core, but create example function
     public void executeSPINExpressionWithCustomJavaFunction() {
 
         // load custom function definition

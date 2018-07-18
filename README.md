@@ -40,7 +40,7 @@ Maven module SPipes Core provides core functionality related to SPipes engine, o
 Web user interface for SPipes that allows to execute any _function_ defined in _global scripts_. The function can be called by http GET request :
  _$webApp_/service?id=_$functionName_&_$paramName1_=_paramValue1_&_$paramName2_=_paramValue2_ ...
 
-_$webApp_ -- url, where SPipes is deployed , e.g. "https://localhost:8080/sempipes".
+_$webApp_ -- url, where SPipes is deployed , e.g. "https://localhost:8080/s-pipes".
 
 _$functionName_ -- name of a function defined in a global script. In case of name collision whole url of the function can be used. E.g. "my-function" can be used instead of full iri  "http://example.org/my-function".
 
@@ -49,13 +49,13 @@ _$paramName_ -- name of parameter e.g. "repositoryName".
 _$paramName_ -- name of parameter e.g. "myRepository".
 
 Example call:
-https://localhost:8080/sempipes/service?id=my-function&repositoryName=myRepository
+https://localhost:8080/s-pipes/service?id=my-function&repositoryName=myRepository
 
 
 ### SPipes CLI
 
-Maven module SPipes Cli provides command-line interface to SPipes engine. In addition to `config-core.properties`, directories configured to load scripts can be overriden by command-line variable SEMPIPES_ONTOLOGIES_PATH. E.g. in UNIX shell following command can be used:
-export SEMPIPES_ONTOLOGIES_PATH="/home/someuser/s-pipes-scripts"
+Maven module SPipes Cli provides command-line interface to SPipes engine. In addition to `config-core.properties`, directories configured to load scripts can be overriden by command-line variable SPIPES_ONTOLOGIES_PATH. E.g. in UNIX shell following command can be used:
+export SPIPES_ONTOLOGIES_PATH="/home/someuser/s-pipes-scripts"
 
 ### SPipes Modules Registry
 

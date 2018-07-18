@@ -83,7 +83,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>cz.cvut.sempipes.cli.UnifiedCLI</mainClass>
+                            <mainClass>cz.cvut.spipes.cli.UnifiedCLI</mainClass>
                             <useUniqueVersions>false</useUniqueVersions>
                         </manifest>
                     </archive>

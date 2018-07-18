@@ -66,7 +66,7 @@
                 </executions>
                 <configuration>
                     <ontology-iri>http://onto.fel.cvut.cz/ontologies/form</ontology-iri>
-                    <package>cz.cvut.sempipes</package>
+                    <package>cz.cvut.spipes</package>
                     <output-directory>${project.basedir}/src/main/java</output-directory>
                     <mapping-file>${project.basedir}/src/main/resources/form-ontology/mapping</mapping-file>
                     <whole-ontology-as-ics>true</whole-ontology-as-ics>
