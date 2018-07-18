@@ -130,32 +130,6 @@
 
     <build>
         <plugins>
-            <!-- workaround to logback.xml included in dependencies of e5xml package (issues #295)
-                   TODO remove when issue is closed
-            -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>truezip-maven-plugin</artifactId>
-                <version>1.1</version>
-                <executions>
-                    <execution>
-                        <id>remove-a-file-in-sub-archive</id>
-                        <goals>
-                            <goal>remove</goal>
-                        </goals>
-                        <phase>package</phase>
-                        <configuration>
-                            <fileset>
-                                <directory>target/s-pipes-web-0.2.0/WEB-INF/lib/e5xml-1.0-SNAPSHOT.jar
-                                </directory>
-                                <includes>
-                                    <include>logback.xml</include>
-                                </includes>
-                            </fileset>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
