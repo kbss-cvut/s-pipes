@@ -84,6 +84,9 @@ public class TransformerImpl implements Transformer {
 
             subQ.setProperties(extractQuestionMetadata(st));
 
+            if (st.getObject().isAnon() && SPipesUtil.isSpinQuery(st.getObject().asResource()))
+                subQ.setLayoutClass(Collections.singleton("sparql"));
+
             Answer a = getAnswer(st.getObject());
             a.setOrigin(key.a);
 

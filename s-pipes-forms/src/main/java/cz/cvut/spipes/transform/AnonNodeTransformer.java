@@ -8,18 +8,18 @@ import org.apache.jena.rdf.model.*;
 import org.apache.jena.shared.PrefixMapping;
 import org.apache.jena.shared.impl.PrefixMappingImpl;
 import org.topbraid.spin.arq.ARQFactory;
-import org.topbraid.spin.model.*;
+import org.topbraid.spin.model.SPINFactory;
 import org.topbraid.spin.util.SPINExpressions;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Map;
 
+import static cz.cvut.spipes.transform.SPipesUtil.SPIN_QUERY_CLASSES;
+
 /**
  * Created by Yan Doroshenko (yandoroshenko@protonmail.com) on 19.04.2018.
  */
 public class AnonNodeTransformer {
-
-    private static final Class[] SPIN_QUERY_CLASSES = {Ask.class, Construct.class, Describe.class, Select.class};
 
     public static String serialize(RDFNode node) {
         Resource r = node.asResource();
