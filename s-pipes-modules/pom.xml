@@ -33,7 +33,7 @@
             <dependency>
                 <groupId>cz.cvut.kbss</groupId>
                 <artifactId>s-pipes-core</artifactId>
-                <version>0.1.0</version>
+                <version>${project.parent.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
