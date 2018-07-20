@@ -55,9 +55,9 @@ public class ExecutionEngineImplTest {
         ExecutionEngine engine = new ExecutionEngineImpl();
         ExecutionContext outputContext = engine.executePipeline(outputModule, ExecutionContextFactory.createEmptyContext());
 
-        verify(inputModule1.execute(), times(1));
-        verify(inputModule2.execute(), times(1));
-        verify(outputModule.execute(), times(1));
+        verify(inputModule1, times(1)).execute();
+        verify(inputModule2, times(1)).execute();
+        verify(outputModule, times(1)).execute();
     }
 
 
