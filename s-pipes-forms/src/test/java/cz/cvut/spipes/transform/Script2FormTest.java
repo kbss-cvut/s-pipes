@@ -20,9 +20,6 @@ import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
-/**
- * Created by Yan Doroshenko (yandoroshenko@protonmail.com) on 14.02.2018.
- */
 public class Script2FormTest {
 
 

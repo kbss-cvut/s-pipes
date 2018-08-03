@@ -6,9 +6,6 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * Created by Yan Doroshenko (yandoroshenko@protonmail.com) on 14.02.2018.
- */
 public class FormUtils {
 
     public static Set<Question> flatten(Set<Question> questions) {
