@@ -2,21 +2,24 @@ package cz.cvut.spipes.transform;
 
 import cz.cvut.sforms.model.Answer;
 import cz.cvut.sforms.model.Question;
+import java.io.InputStream;
+import java.net.URI;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Optional;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.RDFS;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-
-import java.io.InputStream;
-import java.net.URI;
-import java.util.*;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class Form2ScriptTest {
 
@@ -25,12 +28,12 @@ public class Form2ScriptTest {
     private Model sampleScript = ModelFactory.createOntologyModel().read(sampleScriptIS, null, FileUtils.langTurtle);
     private Question form;
 
-    @Before
+    @BeforeEach
     public void initForm() {
         form = getForm();
     }
 
-    @Ignore
+    @Disabled
     @Test
     public void basicTransformation() {
         /*Model m = t.form2Script(sampleScript, form, "http://topbraid.org/sparqlmotionlib#BindWithConstant");
@@ -49,7 +52,7 @@ public class Form2ScriptTest {
         assertTrue(os.stream().anyMatch((o) -> o.isLiteral() && Objects.equals("Robert Plant", o.asLiteral().getString())));*/
     }
 
-    @Ignore
+    @Disabled
     @Test
     public void regularStatementUpdate() {
         Optional<Question> labelQ = form.getSubQuestions().stream()

@@ -26,6 +26,7 @@
         <rdf4j.version>2.2</rdf4j.version>
         <jopa.version>0.10.0</jopa.version>
         <aspectj.version>1.8.12</aspectj.version>
+        <junit.version>RELEASE</junit.version>
     </properties>
 
     <dependencyManagement>
@@ -89,6 +90,27 @@
                 <groupId>cz.cvut.kbss.jopa</groupId>
                 <artifactId>jopa-impl</artifactId>
                 <version>${jopa.version}</version>
+            </dependency>
+            <!-- Testing -->
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-api</artifactId>
+                <version>${junit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.vintage</groupId>
+                <artifactId>junit-vintage-engine</artifactId>
+                <version>${junit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.12</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>2.7.20</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

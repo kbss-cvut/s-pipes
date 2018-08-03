@@ -2,14 +2,17 @@ package cz.cvut.spipes.transform;
 
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
-import org.apache.jena.rdf.model.*;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
-import org.junit.Ignore;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class UtilTest {
 
@@ -37,7 +40,7 @@ public class UtilTest {
         assertEquals(m2, new TransformerImpl().extractModel(s));
     }
 
-    @Ignore
+    @Disabled
     @Test
     public void serializeIsIdempotent() {
         Model m = ModelFactory.createDefaultModel().read(getClass().getResource("/construct.ttl").getFile());
