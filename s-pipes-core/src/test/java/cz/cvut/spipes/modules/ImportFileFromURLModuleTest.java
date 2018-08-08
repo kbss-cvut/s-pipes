@@ -26,9 +26,6 @@ import org.junit.jupiter.api.Test;
 //import static org.springframework.test.web.client.response.MockRestResponseCreators.withBadRequest;
 //import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
-/**
- * Created by Miroslav Blasko on 9.9.16.
- */
 public class ImportFileFromURLModuleTest {
 
 

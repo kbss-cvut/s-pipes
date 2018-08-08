@@ -2,10 +2,6 @@ package cz.cvut.spipes.engine;
 
 import org.apache.jena.rdf.model.Model;
 
-/**
- *
- * Created by blcha on 6.5.16.
- */
 public interface ExecutionContext {
     Model getDefaultModel();
     VariablesBinding getVariablesBinding();

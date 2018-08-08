@@ -10,9 +10,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-/**
- * Created by Miroslav Blasko on 28.11.16.
- */
 public class ImportE5XXMLModuleTest extends ImportE5XModuleTest {
 
     private static Stream<Arguments> generateTestData() {

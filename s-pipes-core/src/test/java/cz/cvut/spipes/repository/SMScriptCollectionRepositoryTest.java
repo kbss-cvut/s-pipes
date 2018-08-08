@@ -17,9 +17,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import util.JenaTestUtils;
 
-/**
- * Created by Miroslav Blasko on 31.7.16.
- */
 @ExtendWith(MockitoExtension.class)
 public class SMScriptCollectionRepositoryTest {
 

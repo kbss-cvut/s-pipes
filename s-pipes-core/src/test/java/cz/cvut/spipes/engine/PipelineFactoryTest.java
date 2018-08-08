@@ -7,9 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import util.JenaTestUtils;
 
-/**
- * Created by Miroslav Blasko on 7.6.16.
- */
 public class PipelineFactoryTest {
 
     @Test

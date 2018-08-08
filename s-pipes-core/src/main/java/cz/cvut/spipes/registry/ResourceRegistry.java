@@ -9,9 +9,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * Registers resources and its alternative ids with respect to contexts in which they are defined.
  *
- *
- * Created by Miroslav Blasko on 30.7.16.
- */
+ **/
 public interface ResourceRegistry {
 
 

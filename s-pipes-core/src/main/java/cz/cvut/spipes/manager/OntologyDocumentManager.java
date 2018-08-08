@@ -7,12 +7,6 @@ import org.apache.jena.ontology.OntDocumentManager;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.Model;
 
-/**
- * Keeps m
- * <p>
- * <p>
- * Created by Miroslav Blasko on 22.7.16.
- */
 public interface OntologyDocumentManager {
 
     /**

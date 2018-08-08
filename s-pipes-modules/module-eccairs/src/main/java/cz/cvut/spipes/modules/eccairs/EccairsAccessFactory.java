@@ -8,9 +8,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.util.Properties;
 
-/**
- * Created by Miroslav Blasko on 29.11.16.
- */
 public class EccairsAccessFactory {
 
     //TODO need synchronization within the factory writable methods !!!

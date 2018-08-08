@@ -3,9 +3,6 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.engine.ExecutionContext;
 
-/**
- * Created by Miroslav Blasko on 26.5.16.
- */
 public class SemFormGeneratorModule extends AbstractModule {
 
 

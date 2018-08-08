@@ -8,9 +8,6 @@ import cz.cvut.spipes.engine.PipelineFactory;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-/**
- * Created by Miroslav Blasko on 26.5.16.
- */
 public class TarqlModuleTest {
 
     String TARQL_MODULE_DIR = "module/tarql";

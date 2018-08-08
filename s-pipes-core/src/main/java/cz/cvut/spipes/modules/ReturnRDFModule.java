@@ -4,9 +4,6 @@ import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import org.apache.jena.rdf.model.Resource;
 
-/**
- * Created by Miroslav Blasko on 29.5.16.
- */
 public class ReturnRDFModule extends AbstractModule {
 
     private Resource serialization;

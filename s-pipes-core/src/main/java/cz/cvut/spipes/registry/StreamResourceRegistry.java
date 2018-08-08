@@ -7,9 +7,6 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Created by Miroslav Blasko on 28.11.16.
- */
 public class StreamResourceRegistry {
     private static final Logger LOG = LoggerFactory.getLogger(StreamResourceRegistry.class);
 

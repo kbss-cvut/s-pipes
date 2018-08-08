@@ -17,9 +17,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-/**
- * Created by Miroslav Blasko on 20.2.17.
- */
 @ExtendWith(MockitoExtension.class)
 public class ImportRDFFromWorkspaceModuleTest {
 

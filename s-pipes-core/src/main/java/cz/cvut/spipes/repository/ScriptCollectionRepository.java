@@ -12,7 +12,6 @@ import org.jetbrains.annotations.Nullable;
  *
  * Unified interface for collection of scripts.
  *
- * Created by Miroslav Blasko on 17.7.16.
  */
 public interface ScriptCollectionRepository extends Repository {
 

@@ -12,9 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-/**
- * Created by Miroslav Blasko on 22.7.16.
- */
 public class OntoDocManagerTest {
 
 

@@ -1,16 +1,11 @@
 package cz.cvut.spipes.exception;
 
-/**
- * Exception thrown when a resource found is not unique.
- *
- * Created by Miroslav Blasko on 21.7.16.
- */
 
 import java.util.Set;
 
 /**
- *
- */
+ * Exception thrown when a resource found is not unique.
+ **/
 public class ResourceNotUniqueException extends RuntimeException {
 
     public ResourceNotUniqueException(String message) {

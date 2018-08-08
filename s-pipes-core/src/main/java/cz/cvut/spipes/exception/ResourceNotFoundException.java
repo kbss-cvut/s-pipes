@@ -3,7 +3,6 @@ package cz.cvut.spipes.exception;
 /**
  * Exception thrown when a resource is not found.
  *
- * Created by Miroslav Blasko on 21.7.16.
  */
 
 import java.util.Set;

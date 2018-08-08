@@ -13,9 +13,6 @@ import org.apache.jena.rdf.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Created by Miroslav Blasko on 30.5.16.
- */
 class ExecutionEngineImpl implements ExecutionEngine {
 
     private static Logger LOG = LoggerFactory.getLogger(ExecutionEngineImpl.class);

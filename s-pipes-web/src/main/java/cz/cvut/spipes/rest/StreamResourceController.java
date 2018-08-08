@@ -18,9 +18,6 @@ import javax.annotation.PostConstruct;
 import java.io.*;
 import java.util.UUID;
 
-/**
- * Created by Miroslav Blasko on 28.11.16.
- */
 @RestController
 @EnableWebMvc
 public class StreamResourceController {

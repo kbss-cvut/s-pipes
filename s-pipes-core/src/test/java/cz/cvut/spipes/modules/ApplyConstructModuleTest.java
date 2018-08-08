@@ -13,9 +13,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 
-/**
- * Created by Miroslav Blasko on 12.5.16.
- */
 public class ApplyConstructModuleTest extends AbstractModuleTestHelper {
 
     @BeforeEach

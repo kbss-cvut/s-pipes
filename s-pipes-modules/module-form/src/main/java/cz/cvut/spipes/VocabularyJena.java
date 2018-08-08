@@ -4,9 +4,6 @@ import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 
-/**
- * Created by Miroslav Blasko on 6.6.17.
- */
 public class VocabularyJena {
 
     public static Property s_p_has_related_question = getProperty(Vocabulary.s_p_has_related_question);

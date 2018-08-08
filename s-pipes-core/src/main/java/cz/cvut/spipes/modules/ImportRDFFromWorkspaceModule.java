@@ -14,9 +14,6 @@ import org.apache.jena.rdf.model.RDFNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Created by Miroslav Blasko on 20.2.17.
- */
 public class ImportRDFFromWorkspaceModule extends AbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(ImportRDFFromWorkspaceModule.class);

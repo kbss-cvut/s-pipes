@@ -6,9 +6,6 @@ import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.util.FileUtils;
 
-/**
- * Created by Miroslav Blasko on 8.6.16.
- */
 public abstract class AbstractModuleTestHelper {
 
     private static final String MODULE_DIR_NAME = "module";

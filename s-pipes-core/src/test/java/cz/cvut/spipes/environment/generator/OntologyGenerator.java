@@ -5,9 +5,6 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.ResourceFactory;
 
-/**
- * Created by Miroslav Blasko on 20.2.17.
- */
 public class OntologyGenerator {
 
     public static Model getSampleModel() {

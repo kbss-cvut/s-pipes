@@ -21,9 +21,6 @@ import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Created by Miroslav Blasko on 30.7.16.
- */
 public class JenaUtils {
 
     private static Logger LOG = LoggerFactory.getLogger(JenaUtils.class);

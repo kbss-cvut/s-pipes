@@ -7,9 +7,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 
-/**
- * Created by Miroslav Blasko on 10.10.16.
- */
 public class SUTimeModuleIntegrationTest {
 
     /********************

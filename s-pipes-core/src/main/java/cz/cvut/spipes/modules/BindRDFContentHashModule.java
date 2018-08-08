@@ -11,9 +11,6 @@ import org.apache.jena.rdf.model.ResourceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Created by Miroslav Blasko on 28.5.16.
- */
 public class BindRDFContentHashModule extends AbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(BindRDFContentHashModule.class);

@@ -19,9 +19,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Created by Miroslav Blasko on 19.12.16.
- */
 @RestController
 @EnableWebMvc
 public class SPipesContextController {

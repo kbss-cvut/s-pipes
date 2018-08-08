@@ -17,7 +17,6 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
-import org.apache.jena.sparql.function.Function;
 import org.apache.jena.sparql.function.FunctionRegistry;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.RDF;
@@ -29,9 +28,6 @@ import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Created by Miroslav Blasko on 11.5.16.
- */
 public class PipelineFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(PipelineFactory.class);

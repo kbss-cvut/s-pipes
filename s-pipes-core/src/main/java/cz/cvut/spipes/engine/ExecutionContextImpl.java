@@ -2,9 +2,6 @@ package cz.cvut.spipes.engine;
 
 import org.apache.jena.rdf.model.Model;
 
-/**
- * Created by Miroslav Blasko on 12.5.16.
- */
 class ExecutionContextImpl implements ExecutionContext {
 
     private Model defaultModel;

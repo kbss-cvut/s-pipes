@@ -11,9 +11,6 @@ import org.apache.jena.util.FileUtils;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
-/**
- * Created by Miroslav Blasko on 12.11.16.
- */
 public class JenaUtilsTest {
 
     private static final String HASH_FILE_PREFIX = "hash-example-";

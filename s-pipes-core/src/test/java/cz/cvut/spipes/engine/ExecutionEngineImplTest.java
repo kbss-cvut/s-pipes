@@ -12,9 +12,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-/**
- * Created by Miroslav Blasko on 31.5.16.
- */
 @ExtendWith(MockitoExtension.class)
 public class ExecutionEngineImplTest {
 

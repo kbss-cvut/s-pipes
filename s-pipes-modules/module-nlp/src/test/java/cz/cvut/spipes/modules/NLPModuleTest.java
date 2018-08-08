@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * TODO test with blank nodes
- * Created by Miroslav Blasko on 22.8.16.
  */
 public class NLPModuleTest {
 

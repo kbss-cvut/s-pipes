@@ -36,7 +36,6 @@ import org.topbraid.spin.system.SPINModuleRegistry;
 //import static cz.cvut.spipes.manager.OntologyDocumentManagerImpl.isFileNameSupported;
 
 /**
- * Created by Miroslav Blasko on 1.6.16.
  */
 //  TODO
 //        JenaUtil.addTransitiveSubjects()

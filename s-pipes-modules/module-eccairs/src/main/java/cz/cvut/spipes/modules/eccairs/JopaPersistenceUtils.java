@@ -10,9 +10,6 @@ import org.eclipse.rdf4j.repository.Repository;
 
 import java.util.Map;
 
-/**
- * Created by Miroslav Blasko on 29.11.16.
- */
 public class JopaPersistenceUtils {
 
     public static EntityManagerFactory createEntityManagerFactoryWithMemoryStore(){

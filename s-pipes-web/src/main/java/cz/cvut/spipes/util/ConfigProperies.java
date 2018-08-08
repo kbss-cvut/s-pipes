@@ -7,9 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-/**
- * Created by Miroslav Blasko on 10.6.16.
- */
 public class ConfigProperies {
     private static final String CONFIG_FILE = "config.properties";
     private static final java.util.Properties prop = new java.util.Properties();

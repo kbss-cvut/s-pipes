@@ -6,9 +6,6 @@ import org.apache.jena.rdf.model.Model;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
-/**
- * Created by Miroslav Blasko on 17.7.17.
- */
 public class RetrieveGraphModuleTest {
 
 //    @Disabled // integration test

@@ -4,9 +4,6 @@ import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 
-/**
- * Created by Miroslav Blasko on 28.5.16.
- */
 public class MergeModule extends AbstractModule  {
 
     @Override

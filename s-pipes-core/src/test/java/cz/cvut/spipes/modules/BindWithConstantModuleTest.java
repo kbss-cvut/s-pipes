@@ -15,9 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import org.junit.jupiter.api.Test;
 
-/**
- * Created by Miroslav Blasko on 1.6.16.
- */
 public class BindWithConstantModuleTest extends AbstractModuleTestHelper {
 
     @Override

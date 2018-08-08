@@ -3,9 +3,6 @@ package cz.cvut.spipes.cli;
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
 
-/**
- * Created by Miroslav Blasko on 11.5.16.
- */
 public class ExecuteModuleCLITest {
 
     @Test

@@ -6,9 +6,6 @@ import java.io.InputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Created by Miroslav Blasko on 10.6.16.
- */
 public class CoreConfigProperies {
     private static final String CONFIG_FILE = "config-core.properties";
     private static final java.util.Properties prop = new java.util.Properties();

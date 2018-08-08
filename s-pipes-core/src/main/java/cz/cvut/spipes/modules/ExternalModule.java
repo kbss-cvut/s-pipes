@@ -2,9 +2,6 @@ package cz.cvut.spipes.modules;
 
 import cz.cvut.spipes.engine.ExecutionContext;
 
-/**
- * Created by Miroslav Blasko on 18.5.16.
- */
 public class ExternalModule extends AbstractModule {
 
     // path
