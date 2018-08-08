@@ -17,7 +17,6 @@
         <dependency>
             <groupId>org.eclipse.rdf4j</groupId>
             <artifactId>rdf4j-repository-http</artifactId>
-            <version>${rdf4j.version}</version>
         </dependency>
         <!--<dependency>-->
             <!--<groupId>org.openrdf.rdf4j</groupId>-->

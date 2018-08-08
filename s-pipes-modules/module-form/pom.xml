@@ -59,7 +59,7 @@
             <plugin>
                 <groupId>cz.cvut.kbss.jopa</groupId>
                 <artifactId>jopa-maven-plugin</artifactId>
-                <version>${jopa.version}</version>
+                <version>${cz.cvut.kbss.jopa.version}</version>
                 <executions>
                     <execution>
                         <id>generate-sources</id>

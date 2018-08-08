@@ -18,7 +18,6 @@
     <packaging>jar</packaging>
 
     <properties>
-        <aspectj.version>1.8.12</aspectj.version>
         <!--<cz.cvut.kbss.jopa.version>0.7.0</cz.cvut.kbss.jopa.version>-->
         <!--<org.springframework.version>4.1.5.RELEASE</org.springframework.version>-->
         <!--<org.springframework.security.version>4.0.2.RELEASE</org.springframework.security.version>-->
@@ -208,7 +207,6 @@
         <dependency>
             <groupId>cz.cvut.kbss.jopa</groupId>
             <artifactId>ontodriver-sesame</artifactId>
-            <version>${jopa.version}</version>
         </dependency>
         <!--<dependency>-->
             <!--<groupId>org.springframework</groupId>-->
@@ -505,12 +503,12 @@
                     <dependency>
                         <groupId>org.aspectj</groupId>
                         <artifactId>aspectjtools</artifactId>
-                        <version>${aspectj.version}</version>
+                        <version>${org.aspectj.version}</version>
                     </dependency>
                     <dependency>
                         <groupId>org.aspectj</groupId>
                         <artifactId>aspectjrt</artifactId>
-                        <version>${aspectj.version}</version>
+                        <version>${org.aspectj.version}</version>
                     </dependency>
                 </dependencies>
                 <executions>

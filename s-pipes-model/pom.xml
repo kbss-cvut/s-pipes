@@ -37,7 +37,7 @@
             <plugin>
                 <groupId>cz.cvut.kbss.jopa</groupId>
                 <artifactId>jopa-maven-plugin</artifactId>
-                <version>${jopa.version}</version>
+                <version>${cz.cvut.kbss.jopa.version}</version>
                 <executions>
                     <execution>
                         <id>generate-sources</id>
@@ -76,12 +76,12 @@
                     <dependency>
                         <groupId>org.aspectj</groupId>
                         <artifactId>aspectjtools</artifactId>
-                        <version>${aspectj.version}</version>
+                        <version>${org.aspectj.version}</version>
                     </dependency>
                     <dependency>
                         <groupId>org.aspectj</groupId>
                         <artifactId>aspectjrt</artifactId>
-                        <version>${aspectj.version}</version>
+                        <version>${org.aspectj.version}</version>
                     </dependency>
                 </dependencies>
                 <executions>
