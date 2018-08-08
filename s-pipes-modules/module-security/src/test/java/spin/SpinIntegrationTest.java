@@ -2,7 +2,6 @@ package spin;
 
 import cz.cvut.spipes.function.EncodePassword;
 import java.io.InputStream;
-import static junit.framework.Assert.assertEquals;
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.rdf.model.Model;
@@ -12,8 +11,8 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.sparql.function.FunctionRegistry;
 import org.apache.jena.util.FileUtils;
-import static org.junit.Assert.assertTrue;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
 import org.topbraid.spin.model.SPINFactory;
 import org.topbraid.spin.util.SPINExpressions;
 import org.topbraid.spin.vocabulary.SP;
@@ -46,6 +45,6 @@ public class SpinIntegrationTest {
 
         RDFNode node = SPINExpressions.evaluate(callExpr, callExpr.getModel(), bindings); //TODO resource.getModel() should be part o context
 
-        assertTrue("Output does not seem to be encoded password.", node.toString().startsWith("$"));
+        assertTrue(node.toString().startsWith("$"), "Output does not seem to be encoded password.");
     }
 }

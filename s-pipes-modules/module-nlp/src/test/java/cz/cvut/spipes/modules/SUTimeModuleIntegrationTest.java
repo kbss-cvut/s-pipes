@@ -3,8 +3,8 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.rdf.model.Model;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -15,13 +15,13 @@ public class SUTimeModuleIntegrationTest {
     /********************
      * Use for manual tests
      ********************/
-    @Ignore
+    @Disabled
     @Test
     public void deployManual() {
         deployTemporalExtractionLinkedDataCz("http://linked.opendata.cz/resource/dataset/vavai/programmes");
     }
 
-    @Ignore
+    @Disabled
     @Test
     public void deployAll() {
         deployTemporalExtractionLinkedDataCz("http://linked.opendata.cz/resource/dataset/vavai/programmes");

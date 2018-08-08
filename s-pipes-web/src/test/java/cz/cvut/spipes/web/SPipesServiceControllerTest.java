@@ -4,6 +4,12 @@ import cz.cvut.spipes.config.WebAppConfig;
 import cz.cvut.spipes.engine.VariablesBinding;
 import cz.cvut.spipes.rest.SPipesServiceController;
 import cz.cvut.spipes.util.RDFMimeType;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.ResourceFactory;
@@ -11,26 +17,29 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFLanguages;
 import org.apache.jena.vocabulary.RDFS;
-import org.junit.*;
-import org.junit.runner.RunWith;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.*;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
-
-import java.io.*;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @WebAppConfiguration
 @ContextConfiguration(classes = WebAppConfig.class)
 public class SPipesServiceControllerTest {
@@ -45,7 +54,7 @@ public class SPipesServiceControllerTest {
 
     private MockMvc mockMvc;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(ctx).build();
     }
@@ -101,13 +110,13 @@ public class SPipesServiceControllerTest {
     private void testMimeType( final String mimeType, boolean pass ) throws Exception {
         MvcResult result = mockMvc.perform(createDefaultIdentityModuleBuilder().
                 accept(mimeType)
-        ).andExpect(pass ? status().isOk() : status().is(415)).andReturn();
+        ).andExpect(pass ? status().isOk() : status().is4xxClientError()).andReturn();
         LOGGER.info("Result: {}", result.getResponse().getContentAsString());
         final Model m = ModelFactory.createDefaultModel();
         try {
             m.read(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()), "", RDFLanguages.contentTypeToLang(mimeType).getName());
         } catch(Exception e) {
-            Assert.fail("Could not parse the result back. Reason: " + e.getMessage());
+            fail("Could not parse the result back. Reason: " + e.getMessage());
         }
     }
 
@@ -164,7 +173,7 @@ public class SPipesServiceControllerTest {
         final StringReader res = new StringReader(result.getResponse().getContentAsString());
         final Model mOutput = ModelFactory.createDefaultModel();
         RDFDataMgr.read(mOutput,res,"", Lang.JSONLD);
-        Assert.assertEquals(expectedNumberOfStatements, mOutput.listStatements().toList().size());
+        assertEquals(expectedNumberOfStatements, mOutput.listStatements().toList().size());
     }
 
     @Test
@@ -178,7 +187,7 @@ public class SPipesServiceControllerTest {
                 2);
     }
 
-    @Ignore // works only within fell vpn
+    @Disabled // works only within fell vpn
     @Test
     public void testRunApplyConstructQueryWithVariable() throws Exception {
         VariablesBinding inputVariablesBinding = new VariablesBinding(
@@ -196,7 +205,7 @@ public class SPipesServiceControllerTest {
         // TODO check number based on service logic
     }
 
-    @Ignore // works only within fel vpn
+    @Disabled // works only within fel vpn
     @Test
     public void testByReportingTool() throws Exception {
         VariablesBinding inputVariablesBinding = new VariablesBinding();

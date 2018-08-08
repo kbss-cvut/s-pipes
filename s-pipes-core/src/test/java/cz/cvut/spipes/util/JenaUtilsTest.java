@@ -8,8 +8,8 @@ import java.util.stream.Collectors;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.util.FileUtils;
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
 
 /**
  * Created by Miroslav Blasko on 12.11.16.
@@ -41,7 +41,7 @@ public class JenaUtilsTest {
         while (it.hasNext()) {
             Map.Entry<String, String> nextHashEntry = it.next();
             String errMessage = "Hashes of ontologies from files " + firstHashEntry.getKey() + " and " + nextHashEntry.getKey() + " are not same.";
-            assertEquals(errMessage, firstHashEntry.getValue(), nextHashEntry.getValue());
+            assertEquals(firstHashEntry.getValue(), nextHashEntry.getValue(), errMessage);
         }
     }
 

@@ -4,29 +4,30 @@ import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.environment.generator.OntologyGenerator;
 import cz.cvut.spipes.exception.ContextNotFoundException;
 import cz.cvut.spipes.manager.OntoDocManager;
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
 import org.apache.jena.rdf.model.Model;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import static org.mockito.BDDMockito.given;
 import org.mockito.Mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
  * Created by Miroslav Blasko on 20.2.17.
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ImportRDFFromWorkspaceModuleTest {
 
     @Mock
     OntoDocManager ontoDocManager;
 
     @Test
-    @Ignore
+    @Disabled
     public void executeSelfWithBaseUriAndIgnoredImports() throws Exception {
 
         Model sampleModel = OntologyGenerator.getSampleModel();
@@ -38,7 +39,7 @@ public class ImportRDFFromWorkspaceModuleTest {
 
         //given
         given(ontoDocManager.getModel(OntologyGenerator.getSampleOntologyUri()))
-                .willReturn(sampleModel);
+            .willReturn(sampleModel);
 
         //when
         ExecutionContext ec = module.executeSelf();
@@ -50,8 +51,8 @@ public class ImportRDFFromWorkspaceModuleTest {
     }
 
 
-    @Test(expected = ContextNotFoundException.class)
-    @Ignore
+    @Test
+    @Disabled
     public void executeSelfWithInvalidBaseUriThrowsException() throws Exception {
 
         Model sampleModel = OntologyGenerator.getSampleModel();
@@ -61,15 +62,18 @@ public class ImportRDFFromWorkspaceModuleTest {
         module.setBaseUri(OntologyGenerator.getSampleOntologyUri());
         module.setIgnoreImports(true);
 
-        //given
-        given(ontoDocManager.getModel(OntologyGenerator.getSampleOntologyUri()))
-                .willReturn(null);
+        assertThrows(ContextNotFoundException.class,
+            () -> {
+                //given
+                given(ontoDocManager.getModel(OntologyGenerator.getSampleOntologyUri()))
+                    .willReturn(null);
 
-        //when
-        ExecutionContext ec = module.executeSelf();
+                //when
+                ExecutionContext ec = module.executeSelf();
 
-        //then
-        verify(ontoDocManager, times(1)).getModel(OntologyGenerator.getSampleOntologyUri());
+                //then
+                verify(ontoDocManager, times(1)).getModel(OntologyGenerator.getSampleOntologyUri());
+            });
     }
 
 }

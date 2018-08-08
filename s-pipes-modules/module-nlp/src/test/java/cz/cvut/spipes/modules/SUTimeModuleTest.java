@@ -1,6 +1,6 @@
 package cz.cvut.spipes.modules;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Properties;
 
@@ -10,7 +10,7 @@ import edu.stanford.nlp.pipeline.*;
 import edu.stanford.nlp.time.*;
 import edu.stanford.nlp.util.CoreMap;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Created by Miroslav Blasko on 10.10.16.

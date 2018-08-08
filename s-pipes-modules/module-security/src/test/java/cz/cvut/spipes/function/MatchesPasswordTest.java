@@ -1,10 +1,10 @@
 package cz.cvut.spipes.function;
 
-import static junit.framework.Assert.assertTrue;
 import org.apache.jena.graph.Node;
 import org.apache.jena.sparql.expr.NodeValue;
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class MatchesPasswordTest {

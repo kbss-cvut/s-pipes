@@ -7,9 +7,9 @@ import cz.cvut.spipes.engine.VariablesBinding;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.ResourceFactory;
-import static org.junit.Assert.assertEquals;
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * Created by Miroslav Blasko on 8.6.16.
@@ -25,7 +25,7 @@ public class AbstractModuleTest extends AbstractModuleTestHelper {
     public void getEffectiveValue() throws Exception {
         Module module = PipelineFactory.loadPipelines(getConfigOntModel()).get(0);
 
-        assertEquals("Incorrect module loaded.", BindWithConstantModule.class, module.getClass());
+        assertEquals(BindWithConstantModule.class, module.getClass(), "Incorrect module loaded.");
 
         VariablesBinding variablesBinding = new VariablesBinding();
         variablesBinding.add("name", ResourceFactory.createPlainLiteral("James"));
@@ -35,11 +35,11 @@ public class AbstractModuleTest extends AbstractModuleTestHelper {
 
         RDFNode node = ((AbstractModule) module).getEffectiveValue(SML.value);
 
-        assertEquals("Effective value computed incorrectly.", node, ResourceFactory.createPlainLiteral("Hello James"));
+        assertEquals(node, ResourceFactory.createPlainLiteral("Hello James"), "Effective value computed incorrectly.");
 
     }
 
-    @Ignore
+    @Disabled
     @Test
     public void throwValidationExceptionIfValidationConstrainFailsAndExitOnErrorIsTrue() {
 //        AbstractModule m = createModuleWithFailingValidationConstraint();
@@ -48,7 +48,7 @@ public class AbstractModuleTest extends AbstractModuleTestHelper {
 //        m.checkInputConstraints();
     }
 
-    @Ignore
+    @Disabled
     @Test
     public void throwNoValidationExceptionIfValidationConstrainFailsAndExitOnErrorIsFalse() {
 

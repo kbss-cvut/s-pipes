@@ -3,42 +3,49 @@ package cz.cvut.spipes.recursion;
 import java.util.stream.Stream;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.junit.Assert;
-import static org.junit.Assert.assertTrue;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class CombinedQueryTemplateRecursionProviderTest {
 
+    final Model emptyModel = ModelFactory.createDefaultModel();
     @Mock
     QueryTemplateRecursionProvider parentProvider = null;
     @Mock
     QueryTemplateRecursionProvider childProvider = null;
-    final Model emptyModel = ModelFactory.createDefaultModel();
-
     CombinedQueryTemplateRecursionProvider combinedProvider;
 
-    @Before
+    @BeforeEach
     public void initTest() {
         combinedProvider = new CombinedQueryTemplateRecursionProvider(-1, parentProvider, childProvider);
     }
 
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void shouldTerminateFailsIfFirstStepIsDifferentFromZero() {
-        callShouldTerminate(combinedProvider, 3);
+        assertThrows(
+            IllegalStateException.class,
+            () -> callShouldTerminate(combinedProvider, 3)
+        );
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void shouldTerminateFailsIfCalledInNonlinearOrder() {
-       callShouldTerminate(combinedProvider, 0, 1, 3);
+        assertThrows(
+            IllegalStateException.class,
+            () -> callShouldTerminate(combinedProvider, 0, 1, 3)
+        );
     }
 
     @Test
@@ -48,35 +55,37 @@ public class CombinedQueryTemplateRecursionProviderTest {
 
     @Test
     public void shouldTerminateCallsSubProvidersMethods() {
-        when(parentProvider.shouldTerminate(0, emptyModel, emptyModel)).thenReturn(Boolean.FALSE);
-        when(parentProvider.shouldTerminate(1, emptyModel, emptyModel)).thenReturn(Boolean.FALSE);
-        when(parentProvider.shouldTerminate(2, emptyModel, emptyModel)).thenReturn(Boolean.FALSE);
-        when(parentProvider.shouldTerminate(3, emptyModel, emptyModel)).thenReturn(Boolean.TRUE);
 
-        when(childProvider.shouldTerminate(0, emptyModel, emptyModel)).thenReturn(Boolean.FALSE);
-        when(childProvider.shouldTerminate(1, emptyModel, emptyModel)).thenReturn(Boolean.FALSE);
-        when(childProvider.shouldTerminate(2, emptyModel, emptyModel)).thenReturn(Boolean.FALSE);
-        when(childProvider.shouldTerminate(3, emptyModel, emptyModel)).thenReturn(Boolean.FALSE);
-        when(childProvider.shouldTerminate(4, emptyModel, emptyModel)).thenReturn(Boolean.TRUE);
+
+        doReturn(Boolean.FALSE).when(parentProvider).shouldTerminate(0, emptyModel, emptyModel);
+        doReturn(Boolean.FALSE).when(parentProvider).shouldTerminate(1, emptyModel, emptyModel);
+        doReturn(Boolean.FALSE).when(parentProvider).shouldTerminate(2, emptyModel, emptyModel);
+        doReturn(Boolean.TRUE).when(parentProvider).shouldTerminate(3, emptyModel, emptyModel);
+
+        doReturn(Boolean.FALSE).when(childProvider).shouldTerminate(0, emptyModel, emptyModel);
+        doReturn(Boolean.FALSE).when(childProvider).shouldTerminate(1, emptyModel, emptyModel);
+        doReturn(Boolean.FALSE).when(childProvider).shouldTerminate(2, emptyModel, emptyModel);
+        doReturn(Boolean.FALSE).when(childProvider).shouldTerminate(3, emptyModel, emptyModel);
+        doReturn(Boolean.TRUE).when(childProvider).shouldTerminate(4, emptyModel, emptyModel);
 
         callShouldTerminateUntilItReturnsTrue(combinedProvider);
 
-        verify(parentProvider, times(1)).shouldTerminate(0,emptyModel, emptyModel);
-        verify(childProvider, times(1)).shouldTerminate(0,emptyModel, emptyModel);
+        verify(parentProvider, times(1)).shouldTerminate(0, emptyModel, emptyModel);
+        verify(childProvider, times(1)).shouldTerminate(0, emptyModel, emptyModel);
 
-        verify(parentProvider, times(1)).shouldTerminate(1,emptyModel, emptyModel);
-        verify(parentProvider, times(1)).shouldTerminate(2,emptyModel, emptyModel);
-        verify(parentProvider, times(1)).shouldTerminate(3,emptyModel, emptyModel);
+        verify(parentProvider, times(1)).shouldTerminate(1, emptyModel, emptyModel);
+        verify(parentProvider, times(1)).shouldTerminate(2, emptyModel, emptyModel);
+        verify(parentProvider, times(1)).shouldTerminate(3, emptyModel, emptyModel);
 
-        verify(parentProvider, times(0)).shouldTerminate(4,emptyModel, emptyModel);
+        verify(parentProvider, times(0)).shouldTerminate(4, emptyModel, emptyModel);
 
 
-        verify(childProvider, times(2)).shouldTerminate(1,emptyModel, emptyModel);
-        verify(childProvider, times(2)).shouldTerminate(2,emptyModel, emptyModel);
-        verify(childProvider, times(2)).shouldTerminate(3,emptyModel, emptyModel);
-        verify(childProvider, times(2)).shouldTerminate(4,emptyModel, emptyModel);
+        verify(childProvider, times(2)).shouldTerminate(1, emptyModel, emptyModel);
+        verify(childProvider, times(2)).shouldTerminate(2, emptyModel, emptyModel);
+        verify(childProvider, times(2)).shouldTerminate(3, emptyModel, emptyModel);
+        verify(childProvider, times(2)).shouldTerminate(4, emptyModel, emptyModel);
 
-        verify(childProvider, times(0)).shouldTerminate(5,emptyModel, emptyModel);
+        verify(childProvider, times(0)).shouldTerminate(5, emptyModel, emptyModel);
 
     }
 
@@ -88,8 +97,8 @@ public class CombinedQueryTemplateRecursionProviderTest {
             emptyModel,
             emptyModel
         );
-        verify(parentProvider, times(1)).shouldTerminate(0,emptyModel, emptyModel);
-        verify(childProvider, times( 0)).shouldTerminate(0,emptyModel, emptyModel);
+        verify(parentProvider, times(1)).shouldTerminate(0, emptyModel, emptyModel);
+        verify(childProvider, times(0)).shouldTerminate(0, emptyModel, emptyModel);
         assertTrue(shouldTerminate);
     }
 
@@ -101,17 +110,18 @@ public class CombinedQueryTemplateRecursionProviderTest {
             emptyModel,
             emptyModel
         );
-        verify(parentProvider, times(1)).shouldTerminate(0,emptyModel, emptyModel);
-        verify(childProvider, times( 1)).shouldTerminate(0,emptyModel, emptyModel);
+        verify(parentProvider, times(1)).shouldTerminate(0, emptyModel, emptyModel);
+        verify(childProvider, times(1)).shouldTerminate(0, emptyModel, emptyModel);
         assertTrue(shouldTerminate);
     }
 
 
-    private void callShouldTerminate(CombinedQueryTemplateRecursionProvider provider, Integer ... currentIteration) {
+    private void callShouldTerminate(CombinedQueryTemplateRecursionProvider provider, Integer... currentIteration) {
         Stream.of(currentIteration).forEach(
             ci -> provider.shouldTerminate(ci, emptyModel, emptyModel)
         );
     }
+
     private void callShouldTerminateUntilItReturnsTrue(CombinedQueryTemplateRecursionProvider provider) {
 
         for (int i = 0; i < 100; i++) {
@@ -119,6 +129,6 @@ public class CombinedQueryTemplateRecursionProviderTest {
                 return;
             }
         }
-        Assert.fail("Method shouldTerminate() did not return true which would caused infinite cycle.");
+        fail("Method shouldTerminate() did not return true which would caused infinite cycle.");
     }
 }

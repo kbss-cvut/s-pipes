@@ -11,9 +11,9 @@ import java.util.Optional;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.ResourceFactory;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import org.junit.jupiter.api.Test;
 
 /**
  * Created by Miroslav Blasko on 1.6.16.
@@ -39,8 +39,8 @@ public class BindWithConstantModuleTest extends AbstractModuleTestHelper {
 
         ExecutionContext context = module.executeSelf();
 
-        assertFalse("Output binding of the module is empty.", context.getVariablesBinding().isEmpty());
-        assertEquals("Output binding does not contain correct value.", variableValue, context.getVariablesBinding().getNode(outputVariable));
+        assertFalse(context.getVariablesBinding().isEmpty(), "Output binding of the module is empty.");
+        assertEquals(variableValue, context.getVariablesBinding().getNode(outputVariable), "Output binding does not contain correct value.");
     }
 
     @Test
@@ -49,7 +49,7 @@ public class BindWithConstantModuleTest extends AbstractModuleTestHelper {
         OntModel ontModel = getConfigOntModel();
 
         List<Module> moduleList = PipelineFactory.loadPipelines(ontModel);
-        assertEquals("Bad number of output modules", moduleList.size(), 1);
+        assertEquals(moduleList.size(), 1, "Bad number of output modules");
 
         Module module = moduleList.get(0);
 
@@ -60,9 +60,9 @@ public class BindWithConstantModuleTest extends AbstractModuleTestHelper {
 
         ExecutionContext newContext = e.executePipeline(module,context);
 
-        assertEquals("Output variable binding of this module is not correct",
+        assertEquals(
                 "Hello Miroslav",
-                Optional.ofNullable(newContext.getVariablesBinding().getNode("greetingMessage")).map(RDFNode::toString).orElse(null));
+                Optional.ofNullable(newContext.getVariablesBinding().getNode("greetingMessage")).map(RDFNode::toString).orElse(null), "Output variable binding of this module is not correct");
     }
 
 

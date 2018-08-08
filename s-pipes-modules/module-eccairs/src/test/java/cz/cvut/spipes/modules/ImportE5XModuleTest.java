@@ -4,27 +4,15 @@ import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.registry.StreamResource;
 import cz.cvut.spipes.registry.StringStreamResource;
-import org.apache.commons.io.IOUtils;
-
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import org.apache.commons.io.IOUtils;
+import static org.aspectj.bridge.MessageUtil.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 abstract class ImportE5XModuleTest {
-    private String path;
 
-    private String contentType;
-
-    public ImportE5XModuleTest(String path, String contentType) {
-        this.path = path;
-        this.contentType = contentType;
-    }
-
-    public void execute() {
+    public void execute(String path, String contentType) {
         URL e5xFileResource = ImportE5XModuleTest.class.getResource(path);
         String e5xFilePath = e5xFileResource.getPath();
         try {

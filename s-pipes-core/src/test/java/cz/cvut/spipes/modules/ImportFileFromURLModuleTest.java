@@ -10,8 +10,9 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.Test;
 
 //import org.junit.runner.RunWith;
 //import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class ImportFileFromURLModuleTest {
 //
 //    private MockRestServiceServer mockServer;
 
-//    @Before
+//    @BeforeEach
 //    public void setUp() {
 ////        restTemplate = new RestTemplate();
 ////        this.mockServer = MockRestServiceServer.createServer(restTemplate);
@@ -47,7 +48,7 @@ public class ImportFileFromURLModuleTest {
 //                .andExpect(method(HttpMethod.GET))
 //                .andRespond(withSuccess("{}", MediaType.APPLICATION_JSON));
 //        mockServer.verify();
-    //@Ignore //TODO mockServer works mostlikely only through Spring API not with URL.connection
+    //@Disabled //TODO mockServer works mostlikely only through Spring API not with URL.connection
     @Test
     public void executeWithTargetFilePath() throws Exception {
 
@@ -79,13 +80,16 @@ public class ImportFileFromURLModuleTest {
         assertEquals(sampleFileContent, importedFileContent);
     }
 
-    @Test(expected=RuntimeException.class) //TODO specific exception
+    @Test
     public void executeWithUnreachableUrl() throws MalformedURLException {
         ImportFileFromURLModule m = new ImportFileFromURLModule();
         m.setUrl(new URL("http://xxx-unreachable-xxx.cz"));
         m.setInputContext(ExecutionContextFactory.createEmptyContext());
 
-        m.executeSelf();
+        //TODO specific exception
+        assertThrows(RuntimeException.class, () -> {
+            m.executeSelf();
+        });
     }
 
     private ImportFileFromURLModule createModuleWithSampleUrl() {

@@ -5,8 +5,8 @@ import cz.cvut.spipes.engine.ExecutionContextFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.util.FileUtils;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * TODO test with blank nodes
@@ -16,7 +16,7 @@ public class NLPModuleTest {
 
 
 
-    @Ignore
+    @Disabled
     @Test
     public void executeSelf() throws Exception {
 

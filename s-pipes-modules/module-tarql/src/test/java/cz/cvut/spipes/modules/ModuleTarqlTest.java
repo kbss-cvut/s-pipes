@@ -2,20 +2,22 @@ package cz.cvut.spipes.modules;
 
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
-import org.apache.jena.datatypes.RDFDatatype;
-import org.apache.jena.rdf.model.*;
-import org.apache.jena.vocabulary.RDF;
-import org.junit.Assert;
-import org.junit.Ignore;
-
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.vocabulary.RDF;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class ModuleTarqlTest {
 
-    @Ignore
-    @org.junit.Test
+    @Disabled
+    @Test
     public void testTarqlSimple() throws Exception {
         final ModuleTarql module = new ModuleTarql();
 
@@ -38,6 +40,6 @@ public class ModuleTarqlTest {
 
 //        module.getOutputContext().getDefaultModel().write(System.out);
 
-        Assert.assertEquals(2, module.getOutputContext().getDefaultModel().listStatements(null, RDF.type, ResourceFactory.createResource("http://onto.fel.cvut.cz/ontologies/example/model/person")).toList().size());
+        assertEquals(2, module.getOutputContext().getDefaultModel().listStatements(null, RDF.type, ResourceFactory.createResource("http://onto.fel.cvut.cz/ontologies/example/model/person")).toList().size());
     }
 }
