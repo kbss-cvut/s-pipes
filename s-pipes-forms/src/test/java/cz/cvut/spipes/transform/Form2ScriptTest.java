@@ -8,12 +8,13 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.RDFS;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.InputStream;
 import java.net.URI;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -28,47 +29,6 @@ public class Form2ScriptTest {
     @Before
     public void initForm() {
         form = getForm();
-    }
-
-    @Ignore
-    @Test
-    public void basicTransformation() {
-        /*Model m = t.form2Script(sampleScript, form, "http://topbraid.org/sparqlmotionlib#BindWithConstant");
-        assertTrue(m.listSubjects().toList().stream().anyMatch((s) -> Objects.equals("http://fel.cvut.cz/ontologies/s-pipes-editor/sample-script/bind-person", s.getURI())));
-        List<Statement> ps = m.listStatements().toList();
-        assertTrue(ps.stream().anyMatch((s) -> Objects.equals(RDFS.label, s.getPredicate())));
-        assertTrue(ps.stream().anyMatch((s) -> Objects.equals(
-                "http://topbraid.org/sparqlmotionlib#value",
-                s.getPredicate().getURI())));
-        assertTrue(ps.stream().anyMatch((s) -> Objects.equals(
-                "http://topbraid.org/sparqlmotion#outputVariable",
-                s.getPredicate().getURI())));
-        List<RDFNode> os = m.listObjects().toList();
-        assertTrue(os.stream().anyMatch((o) -> o.isLiteral() && Objects.equals("Bind person", o.asLiteral().getString())));
-        assertTrue(os.stream().anyMatch((o) -> o.isLiteral() && Objects.equals("person", o.asLiteral().getString())));
-        assertTrue(os.stream().anyMatch((o) -> o.isLiteral() && Objects.equals("Robert Plant", o.asLiteral().getString())));*/
-    }
-
-    @Ignore
-    @Test
-    public void regularStatementUpdate() {
-        Optional<Question> labelQ = form.getSubQuestions().stream()
-                .flatMap((q) -> q.getSubQuestions().stream())
-                .filter((q) -> q.getAnswers().stream()
-                        .anyMatch((a) -> "Bind person".equals(a.getTextValue())))
-                .findFirst();
-
-        assertTrue(labelQ.isPresent());
-
-        labelQ.get().getAnswers().forEach((a) -> a.setTextValue("NEW Bind person"));
-
-        Collection<Model> outputs = t.form2Script(sampleScript, form, "http://topbraid.org/sparqlmotionlib#BindWithConstant");
-
-
-        assertEquals("NEW Bind person", new LinkedList<>(outputs).get(0)
-                .getResource("http://fel.cvut.cz/ontologies/s-pipes-editor/sample-script/bind-person")
-                .getProperty(RDFS.label)
-                .getString());
     }
 
     @Test
@@ -87,12 +47,6 @@ public class Form2ScriptTest {
         assertTrue(uriQ.isPresent());
 
         uriQ.get().getAnswers().forEach((a) -> a.setCodeValue(URI.create("http://fel.cvut.cz/ontologies/s-pipes-editor/sample-script/new-bind-person")));
-
-//        Model outputScript = t.form2Script(sampleScript, form, "http://topbraid.org/sparqlmotionlib#BindWithConstant");
-//        Resource newBindPerson = outputScript.getResource("http://fel.cvut.cz/ontologies/s-pipes-editor/sample-script/new-bind-person");
-
-        /*assertTrue(outputScript.getResource(bindPerson.getURI()).listProperties().toList().isEmpty());
-        assertEquals(initialSize, newBindPerson.listProperties().toList().size());*/
     }
 
 

@@ -14,7 +14,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Map;
 
-import static cz.cvut.spipes.transform.SPipesUtil.SPIN_QUERY_CLASSES;
+import static cz.cvut.spipes.transform.SPipesUtil.SpinQueries;
 
 /**
  * Created by Yan Doroshenko (yandoroshenko@protonmail.com) on 19.04.2018.
@@ -31,9 +31,9 @@ public class AnonNodeTransformer {
         if (SPINExpressions.isExpression(r)) {
             return SPINFactory.asExpression(r).toString();
         }
-        for (Class c : SPIN_QUERY_CLASSES)
-            if (r.canAs(c))
-                return getFromQuery(r, c);
+        for (SpinQueries c : SpinQueries.values())
+            if (r.canAs(c.getClazz()))
+                return getFromQuery(r, c.getClazz());
         return ARQFactory.get().createExpressionString(r);
     }
 

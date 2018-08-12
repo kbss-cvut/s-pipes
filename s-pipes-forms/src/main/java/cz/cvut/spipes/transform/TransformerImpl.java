@@ -84,8 +84,10 @@ public class TransformerImpl implements Transformer {
 
             subQ.setProperties(extractQuestionMetadata(st));
 
-            if (st.getObject().isAnon() && SPipesUtil.isSpinQuery(st.getObject().asResource()))
+            if (st.getObject().isAnon() && SPipesUtil.getSpinQueryUri(st.getObject().asResource()) != null) {
                 subQ.setLayoutClass(Collections.singleton("sparql"));
+                subQ.getProperties().put(Vocabulary.s_p_has_answer_value_type, Collections.singleton(SPipesUtil.getSpinQueryUri(st.getObject().asResource())));
+            }
 
             Answer a = getAnswer(st.getObject());
             a.setOrigin(key.a);
@@ -148,7 +150,7 @@ public class TransformerImpl implements Transformer {
     }
 
     @Override
-    public Collection<Model> form2Script(Model inputScript, Question form, String moduleType) {
+    public Map<String, Model> form2Script(Model inputScript, Question form, String moduleType) {
 
         Map<String, Model> changed = new HashMap<>();
 
@@ -162,22 +164,30 @@ public class TransformerImpl implements Transformer {
             findRegularQ(form).forEach((q) -> {
                 OriginPair<URI, URI> originPair = new OriginPair<>(q.getOrigin(), getAnswer(q).map(Answer::getOrigin).orElse(null));
                 Statement s = questionStatements.get(originPair);
-                Model m = extractModel(s);
-                String uri = ((OntModel) inputScript).getBaseModel().listStatements(null, RDF.type, OWL.Ontology).next().getSubject().getURI();
-                if (!changed.containsKey(uri))
-                    changed.put(uri, ModelFactory.createDefaultModel().add(m instanceof OntModel ? ((OntModel) m).getBaseModel() : m));
-                Model changingModel = changed.get(uri);
+                if (s != null) {
+                    Model m = extractModel(s);
+                    String uri = ((OntModel) inputScript).getBaseModel().listStatements(null, RDF.type, OWL.Ontology).next().getSubject().getURI();
+                    if (!changed.containsKey(uri))
+                        changed.put(uri, ModelFactory.createDefaultModel().add(m instanceof OntModel ? ((OntModel) m).getBaseModel() : m));
+                    Model changingModel = changed.get(uri);
+                    changingModel.remove(changingModel.listStatements(ResourceFactory.createResource(uri), null, (String) null));
 
-                changingModel.remove(s);
-                if (isSupportedAnon(q)) {
-                    Query query = AnonNodeTransformer.parse(q, inputScript);
-                    org.topbraid.spin.model.Query spinQuery = ARQ2SPIN.parseQuery(query.serialize(), inputScript);
-                    changingModel.add(spinQuery.getModel());
-                }
-                else {
-                    RDFNode answerNode = getAnswerNode(getAnswer(q).orElse(null));
-                    if (answerNode != null) {
-                        changingModel.add(s.getSubject(), s.getPredicate(), answerNode);
+                    changingModel.remove(s);
+                    if (isSupportedAnon(q)) {
+                        Query query = AnonNodeTransformer.parse(q, inputScript);
+                        org.topbraid.spin.model.Query spinQuery = ARQ2SPIN.parseQuery(query.serialize(), inputScript);
+                        changingModel.add(spinQuery.getModel());
+                        changingModel.add(
+                                ResourceFactory.createResource(uri),
+                                ResourceFactory.createProperty(Vocabulary.s_p_text),
+                                ResourceFactory.createStringLiteral(q.getAnswers().iterator().next().getTextValue().replaceAll("\\n", "\n"))
+                        );
+                    }
+                    else {
+                        RDFNode answerNode = getAnswerNode(getAnswer(q).orElse(null));
+                        if (answerNode != null) {
+                            changingModel.add(s.getSubject(), s.getPredicate(), answerNode);
+                        }
                     }
                 }
             });
@@ -197,7 +207,7 @@ public class TransformerImpl implements Transformer {
 
         ResourceUtils.renameResource(module, newUri.toString());
 
-        return changed.values();
+        return changed;
     }
 
     @Override

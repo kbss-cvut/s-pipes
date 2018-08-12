@@ -1,5 +1,6 @@
 package cz.cvut.spipes.transform;
 
+import cz.cvut.sforms.Vocabulary;
 import cz.cvut.spipes.constants.SM;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.RDF;
@@ -12,7 +13,29 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class SPipesUtil {
-    static final Class[] SPIN_QUERY_CLASSES = {Ask.class, Construct.class, Describe.class, Select.class};
+
+    enum SpinQueries {
+        ASK(Ask.class, Vocabulary.s_c_Ask),
+        CONSTRUCT(Construct.class, Vocabulary.s_c_Construct),
+        DESCRIBE(Describe.class, Vocabulary.s_c_Describe),
+        SELECT(Select.class, Vocabulary.s_c_Select);
+
+        private Class clazz;
+        private String uri;
+
+        SpinQueries(Class clazz, String uri) {
+            this.clazz = clazz;
+            this.uri = uri;
+        }
+
+        public Class getClazz() {
+            return clazz;
+        }
+
+        public String getUri() {
+            return uri;
+        }
+    }
 
     private static final Set<String> S_PIPES_TERMS = new HashSet<String>() {
         {
@@ -25,10 +48,10 @@ public class SPipesUtil {
         return S_PIPES_TERMS.contains(term.getURI());
     }
 
-    public static boolean isSpinQuery(Resource r) {
-        for (int i = 0; i < SPIN_QUERY_CLASSES.length; i++)
-            if (r.canAs(SPIN_QUERY_CLASSES[i]))
-                return true;
-        return false;
+    public static String getSpinQueryUri(Resource r) {
+        for (SpinQueries v : SpinQueries.values())
+            if (r.canAs(v.getClazz()))
+                return v.getUri();
+        return null;
     }
 }
