@@ -10,19 +10,14 @@ import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import junit.framework.TestCase;
-import static junit.framework.TestCase.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import org.apache.jena.rdf.model.ResourceFactory;
-import static org.hamcrest.CoreMatchers.containsString;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
 
 public class VariablesBindingTest {
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void restrictToReturnsOnlyListedVariables() {
@@ -43,18 +38,22 @@ public class VariablesBindingTest {
     public void loadMultipleBindings() throws Exception {
         final VariablesBinding vb = new VariablesBinding();
         final InputStream is = this.getClass().getResourceAsStream("/engine/variables-binding-test-1.ttl");
-        thrown.expect(IOException.class);
-        thrown.expectMessage(containsString("1 was expected"));
-        vb.load(is, "TURTLE");
+        IOException thrown = assertThrows(IOException.class,
+            () -> {
+                vb.load(is, "TURTLE");
+            });
+        assertTrue(thrown.getMessage().contains("1 was expected"));
     }
 
     @Test
     public void loadNoBinding() throws Exception {
         final VariablesBinding vb = new VariablesBinding();
         final InputStream is = this.getClass().getResourceAsStream("/engine/variables-binding-test-2.ttl");
-        thrown.expect(IOException.class);
-        thrown.expectMessage(containsString("1 was expected"));
-        vb.load(is, "TURTLE");
+        IOException thrown = assertThrows(IOException.class,
+            () -> {
+                vb.load(is, "TURTLE");
+            });
+        assertTrue(thrown.getMessage().contains("1 was expected"));
     }
 
     @Test
@@ -64,7 +63,7 @@ public class VariablesBindingTest {
 
         vb.load(is, "TURTLE");
 
-        Assert.assertEquals(iteratorToStream(vb.asQuerySolution().varNames()).count(),2);
+        assertEquals(iteratorToStream(vb.asQuerySolution().varNames()).count(), 2);
     }
 
     @Test
@@ -74,18 +73,18 @@ public class VariablesBindingTest {
         vb.add("y", ResourceFactory.createPlainLiteral("plain literal"));
         vb.add("z", ResourceFactory.createPlainLiteral("plain literal 2"));
 
-        final File f = File.createTempFile("variables-binding","ttl");
+        final File f = File.createTempFile("variables-binding", "ttl");
 
-        vb.save(new FileOutputStream(f),"TURTLE");
+        vb.save(new FileOutputStream(f), "TURTLE");
 
         final VariablesBinding vb2 = new VariablesBinding();
-        vb2.load(new FileInputStream(f),"TURTLE");
+        vb2.load(new FileInputStream(f), "TURTLE");
 
-        Assert.assertEquals(iteratorToStream(vb.asQuerySolution().varNames()).count(),3);
+        assertEquals(iteratorToStream(vb.asQuerySolution().varNames()).count(), 3);
 
-        Assert.assertEquals(vb.asQuerySolution().get("x").asResource().getURI(),"http://example.org/test-resource");
-        Assert.assertEquals(vb.asQuerySolution().get("y").asLiteral().getString(),"plain literal");
-        Assert.assertEquals(vb.asQuerySolution().get("z").asLiteral().getString(),"plain literal 2");
+        assertEquals(vb.asQuerySolution().get("x").asResource().getURI(), "http://example.org/test-resource");
+        assertEquals(vb.asQuerySolution().get("y").asLiteral().getString(), "plain literal");
+        assertEquals(vb.asQuerySolution().get("z").asLiteral().getString(), "plain literal 2");
     }
 
     private <T> Stream<T> iteratorToStream(final Iterator<T> iterator) {
@@ -97,7 +96,9 @@ public class VariablesBindingTest {
     private int getSize(VariablesBinding newVB) {
         final Integer[] countRef = {0};
         newVB.getVarNames().forEachRemaining(
-            n -> { countRef[0]++; }
+            n -> {
+                countRef[0]++;
+            }
         );
         return countRef[0];
     }

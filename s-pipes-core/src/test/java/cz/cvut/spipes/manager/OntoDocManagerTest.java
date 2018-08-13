@@ -3,26 +3,22 @@ package cz.cvut.spipes.manager;
 import cz.cvut.spipes.TestConstants;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
-import static junit.framework.TestCase.assertEquals;
 import org.apache.jena.ontology.OntDocumentManager;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.util.LocationMapper;
-import static org.junit.Assert.assertTrue;
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
-/**
- * Created by Miroslav Blasko on 22.7.16.
- */
 public class OntoDocManagerTest {
 
 
     static Path managerDirPath = TestConstants.TEST_RESOURCES_DIR_PATH.resolve("manager").toAbsolutePath();
 
 
-    @Ignore
+    @Disabled
     @Test
     public void registerDocumentsDirectoryRecursive()  {
 
@@ -38,7 +34,7 @@ public class OntoDocManagerTest {
         assertEquals(4, getLocationMapperEntriesCount(lm));
     }
 
-    @Ignore //TODO does not work in jenkins if project dir contains " "
+    @Disabled //TODO does not work in jenkins if project dir contains " "
     @Test
     public void registerDocumentsForAllSupportedFormats()  {
 
@@ -63,7 +59,7 @@ public class OntoDocManagerTest {
         }
     }
 
-    @Ignore //TODO does not work in jenkins if project dir contains " "
+    @Disabled //TODO does not work in jenkins if project dir contains " "
     @Test
     public void registerDocumentsToLoadImportClosure() {
 
@@ -83,7 +79,7 @@ public class OntoDocManagerTest {
         assertEquals(3, loadedClassNames.size());
     }
 
-    @Ignore
+    @Disabled
     @Test //TODO move to a "jena experiment project"
     public void registerDocumentsToLoadImportClosure2() {
 

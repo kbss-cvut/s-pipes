@@ -3,17 +3,14 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import org.apache.jena.rdf.model.Model;
-import static org.junit.Assert.assertTrue;
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
-/**
- * Created by Miroslav Blasko on 5.1.17.
- */
 public class GetDatasetDescriptorsModuleTest {
 
     @Test
-    @Ignore
+    @Disabled
     public void executeSelf() throws Exception {
 
         //TODO it should work with empty context as well

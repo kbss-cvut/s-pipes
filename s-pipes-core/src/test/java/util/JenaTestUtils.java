@@ -9,9 +9,6 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.util.FileManager;
 import org.apache.jena.util.FileUtils;
 
-/**
- * Created by Miroslav Blasko on 7.6.16.
- */
 public class JenaTestUtils {
 
 

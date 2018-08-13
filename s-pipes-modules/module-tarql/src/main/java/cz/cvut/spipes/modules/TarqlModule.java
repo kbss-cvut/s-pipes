@@ -5,7 +5,16 @@ import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
-import cz.cvut.spipes.util.ExecUtils;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.jena.ext.com.google.common.io.Files;
 import org.apache.jena.query.Query;
 import org.apache.jena.rdf.model.Model;
@@ -17,18 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.topbraid.spin.arq.ARQFactory;
 import org.topbraid.spin.model.Construct;
-import org.topbraid.spin.system.SPINModuleRegistry;
 
-import java.io.*;
-import java.nio.charset.Charset;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.stream.Collectors;
-
-/**
- * Created by Miroslav Blasko on 26.5.16.
- */
 // TODO merge with ModuleTarql functionality
 public class TarqlModule extends AbstractModule {
 

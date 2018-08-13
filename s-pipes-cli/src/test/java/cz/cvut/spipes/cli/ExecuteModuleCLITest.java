@@ -1,17 +1,11 @@
 package cz.cvut.spipes.cli;
 
-import cz.cvut.spipes.engine.ExecutionContext;
-
 import java.io.IOException;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
-
-/**
- * Created by Miroslav Blasko on 11.5.16.
- */
 public class ExecuteModuleCLITest {
 
-    @org.junit.Test
+    @Test
     public void main() throws Exception {
     }
 

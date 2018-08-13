@@ -14,9 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-/**
- * Created by Miroslav Blasko on 26.5.16.
- */
 public class ExecUtils {
     private static final Logger LOG = LoggerFactory.getLogger(ExecUtils.class);
 

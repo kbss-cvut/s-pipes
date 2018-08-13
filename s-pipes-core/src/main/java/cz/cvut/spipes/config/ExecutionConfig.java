@@ -3,11 +3,7 @@ package cz.cvut.spipes.config;
 import cz.cvut.spipes.util.CoreConfigProperies;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Optional;
 
-/**
- * Created by Miroslav Blasko on 6.3.17.
- */
 public class ExecutionConfig {
 
     public static Path getTempDirectoryPath() {

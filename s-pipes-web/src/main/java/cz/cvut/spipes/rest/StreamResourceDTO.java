@@ -1,8 +1,5 @@
 package cz.cvut.spipes.rest;
 
-/**
- * Created by Miroslav Blasko on 28.11.16.
- */
 class StreamResourceDTO {
     String id;
     String persistentUri;

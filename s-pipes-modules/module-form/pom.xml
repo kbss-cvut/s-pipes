@@ -23,8 +23,13 @@
             <artifactId>s-pipes-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -54,7 +59,7 @@
             <plugin>
                 <groupId>cz.cvut.kbss.jopa</groupId>
                 <artifactId>jopa-maven-plugin</artifactId>
-                <version>${jopa.version}</version>
+                <version>${cz.cvut.kbss.jopa.version}</version>
                 <executions>
                     <execution>
                         <id>generate-sources</id>

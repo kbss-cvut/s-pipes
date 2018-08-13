@@ -3,19 +3,16 @@ package cz.cvut.spipes.engine;
 import cz.cvut.spipes.modules.BindWithConstantModule;
 import java.util.Arrays;
 import org.apache.jena.rdf.model.ResourceFactory;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import static org.mockito.BDDMockito.given;
 import org.mockito.Mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-/**
- * Created by Miroslav Blasko on 31.5.16.
- */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ExecutionEngineImplTest {
 
     @Mock
@@ -26,7 +23,7 @@ public class ExecutionEngineImplTest {
     BindWithConstantModule outputModule;
 
 
-    @Ignore
+    @Disabled
     @Test
     //TODO refactor configuration resource should not be required !?, only one of execute and getOutputContext should be mocked
     public void executePipelineExecutesDependencies() {

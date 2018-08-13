@@ -4,23 +4,20 @@ import cz.cvut.spipes.manager.OntologyDocumentManager;
 import cz.cvut.spipes.util.JenaUtils;
 import java.util.Collections;
 import java.util.List;
-import static junit.framework.TestCase.assertEquals;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.RDF;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import static org.mockito.BDDMockito.given;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import util.JenaTestUtils;
 
-/**
- * Created by Miroslav Blasko on 31.7.16.
- */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class SMScriptCollectionRepositoryTest {
 
 
@@ -47,7 +44,7 @@ public class SMScriptCollectionRepositoryTest {
         // TODO better matching by junit5 or assertThat(modules, CoreMatcher.*);
     }
 
-    @Ignore
+    @Disabled
     @Test
     public void getModuleTypes() throws Exception {
 
@@ -67,7 +64,7 @@ public class SMScriptCollectionRepositoryTest {
 
     }
 
-    @Ignore
+    @Disabled
     @Test
     public void getResource() throws Exception {
 
@@ -83,7 +80,7 @@ public class SMScriptCollectionRepositoryTest {
         assertEquals(sampleResource, resource);
     }
 
-    @Ignore
+    @Disabled
     @Test
     public void getAlternativeEntityIds() throws Exception {        // get all baseIRIs
 

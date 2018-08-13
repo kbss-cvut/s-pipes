@@ -6,9 +6,6 @@ import cz.cvut.spipes.manager.SPipesScriptManager;
 
 import java.util.List;
 
-/**
- * Created by Miroslav Blasko on 12.1.17.
- */
 public class ScriptManagerFactory {
 
     private static SPipesScriptManager scriptManager = null;

@@ -12,9 +12,6 @@ import org.apache.jena.util.LocationMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Created by Miroslav Blasko on 13.1.17.
- */
 public class ContextLoaderHelper {
 
     private static final Logger LOG = LoggerFactory.getLogger(ContextLoaderHelper.class);

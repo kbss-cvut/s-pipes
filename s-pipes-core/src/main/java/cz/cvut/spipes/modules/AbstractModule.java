@@ -40,9 +40,6 @@ import org.topbraid.spin.model.Select;
 import org.topbraid.spin.util.SPINExpressions;
 import org.topbraid.spin.vocabulary.SP;
 
-/**
- * Created by Miroslav Blasko on 10.5.16.
- */
 public abstract class AbstractModule implements Module {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractModule.class);

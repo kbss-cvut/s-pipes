@@ -7,18 +7,15 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.vocabulary.RDFS;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 
-/**
- * Created by Miroslav Blasko on 12.5.16.
- */
 public class ApplyConstructModuleTest extends AbstractModuleTestHelper {
 
-    @Before
+    @BeforeEach
     public void setUp() {
 
     }
@@ -41,12 +38,12 @@ public class ApplyConstructModuleTest extends AbstractModuleTestHelper {
         // isReplace = true
         module.setReplace(true);
         newContext = module.executeSelf();
-        Assert.assertEquals(newContext.getDefaultModel().listStatements().toList().size(), 2);
+        assertEquals(newContext.getDefaultModel().listStatements().toList().size(), 2);
 
         // isReplace = true
         module.setReplace(false);
         newContext = module.executeSelf();
-        Assert.assertEquals(newContext.getDefaultModel().listStatements().toList().size(), 3);
+        assertEquals(newContext.getDefaultModel().listStatements().toList().size(), 3);
 
         //newContext.getDefaultModel().write(System.out, FileUtils.langTurtle);
     }
@@ -64,17 +61,17 @@ public class ApplyConstructModuleTest extends AbstractModuleTestHelper {
         // isReplace = true
         module.setReplace(true);
         newContext = module.executeSelf();
-        Assert.assertEquals(newContext.getDefaultModel().listStatements().toList().size(), 2);
+        assertEquals(newContext.getDefaultModel().listStatements().toList().size(), 2);
 
         // isReplace = true
         module.setReplace(false);
         newContext = module.executeSelf();
-        Assert.assertEquals(newContext.getDefaultModel().listStatements().toList().size(), 3);
+        assertEquals(newContext.getDefaultModel().listStatements().toList().size(), 3);
 
         //newContext.getDefaultModel().write(System.out, FileUtils.langTurtle);
     }
 
-    @Ignore
+    @Disabled
     @Test
     public void executeConstructQueryWithVariable() {
         ApplyConstructModule module = (ApplyConstructModule) getRootModule("remote-query.ttl");
@@ -93,7 +90,7 @@ public class ApplyConstructModuleTest extends AbstractModuleTestHelper {
         // isReplace = true
         module.setReplace(true);
         newContext = module.executeSelf();
-        Assert.assertEquals(newContext.getDefaultModel().listStatements().toList().size(), 54);
+        assertEquals(newContext.getDefaultModel().listStatements().toList().size(), 54);
     }
 
     @Test
@@ -134,20 +131,20 @@ public class ApplyConstructModuleTest extends AbstractModuleTestHelper {
     }
 
     @Test
-    @Ignore
+    @Disabled
     public void executeConstructStopsIfIterationDoesNotProduceNewTriples() {
         executeConstructIterations(100,3, createSimpleModel(), false);
         // TODO verify number of iterations with mockito
     }
 
     @Test
-    @Ignore
+    @Disabled
     public void executeConstructWithBadSyntaxServiceCall() {
         // TODO verify 400 exception and found diagnoses
     }
 
     @Test
-    @Ignore
+    @Disabled
     public void executeConstructWithServiceNotFoundCall() {
         // TODO verify exception and found diagnoses with simple query to check availability of the service
     }
@@ -167,7 +164,7 @@ public class ApplyConstructModuleTest extends AbstractModuleTestHelper {
 
         final ExecutionContext eo = m.executeSelf();
 
-        Assert.assertEquals(expectedNumberOfResults, eo.getDefaultModel().size());
+        assertEquals(expectedNumberOfResults, eo.getDefaultModel().size());
     }
 
     private Model createSimpleModel() {

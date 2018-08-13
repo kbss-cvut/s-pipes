@@ -3,9 +3,6 @@ package cz.cvut.spipes.engine;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 
-/**
- * Created by Miroslav Blasko on 31.5.16.
- */
 public class ExecutionContextFactory {
 
     /**

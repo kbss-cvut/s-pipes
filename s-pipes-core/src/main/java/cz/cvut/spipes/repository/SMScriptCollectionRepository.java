@@ -18,7 +18,6 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 /**
  * Know nothing about alternative entity ids -- e.g. prefixed-names, local-names.
  * <p>
- * Created by Miroslav Blasko on 22.7.16.
  */
 public class SMScriptCollectionRepository implements ScriptCollectionRepository {
     private static final Logger LOG = LoggerFactory.getLogger(SMScriptCollectionRepository.class);

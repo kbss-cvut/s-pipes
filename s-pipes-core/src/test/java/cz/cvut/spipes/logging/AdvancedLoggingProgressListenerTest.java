@@ -3,20 +3,21 @@ package cz.cvut.spipes.logging;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.engine.ExecutionEngine;
 import cz.cvut.spipes.engine.ExecutionEngineFactory;
-import static cz.cvut.spipes.logging.AdvancedLoggingProgressListener.*;
+import static cz.cvut.spipes.logging.AdvancedLoggingProgressListener.P_METADATA_REPOSITORY_NAME;
+import static cz.cvut.spipes.logging.AdvancedLoggingProgressListener.P_PIPELINE_EXECUTION_GROUP_ID;
+import static cz.cvut.spipes.logging.AdvancedLoggingProgressListener.P_RDF4J_SERVER_URL;
 import cz.cvut.spipes.modules.TestIdentityModule;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.RDFS;
-import static org.junit.Assert.*;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class AdvancedLoggingProgressListenerTest {
 
 
-    @Ignore
+    @Disabled
     @Test
     public void testSingleRun() {
         singleRun();

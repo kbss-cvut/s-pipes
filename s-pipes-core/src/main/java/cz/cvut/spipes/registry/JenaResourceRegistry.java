@@ -18,8 +18,6 @@ import org.jetbrains.annotations.NotNull;
 /**
  * TODO id can be defined by some property related to the resource ?
  * <p>
- * <p>
- * Created by Miroslav Blasko on 20.7.16.
  */
 public class JenaResourceRegistry implements  ResourceRegistry {
 

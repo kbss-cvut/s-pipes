@@ -17,13 +17,18 @@
         <dependency>
             <groupId>org.eclipse.rdf4j</groupId>
             <artifactId>rdf4j-repository-http</artifactId>
-            <version>${rdf4j.version}</version>
         </dependency>
         <!--<dependency>-->
             <!--<groupId>org.openrdf.rdf4j</groupId>-->
             <!--<artifactId>rdf4j-sail-nativerdf</artifactId>-->
             <!--<version>${rdf4j.version}</version>-->
         <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.openrdf.rdf4j</groupId>-->
+            <!--<artifactId>rdf4j-repository-manager</artifactId>-->
+            <!--<version>2.2</version>-->
+        <!--</dependency>-->
+
         <!--<dependency>-->
             <!--<groupId>org.openrdf.rdf4j</groupId>-->
             <!--<artifactId>rdf4j-http-server-spring</artifactId>-->
@@ -35,8 +40,8 @@
             <artifactId>s-pipes-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
             <scope>test</scope>
         </dependency>
 

@@ -14,9 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.topbraid.spin.arq.ARQFactory;
 import org.topbraid.spin.model.Select;
 
-/**
- * Created by Miroslav Blasko on 28.5.16.
- */
 public class BindBySelectModule extends AbstractModule  {
 
     private static final Logger LOG = LoggerFactory.getLogger(BindBySelectModule.class);

@@ -7,15 +7,15 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 //import info.aduna.webapp.util.HttpServerUtil;
 
 public class Rdf4jModuleTest {
 
     @Test
-    @Ignore
+    @Disabled
     public void testDeployEmpty() throws Exception {
         final Rdf4jModule moduleRdf4j = new Rdf4jModule();
 

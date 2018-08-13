@@ -3,9 +3,6 @@ package cz.cvut.spipes.utils;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.ResultSet;
 
-/**
- * Created by Miroslav Blasko on 17.7.17.
- */
 public class EndpointTestUtils {
 
 

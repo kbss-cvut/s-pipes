@@ -7,9 +7,6 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-/**
- * Created by Miroslav Blasko on 26.5.16.
- */
 public class ExternalModuleTest {
 
 

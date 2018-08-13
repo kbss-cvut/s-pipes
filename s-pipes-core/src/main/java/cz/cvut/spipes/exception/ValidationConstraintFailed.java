@@ -5,9 +5,6 @@ import java.util.Optional;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * Created by Miroslav Blasko on 6.3.17.
- */
 public class ValidationConstraintFailed extends RuntimeException {
 
     public ValidationConstraintFailed(@NonNls String message, @NotNull Module module) {

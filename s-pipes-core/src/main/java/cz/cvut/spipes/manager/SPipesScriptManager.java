@@ -25,9 +25,6 @@ import org.slf4j.LoggerFactory;
  *
  * TODO resource registry
  *
- *
- *
- * Created by Miroslav Blasko on 22.7.16.
  */
 public class SPipesScriptManager {
 

@@ -1,27 +1,18 @@
 package cz.cvut.spipes.modules;
 
-import org.apache.commons.io.Charsets;
-import org.apache.commons.io.IOUtils;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Stream;
+import org.apache.commons.io.Charsets;
+import org.apache.commons.io.IOUtils;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
-/**
- * Created by Miroslav Blasko on 28.11.16.
- */
-@RunWith(Parameterized.class)
 public class ImportE5XXMLModuleTest extends ImportE5XModuleTest {
 
-    public ImportE5XXMLModuleTest(String path, String contentType) {
-        super(path, contentType);
-    }
-
-    @Parameterized.Parameters(name="e5x")
-    public static Object[] generateTestData() {
+    private static Stream<Arguments> generateTestData() {
         String dir = "data/e5x.xml";
         String contentType = "text/xml";
 
@@ -32,13 +23,14 @@ public class ImportE5XXMLModuleTest extends ImportE5XModuleTest {
             e.printStackTrace();
         }
 
-        return files.stream().map((file) -> new Object[]{"/" + dir + "/" + file, contentType}).toArray();
+        return files.stream().map((file) -> Arguments.of("/" + dir + "/" + file, contentType));
     }
 
     @Override
-    @Ignore
-    @Test
-    public void execute() {
-        super.execute();
+    @Disabled
+    @ParameterizedTest
+    @MethodSource("generateTestData")
+    public void execute(String path, String contentType) {
+        super.execute(path, contentType);
     }
 }

@@ -29,7 +29,7 @@ import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryResult;
 import org.eclipse.rdf4j.repository.sail.SailRepository;
-import org.eclipse.rdf4j.rio.turtle.TurtleWriter;
+import org.eclipse.rdf4j.rio.RDFWriter;
 import org.eclipse.rdf4j.rio.turtle.TurtleWriterFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,7 +93,7 @@ public class SemanticLoggingProgressListener implements ProgressListener {
                 final TurtleWriterFactory factory = new TurtleWriterFactory();
                 try (FileOutputStream fos = new FileOutputStream(
                     Files.createFile(getDir(pipelineExecutionId).resolve("log.ttl")).toFile())) {
-                    final TurtleWriter writer = (TurtleWriter) factory.getWriter(fos);
+                    final RDFWriter writer = factory.getWriter(fos);
                     writer.startRDF();
                     RepositoryConnection con = em.unwrap(SailRepository.class).getConnection();
                     final ValueFactory f = con.getValueFactory();

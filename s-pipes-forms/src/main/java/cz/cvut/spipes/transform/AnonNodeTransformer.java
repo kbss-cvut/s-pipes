@@ -16,9 +16,6 @@ import java.util.Map;
 
 import static cz.cvut.spipes.transform.SPipesUtil.SpinQueries;
 
-/**
- * Created by Yan Doroshenko (yandoroshenko@protonmail.com) on 19.04.2018.
- */
 public class AnonNodeTransformer {
 
     public static String serialize(RDFNode node) {

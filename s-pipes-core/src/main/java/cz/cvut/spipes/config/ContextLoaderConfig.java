@@ -7,9 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Created by Miroslav Blasko on 17.1.17.
- */
 public class ContextLoaderConfig {
 
     public static List<Path> getScriptPaths() {

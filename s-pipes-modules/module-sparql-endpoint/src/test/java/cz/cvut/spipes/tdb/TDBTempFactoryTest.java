@@ -10,15 +10,15 @@ import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.tdb.store.GraphTDB;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class TDBTempFactoryTest {
 
-    @Ignore//doesn't work on windows
+    @Disabled//doesn't work on windows
     @Test
     public void createTDBModelRemovesDirectoryForPreviousModelsWithoutReferences() throws InterruptedException {
         String inputModelPath = TDBTempFactoryTest.class.getResource("/small-model.ttl").getFile().toString();

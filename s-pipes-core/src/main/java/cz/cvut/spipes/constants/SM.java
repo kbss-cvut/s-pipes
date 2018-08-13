@@ -4,9 +4,6 @@ import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 
-/**
- * Created by Miroslav Blasko on 31.5.16.
- */
 public class SM {
 
     /**

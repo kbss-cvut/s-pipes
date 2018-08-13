@@ -1,8 +1,5 @@
 package cz.cvut.spipes.registry;
 
-/**
- * Created by Miroslav Blasko on 29.11.16.
- */
 public class StringStreamResource implements StreamResource {
 
     private final String uri;
