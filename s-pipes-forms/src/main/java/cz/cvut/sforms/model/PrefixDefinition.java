@@ -1,0 +1,31 @@
+package cz.cvut.sforms.model;
+
+import cz.cvut.kbss.jopa.model.annotations.OWLClass;
+import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
+import cz.cvut.sforms.Vocabulary;
+
+@OWLClass(iri = Vocabulary.s_c_PrefixDeclaration)
+public class PrefixDefinition {
+
+    @OWLDataProperty(iri = Vocabulary.s_p_prefix)
+    String prefix;
+
+    @OWLDataProperty(iri = Vocabulary.s_p_namespace)
+    String namespace;
+
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }
+
+    public String getNamespace() {
+        return namespace;
+    }
+
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
+    }
+}
