@@ -1,6 +1,7 @@
 package cz.cvut.sforms.transform;
 
 import cz.cvut.sforms.model.Question;
+import cz.cvut.sforms.util.DefaultQuestionSiblingsComparator;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
@@ -29,6 +30,7 @@ public class SForms2TextTransformer {
         }
 
         String subQStr = question.getSubQuestions().stream()
+            .sorted(new DefaultQuestionSiblingsComparator())
             .map(sq -> serializeRecursive(sq, cfg))
             .filter(Objects::nonNull)
             .map(sq -> appendPrefixToEachLine(INDENTATION, sq))

@@ -1,6 +1,6 @@
 package cz.cvut.spipes.transform;
 
-import cz.cvut.sforms.FormUtils;
+import cz.cvut.sforms.util.FormUtils;
 import cz.cvut.sforms.model.Question;
 import cz.cvut.spipes.constants.SML;
 import java.io.InputStream;

@@ -1,7 +1,6 @@
-package cz.cvut.sforms;
+package cz.cvut.sforms.util;
 
 import cz.cvut.sforms.model.Question;
-
 import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -15,6 +14,7 @@ public class FormUtils {
     /**
      * Returns all questions within a tree rooted by <code>root<code/> question.
      * The <code>root</code> question is included as well.
+     *
      * @param root question representing root of the question tree.
      * @return Set of question.
      */
@@ -24,6 +24,6 @@ public class FormUtils {
         }
         Set<Question> qSet = root.getSubQuestions().stream().flatMap((q) -> flatten(q).stream()).collect(Collectors.toSet());
         qSet.add(root);
-        return  qSet;
+        return qSet;
     }
 }

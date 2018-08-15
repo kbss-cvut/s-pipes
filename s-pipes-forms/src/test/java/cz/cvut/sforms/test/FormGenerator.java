@@ -29,6 +29,7 @@ public class FormGenerator {
 
     @Builder(builderMethodName = "questionBuilder")
     public Question createQuestion(String id,
+                                   String label,
                                    Boolean includeAnswer,
                                    @Singular("subQuestion") List<BuilderChain> subQuestion) {
 
@@ -36,8 +37,10 @@ public class FormGenerator {
         this.includeAnswer = Optional.ofNullable(includeAnswer).orElse(this.includeAnswer);
         Question rootQ = createQuestion(qId);
 
+        Optional.ofNullable(label)
+            .ifPresent(rootQ::setLabel);
 
-        subQuestion.stream().forEach(
+        subQuestion.forEach(
             qb -> {
                 Question q = qb.next(new FormGenerator(this).questionBuilder()).build();
                 rootQ.getSubQuestions().add(q);

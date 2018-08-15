@@ -2,6 +2,7 @@ package cz.cvut.sforms;
 
 import cz.cvut.sforms.model.Question;
 import cz.cvut.sforms.test.FormGenerator;
+import cz.cvut.sforms.util.FormUtils;
 import java.util.Set;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.hamcrest.collection.IsCollectionWithSize;
@@ -30,6 +31,6 @@ public class FormUtilsTest {
 
         Set<Question> flattened = FormUtils.flatten(rootQ);
 
-        assertThat( flattened, IsCollectionWithSize.hasSize(4));
+        assertThat(flattened, IsCollectionWithSize.hasSize(4));
     }
 }

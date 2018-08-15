@@ -1,6 +1,6 @@
 package cz.cvut.sforms.transform;
 
-import cz.cvut.sforms.FormUtils;
+import cz.cvut.sforms.util.FormUtils;
 import cz.cvut.sforms.model.Question;
 import cz.cvut.sforms.test.FormGenerator;
 import static org.hamcrest.MatcherAssert.assertThat;
