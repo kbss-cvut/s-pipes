@@ -5,7 +5,7 @@ import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
 import cz.cvut.sforms.Vocabulary;
 
 @OWLClass(iri = Vocabulary.s_c_PrefixDeclaration)
-public class PrefixDefinition {
+public class PrefixDefinition extends AbstractEntity{
 
     @OWLDataProperty(iri = Vocabulary.s_p_prefix)
     String prefix;

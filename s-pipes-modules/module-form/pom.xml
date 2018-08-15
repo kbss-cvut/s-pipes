@@ -15,13 +15,40 @@
 
     <dependencies>
         <dependency>
+            <groupId>cz.cvut.kbss</groupId>
+            <artifactId>s-pipes-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cz.cvut.kbss</groupId>
+            <artifactId>s-pipes-forms</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
             <groupId>cz.cvut.kbss.jopa</groupId>
             <artifactId>jopa-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>cz.cvut.kbss</groupId>
-            <artifactId>s-pipes-core</artifactId>
+            <groupId>cz.cvut.kbss.jopa</groupId>
+            <artifactId>jopa-impl</artifactId>
         </dependency>
+        <dependency>
+            <groupId>cz.cvut.kbss.jopa</groupId>
+            <artifactId>ontodriver-jena</artifactId>
+            <version>${cz.cvut.kbss.jopa.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+
+        <!-- Testing -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -44,40 +71,10 @@
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>jena-core</artifactId>
+            <version>${org.apache.jena}</version>
+        </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>${jdk.version}</source>
-                    <target>${jdk.version}</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>cz.cvut.kbss.jopa</groupId>
-                <artifactId>jopa-maven-plugin</artifactId>
-                <version>${cz.cvut.kbss.jopa.version}</version>
-                <executions>
-                    <execution>
-                        <id>generate-sources</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>owl2java-transform</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <ontology-iri>http://onto.fel.cvut.cz/ontologies/form</ontology-iri>
-                    <package>cz.cvut.spipes</package>
-                    <output-directory>${project.basedir}/src/main/java</output-directory>
-                    <mapping-file>${project.basedir}/src/main/resources/form-ontology/mapping</mapping-file>
-                    <whole-ontology-as-ics>true</whole-ontology-as-ics>
-                    <vocabulary-only>true</vocabulary-only>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 </project>

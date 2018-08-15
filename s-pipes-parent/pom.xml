@@ -20,7 +20,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jdk.version>1.8</jdk.version>
-        <org.apache.jena>3.1.0</org.apache.jena>
+        <org.apache.jena>3.6.0</org.apache.jena>
         <org.springframework.version>5.0.7.RELEASE</org.springframework.version>
         <org.springframework.security.version>5.0.6.RELEASE</org.springframework.security.version>
         <com.fasterxml.jackson.version>2.9.6</com.fasterxml.jackson.version>
@@ -132,6 +132,11 @@
             <dependency>
                 <groupId>cz.cvut.kbss.jopa</groupId>
                 <artifactId>ontodriver-sesame</artifactId>
+                <version>${cz.cvut.kbss.jopa.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cz.cvut.kbss.jopa</groupId>
+                <artifactId>ontodriver-jena</artifactId>
                 <version>${cz.cvut.kbss.jopa.version}</version>
             </dependency>
 

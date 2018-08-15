@@ -61,7 +61,7 @@ public class ConstructFormMetadataModule extends AnnotatedAbstractModule {
 
         LOG.debug("Found {} root questions.", rootQuestions.size());
         if (LOG.isTraceEnabled()) {
-            LOG.debug("Found root questions: {}", rootQuestions);
+            LOG.trace("Found root questions: {}", rootQuestions);
         }
 
         Model constructedModel = ModelFactory.createDefaultModel();
