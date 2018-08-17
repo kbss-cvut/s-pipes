@@ -2,7 +2,7 @@ package cz.cvut.spipes.modules;
 
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
-import cz.cvut.kbss.jopa.model.query.Query;
+import cz.cvut.kbss.jopa.model.query.TypedQuery;
 import cz.cvut.sforms.Vocabulary;
 import cz.cvut.sforms.model.Question;
 import cz.cvut.spipes.VocabularyJena;
@@ -10,6 +10,7 @@ import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.form.JopaPersistenceUtils;
+import java.net.URI;
 import java.util.List;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -51,8 +52,9 @@ public class ConstructTextSerializationModule extends AnnotatedAbstractModule {
 
         JopaPersistenceUtils.getDataset(em).setDefaultModel(inpModel);
 
-        Query query = em.createNamedQuery("SELECT ?s WHERE { ?s a ?type}")
-            .setParameter("type", Vocabulary.s_c_question);
+
+        TypedQuery<Question> query = em.createNativeQuery("SELECT ?s WHERE { ?s a ?type}", Question.class)
+            .setParameter("type", URI.create(Vocabulary.s_c_question));
 
         List<Question> questions = query.getResultList();
 
