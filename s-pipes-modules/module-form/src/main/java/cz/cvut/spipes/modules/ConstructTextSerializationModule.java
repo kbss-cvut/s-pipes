@@ -5,6 +5,7 @@ import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import cz.cvut.kbss.jopa.model.query.TypedQuery;
 import cz.cvut.sforms.Vocabulary;
 import cz.cvut.sforms.model.Question;
+import cz.cvut.sforms.util.FormUtils;
 import cz.cvut.spipes.VocabularyJena;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
@@ -47,7 +48,7 @@ public class ConstructTextSerializationModule extends AnnotatedAbstractModule {
 
         Model constructedModel = ModelFactory.createDefaultModel();
 
-        EntityManagerFactory emf = JopaPersistenceUtils.createEntityManagerFactoryWithMemoryStore();
+        EntityManagerFactory emf = JopaPersistenceUtils.createEntityManagerFactoryWithMemoryStore(FormUtils.SFORMS_MODEL_PACKAGE_NAME);
         EntityManager em = emf.createEntityManager();
 
         JopaPersistenceUtils.getDataset(em).setDefaultModel(inpModel);

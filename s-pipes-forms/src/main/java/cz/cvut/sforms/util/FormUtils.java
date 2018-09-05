@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 
 public class FormUtils {
 
+    public static String SFORMS_MODEL_PACKAGE_NAME = Question.class.getPackage().getName();
+
     public static Set<Question> flatten(Set<Question> questions) {
         return questions.stream().flatMap((q) -> flatten(q).stream()).collect(Collectors.toSet());
     }

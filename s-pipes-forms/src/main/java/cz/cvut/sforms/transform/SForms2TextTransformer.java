@@ -17,7 +17,7 @@ public class SForms2TextTransformer {
     }
 
     @Nullable
-    String serialize(@NotNull Question question, @Nullable TextTransformerConfig cfg) {
+    public String serialize(@NotNull Question question, @Nullable TextTransformerConfig cfg) {
 
         return serializeRecursive(question, cfg);
     }
@@ -36,7 +36,7 @@ public class SForms2TextTransformer {
             .map(sq -> appendPrefixToEachLine(INDENTATION, sq))
             .collect(Collectors.joining());
 
-        String qStr = question.getLabel();
+        String qStr = cfg.getQuestionProcessor().apply(question);
 
         StringBuffer sb = new StringBuffer();
         sb
