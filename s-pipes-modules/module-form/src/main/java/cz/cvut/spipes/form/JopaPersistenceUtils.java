@@ -14,9 +14,9 @@ import org.apache.jena.rdf.model.Model;
 
 public class JopaPersistenceUtils {
 
-    public static EntityManagerFactory createEntityManagerFactoryWithMemoryStore(String packageToScan){
+    public static EntityManagerFactory createEntityManagerFactoryWithMemoryStore(String packageToScan) {
 
-        Map<String,String> persistenceProperties = new HashMap<>();
+        Map<String, String> persistenceProperties = new HashMap<>();
         persistenceProperties.put(JOPAPersistenceProperties.ONTOLOGY_PHYSICAL_URI_KEY, "local://temporary");
         persistenceProperties.put(JOPAPersistenceProperties.DATA_SOURCE_CLASS, "cz.cvut.kbss.ontodriver.jena.JenaDataSource");
         persistenceProperties.put(JOPAPersistenceProperties.LANG, "en");
@@ -31,11 +31,7 @@ public class JopaPersistenceUtils {
 
 
     public static Dataset getDataset(EntityManager entityManager) {
-        try {
-            return entityManager.unwrap(Dataset.class);
-        } finally {
-            entityManager.close();
-        }
+        return entityManager.unwrap(Dataset.class);
     }
 
     public static EntityManager getEntityManager(String packageToScan, Model model) {
