@@ -28,4 +28,12 @@ public class FormUtils {
         qSet.add(root);
         return qSet;
     }
+
+    public static long getQuestionsSize(Question root) {
+        return flatten(root).stream().count();
+    }
+
+    public static long getQuestionLeavesSize(Question root) {
+        return flatten(root).stream().filter(q -> q.getSubQuestions().isEmpty()).count();
+    }
 }
