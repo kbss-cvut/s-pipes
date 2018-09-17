@@ -1,6 +1,6 @@
 package cz.cvut.spipes.transform;
 
-import cz.cvut.sforms.FormUtils;
+import cz.cvut.sforms.util.FormUtils;
 import cz.cvut.sforms.Vocabulary;
 import cz.cvut.sforms.VocabularyJena;
 import cz.cvut.sforms.model.Answer;

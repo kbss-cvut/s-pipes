@@ -2,13 +2,14 @@
 
 @prefix : <http://onto.fel.cvut.cz/ontologies/form-spin/> .
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
-@prefix documentatio: <http://onto.fel.cvut.cz/ontologies/documentation> .
+@prefix doc: <http://onto.fel.cvut.cz/ontologies/documentation/> .
 @prefix form: <http://onto.fel.cvut.cz/ontologies/form/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
 
 <http://onto.fel.cvut.cz/ontologies/form-spin>
   rdf:type owl:Ontology ;
@@ -18,13 +19,48 @@
 :has-answer-value-type
   rdf:type owl:ObjectProperty ;
   rdfs:comment "Represents a type of answer values based on the question" ;
-  rdfs:domain <http://onto.fel.cvut.cz/ontologies/documentation/question> ;
+  rdfs:domain doc:question ;
   rdfs:label "has answer value type" ;
 .
 
 :has-origin-context
   rdf:type owl:ObjectProperty ;
   rdfs:comment "Represents the context IRI where the question's origin comes from." ;
-  rdfs:domain <http://onto.fel.cvut.cz/ontologies/documentation/question> ;
+  rdfs:domain doc:question ;
   rdfs:label "has origin context" ;
+.
+
+
+:has-declared-prefix
+    rdf:type owl:ObjectProperty ;
+    rdfs:comment "Represents an declared prefix that can be used within SPARQL query of an answer of this question." ;
+    rdfs:domain doc:question ;
+    rdfs:range sh:PrefixDeclaration ;
+.
+
+
+sh:PrefixDeclaration
+	a rdfs:Class ;
+	rdfs:label "Prefix declaration"@en ;
+	rdfs:comment "The class of prefix declarations, consisting of pairs of a prefix with a namespace."@en ;
+	rdfs:subClassOf rdfs:Resource ;
+	rdfs:isDefinedBy sh: ;
+.
+
+sh:prefix
+	a rdf:Property ;
+	rdfs:label "prefix"@en ;
+	rdfs:comment "The prefix of a prefix declaration."@en ;
+	rdfs:domain sh:PrefixDeclaration ;
+	rdfs:range xsd:string ;
+	rdfs:isDefinedBy sh: ;
+.
+
+sh:namespace
+	a rdf:Property ;
+	rdfs:label "namespace"@en ;
+	rdfs:comment "The namespace associated with a prefix in a prefix declaration."@en ;
+	rdfs:domain sh:PrefixDeclaration ;
+	rdfs:range xsd:anyURI ;
+	rdfs:isDefinedBy sh: ;
 .

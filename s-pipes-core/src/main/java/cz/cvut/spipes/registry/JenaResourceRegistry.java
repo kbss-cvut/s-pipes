@@ -11,7 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.apache.jena.ontology.OntModel;
+import org.apache.jena.ontology.OntModelSpec;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,7 +33,8 @@ public class JenaResourceRegistry implements  ResourceRegistry {
                     String resUri = res.getURI();
                     String localName = res.getLocalName();
                     Map<String, String> prefixMap = res.getModel().getNsPrefixMap();
-                    String contextUri = JenaUtils.getBaseUri(((OntModel) res.getModel()).getBaseModel());
+
+                    String contextUri = JenaUtils.getBaseUri(ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM, res.getModel()).getBaseModel());
 
                     local2fullNamesMap
                             .compute(localName, (k, v) -> (v == null) ? new HashSet<>() : v)

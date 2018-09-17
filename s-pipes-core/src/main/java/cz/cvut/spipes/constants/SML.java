@@ -9,7 +9,7 @@ public class SML {
     /**
      * The namespace of the vocabulary as a string
      */
-    private static final String uri = "http://topbraid.org/sparqlmotionlib#";
+    public static final String uri = "http://topbraid.org/sparqlmotionlib#";
 
     protected static final org.apache.jena.rdf.model.Resource resource(String local )
     { return ResourceFactory.createResource( uri + local ); }

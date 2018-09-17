@@ -44,6 +44,6 @@ public class TDBTempFactoryTest {
     }
 
     private Path getLocation(Model tdbModel) {
-        return Paths.get(((GraphTDB) tdbModel.getGraph()).getDSG().getLocation().getDirectoryPath());
+        return Paths.get(((GraphTDB) tdbModel.getGraph()).getDatasetGraphTDB().getLocation().getDirectoryPath());
     }
 }
