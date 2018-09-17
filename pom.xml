@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>cz.cvut.kbss</groupId>
-    <version>0.2.0</version>
+    <version>0.2.1</version>
     <artifactId>s-pipes</artifactId>
     <packaging>pom</packaging>
     <name>SPipes (Semantic Pipelines)</name>

@@ -14,7 +14,7 @@
     <groupId>cz.cvut.kbss</groupId>
     <artifactId>s-pipes-parent</artifactId>
     <name>SPipes Parent</name>
-    <version>0.2.0</version>
+    <version>0.2.1</version>
     <packaging>pom</packaging>
 
     <properties>
