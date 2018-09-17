@@ -100,6 +100,19 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok-maven-plugin</artifactId>
+                <version>1.18.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>testDelombok</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>cz.cvut.kbss.jopa</groupId>
                 <artifactId>jopa-maven-plugin</artifactId>
                 <version>${cz.cvut.kbss.jopa.version}</version>
@@ -155,8 +168,6 @@
                         <goals>
                             <goal>compile</goal>
                             <!-- use this goal to weave all your main classes -->
-                            <goal>test-compile</goal>
-                            <!-- use this goal to weave all your test classes -->
                         </goals>
                     </execution>
                 </executions>
