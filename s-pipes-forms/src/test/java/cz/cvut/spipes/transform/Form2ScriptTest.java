@@ -4,10 +4,9 @@ import cz.cvut.sforms.model.Answer;
 import cz.cvut.sforms.model.Question;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.Map;
 import java.util.Optional;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -64,10 +63,10 @@ public class Form2ScriptTest {
 
         labelQ.get().getAnswers().forEach((a) -> a.setTextValue("NEW Bind person"));
 
-        Collection<Model> outputs = t.form2Script(sampleScript, form, "http://topbraid.org/sparqlmotionlib#BindWithConstant");
+        Map<String, Model> outputs = t.form2Script(sampleScript, form, "http://topbraid.org/sparqlmotionlib#BindWithConstant");
 
 
-        assertEquals("NEW Bind person", new LinkedList<>(outputs).get(0)
+        assertEquals("NEW Bind person", outputs.values().iterator().next()
                 .getResource("http://fel.cvut.cz/ontologies/s-pipes-editor/sample-script/bind-person")
                 .getProperty(RDFS.label)
                 .getString());
