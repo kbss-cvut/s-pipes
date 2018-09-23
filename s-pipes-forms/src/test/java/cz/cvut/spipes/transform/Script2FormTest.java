@@ -35,7 +35,7 @@ public class Script2FormTest {
 
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> {
-                new TransformerImpl().script2Form(sampleScript, bindFirstName, bindWithConstant);
+                new TransformerImpl().script2Form(bindFirstName, bindWithConstant);
             }
         );
     }
@@ -52,7 +52,7 @@ public class Script2FormTest {
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> {
 
-                new TransformerImpl().script2Form(sampleScript, bindFirstName, bindWithConstant);
+                new TransformerImpl().script2Form(bindFirstName, bindWithConstant);
             }
         );
     }
@@ -67,7 +67,7 @@ public class Script2FormTest {
 
         Resource bindFirstName = sampleScript.getResource("http://fel.cvut.cz/ontologies/s-pipes-editor/sample-script/bind-first-name");
 
-        Question rootQ = new TransformerImpl().script2Form(sampleScript, bindFirstName, bindWithConstant);
+        Question rootQ = new TransformerImpl().script2Form(bindFirstName, bindWithConstant);
 
         Question iriQuestion = FormUtils.flatten(rootQ).stream().
             filter(q -> RDFS.Resource.getURI().equals(q.getOrigin().toString()))
@@ -88,7 +88,7 @@ public class Script2FormTest {
 
         Resource bindFirstName = sampleScript.getResource("http://fel.cvut.cz/ontologies/s-pipes-editor/sample-script/bind-first-name");
 
-        Question rootQ = new TransformerImpl().script2Form(sampleScript, bindFirstName, bindWithConstant);
+        Question rootQ = new TransformerImpl().script2Form(bindFirstName, bindWithConstant);
 
         assertTrue(FormUtils.flatten(rootQ).stream().
             anyMatch(q -> RDFS.label.getURI().equals(q.getOrigin().toString())));
@@ -103,7 +103,7 @@ public class Script2FormTest {
 
         Resource bindFirstName = sampleScript.getResource("http://fel.cvut.cz/ontologies/s-pipes-editor/sample-script/bind-first-name");
 
-        Question rootQ = new TransformerImpl().script2Form(sampleScript, bindFirstName, bindWithConstant);
+        Question rootQ = new TransformerImpl().script2Form(bindFirstName, bindWithConstant);
 
         assertEquals(bindFirstName.toString(), rootQ.getOrigin().toString());
 
@@ -190,7 +190,7 @@ public class Script2FormTest {
         ).next();
         Resource moduleType = sampleScript.getResource(SML.BindWithConstant.toString());
 
-        return new TransformerImpl().script2Form(sampleScript, module, moduleType);
+        return new TransformerImpl().script2Form(module, moduleType);
     }
 
     private boolean isPrecedingQuestion(Question preceding, Question following) {

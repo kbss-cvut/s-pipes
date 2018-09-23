@@ -12,6 +12,16 @@ import java.util.stream.Collectors;
 @OWLClass(iri = Vocabulary.s_c_question)
 public class Question extends AbstractEntity {
 
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_declared_prefix, fetch = FetchType.EAGER)
+    private Set<PrefixDefinition> declaredPrefix = new HashSet<>();
+
+    public Set<PrefixDefinition> getDeclaredPrefix() {
+        return declaredPrefix;
+    }
+
+    public void setDeclaredPrefix(Set<PrefixDefinition> declaredPrefix) {
+        this.declaredPrefix = declaredPrefix;
+    }
 
     @OWLDataProperty(iri = Vocabulary.s_p_label)
     private String label;

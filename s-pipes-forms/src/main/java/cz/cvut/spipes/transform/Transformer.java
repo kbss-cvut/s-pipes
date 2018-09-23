@@ -8,7 +8,7 @@ import java.util.Map;
 
 public interface Transformer {
 
-    Question script2Form(Model script, Resource module, Resource moduleType);
+    Question script2Form(Resource module, Resource moduleType);
 
     Map<String, Model> form2Script(Model inputScript, Question form, String moduleType);
 

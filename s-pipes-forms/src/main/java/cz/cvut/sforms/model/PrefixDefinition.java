@@ -8,10 +8,18 @@ import cz.cvut.sforms.Vocabulary;
 public class PrefixDefinition extends AbstractEntity{
 
     @OWLDataProperty(iri = Vocabulary.s_p_prefix)
-    String prefix;
+    private String prefix;
 
     @OWLDataProperty(iri = Vocabulary.s_p_namespace)
-    String namespace;
+    private String namespace;
+
+    public PrefixDefinition() {
+    }
+
+    public PrefixDefinition(String prefix, String namespace) {
+        this.prefix = prefix;
+        this.namespace = namespace;
+    }
 
     public String getPrefix() {
         return prefix;

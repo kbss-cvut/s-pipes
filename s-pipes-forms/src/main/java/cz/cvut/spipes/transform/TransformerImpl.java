@@ -1,10 +1,12 @@
 package cz.cvut.spipes.transform;
 
-import cz.cvut.sforms.util.FormUtils;
 import cz.cvut.sforms.Vocabulary;
 import cz.cvut.sforms.VocabularyJena;
 import cz.cvut.sforms.model.Answer;
+import cz.cvut.sforms.model.PrefixDefinition;
 import cz.cvut.sforms.model.Question;
+import cz.cvut.sforms.model.SparqlQuestion;
+import cz.cvut.sforms.util.FormUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.query.Query;
@@ -36,7 +38,7 @@ public class TransformerImpl implements Transformer {
     }
 
     @Override
-    public Question script2Form(Model script, Resource module, Resource moduleType) {
+    public Question script2Form(Resource module, Resource moduleType) {
 
         if (!URI.create(module.getURI()).isAbsolute()) {
             throw new IllegalArgumentException("Module uri '" + module.getURI() + "' is not absolute.");
@@ -80,13 +82,14 @@ public class TransformerImpl implements Transformer {
             Resource p = st.getPredicate();
 
             processedPredicates.add(p);
-            Question subQ = createQuestion(p);
 
+            Question subQ = createQuestion(p);
             subQ.setProperties(extractQuestionMetadata(st));
 
             if (st.getObject().isAnon() && SPipesUtil.getSpinQueryUri(st.getObject().asResource()) != null) {
                 subQ.setLayoutClass(Collections.singleton("sparql"));
                 subQ.getProperties().put(Vocabulary.s_p_has_answer_value_type, Collections.singleton(SPipesUtil.getSpinQueryUri(st.getObject().asResource())));
+                subQ.setDeclaredPrefix(p.getModel().getNsPrefixMap().entrySet().stream().map(prefix -> new PrefixDefinition(prefix.getKey(), prefix.getValue())).collect(Collectors.toSet()));
             }
 
             Answer a = getAnswer(st.getObject());
