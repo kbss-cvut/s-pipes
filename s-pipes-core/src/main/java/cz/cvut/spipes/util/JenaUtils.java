@@ -10,10 +10,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.jena.graph.compose.MultiUnion;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.ResIterator;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.OWL;
@@ -34,13 +34,23 @@ public class JenaUtils {
 
     // TODO what if OWL ontology is missing
     public static String getBaseUri(Model model) {
-        ResIterator it = model.listResourcesWithProperty(RDF.type, OWL.Ontology);
-        if (!it.hasNext()) {
-            //TODO wrong ?
+
+        List<Resource> resList;
+        if (model.getGraph() instanceof MultiUnion) {
+             resList = ModelFactory.createModelForGraph(((MultiUnion) model.getGraph()).getBaseGraph()).listResourcesWithProperty(RDF.type, OWL.Ontology).toList();
+        } else {
+            resList = model.listResourcesWithProperty(RDF.type, OWL.Ontology).toList();
+        }
+
+
+        if (resList.size() > 1) {
+            throw new RuntimeException("Cannot determine base uri of a model. Possible candidates are : " + resList);
+        }
+
+        if (resList.isEmpty()) {
             return null;
         }
-        String baseURI = it.nextResource().toString();
-        return baseURI;
+        return resList.get(0).toString();
     }
 
 
