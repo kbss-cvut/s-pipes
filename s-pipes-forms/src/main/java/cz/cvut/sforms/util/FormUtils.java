@@ -4,6 +4,8 @@ import cz.cvut.sforms.model.Question;
 import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import org.jetbrains.annotations.NotNull;
 
 public class FormUtils {
 
@@ -27,6 +29,18 @@ public class FormUtils {
         Set<Question> qSet = root.getSubQuestions().stream().flatMap((q) -> flatten(q).stream()).collect(Collectors.toSet());
         qSet.add(root);
         return qSet;
+    }
+
+    @NotNull
+    public static Stream<Question> flatten(Stream<Question> roots) {
+        return roots.flatMap(FormUtils::flattenQuestion);
+    }
+
+    private static Stream<Question> flattenQuestion(Question root) {
+        return Stream.concat(
+            Stream.of(root),
+            root.getSubQuestions().stream().flatMap(FormUtils::flattenQuestion)
+        );
     }
 
     public static long getQuestionsSize(Question root) {

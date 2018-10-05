@@ -1,4 +1,4 @@
-package cz.cvut.sforms.transform;
+package cz.cvut.sforms.transformation;
 
 import cz.cvut.sforms.util.FormUtils;
 import cz.cvut.sforms.model.Question;
