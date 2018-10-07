@@ -5,7 +5,6 @@ import cz.cvut.sforms.VocabularyJena;
 import cz.cvut.sforms.model.Answer;
 import cz.cvut.sforms.model.PrefixDefinition;
 import cz.cvut.sforms.model.Question;
-import cz.cvut.sforms.model.SparqlQuestion;
 import cz.cvut.sforms.util.FormUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.jena.ontology.OntModel;

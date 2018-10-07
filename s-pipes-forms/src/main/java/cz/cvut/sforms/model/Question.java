@@ -12,22 +12,14 @@ import java.util.stream.Collectors;
 @OWLClass(iri = Vocabulary.s_c_question)
 public class Question extends AbstractEntity {
 
-    @OWLObjectProperty(iri = Vocabulary.s_p_has_declared_prefix, fetch = FetchType.EAGER)
-    private Set<PrefixDefinition> declaredPrefix = new HashSet<>();
-
-    public Set<PrefixDefinition> getDeclaredPrefix() {
-        return declaredPrefix;
-    }
-
-    public void setDeclaredPrefix(Set<PrefixDefinition> declaredPrefix) {
-        this.declaredPrefix = declaredPrefix;
-    }
-
     @OWLDataProperty(iri = Vocabulary.s_p_label)
     private String label;
 
     @OWLDataProperty(iri = Vocabulary.s_p_description)
     private String description;
+
+    @OWLAnnotationProperty(iri = Vocabulary.s_p_has_question_origin)
+    private URI origin;
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_related_question, cascade = {CascadeType.MERGE,
             CascadeType.REMOVE}, fetch = FetchType.EAGER)
@@ -43,8 +35,17 @@ public class Question extends AbstractEntity {
     @OWLDataProperty(iri = Vocabulary.s_p_has_layout_class)
     private Set<String> layoutClass = new HashSet<>();
 
-    @OWLDataProperty(iri = Vocabulary.s_p_has_question_origin)
-    private URI origin;
+    // TODO shold not be part of generic question
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_declared_prefix, fetch = FetchType.EAGER)
+    private Set<PrefixDefinition> declaredPrefix = new HashSet<>();
+
+    public Set<PrefixDefinition> getDeclaredPrefix() {
+        return declaredPrefix;
+    }
+
+    public void setDeclaredPrefix(Set<PrefixDefinition> declaredPrefix) {
+        this.declaredPrefix = declaredPrefix;
+    }
 
     @Types
     private Set<String> types = new HashSet<>();
