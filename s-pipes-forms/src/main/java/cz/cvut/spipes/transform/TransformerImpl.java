@@ -23,6 +23,7 @@ import org.topbraid.spin.system.SPINModuleRegistry;
 import org.topbraid.spin.vocabulary.SPIN;
 import org.topbraid.spin.vocabulary.SPL;
 
+import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -147,8 +148,30 @@ public class TransformerImpl implements Transformer {
 
         subQuestions.add(idQ);
 
+        Question ttlQ = new Question();
+        initializeQuestionUri(ttlQ);
+        ttlQ.setLayoutClass(Collections.singleton("ttl"));
+        Answer ttlA = new Answer();
+
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        ModelFactory.createDefaultModel().add(module.listProperties()).write(os, "TTL");
+        ttlA.setTextValue(new String(os.toByteArray()));
+
+        ttlQ.setAnswers(Collections.singleton(ttlA));
+
+        Question ttlStepQ = new Question();
+        initializeQuestionUri(ttlStepQ);
+        ttlStepQ.setLabel("TTL");
+        ttlStepQ.setOrigin(toUri(module));
+        ttlStepQ.setLayoutClass(wizardStepLayoutClass);
+        ttlStepQ.setSubQuestions(Collections.singleton(ttlQ));
+
+        HashSet<Question> steps = new HashSet<>();
+        steps.add(wizardStepQ);
+        steps.add(ttlStepQ);
+
         wizardStepQ.setSubQuestions(new HashSet<>(subQuestions));
-        formRootQ.setSubQuestions(Collections.singleton(wizardStepQ));
+        formRootQ.setSubQuestions(steps);
         return formRootQ;
     }
 
