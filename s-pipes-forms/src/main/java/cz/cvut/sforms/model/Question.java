@@ -35,6 +35,9 @@ public class Question extends AbstractEntity {
     @OWLDataProperty(iri = Vocabulary.s_p_has_layout_class)
     private Set<String> layoutClass = new HashSet<>();
 
+    @OWLDataProperty(iri = Vocabulary.s_p_has_possible_values_query)
+    private String possibleValuesQuery;
+
     // TODO shold not be part of generic question
     @OWLObjectProperty(iri = Vocabulary.s_p_has_declared_prefix, fetch = FetchType.EAGER)
     private Set<PrefixDefinition> declaredPrefix = new HashSet<>();
@@ -67,6 +70,14 @@ public class Question extends AbstractEntity {
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    public String getPossibleValuesQuery() {
+        return possibleValuesQuery;
+    }
+
+    public void setPossibleValuesQuery(String possibleValuesQuery) {
+        this.possibleValuesQuery = possibleValuesQuery;
     }
 
     public Question() {
