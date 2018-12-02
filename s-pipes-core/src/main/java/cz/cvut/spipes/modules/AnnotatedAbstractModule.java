@@ -1,6 +1,5 @@
 package cz.cvut.spipes.modules;
 
-import com.sun.javafx.binding.StringFormatter;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +24,7 @@ public abstract class AnnotatedAbstractModule extends AbstractModule {
             if ( p == null ) {
                 continue;
             } else if (vars.containsKey(p.name())) {
-                throw new RuntimeException(StringFormatter.format("Two parameters are named the same {}, except prefix", p.name()).getValue());
+                throw new RuntimeException(String.format("Two parameters are named the same %s, except prefix", p.name()));
             } else {
                 vars.put(p.name(), f);
             }
