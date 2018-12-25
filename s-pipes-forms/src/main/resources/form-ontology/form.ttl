@@ -60,6 +60,11 @@ form:has-answer-origin
   rdfs:label "has answer origin"^^xsd:string ;
   rdfs:subPropertyOf form:has-origin ;
 .
+form:has-answer-hash
+  rdf:type owl:DatatypeProperty ;
+  rdfs:domain <http://onto.fel.cvut.cz/ontologies/documentation/answer> ;
+  rdfs:range xsd:string ;
+.
 form:has-datatype
   rdf:type owl:DatatypeProperty ;
   rdfs:label "has datatype"^^xsd:string ;

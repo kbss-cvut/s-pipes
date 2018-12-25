@@ -69,6 +69,7 @@ public class TransformerImpl implements Transformer {
         idQ.setOrigin(URI.create(RDFS.Resource.getURI()));
         Answer idAnswer = new Answer();
         idAnswer.setCodeValue(URI.create(module.getURI()));
+        idAnswer.setHash(DigestUtils.sha1Hex(module.getURI()));
         idQ.setAnswers(Collections.singleton(idAnswer));
 
         Set<Resource> processedPredicates = new HashSet<>();
@@ -135,8 +136,7 @@ public class TransformerImpl implements Transformer {
             lQ.setLabel(RDFS.label.getURI());
             lQ.setAnswers(Collections.singleton(new Answer()));
             subQuestions.add(lQ);
-        }
-        else
+        } else
             lQ = labelQ;
         lQ.setPrecedingQuestions(Collections.singleton(idQ));
         subQuestions.stream()
@@ -154,7 +154,9 @@ public class TransformerImpl implements Transformer {
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         ModelFactory.createDefaultModel().add(module.listProperties()).write(os, "TTL");
-        ttlA.setTextValue(new String(os.toByteArray()));
+        String ttlStr = new String(os.toByteArray());
+        ttlA.setTextValue(ttlStr);
+        ttlA.setHash(DigestUtils.sha1Hex(ttlStr));
 
         ttlQ.setAnswers(Collections.singleton(ttlA));
 
@@ -184,6 +186,15 @@ public class TransformerImpl implements Transformer {
         Question uriQ = findUriQ(form);
         URI newUri = new ArrayList<>(uriQ.getAnswers()).get(0).getCodeValue();
 
+        Optional<Model> ttlModel = getTTLModel(form);
+
+        boolean ttlChanged = form.getSubQuestions().stream()
+                .flatMap(q -> q.getSubQuestions().stream())
+                .filter(q -> q.getLayoutClass().stream().anyMatch(s -> s.equals("ttl")))
+                .findFirst()
+                .map(q -> q.getAnswers().stream().anyMatch(a -> !DigestUtils.sha1Hex(a.getTextValue()).equals(a.getHash())))
+                .orElse(false);
+
         if (module.listProperties().hasNext()) {
             Map<OriginPair<URI, URI>, Statement> questionStatements = getOrigin2StatementMap(module); // Created answer origin is different from the actual one
             findRegularQ(form).forEach((q) -> {
@@ -199,6 +210,8 @@ public class TransformerImpl implements Transformer {
 
                     changingModel.remove(s);
                     if (isSupportedAnon(q)) {
+                        if (q.getAnswers().stream().anyMatch(a -> !DigestUtils.sha1Hex(a.getTextValue()).equals(a.getHash()) && !DigestUtils.sha1Hex(a.getCodeValue().toString()).equals(a.getHash())))
+                            throw new ConcurrentModificationException("TTL and form can not be edited at the same time");
                         Query query = AnonNodeTransformer.parse(q, inputScript);
                         org.topbraid.spin.model.Query spinQuery = ARQ2SPIN.parseQuery(query.serialize(), inputScript);
                         changingModel.add(spinQuery.getModel());
@@ -207,8 +220,9 @@ public class TransformerImpl implements Transformer {
                                 ResourceFactory.createProperty(Vocabulary.s_p_text),
                                 ResourceFactory.createStringLiteral(q.getAnswers().iterator().next().getTextValue().replaceAll("\\n", "\n"))
                         );
-                    }
-                    else {
+                    } else {
+                        if (q.getAnswers().stream().anyMatch(a -> !DigestUtils.sha1Hex(a.getTextValue()).equals(a.getHash()) && (a.getCodeValue() == null || !DigestUtils.sha1Hex(a.getCodeValue().toString()).equals(a.getHash()))) && ttlChanged)
+                            throw new ConcurrentModificationException("TTL and form can not be edited at the same time");
                         RDFNode answerNode = getAnswerNode(getAnswer(q).orElse(null));
                         if (answerNode != null) {
                             changingModel.add(s.getSubject(), s.getPredicate(), answerNode);
@@ -216,8 +230,7 @@ public class TransformerImpl implements Transformer {
                     }
                 }
             });
-        }
-        else {
+        } else {
             Model m = ModelFactory.createDefaultModel().add(inputScript);
             m.add(m.getResource(newUri.toString()), RDF.type, m.getResource(moduleType));
             m.add(m.getResource(newUri.toString()), RDF.type, m.getResource(Vocabulary.s_c_Modules_A));
@@ -229,6 +242,14 @@ public class TransformerImpl implements Transformer {
             });
             changed.put(((OntModel) inputScript).getBaseModel().listStatements(null, RDF.type, OWL.Ontology).next().getSubject().getURI(), m);
         }
+
+        if (ttlChanged)
+            ttlModel.map(m ->
+                    changed.put(
+                            m.listStatements(null, RDF.type, OWL.Ontology).next().getSubject().getURI(),
+                            m
+                    )
+            );
 
         ResourceUtils.renameResource(module, newUri.toString());
 
@@ -286,7 +307,10 @@ public class TransformerImpl implements Transformer {
     }
 
     private Question findUriQ(Question root) {
-        Optional<Question> uriQ = FormUtils.flatten(root).stream().filter((q) -> RDFS.Resource.getURI().equals(q.getOrigin().toString())).findFirst();
+        Optional<Question> uriQ =
+                FormUtils.flatten(root).stream()
+                        .filter(q -> q.getOrigin() != null)
+                        .filter((q) -> RDFS.Resource.getURI().equals(q.getOrigin().toString())).findFirst();
         if (uriQ.isPresent())
             return uriQ.get();
         throw new IllegalArgumentException("Root question has no subquestion that maps to URI");
@@ -295,8 +319,21 @@ public class TransformerImpl implements Transformer {
     private Set<Question> findRegularQ(Question root) {
         return FormUtils.flatten(root).stream()
                 .filter((q) -> q.getSubQuestions() == null || q.getSubQuestions().isEmpty())
+                .filter(q -> q.getOrigin() != null)
                 .filter((q) -> !RDFS.Resource.getURI().equals(q.getOrigin().toString()))
                 .collect(Collectors.toSet());
+    }
+
+    private Optional<Model> getTTLModel(Question root) {
+        Optional<Question> ttl = root.getSubQuestions().stream()
+                .filter(q -> q.getLayoutClass().contains("TTL"))
+                .map(q -> q.getSubQuestions().iterator().next())
+                .findFirst();
+        return ttl.map(q -> {
+            Model m = ModelFactory.createDefaultModel();
+            m.read(q.getAnswers().iterator().next().getTextValue());
+            return m;
+        });
     }
 
     private Optional<Answer> getAnswer(Question q) {
@@ -323,14 +360,14 @@ public class TransformerImpl implements Transformer {
         Answer a = new Answer();
         if (node.isURIResource()) {
             a.setCodeValue(URI.create(node.asResource().getURI()));
-        }
-        else if (node.isLiteral()) {
+            a.setHash(DigestUtils.sha1Hex(node.asResource().getURI()));
+        } else if (node.isLiteral()) {
             a.setTextValue(node.asLiteral().getString());
-        }
-        else if (node.isAnon()) {
+            a.setHash(DigestUtils.sha1Hex(node.asLiteral().getLexicalForm()));
+        } else if (node.isAnon()) {
             a.setTextValue(AnonNodeTransformer.serialize(node));
-        }
-        else {
+            a.setHash(DigestUtils.sha1Hex(AnonNodeTransformer.serialize(node)));
+        } else {
             throw new IllegalArgumentException("RDFNode " + node + " should be a literal, a URI resource or an anonymous node of a known type");
         }
         return a;
@@ -447,8 +484,7 @@ public class TransformerImpl implements Transformer {
             Optional<Optional<Model>> o = ((OntModel) (m)).listSubModels().toList().stream().map(sm -> find(st, sm, res)).filter(Optional::isPresent).findFirst();
             if (o.isPresent())
                 return o.get();
-        }
-        else
+        } else
             return Optional.of(m);
         return Optional.empty();
     }

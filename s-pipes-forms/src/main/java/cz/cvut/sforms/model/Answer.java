@@ -26,6 +26,9 @@ public class Answer extends AbstractEntity {
     @OWLAnnotationProperty(iri = Vocabulary.s_p_has_answer_origin)
     private URI origin;
 
+    @OWLDataProperty(iri = Vocabulary.s_p_has_answer_hash)
+    private String hash;
+
     @Types
     private Set<String> types = new HashSet<>();
 
@@ -71,6 +74,14 @@ public class Answer extends AbstractEntity {
 
     public void setTypes(Set<String> types) {
         this.types = types;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
     }
 
     @Override

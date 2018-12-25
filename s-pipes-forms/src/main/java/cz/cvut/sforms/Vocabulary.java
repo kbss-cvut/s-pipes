@@ -438,6 +438,7 @@ public class Vocabulary {
     public final static String s_p_outputValue = "http://onto.fel.cvut.cz/ontologies/form-layout/outputValue";
     public final static String s_p_propertyPath = "http://onto.fel.cvut.cz/ontologies/form-layout/propertyPath";
     public final static String s_p_accepts_validation_value = "http://onto.fel.cvut.cz/ontologies/form/accepts-validation-value";
+    public final static String s_p_has_answer_hash = "http://onto.fel.cvut.cz/ontologies/form/has-answer-hash";
     public final static String s_p_has_datatype = "http://onto.fel.cvut.cz/ontologies/form/has-datatype";
     public final static String s_p_has_origin_path = "http://onto.fel.cvut.cz/ontologies/form/has-origin-path";
     public final static String s_p_has_origin_path_id = "http://onto.fel.cvut.cz/ontologies/form/has-origin-path-id";
