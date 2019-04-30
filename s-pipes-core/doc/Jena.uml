@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="143.23333333333335" y="408.0">org.apache.jena.ontology.OntDocumentManager.DefaultReadHook</node>
+    <node x="59.48333333333335" y="0.0">org.apache.jena.ontology.OntDocumentManager</node>
+    <node x="0.0" y="316.0">org.apache.jena.ontology.OntDocumentManager.ReadHook</node>
+    <node x="170.00000000000003" y="316.0">org.apache.jena.ontology.OntDocumentManager.ReadFailureHandler</node>
+    <node x="386.0" y="495.0">org.apache.jena.util.LocationMapper</node>
+    <node x="0.0" y="495.0">org.apache.jena.util.FileManager</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="org.apache.jena.ontology.OntDocumentManager.DefaultReadHook" target="org.apache.jena.ontology.OntDocumentManager">
+      <point x="53.0" y="-21.0" />
+      <point x="302.23333333333335" y="383.0" />
+      <point x="409.5" y="383.0" />
+      <point x="409.5" y="291.0" />
+      <point x="390.3166666666667" y="291.0" />
+      <point x="132.33333333333337" y="133.0" />
+    </edge>
+    <edge source="org.apache.jena.ontology.OntDocumentManager.DefaultReadHook" target="org.apache.jena.ontology.OntDocumentManager.ReadHook">
+      <point x="-53.0" y="-21.0" />
+      <point x="196.23333333333335" y="383.0" />
+      <point x="75.0" y="383.0" />
+      <point x="0.0" y="21.0" />
+    </edge>
+    <edge source="org.apache.jena.ontology.OntDocumentManager.ReadFailureHandler" target="org.apache.jena.ontology.OntDocumentManager">
+      <point x="0.0" y="-21.0" />
+      <point x="284.5" y="291.0" />
+      <point x="257.98333333333335" y="291.0" />
+      <point x="0.0" y="133.0" />
+    </edge>
+    <edge source="org.apache.jena.ontology.OntDocumentManager.ReadHook" target="org.apache.jena.ontology.OntDocumentManager">
+      <point x="0.0" y="-21.0" />
+      <point x="75.0" y="291.0" />
+      <point x="125.65" y="291.0" />
+      <point x="-132.33333333333334" y="133.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="520.5" y="300.0" />
+  <SelectedNodes>
+    <node>org.apache.jena.ontology.OntDocumentManager</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Properties</Category>
+    <Category>Inner Classes</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
