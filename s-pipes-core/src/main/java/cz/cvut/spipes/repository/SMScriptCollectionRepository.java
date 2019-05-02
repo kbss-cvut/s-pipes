@@ -2,18 +2,18 @@ package cz.cvut.spipes.repository;
 
 import cz.cvut.spipes.manager.OntologyDocumentManager;
 import cz.cvut.spipes.util.JenaPipelineUtils;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.Resource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Know nothing about alternative entity ids -- e.g. prefixed-names, local-names.
@@ -48,7 +48,7 @@ public class SMScriptCollectionRepository implements ScriptCollectionRepository 
     @Override
     public @NotNull List<Resource> getModuleTypes(@Nullable Collection<String> contexts) {
         if (contexts == null) {
-            throw new NotImplementedException();
+            throw new UnsupportedOperationException();
         }
         return null;
     }
@@ -72,7 +72,7 @@ public class SMScriptCollectionRepository implements ScriptCollectionRepository 
 
     @Override
     public Map<String, Set<String>> getAlternativeEntityIds() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
 

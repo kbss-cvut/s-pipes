@@ -10,7 +10,7 @@ import org.apache.jena.shared.impl.PrefixMappingImpl;
 import org.topbraid.spin.arq.ARQFactory;
 import org.topbraid.spin.model.SPINFactory;
 import org.topbraid.spin.util.SPINExpressions;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+//import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Map;
 
@@ -46,7 +46,7 @@ public class AnonNodeTransformer {
             case Vocabulary.s_c_Select:
                 break;
             default:
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException();
         }
         StringBuilder b = new StringBuilder();
         Map<String, String> map = m.getNsPrefixMap();
