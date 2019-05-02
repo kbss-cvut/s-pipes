@@ -1,6 +1,8 @@
 package cz.cvut.spipes.manager;
 
+import cz.cvut.spipes.config.CompatibilityConfig;
 import cz.cvut.spipes.util.JenaUtils;
+import cz.cvut.spipes.util.SparqlMotionUtils;
 import org.apache.jena.atlas.web.HttpException;
 import org.apache.jena.ontology.OntDocumentManager;
 import org.apache.jena.ontology.OntModel;
@@ -73,6 +75,11 @@ public class OntoDocManager implements OntologyDocumentManager {
         this.ontDocumentManager = ontDocumentManager;
         ontDocumentManager.setReadFailureHandler(new OntologyReadFailureHandler());
         ontDocumentManager.setFileManager(FileManager.get());
+        if (! CompatibilityConfig.isLoadSparqlMotionFiles()) {
+            SparqlMotionUtils.SM_ONTOLOGIES.forEach(
+                ontDocumentManager::addIgnoreImport
+            );
+        }
     }
 
     public static OntologyDocumentManager getInstance() {
