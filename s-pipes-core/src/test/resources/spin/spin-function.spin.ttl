@@ -1,0 +1,76 @@
+# baseURI: http://onto.fel.cvut.cz/ontologies/lib/spin-function
+# imports: http://spinrdf.org/spl
+
+@prefix arg: <http://spinrdf.org/arg#> .
+@prefix kbss-spif: <http://onto.fel.cvut.cz/ontologies/lib/spin-function/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sp: <http://spinrdf.org/sp#> .
+@prefix spin: <http://spinrdf.org/spin#> .
+@prefix spl: <http://spinrdf.org/spl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://onto.fel.cvut.cz/ontologies/lib/spin-function>
+  rdf:type owl:Ontology ;
+  owl:imports <http://spinrdf.org/spl> ;
+  owl:versionInfo "Created with TopBraid Composer"^^xsd:string ;
+.
+kbss-spif:create-sparql-service-url
+  rdf:type spin:Function ;
+  spin:body [
+      rdf:type sp:Select ;
+      sp:resultVariables (
+          [
+            sp:varName "serviceUrl"^^xsd:string ;
+          ]
+        ) ;
+      sp:text """SELECT ?serviceUrl
+WHERE {
+    BIND (IRI(CONCAT(str(?arg1), \"?default-graph-uri=\", ENCODE_FOR_URI(str(?arg2)))) AS ?serviceUrl) .
+}"""^^xsd:string ;
+      sp:where (
+          [
+            rdf:type sp:Bind ;
+            sp:expression [
+                rdf:type sp:iri ;
+                sp:arg1 [
+                    rdf:type sp:concat ;
+                    sp:arg1 [
+                        rdf:type sp:str ;
+                        sp:arg1 spin:_arg1 ;
+                      ] ;
+                    sp:arg2 "?default-graph-uri=" ;
+                    sp:arg3 [
+                        rdf:type sp:encode_for_uri ;
+                        sp:arg1 [
+                            rdf:type sp:str ;
+                            sp:arg1 spin:_arg2 ;
+                          ] ;
+                      ] ;
+                  ] ;
+              ] ;
+            sp:variable [
+                sp:varName "serviceUrl"^^xsd:string ;
+              ] ;
+          ]
+        ) ;
+    ] ;
+  spin:constraint [
+      rdf:type spl:Argument ;
+      spl:predicate sp:arg1 ;
+      spl:valueType xsd:string ;
+      rdfs:comment "Sparql endpoint uri (e.g. http://onto.fel.cvut.cz/openrdf-sesame/repositories/test-repo)."^^xsd:string ;
+    ] ;
+  spin:constraint [
+      rdf:type spl:Argument ;
+      spl:predicate sp:arg2 ;
+      rdfs:comment "URI of named graph (e.g. http://example.org/my-ontology)."^^xsd:string ;
+    ] ;
+  rdfs:comment "Construct sparql service url from ?sparqlEndpointUrl and ?namedGraphURI."^^xsd:string ;
+  rdfs:subClassOf spin:Functions ;
+.
+arg:namedGraphUri
+  rdf:type rdf:Property ;
+  rdfs:subPropertyOf sp:arg ;
+.
