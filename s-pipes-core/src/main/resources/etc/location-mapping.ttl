@@ -1,0 +1,7 @@
+@prefix lm: <http://jena.hpl.hp.com/2004/08/location-mapping#> .
+
+[] lm:mapping
+   [ lm:name "http://spinrdf.org/sp" ;     lm:altName "etc/sp.rdf" ] ,
+   [ lm:name "http://spinrdf.org/spin" ;     lm:altName "etc/spin.rdf" ] ,
+   [ lm:name "http://spinrdf.org/spl" ;     lm:altName "etc/spl.rdf" ]
+   .

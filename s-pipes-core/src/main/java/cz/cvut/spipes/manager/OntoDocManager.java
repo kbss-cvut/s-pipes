@@ -1,23 +1,6 @@
 package cz.cvut.spipes.manager;
 
 import cz.cvut.spipes.util.JenaUtils;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.nio.file.DirectoryIteratorException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Stream;
 import org.apache.jena.atlas.web.HttpException;
 import org.apache.jena.ontology.OntDocumentManager;
 import org.apache.jena.ontology.OntModel;
@@ -32,6 +15,18 @@ import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.topbraid.spin.system.SPINModuleRegistry;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.nio.file.DirectoryIteratorException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.stream.Stream;
 
 //import static cz.cvut.spipes.manager.OntologyDocumentManagerImpl.isFileNameSupported;
 
@@ -77,6 +72,7 @@ public class OntoDocManager implements OntologyDocumentManager {
     OntoDocManager(OntDocumentManager ontDocumentManager) {
         this.ontDocumentManager = ontDocumentManager;
         ontDocumentManager.setReadFailureHandler(new OntologyReadFailureHandler());
+        ontDocumentManager.setFileManager(FileManager.get());
     }
 
     public static OntologyDocumentManager getInstance() {
