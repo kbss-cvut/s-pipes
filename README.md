@@ -76,5 +76,7 @@ The following software needs to be installed on the system for development:
 - JDK 8
 - Maven
 
-## Some Notes on Development
+## Licences of reused software components
+
+Beside included software dependencies by Maven, a list of reused software components and their licences are included in `./doc/licences.md`.
 
