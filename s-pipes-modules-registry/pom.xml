@@ -8,13 +8,13 @@
         <relativePath>../s-pipes-parent</relativePath>
         <groupId>cz.cvut.kbss</groupId>
         <artifactId>s-pipes-parent</artifactId>
-        <version>0.2.1</version>
+        <version>0.3.0</version>
     </parent>
 
     <artifactId>s-pipes-modules-registry</artifactId>
     <name>SPipes Modules Registry</name>
     <description>This module aggregates all available modules developed within the main project.</description>
-    <version>0.2.1</version>
+    <version>0.3.0</version>
     <packaging>jar</packaging>
 
     <dependencies>
