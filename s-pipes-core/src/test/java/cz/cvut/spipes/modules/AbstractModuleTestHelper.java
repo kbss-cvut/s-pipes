@@ -1,6 +1,7 @@
 package cz.cvut.spipes.modules;
 
 import cz.cvut.spipes.engine.PipelineFactory;
+import cz.cvut.spipes.test.JenaTestUtils;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -18,6 +19,7 @@ public abstract class AbstractModuleTestHelper {
     abstract String getModuleName();
 
     public OntModel getConfigOntModel() {
+        JenaTestUtils.mapLocalSPipesDefinitionFiles();
         return getOntModel(CONFIG_FILE_NAME);
     }
 

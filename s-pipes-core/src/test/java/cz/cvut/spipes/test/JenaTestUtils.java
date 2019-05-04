@@ -12,13 +12,19 @@ import java.io.InputStream;
 
 public class JenaTestUtils {
 
+    public static void mapLocalSPipesDefinitionFiles() {
+        OntDocumentManager dm = OntDocumentManager.getInstance();
+        dm.setFileManager(FileManager.get());
+        dm.getFileManager().getLocationMapper().addAltEntry("http://onto.fel.cvut.cz/ontologies/s-pipes", "s-pipes.ttl");
+        dm.getFileManager().getLocationMapper().addAltEntry("http://onto.fel.cvut.cz/ontologies/s-pipes-lib", "s-pipes-lib.ttl");
+    }
 
     public static OntModel loadOntologyClosureFromResources(String path) {
         // set external context
         OntModel ontModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
 
         OntDocumentManager dm = OntDocumentManager.getInstance();
-        dm.setFileManager( FileManager.get() );
+        dm.setFileManager(FileManager.get());
         //LocationMapper lm= FileManager.get().getLocationMapper();
 
         // load config

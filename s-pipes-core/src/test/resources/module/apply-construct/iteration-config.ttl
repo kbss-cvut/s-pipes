@@ -44,7 +44,7 @@ apply-construct:Construct1
 
 <http://onto.fel.cvut.cz/ontologies/test/apply-construct/spin-query-config>
     a owl:Ontology ;
-    owl:imports <http://topbraid.org/sparqlmotionfunctions> ;
-    owl:imports <http://topbraid.org/sparqlmotionlib> ;
+    owl:imports <http://onto.fel.cvut.cz/ontologies/s-pipes> ;
+    owl:imports <http://onto.fel.cvut.cz/ontologies/s-pipes-lib> ;
 .
 

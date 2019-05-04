@@ -3,20 +3,23 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.utils.EndpointTestUtils;
-import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.system.StreamRDFBase;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.junit.jupiter.api.Test;
 
 public class DownloadGraphModuleTest {
 
-//    @Disabled // integration test
+    @Disabled // requires online sparql endpoint
     @Test
     public void executeSelfDownloadsFileInNtFormat() throws Exception {
         DownloadGraphModule module = new DownloadGraphModule();

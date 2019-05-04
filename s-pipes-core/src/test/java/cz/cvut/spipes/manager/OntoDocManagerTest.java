@@ -1,6 +1,6 @@
 package cz.cvut.spipes.manager;
 
-import cz.cvut.spipes.test.TestConstants;
+import cz.cvut.spipes.TestConstants;
 import java.nio.file.Path;
 import java.util.List;
 import org.apache.jena.ontology.OntDocumentManager;

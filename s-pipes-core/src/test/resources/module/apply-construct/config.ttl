@@ -1,6 +1,5 @@
 # baseURI: http://onto.fel.cvut.cz/ontologies/test/apply-construct/spin-query-config
-# imports: http://topbraid.org/sparqlmotionfunctions
-# imports: http://topbraid.org/sparqlmotionlib-tbc
+
 
 @prefix apply-construct: <http://onto.fel.cvut.cz/ontologies/test/apply-construct#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
@@ -44,7 +43,6 @@ WHERE {
 .
 <http://onto.fel.cvut.cz/ontologies/test/apply-construct/spin-query-config>
   rdf:type owl:Ontology ;
-  owl:imports <http://topbraid.org/sparqlmotionfunctions> ;
-  owl:imports <http://topbraid.org/sparqlmotionlib> ;
-  owl:versionInfo "Created with TopBraid Composer"^^xsd:string ;
+  owl:imports <http://onto.fel.cvut.cz/ontologies/s-pipes> ;
+  owl:imports <http://onto.fel.cvut.cz/ontologies/s-pipes-lib> ;
 .

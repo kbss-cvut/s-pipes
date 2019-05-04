@@ -14,6 +14,7 @@ public class PipelineFactoryTest {
     @Test
     public void loadPipelines() throws Exception {
 
+        JenaTestUtils.mapLocalSPipesDefinitionFiles();
         OntModel ontModel = JenaTestUtils.loadOntologyClosureFromResources("/pipeline/config.ttl");
 
         List<Module> moduleList = PipelineFactory.loadPipelines(ontModel);

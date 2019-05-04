@@ -3,12 +3,14 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.utils.EndpointTestUtils;
 import org.apache.jena.rdf.model.Model;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RetrieveGraphModuleTest {
 
-//    @Disabled // integration test
+    @Disabled //requires online sparql endpoint
     @Test
     public void executeSelf() throws Exception {
         RetrieveGraphModule module = new RetrieveGraphModule();

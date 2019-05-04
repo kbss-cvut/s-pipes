@@ -1,6 +1,6 @@
 package cz.cvut.spipes.modules;
 
-import cz.cvut.spipes.test.TestConstants;
+import cz.cvut.spipes.TestConstants;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionEngine;
 import cz.cvut.spipes.engine.ExecutionEngineFactory;

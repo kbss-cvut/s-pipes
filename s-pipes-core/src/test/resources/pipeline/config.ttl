@@ -13,9 +13,8 @@
 
 <http://onto.fel.cvut.cz/ontologies/s-pipes/test/pipeline-config>
   rdf:type owl:Ontology ;
-  owl:imports <http://topbraid.org/sparqlmotionfunctions> ;
-  owl:imports <http://topbraid.org/sparqlmotionlib-tbc> ;
-  owl:versionInfo "Created with TopBraid Composer"^^xsd:string ;
+  owl:imports <http://onto.fel.cvut.cz/ontologies/s-pipes> ;
+  owl:imports <http://onto.fel.cvut.cz/ontologies/s-pipes-lib> ;
 .
 sml:bind-greeting-1
   rdf:type sml:BindWithConstant ;

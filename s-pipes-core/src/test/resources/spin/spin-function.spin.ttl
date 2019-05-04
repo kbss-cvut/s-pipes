@@ -14,7 +14,6 @@
 <http://onto.fel.cvut.cz/ontologies/lib/spin-function>
   rdf:type owl:Ontology ;
   owl:imports <http://spinrdf.org/spl> ;
-  owl:versionInfo "Created with TopBraid Composer"^^xsd:string ;
 .
 kbss-spif:create-sparql-service-url
   rdf:type spin:Function ;

@@ -1,6 +1,4 @@
 # baseURI: http://onto.fel.cvut.cz/ontologies/test/bind-with-constant/config
-# imports: http://topbraid.org/sparqlmotionfunctions
-# imports: http://topbraid.org/sparqlmotionlib-tbc
 
 @prefix bind-with-constant: <http://onto.fel.cvut.cz/ontologies/test/bind-with-constant/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
@@ -14,9 +12,8 @@
 
 bind-with-constant:config
   rdf:type owl:Ontology ;
-  owl:imports <http://topbraid.org/sparqlmotionfunctions> ;
-  owl:imports <http://topbraid.org/sparqlmotionlib-tbc> ;
-  owl:versionInfo "Created with TopBraid Composer"^^xsd:string ;
+  owl:imports <http://onto.fel.cvut.cz/ontologies/s-pipes> ;
+  owl:imports <http://onto.fel.cvut.cz/ontologies/s-pipes-lib> ;
 .
 sml:bind-greeting
   rdf:type sml:BindWithConstant ;

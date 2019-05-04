@@ -5,7 +5,7 @@ import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import org.apache.jena.rdf.model.Model;
 import org.junit.jupiter.api.Test;
-import util.JenaTestUtils;
+import cz.cvut.spipes.test.JenaTestUtils;
 
 public class ConstructTextSerializationModuleTest {
 

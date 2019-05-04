@@ -8,7 +8,7 @@ import org.apache.jena.rdf.model.Property;
 import org.apache.jena.vocabulary.RDF;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
-import util.JenaTestUtils;
+import cz.cvut.spipes.test.JenaTestUtils;
 
 public class ConstructFormMetadataModuleTest {
 
