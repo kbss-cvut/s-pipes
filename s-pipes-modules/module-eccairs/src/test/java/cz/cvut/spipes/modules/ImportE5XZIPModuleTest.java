@@ -1,14 +1,16 @@
 package cz.cvut.spipes.modules;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.stream.Stream;
-import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 public class ImportE5XZIPModuleTest extends ImportE5XModuleTest {
 
@@ -18,12 +20,15 @@ public class ImportE5XZIPModuleTest extends ImportE5XModuleTest {
 
         List<String> files = null;
         try {
-            files = IOUtils.readLines((ImportE5XZIPModuleTest.class.getClassLoader().getResourceAsStream(dir)), Charsets.UTF_8);
+            files = IOUtils.readLines(
+                Objects.requireNonNull(ImportE5XZIPModuleTest.class.getClassLoader().getResourceAsStream(dir)),
+                StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return files.stream().map((file) -> Arguments.of("/" + dir + "/" + file, contentType));
+        return Objects.requireNonNull(files)
+            .stream().map((file) -> Arguments.of("/" + dir + "/" + file, contentType));
     }
 
     @Override

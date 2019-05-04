@@ -1,7 +1,11 @@
 package cz.cvut.spipes.modules;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
+
+import java.util.Calendar;
+import java.util.Date;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class UserQueryTest {
 
@@ -10,8 +14,9 @@ public class UserQueryTest {
         String s = "zakon osoba 1990";
 
         UserQuery q = UserQuery.parse(s);
+        Calendar cal = getCalendar(q.getDates().iterator().next());
         assertEquals(1, q.getDates().size());
-        assertEquals(1990, 1900 + q.getDates().iterator().next().getYear());
+        assertEquals(1990, cal.get(Calendar.YEAR));
         assertEquals(2, q.getKeywords().size());
     }
 
@@ -20,10 +25,11 @@ public class UserQueryTest {
         String s = "zakon 1.1.2015";
 
         UserQuery q = UserQuery.parse(s);
+        Calendar cal = getCalendar(q.getDates().iterator().next());
         assertEquals(1, q.getDates().size());
-        assertEquals(1, q.getDates().iterator().next().getDate());
-        assertEquals(1, 1 + q.getDates().iterator().next().getMonth());
-        assertEquals(2015, 1900 + q.getDates().iterator().next().getYear());
+        assertEquals(1, cal.get(Calendar.DAY_OF_MONTH));
+        assertEquals(1, 1 + cal.get(Calendar.MONTH));
+        assertEquals(2015, cal.get(Calendar.YEAR));
         assertEquals(1, q.getKeywords().size());
     }
 
@@ -32,5 +38,11 @@ public class UserQueryTest {
         String s = "zakon osoba 1990";
         UserQuery q = UserQuery.parse(s);
         assertEquals("(zakon)|(osoba)", q.getKeywordRegex());
+    }
+
+    private Calendar getCalendar(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar;
     }
 }
