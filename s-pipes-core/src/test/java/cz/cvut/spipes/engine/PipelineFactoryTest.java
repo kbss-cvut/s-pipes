@@ -1,11 +1,13 @@
 package cz.cvut.spipes.engine;
 
 import cz.cvut.spipes.modules.Module;
-import java.util.List;
+import cz.cvut.spipes.test.JenaTestUtils;
 import org.apache.jena.ontology.OntModel;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
-import util.JenaTestUtils;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PipelineFactoryTest {
 

@@ -7,9 +7,10 @@ import cz.cvut.spipes.engine.VariablesBinding;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.ResourceFactory;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AbstractModuleTest extends AbstractModuleTestHelper {
 
@@ -19,7 +20,7 @@ public class AbstractModuleTest extends AbstractModuleTestHelper {
     }
 
     @Test
-    public void getEffectiveValue() throws Exception {
+    public void getEffectiveValueReturnsComputedValue() throws Exception {
         Module module = PipelineFactory.loadPipelines(getConfigOntModel()).get(0);
 
         assertEquals(BindWithConstantModule.class, module.getClass(), "Incorrect module loaded.");

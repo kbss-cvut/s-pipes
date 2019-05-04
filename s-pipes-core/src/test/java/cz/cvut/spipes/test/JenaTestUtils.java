@@ -1,6 +1,5 @@
-package util;
+package cz.cvut.spipes.test;
 
-import java.io.InputStream;
 import org.apache.jena.ontology.OntDocumentManager;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
@@ -8,6 +7,8 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.util.FileManager;
 import org.apache.jena.util.FileUtils;
+
+import java.io.InputStream;
 
 public class JenaTestUtils {
 

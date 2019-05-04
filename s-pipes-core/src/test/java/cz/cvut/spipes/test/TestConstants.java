@@ -1,4 +1,4 @@
-package cz.cvut.spipes;
+package cz.cvut.spipes.test;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
