@@ -9,13 +9,14 @@ import cz.cvut.spipes.registry.ResourceRegistry;
 import cz.cvut.spipes.repository.SMScriptCollectionRepository;
 import cz.cvut.spipes.repository.ScriptCollectionRepository;
 import cz.cvut.spipes.util.JenaPipelineUtils;
+import org.apache.jena.rdf.model.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.apache.jena.rdf.model.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Registers resources to contexts.
@@ -89,9 +90,6 @@ public class SPipesScriptManager {
 
         return PipelineFactory.loadPipeline(scriptsRepository.getResource(resourceUri, resourceContextUri));
     }
-
-
-
 
     public Module loadFunction(String functionId) {
 
