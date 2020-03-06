@@ -7,6 +7,7 @@ package cz.cvut.spipes.cli;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.OptionDef;
+import org.kohsuke.args4j.spi.Messages;
 import org.kohsuke.args4j.spi.OptionHandler;
 import org.kohsuke.args4j.spi.Parameters;
 import org.kohsuke.args4j.spi.Setter;
@@ -41,8 +42,7 @@ public class SubCommandOptionHandler <T extends SubCommand> extends OptionHandle
             }
 
         if(value==null)
-            //
-            throw new CmdLineException(owner, String.format("\n\"%s\" is not a valid value for \"%s\"", s, option.toString()));
+            throw new CmdLineException(owner, Messages.ILLEGAL_OPERAND, String.format("\n\"%s\" is not a valid value for \"%s\"", s, option.toString()));
         setter.addValue(value);
         return 1;
     }
