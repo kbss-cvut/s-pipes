@@ -1,13 +1,5 @@
 package cz.cvut.spipes.cli;
 
-
-
-import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.stream.Collectors;
-
 import cz.cvut.kbss.util.CmdLineUtils;
 import cz.cvut.spipes.constants.AppConstants;
 import cz.cvut.spipes.engine.*;
@@ -28,14 +20,19 @@ import org.kohsuke.args4j.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-/**
- *
- * @author blcha
- */
+
 public class ExecuteModuleCLI {
 
-    // cat input-data.rdf | sem-pipes execute --instance "<http://url>"
+    // cat input-data.rdf | s-pipes execute --instance "<http://url>"
     //                   --config-file "$PATH/config.ttl"
     //                   --input-binding-file "$PATH/input-binding.ttl" --output-binding-file "$PATH/output-binding.ttl"
     //                   --input-file --output-file
@@ -79,12 +76,11 @@ public class ExecuteModuleCLI {
     @Option(name = "-f", aliases = "--execute-only-one-function", usage = "Execute only one function (TEMPORARY)")
     private boolean isExecuteOnlyOneFunction;
 
-
     @Option(name = "-i", aliases = "--input-data-from-stdin", usage = "Input rdf is taken from also from std-in")
     private boolean isInputDataFromStdIn = false;
-    @Option(name = "-I", aliases = "--input-data-file", usage = "Input rdf files", multiValued = true)
+    @Option(name = "-I", aliases = "--input-data-file", usage = "Input rdf files")
     private List<File> inputDataFiles;
-    @Option(name = "-P", aliases = "--input-binding-parameter", usage = "Input binding parameter", multiValued = true)
+    @Option(name = "-P", aliases = "--input-binding-parameter", usage = "Input binding parameter")
     private Map<String, String> inputBindingParametersMap;
 
     @Argument(index = 0, metaVar = "EXECUTION_TARGET", usage = "Execution target id")
@@ -101,7 +97,7 @@ public class ExecuteModuleCLI {
         CmdLineParser argParser = new CmdLineParser(asArgs);
         CmdLineUtils.parseCommandLine(args, argParser);
 
-        String output = Arrays.stream(args).collect(Collectors.joining(" "));
+        String output = String.join(" ", args);
         LOG.info("Executing external module/function ... " + output);
 
         // ----- load input model

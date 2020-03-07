@@ -2,6 +2,7 @@ package cz.cvut.kbss.util;
 
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.OptionHandlerFilter;
 
 public class CmdLineUtils {
     public static void parseCommandLine(String[] args, CmdLineParser argParser) {
@@ -19,7 +20,7 @@ public class CmdLineUtils {
             System.err.println();
        
             // print option sample. This is useful some time
-            //System.err.println("  Example: java SampleMain"+argParser.printExample(ExampleMode.ALL));
+            System.err.println("  Example: java SampleMain"+argParser.printExample(OptionHandlerFilter.ALL));
             System.exit(1);
         }
     }

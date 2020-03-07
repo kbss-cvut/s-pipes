@@ -1,13 +1,5 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.cvut.spipes.cli;
 
-/**
- *
- * @author blcha
- */
 public enum SubCommand {
 
     EXECUTE_MODULE("execute", ExecuteModuleCLI.class);

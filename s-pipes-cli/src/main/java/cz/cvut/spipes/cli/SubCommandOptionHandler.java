@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package cz.cvut.spipes.cli;
 
 import org.kohsuke.args4j.CmdLineException;
@@ -12,10 +9,6 @@ import org.kohsuke.args4j.spi.OptionHandler;
 import org.kohsuke.args4j.spi.Parameters;
 import org.kohsuke.args4j.spi.Setter;
 
-/**
- *
- * @author blcha
- */
 public class SubCommandOptionHandler <T extends SubCommand> extends OptionHandler<T> {
 
     private final Class<T> enumType;

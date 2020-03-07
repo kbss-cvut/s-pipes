@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.cvut.spipes.cli;
 
 import org.kohsuke.args4j.Argument;
@@ -15,14 +11,10 @@ import java.util.Arrays;
 import java.util.List;
 
 
-/**
- *
- * @author blcha
- */
 public class UnifiedCLI {
 
     
-    @Argument(required = true, index = 0, metaVar="SUBCOMMAND", usage = "The subcommand of nlp utils ", handler=SubCommandOptionHandler.class)
+    @Argument(required = true, index = 0, metaVar="SUBCOMMAND", usage = "The sub-command of s-pipes utils", handler=SubCommandOptionHandler.class)
     private SubCommand subCommand;
     
     public static void main(String[] args) throws NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
@@ -42,14 +34,14 @@ public class UnifiedCLI {
             //argParser.printSingleLineUsage(System.err);
             argParser.printUsage(System.err);
             System.err.println();
-            System.err.println("Available subcommands : " + getSubCommands());
+            System.err.println("Available sub-commands : " + getSubCommands());
             //argParser.printSingleLineUsage(System.err);
             //System.err.println(argParser.printExample(ExampleMode.ALL));
             
             System.err.println();
 
             // print option sample. This is useful some time
-            //System.err.println("  Example: java SampleMain"+argParser.printExample(ExampleMode.ALL));
+            // System.err.println("  Example: java SampleMain"+argParser.printExample(OptionHandlerFilter.ALL));
             System.exit(1);
         }
         
@@ -61,7 +53,7 @@ public class UnifiedCLI {
     }
     
     private static String[] shiftParams(String[] args) {
-        List<String> argsList = new ArrayList(Arrays.asList(args));
+        List<String> argsList = new ArrayList<>(Arrays.asList(args));
         argsList.remove(0);
         return  argsList.toArray(new String[argsList.size()]);
     }
@@ -70,14 +62,13 @@ public class UnifiedCLI {
         if (args.length < 1) {
             return args;
         }
-        
-        String[] ret = { args[0] };
-        return ret;        
+
+        return new String[]{ args[0] };
     }
     
     
     private static String getSubCommands() {
-        StringBuffer rv = new StringBuffer();
+        StringBuilder rv = new StringBuilder();
     	rv.append("[");
     	for (SubCommand sc : SubCommand.values()) {
 			rv.append(sc.toString()).append(" | ");
