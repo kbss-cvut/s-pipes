@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.cvut.kbss.util;
 
 import org.apache.commons.io.IOUtils;
@@ -13,10 +9,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- *
- * @author blcha
- */
 public class InputStreamUtils {
 
     private static Logger LOG = LoggerFactory.getLogger(InputStreamUtils.class);

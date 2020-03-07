@@ -1,16 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.cvut.kbss.util;
 
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 
-/**
- *
- * @author blaskmir
- */
 public class CmdLineUtils {
     public static void parseCommandLine(String[] args, CmdLineParser argParser) {
 
