@@ -6,7 +6,6 @@ import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.QueryUtils;
-import java.util.List;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.QuerySolution;
@@ -19,6 +18,8 @@ import org.topbraid.spin.arq.ARQFactory;
 import org.topbraid.spin.model.Construct;
 import org.topbraid.spin.system.SPINModuleRegistry;
 import org.topbraid.spin.vocabulary.SP;
+
+import java.util.List;
 
 /**
  * TODO Order of queries is not enforced.   
@@ -111,8 +112,16 @@ public class ApplyConstructModule extends AbstractModule {
             Model inferredInSingleIterationModel = ModelFactory.createDefaultModel();
             Model extendedInferredModel = JenaUtils.createUnion(defaultModel, inferredModel);
 
-            for (Resource constructQueryRes : constructQueries) {
-                Construct spinConstructRes = constructQueryRes.as(Construct.class);
+            for (int i = 0; i < constructQueries.size(); i++) {
+                Construct spinConstructRes = constructQueries.get(i).as(Construct.class);
+
+                if (LOG.isTraceEnabled()) {
+                    String queryComment = getQueryComment(spinConstructRes);;
+                    LOG.trace(
+                        "Executing iteration {}/{} with {}/{} query \"{}\" ...",
+                        count, iterationCount, i + 1, constructQueries.size(), queryComment
+                    );
+                }
 
                 Query query;
                 if (parseText) {
@@ -122,6 +131,10 @@ public class ApplyConstructModule extends AbstractModule {
                 }
 
                 Model constructedModel = QueryUtils.execConstruct(query, extendedInferredModel, bindings);
+
+                if (LOG.isTraceEnabled()) {
+                    LOG.trace("... the query returned {} triples.", constructedModel.size());
+                }
 
                 inferredInSingleIterationModel = ModelFactory.createUnion(inferredInSingleIterationModel, constructedModel);
             }

@@ -240,7 +240,7 @@ public abstract class AbstractModule implements Module {
 
     }
 
-    private String getQueryComment(org.topbraid.spin.model.Query query) {
+    protected String getQueryComment(org.topbraid.spin.model.Query query) {
         if (query.getComment() != null) {
             return query.getComment();
         }
