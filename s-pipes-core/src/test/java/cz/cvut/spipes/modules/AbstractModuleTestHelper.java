@@ -4,6 +4,7 @@ import cz.cvut.spipes.engine.PipelineFactory;
 import cz.cvut.spipes.test.JenaTestUtils;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
+import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.util.FileUtils;
 
@@ -39,6 +40,16 @@ public abstract class AbstractModuleTestHelper {
 
         return ontModel;
     }
+
+    public Model getModel(String fileName) {
+        Model model = ModelFactory.createDefaultModel();
+
+        model.read(
+            getClass().getResourceAsStream(getFilePath(fileName)), null, FileUtils.langTurtle);
+
+        return model;
+    }
+
 
     public Module getConfigRootModule() {
         return  getRootModule(CONFIG_FILE_NAME);
