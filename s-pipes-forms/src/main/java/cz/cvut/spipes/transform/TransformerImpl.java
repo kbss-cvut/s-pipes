@@ -201,17 +201,20 @@ public class TransformerImpl implements Transformer {
                 OriginPair<URI, URI> originPair = new OriginPair<>(q.getOrigin(), getAnswer(q).map(Answer::getOrigin).orElse(null));
                 Statement s = questionStatements.get(originPair);
                 if (s != null) {
-                    Model m = extractModel(s);
-                    String uri = ((OntModel) inputScript).getBaseModel().listStatements(null, RDF.type, OWL.Ontology).next().getSubject().getURI();
-                    if (!changed.containsKey(uri))
+                    final Model m = extractModel(s);
+                    final String uri = ((OntModel) inputScript).getBaseModel().listStatements(null, RDF.type, OWL.Ontology).next().getSubject().getURI();
+                    if (!changed.containsKey(uri)) {
                         changed.put(uri, ModelFactory.createDefaultModel().add(m instanceof OntModel ? ((OntModel) m).getBaseModel() : m));
-                    Model changingModel = changed.get(uri);
+                    }
+                    final Model changingModel = changed.get(uri);
                     changingModel.remove(changingModel.listStatements(ResourceFactory.createResource(uri), null, (String) null));
 
                     changingModel.remove(s);
                     if (isSupportedAnon(q)) {
-                        if (q.getAnswers().stream().anyMatch(a -> !DigestUtils.sha1Hex(a.getTextValue()).equals(a.getHash()) && !DigestUtils.sha1Hex(a.getCodeValue().toString()).equals(a.getHash())))
+                        if (q.getAnswers().stream()
+                            .anyMatch(a -> !DigestUtils.sha1Hex(a.getTextValue()).equals(a.getHash()) && !DigestUtils.sha1Hex(a.getCodeValue().toString()).equals(a.getHash()))) {
                             throw new ConcurrentModificationException("TTL and form can not be edited at the same time");
+                        }
                         Query query = AnonNodeTransformer.parse(q, inputScript);
                         org.topbraid.spin.model.Query spinQuery = ARQ2SPIN.parseQuery(query.serialize(), inputScript);
                         changingModel.add(spinQuery.getModel());
@@ -221,8 +224,11 @@ public class TransformerImpl implements Transformer {
                                 ResourceFactory.createStringLiteral(q.getAnswers().iterator().next().getTextValue().replaceAll("\\n", "\n"))
                         );
                     } else {
-                        if (q.getAnswers().stream().anyMatch(a -> !DigestUtils.sha1Hex(a.getTextValue()).equals(a.getHash()) && (a.getCodeValue() == null || !DigestUtils.sha1Hex(a.getCodeValue().toString()).equals(a.getHash()))) && ttlChanged)
+                        if (q.getAnswers().stream()
+                            .anyMatch(a -> !DigestUtils.sha1Hex(a.getTextValue()).equals(a.getHash()) && (a.getCodeValue() == null || !DigestUtils.sha1Hex(a.getCodeValue().toString()).equals(a.getHash()))) &&
+                            ttlChanged) {
                             throw new ConcurrentModificationException("TTL and form can not be edited at the same time");
+                        }
                         RDFNode answerNode = getAnswerNode(getAnswer(q).orElse(null));
                         if (answerNode != null) {
                             changingModel.add(s.getSubject(), s.getPredicate(), answerNode);
@@ -243,13 +249,14 @@ public class TransformerImpl implements Transformer {
             changed.put(((OntModel) inputScript).getBaseModel().listStatements(null, RDF.type, OWL.Ontology).next().getSubject().getURI(), m);
         }
 
-        if (ttlChanged)
+        if (ttlChanged) {
             ttlModel.map(m ->
-                    changed.put(
-                            m.listStatements(null, RDF.type, OWL.Ontology).next().getSubject().getURI(),
-                            m
-                    )
+                changed.put(
+                    m.listStatements(null, RDF.type, OWL.Ontology).next().getSubject().getURI(),
+                    m
+                )
             );
+        }
 
         ResourceUtils.renameResource(module, newUri.toString());
 
@@ -456,6 +463,11 @@ public class TransformerImpl implements Transformer {
                 return false;
             OriginPair p = (OriginPair) o;
             return Objects.equals(q, p.q) && Objects.equals(a, p.a);
+        }
+
+        @Override
+        public String toString() {
+            return "<" + q.toString() + ", " + a.toString() + ">";
         }
     }
 
