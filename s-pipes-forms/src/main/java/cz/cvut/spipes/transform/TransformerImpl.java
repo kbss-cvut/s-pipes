@@ -207,7 +207,6 @@ public class TransformerImpl implements Transformer {
                         changed.put(uri, ModelFactory.createDefaultModel().add(m instanceof OntModel ? ((OntModel) m).getBaseModel() : m));
                     }
                     final Model changingModel = changed.get(uri);
-                    changingModel.remove(changingModel.listStatements(ResourceFactory.createResource(uri), null, (String) null));
 
                     changingModel.remove(s);
                     if (isSupportedAnon(q)) {
