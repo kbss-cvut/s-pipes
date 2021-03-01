@@ -49,7 +49,7 @@ public class ApplyConstructWithScrollableCursorModule extends ApplyConstructAbst
             return true;
         }
 
-        if ((currentIteration > 0) && (previousInferredModel.size() == currentInferredModel.size())) {
+        if ((currentIteration > 1) && (previousInferredModel.size() == currentInferredModel.size())) {
             return true;
         }
 
