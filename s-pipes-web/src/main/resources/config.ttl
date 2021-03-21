@@ -1,0 +1,8 @@
+@prefix spipes: <http://onto.fel.cvut.cz/ontologies/s-pipes/>
+@prefix spl: <http://onto.fel.cvut.cz/ontologies/s-pipes/semantic-logging-progress-listener/> .
+@prefix ddo: <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/>
+
+[
+    a    spipes:progress-listener ;
+    spipes:has-classname "cz.cvut.spipes.logging.SemanticLoggingProgressListener" ;
+] .

@@ -1,11 +1,7 @@
 package cz.cvut.spipes.rest;
 
-import cz.cvut.spipes.engine.ExecutionContext;
-import cz.cvut.spipes.engine.ExecutionContextFactory;
-import cz.cvut.spipes.engine.ExecutionEngine;
-import cz.cvut.spipes.engine.ExecutionEngineFactory;
-import cz.cvut.spipes.engine.PipelineFactory;
-import cz.cvut.spipes.engine.VariablesBinding;
+import cz.cvut.spipes.config.ExecutionConfig;
+import cz.cvut.spipes.engine.*;
 import cz.cvut.spipes.exception.SPipesServiceException;
 import cz.cvut.spipes.manager.SPipesScriptManager;
 import cz.cvut.spipes.modules.Module;
@@ -14,14 +10,6 @@ import cz.cvut.spipes.rest.util.ProgressListenerLoader;
 import cz.cvut.spipes.rest.util.ScriptManagerFactory;
 import cz.cvut.spipes.rest.util.ServiceParametersHelper;
 import cz.cvut.spipes.util.RDFMimeType;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.URL;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import javax.annotation.PostConstruct;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.rdf.model.Model;
@@ -29,18 +17,23 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.util.FileUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+
+import javax.annotation.PostConstruct;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @EnableWebMvc
@@ -210,14 +203,7 @@ public class SPipesServiceController {
         LOG.info("- input variable binding ={}", inputVariablesBinding);
 
         // CONFIGURE ENGINE
-
-        ExecutionEngine engine = ExecutionEngineFactory.createEngine();
-        if (configURL != null) {
-            final Model configModel = loadModelFromUrl(configURL);
-            ProgressListenerLoader.createListeners(configModel).forEach(
-                engine::addProgressListener
-            );
-        }
+        ExecutionEngine engine = createExecutionEngine(configURL);
 
         // LOAD INPUT DATA
         ExecutionContext inputExecutionContext = ExecutionContextFactory.createContext(inputDataModel, inputVariablesBinding);
@@ -319,6 +305,20 @@ public class SPipesServiceController {
 
         LOG.info("Processing successfully finished.");
         return outputExecutionContext.getDefaultModel();
+    }
+
+    private ExecutionEngine createExecutionEngine(@Nullable final String configUrl) {
+        ExecutionEngine engine = ExecutionEngineFactory.createEngine();
+
+        String cUrl = Optional.ofNullable(configUrl)
+            .orElse(ExecutionConfig.getConfigUrl());
+
+        final Model configModel = loadModelFromUrl(cUrl);
+        ProgressListenerLoader.createListeners(configModel).forEach(
+            engine::addProgressListener
+        );
+
+        return engine;
     }
 
     private void logParam(String parameterKey, String parameterValue) {

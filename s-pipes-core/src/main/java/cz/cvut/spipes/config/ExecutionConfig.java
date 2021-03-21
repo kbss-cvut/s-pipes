@@ -21,4 +21,8 @@ public class ExecutionConfig {
                 "execution.checkValidationConstraints",
                 "true"));
     }
+
+    public static String getConfigUrl() {
+        return CoreConfigProperies.get("execution.configuration.url", "config.ttl");
+    }
 }

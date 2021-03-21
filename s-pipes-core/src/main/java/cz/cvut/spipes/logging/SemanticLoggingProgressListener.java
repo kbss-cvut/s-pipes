@@ -11,18 +11,8 @@ import cz.cvut.spipes.model.Thing;
 import cz.cvut.spipes.model.Transformation;
 import cz.cvut.spipes.modules.Module;
 import cz.cvut.spipes.util.TempFileUtils;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.util.FileUtils;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;
@@ -34,11 +24,21 @@ import org.eclipse.rdf4j.rio.turtle.TurtleWriterFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 public class SemanticLoggingProgressListener implements ProgressListener {
     private static final Logger LOG =
         LoggerFactory.getLogger(SemanticLoggingProgressListener.class);
-
-    private static Path root;
 
     /**
      * Maps pipeline executions and module executions to the transformation object.
@@ -59,11 +59,12 @@ public class SemanticLoggingProgressListener implements ProgressListener {
         props.put(JOPAPersistenceProperties.SCAN_PACKAGE, "cz.cvut.spipes.model");
         props.put(JOPAPersistenceProperties.ONTOLOGY_PHYSICAL_URI_KEY, "spipes");
         PersistenceFactory.init(props);
-        try {
-            root = Files.createTempDirectory(TempFileUtils.createTimestampFileName("-s-pipes-log-"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    }
+
+    public SemanticLoggingProgressListener() {
+    }
+
+    public SemanticLoggingProgressListener(Resource configResource) {
     }
 
     @Override public void pipelineExecutionStarted(final long pipelineExecutionId) {
@@ -72,7 +73,7 @@ public class SemanticLoggingProgressListener implements ProgressListener {
         pipelineExecution.setTypes(Collections.singleton(Vocabulary.s_c_transformation));
 
         executionMap.put(pipelineExecution.getId(), pipelineExecution);
-        final Path pipelineExecutionDir = root.resolve("pipeline-execution-" + pipelineExecutionId);
+        final Path pipelineExecutionDir = FileSystemLogger.resolvePipelineExecution(pipelineExecutionId);
         pipelineExecutionDir.toFile().mkdir();
         logDir.put(pipelineExecutionId, pipelineExecutionDir);
 
@@ -144,7 +145,7 @@ public class SemanticLoggingProgressListener implements ProgressListener {
         properties.put(P_HAS_PART, Collections.singleton(URI.create(moduleExecution.getId())));
 
         Thing output = new Thing();
-        output.setId(saveModelToFile(getDir(pipelineExecutionId), "module-" + moduleExecutionId + "-output.ttl", module.getOutputContext().getDefaultModel()));
+        output.setId(saveModelToFile(getDir(pipelineExecutionId), FileSystemLogger.getModuleOutputFilename(moduleExecutionId), module.getOutputContext().getDefaultModel()));
         moduleExecution.setHas_output(Collections.singleton(output));
 
         synchronized (em) {

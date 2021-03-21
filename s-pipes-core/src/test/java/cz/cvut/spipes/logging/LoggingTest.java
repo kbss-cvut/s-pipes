@@ -4,14 +4,15 @@ import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.engine.ExecutionEngine;
 import cz.cvut.spipes.engine.ExecutionEngineFactory;
 import cz.cvut.spipes.modules.TestIdentityModule;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.RDFS;
 import org.junit.jupiter.api.Test;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class LoggingTest {
 
