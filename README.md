@@ -69,6 +69,18 @@ The following software needs to be installed on the system for development:
 - JDK 8
 - Maven
 
+## Dockerization
+  The docker image of SPipes backend can be built by
+  `docker build -t spipes-engine .`
+
+  SPipes web can be run and exposed at the port 8080 as
+  `docker run -v /home:/home -p 8080:8080 spipes-engine:latest` and the endpoint is http://localhost:8080/spipes. The `-v /home:/home`
+  option mount your home to docker image - this is very convenient for testing.
+
+Two optional build arguments are available `CONTEXTS_SCRIPTPATHS=hello` and `AUDIT_RESOURCESPATH=hello` so the full build command could look like:
+  `docker build --build-arg CONTEXTS_SCRIPTPATHS=default_path --build-arg AUDIT_RESOURCESPATH=default_path -t spipes-engine .`
+
+
 ## Licences of Reused software components
 
 Beside included software dependencies by Maven, see a [list of reused software components, and their licences](./doc/licences.md).
