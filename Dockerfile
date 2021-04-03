@@ -15,6 +15,6 @@ FROM tomcat:9.0-jdk8-slim
 
 EXPOSE 8080
 
-COPY --from=MAVEN_BUILD /s-pipes-web/target/s-pipes-web-*.war /usr/local/tomcat/webapps/spipes.war
+COPY --from=MAVEN_BUILD /s-pipes-web/target/s-pipes-web-*.war /usr/local/tomcat/webapps/s-pipes.war
 
 CMD ["catalina.sh","run"]
