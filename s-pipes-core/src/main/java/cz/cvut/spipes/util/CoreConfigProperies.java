@@ -13,10 +13,13 @@ public class CoreConfigProperies {
 
     static {
         try {
-
             InputStream is = CoreConfigProperies.class.getClassLoader().getResourceAsStream("config-core.properties");
             if (is != null) {
                 prop.load(is);
+                prop.keySet().forEach(k -> {
+                    String ks = k.toString();
+                    prop.setProperty(ks, resolveProp(k.toString()));
+                });
                 LOG.info("Loaded configuration from {} : \n {}", CONFIG_FILE, prop.entrySet());
             } else {
                 throw new FileNotFoundException("Property file '" + CONFIG_FILE + "' not found in the classpath");
@@ -41,6 +44,14 @@ public class CoreConfigProperies {
             return defaultValue;
         }
         return value;
+    }
+
+    private static String resolveProp(String name){
+        String systemEnv = System.getenv(name.toUpperCase().replaceAll("\\.", "_"));
+        if(systemEnv != null){
+            return systemEnv;
+        }
+        return prop.getProperty(name);
     }
 
 }
