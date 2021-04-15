@@ -35,17 +35,17 @@ Following steps are required to create hello world script:
         a            owl:Ontology ;
         owl:imports  <http://onto.fel.cvut.cz/ontologies/s-pipes-lib> .
     ```
-3) Add output function -- let's call it `execute-greeding` and make sure that it returns JSON-LD as serialization
+3) Add output function -- let's call it `execute-greeting` and make sure that it returns JSON-LD as serialization
 of constructed RDF.  
     ```
-    :express-greeding_Return
+    :express-greeting_Return
         a                  sml:ReturnRDF ;
-        rdfs:label         "Return greeding statement" ;
+        rdfs:label         "Return greeting statement" ;
         sml:serialization  sml:JSONLD .
 
-    :execute-greeding  a     sm:Function ;
+    :execute-greeting  a     sm:Function ;
         rdfs:subClassOf  sm:Functions ;
-        sm:returnModule  :express-greeding_Return .
+        sm:returnModule  :express-greeting_Return .
    ```
 4) Process input parameters -- we create two variables `?personName` and `?personId` using [SPARQL expressions](https://www.w3.org/TR/sparql11-query/). First, we bind *variable* `?personName` with expression `CONCAT(?firstName, " ", ?lastName)`, then we bind *variable* `?personId` with expression `REPLACE(LCASE(?personName), " ", "-")`. Second assignment must follow the first assignment which is expressed by `sm:next` property.
     ```
@@ -67,7 +67,7 @@ of constructed RDF.
     .
     :bind-person-id
         a sml:BindWithConstant ;
-        sm:next :construct-greeding ;
+        sm:next :construct-greeting ;
         sm:outputVariable "personId" ;
         sml:value [
             a sp:replace ;
@@ -85,9 +85,9 @@ of constructed RDF.
     ```
 5) Construct RDF triples -- finally, we construct RDF triples using SPARQL construct query. 
     ```
-    :construct-greeding
+    :construct-greeting
         a sml:ApplyConstruct ;
-        sm:next :express-greeding_Return ;
+        sm:next :express-greeting_Return ;
         sml:constructQuery [
             a sp:Construct ;
             sp:text """
@@ -117,20 +117,20 @@ i.e. root directory of the project [s-pipes-modules](https://kbss.felk.cvut.cz/g
 
 Let's assume that SPipes web application is running at `http://localhost:8080/s-pipes`. We can call the *pipeline* with:
     
-    http://localhost:8080/s-pipes/service?id=execute-greeding&firstName=Robert&lastName=Plant
+    http://localhost:8080/s-pipes/service?id=execute-greeting&firstName=Robert&lastName=Plant
 
 The call produces log file as shown bellow:
     
     INFO  c.c.s.r.SPipesServiceController - Processing service GET request.
-    INFO  c.c.s.r.SPipesServiceController - - parameters={id=[execute-greeding], firstName=[Robert], lastName=[Plant]}
+    INFO  c.c.s.r.SPipesServiceController - - parameters={id=[execute-greeting], firstName=[Robert], lastName=[Plant]}
     DEBUG c.c.s.r.SPipesServiceController - Parameter 'id' is used instead of parameter '_pId', which is missing.
-    INFO  c.c.s.r.SPipesServiceController - - _pId=execute-greeding
-    INFO  c.c.s.r.SPipesServiceController - - input variable binding ={_pId=execute-greeding, firstName=Robert, lastName=Plant}
-    DEBUG c.c.s.util.JenaPipelineUtils - Registering function http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1/execute-greeding 
-        to return module http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1/express-greeding_Return.
-    INFO  c.c.s.e.ExecutionEngineImpl - Executing script http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1/express-greeding_Return 
+    INFO  c.c.s.r.SPipesServiceController - - _pId=execute-greeting
+    INFO  c.c.s.r.SPipesServiceController - - input variable binding ={_pId=execute-greeting, firstName=Robert, lastName=Plant}
+    DEBUG c.c.s.util.JenaPipelineUtils - Registering function http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1/execute-greeting 
+        to return module http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1/express-greeting_Return.
+    INFO  c.c.s.e.ExecutionEngineImpl - Executing script http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1/express-greeting_Return 
         with context Context 1326017910[ 
-            varBindings = {_pId=execute-greeding, firstName=Robert, lastName=Plant}
+            varBindings = {_pId=execute-greeting, firstName=Robert, lastName=Plant}
 	        modelSize = 0
 	    ].
     INFO  c.c.s.e.ExecutionEngineImpl -  ##### Bind person name
@@ -138,7 +138,7 @@ The call produces log file as shown bellow:
     INFO  c.c.s.e.ExecutionEngineImpl -  ##### Bind person id 
     DEBUG c.c.s.m.BindWithConstantModule - 	Binding personId --> robert-plant
     INFO  c.c.s.e.ExecutionEngineImpl -  ##### Construct greeting
-    INFO  c.c.s.e.ExecutionEngineImpl -  ##### Return greeding statement
+    INFO  c.c.s.e.ExecutionEngineImpl -  ##### Return greeting statement
     INFO  c.c.s.r.SPipesServiceController - Processing successfully finished.
     DEBUG c.c.s.c.RDFMediaTypeConverter - Writing model of size 1, message: {Content-Type=[application/ld+json;charset=utf-8]}
 
@@ -165,6 +165,6 @@ To configure the listener, we need to create a [ttl file](config.ttl) containing
  
  To execute the hello world pipeline configured with the advanced logging listener run: 
     
-    http://localhost:8080/s-pipes/service?id=execute-greeding&firstName=Robert&lastName=Plant&_pConfigURL=/SPIPES_DIR/doc/examples/hello-world/config.ttl
+    http://localhost:8080/s-pipes/service?id=execute-greeting&firstName=Robert&lastName=Plant&_pConfigURL=/SPIPES_DIR/doc/examples/hello-world/config.ttl
 
 It deploys [execution metadata](rdf4j-repository-export.nq.zip) into RDF4J server as well as [directory with all data inputted to or outputted from modules](execution-logs.zip). 

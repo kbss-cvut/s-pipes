@@ -38,7 +38,7 @@
 .
 :bind-person-id
   a sml:BindWithConstant ;
-  sm:next :construct-greeding ;
+  sm:next :construct-greeting ;
   sm:outputVariable "personId" ;
   sml:value [
       a sp:replace ;
@@ -53,9 +53,9 @@
     ] ;
   rdfs:label "Bind person id" ;
 .
-:construct-greeding
+:construct-greeting
   a sml:ApplyConstruct ;
-  sm:next :express-greeding_Return ;
+  sm:next :express-greeting_Return ;
   sml:constructQuery [
       a sp:Construct ;
       sp:text """
@@ -71,13 +71,13 @@ CONSTRUCT {
   sml:replace true ;
   rdfs:label "Construct greeting" ;
 .
-:execute-greeding
+:execute-greeting
   a sm:Function ;
-  sm:returnModule :express-greeding_Return ;
+  sm:returnModule :express-greeting_Return ;
   rdfs:subClassOf sm:Functions ;
 .
-:express-greeding_Return
+:express-greeting_Return
   a sml:ReturnRDF ;
   sml:serialization sml:JSONLD ;
-  rdfs:label "Return greeding statement" ;
+  rdfs:label "Return greeting statement" ;
 .
