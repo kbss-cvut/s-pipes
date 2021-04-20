@@ -51,6 +51,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
      * Maps pipeline executions and module executions to the transformation object.
      */
     private static final Map<String, Object> executionMap = new HashMap<>();
+    private static final Map<String, Object> metadataMap = new HashMap<>();
     private static final Map<String, EntityManager> entityManagerMap = new HashMap<>();
     private static final Map<Long, Path> logDir = new HashMap<>();
     private static final String P_HAS_PART =
@@ -185,6 +186,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_finish_date, finishDate);
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_finish_date_unix, finishDate.getTime());
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_duration, computeDuration(startDate, finishDate));
+            addProperty(pipelineExecution, SPIPES.has_pipeline_name, metadataMap.get(SPIPES.has_pipeline_name.toString()));
 
             em.getTransaction().commit();
             em.close();
@@ -302,6 +304,10 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
                 addProperty(moduleExecution, SPIPES.has_module_execution_finish_date_unix, finishDate.getTime());
                 addProperty(moduleExecution, SPIPES.has_module_execution_duration, computeDuration(startDate, finishDate));
                 addProperty(moduleExecution, SPIPES.has_output_model_triple_count, module.getOutputContext().getDefaultModel().size());
+                addProperty(moduleExecution, SPIPES.has_pipeline_name, module.getResource().toString().replaceAll("\\/[^.]*$", ""));
+                if(!metadataMap.containsKey(SPIPES.has_pipeline_name.toString())){
+                    metadataMap.put(SPIPES.has_pipeline_name.toString(), module.getResource().toString().replaceAll("\\/[^.]*$", ""));
+                }
 
                 // input binding
                 SourceDatasetSnapshot inputBindings = new SourceDatasetSnapshot(); //TODO type is not saved

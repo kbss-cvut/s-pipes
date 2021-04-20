@@ -37,6 +37,7 @@ public class SPIPES {
     public static final Property has_module_type = property("has-module-type");
     public static final Property has_module_id = property("has-module-id");
     public static final Property has_pipeline_input_binding = property("has-pipeline-input-binding");
+    public static final Property has_pipeline_name = property("has-pipeline-name");
 
 
     /**
