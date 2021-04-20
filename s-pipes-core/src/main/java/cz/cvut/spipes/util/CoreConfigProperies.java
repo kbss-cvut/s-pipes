@@ -1,10 +1,11 @@
 package cz.cvut.spipes.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class CoreConfigProperies {
     private static final String CONFIG_FILE = "config-core.properties";
@@ -13,11 +14,22 @@ public class CoreConfigProperies {
 
     static {
         try {
-
             InputStream is = CoreConfigProperies.class.getClassLoader().getResourceAsStream("config-core.properties");
             if (is != null) {
                 prop.load(is);
-                LOG.info("Loaded configuration from {} : \n {}", CONFIG_FILE, prop.entrySet());
+                prop.keySet().forEach(k -> {
+                    String ks = k.toString();
+                    String envValue = getEnvValue(ks);
+                    if (envValue != null) {
+                        LOG.debug("Overriding configuration property '{}' by system environment variable." +
+                                " Using new value: {}.",
+                                ks,
+                                envValue
+                        );
+                        prop.setProperty(ks, envValue);
+                    }
+                });
+                LOG.info("Loaded configuration from {} and system environment : \n {}", CONFIG_FILE, prop.entrySet());
             } else {
                 throw new FileNotFoundException("Property file '" + CONFIG_FILE + "' not found in the classpath");
             }
@@ -41,6 +53,10 @@ public class CoreConfigProperies {
             return defaultValue;
         }
         return value;
+    }
+
+    private static String getEnvValue(String name){
+        return System.getenv(name.toUpperCase().replaceAll("\\.", "_"));
     }
 
 }
