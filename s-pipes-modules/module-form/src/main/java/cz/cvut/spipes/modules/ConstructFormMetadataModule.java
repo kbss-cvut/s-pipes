@@ -2,21 +2,22 @@ package cz.cvut.spipes.modules;
 
 import cz.cvut.spipes.VocabularyJena;
 import cz.cvut.spipes.constants.KBSS_MODULE;
+import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
-import java.util.LinkedList;
-import java.util.List;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.RDF;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.LinkedList;
+import java.util.List;
+
+import static cz.cvut.spipes.form.JenaFormUtils.getAnswerOrigin;
+import static cz.cvut.spipes.form.JenaFormUtils.getQuestionOrigin;
 
 public class ConstructFormMetadataModule extends AnnotatedAbstractModule {
 
@@ -26,13 +27,8 @@ public class ConstructFormMetadataModule extends AnnotatedAbstractModule {
     private static final String TYPE_PREFIX = TYPE_URI + "/";
     private static final String PATH_SEPARATOR = ",";
     private static final String INSTANCE_TYPE_SEPARATOR = "|";
-    // TODO remove prefix
-    private static final String SML_PREFIX = "http://topbraid.org/sparqlmotionlib#";
 
-    /**
-     * URL of the RDF4J repository.
-     */
-    @Parameter(urlPrefix = SML_PREFIX, name = "replace")
+    @Parameter(urlPrefix = SML.uri, name = "replace")
     private boolean isReplace = false;
 
     private enum Origin {
@@ -172,15 +168,6 @@ public class ConstructFormMetadataModule extends AnnotatedAbstractModule {
         }
         throw new IllegalArgumentException("Provided resource " + formEntity + " is not a form entity.");
     }
-
-    private static Resource getQuestionOrigin(Resource formEntity) {
-        return formEntity.getPropertyResourceValue(VocabularyJena.s_p_has_question_origin);
-    }
-
-    private static Resource getAnswerOrigin(Resource formEntity) {
-        return formEntity.getPropertyResourceValue(VocabularyJena.s_p_has_answer_origin);
-    }
-
 
     private static boolean isAnswer(Resource formEntity) {
         return formEntity.hasProperty(RDF.type, VocabularyJena.s_c_answer);

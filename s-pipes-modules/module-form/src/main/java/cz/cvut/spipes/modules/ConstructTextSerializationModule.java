@@ -10,15 +10,16 @@ import cz.cvut.spipes.VocabularyJena;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
+import cz.cvut.spipes.form.JenaFormUtils;
 import cz.cvut.spipes.form.JopaPersistenceUtils;
-import java.net.URI;
-import java.util.List;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.URI;
+import java.util.List;
 
 public class ConstructTextSerializationModule extends AnnotatedAbstractModule {
 
@@ -84,13 +85,7 @@ public class ConstructTextSerializationModule extends AnnotatedAbstractModule {
     }
 
     private List<Resource> getRootQuestions(Model formModel) {
-        return formModel.listSubjects()
-            .filterKeep(
-                subj -> subj.hasProperty(
-                    RDF.type,
-                    VocabularyJena.s_c_question
-                )
-            )
+        return JenaFormUtils.getQuestions(formModel)
             .filterDrop(
                 subj -> formModel.listResourcesWithProperty(
                     VocabularyJena.s_p_has_related_question, subj).hasNext()
