@@ -24,6 +24,11 @@ All terms defined in this section refers to SPipes terminology:
 
 SPipes loads pipelines by recursive traversal of configured directories, searching for ontology files represented by `.ttl` suffix. *Global scripts* are represented by suffix **.sms.ttl**. A script is identified by ontology iri in which it is defined. Ontology imports (using rdf property **owl:imports**) can be used to modularize scripts into multiple files. Script defines set of pipelines from its ontology import closure. 
 
+## Examples
+
+SPipes script construction, execution, and execution history tracking is explained 
+in [Hello world example](doc/examples/hello-world/hello-world.md).
+
 ## Structure of Maven Submodules
 
 ### SPipes Core 

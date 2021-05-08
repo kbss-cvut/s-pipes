@@ -7,19 +7,19 @@ Hello world example explains SPipes script construction, execution, and executio
 We create simple *script* that contain only one *pipeline*. The *pipeline* constructs hello world message for a person within RDF language. The person is identified by *pipeline*'s *input parameter*s `?firstName` and `?lastName`. 
 Output of the pipeline in RDF for `?firstName=Robert` and `?lastName=Plant` is 
 
-    <http://vfn.cz/ontologies/s-pipes/hello-world-example-0.1/John> <http://vfn.cz/ontologies/s-pipes/hello-world-example-0.1/is-greeted-by-message> "Hello Robert Plant." .
+    <http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1/John> <http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1/is-greeted-by-message> "Hello Robert Plant." .
 
 Our pipeline however returns the message in JSON-LD serialization of this RDF, which is
 
     {
-        "@id" : "http://vfn.cz/ontologies/s-pipes/hello-world-example-0.1/Robert-Plant",
+        "@id" : "http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1/Robert-Plant",
         "is-greeted-by-message" : "Hello Robert Plant.",
         
         "@context" : {
             "is-greeted-by-message" : {
-                "@id" : "http://vfn.cz/ontologies/s-pipes/hello-world-example-0.1/is-greeted-by-message"
+                "@id" : "http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1/is-greeted-by-message"
             },
-            "@vocab" : "http://vfn.cz/ontologies/s-pipes/hello-world-example-0.1/",
+            "@vocab" : "http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1/",
         }
     }
 
@@ -91,7 +91,7 @@ of constructed RDF.
         sml:constructQuery [
             a sp:Construct ;
             sp:text """
-                PREFIX : <http://vfn.cz/ontologies/s-pipes/hello-world-example-0.1/>
+                PREFIX : <http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1/>
                 CONSTRUCT {
                     ?person :is-greeted-by-message ?greetingMessage .
                 } WHERE {

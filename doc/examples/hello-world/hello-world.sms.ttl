@@ -59,7 +59,7 @@
   sml:constructQuery [
       a sp:Construct ;
       sp:text """
-PREFIX : <http://vfn.cz/ontologies/s-pipes/hello-world-example-0.1/>
+PREFIX : <http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1/>
 CONSTRUCT {
     ?person :is-greeted-by-message ?greetingMessage .
 } WHERE {
