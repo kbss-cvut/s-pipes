@@ -1,0 +1,41 @@
+version: '2'
+
+services:
+  app:
+    image: 'spipes-engine:latest'
+    container_name: app
+    ports:
+      - "8081:8080"
+    expose:
+      - "8081"
+    networks:
+      - overlay
+    depends_on:
+      - rdf4j
+    environment:
+      - CONTEXTS_SCRIPTPATHS=/home/jordan/IdeaProjects/s-pipes-newgen/src/test/resources/scripts_test/sample
+#      - P_RDF4J_SERVER_URL=http://rdf4j:8080/rdf4j-server #TODO should be part of the configuration
+    volumes:
+      - /home:/home
+
+  rdf4j:
+    image: 'eclipse/rdf4j-workbench:amd64-3.5.0'
+    container_name: rdf4j
+    ports:
+      - "8080:8080"
+    expose:
+      - "8080"
+    networks:
+      - overlay
+    environment:
+      - JAVA_OPTS=-Xms1g -Xmx4g
+    volumes:
+      - data:/var/rdf4j
+      - logs:/usr/local/tomcat/logs
+
+volumes:
+  data:
+  logs:
+
+networks:
+  overlay:
