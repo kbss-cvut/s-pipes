@@ -2,7 +2,7 @@ version: '2'
 
 services:
   app:
-    image: 'spipes-engine:latest'
+    image: 's-pipes-engine:latest'
     container_name: app
     ports:
       - "8081:8080"
