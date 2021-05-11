@@ -1,0 +1,87 @@
+# baseURI: http://onto.fel.cvut.cz/ontologies/s-pipes/skosify-example-0.1
+# imports: http://onto.fel.cvut.cz/ontologies/s-pipes-lib
+# imports: http://onto.fel.cvut.cz/ontologies/s-pipes/skosify-example-0.1/metadata
+# imports: http://onto.fel.cvut.cz/ontologies/s-pipes/skosify-example-0.1/relations
+
+@prefix : <http://onto.fel.cvut.cz/ontologies/s-pipes/skosify-example-0.1/> .
+@prefix doc: <http://onto.fel.cvut.cz/ontologies/documentation/> .
+@prefix kbss-module: <http://onto.fel.cvut.cz/ontologies/lib/module/> .
+@prefix km-sesame: <http://onto.fel.cvut.cz/ontologies/lib/module/sesame/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sk-id: <http://onto.fel.cvut.cz/ontologies/s-pipes/skosify-example-0.1/identification/> .
+@prefix sk-meta: <http://onto.fel.cvut.cz/ontologies/s-pipes/skosify-example-0.1/metadata/> .
+@prefix sk-rel: <http://onto.fel.cvut.cz/ontologies/s-pipes/skosify-example-0.1/relations/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix sm: <http://topbraid.org/sparqlmotion#> .
+@prefix sml: <http://topbraid.org/sparqlmotionlib#> .
+@prefix sp: <http://spinrdf.org/sp#> .
+@prefix spif: <http://spinrdf.org/spif#> .
+@prefix spin: <http://spinrdf.org/spin#> .
+@prefix spl: <http://spinrdf.org/spl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://onto.fel.cvut.cz/ontologies/s-pipes/skosify-example-0.1>
+  a owl:Ontology ;
+  owl:imports <http://onto.fel.cvut.cz/ontologies/s-pipes-lib> ;
+  owl:imports :metadata ;
+  owl:imports :relations ;
+.
+:construct-example-data
+  a sml:ApplyConstruct ;
+  sm:next sk-id:identify-concepts ;
+  sml:constructQuery [
+      a sp:Construct ;
+      sp:text """
+CONSTRUCT {
+   :organism a owl:Class ;
+       rdfs:label \"Organism\" ;
+   .
+   :person a owl:Class ;
+       rdfs:label \"Person\" ;
+       rdfs:subClassOf :organism ;
+   .
+   :animal a owl:Class ;
+       rdfs:label \"Animal\" ;
+       rdfs:subClassOf :organism ;
+   .
+   :cat a owl:Class ;
+       rdfs:label \"Cat\" ;
+       rdfs:subClassOf :animal ;
+   .
+   :dog a owl:Class ;
+       rdfs:label \"Dog\" ;
+       rdfs:subClassOf :animal ;
+   .
+   :lassie-movie-star a owl:NamedIndividual ;
+       rdfs:label \"Lassie\" ;
+       a :dog ;
+   .
+   :laika-space-animal a owl:NamedIndividual ;
+       rdfs:label \"Laika\" ;
+       a :dog ;
+   .
+} WHERE {
+}
+""" ;
+    ] ;
+  sml:replace true ;
+  rdfs:label "Construct example data" ;
+.
+sk-meta:construct-labels
+  sm:next :skosify_Return ;
+.
+sk-rel:construct-broader
+  sm:next :skosify_Return ;
+.
+:skosify
+  a sm:Function ;
+  sm:returnModule :skosify_Return ;
+  rdfs:subClassOf sm:Functions ;
+.
+:skosify_Return
+  a sml:ReturnRDF ;
+  sml:serialization sml:JSONLD ;
+  rdfs:label "Return skosified" ;
+.

@@ -1,0 +1,76 @@
+{
+    "@graph": [
+        {
+            "@id": "http://onto.fel.cvut.cz/ontologies/s-pipes/skosify-example-0.1/animal",
+            "broader": "http://onto.fel.cvut.cz/ontologies/s-pipes/skosify-example-0.1/organism",
+            "prefLabel": "Animal"
+        },
+        {
+            "@id": "http://onto.fel.cvut.cz/ontologies/s-pipes/skosify-example-0.1/cat",
+            "broader": "http://onto.fel.cvut.cz/ontologies/s-pipes/skosify-example-0.1/animal",
+            "prefLabel": "Cat"
+        },
+        {
+            "@id": "http://onto.fel.cvut.cz/ontologies/s-pipes/skosify-example-0.1/dog",
+            "broader": "http://onto.fel.cvut.cz/ontologies/s-pipes/skosify-example-0.1/animal",
+            "prefLabel": "Dog"
+        },
+        {
+            "@id": "http://onto.fel.cvut.cz/ontologies/s-pipes/skosify-example-0.1/laika-space-animal",
+            "broader": "http://onto.fel.cvut.cz/ontologies/s-pipes/skosify-example-0.1/dog",
+            "prefLabel": "Laika"
+        },
+        {
+            "@id": "http://onto.fel.cvut.cz/ontologies/s-pipes/skosify-example-0.1/lassie-movie-star",
+            "broader": "http://onto.fel.cvut.cz/ontologies/s-pipes/skosify-example-0.1/dog",
+            "prefLabel": "Lassie"
+        },
+        {
+            "@id": "http://onto.fel.cvut.cz/ontologies/s-pipes/skosify-example-0.1/organism",
+            "prefLabel": "Organism"
+        },
+        {
+            "@id": "http://onto.fel.cvut.cz/ontologies/s-pipes/skosify-example-0.1/person",
+            "broader": "http://onto.fel.cvut.cz/ontologies/s-pipes/skosify-example-0.1/organism",
+            "prefLabel": "Person"
+        }
+    ],
+    "@context": {
+        "broader": {
+            "@id": "http://www.w3.org/2004/02/skos/core#broader",
+            "@type": "@id"
+        },
+        "prefLabel": {
+            "@id": "http://www.w3.org/2004/02/skos/core#prefLabel"
+        },
+        "@vocab": "http://onto.fel.cvut.cz/ontologies/s-pipes/skosify-example-0.1/",
+        "owl": "http://www.w3.org/2002/07/owl#",
+        "tops": "http://www.topbraid.org/tops#",
+        "xsd": "http://www.w3.org/2001/XMLSchema#",
+        "fn": "http://www.w3.org/2005/xpath-functions#",
+        "skos": "http://www.w3.org/2004/02/skos/core#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "smf": "http://topbraid.org/sparqlmotionfunctions#",
+        "spif": "http://spinrdf.org/spif#",
+        "sk-rel": "http://onto.fel.cvut.cz/ontologies/s-pipes/skosify-example-0.1/relations/",
+        "sml": "http://topbraid.org/sparqlmotionlib#",
+        "arg": "http://spinrdf.org/arg#",
+        "sm": "http://topbraid.org/sparqlmotion#",
+        "km-rdf4j": "http://onto.fel.cvut.cz/ontologies/lib/module/rdf4j/",
+        "sp": "http://spinrdf.org/sp#",
+        "kbss-module": "http://onto.fel.cvut.cz/ontologies/lib/module/",
+        "turtle": "http://www.semanticweb.org/owl/owlapi/turtle#",
+        "km-param": "http://onto.fel.cvut.cz/ontologies/lib/module-param/",
+        "afn": "http://jena.hpl.hp.com/ARQ/function#",
+        "sk-meta": "http://onto.fel.cvut.cz/ontologies/s-pipes/skosify-example-0.1/metadata/",
+        "spl": "http://spinrdf.org/spl#",
+        "jfn": "java:org.apache.jena.sparql.function.library.",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "sk-id": "http://onto.fel.cvut.cz/ontologies/s-pipes/skosify-example-0.1/identification/",
+        "pf": "http://jena.hpl.hp.com/ARQ/property#",
+        "km-sesame": "http://onto.fel.cvut.cz/ontologies/lib/module/sesame/",
+        "spin": "http://spinrdf.org/spin#",
+        "kbss-spif": "http://onto.fel.cvut.cz/ontologies/lib/spin-function/",
+        "doc": "http://onto.fel.cvut.cz/ontologies/documentation/"
+    }
+}

@@ -1,0 +1,43 @@
+# baseURI: http://onto.fel.cvut.cz/ontologies/s-pipes/skosify-example-0.1/identification
+# imports: http://onto.fel.cvut.cz/ontologies/s-pipes-lib
+
+@prefix : <http://onto.fel.cvut.cz/ontologies/s-pipes/skosify-example-0.1/identification/> .
+@prefix doc: <http://onto.fel.cvut.cz/ontologies/documentation/> .
+@prefix kbss-module: <http://onto.fel.cvut.cz/ontologies/lib/module/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sk-id: <http://onto.fel.cvut.cz/ontologies/s-pipes/skosify-example-0.1/identification/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix sm: <http://topbraid.org/sparqlmotion#> .
+@prefix sml: <http://topbraid.org/sparqlmotionlib#> .
+@prefix sp: <http://spinrdf.org/sp#> .
+@prefix spif: <http://spinrdf.org/spif#> .
+@prefix spin: <http://spinrdf.org/spin#> .
+@prefix spl: <http://spinrdf.org/spl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://onto.fel.cvut.cz/ontologies/s-pipes/skosify-example-0.1/identification>
+  a owl:Ontology ;
+  rdfs:comment "Collection of SPipes modules related to identification of SKOS concepts within OWL ontology" ;
+  owl:imports <http://onto.fel.cvut.cz/ontologies/s-pipes-lib> ;
+.
+sk-id:identify-concepts
+  a sml:ApplyConstruct ;
+  sml:constructQuery [
+      a sp:Construct ;
+      sp:text """
+CONSTRUCT {
+   ?concept a skos:Concept .
+} WHERE {
+   {
+     ?concept a owl:Class .
+   } UNION {
+     ?concept a owl:NamedIndividual .
+   }
+}
+""" ;
+    ] ;
+  sml:replace false ;
+  rdfs:label "Identify SKOS concepts" ;
+.

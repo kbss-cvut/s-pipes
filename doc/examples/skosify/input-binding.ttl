@@ -1,0 +1,8 @@
+@prefix sp: <http://onto.fel.cvut.cz/ontologies/s-pipes/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+[] a sp:query_solution ;
+    sp:has_binding [
+        sp:has_bound_variable "prefLabelProperty" ;
+        sp:has_bound_value rdfs:label ;
+    ] .
