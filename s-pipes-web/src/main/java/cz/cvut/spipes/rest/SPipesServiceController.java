@@ -124,22 +124,6 @@ public class SPipesServiceController {
         return runService(ModelFactory.createDefaultModel(), parameters);
     }
 
-    @RequestMapping(
-        value = "/service-new",
-        method = RequestMethod.GET,
-        produces = {
-            RDFMimeType.LD_JSON_STRING,
-            RDFMimeType.N_TRIPLES_STRING,
-            RDFMimeType.RDF_XML_STRING,
-            RDFMimeType.TURTLE_STRING
-        }
-    )
-    @Deprecated //TODO remove -- only to support compatibility with older version (used by RLP)
-    public Model processServiceGetRequestCompat(@RequestParam MultiValueMap<String, String> parameters) {
-        LOG.info("Processing service GET request.");
-        return runService(ModelFactory.createDefaultModel(), parameters);
-    }
-
     @ExceptionHandler
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public Map<String, String> notFoundHandler(SPipesServiceException e) {
