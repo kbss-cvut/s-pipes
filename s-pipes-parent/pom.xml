@@ -22,7 +22,7 @@
         <jdk.version>1.8</jdk.version>
         <org.apache.jena>3.12.0</org.apache.jena>
         <org.springframework.version>5.0.7.RELEASE</org.springframework.version>
-        <org.springframework.security.version>5.0.6.RELEASE</org.springframework.security.version>
+        <org.springframework.security.version>5.2.10.RELEASE</org.springframework.security.version>
         <com.fasterxml.jackson.version>2.9.6</com.fasterxml.jackson.version>
         <org.eclipse.rdf4j.version>2.5.3</org.eclipse.rdf4j.version>
         <cz.cvut.kbss.jopa.version>0.13.1</cz.cvut.kbss.jopa.version>
