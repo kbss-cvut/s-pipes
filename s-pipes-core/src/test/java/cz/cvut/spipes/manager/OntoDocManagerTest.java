@@ -1,37 +1,34 @@
 package cz.cvut.spipes.manager;
 
 import cz.cvut.spipes.TestConstants;
-import java.nio.file.Path;
-import java.util.List;
 import org.apache.jena.ontology.OntDocumentManager;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.util.LocationMapper;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+
+import java.nio.file.Path;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class OntoDocManagerTest {
 
 
     static Path managerDirPath = TestConstants.TEST_RESOURCES_DIR_PATH.resolve("manager").toAbsolutePath();
 
-
-    @Disabled
     @Test
-    public void registerDocumentsDirectoryRecursive()  {
+    public void registerDocumentsProcessDirectoryRecursively()  {
 
         OntologyDocumentManager ontoDocManager = OntoDocManager.getInstance();
 
-        LocationMapper lm = ontoDocManager.getOntDocumentManager().getFileManager().getLocationMapper();
-
-
-        assertEquals(0, getLocationMapperEntriesCount(lm));
+        int initialEntriesCount = getLocationMapperEntriesCount(ontoDocManager);
 
         ontoDocManager.registerDocuments(managerDirPath.resolve("recursive-discovery"));
 
-        assertEquals(4, getLocationMapperEntriesCount(lm));
+        assertEquals(initialEntriesCount + 5, getLocationMapperEntriesCount(ontoDocManager));
     }
 
     @Disabled //TODO does not work in jenkins if project dir contains " "
