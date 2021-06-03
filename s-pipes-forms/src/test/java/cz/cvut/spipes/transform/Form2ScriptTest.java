@@ -4,13 +4,9 @@ import cz.cvut.sforms.model.Answer;
 import cz.cvut.sforms.model.Question;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.Resource;
+import java.util.*;
+
+import org.apache.jena.rdf.model.*;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.RDFS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,10 +27,10 @@ public class Form2ScriptTest {
         form = getForm();
     }
 
-    @Disabled
     @Test
     public void basicTransformation() {
-        /*Model m = t.form2Script(sampleScript, form, "http://topbraid.org/sparqlmotionlib#BindWithConstant");
+        Map<String, Model> stringModelMap = t.form2Script(sampleScript, form, "http://topbraid.org/sparqlmotionlib#BindWithConstant");
+        Model m = stringModelMap.get("");
         assertTrue(m.listSubjects().toList().stream().anyMatch((s) -> Objects.equals("http://fel.cvut.cz/ontologies/s-pipes-editor/sample-script/bind-person", s.getURI())));
         List<Statement> ps = m.listStatements().toList();
         assertTrue(ps.stream().anyMatch((s) -> Objects.equals(RDFS.label, s.getPredicate())));
@@ -47,10 +43,9 @@ public class Form2ScriptTest {
         List<RDFNode> os = m.listObjects().toList();
         assertTrue(os.stream().anyMatch((o) -> o.isLiteral() && Objects.equals("Bind person", o.asLiteral().getString())));
         assertTrue(os.stream().anyMatch((o) -> o.isLiteral() && Objects.equals("person", o.asLiteral().getString())));
-        assertTrue(os.stream().anyMatch((o) -> o.isLiteral() && Objects.equals("Robert Plant", o.asLiteral().getString())));*/
+        assertTrue(os.stream().anyMatch((o) -> o.isLiteral() && Objects.equals("Robert Plant", o.asLiteral().getString())));
     }
 
-    @Disabled
     @Test
     public void regularStatementUpdate() {
         Optional<Question> labelQ = form.getSubQuestions().stream()
@@ -87,13 +82,16 @@ public class Form2ScriptTest {
 
         assertTrue(uriQ.isPresent());
 
-        uriQ.get().getAnswers().forEach((a) -> a.setCodeValue(URI.create("http://fel.cvut.cz/ontologies/s-pipes-editor/sample-script/new-bind-person")));
+        uriQ.get().getAnswers().forEach((a) -> {
+            System.out.println(a);
+            a.setCodeValue(URI.create("http://fel.cvut.cz/ontologies/s-pipes-editor/sample-script/new-bind-person"));
+        });
 
-//        Model outputScript = t.form2Script(sampleScript, form, "http://topbraid.org/sparqlmotionlib#BindWithConstant");
-//        Resource newBindPerson = outputScript.getResource("http://fel.cvut.cz/ontologies/s-pipes-editor/sample-script/new-bind-person");
+        Map<String, Model> outputScript = t.form2Script(sampleScript, form, "http://topbraid.org/sparqlmotionlib#BindWithConstant");
+        Resource newBindPerson = outputScript.get("").getResource("http://fel.cvut.cz/ontologies/s-pipes-editor/sample-script/new-bind-person");
 
-        /*assertTrue(outputScript.getResource(bindPerson.getURI()).listProperties().toList().isEmpty());
-        assertEquals(initialSize, newBindPerson.listProperties().toList().size());*/
+        assertTrue(outputScript.get("").getResource(bindPerson.getURI()).listProperties().toList().isEmpty());
+        assertEquals(initialSize-1, newBindPerson.listProperties().toList().size());
     }
 
 
