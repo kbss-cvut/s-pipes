@@ -1,0 +1,30 @@
+@prefix :      <http://onto.fel.cvut.cz/ontologies/s-pipes/skosify-example-0.1/> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix skos:  <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+:dog    a                owl:Class , skos:Concept ;
+        rdfs:label       "Dog" ;
+        rdfs:subClassOf  :animal .
+
+:organism  a        owl:Class , skos:Concept ;
+        rdfs:label  "Organism" .
+
+:animal  a               owl:Class , skos:Concept ;
+        rdfs:label       "Animal" ;
+        rdfs:subClassOf  :organism .
+
+:lassie-movie-star  a  :dog , owl:NamedIndividual , skos:Concept ;
+        rdfs:label  "Lassie" .
+
+:laika-space-animal  a  :dog , owl:NamedIndividual , skos:Concept ;
+        rdfs:label  "Laika" .
+
+:person  a               owl:Class , skos:Concept ;
+        rdfs:label       "Person" ;
+        rdfs:subClassOf  :organism .
+
+:cat    a                owl:Class , skos:Concept ;
+        rdfs:label       "Cat" ;
+        rdfs:subClassOf  :animal .
