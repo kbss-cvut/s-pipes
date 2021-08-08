@@ -28,6 +28,10 @@ SPipes loads pipelines by recursive traversal of configured directories, searchi
 
 SPipes script construction, execution, and execution history tracking is explained 
 in [Hello world example](doc/examples/hello-world/hello-world.md).
+Script debugging is explained in [skosify example](doc/examples/skosify/skosify.md).
+
+
+
 
 ## Structure of Maven Submodules
 
