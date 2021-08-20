@@ -51,7 +51,7 @@ It has 3 ontology submodules:
 
 ## Pipeline output
 
-The pipeline transforms provided data into [data represented by SKOS vocabulary](skosify-output.ttl).
+The pipeline transforms provided data into [data represented by SKOS vocabulary](skosify-output.jsonld).
 
 
 # Debugging 
