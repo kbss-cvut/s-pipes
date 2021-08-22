@@ -11,7 +11,7 @@ The script can be visualized as follows:
 
 ![graphical notation](skosify-graphical-notation.svg).
 
-It has 3 ontology submodules: 
+It has 3 ontology submodules (which are imported transitively by `owl:imports` statement in [skosify.sms.ttl](skosify.sms.ttl)): 
 - [Identification](identification.ttl) - identifies SKOS concepts within OWL ontology.
 - [Relations](relations.ttl) - constructs SKOS relations between provided SKOS concepts.
 - [Metadata](metadata.ttl) - constructs SKOS metadata for provided SKOS concepts.
@@ -51,7 +51,7 @@ It has 3 ontology submodules:
 
 ## Pipeline output
 
-The pipeline transforms provided data into [data represented by SKOS vocabulary](skosify-output.ttl).
+The pipeline transforms provided data into [data represented by SKOS vocabulary](skosify-output.jsonld).
 
 
 # Debugging 
