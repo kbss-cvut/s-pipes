@@ -112,6 +112,22 @@ public class SPipesServiceController {
 
     @RequestMapping(
         value = "/service",
+        method = RequestMethod.POST,
+        produces = {
+            RDFMimeType.LD_JSON_STRING + ";chaset=utf-8",
+            RDFMimeType.N_TRIPLES_STRING,
+            RDFMimeType.RDF_XML_STRING,
+            RDFMimeType.TURTLE_STRING
+        }
+    )
+    public Model processServicePostRequest(@RequestParam MultiValueMap<String, String> parameters,
+                                           @RequestParam("files") MultipartFile[] files)  {
+        LOG.info("Processing service POST request, with {} multipart files.", files.length);
+        return runService(ModelFactory.createDefaultModel(), parameters);
+    }
+
+    @RequestMapping(
+        value = "/service",
         method = RequestMethod.GET,
         produces = {
             RDFMimeType.LD_JSON_STRING + ";charset=utf-8",
