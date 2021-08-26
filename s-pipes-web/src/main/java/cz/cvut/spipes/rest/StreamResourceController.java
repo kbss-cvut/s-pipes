@@ -1,6 +1,7 @@
 package cz.cvut.spipes.rest;
 
 import cz.cvut.spipes.registry.StreamResourceRegistry;
+import cz.cvut.spipes.rest.util.ResourceRegisterHelper;
 import cz.cvut.spipes.util.RestUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -23,7 +24,11 @@ import java.util.UUID;
 public class StreamResourceController {
 
     private static final Logger LOG = LoggerFactory.getLogger(StreamResourceController.class);
+    private final ResourceRegisterHelper resourceRegisterHelper;
 
+    public StreamResourceController() {
+        this.resourceRegisterHelper = new ResourceRegisterHelper();
+    }
 
     @PostConstruct
     void init() {
@@ -47,36 +52,13 @@ public class StreamResourceController {
     )
     public ResponseEntity<StreamResourceDTO> registerStreamResource(@RequestHeader(value = "Content-type") String contentType, InputStream body) {
 
-        StreamResourceDTO res = new StreamResourceDTO(
-                UUID.randomUUID().toString(),
-                StreamResourceRegistry.getInstance().getPERSISTENT_CONTEXT_PREFIX(),
-                getRegisteredResourceLocation()
-        );
-
-        LOG.info("Registering new stream resource with id {} and url {} ", res.getId(), res.getPersistentUri());
-
-        final byte[] data;
-        try {
-            data = IOUtils.toByteArray(body);
-            StreamResourceRegistry.getInstance().registerResource(res.getId(), data, contentType);
-            // TODO body
-            LOG.info("Resource content size: {}", data.length);
-            LOG.trace("Resource content: {}",  data);
-        } catch (IOException e) {
-            LOG.error("Unable to read payload: ", e);
-        }
+        StreamResourceDTO res = resourceRegisterHelper.registerStreamResource(contentType, body);
 
         final HttpHeaders headers = RestUtils.createLocationHeaderFromCurrentUri("/{id}", res.getId());
         return new ResponseEntity<StreamResourceDTO>(res, headers, HttpStatus.CREATED);
     }
 
-    String getRegisteredResourceLocation() {
-        String resourcesLocation = ServletUriComponentsBuilder
-                .fromCurrentContextPath().path("/resources/")
-                .buildAndExpand("").toUriString();
-        StreamResourceRegistry.getInstance().registerResourcePrefix(resourcesLocation); //TODO not very effective
-        return resourcesLocation;
-    }
+
 
     @RequestMapping(
             value = "/resources2",
@@ -91,7 +73,7 @@ public class StreamResourceController {
         StreamResourceDTO res = new StreamResourceDTO(
                 UUID.randomUUID().toString(),
                 StreamResourceRegistry.getInstance().getPERSISTENT_CONTEXT_PREFIX(),
-                getRegisteredResourceLocation()
+                resourceRegisterHelper.getRegisteredResourceLocation()
         );
 
         LOG.info("Registering new stream resource with url {} " + res.getPersistentUri());

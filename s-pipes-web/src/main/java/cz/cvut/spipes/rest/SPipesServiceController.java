@@ -5,10 +5,7 @@ import cz.cvut.spipes.engine.*;
 import cz.cvut.spipes.exception.SPipesServiceException;
 import cz.cvut.spipes.manager.SPipesScriptManager;
 import cz.cvut.spipes.modules.Module;
-import cz.cvut.spipes.rest.util.ContextLoaderHelper;
-import cz.cvut.spipes.rest.util.ProgressListenerLoader;
-import cz.cvut.spipes.rest.util.ScriptManagerFactory;
-import cz.cvut.spipes.rest.util.ServiceParametersHelper;
+import cz.cvut.spipes.rest.util.*;
 import cz.cvut.spipes.util.RDFMimeType;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.QuerySolutionMap;
@@ -21,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,10 +29,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @EnableWebMvc
@@ -61,9 +56,11 @@ public class SPipesServiceController {
      */
     public static final String P_OUTPUT_BINDING_URL = "_pOutputBindingURL";
     private static final Logger LOG = LoggerFactory.getLogger(SPipesServiceController.class);
+    private final ResourceRegisterHelper resourceRegisterHelper;
     private SPipesScriptManager scriptManager;
 
     public SPipesServiceController() {
+        this.resourceRegisterHelper = new ResourceRegisterHelper();
         scriptManager = ScriptManagerFactory.getSingletonSPipesScriptManager();
     }
 
@@ -112,22 +109,6 @@ public class SPipesServiceController {
 
     @RequestMapping(
         value = "/service",
-        method = RequestMethod.POST,
-        produces = {
-            RDFMimeType.LD_JSON_STRING + ";chaset=utf-8",
-            RDFMimeType.N_TRIPLES_STRING,
-            RDFMimeType.RDF_XML_STRING,
-            RDFMimeType.TURTLE_STRING
-        }
-    )
-    public Model processServicePostRequest(@RequestParam MultiValueMap<String, String> parameters,
-                                           @RequestParam("files") MultipartFile[] files)  {
-        LOG.info("Processing service POST request, with {} multipart files.", files.length);
-        return runService(ModelFactory.createDefaultModel(), parameters);
-    }
-
-    @RequestMapping(
-        value = "/service",
         method = RequestMethod.GET,
         produces = {
             RDFMimeType.LD_JSON_STRING + ";charset=utf-8",
@@ -139,6 +120,62 @@ public class SPipesServiceController {
     public Model processServiceGetRequest(@RequestParam MultiValueMap<String, String> parameters) {
         LOG.info("Processing service GET request.");
         return runService(ModelFactory.createDefaultModel(), parameters);
+    }
+
+    /**
+     * Processes the service POST request, can be used to upload multiple files for input binding.
+     *
+     * @param parameters url query parameters
+     * @return a {@link Model} representing the processed RDF
+     */
+    @RequestMapping(
+        value = "/service",
+        method = RequestMethod.POST,
+        consumes = {"multipart/form-data"},
+        produces = {
+            RDFMimeType.LD_JSON_STRING + ";chaset=utf-8",
+            RDFMimeType.N_TRIPLES_STRING,
+            RDFMimeType.RDF_XML_STRING,
+            RDFMimeType.TURTLE_STRING
+        }
+    )
+    public Model processServicePostRequest(@RequestParam MultiValueMap<String, String> parameters,
+                                           @RequestParam("files") MultipartFile[] files) {
+
+        MultiValueMap<String, String> newParameters = new LinkedMultiValueMap<>(parameters);
+
+        parameters.entrySet().stream()
+            .filter(e -> e.getValue().stream()
+                .anyMatch(v -> v.contains("@")))
+            .forEach(e -> {
+                String paramFilename = e.getValue().stream()
+                    .filter(v -> v.contains("@"))
+                    .findFirst().get(); // must be at least one present due to previous logic
+
+                if (e.getValue().size() > 1) {
+                    LOG.warn("Multiple values for url parameter: {}, using only first value: {}", e.getKey(), paramFilename);
+                }
+
+                String filename = paramFilename.replaceFirst("@", "");
+
+                Optional<MultipartFile> multipartFileOptional = Arrays.stream(files)
+                    .filter(f -> filename.equals(f.getOriginalFilename()))
+                    .findFirst();
+                if (multipartFileOptional.isPresent()) {
+                    MultipartFile multipartFile = multipartFileOptional.get();
+                    try {
+                        StreamResourceDTO res = resourceRegisterHelper.registerStreamResource(multipartFile.getContentType(), multipartFile.getInputStream());
+                        newParameters.replace(e.getKey(), Collections.singletonList(res.getPersistentUri()));
+                    } catch (IOException ex) {
+                        LOG.error(ex.getMessage(), ex);
+                    }
+                } else {
+                    LOG.error("Missing multipart file for url parameter: {} with value: {}", e.getKey(), paramFilename);
+                }
+            });
+
+        LOG.info("Processing service POST request, with {} multipart file(s).", files.length);
+        return runService(ModelFactory.createDefaultModel(), newParameters);
     }
 
     @ExceptionHandler
@@ -166,7 +203,7 @@ public class SPipesServiceController {
 
         ServiceParametersHelper paramHelper = new ServiceParametersHelper(parameters);
 
-        // LOAD MODULE ID
+        // LOAD FUNCTION ID
         final String id = getId(paramHelper);
         logParam(P_ID, id);
 
