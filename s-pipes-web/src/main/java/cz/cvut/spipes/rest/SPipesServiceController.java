@@ -62,7 +62,7 @@ public class SPipesServiceController {
     private final ResourceRegisterHelper resourceRegisterHelper;
     private SPipesScriptManager scriptManager;
 
-    public SPipesServiceController(StreamResourceController streamResourceController) {
+    public SPipesServiceController() {
         this.resourceRegisterHelper = new ResourceRegisterHelper();
         scriptManager = ScriptManagerFactory.getSingletonSPipesScriptManager();
     }
