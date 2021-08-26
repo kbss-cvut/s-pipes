@@ -1,6 +1,6 @@
 package cz.cvut.spipes.rest;
 
-class StreamResourceDTO {
+public class StreamResourceDTO {
     String id;
     String persistentUri;
     String alternativeUri;

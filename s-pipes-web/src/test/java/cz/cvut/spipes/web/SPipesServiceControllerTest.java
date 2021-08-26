@@ -187,6 +187,28 @@ public class SPipesServiceControllerTest {
                 2);
     }
 
+    @Test
+    public void testProcessServicePostRequestWithMultipleFilesBinding() throws Exception {
+        VariablesBinding inputVariablesBinding = new VariablesBinding();
+
+        File inputBindingFile = File.createTempFile("s-pipes-test-input-binding","ttl");
+        inputVariablesBinding.save(new FileOutputStream(inputBindingFile), "TURTLE");
+
+        File outputBindingFile = File.createTempFile("s-pipes-test-output-binding","ttl");
+
+        MockHttpServletRequestBuilder rb = post("/service");
+
+        rb = rb.param(SPipesServiceController.P_ID, CREATE_SAMPLE_TRIPLES).
+                param(SPipesServiceController.P_CONFIG_URL, getClass().getResource("/module-apply-construct/config.ttl").toString()).
+                param(SPipesServiceController.P_INPUT_BINDING_URL,inputBindingFile.toURI().toURL().toString()).
+                param(SPipesServiceController.P_OUTPUT_BINDING_URL,outputBindingFile.toURI().toURL().toString()).
+                accept(RDFMimeType.TURTLE_STRING);
+        //TODO how to add files to rb
+
+        MvcResult result = mockMvc.perform(rb).andReturn();
+
+    }
+
     @Disabled // works only within fell vpn
     @Test
     public void testRunApplyConstructQueryWithVariable() throws Exception {
