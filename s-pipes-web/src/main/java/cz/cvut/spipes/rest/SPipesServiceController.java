@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.annotation.PostConstruct;
@@ -107,6 +108,22 @@ public class SPipesServiceController {
     ) {
         LOG.info("Processing POST request.");
         return runModule(inputModel, parameters);
+    }
+
+    @RequestMapping(
+        value = "/service",
+        method = RequestMethod.POST,
+        produces = {
+            RDFMimeType.LD_JSON_STRING + ";chaset=utf-8",
+            RDFMimeType.N_TRIPLES_STRING,
+            RDFMimeType.RDF_XML_STRING,
+            RDFMimeType.TURTLE_STRING
+        }
+    )
+    public Model processServicePostRequest(@RequestParam MultiValueMap<String, String> parameters,
+                                           @RequestParam("files") MultipartFile[] files)  {
+        LOG.info("Processing service POST request, with {} multipart files.", files.length);
+        return runService(ModelFactory.createDefaultModel(), parameters);
     }
 
     @RequestMapping(
