@@ -112,22 +112,6 @@ public class SPipesServiceController {
 
     @RequestMapping(
         value = "/service",
-        method = RequestMethod.POST,
-        produces = {
-            RDFMimeType.LD_JSON_STRING + ";chaset=utf-8",
-            RDFMimeType.N_TRIPLES_STRING,
-            RDFMimeType.RDF_XML_STRING,
-            RDFMimeType.TURTLE_STRING
-        }
-    )
-    public Model processServicePostRequest(@RequestParam MultiValueMap<String, String> parameters,
-                                           @RequestParam("files") MultipartFile[] files)  {
-        LOG.info("Processing service POST request, with {} multipart files.", files.length);
-        return runService(ModelFactory.createDefaultModel(), parameters);
-    }
-
-    @RequestMapping(
-        value = "/service",
         method = RequestMethod.GET,
         produces = {
             RDFMimeType.LD_JSON_STRING + ";charset=utf-8",
@@ -159,7 +143,7 @@ public class SPipesServiceController {
             }
     )
     public Model processServicePostRequest(@RequestParam MultiValueMap<String, String> parameters,
-                                           @RequestParam("files") MultipartFile[] files) throws IOException {
+                                           @RequestParam("files") MultipartFile[] files) {
 
         // load all attachments and find out names
 
@@ -177,7 +161,7 @@ public class SPipesServiceController {
                 .forEach(e -> {
                     String paramFilename = e.getValue().stream()
                             .filter(v -> v.contains("@"))
-                            .findFirst().get();
+                            .findFirst().get(); // must be at least one present due to previous logic
 
                     if (e.getValue().size() > 1) {
                         LOG.warn("Multiple values for url parameter: {}, using only first value: {}", e.getKey(), paramFilename);
@@ -185,7 +169,7 @@ public class SPipesServiceController {
 
                     String filename = paramFilename.replaceFirst("@", "");
 
-                    Optional<MultipartFile> multipartFileOptional = Arrays.stream(files) //TODO why is array files empty
+                    Optional<MultipartFile> multipartFileOptional = Arrays.stream(files)
                             .filter(f -> filename.equals(f.getOriginalFilename()))
                             .findFirst();
                     if (multipartFileOptional.isPresent()) {
@@ -201,7 +185,7 @@ public class SPipesServiceController {
                     }
                 });
 
-        LOG.info("Processing service POST request.");
+        LOG.info("Processing service POST request, with {} multipart file(s).", files.length);
         return runService(ModelFactory.createDefaultModel(), newParameters);
     }
 
