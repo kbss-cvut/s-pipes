@@ -5,16 +5,8 @@ import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.nio.charset.Charset;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.stream.Collectors;
+import cz.cvut.spipes.registry.StreamResource;
+import cz.cvut.spipes.registry.StreamResourceRegistry;
 import org.apache.jena.ext.com.google.common.io.Files;
 import org.apache.jena.query.Query;
 import org.apache.jena.rdf.model.Model;
@@ -26,6 +18,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.topbraid.spin.arq.ARQFactory;
 import org.topbraid.spin.model.Construct;
+
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.stream.Collectors;
 
 // TODO merge with ModuleTarql functionality
 public class TarqlModule extends AbstractModule {
@@ -72,6 +71,22 @@ public class TarqlModule extends AbstractModule {
             }
         }
 
+
+        StreamResource res = StreamResourceRegistry.getInstance().getResourceByUrl(sourceFilePath);
+        String tabularDataFilePath = null;
+        if (res != null) {
+
+            try {
+                File tabularDataFile = File.createTempFile("output", ".tabular.txt");
+                Files.write(res.getContent(), tabularDataFile);
+                tabularDataFilePath = tabularDataFile.getAbsolutePath();
+            } catch (IOException e) {
+                throw new RuntimeException("Could not write tabular data stream to temporary file: {}", e);
+            }
+        } else {
+            tabularDataFilePath = sourceFilePath;
+        }
+
         //      set up variable bindings
         for (Resource constructQueryRes : constructQueries) {
             Construct spinConstructRes = constructQueryRes.as(Construct.class);
@@ -97,7 +112,7 @@ public class TarqlModule extends AbstractModule {
 //                            "--ntriples",
 //                        noHeader ? "-H" : "",
                             queryFile.getAbsolutePath(),
-                            sourceFilePath
+                            tabularDataFilePath
                     );
                     System.setOut(origStream);
 
