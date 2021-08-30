@@ -87,6 +87,8 @@ public class TarqlModule extends AbstractModule {
             tabularDataFilePath = sourceFilePath;
         }
 
+        LOG.debug("Processing tabular data from file path {}.", tabularDataFilePath);
+
         //      set up variable bindings
         for (Resource constructQueryRes : constructQueries) {
             Construct spinConstructRes = constructQueryRes.as(Construct.class);
