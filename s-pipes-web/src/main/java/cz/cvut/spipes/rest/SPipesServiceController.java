@@ -17,8 +17,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.http.MediaType;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,7 +30,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @EnableWebMvc
@@ -57,10 +61,16 @@ public class SPipesServiceController {
     public static final String P_OUTPUT_BINDING_URL = "_pOutputBindingURL";
     private static final Logger LOG = LoggerFactory.getLogger(SPipesServiceController.class);
     private final ResourceRegisterHelper resourceRegisterHelper;
-    private SPipesScriptManager scriptManager;
+    private final MultipartFileResourceResolver multipartFileResourceResolver;
+    private final SPipesScriptManager scriptManager;
 
-    public SPipesServiceController() {
+
+    @Autowired
+    public SPipesServiceController(
+        ResourceRegisterHelper resourceRegisterHelper,
+        MultipartFileResourceResolver multipartFileResourceResolver) {
         this.resourceRegisterHelper = new ResourceRegisterHelper();
+        this.multipartFileResourceResolver = multipartFileResourceResolver;
         scriptManager = ScriptManagerFactory.getSingletonSPipesScriptManager();
     }
 
@@ -131,7 +141,7 @@ public class SPipesServiceController {
     @RequestMapping(
         value = "/service",
         method = RequestMethod.POST,
-        consumes = {"multipart/form-data"},
+        consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
         produces = {
             RDFMimeType.LD_JSON_STRING + ";chaset=utf-8",
             RDFMimeType.N_TRIPLES_STRING,
@@ -142,37 +152,8 @@ public class SPipesServiceController {
     public Model processServicePostRequest(@RequestParam MultiValueMap<String, String> parameters,
                                            @RequestParam("files") MultipartFile[] files) {
 
-        MultiValueMap<String, String> newParameters = new LinkedMultiValueMap<>(parameters);
-
-        parameters.entrySet().stream()
-            .filter(e -> e.getValue().stream()
-                .anyMatch(v -> v.contains("@")))
-            .forEach(e -> {
-                String paramFilename = e.getValue().stream()
-                    .filter(v -> v.contains("@"))
-                    .findFirst().get(); // must be at least one present due to previous logic
-
-                if (e.getValue().size() > 1) {
-                    LOG.warn("Multiple values for url parameter: {}, using only first value: {}", e.getKey(), paramFilename);
-                }
-
-                String filename = paramFilename.replaceFirst("@", "");
-
-                Optional<MultipartFile> multipartFileOptional = Arrays.stream(files)
-                    .filter(f -> filename.equals(f.getOriginalFilename()))
-                    .findFirst();
-                if (multipartFileOptional.isPresent()) {
-                    MultipartFile multipartFile = multipartFileOptional.get();
-                    try {
-                        StreamResourceDTO res = resourceRegisterHelper.registerStreamResource(multipartFile.getContentType(), multipartFile.getInputStream());
-                        newParameters.replace(e.getKey(), Collections.singletonList(res.getPersistentUri()));
-                    } catch (IOException ex) {
-                        LOG.error(ex.getMessage(), ex);
-                    }
-                } else {
-                    LOG.error("Missing multipart file for url parameter: {} with value: {}", e.getKey(), paramFilename);
-                }
-            });
+        MultiValueMap<String, String> newParameters =
+            multipartFileResourceResolver.resolveResources(parameters, files);
 
         LOG.info("Processing service POST request, with {} multipart file(s).", files.length);
         return runService(ModelFactory.createDefaultModel(), newParameters);

@@ -5,12 +5,14 @@ import cz.cvut.spipes.rest.StreamResourceDTO;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
+@Component
 public class ResourceRegisterHelper {
 
     private static final Logger LOG = LoggerFactory.getLogger(ResourceRegisterHelper.class);
