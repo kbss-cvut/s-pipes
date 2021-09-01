@@ -14,6 +14,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
 
+/**
+ * Resolver of multipart files references within query parameters.
+ */
 @Component
 public class MultipartFileResourceResolver {
 
@@ -26,6 +29,23 @@ public class MultipartFileResourceResolver {
         this.resourceRegisterHelper = resourceRegisterHelper;
     }
 
+    /**
+     * Resolves multipart files that are referenced by query parameters.The references within parameter values
+     * are prefixed by symbol "@" followed by name of the file. Referenced file are registered
+     * as {@code cz.cvut.spipes.registry.StreamResource} which produces URI that is used to replace the original
+     * parameter value.
+     *
+     * Example: "myParam"="@input.csv"
+     *
+     * Within the example, "input.csv" is name of file searched within the {@code files}. It such file is found,
+     * it is registered as {@code cz.cvut.spipes.registry.StreamResource} whose generated URL is replaced
+     * back to "myParam". Then the parameter is replaced by new value e.g.
+     * "myParam"="http://onto.fel.cvut.cz/resources/dea95aca-590e-4e77-8a0c-458814cc82b5
+     *
+     * @param parameters Http query parameters.
+     * @param files Multipart files referenced by the parameters.
+     * @return New parameters where each found reference is replaced by stream resource url.
+     */
     public MultiValueMap<String, String> resolveResources(MultiValueMap<String, String> parameters, MultipartFile[] files) {
         MultiValueMap<String, String> newParameters = new LinkedMultiValueMap<>(parameters);
 
