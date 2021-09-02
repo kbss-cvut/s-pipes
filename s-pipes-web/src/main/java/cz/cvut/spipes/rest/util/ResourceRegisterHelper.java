@@ -30,9 +30,7 @@ public class ResourceRegisterHelper {
         try {
             data = IOUtils.toByteArray(body);
             StreamResourceRegistry.getInstance().registerResource(res.getId(), data, contentType);
-            // TODO body
             LOG.info("Resource content size: {}", data.length);
-            LOG.trace("Resource content: {}", data);
         } catch (IOException e) {
             LOG.error("Unable to read payload: ", e);
         }
