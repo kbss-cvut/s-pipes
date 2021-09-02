@@ -61,16 +61,12 @@ public class SPipesServiceController {
     public static final String P_OUTPUT_BINDING_URL = "_pOutputBindingURL";
     private static final Logger LOG = LoggerFactory.getLogger(SPipesServiceController.class);
     private final ResourceRegisterHelper resourceRegisterHelper;
-    private final MultipartFileResourceResolver multipartFileResourceResolver;
     private final SPipesScriptManager scriptManager;
 
 
     @Autowired
-    public SPipesServiceController(
-        ResourceRegisterHelper resourceRegisterHelper,
-        MultipartFileResourceResolver multipartFileResourceResolver) {
+    public SPipesServiceController() {
         this.resourceRegisterHelper = new ResourceRegisterHelper();
-        this.multipartFileResourceResolver = multipartFileResourceResolver;
         scriptManager = ScriptManagerFactory.getSingletonSPipesScriptManager();
     }
 
@@ -153,7 +149,7 @@ public class SPipesServiceController {
                                            @RequestParam("files") MultipartFile[] files) {
 
         MultiValueMap<String, String> newParameters =
-            multipartFileResourceResolver.resolveResources(parameters, files);
+            new MultipartFileResourceResolver(resourceRegisterHelper).resolveResources(parameters, files);
 
         LOG.info("Processing service POST request, with {} multipart file(s).", files.length);
         return runService(ModelFactory.createDefaultModel(), newParameters);
