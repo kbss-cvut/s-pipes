@@ -26,6 +26,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -33,11 +35,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.multipart.MultipartFile;
 
 @ExtendWith(SpringExtension.class)
 @WebAppConfiguration
@@ -185,6 +189,34 @@ public class SPipesServiceControllerTest {
                 null,
                 null,
                 2);
+    }
+
+    @Test
+    public void testProcessServicePostRequestGoesThroughWithFiles() throws Exception {
+        MockMultipartFile testFile1
+                = new MockMultipartFile(
+                "testFile1",
+                "testFile1.txt",
+                MediaType.TEXT_PLAIN_VALUE,
+                "Hello 1".getBytes()
+        );
+        MockMultipartFile testFile2
+                = new MockMultipartFile(
+                "testFile2",
+                "testFile2.txt",
+                MediaType.TEXT_PLAIN_VALUE,
+                "Hello 2".getBytes()
+        );
+
+        MockHttpServletRequestBuilder rb = multipart("/service")
+                .file(testFile1)
+                .file(testFile2);
+        rb.param("testKey1", "@testFile1.txt")
+                .param("testKey2", "@testFile2.txt");
+
+        mockMvc.perform(rb)
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentTypeCompatibleWith(RDFMimeType.LD_JSON_STRING));
     }
 
     @Disabled // works only within fell vpn
