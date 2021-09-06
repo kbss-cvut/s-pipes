@@ -32,7 +32,7 @@ class MultipartFileResourceResolverTest {
     }
 
     @Test
-    void testResolveResourcesReplacesFilenamesWithUrisInParameters() {
+    void testResolveResourcesReplacesFileReferencesWithUrisInParameters() {
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
         parameters.add("testKey1", "@testFile1.txt");
         parameters.add("testKey2", "@testFile2.txt");
@@ -64,7 +64,7 @@ class MultipartFileResourceResolverTest {
     }
 
     @Test
-    void testResolveResourcesDoesNotReplaceWrongFilenames() {
+    void testResolveResourcesDoesNotReplaceInvalidFileReferences() {
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
         parameters.add("testKey1", "@WRONG_FILENAME.txt");
         parameters.add("testKey2", "testFile2.txt");

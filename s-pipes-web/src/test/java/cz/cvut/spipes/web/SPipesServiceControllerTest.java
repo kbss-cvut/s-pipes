@@ -4,12 +4,6 @@ import cz.cvut.spipes.config.WebAppConfig;
 import cz.cvut.spipes.engine.VariablesBinding;
 import cz.cvut.spipes.rest.SPipesServiceController;
 import cz.cvut.spipes.util.RDFMimeType;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.ResourceFactory;
@@ -17,8 +11,6 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFLanguages;
 import org.apache.jena.vocabulary.RDFS;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -35,13 +27,16 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
+import java.io.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.multipart.MultipartFile;
 
 @ExtendWith(SpringExtension.class)
 @WebAppConfiguration
@@ -198,20 +193,20 @@ public class SPipesServiceControllerTest {
                 "testFile1",
                 "testFile1.txt",
                 MediaType.TEXT_PLAIN_VALUE,
-                "Hello 1".getBytes()
+                "Test content 1".getBytes()
         );
         MockMultipartFile testFile2
                 = new MockMultipartFile(
                 "testFile2",
                 "testFile2.txt",
                 MediaType.TEXT_PLAIN_VALUE,
-                "Hello 2".getBytes()
+                "Test content 2".getBytes()
         );
 
         MockHttpServletRequestBuilder rb = multipart("/service")
                 .file(testFile1)
-                .file(testFile2);
-        rb.param("testKey1", "@testFile1.txt")
+                .file(testFile2)
+                .param("testKey1", "@testFile1.txt")
                 .param("testKey2", "@testFile2.txt");
 
         mockMvc.perform(rb)
