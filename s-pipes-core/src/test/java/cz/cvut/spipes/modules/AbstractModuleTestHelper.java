@@ -66,7 +66,7 @@ public abstract class AbstractModuleTestHelper {
         return PipelineFactory.loadPipelines(configModel).get(0);
     }
 
-    private String getFilePath(String fileName) {
+    public String getFilePath(String fileName) {
         return "/" + MODULE_DIR_NAME + "/" + getModuleName() + "/" + fileName;
     }
 
