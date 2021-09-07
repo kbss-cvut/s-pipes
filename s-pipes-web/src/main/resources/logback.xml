@@ -1,56 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
+    <!-- ################# LOGFILE ####################### -->
+    <property name="LOG_PATH" value="logs"/>
 
-    <!-- logging to own file taken from http://www.mkyong.com/logging/logback-xml-example/ TODO does not work -->
-    <!--<property name="PORTAL_LOG_HOME" value="/srv/inbas.cz/portal/liferay/logs" />-->
-    <!--<property name="PORTAL_LOG_HOME" value="/home/blcha/tmp/day" />-->
+    <appender name="LOGFILE"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/s-pipes.log</file>
+        <!-- By default, encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder -->
+        <encoder>
+            <pattern>%date{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{30} - %msg%n</pattern>
+        </encoder>
 
-    <!--<appender name="FILELOG"-->
-              <!--class="ch.qos.logback.core.rolling.RollingFileAppender">-->
-        <!--<file>${PORTAL_LOG_HOME}/spipes-debug.log</file>-->
-        <!--<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">-->
-            <!--<Pattern>-->
-                <!--%d{yyyy-MM-dd HH:mm:ss} - %msg%n-->
-            <!--</Pattern>-->
-        <!--</encoder>-->
-
-        <!--<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
-            <!--&lt;!&ndash; rollover daily &ndash;&gt;-->
-            <!--<fileNamePattern>${PORTAL_LOG_HOME}/archived/spipes-debug.%d{yyyy-MM-dd}.%i.log-->
-            <!--</fileNamePattern>-->
-            <!--<timeBasedFileNamingAndTriggeringPolicy-->
-                    <!--class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">-->
-                <!--<maxFileSize>10MB</maxFileSize>-->
-            <!--</timeBasedFileNamingAndTriggeringPolicy>-->
-        <!--</rollingPolicy>-->
-    <!--</appender>-->
-
-    <!--<logger name="cz.cvut.spipes" level="TRACE" additivity="false">-->
-        <!--<appender-ref ref="FILELOG"/>-->
-    <!--</logger>-->
-    <!--<logger name="cz.cvut.spipes.modules.BindWithConstantModule" level="TRACE" additivity="false">-->
-        <!--<appender-ref ref="FILELOG"/>-->
-    <!--</logger>-->
-
-
-    <!-- Restrict logging of the Sesame HTTP client (used to connect to remote repositories -->
-    <!--<logger name="org.openrdf.http" level="WARN" additivity="false">-->
-        <!--<appender-ref ref="FILELOG"/>-->
-    <!--</logger>-->
-
-    <!-- Restrict logging of Spring -->
-    <!--<logger name="org.springframework" level="INFO" additivity="false">-->
-        <!--<appender-ref ref="FILELOG"/>-->
-    <!--</logger>-->
-
-    <!-- By default, the level of the root level is set to DEBUG -->
-    <!--<root level="INFO">-->
-        <!--<appender-ref ref="FILELOG"/>-->
-    <!--</root>-->
-
-
-
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- the rollover occurs when the active log file reaches the maximum file size before the end of the time period. -->
+            <!-- The rollover period is inferred from the smallest date unit value of fileNamePattern -->
+            <!-- each file should be at most [maxFileSize], keep [maxHistory] days worth of history, but at most [totalSizeCap] -->
+            <maxFileSize>100MB</maxFileSize>
+            <fileNamePattern>
+                ${LOG_PATH}/archived/s-pipes.%d{yyyy-MM-dd}.%i.log
+            </fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
 
     <!-- ################# STDOUT ####################### -->
 
@@ -58,8 +31,6 @@
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <!-- By default, encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder -->
         <encoder>
-
-
             <pattern>%date{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{30} - %msg%n</pattern>
         </encoder>
     </appender>
@@ -67,35 +38,43 @@
     <!-- Logger for our app -->
     <logger name="cz.cvut.spipes" level="TRACE" additivity="false">
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="LOGFILE"/>
     </logger>
     <logger name="cz.cvut.spipes.modules.ImproveSPOWithMarginalsModule" level="DEBUG" additivity="false">
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="LOGFILE"/>
     </logger>
     <logger name="cz.cvut.spipes.config.RDFMediaTypeConverter" level="DEBUG" additivity="false">
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="LOGFILE"/>
     </logger>
     <logger name="cz.cvut.spipes.modules.BindWithConstantModule" level="TRACE" additivity="false">
-    <appender-ref ref="STDOUT"/>
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="LOGFILE"/>
     </logger>
 
 
     <!-- Restrict logging of the Sesame HTTP client (used to connect to remote repositories -->
     <logger name="org.openrdf.http" level="WARN" additivity="false">
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="LOGFILE"/>
     </logger>
 
     <!-- Restrict logging of Spring -->
     <logger name="org.springframework" level="INFO" additivity="false">
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="LOGFILE"/>
     </logger>
 
     <!-- Restrict logging of logback -->
     <logger name="ch.qos.logback" level="INFO" additivity="false">
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="LOGFILE"/>
     </logger>
 
     <!-- By default, the level of the root level is set to DEBUG -->
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="LOGFILE"/>
     </root>
 </configuration>
