@@ -4,6 +4,10 @@ import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import org.junit.jupiter.api.Test;
 
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TabularToRDFModelModuleTest extends AbstractModuleTestHelper {
@@ -14,11 +18,13 @@ public class TabularToRDFModelModuleTest extends AbstractModuleTestHelper {
         }
 
         @Test
-        public void executeWithSimpleTransformation() {
+        public void executeWithSimpleTransformation() throws URISyntaxException {
 
             TabularToRDFModelModule module = new TabularToRDFModelModule();
 
-            module.setSourceFilePath(this.getFilePath("countries.tsv"));
+            Path filePath = Paths.get(getClass().getResource(this.getFilePath("countries.tsv")).toURI());
+
+            module.setSourceFilePath(filePath.toString());
             module.setReplace(true);
 
             module.setInputContext(ExecutionContextFactory.createEmptyContext());

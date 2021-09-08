@@ -21,7 +21,7 @@ public class TabularToRDFModelModule extends AbstractModule {
     public static final String TYPE_URI = KBSS_MODULE.uri + "tabular";
     private static final Logger LOG = LoggerFactory.getLogger(TabularToRDFModelModule.class);
 
-    // private String delimiter;
+    private String delimiter;
 
     //sml:replace
     private boolean isReplace;
@@ -75,10 +75,14 @@ public class TabularToRDFModelModule extends AbstractModule {
             }
 
         } catch (IOException e) {
-            // TODO log
+            LOG.error("Error while reading file {}", sourceFilePath, e);
         } finally {
             if( listReader != null ) {
-//                listReader.close();
+                try {
+                    listReader.close();
+                } catch (IOException e) {
+                    LOG.error("Error while closing file {}", sourceFilePath, e);
+                }
             }
         }
 
