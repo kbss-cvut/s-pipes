@@ -26,6 +26,8 @@ public class TabularToRDFModelModuleTest extends AbstractModuleTestHelper {
 
             module.setSourceFilePath(filePath.toString());
             module.setReplace(true);
+            module.setDelimiter('\t');
+            module.setDataPrefix("http://onto.fel.cvut.cz/data/");
 
             module.setInputContext(ExecutionContextFactory.createEmptyContext());
 

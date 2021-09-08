@@ -27,6 +27,8 @@ public class SML {
     public static final Property baseURI = property("baseURI");
     public static final Property serialization = property("serialization");
     public static final Property ignoreImports = property("ignoreImports");
+    public static final Property delimiter = property("delimiter");
+    public static final Property dataPrefix = property("dataPrefix");
 
     public static final Resource ApplyConstruct = resource("ApplyConstruct");
     public static final Resource ExportToRDFFile = resource("ExportToRDFFile");

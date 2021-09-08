@@ -21,13 +21,17 @@ public class TabularToRDFModelModule extends AbstractModule {
     public static final String TYPE_URI = KBSS_MODULE.uri + "tabular";
     private static final Logger LOG = LoggerFactory.getLogger(TabularToRDFModelModule.class);
 
-    private String delimiter;
-
     //sml:replace
     private boolean isReplace;
 
     //sml:sourceFilePath
     private String sourceFilePath;
+
+    //sml:delimiter
+    private int delimiter;
+
+    //sml:dataPrefix
+    public String dataPrefix;
 
     public boolean isReplace() {
         return isReplace;
@@ -45,16 +49,28 @@ public class TabularToRDFModelModule extends AbstractModule {
         this.sourceFilePath = sourceFilePath;
     }
 
-    //TODO konfigurace
-    public final String dataPrefix = "http://onto.fel.cvut.cz/data/";
+    public int getDelimiter() {
+        return delimiter;
+    }
+
+    public void setDelimiter(int delimiter) {
+        this.delimiter = delimiter;
+    }
+
+    public String getDataPrefix() {
+        return dataPrefix;
+    }
+
+    public void setDataPrefix(String dataPrefix) {
+        this.dataPrefix = dataPrefix;
+    }
 
     @Override
     ExecutionContext executeSelf() {
         Model outputModel = ModelFactory.createDefaultModel();
 
-        // TODO configure delimiter
         CsvPreference csvPreference = new CsvPreference.Builder('"',
-            '\t',
+            delimiter,
             "\\n").build();
 
         // for each row
@@ -98,6 +114,8 @@ public class TabularToRDFModelModule extends AbstractModule {
     public void loadConfiguration() {
         isReplace = this.getPropertyValue(SML.replace, false);
         sourceFilePath = getEffectiveValue(SML.sourceFilePath).asLiteral().toString();
+        delimiter = getPropertyValue(SML.delimiter, '\t');
+        dataPrefix = getEffectiveValue(SML.dataPrefix).asLiteral().toString();
     }
 
     private FileReader getFileReader() throws FileNotFoundException {
