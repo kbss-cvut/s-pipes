@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 
 import java.net.URISyntaxException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -22,7 +21,7 @@ public class TabularToRDFModelModuleTest extends AbstractModuleTestHelper {
 
             TabularToRDFModelModule module = new TabularToRDFModelModule();
 
-            Path filePath = Paths.get(getClass().getResource(this.getFilePath("countries.tsv")).toURI());
+            Path filePath = this.getFilePath("countries.tsv");
 
             module.setSourceFilePath(filePath.toString());
             module.setReplace(true);

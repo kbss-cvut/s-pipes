@@ -8,6 +8,10 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.util.FileUtils;
 
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 public abstract class AbstractModuleTestHelper {
 
     private static final String MODULE_DIR_NAME = "module";
@@ -36,7 +40,7 @@ public abstract class AbstractModuleTestHelper {
 
         // load config
         ontModel.read(
-                getClass().getResourceAsStream(getFilePath(fileName)), null, FileUtils.langTurtle);
+                getClass().getResourceAsStream(getRelativeFilePath(fileName)), null, FileUtils.langTurtle);
 
         return ontModel;
     }
@@ -45,7 +49,7 @@ public abstract class AbstractModuleTestHelper {
         Model model = ModelFactory.createDefaultModel();
 
         model.read(
-            getClass().getResourceAsStream(getFilePath(fileName)), null, FileUtils.langTurtle);
+            getClass().getResourceAsStream(getRelativeFilePath(fileName)), null, FileUtils.langTurtle);
 
         return model;
     }
@@ -66,7 +70,11 @@ public abstract class AbstractModuleTestHelper {
         return PipelineFactory.loadPipelines(configModel).get(0);
     }
 
-    public String getFilePath(String fileName) {
+    public Path getFilePath(String fileName) throws URISyntaxException {
+        return Paths.get(getClass().getResource(getRelativeFilePath(fileName)).toURI());
+    }
+
+    private String getRelativeFilePath(String fileName) {
         return "/" + MODULE_DIR_NAME + "/" + getModuleName() + "/" + fileName;
     }
 
