@@ -22,6 +22,10 @@ public class CSVW {
     public static final Property hasRow = property( "row");
     public static final Property hasRowNum = property( "rownum");
     public static final Property hasDescribes = property( "describes");
+    public static final Property hasAboutUrl = property("aboutUrl");
+    public static final Property hasPropertyUrl = property("propertyUrl");
+    public static final Property hasName = property("name");
+    public static final Property hasValueUrl = property("valueUrl");
 
     public static final Resource TableGroup = resource("TableGroup");
     public static final Resource Table = resource("Table");

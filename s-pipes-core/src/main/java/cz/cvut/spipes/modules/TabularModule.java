@@ -19,6 +19,7 @@ import org.supercsv.io.ICsvListReader;
 import org.supercsv.prefs.CsvPreference;
 
 import java.io.*;
+import java.net.URLEncoder;
 import java.util.List;
 
 /**
@@ -31,7 +32,7 @@ public class TabularModule extends AbstractModule {
     public static final String TYPE_URI = KBSS_MODULE.uri + "tabular";
     private static final Logger LOG = LoggerFactory.getLogger(TabularModule.class);
 
-    private final Property P_DELIMETER = getSpecificParameter("delimiter");
+    private final Property P_DELIMITER = getSpecificParameter("delimiter");
     private final Property P_DATE_PREFIX = getSpecificParameter("data-prefix");
     private final Property P_SOURCE_RESOURCE_URI = getSpecificParameter("source-resource-uri");
 
@@ -172,18 +173,61 @@ public class TabularModule extends AbstractModule {
 
                 Resource rowResource = outputModel.createResource(dataPrefix + listReader.getRowNumber());
 
+                // 4.6.8
+                // Establish a new blank node Sdef to be used as the default subject for cells where about URL is undefined
+                Resource S_def = ResourceFactory.createResource();
+
                 for (int i = 0; i < header.length; i++) {
-                    //TODO 4.6.8 (establish node S)
-                    Resource S = ResourceFactory.createResource();
-                    if (R == null) {
-                        outputModel.add(getCellStatement(rowResource, header[i], row.get(i)));
+                    // 4.6.8.1
+                    String aboutUrl = getEffectiveValue(CSVW.hasAboutUrl).asLiteral().toString(); //TODO how to make this work for every cell
+
+                    Resource S;
+                    if (aboutUrl != null && !aboutUrl.isEmpty()) {
+                        S = ResourceFactory.createResource(aboutUrl);
                     } else {
-                        //Standard mode - add links from table
+                        S = S_def;
+                    }
+
+                    // 4.6.8.2
+                    if (R != null) {
                         outputModel.add(ResourceFactory.createStatement(
                                 R,
                                 ResourceFactory.createProperty(CSVW.hasDescribes.getURI()),
                                 S));
                     }
+
+                    // 4.6.8.3
+                    String propertyUrl = getEffectiveValue(CSVW.hasPropertyUrl).asLiteral().toString(); //TODO how to make this work for every cell
+
+                    Property P;
+                    if (propertyUrl != null && !propertyUrl.isEmpty()) {
+                        P = ResourceFactory.createProperty(propertyUrl);
+                    } else {
+                        String columnName = getEffectiveValue(CSVW.hasName).asLiteral().toString(); //TODO how to get name for the column associated with this cell
+                        P = ResourceFactory.createProperty(
+                                sourceResource.getUri() + "#" + URLEncoder.encode(columnName, "UTF-8")); //TODO should be URL not URI
+                    }
+
+                    String valueUrl = getEffectiveValue(CSVW.hasValueUrl).asLiteral().toString(); //TODO get for every cell
+
+                    if (valueUrl != null && !valueUrl.isEmpty()) {
+                        // 4.6.8.4
+                        Resource V_url = ResourceFactory.createResource(valueUrl);
+                        outputModel.add(ResourceFactory.createStatement(
+                                S,
+                                P,
+                                V_url));
+                    } else {
+                        //outputModel.add(getCellStatement(rowResource, header[i], row.get(i)));
+                        outputModel.add(ResourceFactory.createStatement(
+                                S,
+                                P,
+                                ResourceFactory.createPlainLiteral(row.get(i))));
+                    }
+
+                    // 4.6.8.5 - else, if value is list and cellOrdering == true
+                    // 4.6.8.6 - else, if value is list
+                    // 4.6.8.7 - else, if cellValue is not null
                 }
             }
 
@@ -209,8 +253,8 @@ public class TabularModule extends AbstractModule {
 
     @Override
     public void loadConfiguration() {
-        isReplace = this.getPropertyValue(SML.replace, false);
-        delimiter = getPropertyValue(P_DELIMETER, '\t');
+        isReplace = getPropertyValue(SML.replace, false);
+        delimiter = getPropertyValue(P_DELIMITER, '\t');
         dataPrefix = getEffectiveValue(P_DATE_PREFIX).asLiteral().toString();
         sourceResource = getResourceByUri(getEffectiveValue(P_SOURCE_RESOURCE_URI).asLiteral().toString());
     }
