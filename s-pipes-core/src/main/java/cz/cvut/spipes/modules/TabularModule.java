@@ -24,10 +24,13 @@ import java.util.List;
  * only one file
  * no table uri TODO finish doc
  */
-public class TabularToRDFModelModule extends AbstractModule {
+public class TabularModule extends AbstractModule {
 
     public static final String TYPE_URI = KBSS_MODULE.uri + "tabular";
-    private static final Logger LOG = LoggerFactory.getLogger(TabularToRDFModelModule.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TabularModule.class);
+
+    private final Property P_DELIMETER = getSpecificParameter("delimiter");
+    private final Property P_DATE_PREFIX = getSpecificParameter("data-prefix");
 
     /**
      * Output data mode.
@@ -36,9 +39,6 @@ public class TabularToRDFModelModule extends AbstractModule {
         STANDARD,
         MINIMAL
     }
-
-    //sml:dataPrefix
-    public String dataPrefix;
 
     //TODO configure
     private Mode outputMode;
@@ -49,8 +49,12 @@ public class TabularToRDFModelModule extends AbstractModule {
     //sml:sourceFilePath
     private String sourceFilePath;
 
-    //sml:delimiter
+    //:delimiter
     private int delimiter;
+
+    //:data-prefix
+    public String dataPrefix;
+
 
     /**
      * Represent a root resource for group of tables.
@@ -204,8 +208,12 @@ public class TabularToRDFModelModule extends AbstractModule {
     public void loadConfiguration() {
         isReplace = this.getPropertyValue(SML.replace, false);
         sourceFilePath = getEffectiveValue(SML.sourceFilePath).asLiteral().toString();
-        delimiter = getPropertyValue(SML.delimiter, '\t');
-        dataPrefix = getEffectiveValue(SML.dataPrefix).asLiteral().toString();
+        delimiter = getPropertyValue(P_DELIMETER, '\t');
+        dataPrefix = getEffectiveValue(P_DATE_PREFIX).asLiteral().toString();
+    }
+
+    private static Property getSpecificParameter(String localPropertyName) {
+        return ResourceFactory.createProperty(TYPE_URI + "/" + localPropertyName);
     }
 
     private void onTableGroup(String tableGroupUri) {

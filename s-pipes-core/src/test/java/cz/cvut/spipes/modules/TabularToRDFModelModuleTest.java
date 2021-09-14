@@ -19,7 +19,7 @@ public class TabularToRDFModelModuleTest extends AbstractModuleTestHelper {
         @Test
         public void executeWithSimpleTransformation() throws URISyntaxException {
 
-            TabularToRDFModelModule module = new TabularToRDFModelModule();
+            TabularModule module = new TabularModule();
 
             Path filePath = this.getFilePath("countries.tsv");
 
