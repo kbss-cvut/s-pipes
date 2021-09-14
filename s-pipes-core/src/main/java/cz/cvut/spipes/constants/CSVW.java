@@ -17,11 +17,11 @@ public class CSVW {
     protected static final Property property(String local )
     { return ResourceFactory.createProperty( uri, local ); }
 
-    public static final Property hasTable = property( "table");
-    public static final Property hasUrl = property( "url");
-    public static final Property hasRow = property( "row");
-    public static final Property hasRowNum = property( "rownum");
-    public static final Property hasDescribes = property( "describes");
+    public static final Property table = property( "table");
+    public static final Property url = property( "url");
+    public static final Property row = property( "row");
+    public static final Property rowNum = property( "rownum");
+    public static final Property describes = property( "describes");
 
     public static final Resource TableGroup = resource("TableGroup");
     public static final Resource Table = resource("Table");

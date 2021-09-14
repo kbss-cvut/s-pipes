@@ -140,7 +140,7 @@ public class TabularModule extends AbstractModule {
                     // 4.6.2
                     outputModel.add(
                             T,
-                            CSVW.hasRow,
+                            CSVW.row,
                             R);
                     // 4.6.3
                     outputModel.add(
@@ -150,14 +150,14 @@ public class TabularModule extends AbstractModule {
                     // 4.6.4
                     outputModel.add(
                             R,
-                            CSVW.hasRowNum,
+                            CSVW.rowNum,
                             ResourceFactory.createTypedLiteral(Integer.toString(rowNumber),
                                     XSDDatatype.XSDinteger));
                     // 4.6.5
                     final String rowIri = T.getURI() + "#" + rowNumber;
                     outputModel.add(
                             R,
-                            CSVW.hasUrl,
+                            CSVW.url,
                             ResourceFactory.createResource(rowIri));
                     // 4.6.6 - Add titles.
                     // We do not support titles.
@@ -183,7 +183,7 @@ public class TabularModule extends AbstractModule {
                         //Standard mode - add links from table
                         outputModel.add(
                                 R,
-                                CSVW.hasDescribes,
+                                CSVW.describes,
                                 S);
                     }
                 }
@@ -256,7 +256,7 @@ public class TabularModule extends AbstractModule {
             // 4.2
             outputModel.add(
                     G,
-                    CSVW.hasTable,
+                    CSVW.table,
                     T);
             // 4.3
             outputModel.add(
@@ -267,7 +267,7 @@ public class TabularModule extends AbstractModule {
             if (tableUri != null) {
                 outputModel.add(
                         G,
-                        CSVW.hasUrl,
+                        CSVW.url,
                         ResourceFactory.createResource(tableUri));
             }
             // 4.5
