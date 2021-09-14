@@ -2,14 +2,15 @@ package cz.cvut.spipes.modules;
 
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
+import cz.cvut.spipes.util.StreamResourceUtils;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TabularToRDFModelModuleTest extends AbstractModuleTestHelper {
+public class TabularModuleTest extends AbstractModuleTestHelper {
 
         @Override
         public String getModuleName() {
@@ -17,13 +18,15 @@ public class TabularToRDFModelModuleTest extends AbstractModuleTestHelper {
         }
 
         @Test
-        public void executeWithSimpleTransformation() throws URISyntaxException {
+        public void executeWithSimpleTransformation() throws URISyntaxException, IOException {
 
             TabularModule module = new TabularModule();
 
-            Path filePath = this.getFilePath("countries.tsv");
-
-            module.setSourceFilePath(filePath.toString());
+            module.setSourceResource(
+                StreamResourceUtils.getStreamResource(
+                    "http://test-file",
+                    getFilePath("countries.tsv"))
+            );
             module.setReplace(true);
             module.setDelimiter('\t');
             module.setDataPrefix("http://onto.fel.cvut.cz/data/");

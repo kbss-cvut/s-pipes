@@ -5,18 +5,20 @@ import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
+import cz.cvut.spipes.exception.ResourceNotFoundException;
+import cz.cvut.spipes.registry.StreamResource;
+import cz.cvut.spipes.registry.StreamResourceRegistry;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.rdf.model.*;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.supercsv.io.CsvListReader;
 import org.supercsv.io.ICsvListReader;
 import org.supercsv.prefs.CsvPreference;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 
 /**
@@ -31,6 +33,7 @@ public class TabularModule extends AbstractModule {
 
     private final Property P_DELIMETER = getSpecificParameter("delimiter");
     private final Property P_DATE_PREFIX = getSpecificParameter("data-prefix");
+    private final Property P_SOURCE_RESOURCE_URI = getSpecificParameter("source-resource-uri");
 
     /**
      * Output data mode.
@@ -46,8 +49,8 @@ public class TabularModule extends AbstractModule {
     //sml:replace
     private boolean isReplace;
 
-    //sml:sourceFilePath
-    private String sourceFilePath;
+    //:source-resource-uri
+    private StreamResource sourceResource;
 
     //:delimiter
     private int delimiter;
@@ -76,14 +79,6 @@ public class TabularModule extends AbstractModule {
         isReplace = replace;
     }
 
-    public String getSourceFilePath() {
-        return sourceFilePath;
-    }
-
-    public void setSourceFilePath(String sourceFilePath) {
-        this.sourceFilePath = sourceFilePath;
-    }
-
     public int getDelimiter() {
         return delimiter;
     }
@@ -100,6 +95,14 @@ public class TabularModule extends AbstractModule {
         this.dataPrefix = dataPrefix;
     }
 
+    public StreamResource getSourceResource() {
+        return sourceResource;
+    }
+
+    public void setSourceResource(StreamResource sourceResource) {
+        this.sourceResource = sourceResource;
+    }
+
     @Override
     ExecutionContext executeSelf() {
         outputModel = ModelFactory.createDefaultModel();
@@ -109,7 +112,7 @@ public class TabularModule extends AbstractModule {
 
         onTableGroup(null);
 
-        onTable("file://" + sourceFilePath, null);
+        onTable(sourceResource.getUri(), null);
 
         CsvPreference csvPreference = new CsvPreference.Builder('"',
             delimiter,
@@ -118,7 +121,7 @@ public class TabularModule extends AbstractModule {
         // for each row
         ICsvListReader listReader = null;
         try {
-            listReader = new CsvListReader(getFileReader(), csvPreference);
+            listReader = new CsvListReader(getReader(), csvPreference);
 
             String[] header = listReader.getHeader(true); // skip the header (can't be used with CsvListReader)
 
@@ -185,13 +188,13 @@ public class TabularModule extends AbstractModule {
             }
 
         } catch (IOException e) {
-            LOG.error("Error while reading file {}", sourceFilePath, e);
+            LOG.error("Error while reading file from resource uri {}", sourceResource, e);
         } finally {
             if( listReader != null ) {
                 try {
                     listReader.close();
                 } catch (IOException e) {
-                    LOG.error("Error while closing file {}", sourceFilePath, e);
+                    LOG.error("Error while closing file from resource uri {}", sourceResource, e);
                 }
             }
         }
@@ -207,9 +210,9 @@ public class TabularModule extends AbstractModule {
     @Override
     public void loadConfiguration() {
         isReplace = this.getPropertyValue(SML.replace, false);
-        sourceFilePath = getEffectiveValue(SML.sourceFilePath).asLiteral().toString();
         delimiter = getPropertyValue(P_DELIMETER, '\t');
         dataPrefix = getEffectiveValue(P_DATE_PREFIX).asLiteral().toString();
+        sourceResource = getResourceByUri(getEffectiveValue(P_SOURCE_RESOURCE_URI).asLiteral().toString());
     }
 
     private static Property getSpecificParameter(String localPropertyName) {
@@ -275,8 +278,19 @@ public class TabularModule extends AbstractModule {
         }
     }
 
-    private FileReader getFileReader() throws FileNotFoundException {
-        return new FileReader(sourceFilePath);
+    private Reader getReader() {
+        return new StringReader(new String(sourceResource.getContent()));
+    }
+
+    @NotNull
+    private StreamResource getResourceByUri(@NotNull String resourceUri) {
+
+        StreamResource res = StreamResourceRegistry.getInstance().getResourceByUrl(resourceUri);
+
+        if (res == null) {
+            throw new ResourceNotFoundException("Stream resource " + resourceUri + " not found. ");
+        }
+        return res;
     }
 
     private Statement getCellStatement(Resource rowResource, String columnName, String value) {
