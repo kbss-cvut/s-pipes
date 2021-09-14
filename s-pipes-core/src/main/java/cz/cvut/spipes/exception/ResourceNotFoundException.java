@@ -20,6 +20,10 @@ public class ResourceNotFoundException extends RuntimeException {
         super("Resource identified by \"" + entityId + "\" was not found in context \"" + contextUri + "\".");
     }
 
+    public ResourceNotFoundException(String message) {
+        super(message);
+    }
+
     public ResourceNotFoundException(String message, Throwable cause) {
         super(message, cause);
     }
