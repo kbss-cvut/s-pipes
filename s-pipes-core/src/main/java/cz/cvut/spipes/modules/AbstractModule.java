@@ -60,23 +60,21 @@ public abstract class AbstractModule implements Module {
     @Override
     public ExecutionContext execute() {
         loadModuleFlags();
-//        if (isInDebugMode) {
-//            LOG.debug("Entering debug mode within this module.");
-//        }
         loadConfiguration();
         loadModuleConstraints();
-        if (ExecutionConfig.isCheckValidationConstrains()) {
-            checkInputConstraints();
-        }
         if (AuditConfig.isEnabled() || isInDebugMode) {
             LOG.debug("Saving module execution input to file {}.", saveModelToTemporaryFile(executionContext.getDefaultModel()));
         }
-        outputContext = executeSelf();
         if (ExecutionConfig.isCheckValidationConstrains()) {
-            checkOutputConstraints();
+            checkInputConstraints();
         }
+        outputContext = executeSelf();
         if (AuditConfig.isEnabled() || isInDebugMode) {
             LOG.debug("Saving module execution output to file {}.", saveModelToTemporaryFile(outputContext.getDefaultModel()));
+        }
+
+        if (ExecutionConfig.isCheckValidationConstrains()) {
+            checkOutputConstraints();
         }
         return  outputContext;
     }
