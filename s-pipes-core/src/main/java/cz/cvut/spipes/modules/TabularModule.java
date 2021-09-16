@@ -42,6 +42,7 @@ public class TabularModule extends AbstractModule {
     private static final Logger LOG = LoggerFactory.getLogger(TabularModule.class);
 
     private final Property P_DELIMITER = getSpecificParameter("delimiter");
+    private final Property P_QUOTE_CHAR = getSpecificParameter("quote-char");
     private final Property P_DATE_PREFIX = getSpecificParameter("data-prefix");
     private final Property P_OUTPUT_MODE = getSpecificParameter("output-mode");
     private final Property P_SOURCE_RESOURCE_URI = getSpecificParameter("source-resource-uri");
@@ -62,6 +63,9 @@ public class TabularModule extends AbstractModule {
 
     //:delimiter
     private int delimiter;
+
+    //:quoteChar
+    private char quoteChar;
 
     //:data-prefix
     public String dataPrefix; // dataprefix#{_column}
@@ -102,6 +106,14 @@ public class TabularModule extends AbstractModule {
         this.delimiter = delimiter;
     }
 
+    public char getQuoteChar() {
+        return quoteChar;
+    }
+
+    public void setQuoteChar(char quoteChar) {
+        this.quoteChar = quoteChar;
+    }
+
     public String getDataPrefix() {
         return dataPrefix;
     }
@@ -135,7 +147,7 @@ public class TabularModule extends AbstractModule {
 
         onTable(null);
 
-        CsvPreference csvPreference = new CsvPreference.Builder('"', //TODO configure quote char
+        CsvPreference csvPreference = new CsvPreference.Builder(quoteChar,
             delimiter,
             "\\n").build();
 
@@ -296,6 +308,7 @@ public class TabularModule extends AbstractModule {
     public void loadConfiguration() {
         isReplace = getPropertyValue(SML.replace, false);
         delimiter = getPropertyValue(P_DELIMITER, '\t');
+        quoteChar = getEffectiveValue(P_QUOTE_CHAR).asLiteral().getChar();
         dataPrefix = getEffectiveValue(P_DATE_PREFIX).asLiteral().toString();
         sourceResource = getResourceByUri(getEffectiveValue(P_SOURCE_RESOURCE_URI).asLiteral().toString());
 

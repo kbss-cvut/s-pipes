@@ -30,6 +30,7 @@ public class TabularModuleTest extends AbstractModuleTestHelper {
             );
             module.setReplace(true);
             module.setDelimiter('\t');
+            module.setQuoteChar('"');
             module.setDataPrefix("http://onto.fel.cvut.cz/data/");
             module.setOutputMode(TabularModule.Mode.STANDARD);
 
