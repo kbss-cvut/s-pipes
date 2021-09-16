@@ -18,14 +18,23 @@ import org.supercsv.io.CsvListReader;
 import org.supercsv.io.ICsvListReader;
 import org.supercsv.prefs.CsvPreference;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.net.URLEncoder;
 import java.util.List;
 
 /**
- * no table group uri
- * only one file
- * no table uri TODO finish doc
+ * Module for converting tabular data (e.g. CSV or TSV) to RDF
+ * <p>
+ * The implementation loosely follows the W3C Recommendation described here:
+ * <a href="https://www.w3.org/TR/csv2rdf/">Generating RDF from Tabular Data on the Web</a>
+ * <p>
+ * <b>Important notes:</b><br/>
+ * Does not support custom table group URIs.<br/>
+ * Does not support custom table URIs. <br/>
+ * Does not support processing of multiple files.<br/>
+ * Does not support the <i>suppress output</i> annotation.
  */
 public class TabularModule extends AbstractModule {
 
@@ -34,6 +43,7 @@ public class TabularModule extends AbstractModule {
 
     private final Property P_DELIMITER = getSpecificParameter("delimiter");
     private final Property P_DATE_PREFIX = getSpecificParameter("data-prefix");
+    private final Property P_OUTPUT_MODE = getSpecificParameter("output-mode");
     private final Property P_SOURCE_RESOURCE_URI = getSpecificParameter("source-resource-uri");
 
     /**
@@ -43,9 +53,6 @@ public class TabularModule extends AbstractModule {
         STANDARD,
         MINIMAL
     }
-
-    //TODO configure
-    private Mode outputMode;
 
     //sml:replace
     private boolean isReplace;
@@ -57,8 +64,10 @@ public class TabularModule extends AbstractModule {
     private int delimiter;
 
     //:data-prefix
-    public String dataPrefix;
+    public String dataPrefix; // dataprefix#{_column}
 
+    //:output-mode
+    private Mode outputMode;
 
     /**
      * Represent a root resource for group of tables.
@@ -104,12 +113,18 @@ public class TabularModule extends AbstractModule {
         this.sourceResource = sourceResource;
     }
 
+    public Mode getOutputMode() {
+        return outputMode;
+    }
+
+    public void setOutputMode(Mode outputMode) {
+        this.outputMode = outputMode;
+    }
+
     @Override
     ExecutionContext executeSelf() {
         outputModel = ModelFactory.createDefaultModel();
-
-        //TODO configure output mode
-        outputMode = Mode.STANDARD;
+        //this.executionContext.getDefaultModel();
 
         onTableGroup(null);
 
@@ -153,7 +168,7 @@ public class TabularModule extends AbstractModule {
                             ResourceFactory.createTypedLiteral(Integer.toString(rowNumber),
                                     XSDDatatype.XSDinteger));
                     // 4.6.5
-                    final String rowIri = T.getURI() + "#" + rowNumber;
+                    final String rowIri = T.getURI() + "#row=" + rowNumber;
                     outputModel.add(
                             R,
                             CSVW.url,
@@ -179,7 +194,7 @@ public class TabularModule extends AbstractModule {
 
                 for (int i = 0; i < header.length; i++) {
                     // 4.6.8.1
-                    String aboutUrl = getEffectiveValue(CSVW.hasAboutUrl).asLiteral().toString(); //TODO how to make this work for every cell
+                    String aboutUrl = null; //TODO get from user
 
                     Resource S;
                     if (aboutUrl != null && !aboutUrl.isEmpty()) {
@@ -197,18 +212,21 @@ public class TabularModule extends AbstractModule {
                     }
 
                     // 4.6.8.3
-                    String propertyUrl = getEffectiveValue(CSVW.hasPropertyUrl).asLiteral().toString(); //TODO how to make this work for every cell
+                    String propertyUrl = null; //TODO get from user
+                    String columnName = header[i];
 
                     Property P;
                     if (propertyUrl != null && !propertyUrl.isEmpty()) {
                         P = ResourceFactory.createProperty(propertyUrl);
-                    } else {
-                        String columnName = getEffectiveValue(CSVW.hasName).asLiteral().toString(); //TODO how to get name for the column associated with this cell
+                    } else if (dataPrefix != null && !dataPrefix.isEmpty()) {
                         P = ResourceFactory.createProperty(
-                                sourceResource.getUri() + "#" + URLEncoder.encode(columnName, "UTF-8")); //TODO should be URL not URI
+                                dataPrefix + URLEncoder.encode(columnName, "UTF-8"));
+                    } else {
+                        P = ResourceFactory.createProperty(
+                                sourceResource.getUri() + "#" + URLEncoder.encode(columnName, "UTF-8")); //TODO should be URL (according to specification) not URI
                     }
 
-                    String valueUrl = getEffectiveValue(CSVW.hasValueUrl).asLiteral().toString(); //TODO get for every cell
+                    String valueUrl = null; //TODO get from user
 
                     if (valueUrl != null && !valueUrl.isEmpty()) {
                         // 4.6.8.4
@@ -257,6 +275,13 @@ public class TabularModule extends AbstractModule {
         delimiter = getPropertyValue(P_DELIMITER, '\t');
         dataPrefix = getEffectiveValue(P_DATE_PREFIX).asLiteral().toString();
         sourceResource = getResourceByUri(getEffectiveValue(P_SOURCE_RESOURCE_URI).asLiteral().toString());
+
+        String outputModeStr = getEffectiveValue(P_OUTPUT_MODE).asLiteral().toString();
+        try {
+            outputMode = Mode.valueOf(outputModeStr);
+        } catch (Exception e) {
+            outputMode = Mode.STANDARD;
+        }
     }
 
     private static Property getSpecificParameter(String localPropertyName) {

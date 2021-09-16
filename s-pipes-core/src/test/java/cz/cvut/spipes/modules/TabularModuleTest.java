@@ -31,12 +31,11 @@ public class TabularModuleTest extends AbstractModuleTestHelper {
             module.setReplace(true);
             module.setDelimiter('\t');
             module.setDataPrefix("http://onto.fel.cvut.cz/data/");
+            module.setOutputMode(TabularModule.Mode.STANDARD);
 
             module.setInputContext(ExecutionContextFactory.createEmptyContext());
 
             ExecutionContext outputContext = module.executeSelf();
-
-            JenaUtils.saveModelToTemporaryFile(outputContext.getDefaultModel());
 
             assertTrue(outputContext.getDefaultModel().size() > 0);
         }
