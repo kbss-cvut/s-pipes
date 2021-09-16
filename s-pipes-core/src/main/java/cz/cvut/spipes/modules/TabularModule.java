@@ -79,6 +79,11 @@ public class TabularModule extends AbstractModule {
      */
     private Resource T;
 
+    /**
+     * Represents the resource for the table schema that was used to describe the table
+     */
+    private Resource T_Schema;
+
     private Model outputModel;
 
     public boolean isReplace() {
@@ -134,15 +139,35 @@ public class TabularModule extends AbstractModule {
             delimiter,
             "\\n").build();
 
-        // for each row
         ICsvListReader listReader = null;
         try {
             listReader = new CsvListReader(getReader(), csvPreference);
 
             String[] header = listReader.getHeader(true); // skip the header (can't be used with CsvListReader)
 
+            for (String columnName : header) {
+                Resource columnResource = ResourceFactory.createResource();
+
+                outputModel.add(
+                        T_Schema,
+                        CSVW.column,
+                        columnResource
+                );
+                outputModel.add(
+                        columnResource,
+                        CSVW.name,
+                        ResourceFactory.createStringLiteral(columnName)
+                );
+                outputModel.add(
+                        columnResource,
+                        CSVW.aboutUrl,
+                        outputModel.createTypedLiteral(sourceResource.getUri() + "/columns/" + columnName + "-{_row}", CSVW.uriTemplate)
+                );
+            }
+
             List<String> row;
             int rowNumber = 0;
+            //for each row
             while( (row = listReader.read()) != null ) {
                 rowNumber++;
 
@@ -168,7 +193,7 @@ public class TabularModule extends AbstractModule {
                             ResourceFactory.createTypedLiteral(Integer.toString(rowNumber),
                                     XSDDatatype.XSDinteger));
                     // 4.6.5
-                    final String rowIri = T.getURI() + "#row=" + rowNumber;
+                    final String rowIri = T.getURI() + "#row=" + listReader.getRowNumber();
                     outputModel.add(
                             R,
                             CSVW.url,
@@ -185,8 +210,6 @@ public class TabularModule extends AbstractModule {
                 } else {
                     R = null;
                 }
-
-                Resource rowResource = outputModel.createResource(dataPrefix + listReader.getRowNumber());
 
                 // 4.6.8
                 // Establish a new blank node Sdef to be used as the default subject for cells where about URL is undefined
@@ -332,7 +355,7 @@ public class TabularModule extends AbstractModule {
                     CSVW.Table);
             // 4.4 (specify the source tabular data file URL for the current table based on the url annotation)
             outputModel.add(
-                    G,
+                    T,
                     CSVW.url,
                     ResourceFactory.createResource(sourceResource.getUri())); //TODO should be URL (according to specification) not URI
 
@@ -343,6 +366,23 @@ public class TabularModule extends AbstractModule {
             // node T as an initial subject, the notes or non-core
             // annotation as property, and the value
             // of the notes or non-core annotation as value.
+
+            T_Schema = ResourceFactory.createResource();
+            outputModel.add(
+                    T,
+                    CSVW.tableSchema,
+                    T_Schema
+            );
+            outputModel.add(
+                    T_Schema,
+                    RDF.type,
+                    CSVW.TableSchema
+            );
+            outputModel.add(
+                    T_Schema,
+                    CSVW.aboutUrl,
+                    outputModel.createTypedLiteral(sourceResource.getUri() + "#table---{_table}", CSVW.uriTemplate)
+            );
         }
     }
 

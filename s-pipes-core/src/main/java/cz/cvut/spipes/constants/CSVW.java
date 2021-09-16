@@ -11,10 +11,10 @@ public class CSVW {
      */
     public static final String uri = "http://www.w3.org/ns/csvw#";
 
-    protected static final Resource resource(String local )
+    protected static Resource resource(String local )
     { return ResourceFactory.createResource( uri + local ); }
 
-    protected static final Property property(String local )
+    protected static Property property(String local )
     { return ResourceFactory.createProperty( uri, local ); }
 
     public static final Property table = property( "table");
@@ -26,10 +26,15 @@ public class CSVW {
     public static final Property propertyUrl = property("propertyUrl");
     public static final Property name = property("name");
     public static final Property valueUrl = property("valueUrl");
+    public static final Property tableSchema = property("tableSchema");
+    public static final Property column = property("column");
 
     public static final Resource TableGroup = resource("TableGroup");
     public static final Resource Table = resource("Table");
     public static final Resource Row = resource("Row");
+    public static final Resource TableSchema = resource("TableSchema");
+
+    public static final String uriTemplate = uri + "uriTemplate";
 
     /**
      returns the URI for this schema
