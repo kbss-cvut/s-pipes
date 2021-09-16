@@ -90,54 +90,6 @@ public class TabularModule extends AbstractModule {
 
     private Model outputModel;
 
-    public boolean isReplace() {
-        return isReplace;
-    }
-
-    public void setReplace(boolean replace) {
-        isReplace = replace;
-    }
-
-    public int getDelimiter() {
-        return delimiter;
-    }
-
-    public void setDelimiter(int delimiter) {
-        this.delimiter = delimiter;
-    }
-
-    public char getQuoteChar() {
-        return quoteChar;
-    }
-
-    public void setQuoteChar(char quoteChar) {
-        this.quoteChar = quoteChar;
-    }
-
-    public String getDataPrefix() {
-        return dataPrefix;
-    }
-
-    public void setDataPrefix(String dataPrefix) {
-        this.dataPrefix = dataPrefix;
-    }
-
-    public StreamResource getSourceResource() {
-        return sourceResource;
-    }
-
-    public void setSourceResource(StreamResource sourceResource) {
-        this.sourceResource = sourceResource;
-    }
-
-    public Mode getOutputMode() {
-        return outputMode;
-    }
-
-    public void setOutputMode(Mode outputMode) {
-        this.outputMode = outputMode;
-    }
-
     @Override
     ExecutionContext executeSelf() {
         outputModel = ModelFactory.createDefaultModel();
@@ -300,11 +252,6 @@ public class TabularModule extends AbstractModule {
     }
 
     @Override
-    public String getTypeURI() {
-        return TYPE_URI;
-    }
-
-    @Override
     public void loadConfiguration() {
         isReplace = getPropertyValue(SML.replace, false);
         delimiter = getPropertyValue(P_DELIMITER, '\t');
@@ -318,6 +265,11 @@ public class TabularModule extends AbstractModule {
         } catch (Exception e) {
             outputMode = Mode.STANDARD;
         }
+    }
+
+    @Override
+    public String getTypeURI() {
+        return TYPE_URI;
     }
 
     private static Property getSpecificParameter(String localPropertyName) {
@@ -414,15 +366,55 @@ public class TabularModule extends AbstractModule {
         return res;
     }
 
-    private Statement getCellStatement(Resource rowResource, String columnName, String value) {
-        return rowResource.getModel().createStatement(
-            rowResource,
-            ResourceFactory.createProperty(dataPrefix, columnName),
-            ResourceFactory.createPlainLiteral(value)
-        );
-    }
-
     private Resource getResource(String name) {
         return ResourceFactory.createResource(dataPrefix + name);
+    }
+
+    public boolean isReplace() {
+        return isReplace;
+    }
+
+    public void setReplace(boolean replace) {
+        isReplace = replace;
+    }
+
+    public StreamResource getSourceResource() {
+        return sourceResource;
+    }
+
+    public void setSourceResource(StreamResource sourceResource) {
+        this.sourceResource = sourceResource;
+    }
+
+    public int getDelimiter() {
+        return delimiter;
+    }
+
+    public void setDelimiter(int delimiter) {
+        this.delimiter = delimiter;
+    }
+
+    public char getQuoteChar() {
+        return quoteChar;
+    }
+
+    public void setQuoteChar(char quoteChar) {
+        this.quoteChar = quoteChar;
+    }
+
+    public String getDataPrefix() {
+        return dataPrefix;
+    }
+
+    public void setDataPrefix(String dataPrefix) {
+        this.dataPrefix = dataPrefix;
+    }
+
+    public Mode getOutputMode() {
+        return outputMode;
+    }
+
+    public void setOutputMode(Mode outputMode) {
+        this.outputMode = outputMode;
     }
 }
