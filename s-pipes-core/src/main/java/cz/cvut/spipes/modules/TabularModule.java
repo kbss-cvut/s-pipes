@@ -217,11 +217,13 @@ public class TabularModule extends AbstractModule {
                                 P,
                                 V_url));
                     } else {
-                        //outputModel.add(getCellStatement(rowResource, header[i], row.get(i)));
-                        outputModel.add(ResourceFactory.createStatement(
+                        final String cellValue = row.get(i);
+                        if (cellValue != null) {
+                            outputModel.add(ResourceFactory.createStatement(
                                 S,
                                 P,
-                                ResourceFactory.createPlainLiteral(row.get(i))));
+                                ResourceFactory.createPlainLiteral(cellValue)));
+                        }
                     }
 
                     // 4.6.8.5 - else, if value is list and cellOrdering == true
