@@ -249,7 +249,7 @@ public class TabularModule extends AbstractModule {
     public void loadConfiguration() {
         isReplace = getPropertyValue(SML.replace, false);
         delimiter = getPropertyValue(P_DELIMITER, '\t');
-        quoteCharacter = getEffectiveValue(P_QUOTE_CHARACTER).asLiteral().getChar();
+        quoteCharacter = getPropertyValue(P_QUOTE_CHARACTER, '\'');
         dataPrefix = getEffectiveValue(P_DATE_PREFIX).asLiteral().toString();
         sourceResource = getResourceByUri(getEffectiveValue(P_SOURCE_RESOURCE_URI).asLiteral().toString());
         outputMode = Mode.fromResource(
