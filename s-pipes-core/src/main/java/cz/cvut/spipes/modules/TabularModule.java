@@ -103,8 +103,11 @@ public class TabularModule extends AbstractModule {
 
             String[] header = listReader.getHeader(true); // skip the header (can't be used with CsvListReader)
 
+
             for (String columnName : header) {
                 Resource columnResource = ResourceFactory.createResource();
+                // TODO make sure normalized names does not clash
+                String columnNameNormalized = normalize(columnName);
 
                 outputModel.add(
                         T_Schema,
@@ -114,12 +117,17 @@ public class TabularModule extends AbstractModule {
                 outputModel.add(
                         columnResource,
                         CSVW.name,
-                        ResourceFactory.createStringLiteral(columnName)
+                        ResourceFactory.createStringLiteral(columnNameNormalized)
+                );
+                outputModel.add(
+                    columnResource,
+                    CSVW.title,
+                    ResourceFactory.createStringLiteral(columnName)
                 );
                 outputModel.add(
                         columnResource,
                         CSVW.aboutUrl,
-                        outputModel.createTypedLiteral(sourceResource.getUri() + "/columns/" + columnName + "-{_row}", CSVW.uriTemplate)
+                        outputModel.createTypedLiteral(sourceResource.getUri() + "/columns/" + columnNameNormalized + "-{_row}", CSVW.uriTemplate)
                 );
             }
 
@@ -195,16 +203,17 @@ public class TabularModule extends AbstractModule {
                     // 4.6.8.3
                     String propertyUrl = null; //TODO get from user
                     String columnName = header[i];
+                    String normalizedColumnName = normalize(columnName);
 
                     Property P;
                     if (propertyUrl != null && !propertyUrl.isEmpty()) {
                         P = ResourceFactory.createProperty(propertyUrl);
                     } else if (dataPrefix != null && !dataPrefix.isEmpty()) {
                         P = ResourceFactory.createProperty(
-                                dataPrefix + URLEncoder.encode(columnName, "UTF-8"));
+                                dataPrefix + URLEncoder.encode(normalizedColumnName, "UTF-8"));
                     } else {
                         P = ResourceFactory.createProperty(
-                                sourceResource.getUri() + "#" + URLEncoder.encode(columnName, "UTF-8")); //TODO should be URL (according to specification) not URI
+                                sourceResource.getUri() + "#" + URLEncoder.encode(normalizedColumnName, "UTF-8")); //TODO should be URL (according to specification) not URI
                     }
 
                     String valueUrl = null; //TODO get from user
@@ -341,6 +350,10 @@ public class TabularModule extends AbstractModule {
                     outputModel.createTypedLiteral(sourceResource.getUri() + "#table---{_table}", CSVW.uriTemplate)
             );
         }
+    }
+
+    private String normalize(String label) {
+        return label.replaceAll("[^\\w]", "_");
     }
 
     private Reader getReader() {
