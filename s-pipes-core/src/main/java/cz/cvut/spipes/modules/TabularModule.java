@@ -6,6 +6,7 @@ import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.exception.ResourceNotFoundException;
+import cz.cvut.spipes.modules.tabular.Mode;
 import cz.cvut.spipes.registry.StreamResource;
 import cz.cvut.spipes.registry.StreamResourceRegistry;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
@@ -42,18 +43,10 @@ public class TabularModule extends AbstractModule {
     private static final Logger LOG = LoggerFactory.getLogger(TabularModule.class);
 
     private final Property P_DELIMITER = getSpecificParameter("delimiter");
-    private final Property P_QUOTE_CHAR = getSpecificParameter("quote-char");
+    private final Property P_QUOTE_CHARACTER = getSpecificParameter("quote-character");
     private final Property P_DATE_PREFIX = getSpecificParameter("data-prefix");
     private final Property P_OUTPUT_MODE = getSpecificParameter("output-mode");
     private final Property P_SOURCE_RESOURCE_URI = getSpecificParameter("source-resource-uri");
-
-    /**
-     * Output data mode.
-     */
-    public enum Mode {
-        STANDARD,
-        MINIMAL
-    }
 
     //sml:replace
     private boolean isReplace;
@@ -64,8 +57,8 @@ public class TabularModule extends AbstractModule {
     //:delimiter
     private int delimiter;
 
-    //:quoteChar
-    private char quoteChar;
+    //:quote-character
+    private char quoteCharacter;
 
     //:data-prefix
     public String dataPrefix; // dataprefix#{_column}
@@ -99,7 +92,8 @@ public class TabularModule extends AbstractModule {
 
         onTable(null);
 
-        CsvPreference csvPreference = new CsvPreference.Builder(quoteChar,
+        CsvPreference csvPreference = new CsvPreference.Builder(
+            quoteCharacter,
             delimiter,
             "\\n").build();
 
@@ -255,16 +249,12 @@ public class TabularModule extends AbstractModule {
     public void loadConfiguration() {
         isReplace = getPropertyValue(SML.replace, false);
         delimiter = getPropertyValue(P_DELIMITER, '\t');
-        quoteChar = getEffectiveValue(P_QUOTE_CHAR).asLiteral().getChar();
+        quoteCharacter = getEffectiveValue(P_QUOTE_CHARACTER).asLiteral().getChar();
         dataPrefix = getEffectiveValue(P_DATE_PREFIX).asLiteral().toString();
         sourceResource = getResourceByUri(getEffectiveValue(P_SOURCE_RESOURCE_URI).asLiteral().toString());
-
-        String outputModeStr = getEffectiveValue(P_OUTPUT_MODE).asLiteral().toString();
-        try {
-            outputMode = Mode.valueOf(outputModeStr);
-        } catch (Exception e) {
-            outputMode = Mode.STANDARD;
-        }
+        outputMode = Mode.fromResource(
+            getPropertyValue(P_OUTPUT_MODE, Mode.STANDARD.getResource())
+        );
     }
 
     @Override
@@ -394,12 +384,12 @@ public class TabularModule extends AbstractModule {
         this.delimiter = delimiter;
     }
 
-    public char getQuoteChar() {
-        return quoteChar;
+    public char getQuote() {
+        return quoteCharacter;
     }
 
-    public void setQuoteChar(char quoteChar) {
-        this.quoteChar = quoteChar;
+    public void setQuoteCharacter(char quoteCharacter) {
+        this.quoteCharacter = quoteCharacter;
     }
 
     public String getDataPrefix() {

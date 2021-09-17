@@ -286,6 +286,17 @@ public abstract class AbstractModule implements Module {
         return defaultValue;
     }
 
+    Resource getPropertyValue(Property property, Resource defaultValue) {
+
+        Statement s = resource.getProperty(property);
+
+        if (s != null && s.getObject().isURIResource()) {
+            return s.getResource();
+        }
+        return defaultValue;
+    }
+
+
     boolean getPropertyValue(Property property, boolean defaultValue) {
 
         Statement s = resource.getProperty(property);
