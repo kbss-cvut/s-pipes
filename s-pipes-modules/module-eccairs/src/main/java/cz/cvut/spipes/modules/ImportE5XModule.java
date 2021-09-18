@@ -12,12 +12,12 @@ import cz.cvut.kbss.jopa.model.descriptors.Descriptor;
 import cz.cvut.kbss.jopa.model.descriptors.EntityDescriptor;
 import cz.cvut.kbss.ucl.MappingEccairsData2Aso;
 import cz.cvut.spipes.constants.KBSS_MODULE;
-import cz.cvut.spipes.constants.KM_PARAM;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
+import cz.cvut.spipes.exception.ResourceNotFoundException;
 import cz.cvut.spipes.modules.eccairs.EccairsAccessFactory;
-import cz.cvut.spipes.modules.eccairs.SesameDataDao;
 import cz.cvut.spipes.modules.eccairs.JopaPersistenceUtils;
+import cz.cvut.spipes.modules.eccairs.SesameDataDao;
 import cz.cvut.spipes.registry.StreamResource;
 import cz.cvut.spipes.registry.StreamResourceRegistry;
 import cz.cvut.spipes.util.JenaUtils;
@@ -29,7 +29,8 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.util.Arrays;
 
@@ -144,7 +145,7 @@ public class ImportE5XModule extends AbstractModule {
 
     @Override
     public void loadConfiguration() {
-        String e5xResourceUriStr = getEffectiveValue(KM_PARAM.has_resource_uri).asLiteral().toString();
+        String e5xResourceUriStr = getEffectiveValue(KBSS_MODULE.has_resource_uri).asLiteral().toString();
         e5xResource = getResourceByUri(e5xResourceUriStr);
     }
 
@@ -170,7 +171,7 @@ public class ImportE5XModule extends AbstractModule {
         StreamResource res = StreamResourceRegistry.getInstance().getResourceByUrl(e5xResourceUriStr);
 
         if (res == null) {
-            throw new RuntimeException("Stream resource " + e5xResourceUriStr + " not found. "); // TODO specific exception
+            throw new ResourceNotFoundException("Stream resource " + e5xResourceUriStr + " not found. ");
         }
         return res;
     }

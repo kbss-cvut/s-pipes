@@ -284,13 +284,34 @@ public abstract class AbstractModule implements Module {
         return defaultValue;
     }
 
-    boolean getPropertyValue(Property property, boolean defaultValue) {
+    Resource getPropertyValue(Property property, Resource defaultValue) {
+
+        Statement s = resource.getProperty(property);
+
+        if (s != null && s.getObject().isURIResource()) {
+            return s.getResource();
+        }
+        return defaultValue;
+    }
+
+
+    boolean getPropertyValue(@NotNull Property property, boolean defaultValue) {
 
         Statement s = resource.getProperty(property);
 
         if (s != null && s.getObject().isLiteral()) {
             //TODO check if it is boolean first
             return s.getBoolean();
+        }
+        return defaultValue;
+    }
+
+    char getPropertyValue(@NotNull Property property, char defaultValue) {
+
+        Statement s = resource.getProperty(property);
+
+        if (s != null && s.getObject().isLiteral()) {
+            return s.getObject().asLiteral().getChar();
         }
         return defaultValue;
     }

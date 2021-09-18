@@ -19,6 +19,7 @@ public class KBSS_MODULE {
     public static final Property has_debug_mode_flag = property("has-debug-mode-flag");
     public static final Property is_parse_text = property("is-parse-text");
     public static final Property has_max_iteration_count = property("has-max-iteration-count");
+    public static final Property has_resource_uri = property("has-resource-uri");
 
     /**
      returns the URI for this schema
