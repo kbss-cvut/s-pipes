@@ -3,7 +3,6 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.modules.tabular.Mode;
-import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.StreamResourceUtils;
 import org.junit.jupiter.api.Test;
 
@@ -38,8 +37,6 @@ public class TabularModuleTest extends AbstractModuleTestHelper {
             module.setInputContext(ExecutionContextFactory.createEmptyContext());
 
             ExecutionContext outputContext = module.executeSelf();
-
-            JenaUtils.saveModelToTemporaryFile(outputContext.getDefaultModel());
 
             assertTrue(outputContext.getDefaultModel().size() > 0);
         }

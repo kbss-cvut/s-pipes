@@ -159,7 +159,7 @@ public class TabularModule extends AbstractModule {
                             ResourceFactory.createTypedLiteral(Integer.toString(rowNumber),
                                     XSDDatatype.XSDinteger));
                     // 4.6.5
-                    final String rowIri = T.getURI() + "#row=" + listReader.getRowNumber();
+                    final String rowIri = sourceResource.getUri() + "#row=" + listReader.getRowNumber(); // TODO check with specification
                     outputModel.add(
                             R,
                             CSVW.url,
