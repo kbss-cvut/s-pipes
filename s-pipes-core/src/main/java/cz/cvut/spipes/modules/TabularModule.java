@@ -9,6 +9,7 @@ import cz.cvut.spipes.exception.ResourceNotFoundException;
 import cz.cvut.spipes.modules.tabular.Mode;
 import cz.cvut.spipes.registry.StreamResource;
 import cz.cvut.spipes.registry.StreamResourceRegistry;
+import cz.cvut.spipes.util.JenaUtils;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.RDF;
@@ -85,8 +86,8 @@ public class TabularModule extends AbstractModule {
 
     @Override
     ExecutionContext executeSelf() {
+        Model inputModel = executionContext.getDefaultModel();
         outputModel = ModelFactory.createDefaultModel();
-        //this.executionContext.getDefaultModel();
 
         onTableGroup(null);
 
@@ -253,7 +254,11 @@ public class TabularModule extends AbstractModule {
             }
         }
 
-        return ExecutionContextFactory.createContext(outputModel);
+        if (isReplace) {
+            return ExecutionContextFactory.createContext(outputModel);
+        } else {
+            return ExecutionContextFactory.createContext(JenaUtils.createUnion(inputModel, outputModel));
+        }
     }
 
     @Override
