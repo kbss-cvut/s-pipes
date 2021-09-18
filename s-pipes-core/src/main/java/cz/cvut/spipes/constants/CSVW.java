@@ -29,6 +29,7 @@ public class CSVW {
     public static final Property valueUrl = property("valueUrl");
     public static final Property tableSchema = property("tableSchema");
     public static final Property column = property("column");
+    public static final Property columns = property("columns");
 
     public static final Resource TableGroup = resource("TableGroup");
     public static final Resource Table = resource("Table");

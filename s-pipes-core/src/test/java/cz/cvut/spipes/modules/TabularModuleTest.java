@@ -1,44 +1,70 @@
 package cz.cvut.spipes.modules;
 
+import cz.cvut.spipes.constants.CSVW;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
+import cz.cvut.spipes.exception.ResourceNotUniqueException;
 import cz.cvut.spipes.modules.tabular.Mode;
 import cz.cvut.spipes.util.StreamResourceUtils;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TabularModuleTest extends AbstractModuleTestHelper {
 
-        @Override
-        public String getModuleName() {
-            return "tabular";
-        }
+    private TabularModule module;
 
-        @Test
-        public void executeWithSimpleTransformation() throws URISyntaxException, IOException {
+    @Override
+    public String getModuleName() {
+        return "tabular";
+    }
 
-            TabularModule module = new TabularModule();
+    @BeforeEach
+    public void init() {
+        module = new TabularModule();
 
-            module.setSourceResource(
-                StreamResourceUtils.getStreamResource(
-                    "http://test-file",
-                    getFilePath("countries.tsv"))
-            );
-            module.setReplace(true);
-            module.setDelimiter('\t');
-            module.setQuoteCharacter('"');
-            module.setDataPrefix("http://onto.fel.cvut.cz/data/");
-            module.setOutputMode(Mode.STANDARD);
+        module.setReplace(true);
+        module.setDelimiter('\t');
+        module.setQuoteCharacter('"');
+        module.setDataPrefix("http://onto.fel.cvut.cz/data/");
+        module.setOutputMode(Mode.STANDARD);
 
-            module.setInputContext(ExecutionContextFactory.createEmptyContext());
+        module.setInputContext(ExecutionContextFactory.createEmptyContext());
+    }
 
-            ExecutionContext outputContext = module.executeSelf();
+    @Test
+    public void executeWithSimpleTransformation() throws URISyntaxException, IOException {
+        module.setSourceResource(
+            StreamResourceUtils.getStreamResource(
+                "http://test-file",
+                getFilePath("countries.tsv"))
+        );
 
-            assertTrue(outputContext.getDefaultModel().size() > 0);
-        }
+        ExecutionContext outputContext = module.executeSelf();
 
+        assertTrue(outputContext.getDefaultModel().size() > 0);
+    }
+
+    @Test
+    public void executeWithDuplicateColumnsThrowsResourceNotUniqueException()
+            throws URISyntaxException, IOException {
+        module.setSourceResource(StreamResourceUtils.getStreamResource(
+                "http://test-file-2",
+                getFilePath("duplicate_column_countries.tsv"))
+        );
+
+        ResourceNotUniqueException exception = assertThrows(
+                ResourceNotUniqueException.class,
+                module::executeSelf
+        );
+
+        String expectedMessage = "latitude";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
 }

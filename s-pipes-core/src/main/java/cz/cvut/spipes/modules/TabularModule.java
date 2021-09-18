@@ -6,6 +6,7 @@ import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.exception.ResourceNotFoundException;
+import cz.cvut.spipes.exception.ResourceNotUniqueException;
 import cz.cvut.spipes.modules.tabular.Mode;
 import cz.cvut.spipes.registry.StreamResource;
 import cz.cvut.spipes.registry.StreamResourceRegistry;
@@ -24,7 +25,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.URLEncoder;
-import java.util.List;
+import java.util.*;
 
 /**
  * Module for converting tabular data (e.g. CSV or TSV) to RDF
@@ -62,7 +63,7 @@ public class TabularModule extends AbstractModule {
     private char quoteCharacter;
 
     //:data-prefix
-    public String dataPrefix; // dataprefix#{_column}
+    public String dataPrefix;
 
     //:output-mode
     private Mode outputMode;
@@ -104,11 +105,27 @@ public class TabularModule extends AbstractModule {
 
             String[] header = listReader.getHeader(true); // skip the header (can't be used with CsvListReader)
 
+            Set<String> columnNames = new HashSet<>();
+            List<RDFNode> columns = new LinkedList<>();
 
-            for (String columnName : header) {
+            for (String columnTitle : header) {
                 Resource columnResource = ResourceFactory.createResource();
-                // TODO make sure normalized names does not clash
-                String columnNameNormalized = normalize(columnName);
+                String columnName = normalize(columnTitle);
+                boolean isDuplicate = !columnNames.add(columnTitle);
+                columns.add(columnResource);
+
+                if (isDuplicate) {
+                    Resource collidingColumn = getColumnByName(columnName);
+                    throw new ResourceNotUniqueException(
+                            String.format("Unable to create resource as value of property %s due to collision. " +
+                                    "Both column titles '%s' and '%s' are normalized to '%s' " +
+                                    "and thus would refer to same about url <%s>.",
+                                    CSVW.aboutUrl,
+                                    columnTitle,
+                                    collidingColumn.getRequiredProperty(CSVW.title).getObject().asLiteral().toString(),
+                                    columnName,
+                                    collidingColumn.getRequiredProperty(CSVW.aboutUrl).getObject().asLiteral().toString()));
+                }
 
                 outputModel.add(
                         T_Schema,
@@ -118,19 +135,36 @@ public class TabularModule extends AbstractModule {
                 outputModel.add(
                         columnResource,
                         CSVW.name,
-                        ResourceFactory.createStringLiteral(columnNameNormalized)
+                        ResourceFactory.createStringLiteral(columnName)
                 );
                 outputModel.add(
                     columnResource,
                     CSVW.title,
-                    ResourceFactory.createStringLiteral(columnName)
+                    ResourceFactory.createStringLiteral(columnTitle)
                 );
-                outputModel.add(
-                        columnResource,
-                        CSVW.aboutUrl,
-                        outputModel.createTypedLiteral(sourceResource.getUri() + "/columns/" + columnNameNormalized + "-{_row}", CSVW.uriTemplate)
-                );
+
+                String columnAboutUrl = null; //TODO get from inputModel
+                if (columnAboutUrl != null && !columnAboutUrl.isEmpty()) {
+                    outputModel.add(
+                            columnResource,
+                            CSVW.aboutUrl,
+                            outputModel.createTypedLiteral(columnAboutUrl, CSVW.uriTemplate)
+                    );
+                } else {
+                    outputModel.add(
+                            columnResource,
+                            CSVW.aboutUrl,
+                            outputModel.createTypedLiteral(sourceResource.getUri() + "/columns/" + columnName + "-{_row}", CSVW.uriTemplate)
+                    );
+                }
             }
+
+            RDFList columnList = outputModel.createList(columns.iterator());
+
+            outputModel.add(
+                    T_Schema,
+                    CSVW.columns,
+                    columnList);
 
             List<String> row;
             int rowNumber = 0;
@@ -179,18 +213,20 @@ public class TabularModule extends AbstractModule {
                 }
 
                 // 4.6.8
-                // Establish a new blank node Sdef to be used as the default subject for cells where about URL is undefined
-                Resource S_def = ResourceFactory.createResource();
+                //Resource S_def = ResourceFactory.createResource();
 
                 for (int i = 0; i < header.length; i++) {
                     // 4.6.8.1
-                    String aboutUrl = null; //TODO get from user
+                    String aboutUrl = null; //TODO get from inputModel
 
                     Resource S;
                     if (aboutUrl != null && !aboutUrl.isEmpty()) {
                         S = ResourceFactory.createResource(aboutUrl);
                     } else {
-                        S = S_def;
+                        String columnAboutUrl = getAboutUrlFromSchema(columns.get(i).asResource());
+                        S = ResourceFactory.createResource(columnAboutUrl.replace(
+                                "{_row}",
+                                Integer.toString(listReader.getRowNumber())));
                     }
 
                     // 4.6.8.2
@@ -202,7 +238,7 @@ public class TabularModule extends AbstractModule {
                     }
 
                     // 4.6.8.3
-                    String propertyUrl = null; //TODO get from user
+                    String propertyUrl = null; //TODO get from inputModel
                     String columnName = header[i];
                     String normalizedColumnName = normalize(columnName);
 
@@ -217,7 +253,7 @@ public class TabularModule extends AbstractModule {
                                 sourceResource.getUri() + "#" + URLEncoder.encode(normalizedColumnName, "UTF-8")); //TODO should be URL (according to specification) not URI
                     }
 
-                    String valueUrl = null; //TODO get from user
+                    String valueUrl = null; //TODO get from inputModel
 
                     if (valueUrl != null && !valueUrl.isEmpty()) {
                         // 4.6.8.4
@@ -352,13 +388,25 @@ public class TabularModule extends AbstractModule {
             outputModel.add(
                     T_Schema,
                     CSVW.aboutUrl,
-                    outputModel.createTypedLiteral(sourceResource.getUri() + "#table---{_table}", CSVW.uriTemplate)
+                    outputModel.createTypedLiteral(sourceResource.getUri() + "#table-{_table}", CSVW.uriTemplate) //TODO what should aboutUrl on table look like
             );
         }
     }
 
     private String normalize(String label) {
         return label.trim().replaceAll("[^\\w]", "_");
+    }
+
+    private Resource getColumnByName(String columnName) {
+        return outputModel.listStatements(
+                null,
+                CSVW.name,
+                ResourceFactory.createStringLiteral(columnName)
+        ).next().getSubject(); //TODO throws NoSuchElementException
+    }
+
+    private String getAboutUrlFromSchema(Resource columnResource) {
+        return outputModel.getRequiredProperty(columnResource, CSVW.aboutUrl).getObject().asLiteral().toString();
     }
 
     private Reader getReader() {
@@ -374,10 +422,6 @@ public class TabularModule extends AbstractModule {
             throw new ResourceNotFoundException("Stream resource " + resourceUri + " not found. ");
         }
         return res;
-    }
-
-    private Resource getResource(String name) {
-        return ResourceFactory.createResource(dataPrefix + name);
     }
 
     public boolean isReplace() {
