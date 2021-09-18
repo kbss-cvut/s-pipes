@@ -358,7 +358,7 @@ public class TabularModule extends AbstractModule {
     }
 
     private String normalize(String label) {
-        return label.replaceAll("[^\\w]", "_");
+        return label.trim().replaceAll("[^\\w]", "_");
     }
 
     private Reader getReader() {
