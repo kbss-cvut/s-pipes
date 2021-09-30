@@ -1,6 +1,5 @@
 package cz.cvut.spipes.modules;
 
-import cz.cvut.spipes.constants.CSVW;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.exception.ResourceNotUniqueException;
@@ -12,7 +11,8 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TabularModuleTest extends AbstractModuleTestHelper {
 
@@ -24,7 +24,7 @@ public class TabularModuleTest extends AbstractModuleTestHelper {
     }
 
     @BeforeEach
-    public void init() {
+    public void setUp() {
         module = new TabularModule();
 
         module.setReplace(true);

@@ -154,7 +154,28 @@ public class TabularModule extends AbstractModule {
                     outputModel.add(
                             columnResource,
                             CSVW.aboutUrl,
-                            outputModel.createTypedLiteral(sourceResource.getUri() + "/columns/" + columnName + "-{_row}", CSVW.uriTemplate)
+                            outputModel.createTypedLiteral(sourceResource.getUri() + "#row-{_row}", CSVW.uriTemplate)
+                    );
+                }
+
+                String columnPropertyUrl = null; //TODO get from inputModel
+                if (columnPropertyUrl != null && !columnPropertyUrl.isEmpty()) {
+                    outputModel.add(
+                            columnResource,
+                            CSVW.propertyUrl,
+                            outputModel.createTypedLiteral(columnPropertyUrl, CSVW.uriTemplate)
+                    );
+                } else if (dataPrefix != null && !dataPrefix.isEmpty()) {
+                    outputModel.add(
+                            columnResource,
+                            CSVW.propertyUrl,
+                            ResourceFactory.createPlainLiteral(dataPrefix + URLEncoder.encode(columnName, "UTF-8")) //TODO should be URL (according to specification) not URI
+                    );
+                } else {
+                    outputModel.add(
+                            columnResource,
+                            CSVW.propertyUrl,
+                            ResourceFactory.createPlainLiteral(sourceResource.getUri() + "#" + URLEncoder.encode(columnName, "UTF-8"))
                     );
                 }
             }
@@ -194,7 +215,7 @@ public class TabularModule extends AbstractModule {
                             ResourceFactory.createTypedLiteral(Integer.toString(rowNumber),
                                     XSDDatatype.XSDinteger));
                     // 4.6.5
-                    final String rowIri = sourceResource.getUri() + "#row=" + listReader.getRowNumber(); // TODO check with specification
+                    final String rowIri = sourceResource.getUri() + "#row=" + listReader.getRowNumber();
                     outputModel.add(
                             R,
                             CSVW.url,
@@ -212,22 +233,15 @@ public class TabularModule extends AbstractModule {
                     R = null;
                 }
 
-                // 4.6.8
-                //Resource S_def = ResourceFactory.createResource();
-
                 for (int i = 0; i < header.length; i++) {
-                    // 4.6.8.1
-                    String aboutUrl = null; //TODO get from inputModel
+                    Resource schemaColumnResource = columns.get(i).asResource();
 
-                    Resource S;
-                    if (aboutUrl != null && !aboutUrl.isEmpty()) {
-                        S = ResourceFactory.createResource(aboutUrl);
-                    } else {
-                        String columnAboutUrl = getAboutUrlFromSchema(columns.get(i).asResource());
-                        S = ResourceFactory.createResource(columnAboutUrl.replace(
-                                "{_row}",
-                                Integer.toString(listReader.getRowNumber())));
-                    }
+                    // 4.6.8.1
+                    String columnAboutUrl = getAboutUrlFromSchema(schemaColumnResource);
+                    Resource S = ResourceFactory.createResource(columnAboutUrl.replace(
+                            "{_row}",
+                            Integer.toString(listReader.getRowNumber())
+                    ));
 
                     // 4.6.8.2
                     if (R != null) {
@@ -238,20 +252,8 @@ public class TabularModule extends AbstractModule {
                     }
 
                     // 4.6.8.3
-                    String propertyUrl = null; //TODO get from inputModel
-                    String columnName = header[i];
-                    String normalizedColumnName = normalize(columnName);
-
-                    Property P;
-                    if (propertyUrl != null && !propertyUrl.isEmpty()) {
-                        P = ResourceFactory.createProperty(propertyUrl);
-                    } else if (dataPrefix != null && !dataPrefix.isEmpty()) {
-                        P = ResourceFactory.createProperty(
-                                dataPrefix + URLEncoder.encode(normalizedColumnName, "UTF-8"));
-                    } else {
-                        P = ResourceFactory.createProperty(
-                                sourceResource.getUri() + "#" + URLEncoder.encode(normalizedColumnName, "UTF-8")); //TODO should be URL (according to specification) not URI
-                    }
+                    String columnPropertyUrl = getPropertyUrlFromSchema(schemaColumnResource);
+                    Property P = ResourceFactory.createProperty(columnPropertyUrl);
 
                     String valueUrl = null; //TODO get from inputModel
 
@@ -262,6 +264,12 @@ public class TabularModule extends AbstractModule {
                                 S,
                                 P,
                                 V_url));
+
+                        outputModel.add(
+                                schemaColumnResource,
+                                CSVW.valueUrl,
+                                ResourceFactory.createPlainLiteral(valueUrl)
+                        );
                     } else {
                         final String cellValue = row.get(i);
                         if (cellValue != null) {
@@ -385,11 +393,6 @@ public class TabularModule extends AbstractModule {
                     RDF.type,
                     CSVW.TableSchema
             );
-            outputModel.add(
-                    T_Schema,
-                    CSVW.aboutUrl,
-                    outputModel.createTypedLiteral(sourceResource.getUri() + "#table-{_table}", CSVW.uriTemplate) //TODO what should aboutUrl on table look like
-            );
         }
     }
 
@@ -406,7 +409,11 @@ public class TabularModule extends AbstractModule {
     }
 
     private String getAboutUrlFromSchema(Resource columnResource) {
-        return outputModel.getRequiredProperty(columnResource, CSVW.aboutUrl).getObject().asLiteral().toString();
+        return outputModel.getRequiredProperty(columnResource, CSVW.aboutUrl).getObject().asLiteral().getString();
+    }
+
+    private String getPropertyUrlFromSchema(Resource columnResource) {
+        return outputModel.getRequiredProperty(columnResource, CSVW.propertyUrl).getObject().asLiteral().getString();
     }
 
     private Reader getReader() {
