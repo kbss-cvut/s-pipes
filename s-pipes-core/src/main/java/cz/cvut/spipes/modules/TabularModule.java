@@ -14,6 +14,7 @@ import cz.cvut.spipes.util.JenaUtils;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.shared.PropertyNotFoundException;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -152,7 +153,7 @@ public class TabularModule extends AbstractModule {
                     );
                 } else {
                     outputModel.add(
-                            columnResource,
+                            T_Schema,
                             CSVW.aboutUrl,
                             outputModel.createTypedLiteral(sourceResource.getUri() + "#row-{_row}", CSVW.uriTemplate)
                     );
@@ -405,11 +406,17 @@ public class TabularModule extends AbstractModule {
                 null,
                 CSVW.name,
                 ResourceFactory.createStringLiteral(columnName)
-        ).next().getSubject(); //TODO throws NoSuchElementException
+        ).next().getSubject();
     }
 
     private String getAboutUrlFromSchema(Resource columnResource) {
-        return outputModel.getRequiredProperty(columnResource, CSVW.aboutUrl).getObject().asLiteral().getString();
+        String aboutUrl;
+        try {
+            aboutUrl = outputModel.getRequiredProperty(columnResource, CSVW.aboutUrl).getObject().asLiteral().getString();
+        } catch (PropertyNotFoundException e) {
+            aboutUrl = outputModel.getRequiredProperty(T_Schema, CSVW.aboutUrl).getObject().asLiteral().getString();
+        }
+        return aboutUrl;
     }
 
     private String getPropertyUrlFromSchema(Resource columnResource) {
