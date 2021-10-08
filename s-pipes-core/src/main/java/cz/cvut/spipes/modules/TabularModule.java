@@ -112,7 +112,7 @@ public class TabularModule extends AbstractModule {
             for (String columnTitle : header) {
                 Resource columnResource = ResourceFactory.createResource();
                 String columnName = normalize(columnTitle);
-                boolean isDuplicate = !columnNames.add(columnTitle);
+                boolean isDuplicate = !columnNames.add(columnName);
                 columns.add(columnResource);
 
                 if (isDuplicate) {
