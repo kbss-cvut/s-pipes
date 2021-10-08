@@ -34,6 +34,8 @@ import java.util.*;
  * The implementation loosely follows the W3C Recommendation described here:
  * <a href="https://www.w3.org/TR/csv2rdf/">Generating RDF from Tabular Data on the Web</a>
  * <p>
+ * The output model contains a csvw:tableSchema which describes what input metadata values where used for the conversion.
+ * <p>
  * <b>Important notes:</b><br/>
  * Does not support custom table group URIs.<br/>
  * Does not support custom table URIs. <br/>
