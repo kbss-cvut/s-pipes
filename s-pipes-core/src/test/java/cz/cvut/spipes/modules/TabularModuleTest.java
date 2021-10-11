@@ -5,6 +5,8 @@ import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.exception.ResourceNotUniqueException;
 import cz.cvut.spipes.modules.tabular.Mode;
 import cz.cvut.spipes.util.StreamResourceUtils;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -66,5 +68,21 @@ public class TabularModuleTest extends AbstractModuleTestHelper {
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    public void checkDefaultConfigurationAgainstExemplaryModelOutput() throws URISyntaxException, IOException {
+        module.setSourceResource(
+                StreamResourceUtils.getStreamResource(
+                        "http://test-file",
+                        getFilePath("countries.tsv"))
+        );
+
+        ExecutionContext outputContext = module.executeSelf();
+        Model actualModel = outputContext.getDefaultModel();
+        Model expectedModel = ModelFactory.createDefaultModel()
+                .read(getFilePath("countries-model-output.ttl").toString());
+
+        assertTrue(actualModel.isIsomorphicWith(expectedModel));
     }
 }
