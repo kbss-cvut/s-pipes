@@ -48,6 +48,10 @@
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="LOGFILE"/>
     </logger>
+    <logger name="cz.cvut.spipes.modules.MergeFormMetadataModule" level="DEBUG" additivity="false">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="LOGFILE"/>
+    </logger>
     <logger name="cz.cvut.spipes.modules.BindWithConstantModule" level="TRACE" additivity="false">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="LOGFILE"/>
