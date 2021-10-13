@@ -34,7 +34,27 @@ import java.util.*;
  * The implementation loosely follows the W3C Recommendation described here:
  * <a href="https://www.w3.org/TR/csv2rdf/">Generating RDF from Tabular Data on the Web</a>
  * <p>
- * The output model contains a csvw:tableSchema which describes what input metadata values where used for the conversion.
+ * Within the recommendation, it is possible to define schema
+ * defining the shape of the output RDF data
+ * (i.e. the input metadata values used for the conversion)
+ * using csvw:tableSchema.<br/>
+ * By default, we use the following schema:
+ * <pre><code>
+ * [   a   csvw:Table ;
+ *     csvw:tableSchema
+ *         [   a   csvw:TableSchema ;
+ *             csvw:aboutUrl
+ *                 "http://test-file#row-{_row}"^^csvw:uriTemplate ;
+ *             csvw:column
+ *                 _:b0 , _:b1 , _:b2 ;
+ *             csvw:columns
+ *                 ( _:b0
+ *                   _:b1
+ *                   _:b2
+ *                 )
+ *         ]
+ * ]
+ * </code></pre>
  * <p>
  * <b>Important notes:</b><br/>
  * Does not support custom table group URIs.<br/>
