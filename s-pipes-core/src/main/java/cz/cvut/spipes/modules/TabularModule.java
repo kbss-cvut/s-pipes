@@ -56,7 +56,7 @@ import java.util.*;
  * ]
  * </code></pre>
  * <p>
- * <b>Important notes:</b><br/>
+ * <b>Important notes (differences from the recommendation):</b><br/>
  * Does not support custom table group URIs.<br/>
  * Does not support custom table URIs. <br/>
  * Does not support processing of multiple files.<br/>
