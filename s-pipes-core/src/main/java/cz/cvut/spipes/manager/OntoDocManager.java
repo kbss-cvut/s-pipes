@@ -152,11 +152,11 @@ public class OntoDocManager implements OntologyDocumentManager {
         return Arrays.stream(SUPPORTED_FILE_EXTENSIONS).anyMatch(ext -> fileName.endsWith("." + ext));
     }
 
-    private static boolean wasModifiedOrNewlyAdded(Path fileName){
+    private static boolean wasModifiedOrNewlyAdded(Path file){
         BasicFileAttributes attr;
         try {
-            attr = Files.readAttributes(fileName, BasicFileAttributes.class);
-            return  !filesModificationTime.containsKey(fileName) || attr.lastModifiedTime().toInstant().isAfter(filesModificationTime.get(fileName));
+            attr = Files.readAttributes(file, BasicFileAttributes.class);
+            return  !filesModificationTime.containsKey(file) || attr.lastModifiedTime().toInstant().isAfter(filesModificationTime.get(file));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -188,7 +188,16 @@ public class OntoDocManager implements OntologyDocumentManager {
                         if (model != null) {
                             OntoDocManager.addSPINRelevantModel(file.toAbsolutePath().toString(), model);
                         }
-                        filesModificationTime.put(file, Instant.now());
+                        if(reloadFiles){
+                            BasicFileAttributes attr;
+                            try {
+                                attr = Files.readAttributes(file, BasicFileAttributes.class);
+                                filesModificationTime.put(file, attr.lastModifiedTime().toInstant());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
                         file2Model.put(file.toString(), model);
 
                     });
