@@ -110,7 +110,7 @@ public class TabularModule extends AbstractModule {
 
     @Override
     ExecutionContext executeSelf() {
-        Model inputModel = executionContext.getDefaultModel();
+        Model inputModel = executionContext.getDefaultModel(); //TODO how to get input model from user
         outputModel = ModelFactory.createDefaultModel();
 
         onTableGroup(null);
@@ -166,7 +166,7 @@ public class TabularModule extends AbstractModule {
                     ResourceFactory.createStringLiteral(columnTitle)
                 );
 
-                String columnAboutUrl = null; //TODO get from inputModel
+                String columnAboutUrl = inputModel.getProperty(columnResource, CSVW.aboutUrl).getLiteral().getString();
                 if (columnAboutUrl != null && !columnAboutUrl.isEmpty()) {
                     outputModel.add(
                             columnResource,
@@ -181,7 +181,7 @@ public class TabularModule extends AbstractModule {
                     );
                 }
 
-                String columnPropertyUrl = null; //TODO get from inputModel
+                String columnPropertyUrl = inputModel.getProperty(columnResource, CSVW.propertyUrl).getLiteral().getString();
                 if (columnPropertyUrl != null && !columnPropertyUrl.isEmpty()) {
                     outputModel.add(
                             columnResource,
@@ -278,7 +278,7 @@ public class TabularModule extends AbstractModule {
                     String columnPropertyUrl = getPropertyUrlFromSchema(schemaColumnResource);
                     Property P = ResourceFactory.createProperty(columnPropertyUrl);
 
-                    String valueUrl = null; //TODO get from inputModel
+                    String valueUrl = inputModel.getProperty(S, P).getLiteral().getString();
 
                     if (valueUrl != null && !valueUrl.isEmpty()) {
                         // 4.6.8.4

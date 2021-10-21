@@ -85,4 +85,17 @@ public class TabularModuleTest extends AbstractModuleTestHelper {
 
         assertTrue(actualModel.isIsomorphicWith(expectedModel));
     }
+
+    @Test
+    public void executeWithCustomInputModel() throws URISyntaxException, IOException {
+        module.setSourceResource(
+                StreamResourceUtils.getStreamResource(
+                        "http://test-file",
+                        getFilePath("countries.tsv"))
+        );
+
+        //TODO add input context
+
+        ExecutionContext outputContext = module.executeSelf();
+    }
 }
