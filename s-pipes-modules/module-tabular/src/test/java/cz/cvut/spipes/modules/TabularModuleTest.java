@@ -93,7 +93,7 @@ public class TabularModuleTest extends AbstractModuleTestHelper {
 
 
     @Test
-    public void testtt() throws URISyntaxException, IOException {
+    public void execute_checkTableSchema() throws URISyntaxException, IOException {
         module.setSourceResource(
                 StreamResourceUtils.getStreamResource(DATA_PREFIX,getFilePath("examples/01/input.tsv"))
         );
@@ -103,9 +103,6 @@ public class TabularModuleTest extends AbstractModuleTestHelper {
 
         ExecutionContext outputContext = module.executeSelf();
         Model actualModel = outputContext.getDefaultModel();
-
-        OutputStream out = new FileOutputStream("output-model.ttl");
-        RDFDataMgr.write(out, actualModel, Lang.TURTLE);
 
         Model expectedModel = ModelFactory.createDefaultModel()
                 .read(getFilePath("examples/01/expected-output.ttl").toString());
