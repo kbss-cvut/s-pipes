@@ -87,15 +87,23 @@ public class TabularModuleTest extends AbstractModuleTestHelper {
     }
 
     @Test
-    public void executeWithCustomInputModel() throws URISyntaxException, IOException {
+    public void executeWithExplicitDefaultInputModel() throws URISyntaxException, IOException {
         module.setSourceResource(
                 StreamResourceUtils.getStreamResource(
                         "http://test-file",
                         getFilePath("countries.tsv"))
         );
 
-        //TODO add input context
+        Model inputModel = ModelFactory.createDefaultModel()
+                .read(getFilePath("default-input-model.ttl").toString());
+        ExecutionContext inputContext = ExecutionContextFactory.createContext(inputModel);
+        module.setInputContext(inputContext);
 
         ExecutionContext outputContext = module.executeSelf();
+        Model actualModel = outputContext.getDefaultModel();
+        Model expectedModel = ModelFactory.createDefaultModel()
+                .read(getFilePath("countries-model-output.ttl").toString());
+
+        assertTrue(actualModel.isIsomorphicWith(expectedModel));
     }
 }

@@ -110,7 +110,7 @@ public class TabularModule extends AbstractModule {
 
     @Override
     ExecutionContext executeSelf() {
-        Model inputModel = executionContext.getDefaultModel(); //TODO how to get input model from user
+        Model inputModel = executionContext.getDefaultModel();
         outputModel = ModelFactory.createDefaultModel();
 
         onTableGroup(null);
@@ -166,7 +166,11 @@ public class TabularModule extends AbstractModule {
                     ResourceFactory.createStringLiteral(columnTitle)
                 );
 
-                String columnAboutUrl = inputModel.getProperty(columnResource, CSVW.aboutUrl).getLiteral().getString();
+                Statement columnAboutUrlStatement = inputModel.getProperty(columnResource, CSVW.aboutUrl);
+                String columnAboutUrl = null;
+                if (columnAboutUrlStatement != null) {
+                    columnAboutUrl = columnAboutUrlStatement.getLiteral().getString();
+                }
                 if (columnAboutUrl != null && !columnAboutUrl.isEmpty()) {
                     outputModel.add(
                             columnResource,
@@ -181,7 +185,11 @@ public class TabularModule extends AbstractModule {
                     );
                 }
 
-                String columnPropertyUrl = inputModel.getProperty(columnResource, CSVW.propertyUrl).getLiteral().getString();
+                Statement columnPropertyUrlStatement = inputModel.getProperty(columnResource, CSVW.propertyUrl);
+                String columnPropertyUrl = null;
+                if (columnPropertyUrlStatement != null) {
+                    columnPropertyUrl = columnPropertyUrlStatement.getLiteral().getString();
+                }
                 if (columnPropertyUrl != null && !columnPropertyUrl.isEmpty()) {
                     outputModel.add(
                             columnResource,
@@ -278,7 +286,11 @@ public class TabularModule extends AbstractModule {
                     String columnPropertyUrl = getPropertyUrlFromSchema(schemaColumnResource);
                     Property P = ResourceFactory.createProperty(columnPropertyUrl);
 
-                    String valueUrl = inputModel.getProperty(S, P).getLiteral().getString();
+                    Statement valueUrlStatement = inputModel.getProperty(S, P);
+                    String valueUrl = null;
+                    if (valueUrlStatement != null) {
+                        valueUrl = valueUrlStatement.getLiteral().getString();
+                    }
 
                     if (valueUrl != null && !valueUrl.isEmpty()) {
                         // 4.6.8.4
