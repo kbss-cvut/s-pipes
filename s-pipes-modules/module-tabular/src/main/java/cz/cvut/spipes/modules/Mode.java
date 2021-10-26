@@ -1,7 +1,6 @@
-package cz.cvut.spipes.modules.tabular;
+package cz.cvut.spipes.modules;
 
 import cz.cvut.spipes.exception.ResourceNotFoundException;
-import cz.cvut.spipes.modules.TabularModule;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 
