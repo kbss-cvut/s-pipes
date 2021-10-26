@@ -166,6 +166,9 @@ public class TabularModule extends AbstractModule {
                     ResourceFactory.createStringLiteral(columnTitle)
                 );
 
+                Resource tableSchemaResource = inputModel.listStatements(null, RDF.type, CSVW.TableSchema).next().getSubject();
+
+                //TODO iterate over "tableSchemaResource csvw:columns" list to get about urls
                 Statement columnAboutUrlStatement = inputModel.getProperty(columnResource, CSVW.aboutUrl);
                 String columnAboutUrl = null;
                 if (columnAboutUrlStatement != null) {

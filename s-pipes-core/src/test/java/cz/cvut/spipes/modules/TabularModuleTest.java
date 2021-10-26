@@ -7,6 +7,8 @@ import cz.cvut.spipes.modules.tabular.Mode;
 import cz.cvut.spipes.util.StreamResourceUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.ResourceFactory;
+import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -105,5 +107,25 @@ public class TabularModuleTest extends AbstractModuleTestHelper {
                 .read(getFilePath("countries-model-output.ttl").toString());
 
         assertTrue(actualModel.isIsomorphicWith(expectedModel));
+    }
+
+    @Test
+    @Ignore
+    public void executeWithCustomInputModel() throws URISyntaxException, IOException {
+        module.setSourceResource(
+                StreamResourceUtils.getStreamResource(
+                        "http://test-file",
+                        getFilePath("countries.tsv"))
+        );
+
+        Model inputModel = ModelFactory.createDefaultModel()
+                .read(getFilePath("custom-input-model.ttl").toString());
+        ExecutionContext inputContext = ExecutionContextFactory.createContext(inputModel);
+        module.setInputContext(inputContext);
+
+        ExecutionContext outputContext = module.executeSelf();
+        Model actualModel = outputContext.getDefaultModel();
+
+        assertTrue(actualModel.containsResource(ResourceFactory.createResource("http://test-file/this/is/my/crazy/about/url#row-1")));
     }
 }
