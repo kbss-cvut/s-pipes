@@ -15,17 +15,17 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>module-rdf4j</module>
-        <module>module-tarql</module>
-        <module>module-identity</module>
-        <module>module-nlp</module>
+        <module>module-ckan2rdf</module>
         <module>module-dataset-discovery</module>
         <module>module-eccairs</module>
-        <module>module-ckan2rdf</module>
+        <module>module-form</module>
+        <module>module-identity</module>
+        <module>module-nlp</module>
+        <module>module-rdf4j</module>
         <module>module-rdfstream</module>
-		<module>module-form</module>
-		<module>module-sparql-endpoint</module>
-		<module>module-security</module>
+        <module>module-security</module>
+        <module>module-sparql-endpoint</module>
+        <module>module-tarql</module>
     </modules>
 
     <dependencyManagement>
