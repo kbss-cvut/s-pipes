@@ -6,6 +6,7 @@ import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.exception.ResourceNotFoundException;
+import cz.cvut.spipes.exception.ResourceNotUniqueException;
 import cz.cvut.spipes.modules.tabular.Mode;
 import cz.cvut.spipes.registry.StreamResource;
 import cz.cvut.spipes.registry.StreamResourceRegistry;
@@ -13,6 +14,7 @@ import cz.cvut.spipes.util.JenaUtils;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.shared.PropertyNotFoundException;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +26,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.URLEncoder;
-import java.util.List;
+import java.util.*;
 
 /**
  * Module for converting tabular data (e.g. CSV or TSV) to RDF
@@ -32,7 +34,29 @@ import java.util.List;
  * The implementation loosely follows the W3C Recommendation described here:
  * <a href="https://www.w3.org/TR/csv2rdf/">Generating RDF from Tabular Data on the Web</a>
  * <p>
- * <b>Important notes:</b><br/>
+ * Within the recommendation, it is possible to define schema
+ * defining the shape of the output RDF data
+ * (i.e. the input metadata values used for the conversion)
+ * using csvw:tableSchema.<br/>
+ * By default, we use the following schema:
+ * <pre><code>
+ * [   a   csvw:Table ;
+ *     csvw:tableSchema
+ *         [   a   csvw:TableSchema ;
+ *             csvw:aboutUrl
+ *                 "http://test-file#row-{_row}"^^csvw:uriTemplate ;
+ *             csvw:column
+ *                 _:b0 , _:b1 , _:b2 ;
+ *             csvw:columns
+ *                 ( _:b0
+ *                   _:b1
+ *                   _:b2
+ *                 )
+ *         ]
+ * ]
+ * </code></pre>
+ * <p>
+ * <b>Important notes (differences from the recommendation):</b><br/>
  * Does not support custom table group URIs.<br/>
  * Does not support custom table URIs. <br/>
  * Does not support processing of multiple files.<br/>
@@ -62,7 +86,7 @@ public class TabularModule extends AbstractModule {
     private char quoteCharacter;
 
     //:data-prefix
-    public String dataPrefix; // dataprefix#{_column}
+    public String dataPrefix;
 
     //:output-mode
     private Mode outputMode;
@@ -104,11 +128,27 @@ public class TabularModule extends AbstractModule {
 
             String[] header = listReader.getHeader(true); // skip the header (can't be used with CsvListReader)
 
+            Set<String> columnNames = new HashSet<>();
+            List<RDFNode> columns = new LinkedList<>();
 
-            for (String columnName : header) {
+            for (String columnTitle : header) {
                 Resource columnResource = ResourceFactory.createResource();
-                // TODO make sure normalized names does not clash
-                String columnNameNormalized = normalize(columnName);
+                String columnName = normalize(columnTitle);
+                boolean isDuplicate = !columnNames.add(columnName);
+                columns.add(columnResource);
+
+                if (isDuplicate) {
+                    Resource collidingColumn = getColumnByName(columnName);
+                    throw new ResourceNotUniqueException(
+                            String.format("Unable to create resource as value of property %s due to collision. " +
+                                    "Both column titles '%s' and '%s' are normalized to '%s' " +
+                                    "and thus would refer to same about url <%s>.",
+                                    CSVW.aboutUrl,
+                                    columnTitle,
+                                    collidingColumn.getRequiredProperty(CSVW.title).getObject().asLiteral().toString(),
+                                    columnName,
+                                    collidingColumn.getRequiredProperty(CSVW.aboutUrl).getObject().asLiteral().toString()));
+                }
 
                 outputModel.add(
                         T_Schema,
@@ -118,19 +158,57 @@ public class TabularModule extends AbstractModule {
                 outputModel.add(
                         columnResource,
                         CSVW.name,
-                        ResourceFactory.createStringLiteral(columnNameNormalized)
+                        ResourceFactory.createStringLiteral(columnName)
                 );
                 outputModel.add(
                     columnResource,
                     CSVW.title,
-                    ResourceFactory.createStringLiteral(columnName)
+                    ResourceFactory.createStringLiteral(columnTitle)
                 );
-                outputModel.add(
-                        columnResource,
-                        CSVW.aboutUrl,
-                        outputModel.createTypedLiteral(sourceResource.getUri() + "/columns/" + columnNameNormalized + "-{_row}", CSVW.uriTemplate)
-                );
+
+                String columnAboutUrl = null; //TODO get from inputModel
+                if (columnAboutUrl != null && !columnAboutUrl.isEmpty()) {
+                    outputModel.add(
+                            columnResource,
+                            CSVW.aboutUrl,
+                            outputModel.createTypedLiteral(columnAboutUrl, CSVW.uriTemplate)
+                    );
+                } else {
+                    outputModel.add(
+                            T_Schema,
+                            CSVW.aboutUrl,
+                            outputModel.createTypedLiteral(sourceResource.getUri() + "#row-{_row}", CSVW.uriTemplate)
+                    );
+                }
+
+                String columnPropertyUrl = null; //TODO get from inputModel
+                if (columnPropertyUrl != null && !columnPropertyUrl.isEmpty()) {
+                    outputModel.add(
+                            columnResource,
+                            CSVW.propertyUrl,
+                            outputModel.createTypedLiteral(columnPropertyUrl, CSVW.uriTemplate)
+                    );
+                } else if (dataPrefix != null && !dataPrefix.isEmpty()) {
+                    outputModel.add(
+                            columnResource,
+                            CSVW.propertyUrl,
+                            ResourceFactory.createPlainLiteral(dataPrefix + URLEncoder.encode(columnName, "UTF-8")) //TODO should be URL (according to specification) not URI
+                    );
+                } else {
+                    outputModel.add(
+                            columnResource,
+                            CSVW.propertyUrl,
+                            ResourceFactory.createPlainLiteral(sourceResource.getUri() + "#" + URLEncoder.encode(columnName, "UTF-8"))
+                    );
+                }
             }
+
+            RDFList columnList = outputModel.createList(columns.iterator());
+
+            outputModel.add(
+                    T_Schema,
+                    CSVW.columns,
+                    columnList);
 
             List<String> row;
             int rowNumber = 0;
@@ -160,7 +238,7 @@ public class TabularModule extends AbstractModule {
                             ResourceFactory.createTypedLiteral(Integer.toString(rowNumber),
                                     XSDDatatype.XSDinteger));
                     // 4.6.5
-                    final String rowIri = sourceResource.getUri() + "#row=" + listReader.getRowNumber(); // TODO check with specification
+                    final String rowIri = sourceResource.getUri() + "#row=" + listReader.getRowNumber();
                     outputModel.add(
                             R,
                             CSVW.url,
@@ -178,20 +256,15 @@ public class TabularModule extends AbstractModule {
                     R = null;
                 }
 
-                // 4.6.8
-                // Establish a new blank node Sdef to be used as the default subject for cells where about URL is undefined
-                Resource S_def = ResourceFactory.createResource();
-
                 for (int i = 0; i < header.length; i++) {
-                    // 4.6.8.1
-                    String aboutUrl = null; //TODO get from user
+                    Resource schemaColumnResource = columns.get(i).asResource();
 
-                    Resource S;
-                    if (aboutUrl != null && !aboutUrl.isEmpty()) {
-                        S = ResourceFactory.createResource(aboutUrl);
-                    } else {
-                        S = S_def;
-                    }
+                    // 4.6.8.1
+                    String columnAboutUrl = getAboutUrlFromSchema(schemaColumnResource);
+                    Resource S = ResourceFactory.createResource(columnAboutUrl.replace(
+                            "{_row}",
+                            Integer.toString(listReader.getRowNumber())
+                    ));
 
                     // 4.6.8.2
                     if (R != null) {
@@ -202,22 +275,10 @@ public class TabularModule extends AbstractModule {
                     }
 
                     // 4.6.8.3
-                    String propertyUrl = null; //TODO get from user
-                    String columnName = header[i];
-                    String normalizedColumnName = normalize(columnName);
+                    String columnPropertyUrl = getPropertyUrlFromSchema(schemaColumnResource);
+                    Property P = ResourceFactory.createProperty(columnPropertyUrl);
 
-                    Property P;
-                    if (propertyUrl != null && !propertyUrl.isEmpty()) {
-                        P = ResourceFactory.createProperty(propertyUrl);
-                    } else if (dataPrefix != null && !dataPrefix.isEmpty()) {
-                        P = ResourceFactory.createProperty(
-                                dataPrefix + URLEncoder.encode(normalizedColumnName, "UTF-8"));
-                    } else {
-                        P = ResourceFactory.createProperty(
-                                sourceResource.getUri() + "#" + URLEncoder.encode(normalizedColumnName, "UTF-8")); //TODO should be URL (according to specification) not URI
-                    }
-
-                    String valueUrl = null; //TODO get from user
+                    String valueUrl = null; //TODO get from inputModel
 
                     if (valueUrl != null && !valueUrl.isEmpty()) {
                         // 4.6.8.4
@@ -226,6 +287,12 @@ public class TabularModule extends AbstractModule {
                                 S,
                                 P,
                                 V_url));
+
+                        outputModel.add(
+                                schemaColumnResource,
+                                CSVW.valueUrl,
+                                ResourceFactory.createPlainLiteral(valueUrl)
+                        );
                     } else {
                         final String cellValue = row.get(i);
                         if (cellValue != null) {
@@ -349,16 +416,33 @@ public class TabularModule extends AbstractModule {
                     RDF.type,
                     CSVW.TableSchema
             );
-            outputModel.add(
-                    T_Schema,
-                    CSVW.aboutUrl,
-                    outputModel.createTypedLiteral(sourceResource.getUri() + "#table---{_table}", CSVW.uriTemplate)
-            );
         }
     }
 
     private String normalize(String label) {
         return label.trim().replaceAll("[^\\w]", "_");
+    }
+
+    private Resource getColumnByName(String columnName) {
+        return outputModel.listStatements(
+                null,
+                CSVW.name,
+                ResourceFactory.createStringLiteral(columnName)
+        ).next().getSubject();
+    }
+
+    private String getAboutUrlFromSchema(Resource columnResource) {
+        String aboutUrl;
+        try {
+            aboutUrl = outputModel.getRequiredProperty(columnResource, CSVW.aboutUrl).getObject().asLiteral().getString();
+        } catch (PropertyNotFoundException e) {
+            aboutUrl = outputModel.getRequiredProperty(T_Schema, CSVW.aboutUrl).getObject().asLiteral().getString();
+        }
+        return aboutUrl;
+    }
+
+    private String getPropertyUrlFromSchema(Resource columnResource) {
+        return outputModel.getRequiredProperty(columnResource, CSVW.propertyUrl).getObject().asLiteral().getString();
     }
 
     private Reader getReader() {
@@ -374,10 +458,6 @@ public class TabularModule extends AbstractModule {
             throw new ResourceNotFoundException("Stream resource " + resourceUri + " not found. ");
         }
         return res;
-    }
-
-    private Resource getResource(String name) {
-        return ResourceFactory.createResource(dataPrefix + name);
     }
 
     public boolean isReplace() {
