@@ -7,7 +7,6 @@ import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.exception.ResourceNotFoundException;
 import cz.cvut.spipes.exception.ResourceNotUniqueException;
-import cz.cvut.spipes.modules.tabular.Mode;
 import cz.cvut.spipes.registry.StreamResource;
 import cz.cvut.spipes.registry.StreamResourceRegistry;
 import cz.cvut.spipes.util.JenaUtils;
@@ -44,7 +43,7 @@ import java.util.*;
  *     csvw:tableSchema
  *         [   a   csvw:TableSchema ;
  *             csvw:aboutUrl
- *                 "http://test-file#row-{_row}"^^csvw:uriTemplate ;
+ *                 "http://csv-resource-uri#row-{_row}"^^csvw:uriTemplate ;
  *             csvw:column
  *                 _:b0 , _:b1 , _:b2 ;
  *             csvw:columns
@@ -140,14 +139,14 @@ public class TabularModule extends AbstractModule {
                 if (isDuplicate) {
                     Resource collidingColumn = getColumnByName(columnName);
                     throw new ResourceNotUniqueException(
-                            String.format("Unable to create resource as value of property %s due to collision. " +
+                            String.format("Unable to create value of property %s due to collision. " +
                                     "Both column titles '%s' and '%s' are normalized to '%s' " +
-                                    "and thus would refer to same about url <%s>.",
-                                    CSVW.aboutUrl,
+                                    "and thus would refer to the same property url <%s>.",
+                                    CSVW.propertyUrl,
                                     columnTitle,
                                     collidingColumn.getRequiredProperty(CSVW.title).getObject().asLiteral().toString(),
                                     columnName,
-                                    collidingColumn.getRequiredProperty(CSVW.aboutUrl).getObject().asLiteral().toString()));
+                                    collidingColumn.getRequiredProperty(CSVW.propertyUrl).getObject().asLiteral().toString()));
                 }
 
                 outputModel.add(
