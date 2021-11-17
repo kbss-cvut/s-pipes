@@ -41,7 +41,11 @@ public class CSVW {
     public static final String aboutUrlUri = uri + "aboutUrl";
     public static final String columnsUri = uri + "columns";
     public static final String propertyUrlUri = uri + "propertyUrl";
+    public static final String valueUrlUri = uri + "valueUrl";
     public static final String ColumnUri = uri + "Column";
+    public static final String nameUri = uri + "name";
+    public static final String requiredUri = uri + "required";
+    public static final String suppressOutputUri = uri + "suppressOutput";
 
     /**
      returns the URI for this schema
