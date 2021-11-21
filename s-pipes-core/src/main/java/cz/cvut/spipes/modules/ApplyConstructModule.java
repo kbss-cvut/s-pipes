@@ -3,7 +3,6 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
-import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.QueryUtils;
 import org.apache.jena.query.Query;
@@ -144,19 +143,8 @@ public class ApplyConstructModule extends AbstractModule {
             nNew = inferredInSingleIterationModel.size();
         }
 
-        if (isReplace) {
-            return ExecutionContextFactory.createContext(inferredModel);
-        } else {
-            return ExecutionContextFactory.createContext(JenaUtils.createUnion(defaultModel, inferredModel));
-        }
+        return this.createOutputContext(isReplace, defaultModel, inferredModel);
     }
-
-    // TODO move this to external utils
-
-
-
-
-
 
     @Override
     public String getTypeURI() {

@@ -7,6 +7,7 @@ import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.engine.VariablesBinding;
 import cz.cvut.spipes.exception.ValidationConstraintFailed;
+import cz.cvut.spipes.util.JenaUtils;
 import org.apache.jena.atlas.lib.NotImplemented;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
@@ -347,6 +348,17 @@ public abstract class AbstractModule implements Module {
             return node;
         } else {
             return valueNode;
+        }
+    }
+
+    protected ExecutionContext createOutputContext(boolean isReplace, Model inputModel, Model computedModel) {
+        if (isReplace) {
+            return ExecutionContextFactory.createContext(computedModel);
+        } else {
+            if (AuditConfig.isEnabled() || isInDebugMode) {
+                LOG.debug("Saving module computed output to file {}.", saveModelToTemporaryFile(outputContext.getDefaultModel()));
+            }
+            return ExecutionContextFactory.createContext(JenaUtils.createUnion(inputModel, computedModel));
         }
     }
 
