@@ -135,6 +135,10 @@ public class ApplyConstructModule extends AbstractModule {
                     LOG.trace("... the query returned {} triples.", constructedModel.size());
                 }
 
+                if (isInDebugMode) {
+                    LOG.debug("... saving module partially computed output to file {}.", saveModelToTemporaryFile(constructedModel));
+                }
+
                 inferredInSingleIterationModel = ModelFactory.createUnion(inferredInSingleIterationModel, constructedModel);
             }
 

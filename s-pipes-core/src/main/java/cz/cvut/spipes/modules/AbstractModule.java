@@ -47,7 +47,7 @@ public abstract class AbstractModule implements Module {
     ExecutionContext outputContext;
     private List<Resource> inputConstraintQueries;
     private List<Resource> outputConstraintQueries;
-    private boolean isInDebugMode;
+    protected boolean isInDebugMode;
     private boolean isTargetModule;
 
 
@@ -132,7 +132,7 @@ public abstract class AbstractModule implements Module {
     /* ------------------ PRIVATE METHODS --------------------- */
 
     // TODO revise
-    private String saveModelToTemporaryFile(Model model) {
+    protected String saveModelToTemporaryFile(Model model) {
         File tempFile = null;
         try {
             tempFile = Files.createTempFile("formgen-", ".ttl").toFile();
