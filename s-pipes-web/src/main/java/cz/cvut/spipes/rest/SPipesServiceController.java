@@ -14,7 +14,6 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.util.FileUtils;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +50,10 @@ public class SPipesServiceController {
      * Request parameter - URL of the resource containing configuration
      */
     public static final String P_CONFIG_URL = "_pConfigURL";
+    /**
+     * Input graph - URL of the file where input graph is stored
+     */
+    public static final String P_INPUT_GRAPH_URL = "_pInputGraphURL";
     /**
      * Input binding - URL of the file where input bindings are stored
      */
@@ -178,60 +181,26 @@ public class SPipesServiceController {
     private Model runService(final Model inputDataModel, final MultiValueMap<String, String> parameters) {
         LOG.info("- parameters={}", parameters);
 
-        ServiceParametersHelper paramHelper = new ServiceParametersHelper(parameters);
+        String id = extractId(parameters);
 
-        // LOAD FUNCTION ID
-        final String id = getId(paramHelper);
-        logParam(P_ID, id);
+        File outputBindingPath = extractOutputBindingPath(parameters);
+        Model configModel = extractConfigurationModel(parameters);
+        ExecutionContext inputExecutionContext = extractInputExecutionContext(inputDataModel, parameters);
 
-        // LOAD CONFIGURATION
-        String configURL = null;
-        if (paramHelper.hasParameterValue(P_CONFIG_URL)) {
-            configURL = paramHelper.getRequiredParameterValue(P_CONFIG_URL);
-            logParam(P_CONFIG_URL, configURL);
-        }
-
-        // FILE WHERE TO GET INPUT BINDING
-        URL inputBindingURL = null;
-        if (parameters.containsKey(P_INPUT_BINDING_URL)) {
-            inputBindingURL = paramHelper.parseParameterValueAsUrl(P_INPUT_BINDING_URL);
-            logParam(P_INPUT_BINDING_URL, inputBindingURL.toString());
-        }
-
-        // TODO included P_ID
-        //      -- commented out to be available to semantic logging listener (engine should provide it instead)
-        if (!paramHelper.hasParameterValue(P_ID)) {
-            parameters.add(P_ID, paramHelper.getParameterValue(P_ID_ALTERNATIVE));
-            parameters.remove(P_ID_ALTERNATIVE);
-        }
-
-        // parameters.remove(P_ID);
-        parameters.remove(P_CONFIG_URL);
-        parameters.remove(P_INPUT_BINDING_URL);
-        parameters.remove(P_OUTPUT_BINDING_URL);
-
-        // END OF PARAMETER PROCESSING
-        final VariablesBinding inputVariablesBinding = new VariablesBinding(transform(parameters));
-        if (inputBindingURL != null) {
-            extendBindingFromURL(inputVariablesBinding, inputBindingURL);
-        }
-        LOG.info("- input variable binding ={}", inputVariablesBinding);
-
-        // CONFIGURE ENGINE
-        ExecutionEngine engine = createExecutionEngine(configURL);
-
-        // LOAD INPUT DATA
-        ExecutionContext inputExecutionContext = ExecutionContextFactory.createContext(inputDataModel, inputVariablesBinding);
+        ExecutionEngine engine = createExecutionEngine(configModel);
 
         // EXECUTE PIPELINE
         ContextLoaderHelper.updateContextsIfNecessary(scriptManager);
         Module module = scriptManager.loadFunction(id);
 
-
         if (module == null) {
             throw new SPipesServiceException("Cannot load return module for a function with id=" + id);
         }
         ExecutionContext outputExecutionContext = engine.executePipeline(module, inputExecutionContext);
+
+        if (outputBindingPath != null) {
+            saveOutputBinding(outputBindingPath, outputExecutionContext.getVariablesBinding());
+        }
 
         LOG.info("Processing successfully finished.");
         return outputExecutionContext.getDefaultModel();
@@ -240,15 +209,37 @@ public class SPipesServiceController {
     private Model runModule(final Model inputDataModel, final MultiValueMap<String, String> parameters) {
         LOG.info("- parameters={}", parameters);
 
+        String id = extractId(parameters);
+
+        File outputBindingPath = extractOutputBindingPath(parameters);
+        Model configModel = extractConfigurationModel(parameters);
+        ExecutionContext inputExecutionContext = extractInputExecutionContext(inputDataModel, parameters);
+
+        ExecutionEngine engine = createExecutionEngine(configModel);
+        ContextLoaderHelper.updateContextsIfNecessary(scriptManager);
+        Module module = PipelineFactory.loadModule(configModel.createResource(id));
+        if (module == null) {
+            throw new SPipesServiceException("Cannot load module with id=" + id);
+        }
+        ExecutionContext outputExecutionContext = engine.executePipeline(module, inputExecutionContext);
+
+        if (outputBindingPath != null) {
+            saveOutputBinding(outputBindingPath, outputExecutionContext.getVariablesBinding());
+        }
+
+        LOG.info("Processing successfully finished.");
+        return outputExecutionContext.getDefaultModel();
+    }
+
+    private ExecutionContext extractInputExecutionContext(final Model inputDataModel, final MultiValueMap<String, String> parameters) {
         ServiceParametersHelper paramHelper = new ServiceParametersHelper(parameters);
 
-        // LOAD MODULE ID
-        final String id = getId(paramHelper);
-        logParam(P_ID, id);
-
-        // LOAD MODULE CONFIGURATION
-        final String configURL = paramHelper.getRequiredParameterValue(P_CONFIG_URL);
-        logParam(P_CONFIG_URL, configURL);
+        // FILE WHERE TO GET INPUT GRAPH
+        URL inputGraphURL = null;
+        if (paramHelper.hasParameterValue(P_INPUT_GRAPH_URL)) {
+            inputGraphURL = paramHelper.parseParameterValueAsUrl(P_INPUT_BINDING_URL);
+            logParam(P_INPUT_GRAPH_URL, inputGraphURL.toString());
+        }
 
         // FILE WHERE TO GET INPUT BINDING
         URL inputBindingURL = null;
@@ -257,12 +248,47 @@ public class SPipesServiceController {
             logParam(P_INPUT_BINDING_URL, inputBindingURL.toString());
         }
 
+        parameters.remove(P_INPUT_GRAPH_URL);
+        parameters.remove(P_INPUT_BINDING_URL);
+
+        final VariablesBinding inputVariablesBinding = new VariablesBinding(transform(parameters));
+        if (inputBindingURL != null) {
+            extendBindingFromURL(inputVariablesBinding, inputBindingURL);
+        }
+        LOG.info("- input variable binding ={}", inputVariablesBinding);
+
+        return ExecutionContextFactory.createContext(inputDataModel, inputVariablesBinding);
+    }
+
+    private File extractOutputBindingPath(final MultiValueMap<String, String> parameters) {
+        ServiceParametersHelper paramHelper = new ServiceParametersHelper(parameters);
+
         // FILE WHERE TO SAVE OUTPUT BINDING
         File outputBindingPath = null;
         if (paramHelper.hasParameterValue(P_OUTPUT_BINDING_URL)) {
             outputBindingPath = paramHelper.parseParameterValueAsFilePath(P_OUTPUT_BINDING_URL).toFile();
             logParam(P_OUTPUT_BINDING_URL, outputBindingPath.toString());
         }
+
+        parameters.remove(P_OUTPUT_BINDING_URL);
+
+        return outputBindingPath;
+    }
+
+    private void saveOutputBinding(File outputBindingPath, VariablesBinding outputVariablesBinding) {
+        try {
+            outputVariablesBinding.save(new FileOutputStream(outputBindingPath), FileUtils.langTurtle);
+        } catch (IOException e) {
+            throw new SPipesServiceException("Cannot save output binding.", e);
+        }
+    }
+
+    private String extractId(final MultiValueMap<String, String> parameters) {
+        ServiceParametersHelper paramHelper = new ServiceParametersHelper(parameters);
+
+        // LOAD MODULE ID
+        final String id = getId(paramHelper);
+        logParam(P_ID, id);
 
         // TODO included P_ID
         //      -- commented out to be available to semantic logging listener (engine should provide it instead)
@@ -272,67 +298,33 @@ public class SPipesServiceController {
         }
 
         // parameters.remove(P_ID);
-        parameters.remove(P_CONFIG_URL);
-        parameters.remove(P_INPUT_BINDING_URL);
-        parameters.remove(P_OUTPUT_BINDING_URL);
 
-        // END OF PARAMETER PROCESSING
-        final VariablesBinding inputVariablesBinding = new VariablesBinding(transform(parameters));
-        if (inputBindingURL != null) {
-            extendBindingFromURL(inputVariablesBinding, inputBindingURL);
-        }
-        LOG.info("- input variable binding ={}", inputVariablesBinding);
-
-        // CONFIGURE ENGINE
-        final Model configModel = loadModelFromUrl(configURL);
-        ExecutionEngine engine = ExecutionEngineFactory.createEngine();
-        ProgressListenerLoader.createListeners(configModel).forEach(
-            engine::addProgressListener
-        );
-
-        // LOAD INPUT DATA
-        ExecutionContext inputExecutionContext = ExecutionContextFactory.createContext(inputDataModel, inputVariablesBinding);
-
-
-        ExecutionContext outputExecutionContext;
-        Module module;
-        // should execute module only
-//        if (asArgs.isExecuteModuleOnly) {
-        module = PipelineFactory.loadModule(configModel.createResource(id));
-
-        if (module == null) {
-            throw new SPipesServiceException("Cannot load module with id=" + id);
-        }
-
-        outputExecutionContext = engine.executePipeline(module, inputExecutionContext);
-//        } else {
-//            module = PipelineFactory.loadPipeline(configModel.createResource(asArgs.configResourceUri));
-//            outputExecutionContext = engine.executePipeline(module, inputExecutionContext);
-//        }
-
-        if (outputBindingPath != null) {
-            try {
-                outputExecutionContext.getVariablesBinding().save(new FileOutputStream(outputBindingPath), FileUtils.langTurtle);
-            } catch (IOException e) {
-                throw new SPipesServiceException("Cannot save output binding.", e);
-            }
-        }
-
-        LOG.info("Processing successfully finished.");
-        return outputExecutionContext.getDefaultModel();
+        return id;
     }
 
-    private ExecutionEngine createExecutionEngine(@Nullable final String configUrl) {
-        ExecutionEngine engine = ExecutionEngineFactory.createEngine();
+    private Model extractConfigurationModel(final MultiValueMap<String, String> parameters) {
+        ServiceParametersHelper paramHelper = new ServiceParametersHelper(parameters);
 
-        String cUrl = Optional.ofNullable(configUrl)
+        // LOAD CONFIGURATION
+        String configURL = null;
+        if (paramHelper.hasParameterValue(P_CONFIG_URL)) {
+            configURL = paramHelper.getRequiredParameterValue(P_CONFIG_URL);
+            logParam(P_CONFIG_URL, configURL);
+            parameters.remove(P_CONFIG_URL);
+        }
+
+        String cUrl = Optional.ofNullable(configURL)
             .orElse(ExecutionConfig.getConfigUrl());
 
-        final Model configModel = loadModelFromUrl(cUrl);
+        return loadModelFromUrl(cUrl);
+    }
+
+    private ExecutionEngine createExecutionEngine(Model configModel) {
+        // CONFIGURE ENGINE
+        ExecutionEngine engine = ExecutionEngineFactory.createEngine();
         ProgressListenerLoader.createListeners(configModel).forEach(
             engine::addProgressListener
         );
-
         return engine;
     }
 
