@@ -110,6 +110,7 @@ public class TabularModule extends AbstractModule {
     @Override
     ExecutionContext executeSelf() {
         Model inputModel = executionContext.getDefaultModel();
+
         outputModel = ModelFactory.createDefaultModel();
 
         onTableGroup(null);
