@@ -6,6 +6,7 @@ import cz.cvut.spipes.exception.SPipesServiceException;
 import cz.cvut.spipes.manager.SPipesScriptManager;
 import cz.cvut.spipes.modules.Module;
 import cz.cvut.spipes.rest.util.*;
+import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.RDFMimeType;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.QuerySolutionMap;
@@ -237,7 +238,7 @@ public class SPipesServiceController {
         // FILE WHERE TO GET INPUT GRAPH
         URL inputGraphURL = null;
         if (paramHelper.hasParameterValue(P_INPUT_GRAPH_URL)) {
-            inputGraphURL = paramHelper.parseParameterValueAsUrl(P_INPUT_BINDING_URL);
+            inputGraphURL = paramHelper.parseParameterValueAsUrl(P_INPUT_GRAPH_URL);
             logParam(P_INPUT_GRAPH_URL, inputGraphURL.toString());
         }
 
@@ -257,7 +258,11 @@ public class SPipesServiceController {
         }
         LOG.info("- input variable binding ={}", inputVariablesBinding);
 
-        return ExecutionContextFactory.createContext(inputDataModel, inputVariablesBinding);
+        Model unionModel =  Optional.ofNullable(inputGraphURL)
+            .map(url -> JenaUtils.createUnion(inputDataModel,loadModelFromUrl(url.toString())))
+            .orElse(inputDataModel);
+
+        return ExecutionContextFactory.createContext(unionModel, inputVariablesBinding);
     }
 
     private File extractOutputBindingPath(final MultiValueMap<String, String> parameters) {
