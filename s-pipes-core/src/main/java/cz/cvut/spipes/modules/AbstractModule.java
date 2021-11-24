@@ -1,6 +1,7 @@
 package cz.cvut.spipes.modules;
 
 import cz.cvut.spipes.config.AuditConfig;
+import cz.cvut.spipes.config.Environment;
 import cz.cvut.spipes.config.ExecutionConfig;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.engine.ExecutionContext;
@@ -9,6 +10,7 @@ import cz.cvut.spipes.engine.VariablesBinding;
 import cz.cvut.spipes.exception.ValidationConstraintFailed;
 import cz.cvut.spipes.util.JenaUtils;
 import org.apache.jena.atlas.lib.NotImplemented;
+import org.apache.jena.ontology.OntModel;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
@@ -28,15 +30,14 @@ import org.topbraid.spin.model.Select;
 import org.topbraid.spin.util.SPINExpressions;
 import org.topbraid.spin.vocabulary.SP;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.joining;
 
 public abstract class AbstractModule implements Module {
 
@@ -77,7 +78,44 @@ public abstract class AbstractModule implements Module {
         if (ExecutionConfig.isCheckValidationConstrains()) {
             checkOutputConstraints();
         }
-        return  outputContext;
+
+        if (ExecutionConfig.getEnvironment().equals(Environment.development)) {
+            generateLinkToRerunExecution();
+        }
+
+        return outputContext;
+    }
+
+
+    private String encodeValue(String value) {
+        try {
+            return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    private void generateLinkToRerunExecution() {
+        final String FILE_PREFIX = "file://";
+        final String SPIPES_SERVICE_URL = "http://localhost:8080/s-pipes";
+
+        String inputModelFileUrl = FILE_PREFIX + saveModelToTemporaryFile(executionContext.getDefaultModel());
+        String inputBindingFileUrl = FILE_PREFIX + saveModelToTemporaryFile(executionContext.getVariablesBinding().getModel());
+        String configModelFileUrl = FILE_PREFIX + saveModelToTemporaryFile(this.resource.getModel());
+
+        Map<String, String> requestParams = new HashMap<>();
+        requestParams.put("id", this.resource.getURI());
+        requestParams.put("_pConfigURL", configModelFileUrl);
+        requestParams.put("_pInputGraphURL", inputModelFileUrl);
+        requestParams.put("_pInputBindingURL", inputBindingFileUrl);
+
+        String encodedURL = requestParams.keySet().stream()
+            .map(key -> key + "=" + encodeValue(requestParams.get(key)))
+            .collect(joining("&", SPIPES_SERVICE_URL + "/module?", ""));
+
+
+        LOG.debug("To rerun the execution visit " + encodedURL);
     }
 
     @Override
@@ -113,7 +151,7 @@ public abstract class AbstractModule implements Module {
     }
 
     public String getLabel() {
-        String label =  getStringPropertyValue(RDFS.label);
+        String label = getStringPropertyValue(RDFS.label);
         return (label != null) ? label : resource.asResource().getLocalName();
     }
 
@@ -150,6 +188,24 @@ public abstract class AbstractModule implements Module {
         }
     }
 
+    protected String saveFullModelToTemporaryFile(OntModel model) {
+        File tempFile = null;
+        try {
+            tempFile = Files.createTempFile("formgen-", ".ttl").toFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        try (OutputStream tempFileIs = new FileOutputStream(tempFile)) {
+            model.writeAll(tempFileIs, FileUtils.langTurtle);
+
+            return tempFile.getAbsolutePath();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     private void loadModuleConstraints() {
         inputConstraintQueries = getResourcesByProperty(KBSS_MODULE.has_input_graph_constraint);
         outputConstraintQueries = getResourcesByProperty(KBSS_MODULE.has_output_graph_constraint);
@@ -168,7 +224,7 @@ public abstract class AbstractModule implements Module {
         VariablesBinding mergedVarsBinding = new VariablesBinding(executionContext.getVariablesBinding().asQuerySolution());
         mergedVarsBinding.extendConsistently(outputContext.getVariablesBinding());
 
-        if (! outputConstraintQueries.isEmpty()) {
+        if (!outputConstraintQueries.isEmpty()) {
             LOG.debug("Validating module's output constraints ...");
             checkConstraints(defaultModel, mergedVarsBinding.asQuerySolution(), outputConstraintQueries);
         }
@@ -179,7 +235,7 @@ public abstract class AbstractModule implements Module {
 
         QuerySolution bindings = executionContext.getVariablesBinding().asQuerySolution();
 
-        if (! inputConstraintQueries.isEmpty()) {
+        if (!inputConstraintQueries.isEmpty()) {
             LOG.debug("Validating module's input constraints ...");
             checkConstraints(defaultModel, bindings, inputConstraintQueries);
         }
@@ -225,9 +281,9 @@ public abstract class AbstractModule implements Module {
                 String mainErrorMsg = String.format("Validation of constraint failed for the constraint \"%s\".", getQueryComment(spinQuery));
                 String failedQueryMsg = String.format("Failed validation constraint : \n %s", spinQuery.toString());
                 String mergedMsg = new StringBuffer()
-                        .append(mainErrorMsg).append("\n")
-                        .append(failedQueryMsg).append("\n")
-                        .toString();
+                    .append(mainErrorMsg).append("\n")
+                    .append(failedQueryMsg).append("\n")
+                    .toString();
                 LOG.error(mergedMsg);
                 if (ExecutionConfig.isExitOnError()) {
                     throw new ValidationConstraintFailed(mergedMsg, this);
@@ -255,7 +311,7 @@ public abstract class AbstractModule implements Module {
     }
 
     private org.topbraid.spin.model.Query getQuery(Resource queryResource) {
-        if (queryResource.hasProperty(RDF.type, SP.Ask)){
+        if (queryResource.hasProperty(RDF.type, SP.Ask)) {
             return queryResource.as(Ask.class);
         }
         if (queryResource.hasProperty(RDF.type, SP.Construct)) {
@@ -328,16 +384,16 @@ public abstract class AbstractModule implements Module {
 
     protected List<Resource> getResourcesByProperty(Property property) {
         return resource.listProperties(property)
-                .toList().stream()
-                .map(st -> st.getObject().asResource())
-                .collect(Collectors.toList());
+            .toList().stream()
+            .map(st -> st.getObject().asResource())
+            .collect(Collectors.toList());
     }
 
     protected RDFNode getEffectiveValue(@NotNull Property valueProperty) {
         RDFNode valueNode = Optional.of(resource)
-                .map(r -> r.getProperty(valueProperty))
-                .map(Statement::getObject)
-                .orElse(null);
+            .map(r -> r.getProperty(valueProperty))
+            .map(Statement::getObject)
+            .orElse(null);
         if (SPINExpressions.isExpression(valueNode)) {
             Resource expr = (Resource) SPINFactory.asExpression(valueNode);
             QuerySolution bindings = executionContext.getVariablesBinding().asQuerySolution();

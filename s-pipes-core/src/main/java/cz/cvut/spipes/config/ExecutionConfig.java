@@ -23,6 +23,17 @@ public class ExecutionConfig {
     }
 
     public static String getConfigUrl() {
-        return CoreConfigProperies.get("execution.configuration.url", "config.ttl");
+        return CoreConfigProperies.get("execution.configUrl", "config.ttl");
+    }
+
+    public static Environment getEnvironment() {
+        return  Environment.valueOf(CoreConfigProperies.get(
+            "execution.environment",
+            Environment.production.toString())
+        );
+    }
+
+    public static String getDevelopmentServiceUrl() {
+        return CoreConfigProperies.get("execution.developmentServiceUrl", "http://localhost:8080/s-pipes/");
     }
 }
