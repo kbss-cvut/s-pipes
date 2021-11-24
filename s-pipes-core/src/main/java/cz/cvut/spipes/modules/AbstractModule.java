@@ -411,7 +411,7 @@ public abstract class AbstractModule implements Module {
         if (isReplace) {
             return ExecutionContextFactory.createContext(computedModel);
         } else {
-            if (AuditConfig.isEnabled() || isInDebugMode) {
+            if (AuditConfig.isEnabled() || ExecutionConfig.getEnvironment().equals(Environment.development)) {
                 LOG.debug("Saving module computed output to file {}.", saveModelToTemporaryFile(computedModel));
             }
             return ExecutionContextFactory.createContext(JenaUtils.createUnion(inputModel, computedModel));

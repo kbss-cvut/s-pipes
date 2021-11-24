@@ -2,8 +2,9 @@ package cz.cvut.spipes.modules;
 
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.VariablesBinding;
-import java.util.List;
 import org.apache.jena.rdf.model.Resource;
+
+import java.util.List;
 
 /**
  * Module should be initialized with setConfigurationResource and setInputContext.

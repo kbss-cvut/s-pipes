@@ -1,5 +1,8 @@
 package cz.cvut.spipes.modules;
 
+import cz.cvut.spipes.config.AuditConfig;
+import cz.cvut.spipes.config.Environment;
+import cz.cvut.spipes.config.ExecutionConfig;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
@@ -135,7 +138,7 @@ public class ApplyConstructModule extends AbstractModule {
                     LOG.trace("... the query returned {} triples.", constructedModel.size());
                 }
 
-                if (isInDebugMode) {
+                if (AuditConfig.isEnabled() || ExecutionConfig.getEnvironment().equals(Environment.development)) {
                     LOG.debug("... saving module partially computed output to file {}.", saveModelToTemporaryFile(constructedModel));
                 }
 
