@@ -321,6 +321,10 @@ public class SPipesServiceController {
         String cUrl = Optional.ofNullable(configURL)
             .orElse(ExecutionConfig.getConfigUrl());
 
+        if (cUrl.isEmpty()) {
+            return ModelFactory.createDefaultModel();
+        }
+
         return loadModelFromUrl(cUrl);
     }
 
