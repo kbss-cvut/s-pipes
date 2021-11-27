@@ -64,8 +64,10 @@ public abstract class AbstractModule implements Module {
         loadModuleFlags();
         loadConfiguration();
         loadModuleConstraints();
+        String inputModelFilePath = null;
         if (AuditConfig.isEnabled() || isInDebugMode) {
-            LOG.debug("Saving module execution input to file {}.", saveModelToTemporaryFile(executionContext.getDefaultModel()));
+            inputModelFilePath = saveModelToTemporaryFile(executionContext.getDefaultModel());
+            LOG.debug("Saving module execution input to file {}.", inputModelFilePath);
         }
         if (ExecutionConfig.isCheckValidationConstrains()) {
             checkInputConstraints();
@@ -80,7 +82,7 @@ public abstract class AbstractModule implements Module {
         }
 
         if (ExecutionConfig.getEnvironment().equals(Environment.development)) {
-            generateLinkToRerunExecution();
+            generateLinkToRerunExecution(inputModelFilePath);
         }
 
         return outputContext;
@@ -96,11 +98,12 @@ public abstract class AbstractModule implements Module {
         return "";
     }
 
-    private void generateLinkToRerunExecution() {
+    private void generateLinkToRerunExecution(String inputModelFilePath) {
         final String FILE_PREFIX = "file://";
         final String SPIPES_SERVICE_URL = "http://localhost:8080/s-pipes";
 
-        String inputModelFileUrl = FILE_PREFIX + saveModelToTemporaryFile(executionContext.getDefaultModel());
+        String inputModelFileUrl = FILE_PREFIX + Optional.ofNullable(inputModelFilePath)
+            .orElse(saveModelToTemporaryFile(executionContext.getDefaultModel()));
         String inputBindingFileUrl = FILE_PREFIX + saveModelToTemporaryFile(executionContext.getVariablesBinding().getModel());
         String configModelFileUrl = FILE_PREFIX + saveModelToTemporaryFile(this.resource.getModel());
 
