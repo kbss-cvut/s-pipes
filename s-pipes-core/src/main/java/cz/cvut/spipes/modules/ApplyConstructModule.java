@@ -21,7 +21,9 @@ import org.topbraid.spin.model.Construct;
 import org.topbraid.spin.system.SPINModuleRegistry;
 import org.topbraid.spin.vocabulary.SP;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * TODO Order of queries is not enforced.   
@@ -108,20 +110,25 @@ public class ApplyConstructModule extends AbstractModule {
 
         Model inferredModel = ModelFactory.createDefaultModel();
 
+        List<Construct> constructQueriesSorted = constructQueries
+            .stream().map(r -> r.as(Construct.class))
+            .sorted(Comparator.comparing(this::getQueryComment))
+            .collect(Collectors.toList());
+
         while (nNew > 0 && count++ < iterationCount) {
             //      set up variable bindings
 
             Model inferredInSingleIterationModel = ModelFactory.createDefaultModel();
             Model extendedInferredModel = JenaUtils.createUnion(defaultModel, inferredModel);
 
-            for (int i = 0; i < constructQueries.size(); i++) {
-                Construct spinConstructRes = constructQueries.get(i).as(Construct.class);
+            for (int i = 0; i < constructQueriesSorted.size(); i++) {
+                Construct spinConstructRes = constructQueriesSorted.get(i);
 
                 if (LOG.isTraceEnabled()) {
-                    String queryComment = getQueryComment(spinConstructRes);;
+                    String queryComment = getQueryComment(spinConstructRes);
                     LOG.trace(
                         "Executing iteration {}/{} with {}/{} query \"{}\" ...",
-                        count, iterationCount, i + 1, constructQueries.size(), queryComment
+                        count, iterationCount, i + 1, constructQueriesSorted.size(), queryComment
                     );
                 }
 
