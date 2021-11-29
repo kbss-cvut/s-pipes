@@ -1,5 +1,6 @@
 package cz.cvut.spipes.modules.model;
 
+import cz.cvut.kbss.jopa.model.annotations.Id;
 import cz.cvut.kbss.jopa.model.annotations.OWLAnnotationProperty;
 import cz.cvut.kbss.jopa.model.annotations.OWLClass;
 import cz.cvut.spipes.constants.CSVW;
@@ -9,6 +10,9 @@ import cz.cvut.spipes.constants.CSVW;
  */
 @OWLClass(iri = CSVW.ColumnUri)
 public class Column {
+
+    @Id(generated = true)
+    private String id;
 
     @OWLAnnotationProperty(iri = CSVW.nameUri)
     private String name;

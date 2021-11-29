@@ -6,12 +6,18 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Implementation of the first two levels of RFC6570
+ * Implementation of the first two levels of RFC6570.
+ * <p>
+ * This implementation of the String Template has been heavily inspired by the one that is part of the
+ * project Linkedpipes ETL developed by the Linkedpipes ETL Team
+ * (<a href="https://etl.linkedpipes.com/team/">ETL Team</a>).
+ *
  * @see <a href="https://tools.ietf.org/html/rfc6570#section-2">RFC6570 section 2</a>
+ * @see <a href="https://etl.linkedpipes.com/">Linkedpipes ETL</a>
  */
 public class StringTemplate {
 
-    public static final String TABLE_RESOURCE_REF = "__A83N48X1_TABLE_URI__"; //TODO what is this?
+    public static final String TABLE_RESOURCE_REF = "__A83N48X1_TABLE_URI__";
 
     private interface Token {
 

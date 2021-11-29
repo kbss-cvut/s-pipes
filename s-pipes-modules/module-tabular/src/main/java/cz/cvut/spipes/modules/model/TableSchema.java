@@ -17,6 +17,12 @@ public class TableSchema {
     @OWLAnnotationProperty(iri = CSVW.aboutUrlUri)
     private String aboutUrl;
 
+    @OWLAnnotationProperty(iri = CSVW.propertyUrlUri)
+    private String propertyUrl;
+
+    @OWLAnnotationProperty(iri = CSVW.valueUrlUri)
+    private String valueUrl;
+
     @OWLObjectProperty(iri = CSVW.columnsUri)
     private List<Column> columns;
 
@@ -26,6 +32,22 @@ public class TableSchema {
 
     public void setAboutUrl(String aboutUrl) {
         this.aboutUrl = aboutUrl;
+    }
+
+    public String getPropertyUrl() {
+        return propertyUrl;
+    }
+
+    public void setPropertyUrl(String propertyUrl) {
+        this.propertyUrl = propertyUrl;
+    }
+
+    public String getValueUrl() {
+        return valueUrl;
+    }
+
+    public void setValueUrl(String valueUrl) {
+        this.valueUrl = valueUrl;
     }
 
     public List<Column> getColumns() {

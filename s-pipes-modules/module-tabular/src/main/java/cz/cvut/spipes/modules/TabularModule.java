@@ -1,5 +1,6 @@
 package cz.cvut.spipes.modules;
 
+import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.spipes.constants.CSVW;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
@@ -7,10 +8,16 @@ import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.exception.ResourceNotFoundException;
 import cz.cvut.spipes.exception.ResourceNotUniqueException;
+import cz.cvut.spipes.modules.model.Column;
+import cz.cvut.spipes.modules.model.TableSchema;
+import cz.cvut.spipes.modules.template.InvalidTemplateException;
+import cz.cvut.spipes.modules.template.UriTemplate;
+import cz.cvut.spipes.modules.util.JopaPersistenceUtils;
 import cz.cvut.spipes.registry.StreamResource;
 import cz.cvut.spipes.registry.StreamResourceRegistry;
 import cz.cvut.spipes.util.JenaUtils;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
+import org.apache.jena.iri.IRI;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.shared.PropertyNotFoundException;
@@ -110,6 +117,7 @@ public class TabularModule extends AbstractModule {
     @Override
     ExecutionContext executeSelf() {
         Model inputModel = executionContext.getDefaultModel();
+        EntityManager em = JopaPersistenceUtils.getEntityManager("model", inputModel);
 
         outputModel = ModelFactory.createDefaultModel();
 
@@ -131,6 +139,15 @@ public class TabularModule extends AbstractModule {
             Set<String> columnNames = new HashSet<>();
             List<RDFNode> columns = new LinkedList<>();
 
+            TableSchema tableSchema = em.createNativeQuery(
+                    "PREFIX csvw: <http://www.w3.org/ns/csvw#>" +
+                            "SELECT ?t WHERE {" +
+                            "?t rdf:type csvw:TableSchema" +
+                            "}",
+                    TableSchema.class).getSingleResult();
+            List<Column> schemaColumns = tableSchema.getColumns();
+
+            int j = 0;
             for (String columnTitle : header) {
                 Resource columnResource = ResourceFactory.createResource();
                 String columnName = normalize(columnTitle);
@@ -166,22 +183,15 @@ public class TabularModule extends AbstractModule {
                     ResourceFactory.createStringLiteral(columnTitle)
                 );
 
-                String columnAboutUrl = null; //TODO get from inputModel
-                if (columnAboutUrl != null && !columnAboutUrl.isEmpty()) {
-                    outputModel.add(
-                            columnResource,
-                            CSVW.aboutUrl,
-                            outputModel.createTypedLiteral(columnAboutUrl, CSVW.uriTemplate)
-                    );
-                } else {
-                    outputModel.add(
-                            T_Schema,
-                            CSVW.aboutUrl,
-                            outputModel.createTypedLiteral(sourceResource.getUri() + "#row-{_row}", CSVW.uriTemplate)
-                    );
-                }
+                Column column = schemaColumns.get(j);
+                String columnAboutUrlStr = column.getAboutUrl();
+                outputModel.add(
+                        columnResource,
+                        CSVW.aboutUrl,
+                        outputModel.createTypedLiteral(columnAboutUrlStr, CSVW.uriTemplate)
+                );
 
-                String columnPropertyUrl = null; //TODO get from inputModel
+                String columnPropertyUrl = column.getPropertyUrl();
                 if (columnPropertyUrl != null && !columnPropertyUrl.isEmpty()) {
                     outputModel.add(
                             columnResource,
@@ -201,6 +211,8 @@ public class TabularModule extends AbstractModule {
                             ResourceFactory.createPlainLiteral(sourceResource.getUri() + "#" + URLEncoder.encode(columnName, "UTF-8"))
                     );
                 }
+
+                j++;
             }
 
             RDFList columnList = outputModel.createList(columns.iterator());
@@ -260,11 +272,12 @@ public class TabularModule extends AbstractModule {
                     Resource schemaColumnResource = columns.get(i).asResource();
 
                     // 4.6.8.1
-                    String columnAboutUrl = getAboutUrlFromSchema(schemaColumnResource);
-                    Resource S = ResourceFactory.createResource(columnAboutUrl.replace(
-                            "{_row}",
-                            Integer.toString(listReader.getRowNumber())
-                    ));
+                    String columnAboutUrlStr = getAboutUrlFromSchema(schemaColumnResource);
+                    UriTemplate aboutUrlTemplate = new UriTemplate(columnAboutUrlStr);
+                    aboutUrlTemplate.initialize(null, Arrays.asList(header));
+                    IRI columnAboutUrl = aboutUrlTemplate.getUri(row);
+
+                    Resource S = ResourceFactory.createResource(columnAboutUrl.toString());
 
                     // 4.6.8.2
                     if (R != null) {
@@ -278,7 +291,8 @@ public class TabularModule extends AbstractModule {
                     String columnPropertyUrl = getPropertyUrlFromSchema(schemaColumnResource);
                     Property P = ResourceFactory.createProperty(columnPropertyUrl);
 
-                    String valueUrl = null; //TODO get from inputModel
+                    Column column = schemaColumns.get(i);
+                    String valueUrl = column.getValueUrl();
 
                     if (valueUrl != null && !valueUrl.isEmpty()) {
                         // 4.6.8.4
@@ -309,7 +323,7 @@ public class TabularModule extends AbstractModule {
                 }
             }
 
-        } catch (IOException e) {
+        } catch (IOException | InvalidTemplateException e) {
             LOG.error("Error while reading file from resource uri {}", sourceResource, e);
         } finally {
             if( listReader != null ) {
