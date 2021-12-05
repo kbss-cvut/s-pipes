@@ -148,7 +148,7 @@ public class TarqlModule extends AbstractModule {
                 .map(st -> st.getObject().asResource())
                 .collect(Collectors.toList());
 
-        LOG.debug("Loading spin constuct queries ... " + constructQueries);
+        LOG.debug("Loaded {} spin construct queries.", constructQueries.size());
 
         //TODO default value must be taken from template definition
         isReplace = this.getPropertyValue(SML.replace, false);

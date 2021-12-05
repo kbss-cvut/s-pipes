@@ -6,7 +6,6 @@ import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.QueryUtils;
-import java.util.List;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.QuerySolution;
@@ -19,6 +18,8 @@ import org.topbraid.spin.arq.ARQFactory;
 import org.topbraid.spin.model.Construct;
 import org.topbraid.spin.system.SPINModuleRegistry;
 import org.topbraid.spin.vocabulary.SP;
+
+import java.util.List;
 
 public abstract class ApplyConstructAbstractModule extends AnnotatedAbstractModule {
 
@@ -174,7 +175,7 @@ public abstract class ApplyConstructAbstractModule extends AnnotatedAbstractModu
         // TODO does not work with string query as object is not RDF resource ???
         constructQueries = getResourcesByProperty(SML.constructQuery);
 
-        LOG.debug("Loading spin constuct queries ... " + constructQueries);
+        LOG.debug("Loaded {} spin construct queries.", constructQueries.size());
 
         //TODO default value must be taken from template definition
         isReplace = this.getPropertyValue(SML.replace, false);

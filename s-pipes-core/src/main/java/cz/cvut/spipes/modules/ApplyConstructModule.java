@@ -174,7 +174,7 @@ public class ApplyConstructModule extends AbstractModule {
         // TODO does not work with string query as object is not RDF resource ???
         constructQueries = getResourcesByProperty(SML.constructQuery);
 
-        LOG.debug("Loading spin constuct queries ... " + constructQueries);
+        LOG.debug("Loaded {} spin construct queries.", constructQueries.size());
 
         //TODO default value must be taken from template definition
         isReplace = this.getPropertyValue(SML.replace, false);
