@@ -8,10 +8,9 @@
         <groupId>cz.cvut.kbss</groupId>
         <artifactId>kbss-project-parent</artifactId>
         <version>0.0.4</version>
-        <relativePath></relativePath>
+        <relativePath/>
     </parent>
 
-    <groupId>cz.cvut.kbss</groupId>
     <artifactId>s-pipes-parent</artifactId>
     <name>SPipes Parent</name>
     <version>0.3.0</version>
@@ -313,7 +312,7 @@
         <repository>
             <id>kbss</id>
             <name>KBSS Maven 2 Repository</name>
-            <url>http://kbss.felk.cvut.cz/m2repo</url>
+            <url>https://kbss.felk.cvut.cz/m2repo</url>
             <snapshots>
                 <checksumPolicy>warn</checksumPolicy>
                 <enabled>true</enabled>
@@ -331,7 +330,7 @@
         <pluginRepository>
             <id>kbss</id>
             <name>KBSS Maven 2 Repository</name>
-            <url>http://kbss.felk.cvut.cz/m2repo</url>
+            <url>https://kbss.felk.cvut.cz/m2repo</url>
             <snapshots>
                 <checksumPolicy>warn</checksumPolicy>
                 <enabled>true</enabled>
