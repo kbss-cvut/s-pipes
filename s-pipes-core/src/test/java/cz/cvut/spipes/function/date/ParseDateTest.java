@@ -6,18 +6,13 @@ import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.graph.Node;
 import org.apache.jena.sparql.expr.NodeValue;
-import org.junit.Rule;
 import org.junit.jupiter.api.Test;
-import org.junit.rules.ExpectedException;
 
-import static org.apache.jena.graph.NodeFactory.createLiteral;
+import static org.apache.jena.graph.NodeFactory.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ParseDateTest {
-
-    @Rule
-    public final ExpectedException exception = ExpectedException.none();
 
     @Test
     public void execReturnsDate_ItalianLocale() {
@@ -151,7 +146,13 @@ public class ParseDateTest {
         ParseDate parseDate = new ParseDate();
         Node text = createLiteral("21/10/2013");
 
-        assertThrows(IllegalArgumentException.class, () -> parseDate.exec(text, null, null, null));
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> parseDate.exec(text, null, null, null)
+        );
+
+        String expectedMessage = "2. argument of this function is required but missing.";
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
@@ -161,7 +162,43 @@ public class ParseDateTest {
         Node pattern = createLiteral("dd/MM/yyyy");
         Node patternLanguage = createLiteral("en");
 
-        assertThrows(IllegalArgumentException.class, () -> parseDate.exec(text, pattern, patternLanguage, null));
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> parseDate.exec(text, pattern, patternLanguage, null)
+        );
+
+        String expectedMessage = "Pattern does not corresponds to the pattern language.";
+        assertEquals(expectedMessage, exception.getMessage());
+    }
+
+    @Test
+    public void execReturnsDate_uriNode() {
+        ParseDate parseDate = new ParseDate();
+        Node text = createLiteral("19/12/2016");
+        Node pattern = createURI("htttp://example.org/person");
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> parseDate.exec(text, pattern, null, null)
+        );
+
+        String expectedMessage = "2. argument of this function is not literal.";
+        assertEquals(expectedMessage, exception.getMessage());
+    }
+
+    @Test
+    public void execReturnsDate_blankNode() {
+        ParseDate parseDate = new ParseDate();
+        Node text = createBlankNode("blank node");
+        Node pattern = createLiteral("dd/MM/yy");
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> parseDate.exec(text, pattern, null, null)
+        );
+
+        String expectedMessage = "1. argument of this function is not literal.";
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
 

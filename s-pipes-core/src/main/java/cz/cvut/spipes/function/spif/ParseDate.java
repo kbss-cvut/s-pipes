@@ -41,13 +41,8 @@ public class ParseDate extends AbstractFunction3 implements ValueFunction {
      */
     @Override
     public NodeValue exec(Node text, Node pattern, Node patternLanguage, FunctionEnv env) {
-        String textValue, patternValue;
-        try{
-            textValue = text.getLiteralValue().toString();
-            patternValue = pattern.getLiteralValue().toString();
-        }catch(Exception e){
-            throw new IllegalArgumentException("Some of required parameters were not provided.");
-        }
+        String textValue = getRequiredParameterLiteralValue(text, 1);
+        String patternValue = getRequiredParameterLiteralValue(pattern, 2);
 
         Optional<Node> patternLanguageNode = Optional.ofNullable(patternLanguage);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(patternValue);
@@ -68,6 +63,16 @@ public class ParseDate extends AbstractFunction3 implements ValueFunction {
             return getTimeNode(localTime.format(DateTimeFormatter.ofPattern("kk:mm:ss")));
         }catch(Exception e){
             throw new ParseException();
+        }
+    }
+
+    private String getRequiredParameterLiteralValue(Node text, int number) {
+        if(text == null){
+            throw new IllegalArgumentException(number + ". argument of this function is required but missing.");
+        }else if(text.isLiteral()){
+            return text.getLiteralValue().toString();
+        }else{
+            throw new IllegalArgumentException(number + ". argument of this function is not literal.");
         }
     }
 
