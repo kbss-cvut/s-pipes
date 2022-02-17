@@ -1,5 +1,6 @@
 package cz.cvut.spipes.function.date;
 
+import org.apache.jena.rdf.model.LiteralRequiredException;
 import cz.cvut.spipes.exception.ParseException;
 import cz.cvut.spipes.function.spif.ParseDate;
 import org.apache.jena.datatypes.RDFDatatype;
@@ -9,8 +10,7 @@ import org.apache.jena.sparql.expr.NodeValue;
 import org.junit.jupiter.api.Test;
 
 import static org.apache.jena.graph.NodeFactory.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ParseDateTest {
 
@@ -54,7 +54,7 @@ public class ParseDateTest {
     public void execReturnsTime_WithSeconds() {
         ParseDate parseDate = new ParseDate();
         Node text = createLiteral("09:10:10");
-        Node pattern = createLiteral("k:m:s");
+        Node pattern = createLiteral("HH:m:s");
         NodeValue returnedTime = parseDate.exec(text, pattern, null, null);
 
         NodeValue expectedTime = getTimeNode("09:10:10");
@@ -65,7 +65,7 @@ public class ParseDateTest {
     public void execReturnsTime_WithoutSeconds() {
         ParseDate parseDate = new ParseDate();
         Node text = createLiteral("23:59");
-        Node pattern = createLiteral("k:m");
+        Node pattern = createLiteral("HH:m");
 
         NodeValue returnedTime = parseDate.exec(text, pattern, null, null);
         NodeValue expectedTime = getTimeNode("23:59:00");
@@ -77,7 +77,7 @@ public class ParseDateTest {
     public void execReturnsTime_OnlyHours() {
         ParseDate parseDate = new ParseDate();
         Node text = createLiteral("15");
-        Node pattern = createLiteral("k");
+        Node pattern = createLiteral("HH");
 
         NodeValue returnedTime = parseDate.exec(text, pattern, null, null);
         NodeValue expectedTime = getTimeNode("15:00:00");
@@ -123,6 +123,18 @@ public class ParseDateTest {
         assertEquals(expectedDateTime, returnedDateTime);
     }
 
+    @Test
+    public void execReturnsTime_afterMidnight() {
+        ParseDate parseDate = new ParseDate();
+        Node text = createLiteral("00:35");
+        Node pattern = createLiteral("HH:mm");
+
+        NodeValue returnedDateTime = parseDate.exec(text, pattern, null, null);
+        NodeValue expectedDateTime = getTimeNode("00:35:00");
+
+        assertEquals(expectedDateTime, returnedDateTime);
+    }
+
 
     @Test
     public void execThrowsException_badInput() {
@@ -137,8 +149,9 @@ public class ParseDateTest {
     public void execThrowsException_nullInputText() {
         ParseDate parseDate = new ParseDate();
         Node pattern = createLiteral("yyyy.MM.dd");
+        NodeValue result = parseDate.exec(null, pattern, null, null);
 
-        assertThrows(IllegalArgumentException.class, () -> parseDate.exec(null, pattern, null, null));
+        assertNull(result);
     }
 
     @Test
@@ -146,13 +159,8 @@ public class ParseDateTest {
         ParseDate parseDate = new ParseDate();
         Node text = createLiteral("21/10/2013");
 
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
-                () -> parseDate.exec(text, null, null, null)
-        );
-
-        String expectedMessage = "2. argument of this function is required but missing.";
-        assertEquals(expectedMessage, exception.getMessage());
+        NodeValue result = parseDate.exec(text,null, null, null);
+        assertNull(result);
     }
 
     @Test
@@ -177,13 +185,9 @@ public class ParseDateTest {
         Node text = createLiteral("19/12/2016");
         Node pattern = createURI("htttp://example.org/person");
 
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
+        assertThrows(LiteralRequiredException.class,
                 () -> parseDate.exec(text, pattern, null, null)
         );
-
-        String expectedMessage = "2. argument of this function is not literal.";
-        assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
@@ -192,13 +196,10 @@ public class ParseDateTest {
         Node text = createBlankNode("blank node");
         Node pattern = createLiteral("dd/MM/yy");
 
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
+        assertThrows(
+                LiteralRequiredException.class,
                 () -> parseDate.exec(text, pattern, null, null)
         );
-
-        String expectedMessage = "1. argument of this function is not literal.";
-        assertEquals(expectedMessage, exception.getMessage());
     }
 
 
