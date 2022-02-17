@@ -6,15 +6,14 @@ import cz.cvut.spipes.function.ValueFunction;
 import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.graph.Node;
+import org.apache.jena.rdf.model.LiteralRequiredException;
 import org.apache.jena.sparql.expr.NodeValue;
 import org.apache.jena.sparql.function.FunctionEnv;
 import org.topbraid.spin.arq.AbstractFunction3;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.*;
@@ -41,8 +40,12 @@ public class ParseDate extends AbstractFunction3 implements ValueFunction {
      */
     @Override
     public NodeValue exec(Node text, Node pattern, Node patternLanguage, FunctionEnv env) {
-        String textValue = getRequiredParameterLiteralValue(text, 1);
-        String patternValue = getRequiredParameterLiteralValue(pattern, 2);
+        if(text == null || pattern == null){
+            return null;
+        }
+
+        String textValue = getRequiredParameterLiteralValue(text);
+        String patternValue = getRequiredParameterLiteralValue(pattern);
 
         Optional<Node> patternLanguageNode = Optional.ofNullable(patternLanguage);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(patternValue);
@@ -60,19 +63,17 @@ public class ParseDate extends AbstractFunction3 implements ValueFunction {
 
         try{
             LocalTime localTime = LocalTime.parse(textValue,formatter);
-            return getTimeNode(localTime.format(DateTimeFormatter.ofPattern("kk:mm:ss")));
+            return getTimeNode(localTime.format(DateTimeFormatter.ofPattern("HH:mm:ss")));
         }catch(Exception e){
             throw new ParseException();
         }
     }
 
-    private String getRequiredParameterLiteralValue(Node text, int number) {
-        if(text == null){
-            throw new IllegalArgumentException(number + ". argument of this function is required but missing.");
-        }else if(text.isLiteral()){
+    private String getRequiredParameterLiteralValue(Node text) {
+        if(text.isLiteral()){
             return text.getLiteralValue().toString();
         }else{
-            throw new IllegalArgumentException(number + ". argument of this function is not literal.");
+            throw new LiteralRequiredException(text);
         }
     }
 
