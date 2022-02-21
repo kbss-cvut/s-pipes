@@ -11,10 +11,7 @@ import cz.cvut.spipes.exception.ValidationConstraintFailed;
 import cz.cvut.spipes.util.JenaUtils;
 import org.apache.jena.atlas.lib.NotImplemented;
 import org.apache.jena.ontology.OntModel;
-import org.apache.jena.query.Query;
-import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.query.QuerySolution;
+import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.RDF;
@@ -247,6 +244,9 @@ public abstract class AbstractModule implements Module {
 
     private void checkConstraints(Model model, QuerySolution bindings, List<Resource> constraintQueries) {
 
+        // sort queries based on order specified by comments within query
+        constraintQueries = sortConstraintQueries(constraintQueries);
+
         //      set up variable bindings
         for (Resource queryRes : constraintQueries) {
             org.topbraid.spin.model.Query spinQuery = SPINFactory.asQuery(queryRes);
@@ -419,6 +419,28 @@ public abstract class AbstractModule implements Module {
             }
             return ExecutionContextFactory.createContext(JenaUtils.createUnion(inputModel, computedModel));
         }
+    }
+
+    private List<Resource> sortConstraintQueries(List<Resource> constraintQueries) {
+        return constraintQueries.stream().sorted((resource1, resource2) -> {
+
+            org.topbraid.spin.model.Query spinQuery1 = SPINFactory.asQuery(resource1);
+            org.topbraid.spin.model.Query spinQuery2 = SPINFactory.asQuery(resource2);
+
+            String comment1 = spinQuery1.toString().split("\\n")[0];
+            String comment2 = spinQuery2.toString().split("\\n")[0];
+
+            if (comment1.matches("\\s*#.*") && comment2.matches("\\s*#.*")) {
+                int mainNumber1  = Integer.parseInt(comment1.split(" ")[1].split("\\.")[0]);
+                int mainNumber2  = Integer.parseInt(comment2.split(" ")[1].split("\\.")[0]);
+
+                int minorNumber1 = Integer.parseInt(comment1.split(" ")[1].split("\\.")[1]);
+                int minorNumber2 = Integer.parseInt(comment2.split(" ")[1].split("\\.")[1]);
+
+                return mainNumber1 < mainNumber2 ? -1 : (mainNumber1 > mainNumber2 ? 1 : (minorNumber1 <= minorNumber2) ? -1 : 1);
+            }
+            return 0;
+        }).collect(Collectors.toList());
     }
 
 //    @Override
