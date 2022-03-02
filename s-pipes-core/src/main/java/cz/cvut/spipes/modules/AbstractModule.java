@@ -423,23 +423,13 @@ public abstract class AbstractModule implements Module {
 
     private List<Resource> sortConstraintQueries(List<Resource> constraintQueries) {
         return constraintQueries.stream().sorted((resource1, resource2) -> {
-
             org.topbraid.spin.model.Query spinQuery1 = SPINFactory.asQuery(resource1);
             org.topbraid.spin.model.Query spinQuery2 = SPINFactory.asQuery(resource2);
 
             String comment1 = spinQuery1.toString().split("\\n")[0];
             String comment2 = spinQuery2.toString().split("\\n")[0];
 
-            if (comment1.matches("\\s*#.*") && comment2.matches("\\s*#.*")) {
-                int mainNumber1  = Integer.parseInt(comment1.split(" ")[1].split("\\.")[0]);
-                int mainNumber2  = Integer.parseInt(comment2.split(" ")[1].split("\\.")[0]);
-
-                int minorNumber1 = Integer.parseInt(comment1.split(" ")[1].split("\\.")[1]);
-                int minorNumber2 = Integer.parseInt(comment2.split(" ")[1].split("\\.")[1]);
-
-                return mainNumber1 < mainNumber2 ? -1 : (mainNumber1 > mainNumber2 ? 1 : (minorNumber1 <= minorNumber2) ? -1 : 1);
-            }
-            return 0;
+            return comment1.compareTo(comment2);
         }).collect(Collectors.toList());
     }
 
