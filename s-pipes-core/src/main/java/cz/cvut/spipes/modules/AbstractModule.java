@@ -289,7 +289,7 @@ public abstract class AbstractModule implements Module {
                 String mergedMsg = new StringBuffer()
                         .append(mainErrorMsg).append("\n")
                         .append(failedQueryMsg).append("\n")
-                        .append(failedQueryMsg).append("\n")
+                        .append(evidence).append("\n")
                         .toString();
                 LOG.error(mergedMsg);
                 if (ExecutionConfig.isExitOnError()) {
