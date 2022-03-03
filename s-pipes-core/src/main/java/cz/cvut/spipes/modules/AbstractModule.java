@@ -11,10 +11,7 @@ import cz.cvut.spipes.exception.ValidationConstraintFailed;
 import cz.cvut.spipes.util.JenaUtils;
 import org.apache.jena.atlas.lib.NotImplemented;
 import org.apache.jena.ontology.OntModel;
-import org.apache.jena.query.Query;
-import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.query.QuerySolution;
+import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.RDF;
@@ -247,6 +244,9 @@ public abstract class AbstractModule implements Module {
 
     private void checkConstraints(Model model, QuerySolution bindings, List<Resource> constraintQueries) {
 
+        // sort queries based on order specified by comments within query
+        constraintQueries = sortConstraintQueries(constraintQueries);
+
         //      set up variable bindings
         for (Resource queryRes : constraintQueries) {
             org.topbraid.spin.model.Query spinQuery = SPINFactory.asQuery(queryRes);
@@ -260,33 +260,37 @@ public abstract class AbstractModule implements Module {
 
             QueryExecution execution = QueryExecutionFactory.create(query, model, bindings);
 
-            boolean constaintViolated = false;
+            boolean constraintViolated;
+            StringBuilder evidence = new StringBuilder();
 
             if (spinQuery instanceof Ask) {
-                constaintViolated = execution.execAsk();
+                constraintViolated = execution.execAsk();
             } else if (spinQuery instanceof Select) { //TODO implement
-//                ResultSet rs = execution.execSelect();
-//                constaintViolated = rs.hasNext();
-//                String qs = spinQuery.getComment();
-//                if (qs == null) {
-//
-//                }
-//                String evidenceStr = "Evidence of the violation : ";
-                throw new NotImplemented("Constraints for objects " + query + " not implemented.");
+                ResultSet rs = execution.execSelect();
+                constraintViolated = rs.hasNext();
+
+                if(constraintViolated){
+                    evidence.append("Evidence of the violation: \n");
+                    for(int i = 0; i < 3 && rs.hasNext(); i++){
+                        QuerySolution solution = rs.next() ;
+                        evidence.append(solution.toString());
+                    }
+                }
             } else if (spinQuery instanceof Construct) {
                 throw new NotImplemented("Constraints for objects " + query + " not implemented.");
             } else {
                 throw new NotImplemented("Constraints for objects " + query + " not implemented.");
             }
 
-            if (constaintViolated) {
+            if (constraintViolated) {
 
                 String mainErrorMsg = String.format("Validation of constraint failed for the constraint \"%s\".", getQueryComment(spinQuery));
                 String failedQueryMsg = String.format("Failed validation constraint : \n %s", spinQuery.toString());
                 String mergedMsg = new StringBuffer()
-                    .append(mainErrorMsg).append("\n")
-                    .append(failedQueryMsg).append("\n")
-                    .toString();
+                        .append(mainErrorMsg).append("\n")
+                        .append(failedQueryMsg).append("\n")
+                        .append(evidence).append("\n")
+                        .toString();
                 LOG.error(mergedMsg);
                 if (ExecutionConfig.isExitOnError()) {
                     throw new ValidationConstraintFailed(mergedMsg, this);
@@ -419,6 +423,15 @@ public abstract class AbstractModule implements Module {
             }
             return ExecutionContextFactory.createContext(JenaUtils.createUnion(inputModel, computedModel));
         }
+    }
+
+    private List<Resource> sortConstraintQueries(List<Resource> constraintQueries) {
+        return constraintQueries.stream().sorted((resource1, resource2) -> {
+            org.topbraid.spin.model.Query spinQuery1 = SPINFactory.asQuery(resource1);
+            org.topbraid.spin.model.Query spinQuery2 = SPINFactory.asQuery(resource2);
+
+            return spinQuery1.toString().compareTo(spinQuery2.toString());
+        }).collect(Collectors.toList());
     }
 
 //    @Override
