@@ -288,7 +288,7 @@ public abstract class AbstractModule implements Module {
                 String failedQueryMsg = String.format("Failed validation constraint : \n %s", spinQuery.toString());
                 String mergedMsg = new StringBuffer()
                         .append(mainErrorMsg).append("\n")
-                        .append(evidence).append("\n")
+                        .append(failedQueryMsg).append("\n")
                         .append(failedQueryMsg).append("\n")
                         .toString();
                 LOG.error(mergedMsg);
