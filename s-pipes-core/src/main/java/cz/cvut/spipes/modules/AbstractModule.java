@@ -260,33 +260,37 @@ public abstract class AbstractModule implements Module {
 
             QueryExecution execution = QueryExecutionFactory.create(query, model, bindings);
 
-            boolean constaintViolated = false;
+            boolean constraintViolated;
+            StringBuilder evidence = new StringBuilder();
 
             if (spinQuery instanceof Ask) {
-                constaintViolated = execution.execAsk();
+                constraintViolated = execution.execAsk();
             } else if (spinQuery instanceof Select) { //TODO implement
-//                ResultSet rs = execution.execSelect();
-//                constaintViolated = rs.hasNext();
-//                String qs = spinQuery.getComment();
-//                if (qs == null) {
-//
-//                }
-//                String evidenceStr = "Evidence of the violation : ";
-                throw new NotImplemented("Constraints for objects " + query + " not implemented.");
+                ResultSet rs = execution.execSelect();
+                constraintViolated = rs.hasNext();
+
+                if(constraintViolated){
+                    evidence.append("Evidence of the violation: \n");
+                    for(int i = 0; i < 3 && rs.hasNext(); i++){
+                        QuerySolution solution = rs.next() ;
+                        evidence.append(solution.toString());
+                    }
+                }
             } else if (spinQuery instanceof Construct) {
                 throw new NotImplemented("Constraints for objects " + query + " not implemented.");
             } else {
                 throw new NotImplemented("Constraints for objects " + query + " not implemented.");
             }
 
-            if (constaintViolated) {
+            if (constraintViolated) {
 
                 String mainErrorMsg = String.format("Validation of constraint failed for the constraint \"%s\".", getQueryComment(spinQuery));
                 String failedQueryMsg = String.format("Failed validation constraint : \n %s", spinQuery.toString());
                 String mergedMsg = new StringBuffer()
-                    .append(mainErrorMsg).append("\n")
-                    .append(failedQueryMsg).append("\n")
-                    .toString();
+                        .append(mainErrorMsg).append("\n")
+                        .append(evidence).append("\n")
+                        .append(failedQueryMsg).append("\n")
+                        .toString();
                 LOG.error(mergedMsg);
                 if (ExecutionConfig.isExitOnError()) {
                     throw new ValidationConstraintFailed(mergedMsg, this);
