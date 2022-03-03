@@ -430,10 +430,7 @@ public abstract class AbstractModule implements Module {
             org.topbraid.spin.model.Query spinQuery1 = SPINFactory.asQuery(resource1);
             org.topbraid.spin.model.Query spinQuery2 = SPINFactory.asQuery(resource2);
 
-            String comment1 = spinQuery1.toString().split("\\n")[0];
-            String comment2 = spinQuery2.toString().split("\\n")[0];
-
-            return comment1.compareTo(comment2);
+            return spinQuery1.toString().compareTo(spinQuery2.toString());
         }).collect(Collectors.toList());
     }
 
