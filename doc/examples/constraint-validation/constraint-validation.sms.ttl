@@ -1,0 +1,114 @@
+@prefix : <http://onto.fel.cvut.cz/ontologies/s-pipes/constraint-validation/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sm: <http://topbraid.org/sparqlmotion#> .
+@prefix sml: <http://topbraid.org/sparqlmotionlib#> .
+@prefix sp: <http://spinrdf.org/sp#> .
+@prefix kbss: <http://onto.fel.cvut.cz/ontologies/lib/module/>.
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+
+<http://onto.fel.cvut.cz/ontologies/s-pipes/constraint-validation>
+  rdf:type owl:Ontology ;
+  owl:imports <http://onto.fel.cvut.cz/ontologies/s-pipes> ;
+  owl:imports <http://onto.fel.cvut.cz/ontologies/s-pipes-lib> ;
+.
+
+:createPersonTriples
+    rdf:type sml:ApplyConstruct ;
+    sm:next :changeLastName;
+    sml:constructQuery [
+            a sp:Construct ;
+            sp:text """
+      PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+      PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+      CONSTRUCT {
+            <http://example.org/person1>
+                    a foaf:Person;
+                    foaf:firstName "Pavel";
+                    foaf:lastName "Hnizdo";
+                    rdf:id "1".
+      } WHERE {
+      }
+      """ ;
+  ];
+  rdfs:label "Create person triples";
+ 
+  kbss:has-output-graph-constraint [
+  a sp:Ask ;
+  sp:text """# Person 'Pavel Hnizdo' with id '1' does not exist
+    PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    ASK
+    WHERE{
+        ?person a foaf:Person;
+                rdf:id "1".
+        FILTER NOT EXISTS { ?person foaf:lastName "Hnizdo";
+                            foaf:firstName "Pavel"
+                            }
+    }""" ;
+].
+
+:changeLastName
+    rdf:type sml:ApplyConstruct ;
+    sm:next :constraint-validation_Return;
+    sml:constructQuery [
+      a sp:Construct ;
+      sp:text """
+        PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        CONSTRUCT {
+            ?person foaf:firstName ?firstName;
+                foaf:lastName ?lastName;
+                a foaf:Person;
+                rdf:id ?id
+        } WHERE {
+            ?person a foaf:Person;
+                rdf:id ?id;
+                foaf:firstName ?firstName;
+                foaf:lastName ?oldLastName
+            BIND( IF(?oldLastName = "Hnizdo" && ?firstName = "Pavel", "Novak", ?oldLastName) as ?lastName )
+        }
+        """ ;
+  ];
+  sml:replace true;
+  rdfs:label "Change last name";
+
+    kbss:has-input-graph-constraint [
+      a sp:Ask ;
+      sp:text """# Person 'Pavel Novak' with id '1' already exists
+        PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        ASK
+        WHERE{
+            ?person a foaf:Person;
+                    rdf:id "1";
+                    foaf:lastName "Novak";
+                    foaf:firstName "Pavel"
+        }""" ;
+    ];
+
+ kbss:has-output-graph-constraint [
+   a sp:Select ;
+   sp:text """# Person with id '1', first name 'Pavel' and last name different than 'Hnizdo' exists
+     PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+     SELECT *
+     WHERE{
+       ?person a foaf:Person;
+               foaf:lastName ?lastName;
+               foaf:firstName "Pavel";
+               rdf:id "1".
+        FILTER NOT EXISTS { ?person foaf:lastName "Hnizdo" }
+    }""" ;
+ ].
+
+:constraint-validation_Return
+  a sml:ReturnRDF ;
+  sml:serialization sml:JSONLD ;
+  rdfs:label "Return data".
+
+:constraint-validation
+   a sm:Function ;
+   sm:returnModule :constraint-validation_Return ;
+   rdfs:subClassOf sm:Functions .
