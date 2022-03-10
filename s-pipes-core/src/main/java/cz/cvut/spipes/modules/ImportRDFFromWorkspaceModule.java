@@ -6,13 +6,14 @@ import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.exception.ContextNotFoundException;
 import cz.cvut.spipes.manager.OntoDocManager;
 import cz.cvut.spipes.manager.OntologyDocumentManager;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Optional;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Optional;
 
 public class ImportRDFFromWorkspaceModule extends AbstractModule {
 
@@ -63,7 +64,7 @@ public class ImportRDFFromWorkspaceModule extends AbstractModule {
 
     @Override
     public void loadConfiguration() {
-        baseUri = getStringPropertyValue(SML.baseURI);
+        baseUri = getEffectiveValue(SML.baseURI).asLiteral().getString();
         isIgnoreImports = getPropertyValue(SML.ignoreImports, false);
         sourceFilePath = Optional.ofNullable(getEffectiveValue(SML.sourceFilePath))
                         .filter(RDFNode::isLiteral)
