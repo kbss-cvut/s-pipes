@@ -7,6 +7,7 @@ import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.graph.Node;
 import org.apache.jena.sparql.expr.NodeValue;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.apache.jena.graph.NodeFactory.*;
@@ -38,6 +39,7 @@ public class ParseDateTest {
         assertEquals(expectedDate, returnedDate);
     }
 
+    @Disabled
     @Test
     public void execReturnsDate_FrenchLocale() {
         ParseDate parseDate = new ParseDate();
@@ -86,6 +88,7 @@ public class ParseDateTest {
     }
 
 
+    @Disabled
     @Test
     public void execReturnsDateTime_FrenchLocale() {
         ParseDate parseDate = new ParseDate();
