@@ -24,7 +24,7 @@ public class LoggingTest {
         final TestIdentityModule m = new TestIdentityModule();
 
         final Model model = ModelFactory.createDefaultModel();
-        final Resource r = model.createResource();
+        final Resource r = model.createResource("http://example.org/identity-module-1");
         model.add(r, RDFS.label, "Test1");
         m.setConfigurationResource(r);
 
