@@ -24,8 +24,8 @@
         <org.springframework.security.version>5.0.6.RELEASE</org.springframework.security.version>
         <com.fasterxml.jackson.version>2.9.6</com.fasterxml.jackson.version>
         <org.eclipse.rdf4j.version>2.5.3</org.eclipse.rdf4j.version>
-        <cz.cvut.kbss.jopa.version>0.13.1</cz.cvut.kbss.jopa.version>
-        <org.aspectj.version>1.9.4</org.aspectj.version>
+        <cz.cvut.kbss.jopa.version>0.17.2</cz.cvut.kbss.jopa.version>
+        <org.aspectj.version>1.9.7</org.aspectj.version>
         <org.junit.jupiter.version>5.2.0</org.junit.jupiter.version>
         <org.mockito.version>2.21.0</org.mockito.version>
         <commons.io.version>2.6</commons.io.version>
