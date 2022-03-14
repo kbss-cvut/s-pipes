@@ -6,7 +6,7 @@ The following text explains how SPipes module inputs and outputs can be checked 
 This document is focused mainly on constraint validation, but you can take a look at [hello-world-example](https://github.com/kbss-cvut/s-pipes/blob/main/doc/examples/hello-world/hello-world.md) for more details about script construction and execution.
 
 ## Definition of validation constraints
-There are two types of queries we can validate constraints with:
+Each SPipes module can have any number of validation constraints on its input (see `kbss:has-input-graph-constraint`) and its output (see `kbss:has-output-graph-constraint`). Each validation constraint is SPARQL query. Currently, we support 2 types of queries:
 * `ASK` -- returns true if the condition in the body is met by at least one result set
 * `SELECT` -- returns variable bindings as its result
 
