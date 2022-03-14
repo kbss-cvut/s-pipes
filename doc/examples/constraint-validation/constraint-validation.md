@@ -8,7 +8,7 @@ This document is focused mainly on constraint validation, but you can take a loo
 ## Definition of validation constraints
 Each SPipes module can have any number of validation constraints on its input (see `kbss:has-input-graph-constraint`) and its output (see `kbss:has-output-graph-constraint`). Each validation constraint is SPARQL query. Currently, we support 2 types of queries:
 * `ASK` -- returns true if validation constraint is violated
-* `SELECT` -- returns variable bindings as its result
+* `SELECT` -- returns non-empty variable bindings as its result if validation constraint is violated. The variable binding should be used to exemplify/explain what particular entities are violating the constraint.
 
 ## Example
 We create simple script which shows the example of constraint validation usage. The script only changes the last name of person and meanwhile validates constraints.
