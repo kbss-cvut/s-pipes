@@ -5,7 +5,7 @@ The following text explains how SPipes module inputs and outputs can be checked 
 ## Introduction
 This document is focused mainly on constraint validation, but you can take a look at [hello-world-example](https://github.com/kbss-cvut/s-pipes/blob/main/doc/examples/hello-world/hello-world.md) for more details about script construction and execution.
 
-## Validation construction
+## Definition of validation constraints
 There are two types of queries we can validate constraints with:
 * `ASK` -- returns true if the condition in the body is met by at least one result set
 * `SELECT` -- returns variable bindings as its result
