@@ -1,6 +1,6 @@
 # Constraint validation example
 
-Constraint validation example explains how SPipes can check validation constraints.
+The following text explains how SPipes module inputs and outputs can be checked by validation constraints.
 
 ## Introduction
 This document is focused mainly on constraint validation, but you can take a look at [hello-world-example](https://github.com/kbss-cvut/s-pipes/blob/main/doc/examples/hello-world/hello-world.md) for more details about script construction and execution.
