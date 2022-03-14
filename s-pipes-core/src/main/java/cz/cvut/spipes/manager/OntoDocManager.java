@@ -27,6 +27,8 @@ import java.nio.file.DirectoryIteratorException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -56,6 +58,8 @@ import java.util.stream.Stream;
 public class OntoDocManager implements OntologyDocumentManager {
 
     private static final Logger LOG = LoggerFactory.getLogger(OntoDocManager.class);
+    private static Instant lastTime = Instant.now();
+    private static Boolean reloadFiles = false;
 
     // TODO remove !!!!!!! this is workaround for registering SPIN related things.
     private static Model allLoadedFilesModel = ModelFactory.createDefaultModel();
@@ -111,6 +115,7 @@ public class OntoDocManager implements OntologyDocumentManager {
                     ontDocumentManager.addAltEntry(e.getKey(), e.getValue());
                 }
         );
+        lastTime = Instant.now();
     }
 
     @Override
@@ -149,6 +154,17 @@ public class OntoDocManager implements OntologyDocumentManager {
         return Arrays.stream(SUPPORTED_FILE_EXTENSIONS).anyMatch(ext -> fileName.endsWith("." + ext));
     }
 
+    private static boolean wasModified(Path fileName){
+        BasicFileAttributes attr;
+        try {
+            attr = Files.readAttributes(fileName, BasicFileAttributes.class);
+            return attr.lastModifiedTime().toInstant().isAfter(lastTime);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public static Map<String, Model> getAllFile2Model(Path directoryOrFilePath) {
         Map<String, Model> file2Model = new HashMap<>();
 
@@ -160,7 +176,9 @@ public class OntoDocManager implements OntologyDocumentManager {
                         return isFileNameSupported(fileName);
                     })
                     .forEach(file -> {
-
+                        if(reloadFiles && !wasModified(file)){
+                            return;
+                        }
                         String lang = FileUtils.guessLang(file.getFileName().toString());
 
                         LOG.debug("Loading model from {} ...", file.toUri().toString());
@@ -375,5 +393,9 @@ public class OntoDocManager implements OntologyDocumentManager {
             }
             LOG.warn("Attempt to read ontology from {} failed. Msg was {}. {}", url, e.getMessage(), e);
         }
+    }
+
+    public static void setReloadFiles(Boolean reloadFiles) {
+        OntoDocManager.reloadFiles = reloadFiles;
     }
 }

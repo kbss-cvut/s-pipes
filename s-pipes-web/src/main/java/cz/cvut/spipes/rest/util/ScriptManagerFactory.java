@@ -14,7 +14,7 @@ public class ScriptManagerFactory {
 
         if (scriptManager == null) {
             OntologyDocumentManager ontoDocManager = OntoDocManager.getInstance();
-            List<String> globalScripts = ContextLoaderHelper.registerGlobalScripts(ontoDocManager);
+            List<String> globalScripts = ContextLoaderHelper.registerGlobalScripts(ontoDocManager, false);
             scriptManager = new SPipesScriptManager(ontoDocManager, globalScripts);
         }
         return scriptManager;

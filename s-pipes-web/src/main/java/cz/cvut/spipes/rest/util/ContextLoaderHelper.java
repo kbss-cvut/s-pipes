@@ -21,13 +21,14 @@ public class ContextLoaderHelper {
         if (isKeepUpdated()) {
             LOG.warn("Updating contexts which is not thread safe -- don't use in in production environment.");
             OntologyDocumentManager ontoDocManager = OntoDocManager.getInstance();
-            List<String> globalScripts = ContextLoaderHelper.registerGlobalScripts(ontoDocManager);
+            List<String> globalScripts = ContextLoaderHelper.registerGlobalScripts(ontoDocManager, true);
             scriptManager.reloadScripts(globalScripts);
         }
     }
 
-    public static List<String> registerGlobalScripts(OntologyDocumentManager ontDocManager) {
+    public static List<String> registerGlobalScripts(OntologyDocumentManager ontDocManager, Boolean reloadFiles) {
         List<Path> scriptPaths = ContextLoaderConfig.getScriptPaths();
+        OntoDocManager.setReloadFiles(reloadFiles);
         scriptPaths.forEach(
                 ontDocManager::registerDocuments
         );
