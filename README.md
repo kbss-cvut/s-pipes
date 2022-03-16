@@ -89,6 +89,8 @@ The following software needs to be installed on the system for development:
 Configuration properties could be overloaded by system environment such as `CONTEXTS_SCRIPTPATHS=/my/special/path`. The full build command could look like:
   `docker run -e CONTEXTS_SCRIPTPATHS=/my/special/path -v /home:/home -p 8080:8080 s-pipes-engine:latest`
 
+## Swagger
+Rest API is documented by Swagger. We can open Swagger UI with: `SPIPES_URL/swagger-ui.html`.
 
 ## Licences of Reused software components
 
