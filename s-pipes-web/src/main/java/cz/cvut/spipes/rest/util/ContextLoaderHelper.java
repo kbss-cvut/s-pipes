@@ -21,8 +21,8 @@ public class ContextLoaderHelper {
         if (isKeepUpdated()) {
             LOG.warn("Updating contexts which is not thread safe -- don't use in in production environment.");
             OntologyDocumentManager ontoDocManager = OntoDocManager.getInstance();
-            List<String> globalScripts = ContextLoaderHelper.registerGlobalScripts(ontoDocManager);
             OntoDocManager.setReloadFiles(true);
+            List<String> globalScripts = ContextLoaderHelper.registerGlobalScripts(ontoDocManager);
             scriptManager.reloadScripts(globalScripts);
         }
     }
