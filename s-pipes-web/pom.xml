@@ -29,6 +29,12 @@
             <groupId>cz.cvut.kbss</groupId>
             <artifactId>s-pipes-modules-registry</artifactId>
             <version>${project.parent.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-slf4j-impl</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- SPipes core -->
