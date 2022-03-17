@@ -59,7 +59,7 @@ public class OntoDocManager implements OntologyDocumentManager {
 
     private static final Logger LOG = LoggerFactory.getLogger(OntoDocManager.class);
     private static Instant lastTime = Instant.now();
-    private static Boolean reloadFiles = false;
+    private static boolean reloadFiles = false;
 
     // TODO remove !!!!!!! this is workaround for registering SPIN related things.
     private static Model allLoadedFilesModel = ModelFactory.createDefaultModel();
@@ -395,7 +395,7 @@ public class OntoDocManager implements OntologyDocumentManager {
         }
     }
 
-    public static void setReloadFiles(Boolean reloadFiles) {
+    public static void setReloadFiles(boolean reloadFiles) {
         OntoDocManager.reloadFiles = reloadFiles;
     }
 }
