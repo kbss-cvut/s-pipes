@@ -28,7 +28,6 @@ public class SpringFoxConfig {
         return new ApiInfoBuilder()
                 .title("SPipes Open API")
                 .description("SPipes Swagger Open API")
-                .version("v0.3.0")
                 .build();
     }
 
