@@ -6,7 +6,7 @@ The following text explains how SPipes module inputs and outputs can be checked 
 This document is focused mainly on constraint validation, but you can take a look at [hello-world-example](https://github.com/kbss-cvut/s-pipes/blob/main/doc/examples/hello-world/hello-world.md) for more details about script construction and execution.
 
 ## Definition of validation constraints
-Each SPipes module can have any number of validation constraints on its input (see `kbss:has-input-graph-constraint`) and its output (see `kbss:has-output-graph-constraint`). Each validation constraint is SPARQL query. Currently, we support 2 types of queries:
+Each SPipes module can have any number of validation constraints on its input (see `kbss:has-input-graph-constraint`) and its output (see `kbss:has-output-graph-constraint`). Each validation constraint is a SPARQL query. Currently, we support 2 types of queries:
 * `ASK` -- returns true if validation constraint is violated
 
   - For example, we can create output constraint validating person's age. If a person is younger than 18 years, then validation fails.
@@ -23,9 +23,9 @@ Each SPipes module can have any number of validation constraints on its input (s
     ].
     ```
     
-* `SELECT` -- returns non-empty variable bindings as its result if validation constraint is violated. The variable binding should be used to exemplify/explain what particular entities are violating the constraint.
+* `SELECT` -- returns non-empty variable bindings if validation constraint is violated. The variable binding should be used to exemplify/explain what particular entities are violating the constraint.
 
-  - E.g. we make a constraint which validates if person 'Martin Novak' exists. If this person exists, then the constraint is validated.
+  - E.g. we make a constraint ensuring that person 'Martin Novak' does not exists, i.e. if the person exists, the constraint is validated.
   ```
   kbss:has-output-graph-constraint [
     a sp:Select ;
