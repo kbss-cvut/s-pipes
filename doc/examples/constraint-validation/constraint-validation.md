@@ -54,6 +54,7 @@ Let's imagine that we have database of people, that is small enough to expect th
   sml:ignoreImports true ;
   rdfs:label "Import person database" ;
 .
+```
 
 2) Afterwards we validate the output from the previous part of the script so that we know if the script properly works. We create an output graph constraint which validates
    existence of person "Pavel Hnizdo" with ASK query. If there does not exist this person then validation fails.
