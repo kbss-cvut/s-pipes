@@ -1,0 +1,30 @@
+# baseURI: <http://onto.fel.cvut.cz/ontologies/s-pipes/examples/constraint-validation/people>
+
+@prefix : <http://onto.fel.cvut.cz/ontologies/s-pipes/examples/constraint-validation/people/> .
+@prefix ex: <http://example.org/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix kbss: <http://onto.fel.cvut.cz/ontologies/lib/module/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix sm: <http://topbraid.org/sparqlmotion#> .
+@prefix sml: <http://topbraid.org/sparqlmotionlib#> .
+@prefix sp: <http://spinrdf.org/sp#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://onto.fel.cvut.cz/ontologies/s-pipes/examples/constraint-validation/people>
+  rdf:type owl:Ontology ;
+.
+
+:person-1
+	a foaf:Person ;
+        foaf:firstName "Pavel" ;
+        foaf:lastName "Hnizdo" ;
+.
+
+:person-2
+	a foaf:Person ;
+        foaf:firstName "Peter" ;
+        foaf:lastName "Hnizdo" ;
+.

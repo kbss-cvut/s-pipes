@@ -19,28 +19,16 @@
   owl:imports <http://onto.fel.cvut.cz/ontologies/s-pipes-lib> ;
 .
 
-:createPersonTriples
-    rdf:type sml:ApplyConstruct ;
-    sm:next :constraint-validation_Return;
-    sml:constructQuery [
-            a sp:Construct ;
-            sp:text """
-      PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-      PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-      CONSTRUCT {
-            <http://example.org/person1>
-                    a foaf:Person;
-                    foaf:firstName "Pavel";
-                    foaf:lastName "Hnizdo".
-      } WHERE {
-      }
-      """ ;
-  ];
-  rdfs:label "Create person triples";
- 
+
+:import-person-database
+  a sml:ImportRDFFromWorkspace ;
+  sm:next :constraint-validation_Return;
+  sml:baseURI "http://onto.fel.cvut.cz/ontologies/s-pipes/examples/constraint-validation/people" ;
+  sml:ignoreImports true ;
+
   kbss:has-output-graph-constraint [
-  a sp:Select ;
-  sp:text """# Person provided in input does not exist.
+   a sp:Select ;
+   sp:text """# Person provided in input does not exist.
 
     PREFIX foaf: <http://xmlns.com/foaf/0.1/>
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -52,7 +40,7 @@
                  	a foaf:Person;
     	}
     }""" ;
-];
+  ];
 
 
  kbss:has-output-graph-constraint [
@@ -66,7 +54,11 @@
          FILTER NOT EXISTS { ?person foaf:lastName "Hnizdo";
                                      foaf:firstName "Pavel" }
      }""" ;
- ].
+ ] ;
+
+
+  rdfs:label "Import person database" ;
+.
 
 :constraint-validation_Return
   a sml:ReturnRDF ;
