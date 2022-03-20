@@ -42,29 +42,18 @@ Each SPipes module can have any number of validation constraints on its input (s
   ];
   ```
 ## Example
-Let's imagine that we have a pipeline that create person database with one person and then validates if specified person in input request exists in the database.
 
-1) First, we construct simple data about person with name "Pavel Hnizdo" within RDF language.
+Let's imagine that we have database of people, that is small enough to expect that all people will have different names. We construct pipeline that creates new person, but keep us on track if the assumption about the different names would not hold.
+
+1) First, we import the database from a [file](./people.ttl) with ontology iri `http://onto.fel.cvut.cz/ontologies/s-pipes/examples/constraint-validation/people`.
 ```
-:createPersonTriples
-    rdf:type sml:ApplyConstruct ;
-    sm:next :constraint-validation_Return;
-    sml:constructQuery [
-        a sp:Construct ;
-        sp:text """
-            PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-            CONSTRUCT {
-                <http://example.org/person1>
-                        a foaf:Person;
-                        foaf:firstName "Pavel";
-                        foaf:lastName "Hnizdo".
-            } WHERE {
-            }
-      """ ;
-  ];
-  rdfs:label "Create person triples";
-```
+:import-person-database
+  a sml:ImportRDFFromWorkspace ;
+  sm:next :constraint-validation_Return;
+  sml:baseURI "http://onto.fel.cvut.cz/ontologies/s-pipes/examples/constraint-validation/people" ;
+  sml:ignoreImports true ;
+  rdfs:label "Import person database" ;
+.
 
 2) Afterwards we validate the output from the previous part of the script so that we know if the script properly works. We create an output graph constraint which validates
    existence of person "Pavel Hnizdo" with ASK query. If there does not exist this person then validation fails.
