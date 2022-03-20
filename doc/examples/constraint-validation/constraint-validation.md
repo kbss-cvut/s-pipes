@@ -6,7 +6,7 @@ The following text explains how SPipes module inputs and outputs can be checked 
 This document is focused mainly on constraint validation, but you can take a look at [hello-world-example](https://github.com/kbss-cvut/s-pipes/blob/main/doc/examples/hello-world/hello-world.md) for more details about script construction and execution.
 
 ## Definition of validation constraints
-Each SPipes module can have any number of validation constraints on its input (see `kbss:has-input-graph-constraint`) and its output (see `kbss:has-output-graph-constraint`). Each validation constraint is SPARQL query. Currently, we support 2 types of queries:
+Each SPipes module can have any number of validation constraints on its input (see `kbss:has-input-graph-constraint`) and its output (see `kbss:has-output-graph-constraint`). Each validation constraint is a SPARQL query. Currently, we support 2 types of queries:
 * `ASK` -- returns true if validation constraint is violated
 
   - For example, we can create output constraint validating person's age. If a person is younger than 18 years, then validation fails.
@@ -23,9 +23,9 @@ Each SPipes module can have any number of validation constraints on its input (s
     ].
     ```
     
-* `SELECT` -- returns non-empty variable bindings as its result if validation constraint is violated. The variable binding should be used to exemplify/explain what particular entities are violating the constraint.
+* `SELECT` -- returns non-empty variable bindings if validation constraint is violated. The variable binding should be used to exemplify/explain what particular entities are violating the constraint.
 
-  - E.g. we make a constraint which validates if person 'Martin Novak' exists. If this person exists, then the constraint is validated.
+  - E.g. we make a constraint ensuring that person 'Martin Novak' exists, i.e. if the person does exists, the validation fails.
   ```
   kbss:has-output-graph-constraint [
     a sp:Select ;
@@ -42,29 +42,18 @@ Each SPipes module can have any number of validation constraints on its input (s
   ];
   ```
 ## Example
-Let's imagine that we have a pipeline that create person database with one person and then validates if specified person in input request exists in the database.
 
-1) First, we construct simple data about person with name "Pavel Hnizdo" within RDF language.
+Let's imagine that we have database of people, that is small enough to expect that all people will have different names. We construct pipeline that creates new person, but keep us on track if the assumption about the different names would not hold.
+
+1) First, we import the database from a [file](./people.ttl) with ontology iri `http://onto.fel.cvut.cz/ontologies/s-pipes/examples/constraint-validation/people`.
 ```
-:createPersonTriples
-    rdf:type sml:ApplyConstruct ;
-    sm:next :constraint-validation_Return;
-    sml:constructQuery [
-        a sp:Construct ;
-        sp:text """
-            PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-            CONSTRUCT {
-                <http://example.org/person1>
-                        a foaf:Person;
-                        foaf:firstName "Pavel";
-                        foaf:lastName "Hnizdo".
-            } WHERE {
-            }
-      """ ;
-  ];
-  rdfs:label "Create person triples";
-```
+:import-person-database
+  a sml:ImportRDFFromWorkspace ;
+  sm:next :constraint-validation_Return;
+  sml:baseURI "http://onto.fel.cvut.cz/ontologies/s-pipes/examples/constraint-validation/people" ;
+  sml:ignoreImports true ;
+  rdfs:label "Import person database" ;
+.
 
 2) Afterwards we validate the output from the previous part of the script so that we know if the script properly works. We create an output graph constraint which validates
    existence of person "Pavel Hnizdo" with ASK query. If there does not exist this person then validation fails.
