@@ -25,7 +25,7 @@ Each SPipes module can have any number of validation constraints on its input (s
     
 * `SELECT` -- returns non-empty variable bindings if validation constraint is violated. The variable binding should be used to exemplify/explain what particular entities are violating the constraint.
 
-  - E.g. we make a constraint ensuring that person 'Martin Novak' does not exists, i.e. if the person exists, the constraint is validated.
+  - E.g. we make a constraint ensuring that person 'Martin Novak' exists, i.e. if the person does exists, the validation fails.
   ```
   kbss:has-output-graph-constraint [
     a sp:Select ;
