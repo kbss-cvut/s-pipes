@@ -167,17 +167,7 @@ public class OntoDocManager implements OntologyDocumentManager {
         Map<String, Model> file2Model = new HashMap<>();
 
         if(reloadFiles){
-            for (Path p: loadedFiles.get(directoryOrFilePath)){
-                String file = p.toString();
-                try{
-                    File f = new File(file);
-                    if (!f.exists()) {
-                        throw new FileNotFoundException(file);
-                    }
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
+            checkFileExistence(directoryOrFilePath);
         }
 
         try (Stream<Path> stream = Files.walk(directoryOrFilePath)) {
@@ -208,6 +198,20 @@ public class OntoDocManager implements OntologyDocumentManager {
             LOG.error("Could not load ontologies from directory {} -- {} .", directoryOrFilePath, e);
         }
         return file2Model;
+    }
+
+    private static void checkFileExistence(Path directoryOrFilePath) {
+        for (Path p: loadedFiles.get(directoryOrFilePath)){
+            String file = p.toString();
+            try{
+                File f = new File(file);
+                if (!f.exists()) {
+                    throw new FileNotFoundException(file);
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     // TODO remove this method !!!
