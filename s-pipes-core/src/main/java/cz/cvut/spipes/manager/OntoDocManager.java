@@ -1,5 +1,6 @@
 package cz.cvut.spipes.manager;
 
+import com.google.common.collect.HashMultimap;
 import cz.cvut.spipes.config.CompatibilityConfig;
 import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.SparqlMotionUtils;
@@ -18,10 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.topbraid.spin.system.SPINModuleRegistry;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.file.DirectoryIteratorException;
 import java.nio.file.Files;
@@ -58,7 +56,8 @@ import java.util.stream.Stream;
 public class OntoDocManager implements OntologyDocumentManager {
 
     private static final Logger LOG = LoggerFactory.getLogger(OntoDocManager.class);
-    private static Instant lastTime = Instant.now();
+    private static final HashMap<Path, Instant> filesModificationTime = new HashMap<>();
+    private static final HashMultimap<Path, Path> loadedFiles = HashMultimap.create(); // {directory: filesInDirectory}
     private static boolean reloadFiles = false;
 
     // TODO remove !!!!!!! this is workaround for registering SPIN related things.
@@ -115,7 +114,6 @@ public class OntoDocManager implements OntologyDocumentManager {
                     ontDocumentManager.addAltEntry(e.getKey(), e.getValue());
                 }
         );
-        lastTime = Instant.now();
     }
 
     @Override
@@ -154,11 +152,11 @@ public class OntoDocManager implements OntologyDocumentManager {
         return Arrays.stream(SUPPORTED_FILE_EXTENSIONS).anyMatch(ext -> fileName.endsWith("." + ext));
     }
 
-    private static boolean wasModified(Path fileName){
+    private static boolean wasModifiedOrNewlyAdded(Path fileName){
         BasicFileAttributes attr;
         try {
             attr = Files.readAttributes(fileName, BasicFileAttributes.class);
-            return attr.lastModifiedTime().toInstant().isAfter(lastTime);
+            return  !filesModificationTime.containsKey(fileName) || attr.lastModifiedTime().toInstant().isAfter(filesModificationTime.get(fileName));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -168,6 +166,20 @@ public class OntoDocManager implements OntologyDocumentManager {
     public static Map<String, Model> getAllFile2Model(Path directoryOrFilePath) {
         Map<String, Model> file2Model = new HashMap<>();
 
+        if(reloadFiles){
+            for (Path p: loadedFiles.get(directoryOrFilePath)){
+                String file = p.toString();
+                try{
+                    File f = new File(file);
+                    if (!f.exists()) {
+                        throw new FileNotFoundException(file);
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
         try (Stream<Path> stream = Files.walk(directoryOrFilePath)) {
             stream
                     .filter(f -> !Files.isDirectory(f))
@@ -175,11 +187,10 @@ public class OntoDocManager implements OntologyDocumentManager {
                         String fileName = f.getFileName().toString();
                         return isFileNameSupported(fileName);
                     })
+                    .filter(f -> !reloadFiles || wasModifiedOrNewlyAdded(f))
                     .forEach(file -> {
-                        if(reloadFiles && !wasModified(file)){
-                            return;
-                        }
                         String lang = FileUtils.guessLang(file.getFileName().toString());
+                        loadedFiles.put(directoryOrFilePath, file);
 
                         LOG.debug("Loading model from {} ...", file.toUri().toString());
                         Model model = loadModel(file, lang);
@@ -187,7 +198,7 @@ public class OntoDocManager implements OntologyDocumentManager {
                         if (model != null) {
                             OntoDocManager.addSPINRelevantModel(file.toAbsolutePath().toString(), model);
                         }
-
+                        filesModificationTime.put(file, Instant.now());
                         file2Model.put(file.toString(), model);
 
                     });
