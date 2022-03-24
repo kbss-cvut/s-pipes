@@ -107,33 +107,45 @@ kbss:has-output-graph-constraint [
 ];
  ```
 Now our pipeline is prepared, and we can run pipeline.
-1) We want to check if 'Pavel Hnizdo' is in our database. So we call following GET request. But we know that exactly this person is created in database, so both constraints are validated.
+1) First, we check if 'Pavel Hnizdo' is in our database. We call following GET request and find out that both constraints are validated.
 ```
-http://localhost:8080/s-pipes/service?id=constraint-validation&firstname=Pavel&lastname=Hnizdo
+http://localhost:8080/s-pipes/service?id=constraint-validation&firstName=Pavel&lastName=Hnizdo
 ```
 
-2) But we can also send another request that checks if different person with name 'Martin Novak' exists in database.
+2) Second, we check if person with lastname 'Hnizdo' is in our database. We call following GET request, but we find out that one of the constraints is failed.
 
 ```
-http://localhost:8080/s-pipes/service?id=constraint-validation&firstname=Martin&lastname=Novak
+http://localhost:8080/s-pipes/service?id=constraint-validation&lastName=Hnizdo
 ```
-After pipeline execution validation constraint fails with message 'Person provided in input does not exist.' because 'Martin Novak' is not in our database.
+Pipeline execution validation constraint fails with message 'More than one person matches input parameters.' because 'Hnizdo' is in our database twice, once as Peter and once as Pavel.
 ```
 Failed validation constraint : 
- # Person provided in input does not exist.
+ # More than one person matches input parameters.
+      PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 
-    PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-    SELECT *
-    WHERE{
-         FILTER NOT EXISTS{
-            ?person foaf:lastName ?lastname;
-                 	foaf:firstName ?firstname;
-                 	a foaf:Person;
-    	}
+      SELECT ?person ?lastName ?firstName
+      WHERE {
+        {
+          SELECT (count(distinct ?p) as ?pCount) 
+          WHERE {
+             ?p a foaf:Person;
+                foaf:firstName ?firstName;
+                foaf:lastName ?lastName;
+            .
+          }
+        }
+           
+        FILTER(?pCount > 1)  
+           
+        ?person a foaf:Person;
+           foaf:lastName ?lastName;
+           foaf:firstName ?firstName;
+        .       
     }
 Evidence of the violation: 
-( ?firstname = "Martin" ) ( ?lastname = "Novak" ) ( ?_pId = "constraint-validation" )
+( ?person = <http://onto.fel.cvut.cz/ontologies/s-pipes/examples/constraint-validation/people/person-2> ) ( ?firstName = "Peter" )
+( ?person = <http://onto.fel.cvut.cz/ontologies/s-pipes/examples/constraint-validation/people/person-1> ) ( ?firstName = "Pavel" )
+
 ```
 
 The final script [constraint-validation.sms.ttl](constraint-validation.sms.ttl).
