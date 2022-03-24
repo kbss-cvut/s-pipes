@@ -7,40 +7,29 @@ This document is focused mainly on constraint validation, but you can take a loo
 
 ## Definition of validation constraints
 Each SPipes module can have any number of validation constraints on its input (see `kbss:has-input-graph-constraint`) and its output (see `kbss:has-output-graph-constraint`). Each validation constraint is a SPARQL query. Currently, we support 2 types of queries:
-* `ASK` -- returns true if validation constraint is violated
-
-  - For example, we can create output constraint validating person's age. If a person is younger than 18 years, then validation fails.
-    ```
-    kbss:has-output-graph-constraint [
-      a sp:Ask ;
-      sp:text """# Person must be at least 18 years old
-         PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-          ASK WHERE {
-              ?person foaf:age ?age .
-              FILTER (?age < 18) .
-          }
-          """ ;
-    ].
-    ```
+* `ASK` -- returns true if validation constraint is violated. The template of the query looks like this:
+```
+ a sp:Ask ;
+  sp:text """# SOME_COMMENT_IN_FIRST_LINE_TO_SHOW_WHEN_QUERY_FIRES
+   
+    ASK
+    WHERE{
+       # graph patterns to match
+  }""" ;
+```
     
-* `SELECT` -- returns non-empty variable bindings if validation constraint is violated. The variable binding should be used to exemplify/explain what particular entities are violating the constraint.
+* `SELECT` -- returns non-empty variable bindings if validation constraint is violated. The variable binding should be used to exemplify/explain what particular entities are violating the constraint. The template of the query looks like this:
+```
+ a sp:Select ;
+  sp:text """# SOME_COMMENT_IN_FIRST_LINE_TO_SHOW_WHEN_QUERY_FIRES
+   
+    SELECT * # here we should use rather variables that explains the results
+    WHERE{
+       # graph patterns to match
+  }""" ;
+```
 
-  - E.g. we make a constraint ensuring that person 'Martin Novak' exists, i.e. if the person does exists, the validation fails.
-  ```
-  kbss:has-output-graph-constraint [
-    a sp:Select ;
-    sp:text """# Person 'Martin Novak' does not exist.
-      PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-      PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-      SELECT *
-      WHERE{
-        FILTER NOT EXISTS{
-          ?person foaf:lastName "Novak";
-                  foaf:firstName "Martin";
-                  a foaf:Person; }
-      }""" ;
-  ];
-  ```
+
 ## Example
 
 Let's imagine that we have database of people and a function `retrieve-person` that returns a person if its `firstName`, `lastName` or both are provided.
@@ -119,7 +108,9 @@ kbss:has-output-graph-constraint [
   }""" ; 
 ];
  ```
+ 
  4) Finally, we retrieve people that match `firstName`, `lastName` variables. Note, that partial match is also possible.
+ 
  ```
  :construct-matched-person
   a sml:ApplyConstruct ;
@@ -161,6 +152,7 @@ We see following messages in the log:
 
 
 And we retrieve following answer:
+```
 {
   "@id" : "http://onto.fel.cvut.cz/ontologies/s-pipes/examples/constraint-validation/people/person-1",
   "@type" : "foaf:Person",
@@ -181,6 +173,7 @@ And we retrieve following answer:
     "@vocab" : "http://onto.fel.cvut.cz/ontologies/s-pipes/constraint-validation/",
   }
 }
+```
 
 2) Second, we check if 'Pavel' is in our database. We call following GET request, and we retrieve same results because there is only one "Pavel" in the database.
 ```
