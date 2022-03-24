@@ -55,33 +55,6 @@
           """ ;
   ];
 
-
-  kbss:has-output-graph-constraint [
-    a sp:Select ;
-    sp:text """# More than one person matches input parameters
-      PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-
-      SELECT ?person ?lastName ?firstName 
-      WHERE {
-        {
-          SELECT (count(distinct ?p) as ?pCount) 
-          WHERE {
-             ?p a foaf:Person;
-                foaf:firstName ?firstName;
-                foaf:lastName ?lastName;
-            .
-          }
-        }
-           
-        FILTER(?pCount > 1)  
-           
-        ?person a foaf:Person;
-           foaf:lastName ?lastName;
-           foaf:firstName ?firstName;
-        .       
-    }""" ;
-  ];
-
   rdfs:label "Import person database" ;
 .
 
@@ -104,6 +77,33 @@
       }""" ;
     ] ;
   sml:replace true ;
+
+  kbss:has-input-graph-constraint [
+      a sp:Select ;
+      sp:text """# More than one person matches input parameters
+        PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+
+        SELECT ?person ?lastName ?firstName
+        WHERE {
+          {
+            SELECT (count(distinct ?p) as ?pCount)
+            WHERE {
+               ?p a foaf:Person;
+                  foaf:firstName ?firstName;
+                  foaf:lastName ?lastName;
+              .
+            }
+          }
+
+          FILTER(?pCount > 1)
+
+          ?person a foaf:Person;
+             foaf:lastName ?lastName;
+             foaf:firstName ?firstName;
+          .
+      }""" ;
+    ];
+
   rdfs:label "Retrieve matched person" ;
 .
 
