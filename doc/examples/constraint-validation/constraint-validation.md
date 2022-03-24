@@ -34,6 +34,8 @@ Each SPipes module can have any number of validation constraints on its input (s
 
 Let's imagine that we have database of people and a function `retrieve-person` that returns a person if its `firstName`, `lastName` or both are provided.
 
+### Definition of the pipeline
+
 1) First, we import the database from a [file](./people.ttl) with ontology iri `http://onto.fel.cvut.cz/ontologies/s-pipes/examples/constraint-validation/people`. Database contains two  people "Pavel Hnizdo" and "Petr Hnizdo".
 
 ```
@@ -135,7 +137,7 @@ kbss:has-output-graph-constraint [
 .
 ```
  
------ 
+### Execution of the pipeline
  
 Now our pipeline is prepared, and we can run pipeline.
 1) First, we check if 'Pavel Hnizdo' is in our database. We call following GET request and find out that both constraints are validated.
@@ -219,18 +221,15 @@ Evidence of the violation:
 
 The final script [constraint-validation.sms.ttl](constraint-validation.sms.ttl).
 
-### Options to execute
+### Additional options to execute
 
-We can specify following properties in `config-core.properties` to fine-tune behaviour w.r.t. validation constrains:
-* `execution.checkValidationContraint` -- enables constraint validation check (true|false)
-* `execution.exitOnError` -- whole pipeline fails when validation constraint fails  (true|false)
-
-
-
-### General information about execution
-
-Let's assume that SPipes web application is running at `http://localhost:8080/s-pipes`. We can call the *pipeline* with:
+As can be seen above, assuming that SPipes web application is running at `http://localhost:8080/s-pipes`. We can call the *pipeline* with:
 ```
 http://localhost:8080/s-pipes/service?id=retrieve-person&firstName=$ARGUMENT1&lastName=$ARGUMENT2
 ```
 where `$ARGUMENT1` is first name and `$ARGUMENT2` is last name of a person we want to retrieve from the database.
+
+Moreover, we can specify following properties in `config-core.properties` to fine-tune behaviour w.r.t. validation constrains:
+* `execution.checkValidationContraint` -- enables constraint validation check (true|false)
+* `execution.exitOnError` -- whole pipeline fails when validation constraint fails  (true|false)
+
