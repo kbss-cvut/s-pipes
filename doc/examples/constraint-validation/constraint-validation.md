@@ -136,6 +136,10 @@ kbss:has-input-graph-constraint [
   rdfs:label "Retrieve matched person" ;
 .
 ```
+
+The final script [constraint-validation.sms.ttl](constraint-validation.sms.ttl) can be visualized as follows:
+
+![graphical notation](constraint-validation-graphical-notion.svg)
  
 ### Execution of the pipeline
  
@@ -219,9 +223,6 @@ Evidence of the violation:
 
 ```
 
-The final script [constraint-validation.sms.ttl](constraint-validation.sms.ttl) can be visualized as follows:
-
-![graphical notation](constraint-validation-graphical-notion.svg)
 
 ### Additional options to execute
 
