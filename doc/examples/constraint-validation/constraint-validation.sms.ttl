@@ -1,0 +1,118 @@
+# baseURI: http://onto.fel.cvut.cz/ontologies/s-pipes/constraint-validation/
+
+@prefix : <http://onto.fel.cvut.cz/ontologies/s-pipes/constraint-validation/> .
+@prefix ex: <http://example.org/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix kbss: <http://onto.fel.cvut.cz/ontologies/lib/module/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix sm: <http://topbraid.org/sparqlmotion#> .
+@prefix sml: <http://topbraid.org/sparqlmotionlib#> .
+@prefix sp: <http://spinrdf.org/sp#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://onto.fel.cvut.cz/ontologies/s-pipes/constraint-validation>
+  rdf:type owl:Ontology ;
+  owl:imports <http://onto.fel.cvut.cz/ontologies/s-pipes> ;
+  owl:imports <http://onto.fel.cvut.cz/ontologies/s-pipes-lib> ;
+.
+
+
+:import-person-database
+  a sml:ImportRDFFromWorkspace ;
+  sm:next :construct-matched-person ;
+  sml:baseURI "http://onto.fel.cvut.cz/ontologies/s-pipes/examples/constraint-validation/people" ;
+  sml:ignoreImports true ;
+
+
+  kbss:has-output-graph-constraint [
+    a sp:Ask ;
+    sp:text """# There is a person whose name is not complete
+      PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+      ASK
+      WHERE{
+        ?person a foaf:Person .
+        OPTIONAL { ?person foaf:lastName ?pFirstName }
+        OPTIONAL { ?person foaf:firstName ?pLastName }
+        FILTER( 
+            (! bound(?pFirstName))
+            || (! bound(?pLastName))
+        )
+    }""" ;
+  ];
+
+  kbss:has-output-graph-constraint [
+      a sp:Select ;
+      sp:text """# Person is not at least 18 years old
+         PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+          SELECT ?person
+          WHERE {
+              ?person foaf:age ?age .
+              FILTER (?age < 18) .
+          }
+          """ ;
+  ];
+
+
+  kbss:has-output-graph-constraint [
+    a sp:Select ;
+    sp:text """# More than one person matches input parameters
+      PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+
+      SELECT ?person ?lastName ?firstName 
+      WHERE {
+        {
+          SELECT (count(distinct ?p) as ?pCount) 
+          WHERE {
+             ?p a foaf:Person;
+                foaf:firstName ?firstName;
+                foaf:lastName ?lastName;
+            .
+          }
+        }
+           
+        FILTER(?pCount > 1)  
+           
+        ?person a foaf:Person;
+           foaf:lastName ?lastName;
+           foaf:firstName ?firstName;
+        .       
+    }""" ;
+  ];
+
+  rdfs:label "Import person database" ;
+.
+
+:construct-matched-person
+  a sml:ApplyConstruct ;
+  sm:next :retrieve-person_Return;
+  sml:constructQuery [
+      a sp:Construct ;
+      sp:text """
+      PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+
+      CONSTRUCT {
+	?s ?p ?o .
+      } WHERE {
+        ?s a foaf:Person;
+           foaf:lastName ?lastName;
+           foaf:firstName ?firstName;
+        .
+	?s ?p ?o .
+      }""" ;
+    ] ;
+  sml:replace true ;
+  rdfs:label "Retrieve matched person" ;
+.
+
+:retrieve-person_Return
+  a sml:ReturnRDF ;
+  sml:serialization sml:JSONLD ;
+  rdfs:label "Return data".
+
+:retrieve-person
+   a sm:Function ;
+   sm:returnModule :retrieve-person_Return ;
+   rdfs:subClassOf sm:Functions .

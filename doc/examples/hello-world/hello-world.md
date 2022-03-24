@@ -113,7 +113,7 @@ The final script [hello-world.sms.ttl](hello-world.sms.ttl) can be visualized as
 
 Execution of the pipeline requires to configure location of scripts in variable `contexts.scriptPaths` of file `config-core.properties`. Two directories must be referenced there. First, directory that contains the script  
 i.e. `$THIS_PROJECT_ROOT/doc/examples/hello-world`. Second, the directory that contains SPipes libraries 
-i.e. root directory of the project [s-pipes-modules](https://kbss.felk.cvut.cz/gitblit/summary/s-pipes-modules.git).
+i.e. root directory of the project [s-pipes-modules](https://kbss.felk.cvut.cz/gitblit/summary/s-pipes-modules.git) (Note! : it is different project not a sub-directory of this project).
 
 Let's assume that SPipes web application is running at `http://localhost:8080/s-pipes`. We can call the *pipeline* with:
     
