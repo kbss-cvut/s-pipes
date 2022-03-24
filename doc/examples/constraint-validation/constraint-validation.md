@@ -84,7 +84,7 @@ kbss:has-output-graph-constraint [
 3) We create another constraint which checks if the retrieved person is unique.
 
 ```
-kbss:has-output-graph-constraint [ 
+kbss:has-input-graph-constraint [ 
   a sp:Select ; 
   sp:text """# More than one person matches input parameters
     PREFIX foaf: <http://xmlns.com/foaf/0.1/>
@@ -136,6 +136,10 @@ kbss:has-output-graph-constraint [
   rdfs:label "Retrieve matched person" ;
 .
 ```
+
+The final script [constraint-validation.sms.ttl](constraint-validation.sms.ttl) can be visualized as follows:
+
+![graphical notation](constraint-validation-graphical-notion.svg)
  
 ### Execution of the pipeline
  
@@ -219,7 +223,6 @@ Evidence of the violation:
 
 ```
 
-The final script [constraint-validation.sms.ttl](constraint-validation.sms.ttl).
 
 ### Additional options to execute
 
