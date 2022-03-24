@@ -43,7 +43,7 @@ Each SPipes module can have any number of validation constraints on its input (s
   ```
 ## Example
 
-Let's imagine that we have database of people, that is small enough to expect that all people will have different names. We construct pipeline that creates new person, but keep us on track if the assumption about the different names would not hold.
+Let's imagine that we have database of people and a function `retrieve-person` that returns a person if its `firstName, `lastName` or both are provided.
 
 1) First, we import the database from a [file](./people.ttl) with ontology iri `http://onto.fel.cvut.cz/ontologies/s-pipes/examples/constraint-validation/people`.
 ```
@@ -56,41 +56,54 @@ Let's imagine that we have database of people, that is small enough to expect th
 .
 ```
 
-2) Afterwards we validate the output from the previous part of the script so that we know if the script properly works. We create an output graph constraint which validates
-   existence of person "Pavel Hnizdo" with ASK query. If there does not exist this person then validation fails.
-   In this case constraint is validated because person "Pavel Hnizdo" already exists.
+2) Afterwards we validate that every person has first name and last name.
 
 ```
 kbss:has-output-graph-constraint [
   a sp:Ask ;
-  sp:text """# Person 'Pavel Hnizdo' does not exist
+  sp:text """# There is a person whose name is not complete
     PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
     ASK
     WHERE{
-        ?person a foaf:Person;
-        FILTER NOT EXISTS { ?person foaf:lastName "Hnizdo";
-                                    foaf:firstName "Pavel" }
-    }""" ;
-].
+      ?person a foaf:Person .
+      OPTIONAL { ?person foaf:lastName ?pFirstName }
+      OPTIONAL { ?person foaf:firstName ?pLastName }
+      FILTER(
+          (! bound(?pFirstName))
+          || (! bound(?pLastName))
+      )
+  }""" ;
+];
 ```
 
-3) We create another constraint which checks if the specified person is in the database.
+3) We create another constraint which checks if the retrieved person is unique.
 
 ```
- kbss:has-output-graph-constraint [
-  a sp:Select ;
-  sp:text """# Person provided in input does not exist.
+kbss:has-output-graph-constraint [ 
+  a sp:Select ; 
+  sp:text """# More than one person matches input parameters
     PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-    SELECT *
-    WHERE{
-         FILTER NOT EXISTS{
-            ?person foaf:lastName ?lastname;
-                 	foaf:firstName ?firstname;
-                 	a foaf:Person;
-    	}
-    }""" ;
+
+    SELECT ?person ?lastName ?firstName ?pCount
+    WHERE { 
+      { 
+        SELECT (count(distinct ?p) as ?pCount) 
+        WHERE { 
+           ?p a foaf:Person;
+              foaf:firstName ?firstName;
+              foaf:lastName ?lastName;
+          . 
+        } 
+      } 
+  
+      FILTER(?pCount > 1)  
+  
+      ?person a foaf:Person;
+         foaf:lastName ?lastName;
+         foaf:firstName ?firstName;
+      .  
+  }""" ; 
 ];
  ```
 Now our pipeline is prepared, and we can run pipeline.
