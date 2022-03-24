@@ -21,10 +21,12 @@
 	a foaf:Person ;
         foaf:firstName "Pavel" ;
         foaf:lastName "Hnizdo" ;
+	foaf:age 25 ;
 .
 
 :person-2
 	a foaf:Person ;
         foaf:firstName "Peter" ;
         foaf:lastName "Hnizdo" ;
+	foaf:age 55 ;
 .
