@@ -1,0 +1,110 @@
+_:b0    <http://www.w3.org/ns/csvw#name>
+                "bookingno_i" ;
+        <http://www.w3.org/ns/csvw#propertyUrl>
+                "http://onto.fel.cvut.cz/data/bookingno_i" ;
+        <http://www.w3.org/ns/csvw#title>
+                "bookingno_i" .
+
+[ a       <http://www.w3.org/ns/csvw#TableGroup> ;
+  <http://www.w3.org/ns/csvw#table>
+          [ a       <http://www.w3.org/ns/csvw#Table> ;
+            <http://www.w3.org/ns/csvw#row>
+                    [ a       <http://www.w3.org/ns/csvw#Row> ;
+                      <http://www.w3.org/ns/csvw#describes>
+                              <http://onto.fel.cvut.cz/data/#row-3> ;
+                      <http://www.w3.org/ns/csvw#rownum>
+                              2 ;
+                      <http://www.w3.org/ns/csvw#url>
+                              <http://onto.fel.cvut.cz/data/#row=3>
+                    ] ;
+            <http://www.w3.org/ns/csvw#row>
+                    [ a       <http://www.w3.org/ns/csvw#Row> ;
+                      <http://www.w3.org/ns/csvw#describes>
+                              <http://onto.fel.cvut.cz/data/#row-2> ;
+                      <http://www.w3.org/ns/csvw#rownum>
+                              1 ;
+                      <http://www.w3.org/ns/csvw#url>
+                              <http://onto.fel.cvut.cz/data/#row=2>
+                    ] ;
+            <http://www.w3.org/ns/csvw#tableSchema>
+                    [ a       <http://www.w3.org/ns/csvw#TableSchema> ;
+                      <http://www.w3.org/ns/csvw#aboutUrl>
+                              "http://onto.fel.cvut.cz/data/#row-{_row}"^^<http://www.w3.org/ns/csvw#uriTemplate> ;
+                      <http://www.w3.org/ns/csvw#column>
+                              _:b1 , _:b2 , _:b3 , _:b4 , _:b5 , _:b0 ;
+                      <http://www.w3.org/ns/csvw#columns>
+                              ( _:b0
+                                _:b5
+                                _:b4
+                                _:b3
+                                _:b2
+                                _:b1
+                              )
+                    ] ;
+            <http://www.w3.org/ns/csvw#url>
+                    <http://onto.fel.cvut.cz/data/>
+          ]
+] .
+
+_:b4    <http://www.w3.org/ns/csvw#name>
+                "user_sign" ;
+        <http://www.w3.org/ns/csvw#propertyUrl>
+                "http://onto.fel.cvut.cz/data/user_sign" ;
+        <http://www.w3.org/ns/csvw#title>
+                "user_sign" .
+
+_:b2    <http://www.w3.org/ns/csvw#name>
+                "Start_Time" ;
+        <http://www.w3.org/ns/csvw#propertyUrl>
+                "http://onto.fel.cvut.cz/data/Start_Time" ;
+        <http://www.w3.org/ns/csvw#title>
+                "Start Time" .
+
+<http://onto.fel.cvut.cz/data/#row-3>
+        <http://onto.fel.cvut.cz/data/Employee_No>
+                "59999" ;
+        <http://onto.fel.cvut.cz/data/End_Date>
+                "06.03.2022" ;
+        <http://onto.fel.cvut.cz/data/Start_Date>
+                "06.02.2022" ;
+        <http://onto.fel.cvut.cz/data/Start_Time>
+                "14:00" ;
+        <http://onto.fel.cvut.cz/data/bookingno_i>
+                "6797451" ;
+        <http://onto.fel.cvut.cz/data/user_sign>
+                "KULICMAT" .
+
+_:b3    <http://www.w3.org/ns/csvw#name>
+                "Start_Date" ;
+        <http://www.w3.org/ns/csvw#propertyUrl>
+                "http://onto.fel.cvut.cz/data/Start_Date" ;
+        <http://www.w3.org/ns/csvw#title>
+                "Start Date" .
+
+<http://onto.fel.cvut.cz/data/#row-2>
+        <http://onto.fel.cvut.cz/data/Employee_No>
+                "59999" ;
+        <http://onto.fel.cvut.cz/data/End_Date>
+                "09.04.2022" ;
+        <http://onto.fel.cvut.cz/data/Start_Date>
+                "08.04.2022" ;
+        <http://onto.fel.cvut.cz/data/Start_Time>
+                "16:00" ;
+        <http://onto.fel.cvut.cz/data/bookingno_i>
+                "6568520" ;
+        <http://onto.fel.cvut.cz/data/user_sign>
+                "KULICMAT" .
+
+_:b1    <http://www.w3.org/ns/csvw#name>
+                "End_Date" ;
+        <http://www.w3.org/ns/csvw#propertyUrl>
+                "http://onto.fel.cvut.cz/data/End_Date" ;
+        <http://www.w3.org/ns/csvw#title>
+                "End Date" .
+
+_:b5    <http://www.w3.org/ns/csvw#name>
+                "Employee_No" ;
+        <http://www.w3.org/ns/csvw#propertyUrl>
+                "http://onto.fel.cvut.cz/data/Employee_No" ;
+        <http://www.w3.org/ns/csvw#title>
+                "Employee No" .
