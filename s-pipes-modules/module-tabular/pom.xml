@@ -32,9 +32,5 @@
             <groupId>cz.cvut.kbss.jopa</groupId>
             <artifactId>ontodriver-jena</artifactId>
         </dependency>
-        <dependency>
-            <groupId>cz.cvut.kbss.jopa</groupId>
-            <artifactId>ontodriver-jena</artifactId>
-        </dependency>
     </dependencies>
 </project>
