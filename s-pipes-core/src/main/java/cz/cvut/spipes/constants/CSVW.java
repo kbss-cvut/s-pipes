@@ -44,6 +44,7 @@ public class CSVW {
     public static final String valueUrlUri = uri + "valueUrl";
     public static final String ColumnUri = uri + "Column";
     public static final String nameUri = uri + "name";
+    public static final String titleUri = uri + "title";
     public static final String requiredUri = uri + "required";
     public static final String suppressOutputUri = uri + "suppressOutput";
 

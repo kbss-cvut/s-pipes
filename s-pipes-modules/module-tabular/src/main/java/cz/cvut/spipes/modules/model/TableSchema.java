@@ -1,18 +1,17 @@
 package cz.cvut.spipes.modules.model;
 
-import cz.cvut.kbss.jopa.model.annotations.OWLAnnotationProperty;
-import cz.cvut.kbss.jopa.model.annotations.OWLClass;
-import cz.cvut.kbss.jopa.model.annotations.OWLObjectProperty;
+import cz.cvut.kbss.jopa.model.annotations.*;
 import cz.cvut.spipes.constants.CSVW;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Represents the custom tabular metadata (according to relevant W3C standard)
  * that are provided to tabular module as an input model.
  */
 @OWLClass(iri = CSVW.TableSchemaUri)
-public class TableSchema {
+public class TableSchema extends AbstractEntity {
 
     @OWLAnnotationProperty(iri = CSVW.aboutUrlUri)
     private String aboutUrl;
@@ -23,8 +22,8 @@ public class TableSchema {
     @OWLAnnotationProperty(iri = CSVW.valueUrlUri)
     private String valueUrl;
 
-    @OWLObjectProperty(iri = CSVW.columnsUri)
-    private List<Column> columns;
+    @OWLObjectProperty(iri = CSVW.uri + "column", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<Column> columnsSet = new HashSet<>();
 
     public String getAboutUrl() {
         return aboutUrl;
@@ -50,11 +49,11 @@ public class TableSchema {
         this.valueUrl = valueUrl;
     }
 
-    public List<Column> getColumns() {
-        return columns;
+    public Set<Column> getColumnsSet() {
+        return columnsSet;
     }
 
-    public void setColumns(List<Column> columns) {
-        this.columns = columns;
+    public void setColumnsSet(Set<Column> columnsSet) {
+        this.columnsSet = columnsSet;
     }
 }

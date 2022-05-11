@@ -1,11 +1,11 @@
-package cz.cvut.spipes.modules.template;
+package cz.cvut.spipes.modules.exception;
 
 /**
  * Reports an invalid template.
  */
 public class InvalidTemplateException extends Exception {
 
-    InvalidTemplateException(String message) {
+    public InvalidTemplateException(String message) {
         super(message);
     }
 }

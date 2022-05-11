@@ -1,27 +1,30 @@
 package cz.cvut.spipes.modules.model;
 
-import cz.cvut.kbss.jopa.model.annotations.Id;
-import cz.cvut.kbss.jopa.model.annotations.OWLAnnotationProperty;
-import cz.cvut.kbss.jopa.model.annotations.OWLClass;
+import cz.cvut.kbss.jopa.model.annotations.*;
 import cz.cvut.spipes.constants.CSVW;
+
+import java.net.URI;
 
 /**
  * Part of {@link TableSchema}, each column can have different metadata.
  */
 @OWLClass(iri = CSVW.ColumnUri)
-public class Column {
-
-    @Id(generated = true)
-    private String id;
+public class Column extends AbstractEntity {
 
     @OWLAnnotationProperty(iri = CSVW.nameUri)
     private String name;
 
+    @OWLAnnotationProperty(iri = CSVW.titleUri)
+    private String title;
+
+    @OWLObjectProperty(iri = CSVW.propertyUrlUri)
+    private URI property;
+
     @OWLAnnotationProperty(iri = CSVW.requiredUri)
-    private boolean required;
+    private Boolean required;
 
     @OWLAnnotationProperty(iri = CSVW.suppressOutputUri)
-    private boolean suppressOutput;
+    private Boolean suppressOutput;
 
     @OWLAnnotationProperty(iri = CSVW.aboutUrlUri)
     private String aboutUrl;
@@ -78,5 +81,37 @@ public class Column {
 
     public void setValueUrl(String valueUrl) {
         this.valueUrl = valueUrl;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Boolean getRequired() {
+        return required;
+    }
+
+    public void setRequired(Boolean required) {
+        this.required = required;
+    }
+
+    public Boolean getSuppressOutput() {
+        return suppressOutput;
+    }
+
+    public void setSuppressOutput(Boolean suppressOutput) {
+        this.suppressOutput = suppressOutput;
+    }
+
+    public URI getProperty() {
+        return property;
+    }
+
+    public void setProperty(URI property) {
+        this.property = property;
     }
 }

@@ -1,5 +1,6 @@
 package cz.cvut.spipes.modules.template;
 
+import cz.cvut.spipes.modules.exception.InvalidTemplateException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.LinkedList;
