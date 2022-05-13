@@ -25,6 +25,12 @@
             <artifactId>s-pipes-model</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <dependency>
+            <groupId>cz.cvut.kbss</groupId>
+            <artifactId>s-pipes-test</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
         <!-- Logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
