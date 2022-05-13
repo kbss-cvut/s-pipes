@@ -1,6 +1,7 @@
 package cz.cvut.spipes.modules;
 
 import cz.cvut.spipes.engine.PipelineFactory;
+import cz.cvut.spipes.test.JenaTestUtils;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.rdf.model.Model;

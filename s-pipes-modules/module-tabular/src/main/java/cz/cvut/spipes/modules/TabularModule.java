@@ -1,7 +1,7 @@
 package cz.cvut.spipes.modules;
 
-import cz.cvut.kbss.jopa.exceptions.NoResultException;
 import cz.cvut.kbss.jopa.model.EntityManager;
+import cz.cvut.kbss.jopa.model.query.TypedQuery;
 import cz.cvut.spipes.config.ExecutionConfig;
 import cz.cvut.spipes.constants.CSVW;
 import cz.cvut.spipes.constants.KBSS_MODULE;
@@ -18,7 +18,6 @@ import cz.cvut.spipes.registry.StreamResource;
 import cz.cvut.spipes.registry.StreamResourceRegistry;
 import cz.cvut.spipes.util.JenaUtils;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
-import org.apache.jena.iri.IRI;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.shared.PropertyNotFoundException;
@@ -117,10 +116,10 @@ public class TabularModule extends AbstractModule {
 
     private TableSchema inputTableSchema = new TableSchema();
 
-    private boolean hasTableSchema = false;
-
     @Override
     ExecutionContext executeSelf() {
+
+        boolean hasTableSchema = false;
         Model inputModel = executionContext.getDefaultModel();
 
         outputModel = ModelFactory.createDefaultModel();
@@ -144,17 +143,23 @@ public class TabularModule extends AbstractModule {
             Set<String> columnNames = new HashSet<>();
             List<RDFNode> columns = new LinkedList<>();
 
-            try {
-                inputTableSchema = em.createNativeQuery(
-                        "PREFIX csvw: <http://www.w3.org/ns/csvw#>\n" +
-                                "SELECT ?t WHERE { \n" +
-                                "?t a csvw:TableSchema. \n" +
-                                "}",
-                        TableSchema.class
-                ).getSingleResult();
+            TypedQuery<TableSchema> query = em.createNativeQuery(
+                    "PREFIX csvw: <http://www.w3.org/ns/csvw#>\n" +
+                            "SELECT ?t WHERE { \n" +
+                            "?t a csvw:TableSchema. \n" +
+                            "}",
+                    TableSchema.class
+            );
+
+            int tableSchemaCount = query.getResultList().size();
+
+            if(tableSchemaCount == 1) {
                 hasTableSchema = true;
+                inputTableSchema = query.getSingleResult();
                 LOG.debug("Custom table schema found.");
-            } catch (NoResultException e) {
+            }else if(tableSchemaCount > 1) {
+                LOG.error("More than one table schema found.");
+            }else {
                 LOG.debug("No custom table schema found.");
             }
 
@@ -245,6 +250,15 @@ public class TabularModule extends AbstractModule {
 
 
                 String columnPropertyUrl = null;
+                if (hasTableSchema && schemaColumns.get(j).getProperty() != null) {
+                    columnPropertyUrl = schemaColumns.get(j).getProperty();
+                    outputModel.add(
+                            columnResource,
+                            CSVW.extendedPropertyUrl,
+                            outputModel.createTypedLiteral(columnPropertyUrl, CSVW.uriTemplate)
+                    );
+                }
+
                 if (columnPropertyUrl != null && !columnPropertyUrl.isEmpty()) {
                     outputModel.add(
                             columnResource,

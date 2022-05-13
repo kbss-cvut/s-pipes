@@ -17,8 +17,8 @@ public class Column extends AbstractEntity {
     @OWLAnnotationProperty(iri = CSVW.titleUri)
     private String title;
 
-    @OWLObjectProperty(iri = CSVW.propertyUrlUri)
-    private URI property;
+    @OWLAnnotationProperty(iri = CSVW.extendedPropertyUri)
+    private String property;
 
     @OWLAnnotationProperty(iri = CSVW.requiredUri)
     private Boolean required;
@@ -107,11 +107,11 @@ public class Column extends AbstractEntity {
         this.suppressOutput = suppressOutput;
     }
 
-    public URI getProperty() {
+    public String getProperty() {
         return property;
     }
 
-    public void setProperty(URI property) {
+    public void setProperty(String property) {
         this.property = property;
     }
 }

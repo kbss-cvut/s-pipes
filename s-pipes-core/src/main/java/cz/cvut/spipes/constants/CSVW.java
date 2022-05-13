@@ -10,11 +10,15 @@ public class CSVW {
      * The namespace of the vocabulary as a string
      */
     public static final String uri = "http://www.w3.org/ns/csvw#";
+    public static final String extendedUri = "https://onto.fel.cvut.cz/ontologies/csvw-extension/";
 
     protected static Resource resource(String local )
     { return ResourceFactory.createResource( uri + local ); }
 
     protected static Property property(String local )
+    { return ResourceFactory.createProperty( uri, local ); }
+
+    public static Property extendedProperty(String local )
     { return ResourceFactory.createProperty( uri, local ); }
 
     public static final Property table = property( "table");
@@ -30,6 +34,8 @@ public class CSVW {
     public static final Property tableSchema = property("tableSchema");
     public static final Property column = property("column");
     public static final Property columns = property("columns");
+    public static final Property extendedPropertyUrl = extendedProperty("property");
+
 
     public static final Resource TableGroup = resource("TableGroup");
     public static final Resource Table = resource("Table");
@@ -40,14 +46,14 @@ public class CSVW {
     public static final String TableSchemaUri = uri + "TableSchema";
     public static final String aboutUrlUri = uri + "aboutUrl";
     public static final String columnsUri = uri + "columns";
-    public static final String propertyUrlUri = uri + "propertyUrl";
+    public static final String propertyUrlUri = uri + "property";
     public static final String valueUrlUri = uri + "valueUrl";
     public static final String ColumnUri = uri + "Column";
     public static final String nameUri = uri + "name";
     public static final String titleUri = uri + "title";
     public static final String requiredUri = uri + "required";
     public static final String suppressOutputUri = uri + "suppressOutput";
-
+    public static final String extendedPropertyUri = extendedUri + "property";
     /**
      returns the URI for this schema
      @return the URI for this schema
