@@ -10,7 +10,6 @@ import cz.cvut.spipes.util.StreamResourceUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
@@ -53,7 +52,6 @@ public class TabularModuleTest extends AbstractModuleTestHelper {
         assertTrue(outputContext.getDefaultModel().size() > 0);
     }
 
-    @Disabled
     @Test
     public void executeWithDuplicateColumnsThrowsResourceNotUniqueException()
             throws URISyntaxException, IOException {

@@ -158,7 +158,7 @@ public class TabularModule extends AbstractModule {
                 inputTableSchema = query.getSingleResult();
                 LOG.debug("Custom table schema found.");
             }else if(tableSchemaCount > 1) {
-                LOG.error("More than one table schema found.");
+                LOG.warn("More than one table schema found. Ignoring schemas {}. ", query.getResultList());
             }else {
                 LOG.debug("No custom table schema found.");
             }
@@ -171,10 +171,7 @@ public class TabularModule extends AbstractModule {
                         "The number of columns in the table schema does not match the number of columns in the table." + "\n"
 //                        .append(evidence).append("\n") TODO: rdf triples of evidence
                         ;
-
-                if (ExecutionConfig.isExitOnError()) {
-                    throw new TableSchemaException(mergedMsg, this);
-                }else LOG.error(mergedMsg);
+                logError(mergedMsg);
             }
 
             List<Column> schemaColumns = new ArrayList<>(header.length);
@@ -195,9 +192,7 @@ public class TabularModule extends AbstractModule {
 //                        .append(evidence).append("\n") TODO: rdf triples of evidence
                                 ;
 
-                        if (ExecutionConfig.isExitOnError()) {
-                            throw new TableSchemaException(mergedMsg, this);
-                        }else LOG.error(mergedMsg);
+                        logError(mergedMsg);
                     }
                 }
 
@@ -603,5 +598,11 @@ public class TabularModule extends AbstractModule {
             }
         }
         return null;
+    }
+
+    private void logError(String msg) {
+        if (ExecutionConfig.isExitOnError()) {
+            throw new TableSchemaException(msg, this);
+        }else LOG.error(msg);
     }
 }
