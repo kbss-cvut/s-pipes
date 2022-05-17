@@ -1,5 +1,6 @@
 package cz.cvut.spipes.modules;
 
+import cz.cvut.spipes.config.ExecutionConfig;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.exception.ResourceNotUniqueException;
@@ -19,6 +20,7 @@ import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class TabularModuleTest extends AbstractModuleTestHelper {
 
@@ -111,6 +113,7 @@ public class TabularModuleTest extends AbstractModuleTestHelper {
 
     @Test
     public void execute_TableSchemaWithLessColumns_throwsException() throws URISyntaxException, IOException {
+        assumeTrue(ExecutionConfig.isExitOnError());
         module.setSourceResource(
                 StreamResourceUtils.getStreamResource(DATA_PREFIX,getFilePath("examples/02/input.tsv"))
         );
@@ -124,6 +127,8 @@ public class TabularModuleTest extends AbstractModuleTestHelper {
 
     @Test
     public void execute_TableSchemaWithMoreColumns_throwsException() throws URISyntaxException, IOException {
+        assumeTrue(ExecutionConfig.isExitOnError());
+
         module.setSourceResource(
                 StreamResourceUtils.getStreamResource(DATA_PREFIX,getFilePath("examples/03/input.tsv"))
         );
@@ -136,6 +141,8 @@ public class TabularModuleTest extends AbstractModuleTestHelper {
 
     @Test
     public void execute_TableSchemaWithNoExistingColumn_throwsException() throws URISyntaxException, IOException {
+        assumeTrue(ExecutionConfig.isExitOnError());
+
         module.setSourceResource(
                 StreamResourceUtils.getStreamResource(DATA_PREFIX,getFilePath("examples/04/input.tsv"))
         );

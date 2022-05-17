@@ -232,7 +232,7 @@ public class TabularModule extends AbstractModule {
                 );
 
                 String columnAboutUrl = null;
-                if(hasTableSchema) columnAboutUrl = schemaColumns.get(j).getAboutUrl();
+                if(hasTableSchema && schemaColumns.get(j).getAboutUrl() != null) columnAboutUrl = schemaColumns.get(j).getAboutUrl();
 
                 if (columnAboutUrl != null && !columnAboutUrl.isEmpty()) {
                     outputModel.add(
