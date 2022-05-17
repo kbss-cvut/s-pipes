@@ -76,5 +76,11 @@
             <artifactId>jena-core</artifactId>
             <version>${org.apache.jena}</version>
         </dependency>
+        <dependency>
+            <groupId>cz.cvut.kbss</groupId>
+            <artifactId>s-pipes-test</artifactId>
+            <version>${version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

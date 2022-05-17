@@ -1,26 +1,30 @@
 package cz.cvut.spipes.modules;
 
+import cz.cvut.spipes.config.ExecutionConfig;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.exception.ResourceNotUniqueException;
+import cz.cvut.spipes.modules.exception.TableSchemaException;
+import cz.cvut.spipes.test.JenaTestUtils;
 import cz.cvut.spipes.util.StreamResourceUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
-public class TabularModuleTest {
+public class TabularModuleTest extends AbstractModuleTestHelper {
 
     private TabularModule module;
+    private final String DATA_PREFIX = "http://onto.fel.cvut.cz/data/";
 
     @BeforeEach
     public void setUp() {
@@ -29,7 +33,7 @@ public class TabularModuleTest {
         module.setReplace(true);
         module.setDelimiter('\t');
         module.setQuoteCharacter('"');
-        module.setDataPrefix("http://onto.fel.cvut.cz/data/");
+        module.setDataPrefix(DATA_PREFIX);
         module.setOutputMode(Mode.STANDARD);
 
         module.setInputContext(ExecutionContextFactory.createEmptyContext());
@@ -48,7 +52,6 @@ public class TabularModuleTest {
         assertTrue(outputContext.getDefaultModel().size() > 0);
     }
 
-    @Disabled
     @Test
     public void executeWithDuplicateColumnsThrowsResourceNotUniqueException()
             throws URISyntaxException, IOException {
@@ -84,7 +87,75 @@ public class TabularModuleTest {
         assertTrue(actualModel.isIsomorphicWith(expectedModel));
     }
 
-    private Path getFilePath(String fileName) throws URISyntaxException {
+
+
+    @Test
+    public void execute_checkTableSchema() throws URISyntaxException, IOException {
+        module.setSourceResource(
+                StreamResourceUtils.getStreamResource(DATA_PREFIX,getFilePath("examples/01/input.tsv"))
+        );
+
+        Model inputModel = JenaTestUtils.laodModelFromResource("/examples/01/input-data-schema.ttl");
+        module.setInputContext(ExecutionContextFactory.createContext(inputModel));
+
+        ExecutionContext outputContext = module.executeSelf();
+        Model actualModel = outputContext.getDefaultModel();
+
+        Model expectedModel = ModelFactory.createDefaultModel()
+                .read(getFilePath("examples/01/expected-output.ttl").toString());
+
+        assertTrue(actualModel.isIsomorphicWith(expectedModel));
+    }
+
+
+
+    @Test
+    public void execute_TableSchemaWithLessColumns_throwsException() throws URISyntaxException, IOException {
+        assumeTrue(ExecutionConfig.isExitOnError());
+        module.setSourceResource(
+                StreamResourceUtils.getStreamResource(DATA_PREFIX,getFilePath("examples/02/input.tsv"))
+        );
+
+        Model inputModel = JenaTestUtils.laodModelFromResource("/examples/02/input-data-schema.ttl");
+        module.setInputContext(ExecutionContextFactory.createContext(inputModel));
+
+        assertThrows(TableSchemaException.class, () -> module.executeSelf());
+
+    }
+
+    @Test
+    public void execute_TableSchemaWithMoreColumns_throwsException() throws URISyntaxException, IOException {
+        assumeTrue(ExecutionConfig.isExitOnError());
+
+        module.setSourceResource(
+                StreamResourceUtils.getStreamResource(DATA_PREFIX,getFilePath("examples/03/input.tsv"))
+        );
+
+        Model inputModel = JenaTestUtils.laodModelFromResource("/examples/03/input-data-schema.ttl");
+        module.setInputContext(ExecutionContextFactory.createContext(inputModel));
+
+        assertThrows(TableSchemaException.class, () -> module.executeSelf());
+    }
+
+    @Test
+    public void execute_TableSchemaWithNoExistingColumn_throwsException() throws URISyntaxException, IOException {
+        assumeTrue(ExecutionConfig.isExitOnError());
+
+        module.setSourceResource(
+                StreamResourceUtils.getStreamResource(DATA_PREFIX,getFilePath("examples/04/input.tsv"))
+        );
+
+        Model inputModel = JenaTestUtils.laodModelFromResource("/examples/04/input-data-schema.ttl");
+        module.setInputContext(ExecutionContextFactory.createContext(inputModel));
+        assertThrows(TableSchemaException.class, () -> module.executeSelf());
+    }
+
+    @Override
+    public String getModuleName() {
+        return "tabular";
+    }
+
+    public Path getFilePath(String fileName) throws URISyntaxException {
         return Paths.get(getClass().getResource("/" + fileName).toURI());
     }
 }
