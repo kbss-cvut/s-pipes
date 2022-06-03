@@ -4,11 +4,12 @@ import cz.cvut.sforms.model.Question;
 import java.util.function.Function;
 
 /**
- * include --
+ * Configuration for transformer from SForms to text.
  */
 public class TextTransformerConfig {
 
     boolean includeAnswer;
+    // process only questions that has answers
     boolean requireAnswer;
     boolean includeLabel;
     private Function<Question, String> questionProcessor = Question::getLabel;

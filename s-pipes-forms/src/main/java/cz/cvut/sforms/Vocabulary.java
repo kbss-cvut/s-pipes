@@ -9,16 +9,16 @@ package cz.cvut.sforms;
  */
 public class Vocabulary {
 
-    public final static String ONTOLOGY_IRI_form_spin = "http://onto.fel.cvut.cz/ontologies/form-spin";
-    public final static String ONTOLOGY_IRI_s_pipes_forms_generated = "http://onto.fel.cvut.cz/ontologies/s-pipes-forms-generated";
-    public final static String ONTOLOGY_IRI_sp = "http://spinrdf.org/sp";
-    public final static String ONTOLOGY_IRI_editor_model = "http://onto.fel.cvut.cz/ontologies/s-pipes-view/editor-model";
     public final static String ONTOLOGY_IRI_documentation = "http://onto.fel.cvut.cz/ontologies/documentation";
-    public final static String ONTOLOGY_IRI_form_layout = "http://onto.fel.cvut.cz/ontologies/form-layout";
-    public final static String ONTOLOGY_IRI_spl = "http://spinrdf.org/spl";
-    public final static String ONTOLOGY_IRI_s_pipes_forms = "http://onto.fel.cvut.cz/ontologies/s-pipes-forms";
-    public final static String ONTOLOGY_IRI_spin = "http://spinrdf.org/spin";
     public final static String ONTOLOGY_IRI_form = "http://onto.fel.cvut.cz/ontologies/form";
+    public final static String ONTOLOGY_IRI_form_layout = "http://onto.fel.cvut.cz/ontologies/form-layout";
+    public final static String ONTOLOGY_IRI_form_spin = "http://onto.fel.cvut.cz/ontologies/form-spin";
+    public final static String ONTOLOGY_IRI_s_pipes_forms = "http://onto.fel.cvut.cz/ontologies/s-pipes-forms";
+    public final static String ONTOLOGY_IRI_s_pipes_forms_generated = "http://onto.fel.cvut.cz/ontologies/s-pipes-forms-generated";
+    public final static String ONTOLOGY_IRI_editor_model = "http://onto.fel.cvut.cz/ontologies/s-pipes-view/editor-model";
+    public final static String ONTOLOGY_IRI_sp = "http://spinrdf.org/sp";
+    public final static String ONTOLOGY_IRI_spin = "http://spinrdf.org/spin";
+    public final static String ONTOLOGY_IRI_spl = "http://spinrdf.org/spl";
     public final static String s_c_Thing = "http://www.w3.org/2002/07/owl#Thing";
     public final static String s_c_localname = "http://jena.hpl.hp.com/ARQ/function#localname";
     public final static String s_c_attribute_type = "http://onto.fel.cvut.cz/ontologies/aviation-safety/attribute_type";
@@ -863,10 +863,20 @@ public class Vocabulary {
     public final static String s_i_subjectCount = "http://spinrdf.org/spl#subjectCount";
     public final static String s_i_testExpression = "http://spinrdf.org/spl#testExpression";
     public final static String s_i_testResult = "http://spinrdf.org/spl#testResult";
+    public final static String s_i_PlainLiteral = "http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral";
     public final static String s_i_first = "http://www.w3.org/1999/02/22-rdf-syntax-ns#first";
     public final static String s_i_type = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
+    public final static String s_i_Class = "http://www.w3.org/2000/01/rdf-schema#Class";
+    public final static String s_i_Literal = "http://www.w3.org/2000/01/rdf-schema#Literal";
+    public final static String s_i_Resource = "http://www.w3.org/2000/01/rdf-schema#Resource";
     public final static String s_i_domain = "http://www.w3.org/2000/01/rdf-schema#domain";
     public final static String s_i_label = "http://www.w3.org/2000/01/rdf-schema#label";
+    public final static String s_i__boolean = "http://www.w3.org/2001/XMLSchema#boolean";
+    public final static String s_i_dateTime = "http://www.w3.org/2001/XMLSchema#dateTime";
+    public final static String s_i__double = "http://www.w3.org/2001/XMLSchema#double";
+    public final static String s_i_duration = "http://www.w3.org/2001/XMLSchema#duration";
+    public final static String s_i_integer = "http://www.w3.org/2001/XMLSchema#integer";
+    public final static String s_i_string = "http://www.w3.org/2001/XMLSchema#string";
     public final static String s_i_onProperty = "http://www.w3.org/2002/07/owl#onProperty";
     public final static String s_i_unionOf = "http://www.w3.org/2002/07/owl#unionOf";
     public final static String s_i_PrefixDeclaration = "http://www.w3.org/ns/shacl#PrefixDeclaration";
