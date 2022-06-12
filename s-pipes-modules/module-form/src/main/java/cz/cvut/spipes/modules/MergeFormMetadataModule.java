@@ -60,7 +60,7 @@ public class MergeFormMetadataModule extends AnnotatedAbstractModule {
                 String newQuestionUrl = questionInstanceTemplate
                     .replace(QUESTION_ORIGIN_HASH_VAR, originHash)
                     .replace(EXECUTION_ID_VAR, executionId);
-                if (!q.equals(newQuestionUrl)) {
+                if (!q.getURI().equals(newQuestionUrl)) {
                     if (LOG.isTraceEnabled()) {
                         LOG.trace("Renaming questions {} -> {}", q, newQuestionUrl);
                     }
