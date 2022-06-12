@@ -197,7 +197,7 @@ public class TransformerImpl implements Transformer {
 
         if (module.listProperties().hasNext()) {
             Map<OriginPair<URI, URI>, Statement> questionStatements = getOrigin2StatementMap(module); // Created answer origin is different from the actual one
-            findRegularQ(form).forEach((q) -> {
+            findRegularQ(form).forEach(q -> {
                 OriginPair<URI, URI> originPair = new OriginPair<>(q.getOrigin(), getAnswer(q).map(Answer::getOrigin).orElse(null));
                 Statement s = questionStatements.get(originPair);
                 if (s != null) {
@@ -239,7 +239,7 @@ public class TransformerImpl implements Transformer {
             Model m = ModelFactory.createDefaultModel().add(inputScript);
             m.add(m.getResource(newUri.toString()), RDF.type, m.getResource(moduleType));
             m.add(m.getResource(newUri.toString()), RDF.type, m.getResource(Vocabulary.s_c_Modules_A));
-            findRegularQ(form).forEach((q) -> {
+            findRegularQ(form).forEach(q -> {
                 RDFNode answerNode = getAnswerNode(getAnswer(q).orElse(null));
                 if (answerNode != null) {
                     m.add(m.getResource(newUri.toString()), new PropertyImpl(q.getOrigin().toString()), answerNode);
@@ -316,7 +316,7 @@ public class TransformerImpl implements Transformer {
         Optional<Question> uriQ =
                 FormUtils.flatten(root).stream()
                         .filter(q -> q.getOrigin() != null)
-                        .filter((q) -> RDFS.Resource.getURI().equals(q.getOrigin().toString())).findFirst();
+                        .filter(q -> RDFS.Resource.getURI().equals(q.getOrigin().toString())).findFirst();
         if (uriQ.isPresent())
             return uriQ.get();
         throw new IllegalArgumentException("Root question has no subquestion that maps to URI");
@@ -324,9 +324,9 @@ public class TransformerImpl implements Transformer {
 
     private Set<Question> findRegularQ(Question root) {
         return FormUtils.flatten(root).stream()
-                .filter((q) -> q.getSubQuestions() == null || q.getSubQuestions().isEmpty())
+                .filter(q -> q.getSubQuestions() == null || q.getSubQuestions().isEmpty())
                 .filter(q -> q.getOrigin() != null)
-                .filter((q) -> !RDFS.Resource.getURI().equals(q.getOrigin().toString()))
+                .filter(q -> !RDFS.Resource.getURI().equals(q.getOrigin().toString()))
                 .collect(Collectors.toSet());
     }
 
