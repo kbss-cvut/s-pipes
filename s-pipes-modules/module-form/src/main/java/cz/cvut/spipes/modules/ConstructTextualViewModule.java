@@ -25,7 +25,7 @@ public class ConstructTextualViewModule extends AnnotatedAbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(ConstructTextualViewModule.class);
 
-    private static final String TYPE_URI = FORM_MODULE.uri + "construct-text-serialization";
+    private static final String TYPE_URI = FORM_MODULE.uri + "construct-textual-view";
 
     @Parameter(urlPrefix = SML.uri, name = "replace")
     private boolean isReplace = false;
