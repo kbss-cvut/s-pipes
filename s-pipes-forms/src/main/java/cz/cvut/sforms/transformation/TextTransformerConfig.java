@@ -8,26 +8,26 @@ import java.util.function.Function;
  */
 public class TextTransformerConfig {
 
-    boolean includeAnswer;
+    boolean isSerializeAnswers;
     // process only questions that has answers
-    boolean requireAnswer;
+    boolean isSerializeUnansweredQuestions;
     boolean includeLabel;
     private Function<Question, String> questionProcessor = Question::getLabel;
 
-    public boolean isRequireAnswer() {
-        return requireAnswer;
+    public boolean isSerializeUnansweredQuestions() {
+        return isSerializeUnansweredQuestions;
     }
 
-    public void setRequireAnswer(boolean requireAnswer) {
-        this.requireAnswer = requireAnswer;
+    public void setSerializeUnansweredQuestions(boolean serializeUnansweredQuestions) {
+        this.isSerializeUnansweredQuestions = serializeUnansweredQuestions;
     }
 
-    public boolean isIncludeAnswer() {
-        return includeAnswer;
+    public boolean isSerializeAnswers() {
+        return isSerializeAnswers;
     }
 
-    public void setIncludeAnswer(boolean includeAnswer) {
-        this.includeAnswer = includeAnswer;
+    public void setSerializeAnswers(boolean serializeAnswers) {
+        this.isSerializeAnswers = serializeAnswers;
     }
 
     public Function<Question, String> getQuestionProcessor() {

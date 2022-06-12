@@ -1,7 +1,7 @@
 package cz.cvut.spipes.transform;
 
 import cz.cvut.sforms.Vocabulary;
-import cz.cvut.sforms.VocabularyJena;
+import cz.cvut.sforms.SformsVocabularyJena;
 import cz.cvut.sforms.model.Answer;
 import cz.cvut.sforms.model.PrefixDefinition;
 import cz.cvut.sforms.model.Question;
@@ -107,9 +107,9 @@ public class TransformerImpl implements Transformer {
         }
 
         List<Statement> typeDefinitionStatements = moduleType.listProperties().filterKeep(
-                st -> st.getPredicate().hasURI(VocabularyJena.s_p_constraint.getURI())).toList();
+                st -> st.getPredicate().hasURI(SformsVocabularyJena.s_p_constraint.getURI())).toList();
         for (Statement st : typeDefinitionStatements) {
-            Resource p = st.getObject().asResource().getPropertyResourceValue(VocabularyJena.s_p_predicate_A);
+            Resource p = st.getObject().asResource().getPropertyResourceValue(SformsVocabularyJena.s_p_predicate_A);
 
             if (processedPredicates.contains(p)) {
                 continue;
@@ -396,9 +396,9 @@ public class TransformerImpl implements Transformer {
 
     private URI createAnswerOrigin(Statement statement) {
         if (!statement.getObject().isAnon())
-            return URI.create(VocabularyJena.s_c_answer_origin.toString() +
+            return URI.create(SformsVocabularyJena.s_c_answer_origin.toString() +
                     "/" + createMd5Hash(statement.getObject().toString()));
-        return URI.create(VocabularyJena.s_c_answer_origin.toString() +
+        return URI.create(SformsVocabularyJena.s_c_answer_origin.toString() +
                 "/" + createMd5Hash(AnonNodeTransformer.serialize(statement.getObject())));
     }
 
@@ -407,7 +407,7 @@ public class TransformerImpl implements Transformer {
     }
 
     private void initializeQuestionUri(Question q) {
-        q.setUri(URI.create(VocabularyJena.s_c_question + "-" + UUID.randomUUID().toString()));
+        q.setUri(URI.create(SformsVocabularyJena.s_c_question + "-" + UUID.randomUUID().toString()));
     }
 
     private Question createQuestion(Resource resource) {

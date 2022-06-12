@@ -1,235 +1,361 @@
-# baseURI: http://onto.fel.cvut.cz/ontologies/form
-# imports: http://onto.fel.cvut.cz/ontologies/documentation
-
 @prefix : <http://onto.fel.cvut.cz/ontologies/form/> .
-@prefix documentatio: <http://onto.fel.cvut.cz/ontologies/documentation> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix doc: <http://onto.fel.cvut.cz/ontologies/documentation/> .
 @prefix form: <http://onto.fel.cvut.cz/ontologies/form/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix dc: <http://purl.org/dc/elements/1.1/> .
 
-<http://onto.fel.cvut.cz/ontologies/documentation/answer>
-  rdf:type owl:Class ;
-  rdfs:subClassOf form:entity ;
-.
-<http://onto.fel.cvut.cz/ontologies/documentation/todo>
-  rdf:type owl:DatatypeProperty ;
-.
-dc:description
-  rdf:type owl:DatatypeProperty ;
+doc:answer a owl:Class ;
+    rdfs:subClassOf form:entity .
+
+doc:todo a owl:DatatypeProperty .
+
+<http://onto.fel.cvut.cz/ontologies/form> a owl:Ontology ;
+    rdfs:comment "Represent form data." ;
+    owl:imports <http://onto.fel.cvut.cz/ontologies/documentation> .
+
+form:has-comment a owl:ObjectProperty ;
+    rdfs:domain form:question ;
+    rdfs:range form:comment ;
 .
 
-<http://onto.fel.cvut.cz/ontologies/form>
-  rdf:type owl:Ontology ;
-  rdfs:comment "Represent form data." ;
-  owl:imports <http://onto.fel.cvut.cz/ontologies/documentation> ;
+form:comment a owl:Class ;
 .
-form:accepts-answer-value
-  rdf:type owl:AnnotationProperty ;
-  rdfs:label "accepts value"^^xsd:string ;
+form:author a  owl:Class ;
 .
-form:accepts-validation-value
-  rdf:type owl:DatatypeProperty ;
-  rdfs:comment "Defines which validation values (true/false) are permitted for the tested question." ;
-  rdfs:domain form:condition ;
-  rdfs:label "accepts validation value" ;
-  rdfs:range xsd:boolean ;
+
+form:has-author a owl:ObjectProperty ;
+    rdfs:label "has author" ;
+    rdfs:domain form:comment ;
+    rdfs:range form:author ;
 .
-form:answer-origin
-  rdf:type owl:Class ;
-  rdfs:comment "Class of objects that are used to reconstruct how was a answer created."^^xsd:string ;
-  rdfs:label "Answer origin"^^xsd:string ;
+
+form:has-timestamp a owl:ObjectProperty ;
+    rdfs:label "has timestamp" ;
+    rdfs:domain form:comment ;
 .
-form:condition
-  rdf:type owl:Class ;
-  rdfs:label "Condition"^^xsd:string ;
-  rdfs:subClassOf owl:Thing ;
+
+form:has-comment-value a owl:DatatypeProperty ;
+    rdfs:label "has comment value" ;
+    rdfs:domain form:comment ;
+    rdfs:range xsd:string ;
 .
-form:entity
-  rdf:type owl:Class ;
-  rdfs:label "entity"^^xsd:string ;
-  rdfs:subClassOf owl:Thing ;
+
+form:textual-view a owl:DataProperty ;
+    dc:description "Defines a view on the question in textual form, which may also include textual views of its subquestions recursively." ;
+    rdfs:domain doc:question ;
+    rdfs:range xsd:string ;
 .
-form:has-answer-origin
-  rdf:type owl:ObjectProperty ;
-  rdfs:comment "Defines entity from which this answer was created."^^xsd:string ;
-  rdfs:domain <http://onto.fel.cvut.cz/ontologies/documentation/question> ;
-  rdfs:label "has answer origin"^^xsd:string ;
-  rdfs:subPropertyOf form:has-origin ;
+
+form:accepts a owl:ObjectProperty ;
+    rdfs:label "accepts" ;
+    rdfs:domain form:condition ;
+    rdfs:range form:question-type .
+
+form:accepts-answer-value a owl:AnnotationProperty ;
+    rdfs:label "accepts value" ;
+    rdfs:domain form:condition .
+
+form:accepts-validation-value a owl:DatatypeProperty ;
+    rdfs:label "accepts validation value" ;
+    dc:description "Defines which validation values (true/false) are permitted for the tested question." ;
+    rdfs:domain form:condition ;
+    rdfs:range xsd:boolean .
+
+form:and-condition a owl:Class ;
+    rdfs:label "And condition" ;
+    dc:description "Operator to combine different conditions. If all of its sub-conditions are true this condition is evaluated as true." ;
+    rdfs:subClassOf form:condition .
+
+form:answer-origin a owl:Class ;
+    rdfs:label "Answer origin" ;
+    dc:description "Class of objects that are used to reconstruct how was a answer created." .
+
+form:answered-question a form:question-type,
+        owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "Represent question that was answered"@en ;
+    rdfs:subClassOf doc:question .
+
+form:has-answer-origin a owl:ObjectProperty ;
+    rdfs:label "has answer origin" ;
+    dc:description "Defines entity from which this answer was created." ;
+    rdfs:domain doc:question ;
+    rdfs:subPropertyOf form:has-origin .
+
+form:has-datatype a owl:DatatypeProperty ;
+    rdfs:label "has datatype" .
+
+form:has-origin-path a owl:DatatypeProperty ;
+    rdfs:label "has origin path" ;
+    rdfs:range xsd:string .
+
+form:has-origin-path-id a owl:DatatypeProperty ;
+    rdfs:label "has origin path id" ;
+    rdfs:range xsd:string .
+
+form:has-origin-type a owl:ObjectProperty ;
+    rdfs:label "has origin" ;
+    dc:description "Defines type of entity from which this template was created." .
+
+form:has-possible-value a owl:ObjectProperty ;
+    rdfs:label "has possible value" ;
+    rdfs:domain doc:question .
+
+form:has-possible-values-query a owl:DatatypeProperty ;
+    rdfs:label "has possible value query" ;
+    rdfs:domain doc:question .
+
+form:has-preceding-question a owl:ObjectProperty ;
+    rdfs:label "has preceding question" ;
+    dc:description "Defines that this question follows (typicaly chronologically) specified question." ;
+    rdfs:domain doc:question ;
+    rdfs:range doc:question .
+
+form:has-preceding-template a owl:ObjectProperty ;
+    rdfs:label "has preceding question template" ;
+    dc:description "Defines that this question template follows (typicaly chronologically) specified question template." ;
+    rdfs:domain form:question-template ;
+    rdfs:range form:question-template .
+
+form:has-preceding-value a owl:ObjectProperty ;
+    rdfs:label "has preceding question" ;
+    dc:description "Defines that this answer value follows (typicaly chronologically) specified answer value." .
+
+form:has-question-origin a owl:ObjectProperty ;
+    rdfs:label "has question origin" ;
+    dc:description "Defines entity from which this question was created." ;
+    rdfs:domain doc:question ;
+    rdfs:subPropertyOf form:has-origin .
+
+form:has-sub-condition a owl:ObjectProperty ;
+    rdfs:label "has sub-condition" ;
+    rdfs:domain form:condition ;
+    rdfs:range form:condition .
+
+form:has-subsection a owl:ObjectProperty ;
+    rdfs:label "has subsection" .
+
+form:has-subtemplate a owl:ObjectProperty ;
+    rdfs:domain form:section ;
+    rdfs:range form:question-template .
+
+form:has-template a owl:ObjectProperty ;
+    rdfs:label "has template" .
+
+form:has-template-origin a owl:ObjectProperty ;
+    rdfs:label "has template origin" ;
+    dc:description "Defines entity from which this template was created." ;
+    rdfs:domain form:question-template ;
+    rdfs:subPropertyOf form:has-origin .
+
+form:has-template-relation a owl:ObjectProperty ;
+    rdfs:label "has template relation" .
+
+form:has-tested-question a owl:ObjectProperty ;
+    rdfs:label "has tested question" ;
+    dc:description "Determine which questions are tested for this condition. Multiple questions can be tested." ;
+    rdfs:domain form:condition ;
+    rdfs:range doc:question .
+
+form:has-unit a owl:DatatypeProperty ;
+    rdfs:label "has unit" ;
+    rdfs:range xsd:string .
+
+form:inherits-template-from a owl:ObjectProperty ;
+    dc:description "Subject inherits properties from its object, i.e. any question created by subject template must also have properties of object template." ;
+    rdfs:domain form:question-template ;
+    rdfs:range form:question-template .
+
+form:is-clone-of-question a owl:ObjectProperty ;
+    dc:description "Question within subject of this relation is unmodifiable clone of question within object of this relation." ;
+    rdfs:domain doc:question ;
+    rdfs:range doc:question .
+
+form:is-link-template-of a owl:ObjectProperty ;
+    dc:description "Subject of this relation is a template relation (?s_qts_rel) that defines contract how any of its question should be created. Every question created using ?s_qts_rel must be only reference to other question created from ?o_qts_rel, i.e. template relation within object of this relation. Domain and range of this relation is of type reification of ?qt1 has-subtemplate ?qt2." .
+
+form:is-relevant-if a owl:ObjectProperty ;
+    rdfs:label "is relevant if" ;
+    dc:description "States in which context is statement relevant." ;
+    rdfs:domain doc:question ;
+    rdfs:range form:condition .
+
+form:is-valid-answer a owl:ObjectProperty ;
+    rdfs:label "has valid answer" ;
+    dc:description "Defines  set of answers that need to be valid in order for condition to hold." ;
+    rdfs:domain form:condition ;
+    rdfs:range doc:question .
+
+form:not-answered-question a form:question-type,
+        owl:Class,
+        owl:NamedIndividual ;
+    rdfs:label "Represent question that was not answered"@en ;
+    rdfs:subClassOf doc:question .
+
+form:not-condition a owl:Class ;
+    rdfs:label "Not condition" ;
+    dc:description "Operator negates related conditions. If sub-condition evaluates to true it evaluates to false and vice versa." ;
+    rdfs:subClassOf form:condition .
+
+form:or-condition a owl:Class ;
+    rdfs:label "Or condition" ;
+    dc:description "Operator to combine different conditions. If any of its sub-conditions is true this condition is evaluated as true." ;
+    rdfs:subClassOf form:condition .
+
+form:positive-validation-condition a owl:Class ;
+    dc:description "Indicates that accept answer value is only  \"true\" of this condition." ;
+    rdfs:subClassOf form:validation-result-condition .
+
+form:question-origin a owl:Class ;
+    rdfs:label "Question origin" ;
+    dc:description "Class of objects that are used to reconstruct how was a question created." .
+
+form:requires-answer a owl:ObjectProperty ;
+    rdfs:label "requires answer" ;
+    dc:description "Indicates that question requires answer." ;
+    rdfs:domain doc:question .
+
+form:requires-answer-description-if a owl:ObjectProperty ;
+    rdfs:label "requires answer description" ;
+    dc:description "Answer requires descripton." ;
+    rdfs:domain doc:question ;
+    rdfs:range form:condition .
+
+dc:description a owl:AnnotationProperty .
+
+form:entity a owl:Class ;
+    rdfs:label "entity" ;
+    rdfs:subClassOf owl:Thing .
+
+form:section a owl:Class ;
+    rdfs:subClassOf form:question-template .
+
+form:template-entity a owl:Class ;
+    rdfs:label "template entity" ;
+    rdfs:subClassOf owl:Thing .
+
+form:validation-result-condition a owl:Class ;
+    dc:description "" ;
+    rdfs:subClassOf form:condition .
+
+form:has-origin a owl:ObjectProperty ;
+    rdfs:label "has origin" ;
+    dc:description "Defines entity from which this template was created." .
+
+form:question-type a owl:Class .
+
+form:question-template a owl:Class ;
+    rdfs:subClassOf form:template-entity .
+
+form:condition a owl:Class ;
+    rdfs:label "Condition" ;
+    rdfs:subClassOf owl:Thing .
+
+form:has-first-question a owl:ObjectProperty ;
+	rdfs:domain form:question-precedence ;
+	rdfs:range doc:question ;
 .
+
+form:has-second-question a owl:ObjectProperty ;
+	rdfs:domain form:question-precedence ;
+	rdfs:range doc:question ;
+.
+
+form:question-precedence a owl:Class, owl:NamedIndividual ;
+    rdfs:label "Relator of a precedence between two questions." ;
+.
+
+form:direct-precedence a owl:Class, owl:NamedIndividual ;
+    rdfs:label "Relator defining precedence between two questions based on explicit has-preceding-question relation." ;
+    rdfs:subClassOf form:question-precedence ;
+.
+
+form:language-variant-precedence a owl:Class, owl:NamedIndividual ;
+    rdfs:label "Relator defining precedence between two questions based on same question having different language variants." ;
+    rdfs:subClassOf form:question-precedence ;
+.
+
+form:relator-multiplicity-precedence a owl:Class, owl:NamedIndividual ;
+    rdfs:label "Relator defining precedence between two questions based on relator question with higher cardinality." ;
+    rdfs:subClassOf form:question-precedence ;
+.
+
+form:meta-question-precedence a owl:Class, owl:NamedIndividual ;
+    rdfs:label "Relator defining precedence between two questions where one of them is meta-question." ;
+    rdfs:subClassOf form:question-precedence ;
+.
+
+form:object-identification-precedence a owl:Class, owl:NamedIndividual ;
+    rdfs:label "Relator defining precedence between two questions where one of them is identifying trope of an entity." ;
+    rdfs:subClassOf form:question-precedence ;
+.
+
+form:object-description-precedence a owl:Class, owl:NamedIndividual ;
+    rdfs:label "Relator defining precedence between two questions where one of them is trope providing description of an entity." ;
+    rdfs:subClassOf form:question-precedence ;
+.
+
+form:aspect-type-precedence a owl:Class, owl:NamedIndividual ;
+    rdfs:label "Relator defining precedence between two questions that are either relator or intrinsic trope." ;
+    rdfs:subClassOf form:question-precedence ;
+.
+
+form:temporal-precedence a owl:Class, owl:NamedIndividual ;
+    rdfs:label "Relator defining precedence between two questions based on temporal properties of entities." ;
+    rdfs:subClassOf form:question-precedence ;
+.
+
+form:alphabethical-precedence a owl:Class, owl:NamedIndividual ;
+    rdfs:label "Relator defining precedence between two questions based on alphabethical order of its labels." ;
+    rdfs:subClassOf form:question-precedence ;
+.
+
+form:has-higher-priority-precedence a owl:ObjectProperty ;
+    rdfs:label "Defines priority of precedence types, the higher priority precedence should be ordered before the lower one." ;
+.
+
+form:object-identification-question a owl:Class ;
+    rdfs:subClassOf form:trope-question ;
+.
+
+form:object-identification-coordinate-question a owl:Class ;
+    rdfs:subClassOf form:trope-question ;
+.
+
+form:object-description-question a owl:Class ;
+    rdfs:subClassOf form:trope-question ;
+.
+
+form:trope-question a owl:Class ;
+    rdfs:subClassOf doc:question ;
+.
+
+form:multilingual-question a owl:Class ;
+    rdfs:subClassOf form:trope-question ;
+.
+
+form:multirelator-question a owl:Class ;
+    rdfs:subClassOf form:relator-question ;
+.
+
+form:relator-question a owl:Class ;
+    rdfs:subClassOf doc:question ;
+.
+
+form:meta-question a owl:Class ;
+    rdfs:subClassOf doc:question ;
+.
+
+form:temporally-related-question a owl:Class ;
+    rdfs:subClassOf doc:question ;
+.
+
 form:has-answer-hash
   rdf:type owl:DatatypeProperty ;
   rdfs:domain <http://onto.fel.cvut.cz/ontologies/documentation/answer> ;
   rdfs:range xsd:string ;
-.
-form:has-datatype
-  rdf:type owl:DatatypeProperty ;
-  rdfs:label "has datatype"^^xsd:string ;
-.
-form:has-origin
-  rdf:type owl:ObjectProperty ;
-  rdfs:comment "Defines entity from which this template was created."^^xsd:string ;
-  rdfs:label "has origin"^^xsd:string ;
-.
-form:has-origin-path
-  rdf:type owl:DatatypeProperty ;
-  rdfs:label "has origin path"^^xsd:string ;
-  rdfs:range xsd:string ;
-.
-form:has-origin-path-id
-  rdf:type owl:DatatypeProperty ;
-  rdfs:label "has origin path id"^^xsd:string ;
-  rdfs:range xsd:string ;
-.
-form:has-origin-type
-  rdf:type owl:ObjectProperty ;
-  rdfs:comment "Defines type of entity from which this template was created."^^xsd:string ;
-  rdfs:label "has origin"^^xsd:string ;
-.
-form:has-possible-value
-  rdf:type owl:ObjectProperty ;
-  rdfs:domain <http://onto.fel.cvut.cz/ontologies/documentation/question> ;
-  rdfs:label "has-possible-value"^^xsd:string ;
-.
-form:has-possible-values-query
-  rdf:type owl:ObjectProperty ;
-  rdfs:comment "Defines entity from which this template was created."^^xsd:string ;
-  rdfs:domain form:question-template ;
-  rdfs:label "has template origin"^^xsd:string ;
-  rdfs:subPropertyOf form:has-origin ;
-.
-form:has-preceding-question
-  rdf:type owl:ObjectProperty ;
-  rdfs:comment "Defines that this question follows (typicaly chronologically) specified question."^^xsd:string ;
-  rdfs:domain <http://onto.fel.cvut.cz/ontologies/documentation/question> ;
-  rdfs:label "has preceding question"^^xsd:string ;
-  rdfs:range <http://onto.fel.cvut.cz/ontologies/documentation/question> ;
-.
-form:has-preceding-template
-  rdf:type owl:ObjectProperty ;
-  rdfs:comment "Defines that this question template follows (typicaly chronologically) specified question template."^^xsd:string ;
-  rdfs:domain form:question-template ;
-  rdfs:label "has preceding question template"^^xsd:string ;
-  rdfs:range form:question-template ;
-.
-form:has-preceding-value
-  rdf:type owl:ObjectProperty ;
-  rdfs:comment "Defines that this answer value follows (typicaly chronologically) specified answer value."^^xsd:string ;
-  rdfs:label "has preceding question"^^xsd:string ;
-.
-form:has-question-origin
-  rdf:type owl:ObjectProperty ;
-  rdfs:comment "Defines entity from which this question was created."^^xsd:string ;
-  rdfs:domain <http://onto.fel.cvut.cz/ontologies/documentation/question> ;
-  rdfs:label "has question origin"^^xsd:string ;
-  rdfs:subPropertyOf form:has-origin ;
-.
-form:has-subsection
-  rdf:type owl:ObjectProperty ;
-  rdfs:label "has-subsection"^^xsd:string ;
-.
-form:has-subtemplate
-  rdf:type owl:ObjectProperty ;
-  rdfs:domain form:section ;
-  rdfs:range form:question-template ;
-.
-form:has-template
-  rdf:type owl:ObjectProperty ;
-  rdfs:label "has-template"^^xsd:string ;
-.
-form:has-template-origin
-  rdf:type owl:ObjectProperty ;
-  rdfs:comment "Defines entity from which this template was created."^^xsd:string ;
-  rdfs:domain form:question-template ;
-  rdfs:label "has template origin"^^xsd:string ;
-  rdfs:subPropertyOf form:has-origin ;
-.
-form:has-template-relation
-  rdf:type owl:ObjectProperty ;
-  rdfs:label "has-template-relation"^^xsd:string ;
-.
-form:has-tested-question
-  rdf:type owl:ObjectProperty ;
-  rdfs:comment "Determine which questions are tested for this condition. Multiple questions can be tested."^^xsd:string ;
-  rdfs:domain form:condition ;
-  rdfs:label "has tested question"^^xsd:string ;
-  rdfs:range <http://onto.fel.cvut.cz/ontologies/documentation/question> ;
-.
-form:has-unit
-  rdf:type owl:DatatypeProperty ;
-  rdfs:label "has unit"^^xsd:string ;
-  rdfs:range xsd:string ;
-.
-form:inherits-template-from
-  rdf:type owl:ObjectProperty ;
-  rdfs:comment "Subject inherits properties from its object, i.e. any question created by subject template must also have properties of object template."^^xsd:string ;
-  rdfs:domain form:question-template ;
-  rdfs:range form:question-template ;
-.
-form:is-clone-of-question
-  rdf:type owl:ObjectProperty ;
-  rdfs:comment "Question within subject of this relation is unmodifiable clone of question within object of this relation."^^xsd:string ;
-  rdfs:domain <http://onto.fel.cvut.cz/ontologies/documentation/question> ;
-  rdfs:range <http://onto.fel.cvut.cz/ontologies/documentation/question> ;
-.
-form:is-link-template-of
-  rdf:type owl:ObjectProperty ;
-  rdfs:comment "Subject of this relation is a template relation (?s_qts_rel) that defines contract how any of its question should be created. Every question created using ?s_qts_rel must be only reference to other question created from ?o_qts_rel, i.e. template relation within object of this relation. Domain and range of this relation is of type reification of ?qt1 has-subtemplate ?qt2."^^xsd:string ;
-.
-form:is-relevant-if
-  rdf:type owl:ObjectProperty ;
-  rdfs:comment "States in which context is statement relevant."^^xsd:string ;
-  rdfs:domain <http://onto.fel.cvut.cz/ontologies/documentation/question> ;
-  rdfs:label "is relevant if"^^xsd:string ;
-  rdfs:range form:condition ;
-.
-form:is-valid-answer
-  rdf:type owl:ObjectProperty ;
-  rdfs:comment "Defines  set of answers that need to be valid in order for condition to hold."^^xsd:string ;
-  rdfs:domain form:condition ;
-  rdfs:label "has valid answer"^^xsd:string ;
-  rdfs:range <http://onto.fel.cvut.cz/ontologies/documentation/question> ;
-.
-form:positive-validation-condition
-  rdf:type owl:Class ;
-  rdfs:comment "Indicates that accept answer value is only  \"true\" of this condition." ;
-  rdfs:subClassOf form:validation-result-condition ;
-.
-form:question-origin
-  rdf:type owl:Class ;
-  rdfs:comment "Class of objects that are used to reconstruct how was a question created." ;
-  rdfs:label "Question origin" ;
-.
-form:question-template
-  rdf:type owl:Class ;
-  rdfs:subClassOf form:template-entity ;
-.
-form:requires-answer
-  rdf:type owl:ObjectProperty ;
-  rdfs:comment "Indicates that question requires answer."^^xsd:string ;
-  rdfs:domain <http://onto.fel.cvut.cz/ontologies/documentation/question> ;
-  rdfs:label "requires answer"^^xsd:string ;
-.
-form:requires-answer-description-if
-  rdf:type owl:ObjectProperty ;
-  rdfs:comment "Answer requires descripton."^^xsd:string ;
-  rdfs:domain <http://onto.fel.cvut.cz/ontologies/documentation/question> ;
-  rdfs:label "requires answer description"^^xsd:string ;
-  rdfs:range form:condition ;
-.
-form:section
-  rdf:type owl:Class ;
-  rdfs:subClassOf form:question-template ;
-.
-form:template-entity
-  rdf:type owl:Class ;
-  rdfs:label "template-entity"^^xsd:string ;
-  rdfs:subClassOf owl:Thing ;
-.
-form:validation-result-condition
-  rdf:type owl:Class ;
-  rdfs:subClassOf form:condition ;
 .

@@ -1,6 +1,6 @@
 package cz.cvut.spipes.modules;
 
-import cz.cvut.spipes.VocabularyJena;
+import cz.cvut.sforms.SformsVocabularyJena;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
@@ -27,7 +27,6 @@ public class ConstructFormMetadataModule extends AnnotatedAbstractModule {
     private static final Logger LOG = LoggerFactory.getLogger(ConstructFormMetadataModule.class);
 
     private static final String TYPE_URI = KBSS_MODULE.uri + "construct-form-metadata";
-    private static final String TYPE_PREFIX = TYPE_URI + "/";
     private static final String PATH_SEPARATOR = ",";
     private static final String INSTANCE_TYPE_SEPARATOR = "|";
 
@@ -93,13 +92,13 @@ public class ConstructFormMetadataModule extends AnnotatedAbstractModule {
             e -> processFormEntity(e, path, constructedModel)
         );
 
-        constructedModel.add(formEntity, VocabularyJena.s_p_has_origin_path, path);
-        constructedModel.add(formEntity, VocabularyJena.s_p_has_origin_path_id, pathId);
+        constructedModel.add(formEntity, SformsVocabularyJena.s_p_has_origin_path, path);
+        constructedModel.add(formEntity, SformsVocabularyJena.s_p_has_origin_path_id, pathId);
     }
 
     private String getPathId(Resource question) {
         return question
-            .getProperty(VocabularyJena.s_p_has_origin_path)
+            .getProperty(SformsVocabularyJena.s_p_has_origin_path)
             .getObject()
             .asLiteral()
             .getString();
@@ -133,9 +132,8 @@ public class ConstructFormMetadataModule extends AnnotatedAbstractModule {
         if (isAnswer(formEntity)) {
             return Origin.ANSWER_ORIGIN;
         }
-        throw new IllegalArgumentException("Provided resource " + formEntity + " is not a form entity.");
+        throw getExceptionProvidedResourceNotAFormEntity(formEntity);
     }
-
 
     private Resource getFormEntityOrigin(Resource formEntity) {
         if (isQuestion(formEntity)) {
@@ -144,7 +142,7 @@ public class ConstructFormMetadataModule extends AnnotatedAbstractModule {
         if (isAnswer(formEntity)) {
             return getAnswerOrigin(formEntity);
         }
-        throw new IllegalArgumentException("Provided resource " + formEntity + " is not a form entity.");
+        throw getExceptionProvidedResourceNotAFormEntity(formEntity);
     }
 
 
@@ -153,12 +151,12 @@ public class ConstructFormMetadataModule extends AnnotatedAbstractModule {
             .filterKeep(
                 subj -> subj.hasProperty(
                     RDF.type,
-                    VocabularyJena.s_c_question
+                    SformsVocabularyJena.s_c_question
                 )
             )
             .filterDrop(
                 subj -> formModel.listResourcesWithProperty(
-                    VocabularyJena.s_p_has_related_question, subj).hasNext()
+                    SformsVocabularyJena.s_p_has_related_question, subj).hasNext()
             ).toList();
     }
 
@@ -169,23 +167,23 @@ public class ConstructFormMetadataModule extends AnnotatedAbstractModule {
         if (isAnswer(formEntity)) {
             return getAnswerOrigin(formEntity);
         }
-        throw new IllegalArgumentException("Provided resource " + formEntity + " is not a form entity.");
+        throw getExceptionProvidedResourceNotAFormEntity(formEntity);
     }
 
     private static boolean isAnswer(Resource formEntity) {
-        return formEntity.hasProperty(RDF.type, VocabularyJena.s_c_answer);
+        return formEntity.hasProperty(RDF.type, SformsVocabularyJena.s_c_answer);
     }
 
     private static boolean isQuestion(Resource formEntity) {
-        return formEntity.hasProperty(RDF.type, VocabularyJena.s_c_question);
+        return formEntity.hasProperty(RDF.type, SformsVocabularyJena.s_c_question);
     }
 
     private static List<Resource> getRelatedQuestions(Resource question) {
-        return question.listProperties(VocabularyJena.s_p_has_related_question).mapWith(st -> st.getObject().asResource()).toList();
+        return question.listProperties(SformsVocabularyJena.s_p_has_related_question).mapWith(st -> st.getObject().asResource()).toList();
     }
 
     private static List<Resource> getAnswers(Resource question) {
-        return question.listProperties(VocabularyJena.s_p_has_answer).mapWith(st -> st.getObject().asResource()).toList();
+        return question.listProperties(SformsVocabularyJena.s_p_has_answer).mapWith(st -> st.getObject().asResource()).toList();
     }
 
     private static List<Resource> getSubEntities(Resource formEntity) {
@@ -201,10 +199,10 @@ public class ConstructFormMetadataModule extends AnnotatedAbstractModule {
 
     private static boolean isLeafFormEntity(Resource formEntity) {
 
-        if (formEntity.hasProperty(VocabularyJena.s_p_has_related_question)) {
+        if (formEntity.hasProperty(SformsVocabularyJena.s_p_has_related_question)) {
             return false;
         }
-        if (formEntity.hasProperty(VocabularyJena.s_p_has_answer)) {
+        if (formEntity.hasProperty(SformsVocabularyJena.s_p_has_answer)) {
             return false;
         }
         return true;
@@ -215,6 +213,9 @@ public class ConstructFormMetadataModule extends AnnotatedAbstractModule {
         return ResourceFactory.createProperty(property);
     }
 
+    private static IllegalArgumentException getExceptionProvidedResourceNotAFormEntity(Resource formEntity) {
+        return new IllegalArgumentException(String.format("Provided resource %s is not a form entity.", formEntity));
+    }
 
     @Override
     public String getTypeURI() {

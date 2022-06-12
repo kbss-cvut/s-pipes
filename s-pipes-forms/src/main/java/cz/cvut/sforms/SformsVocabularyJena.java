@@ -4,7 +4,11 @@ import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 
-public class VocabularyJena {
+public class SformsVocabularyJena {
+
+    private SformsVocabularyJena() {
+        throw new IllegalStateException("Utility class");
+    }
 
     public static Property s_p_constraint = getProperty(cz.cvut.sforms.Vocabulary.s_p_constraint);
     public static Property s_p_defaultValue = getProperty(cz.cvut.sforms.Vocabulary.s_p_defaultValue);
@@ -19,6 +23,7 @@ public class VocabularyJena {
     public static Property s_p_has_origin_path_id = getProperty(cz.cvut.sforms.Vocabulary.s_p_has_origin_path_id);
     public static Property s_p_has_question_origin = getProperty(cz.cvut.sforms.Vocabulary.s_p_has_question_origin);
     public static Property s_p_has_answer_origin = getProperty(cz.cvut.sforms.Vocabulary.s_p_has_answer_origin);
+    public static Property s_p_textual_view = getProperty(Vocabulary.s_p_textual_view);
 
     public static Resource s_c_question = getProperty(cz.cvut.sforms.Vocabulary.s_c_question);
     public static Resource s_c_answer = getProperty(cz.cvut.sforms.Vocabulary.s_c_answer);

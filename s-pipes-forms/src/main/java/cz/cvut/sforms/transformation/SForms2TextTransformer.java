@@ -2,10 +2,11 @@ package cz.cvut.sforms.transformation;
 
 import cz.cvut.sforms.model.Question;
 import cz.cvut.sforms.util.DefaultQuestionSiblingsComparator;
-import java.util.Objects;
-import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class SForms2TextTransformer {
 
@@ -25,7 +26,7 @@ public class SForms2TextTransformer {
     @Nullable
     private String serializeRecursive(Question question, TextTransformerConfig cfg) {
 
-        if (cfg.isRequireAnswer() && question.getAnswers().isEmpty()) {
+        if ((! cfg.isSerializeUnansweredQuestions()) && question.getAnswers().isEmpty()) {
             return null;
         }
 

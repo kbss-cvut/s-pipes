@@ -1,16 +1,17 @@
 package cz.cvut.sforms.transformation;
 
-import cz.cvut.sforms.util.FormUtils;
 import cz.cvut.sforms.model.Question;
 import cz.cvut.sforms.test.FormGenerator;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import cz.cvut.sforms.util.FormUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class SForms2TextTransformerTest {
+
+class SForms2TextTransformerTest {
 
     private TextTransformerConfig cfg;
     private FormGenerator g;
@@ -24,25 +25,25 @@ public class SForms2TextTransformerTest {
     }
 
     @Test
-    public void serializeWithRequireAnswerForQuestionWithoutAnswerReturnsNull() {
+    void serializeWithRequireAnswerForQuestionWithoutAnswerReturnsNull() {
         Question q = g.questionBuilder()
             .id("root")
             .includeAnswer(false)
             .build();
-        cfg.setRequireAnswer(true);
+        cfg.setSerializeUnansweredQuestions(true);
 
         assertNull(t.serialize(q, cfg));
     }
 
     @Test
-    public void serializeByDefaultForLeafQuestionReturnsLabel() {
+    void serializeByDefaultForLeafQuestionReturnsLabel() {
         Question q = g.createQuestion("root");
 
         assertThat(t.serialize(q, cfg), containsString(q.getLabel()));
     }
 
     @Test
-    public void serializeByDefaultReturnsLabelsOfAllQuestions() {
+    void serializeByDefaultReturnsLabelsOfAllQuestions() {
         Question rootQ = g.questionBuilder()
             .includeAnswer(false)
             .id("1")
