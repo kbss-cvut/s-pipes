@@ -27,7 +27,8 @@ public class MergeFormMetadataModule extends AnnotatedAbstractModule {
     private static final Random RANDOM = new Random();
 
     private static final String TYPE_URI = KBSS_MODULE.uri + "merge-form-metadata";
-    private static final String QUESTION_ORGIN_HASH_VAR = "{_questionOriginHash}";
+    // TODO use official uri templates
+    private static final String QUESTION_ORIGIN_HASH_VAR = "{_questionOriginHash}";
     private static final String EXECUTION_ID_VAR = "{_executionId}";
 
     @Parameter(urlPrefix = SML.uri, name = "replace")
@@ -40,7 +41,7 @@ public class MergeFormMetadataModule extends AnnotatedAbstractModule {
     private String questionInstanceTemplate =
         SformsVocabularyJena.s_c_question.toString()
             + "-"
-            + QUESTION_ORGIN_HASH_VAR
+            + QUESTION_ORIGIN_HASH_VAR
             + "-"
             + EXECUTION_ID_VAR;
 
@@ -57,7 +58,7 @@ public class MergeFormMetadataModule extends AnnotatedAbstractModule {
             q -> {
                 String originHash = DigestUtils.md5Hex(JenaFormUtils.getQuestionOrigin(q).toString());
                 String newQuestionUrl = questionInstanceTemplate
-                    .replace(QUESTION_ORGIN_HASH_VAR, originHash)
+                    .replace(QUESTION_ORIGIN_HASH_VAR, originHash)
                     .replace(EXECUTION_ID_VAR, executionId);
                 if (!q.equals(newQuestionUrl)) {
                     if (LOG.isTraceEnabled()) {

@@ -7,6 +7,7 @@ import cz.cvut.sforms.model.Question;
 import cz.cvut.sforms.transformation.SForms2TextTransformer;
 import cz.cvut.sforms.transformation.TextTransformerConfig;
 import cz.cvut.sforms.util.FormUtils;
+import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
@@ -25,7 +26,7 @@ public class ConstructTextualViewModule extends AnnotatedAbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(ConstructTextualViewModule.class);
 
-    private static final String TYPE_URI = FORM_MODULE.uri + "construct-textual-view";
+    private static final String TYPE_URI = KBSS_MODULE.uri + "construct-textual-view";
 
     @Parameter(urlPrefix = SML.uri, name = "replace")
     private boolean isReplace = false;
