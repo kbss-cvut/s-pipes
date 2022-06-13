@@ -17,6 +17,7 @@
         <module>s-pipes-web</module>
         <module>s-pipes-modules</module>
         <module>s-pipes-modules-registry</module>
+        <module>s-pipes-modules-utils</module>
         <module>s-pipes-forms</module>
         <module>s-pipes-test</module>
     </modules>
