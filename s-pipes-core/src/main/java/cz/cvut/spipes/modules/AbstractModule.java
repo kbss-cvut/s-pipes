@@ -306,7 +306,7 @@ public abstract class AbstractModule implements Module {
         if (query.getComment() != null) {
             return query.getComment();
         }
-        String comment = query.toString().split("\\n")[0];
+        String comment = query.toString().split(System.lineSeparator())[0];
         if (comment.matches("\\s*#.*")) {
             return comment.split("\\s*#\\s*", 2)[1];
         }
