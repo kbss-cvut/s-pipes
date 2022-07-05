@@ -7,6 +7,7 @@ public interface ExecutionContext {
     VariablesBinding getVariablesBinding();
 
     String toSimpleString();
+    String toTruncatedSimpleString();
 
 
     //getReadOnlyModel();

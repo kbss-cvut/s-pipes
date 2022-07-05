@@ -18,15 +18,12 @@ class ExecutionContextImpl implements ExecutionContext {
 
     @Override
     public String toSimpleString() {
+        return getSimpleString(false);
+    }
 
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("Context ").append(this.hashCode()).append("[ \n")
-                .append("\t varBindings = ").append(variablesBinding).append("\n")
-                .append("\t modelSize = ").append(defaultModel.listStatements().toList().size())
-                .append("]");
-
-        return sb.toString();
+    @Override
+    public String toTruncatedSimpleString() {
+        return getSimpleString(true);
     }
 
     public void setDefaultModel(Model defaultModel) {
@@ -35,5 +32,23 @@ class ExecutionContextImpl implements ExecutionContext {
 
     public void setVariablesBinding(VariablesBinding variablesBinding) {
         this.variablesBinding = variablesBinding;
+    }
+
+    private String getSimpleString(boolean truncate) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Context ").append(this.hashCode()).append("[ \n")
+            .append("\t varBindings = ").append(getVariablesBindingString(truncate)).append("\n")
+            .append("\t modelSize = ").append(defaultModel.listStatements().toList().size())
+            .append("]");
+
+        return sb.toString();
+    }
+
+    private String getVariablesBindingString(boolean truncate) {
+        if (truncate) {
+            return variablesBinding.toTruncatedString();
+        }
+        return variablesBinding.toString();
     }
 }
