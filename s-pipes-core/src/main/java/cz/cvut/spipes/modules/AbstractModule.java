@@ -97,7 +97,7 @@ public abstract class AbstractModule implements Module {
 
     private void generateLinkToRerunExecution(String inputModelFilePath) {
         final String FILE_PREFIX = "file://";
-        final String SPIPES_SERVICE_URL = "http://localhost:8080/s-pipes";
+        final String SPIPES_SERVICE_URL = ExecutionConfig.getDevelopmentServiceUrl();
 
         String inputModelFileUrl = FILE_PREFIX + Optional.ofNullable(inputModelFilePath)
             .orElse(saveModelToTemporaryFile(executionContext.getDefaultModel()));
@@ -306,7 +306,7 @@ public abstract class AbstractModule implements Module {
         if (query.getComment() != null) {
             return query.getComment();
         }
-        String comment = query.toString().split("\\n")[0];
+        String comment = query.toString().split(System.lineSeparator())[0];
         if (comment.matches("\\s*#.*")) {
             return comment.split("\\s*#\\s*", 2)[1];
         }
