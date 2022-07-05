@@ -22,6 +22,10 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.function.Predicate;
 
+/**
+ * For input Q&A models constructs textual view of specified questions. Each textual view represent the question
+ * and its sub-questions recursively.
+ */
 public class ConstructTextualViewModule extends AnnotatedAbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(ConstructTextualViewModule.class);
