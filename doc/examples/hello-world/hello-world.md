@@ -117,13 +117,12 @@ i.e. root directory of the project [s-pipes-modules](https://kbss.felk.cvut.cz/g
 
 Let's assume that SPipes web application is running at `http://localhost:8080/s-pipes`. We can call the *pipeline* with:
     
-    http://localhost:8080/s-pipes/service?id=execute-greeting&firstName=Robert&lastName=Plant
+    http://localhost:8080/s-pipes/service?_pId=execute-greeting&firstName=Robert&lastName=Plant
 
 The call produces log file as shown bellow:
     
     INFO  c.c.s.r.SPipesServiceController - Processing service GET request.
-    INFO  c.c.s.r.SPipesServiceController - - parameters={id=[execute-greeting], firstName=[Robert], lastName=[Plant]}
-    DEBUG c.c.s.r.SPipesServiceController - Parameter 'id' is used instead of parameter '_pId', which is missing.
+    INFO  c.c.s.r.SPipesServiceController - - parameters={_pId=[execute-greeting], firstName=[Robert], lastName=[Plant]}
     INFO  c.c.s.r.SPipesServiceController - - _pId=execute-greeting
     INFO  c.c.s.r.SPipesServiceController - - input variable binding ={_pId=execute-greeting, firstName=Robert, lastName=Plant}
     DEBUG c.c.s.util.JenaPipelineUtils - Registering function http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1/execute-greeting 
@@ -165,6 +164,6 @@ To configure the listener, we need to create a [ttl file](config.ttl) containing
  
  To execute the hello world pipeline configured with the advanced logging listener run: 
     
-    http://localhost:8080/s-pipes/service?id=execute-greeting&firstName=Robert&lastName=Plant&_pConfigURL=/SPIPES_DIR/doc/examples/hello-world/config.ttl
+    http://localhost:8080/s-pipes/service?_pId=execute-greeting&firstName=Robert&lastName=Plant&_pConfigURL=/SPIPES_DIR/doc/examples/hello-world/config.ttl
 
 It deploys [execution metadata](rdf4j-repository-export.nq.zip) into RDF4J server as well as [directory with all data inputted to or outputted from modules](execution-logs.zip). 
