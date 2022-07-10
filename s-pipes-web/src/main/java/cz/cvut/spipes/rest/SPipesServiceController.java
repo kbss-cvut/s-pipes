@@ -128,12 +128,7 @@ public class SPipesServiceController {
         @RequestParam MultiValueMap<String, String> parameters
     ) {
         LOG.info("Processing POST request.");
-        // TODO process internal params by passing to runModule() instead of this
-        addIfNotNull(parameters, P_ID, pId);
-        addIfNotNull(parameters, P_CONFIG_URL, pConfigURL);
-        addIfNotNull(parameters, P_INPUT_GRAPH_URL, pInputGraphURL);
-        addIfNotNull(parameters, P_INPUT_BINDING_URL, pInputBindingURL);
-        addIfNotNull(parameters, P_OUTPUT_BINDING_URL, pOutputBindingURL);
+        // TODO process internal params passed arguments not parameters map
         return runModule(inputModel, parameters);
     }
 
@@ -388,12 +383,6 @@ public class SPipesServiceController {
             LOG.warn("Could not read data from parameter {}={}, caused by: {}", P_INPUT_BINDING_URL, inputBindingURL, e);
         }
 
-    }
-
-    private void addIfNotNull(MultiValueMap<String, String> parameters, String name, String value) {
-        if (value != null) {
-            parameters.add(name, value);
-        }
     }
 
 }
