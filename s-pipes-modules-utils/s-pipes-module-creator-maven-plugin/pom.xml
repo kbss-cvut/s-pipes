@@ -40,6 +40,10 @@
             <groupId>cz.cvut.kbss</groupId>
             <artifactId>s-pipes-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>jena-core</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
