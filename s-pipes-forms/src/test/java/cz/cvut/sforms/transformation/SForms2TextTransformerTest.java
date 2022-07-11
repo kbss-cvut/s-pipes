@@ -25,12 +25,12 @@ class SForms2TextTransformerTest {
     }
 
     @Test
-    void serializeWithRequireAnswerForQuestionWithoutAnswerReturnsNull() {
+    void serializeWithNoSerializeUnansweredQuestionsReturnsNull() {
         Question q = g.questionBuilder()
             .id("root")
             .includeAnswer(false)
             .build();
-        cfg.setSerializeUnansweredQuestions(true);
+        cfg.setSerializeUnansweredQuestions(false);
 
         assertNull(t.serialize(q, cfg));
     }

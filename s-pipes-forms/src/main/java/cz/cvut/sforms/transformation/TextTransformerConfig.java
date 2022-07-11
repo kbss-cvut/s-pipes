@@ -1,6 +1,7 @@
 package cz.cvut.sforms.transformation;
 
 import cz.cvut.sforms.model.Question;
+
 import java.util.function.Function;
 
 /**
@@ -8,9 +9,9 @@ import java.util.function.Function;
  */
 public class TextTransformerConfig {
 
-    boolean isSerializeAnswers;
+    boolean isSerializeAnswers = true;
     // process only questions that has answers
-    boolean isSerializeUnansweredQuestions;
+    boolean isSerializeUnansweredQuestions = true;
     boolean includeLabel;
     private String indentationString = "  ";
     private Function<Question, String> questionProcessor = Question::getLabel;
