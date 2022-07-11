@@ -146,7 +146,7 @@ The final script [constraint-validation.sms.ttl](constraint-validation.sms.ttl) 
 Now our pipeline is prepared, and we can run pipeline.
 1) First, we check if 'Pavel Hnizdo' is in our database. We call following GET request and find out that both constraints are validated.
 ```
-http://localhost:8080/s-pipes/service?id=retrieve-person&firstName=Pavel&lastName=Hnizdo
+http://localhost:8080/s-pipes/service?_pId=retrieve-person&firstName=Pavel&lastName=Hnizdo
 ```
 
 We see following messages in the log:
@@ -183,14 +183,14 @@ And we retrieve following answer:
 
 2) Second, we check if 'Pavel' is in our database. We call following GET request, and we retrieve same results because there is only one "Pavel" in the database.
 ```
-http://localhost:8080/s-pipes/service?id=retrieve-person&firstName=Pavel
+http://localhost:8080/s-pipes/service?_pId=retrieve-person&firstName=Pavel
 ```
 
 
 2) Second, we check if person with lastname 'Hnizdo' is in our database. We call following GET request, but we find out that one of the constraints is failed.
 
 ```
-http://localhost:8080/s-pipes/service?id=retrieve-person&lastName=Hnizdo
+http://localhost:8080/s-pipes/service?_pId=retrieve-person&lastName=Hnizdo
 ```
 Pipeline execution validation constraint fails with message 'More than one person matches input parameters.' because 'Hnizdo' is in our database twice, once as Peter and once as Pavel.
 ```
@@ -228,7 +228,7 @@ Evidence of the violation:
 
 As can be seen above, assuming that SPipes web application is running at `http://localhost:8080/s-pipes`. We can call the *pipeline* with:
 ```
-http://localhost:8080/s-pipes/service?id=retrieve-person&firstName=$ARGUMENT1&lastName=$ARGUMENT2
+http://localhost:8080/s-pipes/service?_pId=retrieve-person&firstName=$ARGUMENT1&lastName=$ARGUMENT2
 ```
 where `$ARGUMENT1` is first name and `$ARGUMENT2` is last name of a person we want to retrieve from the database.
 
