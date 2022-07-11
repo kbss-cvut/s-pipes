@@ -7,7 +7,7 @@
     <parent>
         <groupId>cz.cvut.kbss</groupId>
         <artifactId>kbss-project-parent</artifactId>
-        <version>0.0.8</version>
+        <version>0.0.9</version>
         <relativePath/>
     </parent>
 
@@ -29,7 +29,6 @@
         <org.junit.jupiter.version>5.2.0</org.junit.jupiter.version>
         <org.mockito.version>2.21.0</org.mockito.version>
         <commons.io.version>2.7</commons.io.version>
-        <maven.deploy.plugin.version>2.8.2</maven.deploy.plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -240,6 +239,7 @@
             <build>
                 <plugins>
                     <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
                         <version>3.1.0</version>
                         <executions>
@@ -266,6 +266,7 @@
                         </executions>
                     </plugin>
                     <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
                         <!-- explicitly define maven-deploy-plugin after other to force exec order -->
                         <artifactId>maven-deploy-plugin</artifactId>
                         <version>${maven.deploy.plugin.version}</version>
