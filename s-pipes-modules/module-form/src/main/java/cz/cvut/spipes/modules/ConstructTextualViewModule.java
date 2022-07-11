@@ -44,6 +44,9 @@ public class ConstructTextualViewModule extends AnnotatedAbstractModule {
     @Parameter(urlPrefix = FORM_MODULE.uri, name = "process-non-root-questions")
     private boolean isProcessNonRootQuestions = true;
 
+    @Parameter(urlPrefix = FORM_MODULE.uri, name = "indentation-string")
+    private String indentationString = "  ";
+
     @Override
     ExecutionContext executeSelf() {
 
@@ -66,6 +69,7 @@ public class ConstructTextualViewModule extends AnnotatedAbstractModule {
         TextTransformerConfig cfg = new TextTransformerConfig();
         cfg.setSerializeAnswers(this.isSerializeAnswers);
         cfg.setSerializeUnansweredQuestions(this.isSerializeUnansweredQuestions);
+        cfg.setIndentationString(this.indentationString);
         SForms2TextTransformer t = new SForms2TextTransformer();
 
         for (Resource qR: questions) {
@@ -99,6 +103,14 @@ public class ConstructTextualViewModule extends AnnotatedAbstractModule {
 
     public void setProcessNonRootQuestions(boolean processNonRootQuestions) {
         isProcessNonRootQuestions = processNonRootQuestions;
+    }
+
+    public String getIndentationString() {
+        return indentationString;
+    }
+
+    public void setIndentationString(String indentationString) {
+        this.indentationString = indentationString;
     }
 
     public boolean isReplace() {

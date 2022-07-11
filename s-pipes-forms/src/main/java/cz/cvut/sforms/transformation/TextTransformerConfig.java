@@ -12,6 +12,7 @@ public class TextTransformerConfig {
     // process only questions that has answers
     boolean isSerializeUnansweredQuestions;
     boolean includeLabel;
+    private String indentationString = "  ";
     private Function<Question, String> questionProcessor = Question::getLabel;
 
     public boolean isSerializeUnansweredQuestions() {
@@ -40,5 +41,13 @@ public class TextTransformerConfig {
 
     public boolean isIncludeLabel() {
         return includeLabel;
+    }
+
+    public void setIndentationString(String indentationString) {
+        this.indentationString = indentationString;
+    }
+
+    public String getIndentationString() {
+        return indentationString;
     }
 }
