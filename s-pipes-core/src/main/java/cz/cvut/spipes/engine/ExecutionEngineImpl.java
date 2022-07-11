@@ -1,17 +1,18 @@
 package cz.cvut.spipes.engine;
 
 import cz.cvut.spipes.modules.Module;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 class ExecutionEngineImpl implements ExecutionEngine {
 
@@ -63,7 +64,7 @@ class ExecutionEngineImpl implements ExecutionEngine {
 
                 LOG.info(" ##### " + module.getLabel());
                 if (LOG.isTraceEnabled()) {
-                    LOG.trace("Using input context {}", context.toSimpleString()); //TODO redundant code -> merge
+                    LOG.trace("Using input context {}", context.toTruncatedSimpleString()); //TODO redundant code -> merge
                 }
                 ExecutionContext outputContext = module.execute();
                 if (LOG.isTraceEnabled()) {
@@ -82,7 +83,7 @@ class ExecutionEngineImpl implements ExecutionEngine {
         LOG.info(" ##### " + module.getLabel());
         ExecutionContext mergedContext = mergeContexts(resource2ContextMap);
         if (LOG.isTraceEnabled()) {
-            LOG.trace("Using input merged context {}", mergedContext.toSimpleString());
+            LOG.trace("Using input merged context {}", mergedContext.toTruncatedSimpleString());
         }
         fire((l) -> {l.moduleExecutionStarted(pipelineExecutionId, moduleExecutionId, module, mergedContext, predecessorId); return null;});
 

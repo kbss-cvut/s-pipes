@@ -1,31 +1,25 @@
 package cz.cvut.spipes.engine;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.QuerySolutionMap;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.ResourceFactory;
-import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.RDF;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class VariablesBinding {
 
     // TODO stream variables etc.
 
     private static Logger LOG = LoggerFactory.getLogger(VariablesBinding.class);
+    private static final int MAX_TRUNCATED_VALUE_SIZE = 300;
     QuerySolutionMap binding = new QuerySolutionMap();
 
     public VariablesBinding() {
@@ -79,15 +73,15 @@ public class VariablesBinding {
         VariablesBinding conflictingBinding = new VariablesBinding();
 
         newVarsBinding.getVarNames().forEachRemaining(
-                var -> {
-                    RDFNode oldNode = this.getNode(var);
-                    RDFNode newNode = newVarsBinding.getNode(var);
+                v -> {
+                    RDFNode oldNode = this.getNode(v);
+                    RDFNode newNode = newVarsBinding.getNode(v);
 
                     if ((oldNode != null) && (!oldNode.equals(newNode))) {
-                        conflictingBinding.add(var, newNode);
-                        LOG.warn("Variable \"{}\" have been bind to value \"{}\", ignoring assignment to value \"{}\".", var, oldNode, newNode);
+                        conflictingBinding.add(v, newNode);
+                        LOG.warn("Variable \"{}\" have been bind to value \"{}\", ignoring assignment to value \"{}\".", v, oldNode, newNode);
                     } else {
-                        this.add(var, newNode);
+                        this.add(v, newNode);
                     }
                 }
         );
@@ -104,11 +98,11 @@ public class VariablesBinding {
     public VariablesBinding restrictTo(@NotNull List<String> varNames) {
         VariablesBinding newBinding = new VariablesBinding();
         varNames.forEach(
-            var -> {
-                RDFNode oldNode = this.getNode(var);
+            v -> {
+                RDFNode oldNode = this.getNode(v);
 
                 if (oldNode != null) {
-                    newBinding.add(var, oldNode);
+                    newBinding.add(v, oldNode);
                 }
             }
         );
@@ -125,17 +119,17 @@ public class VariablesBinding {
     }
 
 
-    final String BASE_URI = "http://onto.fel.cvut.cz/ontologies/s-pipes/";
-    final String QUERY_SOLUTION = BASE_URI + "query_solution";
-    final String HAS_BINDING = BASE_URI + "has_binding";
-    final String HAS_BOUND_VARIABLE = BASE_URI + "has_bound_variable";
-    final String HAS_BOUND_VALUE = BASE_URI + "has_bound_value";
+    static final String BASE_URI = "http://onto.fel.cvut.cz/ontologies/s-pipes/";
+    static final String QUERY_SOLUTION = BASE_URI + "query_solution";
+    static final String HAS_BINDING = BASE_URI + "has_binding";
+    static final String HAS_BOUND_VARIABLE = BASE_URI + "has_bound_variable";
+    static final String HAS_BOUND_VALUE = BASE_URI + "has_bound_value";
 
     private static Property p(String property) {
         return ResourceFactory.createProperty(property);
     }
 
-    public void save(final OutputStream os, final String lang) throws IOException {
+    public void save(final OutputStream os, final String lang) {
         getModel().write(os, lang);
     }
 
@@ -186,5 +180,18 @@ public class VariablesBinding {
     @Override
     public String toString() {
         return binding.asMap().toString();
+    }
+
+    public String toTruncatedString() {
+        return binding.asMap().entrySet().stream()
+            .map(e -> new AbstractMap.SimpleEntry<>(e.getKey(), getTruncatedValue(e.getValue().toString()))).
+            collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)).toString();
+    }
+
+    private static String getTruncatedValue(@NotNull String value) {
+        if (value.length() > MAX_TRUNCATED_VALUE_SIZE) {
+            return "... " + value.substring(0, MAX_TRUNCATED_VALUE_SIZE).replace("\n", "\\n") + " ...";
+        }
+        return value;
     }
 }

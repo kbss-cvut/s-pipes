@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 
 public class SForms2TextTransformer {
 
-    private static final String INDENTATION = " ";
 
     static String appendPrefixToEachLine(String prefix, String s) {
         String ret = prefix + s.replaceAll("(\r\n|\n)", "$1" + prefix);
@@ -18,13 +17,13 @@ public class SForms2TextTransformer {
     }
 
     @Nullable
-    public String serialize(@NotNull Question question, @Nullable TextTransformerConfig cfg) {
+    public String serialize(@NotNull Question question, @NotNull TextTransformerConfig cfg) {
 
         return serializeRecursive(question, cfg);
     }
 
     @Nullable
-    private String serializeRecursive(Question question, TextTransformerConfig cfg) {
+    private String serializeRecursive(@NotNull Question question, @NotNull TextTransformerConfig cfg) {
 
         if ((! cfg.isSerializeUnansweredQuestions()) && question.getAnswers().isEmpty()) {
             return null;
@@ -34,12 +33,12 @@ public class SForms2TextTransformer {
             .sorted(new DefaultQuestionSiblingsComparator())
             .map(sq -> serializeRecursive(sq, cfg))
             .filter(Objects::nonNull)
-            .map(sq -> appendPrefixToEachLine(INDENTATION, sq))
+            .map(sq -> appendPrefixToEachLine(cfg.getIndentationString(), sq))
             .collect(Collectors.joining());
 
         String qStr = cfg.getQuestionProcessor().apply(question);
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb
             .append(qStr)
             .append("\n")

@@ -8,6 +8,8 @@ import cz.cvut.spipes.modules.Module;
 import cz.cvut.spipes.rest.util.*;
 import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.RDFMimeType;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.rdf.model.Model;
@@ -25,7 +27,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -43,10 +44,6 @@ public class SPipesServiceController {
      * Request parameter - 'id' of the module to be executed
      */
     public static final String P_ID = "_pId";
-    /**
-     * Request parameter - 'id' of the module to be executed, in case when '_pId' is not specified. Otherwise it is regular service parameter.
-     */
-    public static final String P_ID_ALTERNATIVE = "id";
     /**
      * Request parameter - URL of the resource containing configuration
      */
@@ -74,13 +71,8 @@ public class SPipesServiceController {
         scriptManager = ScriptManagerFactory.getSingletonSPipesScriptManager();
     }
 
-    @PostConstruct
-    void init() {
-    }
-
-    @RequestMapping(
+    @GetMapping(
         value = "/module",
-        method = RequestMethod.GET,
         produces = {
             RDFMimeType.LD_JSON_STRING,
             RDFMimeType.N_TRIPLES_STRING,
@@ -93,10 +85,11 @@ public class SPipesServiceController {
         return runModule(ModelFactory.createDefaultModel(), parameters);
     }
 
-    @RequestMapping(
+    @ApiOperation(
+        value = "Run a module."
+    )
+    @PostMapping(
         value = "/module",
-        method = RequestMethod.POST
-        ,
         consumes = {
             RDFMimeType.LD_JSON_STRING,
             RDFMimeType.N_TRIPLES_STRING,
@@ -110,16 +103,37 @@ public class SPipesServiceController {
             RDFMimeType.TURTLE_STRING
         }
     )
-    public Model processPostRequest(@RequestBody Model inputModel,
-                                    @RequestParam MultiValueMap<String, String> parameters
+    public Model processPostRequest(
+        @ApiParam(value = "Input RDF model that is fed to the module. Additional models can be specified using"
+            + " parameter '" + P_INPUT_GRAPH_URL + "'. In case, more than one model is specified, they are merged"
+            + " into one union model before fed to the module.")
+        @RequestBody Model inputModel,
+        @RequestParam(name = P_ID)
+        @ApiParam(value = "Id of the module.")
+            String pId,
+        @RequestParam(name = P_CONFIG_URL, required = false)
+        @ApiParam(value = "Url used to set configuration of the module and possibly a logging.")
+            String pConfigURL,
+        @RequestParam(value = P_INPUT_GRAPH_URL, required = false)
+        @ApiParam(value = "Url used to retrieve input graph for the module. See 'inputModel' parameter for"
+            + " additional info.")
+            String pInputGraphURL,
+        @RequestParam(name = P_INPUT_BINDING_URL, required = false)
+        @ApiParam(value = "Url used to retrieve input binding of the module. Note that additional request parameters"
+            + " can be used for same purpose.")
+            String pInputBindingURL,
+        @RequestParam(name = P_OUTPUT_BINDING_URL, required = false)
+        @ApiParam(value = "Url used to retrieve output binding of the module.")
+            String pOutputBindingURL,
+        @RequestParam MultiValueMap<String, String> parameters
     ) {
         LOG.info("Processing POST request.");
+        // TODO process internal params passed arguments not parameters map
         return runModule(inputModel, parameters);
     }
 
-    @RequestMapping(
+    @GetMapping(
         value = "/service",
-        method = RequestMethod.GET,
         produces = {
             RDFMimeType.LD_JSON_STRING + ";charset=utf-8",
             RDFMimeType.N_TRIPLES_STRING,
@@ -138,9 +152,8 @@ public class SPipesServiceController {
      * @param parameters url query parameters
      * @return a {@link Model} representing the processed RDF
      */
-    @RequestMapping(
+    @PostMapping(
         value = "/service",
-        method = RequestMethod.POST,
         consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
         produces = {
             RDFMimeType.LD_JSON_STRING + ";chaset=utf-8",
@@ -165,13 +178,13 @@ public class SPipesServiceController {
         return Collections.singletonMap("message", e.getMessage());
     }
 
-    private QuerySolution transform(final Map parameters) {
+    private QuerySolution transform(final MultiValueMap<String, String> parameters) {
         final QuerySolutionMap querySolution = new QuerySolutionMap();
 
-        for (Object key : parameters.keySet()) {
+        for (Map.Entry<String, List<String>> entry : parameters.entrySet()) {
             // TODO types of RDFNode
-            String value = (String) ((List) parameters.get(key)).get(0);
-            querySolution.add(key.toString(), ResourceFactory.createPlainLiteral(value));
+            String value = entry.getValue().get(0);
+            querySolution.add(entry.getKey(), ResourceFactory.createPlainLiteral(value));
         }
 
         return querySolution;
@@ -258,8 +271,8 @@ public class SPipesServiceController {
         }
         LOG.info("- input variable binding ={}", inputVariablesBinding);
 
-        Model unionModel =  Optional.ofNullable(inputGraphURL)
-            .map(url -> JenaUtils.createUnion(inputDataModel,loadModelFromUrl(url.toString())))
+        Model unionModel = Optional.ofNullable(inputGraphURL)
+            .map(url -> JenaUtils.createUnion(inputDataModel, loadModelFromUrl(url.toString())))
             .orElse(inputDataModel);
 
         return ExecutionContextFactory.createContext(unionModel, inputVariablesBinding);
@@ -294,15 +307,6 @@ public class SPipesServiceController {
         // LOAD MODULE ID
         final String id = getId(paramHelper);
         logParam(P_ID, id);
-
-        // TODO included P_ID
-        //      -- commented out to be available to semantic logging listener (engine should provide it instead)
-        if (!paramHelper.hasParameterValue(P_ID)) {
-            parameters.add(P_ID, paramHelper.getParameterValue(P_ID_ALTERNATIVE));
-            parameters.remove(P_ID_ALTERNATIVE);
-        }
-
-        // parameters.remove(P_ID);
 
         return id;
     }
@@ -346,11 +350,7 @@ public class SPipesServiceController {
 
         if (paramHelper.hasParameterValue(P_ID)) {
             return paramHelper.getParameterValue(P_ID);
-        } else if (paramHelper.hasParameterValue(P_ID_ALTERNATIVE)) {
-            LOG.debug("Parameter '{}' is used instead of parameter '{}', which is missing.", P_ID_ALTERNATIVE, P_ID);
-            return paramHelper.getParameterValue(P_ID_ALTERNATIVE);
         }
-
         throw new SPipesServiceException("Invalid/no module id supplied.");
     }
 
@@ -371,9 +371,13 @@ public class SPipesServiceController {
             vb2.load(inputBindingURL.openStream(), FileUtils.langTurtle);
             VariablesBinding vb3 = inputVariablesBinding.extendConsistently(vb2);
             if (vb3.isEmpty()) {
-                LOG.debug("- no conflict between bindings loaded from '" + P_INPUT_BINDING_URL + "' and those provided in query string.");
+                LOG.debug("- no conflict between bindings loaded from '{}' and those provided in query string.",
+                    P_INPUT_BINDING_URL
+                );
             } else {
-                LOG.info("- conflicts found between bindings loaded from '" + P_INPUT_BINDING_URL + "' and those provided in query string: " + vb3.toString());
+                LOG.info("- conflicts found between bindings loaded from '{}' and those provided in query string: {}",
+                    P_INPUT_BINDING_URL, vb3
+                );
             }
         } catch (IOException e) {
             LOG.warn("Could not read data from parameter {}={}, caused by: {}", P_INPUT_BINDING_URL, inputBindingURL, e);

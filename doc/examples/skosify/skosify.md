@@ -4,7 +4,7 @@ This example demonstrates debugging capabilities of SPipes engine. Let's assume 
 is running at `http://localhost:8080/s-pipes`. Script [skosify.sms.ttl](skosify.sms.ttl) contains *pipeline* 
 that can be called with:
 
-    http://localhost:8080/s-pipes/service?id=skosify
+    http://localhost:8080/s-pipes/service?_pId=skosify
 
 The *pipeline* constructs sample OWL ontology about organisms and returns a SKOS view on that ontology. 
 The script can be visualized as follows:
@@ -59,7 +59,7 @@ The pipeline transforms provided data into [data represented by SKOS vocabulary]
 There is possibility to execute any module within the script separately using SPipes REST endpoint `/module`.
 As an example, consider following http POST request using `curl` call:
 ```
-curl --location --request POST 'http://localhost:8080/s-pipes/module?id=http://onto.fel.cvut.cz/ontologies/s-pipes/skosify-example-0.1/metadata/construct-labels&_pConfigURL=file:///SPIPES_DIR/s-pipes/doc/examples/skosify/module-execution/config.ttl&_pInputBindingURL=file:///SPIPES_DIR/doc/examples/skosify/module-execution/construct-labels--input-binding.ttl' \
+curl --location --request POST 'http://localhost:8080/s-pipes/module?_pId=http://onto.fel.cvut.cz/ontologies/s-pipes/skosify-example-0.1/metadata/construct-labels&_pConfigURL=file:///SPIPES_DIR/s-pipes/doc/examples/skosify/module-execution/config.ttl&_pInputBindingURL=file:///SPIPES_DIR/doc/examples/skosify/module-execution/construct-labels--input-binding.ttl' \
 --header 'Content-Type: text/turtle' \
 --data "@/SPIPES_DIR/doc/examples/skosify/module-execution/construct-labels--input-model.ttl"
 ```
