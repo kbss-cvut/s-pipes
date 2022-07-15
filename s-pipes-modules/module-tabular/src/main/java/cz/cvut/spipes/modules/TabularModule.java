@@ -134,12 +134,15 @@ public class TabularModule extends AbstractModule {
             delimiter,
             "\\n").build();
 
-        ICsvListReader listReader = null;
-        try {
-            listReader = new CsvListReader(getReader(), csvPreference);
-
+        try (
+            ICsvListReader listReader = new CsvListReader(getReader(), csvPreference);
+            ) {
             String[] header = listReader.getHeader(true); // skip the header (can't be used with CsvListReader)
 
+            if (header == null) {
+                LOG.warn("Input stream resource {} to provide tabular data is empty.", this.sourceResource.getUri());
+                return getExecutionContext(inputModel, outputModel);
+            }
             Set<String> columnNames = new HashSet<>();
             List<RDFNode> columns = new LinkedList<>();
 
@@ -394,16 +397,12 @@ public class TabularModule extends AbstractModule {
 
         } catch (IOException e) {
             LOG.error("Error while reading file from resource uri {}", sourceResource, e);
-        } finally {
-            if( listReader != null ) {
-                try {
-                    listReader.close();
-                } catch (IOException e) {
-                    LOG.error("Error while closing file from resource uri {}", sourceResource, e);
-                }
-            }
         }
 
+        return getExecutionContext(inputModel, outputModel);
+    }
+
+    private ExecutionContext getExecutionContext(Model inputModel, Model outputModel) {
         if (isReplace) {
             return ExecutionContextFactory.createContext(outputModel);
         } else {
