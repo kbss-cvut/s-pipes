@@ -1,14 +1,5 @@
 package cz.cvut.spipes.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Stream;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.jena.graph.compose.MultiUnion;
 import org.apache.jena.rdf.model.Model;
@@ -20,6 +11,16 @@ import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.ByteArrayInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Stream;
 
 public class JenaUtils {
 
@@ -88,9 +89,9 @@ public class JenaUtils {
         objectResources.sort(uriComparator);
 
         modelMetadataBuff
-            .append("No. of statements: ").append(statementsSize).append("\n")
-            .append("Subjects: ").append(subjectResources.toString()).append("\n")
-            .append("Objects: ").append(objectResources.toString()).append("\n");
+            .append("No. of statements: ").append(statementsSize).append("%n")
+            .append("Subjects: ").append(subjectResources.toString()).append("%n")
+            .append("Objects: ").append(objectResources.toString()).append("%n");
 
 
         return DigestUtils.md5Hex(modelMetadataBuff.toString());

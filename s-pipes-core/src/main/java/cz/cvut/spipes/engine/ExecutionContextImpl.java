@@ -37,8 +37,8 @@ class ExecutionContextImpl implements ExecutionContext {
     private String getSimpleString(boolean truncate) {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Context ").append(this.hashCode()).append("[ \n")
-            .append("\t varBindings = ").append(getVariablesBindingString(truncate)).append("\n")
+        sb.append("Context ").append(this.hashCode()).append("[ %n")
+            .append("\t varBindings = ").append(getVariablesBindingString(truncate)).append("%n")
             .append("\t modelSize = ").append(defaultModel.listStatements().toList().size())
             .append("]");
 

@@ -29,7 +29,7 @@ public class CoreConfigProperies {
                         prop.setProperty(ks, envValue);
                     }
                 });
-                LOG.info("Loaded configuration from {} and system environment : \n {}", CONFIG_FILE, prop.entrySet());
+                LOG.info("Loaded configuration from {} and system environment : %n {}", CONFIG_FILE, prop.entrySet());
             } else {
                 throw new FileNotFoundException("Property file '" + CONFIG_FILE + "' not found in the classpath");
             }
