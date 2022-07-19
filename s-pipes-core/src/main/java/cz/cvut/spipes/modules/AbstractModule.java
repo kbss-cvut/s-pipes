@@ -270,7 +270,7 @@ public abstract class AbstractModule implements Module {
                 constraintViolated = rs.hasNext();
 
                 if(constraintViolated){
-                    evidence.append("Evidence of the violation:%n");
+                    evidence.append("Evidence of the violation: \n");
                     for(int i = 0; i < 3 && rs.hasNext(); i++){
                         QuerySolution solution = rs.next() ;
                         evidence.append(solution.toString());
@@ -285,11 +285,11 @@ public abstract class AbstractModule implements Module {
             if (constraintViolated) {
 
                 String mainErrorMsg = String.format("Validation of constraint failed for the constraint \"%s\".", getQueryComment(spinQuery));
-                String failedQueryMsg = String.format("Failed validation constraint : %n %s", spinQuery.toString());
+                String failedQueryMsg = String.format("Failed validation constraint : \n %s", spinQuery.toString());
                 String mergedMsg = new StringBuffer()
-                        .append(mainErrorMsg).append("%n")
-                        .append(failedQueryMsg).append("%n")
-                        .append(evidence).append("%n")
+                        .append(mainErrorMsg).append("\n")
+                        .append(failedQueryMsg).append("\n")
+                        .append(evidence).append("\n")
                         .toString();
                 LOG.error(mergedMsg);
                 if (ExecutionConfig.isExitOnError()) {

@@ -1,17 +1,24 @@
 package cz.cvut.spipes.util;
 
 
-import org.apache.jena.query.*;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.stream.Collectors;
+import org.apache.jena.query.ARQ;
+import org.apache.jena.query.ParameterizedSparqlString;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QuerySolution;
+import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.sparql.mgt.Explain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.regex.Matcher;
-import java.util.stream.Collectors;
 
 public class QueryUtils {
 
@@ -38,10 +45,10 @@ public class QueryUtils {
     public static String nextResultsToValuesClause(ResultSet resultSet, int rowsCount) {
         StringBuffer clauseBuffer = new StringBuffer();
         clauseBuffer
-            .append("%n")
+            .append("\n")
             .append(getValuesClauseHeader(resultSet))
             .append(getValuesClauseValues(resultSet, rowsCount))
-            .append("}%n");
+            .append("}\n");
 
         return clauseBuffer.toString();
     }
@@ -57,7 +64,7 @@ public class QueryUtils {
     private static String getValuesClauseHeader(ResultSet resultSet) {
         return resultSet.getResultVars().stream()
             .map(v -> "?" + v)
-            .collect(Collectors.joining(" ", "VALUES (", ") {%n"));
+            .collect(Collectors.joining(" ", "VALUES (", ") {\n"));
     }
 
     private static String getValuesClauseValues(ResultSet resultSet, int rowsCount) {
@@ -73,7 +80,7 @@ public class QueryUtils {
                 resultSet.getResultVars().stream()
                     .map(querySolution::get)
                     .map(QueryUtils::serializeToSparql)
-                    .collect(Collectors.joining(" ", "  (", ")%n"))
+                    .collect(Collectors.joining(" ", "  (", ")\n"))
             );
         }
 
@@ -139,9 +146,9 @@ public class QueryUtils {
         } catch (RuntimeException ex) {
             LOG.error("Failed execution of query [1] for binding [2], due to exception [3]. " +
                     "The query [1] will be executed again with detailed logging turned on. " +
-                    "\n\t - query [1]: \"%n{}\n\"" +
-                    "\n\t - binding [2]: \"%n{}\n\"" +
-                    "\n\t - exception [3]: \"%n{}\n\""
+                    "\n\t - query [1]: \"\n{}\n\"" +
+                    "\n\t - binding [2]: \"\n{}\n\"" +
+                    "\n\t - exception [3]: \"\n{}\n\""
                 , query, bindings, getStackTrace(ex));
         }
         LOG.error("Executing query [1] again to diagnose the cause ...");
