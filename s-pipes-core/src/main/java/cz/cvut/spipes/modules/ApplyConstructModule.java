@@ -146,7 +146,7 @@ public class ApplyConstructModule extends AbstractModule {
                 }
 
                 if (AuditConfig.isEnabled() || ExecutionConfig.getEnvironment().equals(Environment.development)) {
-                    LOG.debug("... saving module partially computed output to file {}.", saveModelToTemporaryFile(constructedModel));
+                    LOG.debug("... saving module's partially computed output to file {}.", saveModelToTemporaryFile(constructedModel));
                 }
 
                 inferredInSingleIterationModel = ModelFactory.createUnion(inferredInSingleIterationModel, constructedModel);

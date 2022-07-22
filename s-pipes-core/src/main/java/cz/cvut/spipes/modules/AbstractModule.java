@@ -64,14 +64,14 @@ public abstract class AbstractModule implements Module {
         String inputModelFilePath = null;
         if (AuditConfig.isEnabled() || isInDebugMode) {
             inputModelFilePath = saveModelToTemporaryFile(executionContext.getDefaultModel());
-            LOG.debug("Saving module execution input to file {}.", inputModelFilePath);
+            LOG.debug("Saving module's execution input to file {}.", inputModelFilePath);
         }
         if (ExecutionConfig.isCheckValidationConstrains()) {
             checkInputConstraints();
         }
         outputContext = executeSelf();
         if (AuditConfig.isEnabled() || isInDebugMode) {
-            LOG.debug("Saving module execution output to file {}.", saveModelToTemporaryFile(outputContext.getDefaultModel()));
+            LOG.debug("Saving module's execution output to file {}.", saveModelToTemporaryFile(outputContext.getDefaultModel()));
         }
 
         if (ExecutionConfig.isCheckValidationConstrains()) {
@@ -115,7 +115,7 @@ public abstract class AbstractModule implements Module {
             .collect(joining("&", SPIPES_SERVICE_URL + "/module?", ""));
 
 
-        LOG.debug("To rerun the execution visit " + encodedURL);
+        LOG.debug("To rerun the execution visit {}", encodedURL);
     }
 
     @Override
@@ -419,7 +419,7 @@ public abstract class AbstractModule implements Module {
             return ExecutionContextFactory.createContext(computedModel);
         } else {
             if (AuditConfig.isEnabled() || ExecutionConfig.getEnvironment().equals(Environment.development)) {
-                LOG.debug("Saving module computed output to file {}.", saveModelToTemporaryFile(computedModel));
+                LOG.debug("Saving module's computed output to file {}.", saveModelToTemporaryFile(computedModel));
             }
             return ExecutionContextFactory.createContext(JenaUtils.createUnion(inputModel, computedModel));
         }
