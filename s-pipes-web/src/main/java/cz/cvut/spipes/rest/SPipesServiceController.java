@@ -40,26 +40,6 @@ import java.util.Optional;
 @EnableWebMvc
 public class SPipesServiceController {
 
-    /**
-     * Request parameter - 'id' of the module to be executed
-     */
-    public static final String P_ID = "_pId";
-    /**
-     * Request parameter - URL of the resource containing configuration
-     */
-    public static final String P_CONFIG_URL = "_pConfigURL";
-    /**
-     * Input graph - URL of the file where input graph is stored
-     */
-    public static final String P_INPUT_GRAPH_URL = "_pInputGraphURL";
-    /**
-     * Input binding - URL of the file where input bindings are stored
-     */
-    public static final String P_INPUT_BINDING_URL = "_pInputBindingURL";
-    /**
-     * Output binding - URL of the file where output bindings are stored
-     */
-    public static final String P_OUTPUT_BINDING_URL = "_pOutputBindingURL";
     private static final Logger LOG = LoggerFactory.getLogger(SPipesServiceController.class);
     private final ResourceRegisterHelper resourceRegisterHelper;
     private final SPipesScriptManager scriptManager;
@@ -105,24 +85,24 @@ public class SPipesServiceController {
     )
     public Model processPostRequest(
         @ApiParam(value = "Input RDF model that is fed to the module. Additional models can be specified using"
-            + " parameter '" + P_INPUT_GRAPH_URL + "'. In case, more than one model is specified, they are merged"
+            + " parameter '" + ReservedParams.P_INPUT_GRAPH_URL + "'. In case, more than one model is specified, they are merged"
             + " into one union model before fed to the module.")
         @RequestBody Model inputModel,
-        @RequestParam(name = P_ID)
+        @RequestParam(name = ReservedParams.P_ID)
         @ApiParam(value = "Id of the module.")
             String pId,
-        @RequestParam(name = P_CONFIG_URL, required = false)
+        @RequestParam(name = ReservedParams.P_CONFIG_URL, required = false)
         @ApiParam(value = "Url used to set configuration of the module and possibly a logging.")
             String pConfigURL,
-        @RequestParam(value = P_INPUT_GRAPH_URL, required = false)
+        @RequestParam(value = ReservedParams.P_INPUT_GRAPH_URL, required = false)
         @ApiParam(value = "Url used to retrieve input graph for the module. See 'inputModel' parameter for"
             + " additional info.")
             String pInputGraphURL,
-        @RequestParam(name = P_INPUT_BINDING_URL, required = false)
+        @RequestParam(name = ReservedParams.P_INPUT_BINDING_URL, required = false)
         @ApiParam(value = "Url used to retrieve input binding of the module. Note that additional request parameters"
             + " can be used for same purpose.")
             String pInputBindingURL,
-        @RequestParam(name = P_OUTPUT_BINDING_URL, required = false)
+        @RequestParam(name = ReservedParams.P_OUTPUT_BINDING_URL, required = false)
         @ApiParam(value = "Url used to retrieve output binding of the module.")
             String pOutputBindingURL,
         @RequestParam MultiValueMap<String, String> parameters
@@ -250,20 +230,20 @@ public class SPipesServiceController {
 
         // FILE WHERE TO GET INPUT GRAPH
         URL inputGraphURL = null;
-        if (paramHelper.hasParameterValue(P_INPUT_GRAPH_URL)) {
-            inputGraphURL = paramHelper.parseParameterValueAsUrl(P_INPUT_GRAPH_URL);
-            logParam(P_INPUT_GRAPH_URL, inputGraphURL.toString());
+        if (paramHelper.hasParameterValue(ReservedParams.P_INPUT_GRAPH_URL)) {
+            inputGraphURL = paramHelper.parseParameterValueAsUrl(ReservedParams.P_INPUT_GRAPH_URL);
+            logParam(ReservedParams.P_INPUT_GRAPH_URL, inputGraphURL.toString());
         }
 
         // FILE WHERE TO GET INPUT BINDING
         URL inputBindingURL = null;
-        if (paramHelper.hasParameterValue(P_INPUT_BINDING_URL)) {
-            inputBindingURL = paramHelper.parseParameterValueAsUrl(P_INPUT_BINDING_URL);
-            logParam(P_INPUT_BINDING_URL, inputBindingURL.toString());
+        if (paramHelper.hasParameterValue(ReservedParams.P_INPUT_BINDING_URL)) {
+            inputBindingURL = paramHelper.parseParameterValueAsUrl(ReservedParams.P_INPUT_BINDING_URL);
+            logParam(ReservedParams.P_INPUT_BINDING_URL, inputBindingURL.toString());
         }
 
-        parameters.remove(P_INPUT_GRAPH_URL);
-        parameters.remove(P_INPUT_BINDING_URL);
+        parameters.remove(ReservedParams.P_INPUT_GRAPH_URL);
+        parameters.remove(ReservedParams.P_INPUT_BINDING_URL);
 
         final VariablesBinding inputVariablesBinding = new VariablesBinding(transform(parameters));
         if (inputBindingURL != null) {
@@ -283,12 +263,12 @@ public class SPipesServiceController {
 
         // FILE WHERE TO SAVE OUTPUT BINDING
         File outputBindingPath = null;
-        if (paramHelper.hasParameterValue(P_OUTPUT_BINDING_URL)) {
-            outputBindingPath = paramHelper.parseParameterValueAsFilePath(P_OUTPUT_BINDING_URL).toFile();
-            logParam(P_OUTPUT_BINDING_URL, outputBindingPath.toString());
+        if (paramHelper.hasParameterValue(ReservedParams.P_OUTPUT_BINDING_URL)) {
+            outputBindingPath = paramHelper.parseParameterValueAsFilePath(ReservedParams.P_OUTPUT_BINDING_URL).toFile();
+            logParam(ReservedParams.P_OUTPUT_BINDING_URL, outputBindingPath.toString());
         }
 
-        parameters.remove(P_OUTPUT_BINDING_URL);
+        parameters.remove(ReservedParams.P_OUTPUT_BINDING_URL);
 
         return outputBindingPath;
     }
@@ -306,7 +286,7 @@ public class SPipesServiceController {
 
         // LOAD MODULE ID
         final String id = getId(paramHelper);
-        logParam(P_ID, id);
+        logParam(ReservedParams.P_ID, id);
 
         return id;
     }
@@ -316,10 +296,10 @@ public class SPipesServiceController {
 
         // LOAD CONFIGURATION
         String configURL = null;
-        if (paramHelper.hasParameterValue(P_CONFIG_URL)) {
-            configURL = paramHelper.getRequiredParameterValue(P_CONFIG_URL);
-            logParam(P_CONFIG_URL, configURL);
-            parameters.remove(P_CONFIG_URL);
+        if (paramHelper.hasParameterValue(ReservedParams.P_CONFIG_URL)) {
+            configURL = paramHelper.getRequiredParameterValue(ReservedParams.P_CONFIG_URL);
+            logParam(ReservedParams.P_CONFIG_URL, configURL);
+            parameters.remove(ReservedParams.P_CONFIG_URL);
         }
 
         String cUrl = Optional.ofNullable(configURL)
@@ -348,8 +328,8 @@ public class SPipesServiceController {
     private @NotNull
     String getId(@NotNull final ServiceParametersHelper paramHelper) {
 
-        if (paramHelper.hasParameterValue(P_ID)) {
-            return paramHelper.getParameterValue(P_ID);
+        if (paramHelper.hasParameterValue(ReservedParams.P_ID)) {
+            return paramHelper.getParameterValue(ReservedParams.P_ID);
         }
         throw new SPipesServiceException("Invalid/no module id supplied.");
     }
@@ -372,15 +352,15 @@ public class SPipesServiceController {
             VariablesBinding vb3 = inputVariablesBinding.extendConsistently(vb2);
             if (vb3.isEmpty()) {
                 LOG.debug("- no conflict between bindings loaded from '{}' and those provided in query string.",
-                    P_INPUT_BINDING_URL
+                    ReservedParams.P_INPUT_BINDING_URL
                 );
             } else {
                 LOG.info("- conflicts found between bindings loaded from '{}' and those provided in query string: {}",
-                    P_INPUT_BINDING_URL, vb3
+                    ReservedParams.P_INPUT_BINDING_URL, vb3
                 );
             }
         } catch (IOException e) {
-            LOG.warn("Could not read data from parameter {}={}, caused by: {}", P_INPUT_BINDING_URL, inputBindingURL, e);
+            LOG.warn("Could not read data from parameter {}={}, caused by: {}", ReservedParams.P_INPUT_BINDING_URL, inputBindingURL, e);
         }
 
     }

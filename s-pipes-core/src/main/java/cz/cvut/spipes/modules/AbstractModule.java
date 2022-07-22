@@ -105,7 +105,7 @@ public abstract class AbstractModule implements Module {
         String configModelFileUrl = FILE_PREFIX + saveModelToTemporaryFile(this.resource.getModel());
 
         Map<String, String> requestParams = new HashMap<>();
-        requestParams.put("id", this.resource.getURI());
+        requestParams.put("_pId", this.resource.getURI());
         requestParams.put("_pConfigURL", configModelFileUrl);
         requestParams.put("_pInputGraphURL", inputModelFileUrl);
         requestParams.put("_pInputBindingURL", inputBindingFileUrl);

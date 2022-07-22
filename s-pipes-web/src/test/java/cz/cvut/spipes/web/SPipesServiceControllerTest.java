@@ -2,7 +2,7 @@ package cz.cvut.spipes.web;
 
 import cz.cvut.spipes.config.WebAppConfig;
 import cz.cvut.spipes.engine.VariablesBinding;
-import cz.cvut.spipes.rest.SPipesServiceController;
+import cz.cvut.spipes.rest.util.ReservedParams;
 import cz.cvut.spipes.util.RDFMimeType;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -67,22 +67,22 @@ public class SPipesServiceControllerTest {
     @Test
     public void testRunNonExistingModule() throws Exception {
         final RequestBuilder rb = get("/module").
-                param(SPipesServiceController.P_ID,"http://example.org/s-pipes/test-no-module");
+                param(ReservedParams.P_ID,"http://example.org/s-pipes/test-no-module");
         mockMvc.perform(rb).andExpect(status().is4xxClientError());
     }
 
     @Test
     public void testRunInvalidConfigurationModule() throws Exception {
         final RequestBuilder rb = get("/module").
-                param(SPipesServiceController.P_ID,SAMPLE_IDENTITY_MODULE).
-                param(SPipesServiceController.P_CONFIG_URL,"http://example.org/s-pipes/test-no-module/no-configuration");
+                param(ReservedParams.P_ID,SAMPLE_IDENTITY_MODULE).
+                param(ReservedParams.P_CONFIG_URL,"http://example.org/s-pipes/test-no-module/no-configuration");
         mockMvc.perform(rb).andExpect(status().is4xxClientError());
     }
 
     private MockHttpServletRequestBuilder createDefaultIdentityModuleBuilder() throws Exception {
         return post("/module").
-                param(SPipesServiceController.P_ID, SAMPLE_IDENTITY_MODULE).
-                param(SPipesServiceController.P_CONFIG_URL,getClass().getResource("/module-identity/config.ttl").toURI().toURL().toString()).
+                param(ReservedParams.P_ID, SAMPLE_IDENTITY_MODULE).
+                param(ReservedParams.P_CONFIG_URL,getClass().getResource("/module-identity/config.ttl").toURI().toURL().toString()).
                 param("paramString","haha").
                 param("paramInt","7").
                 param("paramIRI","http://test.me").
@@ -154,10 +154,10 @@ public class SPipesServiceControllerTest {
 
         MockHttpServletRequestBuilder rb = inputModel.isEmpty() ? get("/module") : post("/module").contentType(RDFMimeType.TURTLE_STRING).
                 content(w.getBuffer().toString());
-        rb = rb.param(SPipesServiceController.P_ID, id).
-                param(SPipesServiceController.P_CONFIG_URL, getClass().getResource(resourceConfig).toString()).
-                param(SPipesServiceController.P_INPUT_BINDING_URL,inputBindingFile.toURI().toURL().toString()).
-                param(SPipesServiceController.P_OUTPUT_BINDING_URL,outputBindingFile.toURI().toURL().toString()).
+        rb = rb.param(ReservedParams.P_ID, id).
+                param(ReservedParams.P_CONFIG_URL, getClass().getResource(resourceConfig).toString()).
+                param(ReservedParams.P_INPUT_BINDING_URL,inputBindingFile.toURI().toURL().toString()).
+                param(ReservedParams.P_OUTPUT_BINDING_URL,outputBindingFile.toURI().toURL().toString()).
                 accept(RDFMimeType.LD_JSON_STRING);
 
         MvcResult result = mockMvc.perform(rb)
