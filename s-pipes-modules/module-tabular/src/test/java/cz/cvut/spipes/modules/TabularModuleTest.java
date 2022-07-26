@@ -7,8 +7,7 @@ import cz.cvut.spipes.exception.ResourceNotUniqueException;
 import cz.cvut.spipes.modules.exception.TableSchemaException;
 import cz.cvut.spipes.test.JenaTestUtils;
 import cz.cvut.spipes.util.StreamResourceUtils;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,8 +16,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class TabularModuleTest extends AbstractModuleTestHelper {
@@ -148,6 +146,51 @@ public class TabularModuleTest extends AbstractModuleTestHelper {
         Model inputModel = JenaTestUtils.laodModelFromResource("/examples/04/input-data-schema.ttl");
         module.setInputContext(ExecutionContextFactory.createContext(inputModel));
         assertThrows(TableSchemaException.class, () -> module.executeSelf());
+    }
+
+    @Test
+    public void executeSimpleTransformationWithoutHeaders() throws URISyntaxException, IOException {
+        module.setSkipHeader(true);
+
+        module.setSourceResource(
+                StreamResourceUtils.getStreamResource(DATA_PREFIX,getFilePath("examples/noHeader/schemaExample/input.csv"))
+        );
+
+        Model inputModel = JenaTestUtils.laodModelFromResource("/examples/noHeader/schemaExample/input-data-schema.ttl");
+        module.setInputContext(ExecutionContextFactory.createContext(inputModel));
+
+        ExecutionContext outputContext = module.executeSelf();
+
+        String[] columns = new String[]{"col_1", "col_2", "col_3", "col_4", "col_5"};
+
+        for (int i = 1; i <= 3; i++) {
+            Resource resource = ResourceFactory.createResource(DATA_PREFIX + "#row-" + i);
+            for (String column: columns) {
+                Property property = ResourceFactory.createProperty(DATA_PREFIX, column);
+                assertTrue(outputContext.getDefaultModel().contains(resource, property));
+            }
+        }
+    }
+
+    @Test
+    public void executeWithSimpleTransformationWithoutHeaders_NoSchema() throws URISyntaxException, IOException {
+        module.setSkipHeader(true);
+
+        module.setSourceResource(
+                StreamResourceUtils.getStreamResource(DATA_PREFIX,getFilePath("examples/noHeader/noSchemaExample/input.tsv"))
+        );
+
+        ExecutionContext outputContext = module.executeSelf();
+
+        for (int i = 1; i <= 3; i++) {
+            Resource resource = ResourceFactory.createResource(DATA_PREFIX + "#row-" + i);
+            for (int j = 1; j <= 6; j++) {
+                String columnName = "column_" + j;
+                Property property = ResourceFactory.createProperty(DATA_PREFIX, columnName);
+
+                assertTrue(outputContext.getDefaultModel().contains(resource, property));
+            }
+        }
     }
 
     @Override
