@@ -3,8 +3,8 @@ package cz.cvut.spipes.modules.model;
 import cz.cvut.kbss.jopa.model.annotations.*;
 import cz.cvut.spipes.constants.CSVW;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.net.URI;
+import java.util.*;
 
 /**
  * Represents the custom tabular metadata (according to relevant W3C standard)
@@ -55,5 +55,17 @@ public class TableSchema extends AbstractEntity {
 
     public void setColumnsSet(Set<Column> columnsSet) {
         this.columnsSet = columnsSet;
+    }
+
+    public List<Column> sortColumns(List<URI> orderList){
+        if (orderList.isEmpty()) return new ArrayList<>(columnsSet);
+
+        List<Column> columnList = new ArrayList<>(orderList.size());
+
+        for (URI uri : orderList) {
+            Optional<Column> col = columnsSet.stream().filter(column -> column.getUri().equals(uri)).findFirst();
+            col.ifPresent(columnList::add);
+        }
+        return columnList;
     }
 }
