@@ -1,0 +1,44 @@
+@prefix : <http://onto.fel.cvut.cz/data/data-schema/> .
+@prefix csvw: <http://www.w3.org/ns/csvw#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+
+:input-data-schema a owl:Ontology .
+
+:input-table-schema a csvw:TableSchema ;
+                    csvw:column :Column_1 ;
+                    csvw:column :Column_2 ;
+                    csvw:column :Column_3 ;
+                    csvw:column :Column_4 ;
+                    csvw:column :Column_5 ;
+                    csvw:columns ( :Column_1 :Column_2 :Column_3 :Column_4 :Column_5) ;
+
+.
+
+:Column_1   a csvw:Column;
+    csvw:name "col_1";
+    csvw:title "col_1";
+.
+:Column_2   a csvw:Column;
+    csvw:name "col_2" ;
+    csvw:title "col_2";
+.
+:Column_3   a csvw:Column;
+    csvw:name "col_3" ;
+    csvw:title "col_3";
+.
+
+:Column_4   a csvw:Column;
+    csvw:name "col_4" ;
+    csvw:title "col_4";
+.
+
+:Column_5  a csvw:Column;
+  csvw:name "col_5" ;
+  csvw:title "col_5";
+.
+
+csvw:property a rdf:Property .
+csvw:property rdfs:range rdf:Property .
