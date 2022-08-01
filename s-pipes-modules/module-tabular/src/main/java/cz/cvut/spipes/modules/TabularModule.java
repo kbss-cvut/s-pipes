@@ -172,28 +172,7 @@ public class TabularModule extends AbstractModule {
             }
 
             if(skipHeader){
-                if(tableSchemaCount == 1) {
-                    List<URI> orderList = new ArrayList<>();
-                    Resource tableSchemaResource = inputModel.getResource(inputTableSchema.getUri().toString());
-                    Statement statement = tableSchemaResource.getProperty(CSVW.columns);
-
-                    if(statement != null){
-                        RDFNode node = statement.getObject();
-                        RDFList rdfList = node.as(RDFList.class);
-
-                        rdfList.iterator().forEach(rdfNode -> {
-                            try {
-                                orderList.add(new URI(rdfNode.toString()));
-                            } catch (URISyntaxException e) {
-                                logError("Invalid URI: " + rdfNode);
-                            }
-                        });
-                    }else LOG.warn("Order of columns was not provided in the schema. Using random order.");
-
-                    header = createHeaders(header.length, inputTableSchema.sortColumns(orderList));
-                }else {
-                    header = createHeaders(header.length, new ArrayList<>());
-                }
+                header = getHeaderFromSchema(inputModel, header, tableSchemaCount);
                 listReader = new CsvListReader(getReader(), csvPreference);
             }
 
@@ -626,20 +605,46 @@ public class TabularModule extends AbstractModule {
         this.skipHeader = skipHeader;
     }
 
+    private String[] getHeaderFromSchema(Model inputModel, String[] header, int tableSchemaCount) {
+        if (tableSchemaCount == 1) {
+            List<URI> orderList = new ArrayList<>();
+            Resource tableSchemaResource = inputModel.getResource(inputTableSchema.getUri().toString());
+            Statement statement = tableSchemaResource.getProperty(CSVW.columns);
+
+            if (statement != null) {
+                RDFNode node = statement.getObject();
+                RDFList rdfList = node.as(RDFList.class);
+
+                rdfList.iterator().forEach(rdfNode -> {
+                    try {
+                        orderList.add(new URI(rdfNode.toString()));
+                    } catch (URISyntaxException e) {
+                        logError("Invalid URI: " + rdfNode);
+                    }
+                });
+                header = createHeaders(header.length, inputTableSchema.sortColumns(orderList));
+
+            } else logError("Order of columns was not provided in the schema.");
+        } else {
+            header = createHeaders(header.length, new ArrayList<>());
+        }
+        return header;
+    }
+
     private String[] createHeaders(int size, List<Column> columns) {
         String[] headers = new String[size];
 
         for(int i = 0; i < size; i++){
             if(!columns.isEmpty()){
-                headers[i] = columns.get(i).getTitle();
+                headers[i] = columns.get(i).getName();
             }else headers[i] = "column_" + (i + 1);
         }
         return headers;
     }
 
-    private Column getColumnFromTableSchema(String columnTitle, TableSchema tableSchema) {
+    private Column getColumnFromTableSchema(String columnName, TableSchema tableSchema) {
         for (Column column : tableSchema.getColumnsSet()) {
-            if (column.getTitle() != null && column.getTitle().equals(columnTitle)) {
+            if (column.getName() != null && column.getName().equals(columnName)) {
                 return column;
             }
         }
