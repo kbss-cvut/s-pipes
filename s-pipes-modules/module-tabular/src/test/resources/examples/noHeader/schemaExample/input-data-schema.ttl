@@ -19,25 +19,20 @@
 
 :Column_1   a csvw:Column;
     csvw:name "col_1";
-    csvw:title "col_1";
 .
 :Column_2   a csvw:Column;
     csvw:name "col_2" ;
-    csvw:title "col_2";
 .
 :Column_3   a csvw:Column;
     csvw:name "col_3" ;
-    csvw:title "col_3";
 .
 
 :Column_4   a csvw:Column;
     csvw:name "col_4" ;
-    csvw:title "col_4";
 .
 
 :Column_5  a csvw:Column;
   csvw:name "col_5" ;
-  csvw:title "col_5";
 .
 
 csvw:property a rdf:Property .
