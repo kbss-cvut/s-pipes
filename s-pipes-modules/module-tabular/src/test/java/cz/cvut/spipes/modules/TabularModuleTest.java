@@ -9,7 +9,10 @@ import cz.cvut.spipes.test.JenaTestUtils;
 import cz.cvut.spipes.util.StreamResourceUtils;
 import org.apache.jena.rdf.model.*;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -19,13 +22,13 @@ import java.nio.file.Paths;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
-public class TabularModuleTest extends AbstractModuleTestHelper {
+ class TabularModuleTest extends AbstractModuleTestHelper {
 
     private TabularModule module;
     private final String DATA_PREFIX = "http://onto.fel.cvut.cz/data/";
 
     @BeforeEach
-    public void setUp() {
+     void setUp() {
         module = new TabularModule();
 
         module.setReplace(true);
@@ -38,7 +41,7 @@ public class TabularModuleTest extends AbstractModuleTestHelper {
     }
 
     @Test
-    public void executeWithSimpleTransformation() throws URISyntaxException, IOException {
+     void executeWithSimpleTransformation() throws URISyntaxException, IOException {
         module.setSourceResource(
             StreamResourceUtils.getStreamResource(
                 "http://test-file",
@@ -51,7 +54,7 @@ public class TabularModuleTest extends AbstractModuleTestHelper {
     }
 
     @Test
-    public void executeWithDuplicateColumnsThrowsResourceNotUniqueException()
+     void executeWithDuplicateColumnsThrowsResourceNotUniqueException()
             throws URISyntaxException, IOException {
         module.setSourceResource(StreamResourceUtils.getStreamResource(
                 "http://test-file-2",
@@ -70,7 +73,7 @@ public class TabularModuleTest extends AbstractModuleTestHelper {
     }
 
     @Test
-    public void checkDefaultConfigurationAgainstExemplaryModelOutput() throws URISyntaxException, IOException {
+     void checkDefaultConfigurationAgainstExemplaryModelOutput() throws URISyntaxException, IOException {
         module.setSourceResource(
                 StreamResourceUtils.getStreamResource(
                         "http://test-file",
@@ -88,7 +91,7 @@ public class TabularModuleTest extends AbstractModuleTestHelper {
 
 
     @Test
-    public void execute_checkTableSchema() throws URISyntaxException, IOException {
+     void execute_checkTableSchema() throws URISyntaxException, IOException {
         module.setSourceResource(
                 StreamResourceUtils.getStreamResource(DATA_PREFIX,getFilePath("examples/01/input.tsv"))
         );
@@ -107,49 +110,24 @@ public class TabularModuleTest extends AbstractModuleTestHelper {
 
 
 
-    @Test
-    public void execute_TableSchemaWithLessColumns_throwsException() throws URISyntaxException, IOException {
+    @DisplayName("Executes Tabular module with the different number of columns in the schema.")
+    @ParameterizedTest(name = "{index} => message=''{0} in the schema''")
+    @ValueSource(strings = {"moreColumns", "lessColumns", "noColumns"})
+    void executeTabularModule_throwsException(String folderName) throws URISyntaxException, IOException {
         assumeTrue(ExecutionConfig.isExitOnError());
         module.setSourceResource(
-                StreamResourceUtils.getStreamResource(DATA_PREFIX,getFilePath("examples/02/input.tsv"))
+                StreamResourceUtils.getStreamResource(DATA_PREFIX,getFilePath("examples/" + folderName + "/input.tsv"))
         );
 
-        Model inputModel = JenaTestUtils.laodModelFromResource("/examples/02/input-data-schema.ttl");
-        module.setInputContext(ExecutionContextFactory.createContext(inputModel));
-
-        assertThrows(TableSchemaException.class, () -> module.executeSelf());
-
-    }
-
-    @Test
-    public void execute_TableSchemaWithMoreColumns_throwsException() throws URISyntaxException, IOException {
-        assumeTrue(ExecutionConfig.isExitOnError());
-
-        module.setSourceResource(
-                StreamResourceUtils.getStreamResource(DATA_PREFIX,getFilePath("examples/03/input.tsv"))
-        );
-
-        Model inputModel = JenaTestUtils.laodModelFromResource("/examples/03/input-data-schema.ttl");
+        Model inputModel = JenaTestUtils.laodModelFromResource("/examples/" + folderName + "/input-data-schema.ttl");
         module.setInputContext(ExecutionContextFactory.createContext(inputModel));
 
         assertThrows(TableSchemaException.class, () -> module.executeSelf());
     }
 
     @Test
-    public void execute_TableSchemaWithNoExistingColumn_throwsException() throws URISyntaxException, IOException {
-        assumeTrue(ExecutionConfig.isExitOnError());
-
-        module.setSourceResource(
-                StreamResourceUtils.getStreamResource(DATA_PREFIX,getFilePath("examples/04/input.tsv"))
-        );
-
-        Model inputModel = JenaTestUtils.laodModelFromResource("/examples/04/input-data-schema.ttl");
-        module.setInputContext(ExecutionContextFactory.createContext(inputModel));
-        assertThrows(TableSchemaException.class, () -> module.executeSelf());
-    }
-
-    @Test
-    public void executeSimpleTransformationWithoutHeaders() throws URISyntaxException, IOException {
+     void executeTabularModule_withDataSchemaNoHeader_returnsNamedColumnsFromSchema()
+            throws URISyntaxException, IOException {
         module.setSkipHeader(true);
 
         module.setSourceResource(
@@ -173,11 +151,13 @@ public class TabularModuleTest extends AbstractModuleTestHelper {
     }
 
     @Test
-    public void executeWithSimpleTransformationWithoutHeaders_NoSchema() throws URISyntaxException, IOException {
+     void checksCSVTransformation_noDataSchemaNoHeader_returnsAutonamedColumns()
+            throws URISyntaxException, IOException {
         module.setSkipHeader(true);
 
         module.setSourceResource(
-                StreamResourceUtils.getStreamResource(DATA_PREFIX,getFilePath("examples/noHeader/noSchemaExample/input.tsv"))
+                StreamResourceUtils
+                        .getStreamResource(DATA_PREFIX,getFilePath("examples/noHeader/noSchemaExample/input.tsv"))
         );
 
         ExecutionContext outputContext = module.executeSelf();

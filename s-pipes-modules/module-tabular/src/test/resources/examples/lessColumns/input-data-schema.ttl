@@ -10,10 +10,6 @@
 :input-table-schema a csvw:TableSchema ;
                     csvw:column :bookingno_i_column ;
                     csvw:column :Employee_No_column ;
-                    csvw:column :user_sign_column ;
-                    csvw:column :Start_Date_column ;
-                    csvw:column :Start_Time_column ;
-                    csvw:column :Date_column ;
 .
 
 :bookingno_i_column   a csvw:Column;
@@ -26,35 +22,9 @@
     csvw:property :Employee_No ;
     csvw:title "Employee No"
 .
-:user_sign_column   a csvw:Column;
-    csvw:name "user_sign" ;
-    csvw:property :user_sign ;
-    csvw:title "user_sign"
-.
-:Start_Date_column   a csvw:Column;
-    csvw:name "Start_Date" ;
-    csvw:property :Start_Date ;
-    csvw:title "Start Date"
-.
-
-:Start_Time_column  a csvw:Column;
-  csvw:name "Start_Time" ;
-  csvw:property :Start_Time ;
-  csvw:title "Start Time"
-.
-
-:Date_column a csvw:Column;
-  csvw:name "Date" ;
-  csvw:property :Date ;
-  csvw:title "Date"
-.
 
 csvw:property a rdf:Property .
 csvw:property rdfs:range rdf:Property .
 
 :bookingno_i a rdf:Property .
 :Employee_No a rdf:Property .
-:user_sign a rdf:Property .
-:Start_Date a rdf:Property .
-:Start_Time a rdf:Property .
-:Date a rdf:Property .
