@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -78,10 +79,26 @@ public class SMScriptCollectionRepository implements ScriptCollectionRepository 
 
     private OntModel getContextClosure(@NotNull  String context) {
         OntModel model = ontoDocManager.getOntology(context);
+
+        model.getNsPrefixMap().forEach((name, url) -> {
+            if (!isValidURL(url)){
+                LOG.warn("Invalid URI prefix: <{}> within <{}> ontology.", url, context);
+            }
+        });
+
         model.loadImports();
         return model;
     }
 
+    private boolean isValidURL(String url)
+    {
+        try {
+            new URL(url).toURI();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
     /*
 
     -- functionOntologySet
