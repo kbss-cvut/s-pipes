@@ -90,21 +90,22 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 
 
-    @Test
-     void execute_checkTableSchema() throws URISyntaxException, IOException {
+     @DisplayName("Executes Tabular module with or without csvw:property.")
+     @ParameterizedTest(name = "{index} => message=''Test {0} (csvw:property) in the schema''")
+     @ValueSource(strings = {"withProperty", "withoutProperty"})
+     void executeSelfChecksSchemaWithoutProperty(String folderName) throws URISyntaxException, IOException {
         module.setSourceResource(
-                StreamResourceUtils.getStreamResource(DATA_PREFIX,getFilePath("examples/01/input.tsv"))
+                StreamResourceUtils.getStreamResource(DATA_PREFIX, getFilePath("examples/" + folderName + "/input.tsv"))
         );
 
-        Model inputModel = JenaTestUtils.laodModelFromResource("/examples/01/input-data-schema.ttl");
+        Model inputModel = JenaTestUtils.laodModelFromResource("/examples/" + folderName + "/input-data-schema.ttl");
         module.setInputContext(ExecutionContextFactory.createContext(inputModel));
 
         ExecutionContext outputContext = module.executeSelf();
         Model actualModel = outputContext.getDefaultModel();
 
         Model expectedModel = ModelFactory.createDefaultModel()
-                .read(getFilePath("examples/01/expected-output.ttl").toString());
-
+                .read(getFilePath("examples/" + folderName + "/expected-output.ttl").toString());
         assertTrue(actualModel.isIsomorphicWith(expectedModel));
     }
 
@@ -113,7 +114,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
     @DisplayName("Executes Tabular module with the different number of columns in the schema.")
     @ParameterizedTest(name = "{index} => message=''{0} in the schema''")
     @ValueSource(strings = {"moreColumns", "lessColumns", "noColumns"})
-    void executeTabularModule_throwsException(String folderName) throws URISyntaxException, IOException {
+    void executeSelfThrowsException(String folderName) throws URISyntaxException, IOException {
         assumeTrue(ExecutionConfig.isExitOnError());
         module.setSourceResource(
                 StreamResourceUtils.getStreamResource(DATA_PREFIX,getFilePath("examples/" + folderName + "/input.tsv"))
@@ -126,7 +127,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
     }
 
     @Test
-     void executeTabularModule_withDataSchemaNoHeader_returnsNamedColumnsFromSchema()
+    void executeSelfWithDataSchemaNoHeaderReturnsNamedColumnsFromSchema()
             throws URISyntaxException, IOException {
         module.setSkipHeader(true);
 
@@ -151,7 +152,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
     }
 
     @Test
-     void checksCSVTransformation_noDataSchemaNoHeader_returnsAutonamedColumns()
+    void executeSelfWithNoDataSchemaNoHeaderReturnsAutonamedColumns()
             throws URISyntaxException, IOException {
         module.setSkipHeader(true);
 
