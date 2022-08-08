@@ -197,7 +197,7 @@ public class TabularModule extends AbstractModule {
                 columns.add(columnResource);
 
                 if (hasTableSchema){
-                    Column schemaColumn = getColumnFromTableSchema(columnTitle, inputTableSchema);
+                    Column schemaColumn = getColumnFromTableSchema(columnName, inputTableSchema);
                     schemaColumns.add(schemaColumn);
                     if (schemaColumn == null) {
                         String mergedMsg = mainErrorMsg + "\n" +
@@ -258,11 +258,11 @@ public class TabularModule extends AbstractModule {
 
 
                 String columnPropertyUrl = null;
-                if (hasTableSchema && schemaColumns.get(j).getProperty() != null) {
-                    columnPropertyUrl = schemaColumns.get(j).getProperty();
+                if (hasTableSchema && schemaColumns.get(j).getPropertyUrl() != null) {
+                    columnPropertyUrl = schemaColumns.get(j).getPropertyUrl();
                     outputModel.add(
                             columnResource,
-                            CSVW.extendedPropertyUrl,
+                            CSVW.propertyUrl, // TODO: csvw-e:property
                             outputModel.createTypedLiteral(columnPropertyUrl, CSVW.uriTemplate)
                     );
                 }
