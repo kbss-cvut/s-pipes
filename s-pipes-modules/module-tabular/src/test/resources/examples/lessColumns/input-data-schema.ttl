@@ -15,12 +15,10 @@
 :bookingno_i_column   a csvw:Column;
     csvw:name "bookingno_i" ;
     csvw:property :bookingno_i ;
-    csvw:title "bookingno_i"
 .
 :Employee_No_column   a csvw:Column;
     csvw:name "Employee_No" ;
     csvw:property :Employee_No ;
-    csvw:title "Employee No"
 .
 
 csvw:property a rdf:Property .

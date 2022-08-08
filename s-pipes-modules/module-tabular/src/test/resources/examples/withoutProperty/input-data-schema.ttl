@@ -1,4 +1,4 @@
-@prefix : <http://onto.fel.cvut.cz/ontologies/csat/time-analysis-0.1/> .
+@prefix : <http://onto.fel.cvut.cz/data/> .
 @prefix csvw: <http://www.w3.org/ns/csvw#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -18,37 +18,24 @@
 
 :bookingno_i_column   a csvw:Column;
     csvw:name "bookingno_i" ;
-    csvw:property :bookingno_i ;
 .
 :Employee_No_column   a csvw:Column;
-    csvw:name "Employee No" ;
-    csvw:property :Employee_No ;
+    csvw:name "Employee_No" ;
 .
 :user_sign_column   a csvw:Column;
     csvw:name "user_sign" ;
-    csvw:property :user_sign ;
 .
 :Start_Date_column   a csvw:Column;
-    csvw:name "Start Date" ;
-    csvw:property :Start_Date ;
+    csvw:name "Start_Date" ;
 .
 
 :Start_Time_column  a csvw:Column;
-  csvw:name "Start Time" ;
-  csvw:property :Start_Time ;
+    csvw:name "Start_Time" ;
 .
 
 :End_Date_column a csvw:Column;
-    csvw:name "End Date" ;
-    csvw:property :End_Date ;
+    csvw:name "End_Date" ;
 .
 
 csvw:property a rdf:Property .
 csvw:property rdfs:range rdf:Property .
-
-:bookingno_i a rdf:Property .
-:Employee_No a rdf:Property .
-:user_sign a rdf:Property .
-:Start_Date a rdf:Property .
-:Start_Time a rdf:Property .
-:End_Date a rdf:Property .
