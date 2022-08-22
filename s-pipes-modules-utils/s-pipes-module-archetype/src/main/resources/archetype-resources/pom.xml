@@ -3,7 +3,7 @@
     <parent>
         <artifactId>s-pipes-modules</artifactId>
         <groupId>cz.cvut.kbss</groupId>
-        <version>0.3.0</version>
+        <version>0.4.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -42,7 +42,7 @@
             <plugin>
                 <groupId>cz.cvut.kbss</groupId>
                 <artifactId>s-pipes-module-creator-maven-plugin</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>0.4.0</version>
                 <executions>
                     <execution>
                         <goals>
