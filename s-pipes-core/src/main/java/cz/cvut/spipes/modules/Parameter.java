@@ -8,8 +8,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-@interface Parameter {
+public @interface Parameter {
     String urlPrefix() default KBSS_MODULE.uri;
     String name();
 }
-
