@@ -26,6 +26,5 @@ public class $className extends AnnotatedAbstractModule {
 
     @Override
     public void loadConfiguration() {
-        LOG.info("Configuration loaded successfully.");
     }
 }

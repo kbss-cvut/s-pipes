@@ -22,7 +22,7 @@ public class $testClassName {
     }
 
     @Test
-    public void loadConfiguration_doesNotThrow() {
+    void loadConfiguration_doesNotThrow() {
         assertDoesNotThrow(() -> module.loadConfiguration());
     }
 }

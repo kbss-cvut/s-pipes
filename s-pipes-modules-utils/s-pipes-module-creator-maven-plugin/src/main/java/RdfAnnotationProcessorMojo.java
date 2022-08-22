@@ -1,6 +1,7 @@
 import cz.cvut.spipes.constants.SM;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.apache.maven.plugin.AbstractMojo;
@@ -93,7 +94,7 @@ public class RdfAnnotationProcessorMojo extends AbstractMojo {
                         "(name = " + annotation.name() + ", urlPrefix = " + annotation.urlPrefix() + ")");
             }
         }
-        model.write(new FileOutputStream(ontologyFilepath), "TTL");
+        model.write(new FileOutputStream(ontologyFilepath), FileUtils.langTurtle);
         log.info("Successfully written constraints to the ontology file: " + ontologyFilepath);
     }
 }
