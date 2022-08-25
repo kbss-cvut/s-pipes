@@ -57,13 +57,13 @@ public class TableSchema extends AbstractEntity {
         this.columnsSet = columnsSet;
     }
 
-    public List<Column> sortColumns(List<URI> orderList){
+    public List<Column> sortColumns(List<String> orderList){
         if (orderList.isEmpty()) return new ArrayList<>(columnsSet);
 
         List<Column> columnList = new ArrayList<>(orderList.size());
 
-        for (URI uri : orderList) {
-            Optional<Column> col = columnsSet.stream().filter(column -> column.getUri().equals(uri)).findFirst();
+        for (String uri : orderList) {
+            Optional<Column> col = columnsSet.stream().filter(column -> column.getUri().toString().equals(uri)).findFirst();
             col.ifPresent(columnList::add);
         }
         return columnList;

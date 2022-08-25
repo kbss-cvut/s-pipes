@@ -150,9 +150,12 @@ public class TabularModule extends AbstractModule {
 
             boolean hasTableSchema = getTableSchema(em);
             if(skipHeader){
-                header = getHeaderFromSchema(inputModel, header, tableSchemaCount);
+                header = getHeaderFromSchema(inputModel, header, hasTableSchema ? 1 : 0);
                 listReader = new CsvListReader(getReader(), csvPreference);
+            }else if (hasTableSchema) {
+                header = getHeaderFromSchema(inputModel, header, 1);
             }
+
             String mainErrorMsg = "CSV table schema is not compliant with provided custom schema.";
             if (hasTableSchema && header.length != inputTableSchema.getColumnsSet().size()) {
 
@@ -173,15 +176,14 @@ public class TabularModule extends AbstractModule {
             for (String columnTitle : header) {
                 String columnName = normalize(columnTitle);
                 boolean isDuplicate = !columnNames.add(columnName);
-                if(hasTableSchema) checkMissingColumns(mainErrorMsg, schemaColumns, columnTitle);
-                if(isDuplicate) throwNotUniqueException(columnTitle, columnName);
+                if(hasTableSchema) checkMissingColumns(mainErrorMsg, schemaColumns, columnName);
 
                 Column column = new Column(columnName, columnTitle);
                 outputColumns.add(column);
 
-                if(hasTableSchema) column.setUri(schemaColumns.get(j).getUri());
                 setColumnAboutUrl(hasTableSchema, tableSchema, schemaColumns, j, column);
                 setColumnPropertyUrl(hasTableSchema, schemaColumns, j, columnName, column);
+                if(isDuplicate) throwNotUniqueException(column,columnTitle, columnName);
                 j++;
             }
             tableSchema.getColumnsSet().addAll(outputColumns);
@@ -223,10 +225,6 @@ public class TabularModule extends AbstractModule {
 
         em.close();
         return getExecutionContext(inputModel, outputModel);
-    }
-
-    private void setColumnUri(boolean hasTableSchema, List<Column> schemaColumns, Column column, int j) {
-
     }
 
     private void setValueUrl(Model inputModel, List<Column> outputColumns, String[] header,
@@ -315,17 +313,16 @@ public class TabularModule extends AbstractModule {
         }
     }
 
-    private void throwNotUniqueException(String columnTitle, String columnName) {
-        Resource collidingColumn = getColumnByName(columnName);
+    private void throwNotUniqueException(Column column, String columnTitle, String columnName) {
         throw new ResourceNotUniqueException(
                 String.format("Unable to create value of property %s due to collision. " +
                         "Both column titles '%s' and '%s' are normalized to '%s' " +
                         "and thus would refer to the same property url <%s>.",
                         CSVW.propertyUrl,
                         columnTitle,
-                        collidingColumn.getRequiredProperty(CSVW.title).getObject().asLiteral().toString(),
+                        column.getTitle(),
                         columnName,
-                        collidingColumn.getRequiredProperty(CSVW.propertyUrl).getObject().asLiteral().toString()));
+                        column.getPropertyUrl()));
     }
 
     private void checkMissingColumns(String mainErrorMsg, List<Column> schemaColumns,
@@ -497,7 +494,7 @@ public class TabularModule extends AbstractModule {
 
     private String[] getHeaderFromSchema(Model inputModel, String[] header, int tableSchemaCount) {
         if (tableSchemaCount == 1) {
-            List<URI> orderList = new ArrayList<>();
+            List<String> orderList = new ArrayList<>();
             Resource tableSchemaResource = inputModel.getResource(inputTableSchema.getUri().toString());
             Statement statement = tableSchemaResource.getProperty(CSVW.columns);
 
@@ -505,16 +502,10 @@ public class TabularModule extends AbstractModule {
                 RDFNode node = statement.getObject();
                 RDFList rdfList = node.as(RDFList.class);
 
-                rdfList.iterator().forEach(rdfNode -> {
-                    try {
-                        orderList.add(new URI(rdfNode.toString()));
-                    } catch (URISyntaxException e) {
-                        logError("Invalid URI: " + rdfNode);
-                    }
-                });
+                rdfList.iterator().forEach(rdfNode -> orderList.add(String.valueOf(rdfNode)));
                 header = createHeaders(header.length, inputTableSchema.sortColumns(orderList));
 
-            } else logError("Order of columns was not provided in the schema.");
+            } else LOG.info("Order of columns was not provided in the schema.");
         } else {
             header = createHeaders(header.length, new ArrayList<>());
         }
