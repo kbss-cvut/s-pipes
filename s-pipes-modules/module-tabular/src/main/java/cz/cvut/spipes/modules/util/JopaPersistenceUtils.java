@@ -16,7 +16,6 @@ public class JopaPersistenceUtils {
         Map<String, String> persistenceProperties = new HashMap<>();
         persistenceProperties.put(JOPAPersistenceProperties.ONTOLOGY_PHYSICAL_URI_KEY, "local://temporary");
         persistenceProperties.put(JOPAPersistenceProperties.DATA_SOURCE_CLASS, "cz.cvut.kbss.ontodriver.jena.JenaDataSource");
-        persistenceProperties.put(JOPAPersistenceProperties.LANG, "en");
         persistenceProperties.put(JOPAPersistenceProperties.SCAN_PACKAGE, packageToScan);
         persistenceProperties.put(PersistenceProperties.JPA_PERSISTENCE_PROVIDER, JOPAPersistenceProvider.class.getName());
 
