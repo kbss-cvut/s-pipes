@@ -1,5 +1,5 @@
 # the first stage of our build will use a maven 3.6.1 parent image
-FROM maven:3.6.1-jdk-8-alpine AS MAVEN_BUILD
+FROM maven:3.8.6-openjdk-11 AS MAVEN_BUILD
 
 COPY ./ ./
 
