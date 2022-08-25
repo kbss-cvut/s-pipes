@@ -11,6 +11,13 @@ import java.net.URI;
 @OWLClass(iri = CSVW.ColumnUri)
 public class Column extends AbstractEntity {
 
+    public Column() {}
+
+    public Column(String name, String title) {
+        this.name = name;
+        this.title = title;
+    }
+
     @OWLAnnotationProperty(iri = CSVW.nameUri)
     private String name;
 
