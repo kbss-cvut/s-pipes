@@ -78,6 +78,7 @@ public class TabularModule extends AbstractModule {
     private final Property P_DATE_PREFIX = getSpecificParameter("data-prefix");
     private final Property P_OUTPUT_MODE = getSpecificParameter("output-mode");
     private final Property P_SOURCE_RESOURCE_URI = getSpecificParameter("source-resource-uri");
+    private final Property P_SKIP_HEADER = getSpecificParameter("skip-header");
 
     //sml:replace
     private boolean isReplace;
@@ -93,6 +94,9 @@ public class TabularModule extends AbstractModule {
 
     //:data-prefix
     private String dataPrefix;
+
+    //:skip-header
+    private boolean skipHeader;
 
     //:output-mode
     private Mode outputMode;
@@ -134,9 +138,8 @@ public class TabularModule extends AbstractModule {
             delimiter,
             "\\n").build();
 
-        try (
+        try{
             ICsvListReader listReader = new CsvListReader(getReader(), csvPreference);
-            ) {
             String[] header = listReader.getHeader(true); // skip the header (can't be used with CsvListReader)
 
             if (header == null) {
@@ -146,6 +149,10 @@ public class TabularModule extends AbstractModule {
             Set<String> columnNames = new HashSet<>();
 
             boolean hasTableSchema = getTableSchema(em);
+            if(skipHeader){
+                header = getHeaderFromSchema(inputModel, header, tableSchemaCount);
+                listReader = new CsvListReader(getReader(), csvPreference);
+            }
             String mainErrorMsg = "CSV table schema is not compliant with provided custom schema.";
             if (hasTableSchema && header.length != inputTableSchema.getColumnsSet().size()) {
 
@@ -366,6 +373,7 @@ public class TabularModule extends AbstractModule {
     public void loadConfiguration() {
         isReplace = getPropertyValue(SML.replace, false);
         delimiter = getPropertyValue(P_DELIMITER, '\t');
+        skipHeader = getPropertyValue(P_SKIP_HEADER, false);
         quoteCharacter = getPropertyValue(P_QUOTE_CHARACTER, '\'');
         dataPrefix = getEffectiveValue(P_DATE_PREFIX).asLiteral().toString();
         sourceResource = getResourceByUri(getEffectiveValue(P_SOURCE_RESOURCE_URI).asLiteral().toString());
@@ -483,9 +491,50 @@ public class TabularModule extends AbstractModule {
         this.outputMode = outputMode;
     }
 
-    private Column getColumnFromTableSchema(String columnTitle, TableSchema tableSchema) {
+    public void setSkipHeader(boolean skipHeader) {
+        this.skipHeader = skipHeader;
+    }
+
+    private String[] getHeaderFromSchema(Model inputModel, String[] header, int tableSchemaCount) {
+        if (tableSchemaCount == 1) {
+            List<URI> orderList = new ArrayList<>();
+            Resource tableSchemaResource = inputModel.getResource(inputTableSchema.getUri().toString());
+            Statement statement = tableSchemaResource.getProperty(CSVW.columns);
+
+            if (statement != null) {
+                RDFNode node = statement.getObject();
+                RDFList rdfList = node.as(RDFList.class);
+
+                rdfList.iterator().forEach(rdfNode -> {
+                    try {
+                        orderList.add(new URI(rdfNode.toString()));
+                    } catch (URISyntaxException e) {
+                        logError("Invalid URI: " + rdfNode);
+                    }
+                });
+                header = createHeaders(header.length, inputTableSchema.sortColumns(orderList));
+
+            } else logError("Order of columns was not provided in the schema.");
+        } else {
+            header = createHeaders(header.length, new ArrayList<>());
+        }
+        return header;
+    }
+
+    private String[] createHeaders(int size, List<Column> columns) {
+        String[] headers = new String[size];
+
+        for(int i = 0; i < size; i++){
+            if(!columns.isEmpty()){
+                headers[i] = columns.get(i).getName();
+            }else headers[i] = "column_" + (i + 1);
+        }
+        return headers;
+    }
+
+    private Column getColumnFromTableSchema(String columnName, TableSchema tableSchema) {
         for (Column column : tableSchema.getColumnsSet()) {
-            if (column.getTitle() != null && column.getTitle().equals(columnTitle)) {
+            if (column.getName() != null && column.getName().equals(columnName)) {
                 return column;
             }
         }
