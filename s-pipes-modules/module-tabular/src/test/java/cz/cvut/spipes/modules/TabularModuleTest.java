@@ -7,27 +7,28 @@ import cz.cvut.spipes.exception.ResourceNotUniqueException;
 import cz.cvut.spipes.modules.exception.TableSchemaException;
 import cz.cvut.spipes.test.JenaTestUtils;
 import cz.cvut.spipes.util.StreamResourceUtils;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.*;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
-public class TabularModuleTest extends AbstractModuleTestHelper {
+ class TabularModuleTest extends AbstractModuleTestHelper {
 
     private TabularModule module;
     private final String DATA_PREFIX = "http://onto.fel.cvut.cz/data/";
 
     @BeforeEach
-    public void setUp() {
+     void setUp() {
         module = new TabularModule();
 
         module.setReplace(true);
@@ -40,7 +41,7 @@ public class TabularModuleTest extends AbstractModuleTestHelper {
     }
 
     @Test
-    public void executeWithSimpleTransformation() throws URISyntaxException, IOException {
+     void executeWithSimpleTransformation() throws URISyntaxException, IOException {
         module.setSourceResource(
             StreamResourceUtils.getStreamResource(
                 "http://test-file",
@@ -53,7 +54,7 @@ public class TabularModuleTest extends AbstractModuleTestHelper {
     }
 
     @Test
-    public void executeWithDuplicateColumnsThrowsResourceNotUniqueException()
+     void executeWithDuplicateColumnsThrowsResourceNotUniqueException()
             throws URISyntaxException, IOException {
         module.setSourceResource(StreamResourceUtils.getStreamResource(
                 "http://test-file-2",
@@ -72,7 +73,7 @@ public class TabularModuleTest extends AbstractModuleTestHelper {
     }
 
     @Test
-    public void checkDefaultConfigurationAgainstExemplaryModelOutput() throws URISyntaxException, IOException {
+     void checkDefaultConfigurationAgainstExemplaryModelOutput() throws URISyntaxException, IOException {
         module.setSourceResource(
                 StreamResourceUtils.getStreamResource(
                         "http://test-file",
@@ -89,65 +90,88 @@ public class TabularModuleTest extends AbstractModuleTestHelper {
 
 
 
-    @Test
-    public void execute_checkTableSchema() throws URISyntaxException, IOException {
+     @DisplayName("Executes Tabular module with or without csvw:property.")
+     @ParameterizedTest(name = "{index} => message=''Test {0} (csvw:property) in the schema''")
+     @ValueSource(strings = {"withProperty", "withoutProperty"})
+     void executeSelfChecksSchemaWithoutProperty(String folderName) throws URISyntaxException, IOException {
         module.setSourceResource(
-                StreamResourceUtils.getStreamResource(DATA_PREFIX,getFilePath("examples/01/input.tsv"))
+                StreamResourceUtils.getStreamResource(DATA_PREFIX, getFilePath("examples/" + folderName + "/input.tsv"))
         );
 
-        Model inputModel = JenaTestUtils.laodModelFromResource("/examples/01/input-data-schema.ttl");
+        Model inputModel = JenaTestUtils.laodModelFromResource("/examples/" + folderName + "/input-data-schema.ttl");
         module.setInputContext(ExecutionContextFactory.createContext(inputModel));
 
         ExecutionContext outputContext = module.executeSelf();
         Model actualModel = outputContext.getDefaultModel();
 
         Model expectedModel = ModelFactory.createDefaultModel()
-                .read(getFilePath("examples/01/expected-output.ttl").toString());
-
+                .read(getFilePath("examples/" + folderName + "/expected-output.ttl").toString());
         assertTrue(actualModel.isIsomorphicWith(expectedModel));
     }
 
 
 
-    @Test
-    public void execute_TableSchemaWithLessColumns_throwsException() throws URISyntaxException, IOException {
+    @DisplayName("Executes Tabular module with the different number of columns in the schema.")
+    @ParameterizedTest(name = "{index} => message=''{0} in the schema''")
+    @ValueSource(strings = {"moreColumns", "lessColumns", "noColumns"})
+    void executeSelfThrowsException(String folderName) throws URISyntaxException, IOException {
         assumeTrue(ExecutionConfig.isExitOnError());
         module.setSourceResource(
-                StreamResourceUtils.getStreamResource(DATA_PREFIX,getFilePath("examples/02/input.tsv"))
+                StreamResourceUtils.getStreamResource(DATA_PREFIX,getFilePath("examples/" + folderName + "/input.tsv"))
         );
 
-        Model inputModel = JenaTestUtils.laodModelFromResource("/examples/02/input-data-schema.ttl");
-        module.setInputContext(ExecutionContextFactory.createContext(inputModel));
-
-        assertThrows(TableSchemaException.class, () -> module.executeSelf());
-
-    }
-
-    @Test
-    public void execute_TableSchemaWithMoreColumns_throwsException() throws URISyntaxException, IOException {
-        assumeTrue(ExecutionConfig.isExitOnError());
-
-        module.setSourceResource(
-                StreamResourceUtils.getStreamResource(DATA_PREFIX,getFilePath("examples/03/input.tsv"))
-        );
-
-        Model inputModel = JenaTestUtils.laodModelFromResource("/examples/03/input-data-schema.ttl");
+        Model inputModel = JenaTestUtils.laodModelFromResource("/examples/" + folderName + "/input-data-schema.ttl");
         module.setInputContext(ExecutionContextFactory.createContext(inputModel));
 
         assertThrows(TableSchemaException.class, () -> module.executeSelf());
     }
 
     @Test
-    public void execute_TableSchemaWithNoExistingColumn_throwsException() throws URISyntaxException, IOException {
-        assumeTrue(ExecutionConfig.isExitOnError());
+    void executeSelfWithDataSchemaNoHeaderReturnsNamedColumnsFromSchema()
+            throws URISyntaxException, IOException {
+        module.setSkipHeader(true);
 
         module.setSourceResource(
-                StreamResourceUtils.getStreamResource(DATA_PREFIX,getFilePath("examples/04/input.tsv"))
+                StreamResourceUtils.getStreamResource(DATA_PREFIX,getFilePath("examples/noHeader/schemaExample/input.csv"))
         );
 
-        Model inputModel = JenaTestUtils.laodModelFromResource("/examples/04/input-data-schema.ttl");
+        Model inputModel = JenaTestUtils.laodModelFromResource("/examples/noHeader/schemaExample/input-data-schema.ttl");
         module.setInputContext(ExecutionContextFactory.createContext(inputModel));
-        assertThrows(TableSchemaException.class, () -> module.executeSelf());
+
+        ExecutionContext outputContext = module.executeSelf();
+
+        String[] columns = new String[]{"col_1", "col_2", "col_3", "col_4", "col_5"};
+
+        for (int i = 1; i <= 3; i++) {
+            Resource resource = ResourceFactory.createResource(DATA_PREFIX + "#row-" + i);
+            for (String column: columns) {
+                Property property = ResourceFactory.createProperty(DATA_PREFIX, column);
+                assertTrue(outputContext.getDefaultModel().contains(resource, property));
+            }
+        }
+    }
+
+    @Test
+    void executeSelfWithNoDataSchemaNoHeaderReturnsAutonamedColumns()
+            throws URISyntaxException, IOException {
+        module.setSkipHeader(true);
+
+        module.setSourceResource(
+                StreamResourceUtils
+                        .getStreamResource(DATA_PREFIX,getFilePath("examples/noHeader/noSchemaExample/input.tsv"))
+        );
+
+        ExecutionContext outputContext = module.executeSelf();
+
+        for (int i = 1; i <= 3; i++) {
+            Resource resource = ResourceFactory.createResource(DATA_PREFIX + "#row-" + i);
+            for (int j = 1; j <= 6; j++) {
+                String columnName = "column_" + j;
+                Property property = ResourceFactory.createProperty(DATA_PREFIX, columnName);
+
+                assertTrue(outputContext.getDefaultModel().contains(resource, property));
+            }
+        }
     }
 
     @Override
