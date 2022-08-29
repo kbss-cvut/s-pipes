@@ -10,6 +10,5 @@
 :input-table-schema a csvw:TableSchema
 .
 
-
 csvw:propertyUrl a rdf:Property .
 csvw:propertyUrl rdfs:range rdf:Property .

@@ -3,6 +3,7 @@ _:b0    a       <http://www.w3.org/ns/csvw#Column> ;
                 "bookingno_i" ;
         <http://www.w3.org/ns/csvw#propertyUrl>
                 <http://onto.fel.cvut.cz/data/bookingno_i_p>  ;
+
         <http://www.w3.org/ns/csvw#title>
                 "bookingno_i" .
 
@@ -82,6 +83,7 @@ _:b3    a       <http://www.w3.org/ns/csvw#Column> ;
                 "Start_Date" ;
         <http://www.w3.org/ns/csvw#propertyUrl>
                 <http://onto.fel.cvut.cz/data/Start_Date_p>  ;
+
         <http://www.w3.org/ns/csvw#title>
                 "Start Date" .
 

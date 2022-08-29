@@ -18,6 +18,7 @@
 
 :bookingno_i_column   a csvw:Column;
     csvw:name "bookingno_i" ;
+
     csvw:propertyUrl :bookingno_i ;
 .
 :Employee_No_column   a csvw:Column;

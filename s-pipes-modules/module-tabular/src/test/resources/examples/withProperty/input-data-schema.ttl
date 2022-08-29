@@ -14,7 +14,6 @@
                     csvw:column :Start_Date_column ;
                     csvw:column :Start_Time_column ;
                     csvw:column :End_Date_column ;
-                    #csvw:columns ( :bookingno_i_column :Employee_No_column :user_sign_column :Start_Date_column :Start_Time_column :End_Date_column );
 .
 
 :bookingno_i_column   a csvw:Column;

@@ -90,7 +90,6 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
     }
 
 
-
      @DisplayName("Executes Tabular module with or without csvw:propertyUrl.")
      @ParameterizedTest(name = "{index} => message=''Test {0} (csvw:propertyUrl) in the schema''")
      @ValueSource(strings = {"withProperty", "withoutProperty"})
@@ -143,6 +142,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
         String[] columns = new String[]{"col_1", "col_2", "col_3", "col_4", "col_5"};
 
+
         for (int i = 2; i <= 4; i++) {
             Resource resource = ResourceFactory.createResource(DATA_PREFIX + "#row-" + i);
             for (String column: columns) {
@@ -163,6 +163,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
         );
 
         ExecutionContext outputContext = module.executeSelf();
+
         for (int i = 2; i <= 4; i++) {
             Resource resource = ResourceFactory.createResource(DATA_PREFIX + "#row-" + i);
             for (int j = 1; j <= 6; j++) {

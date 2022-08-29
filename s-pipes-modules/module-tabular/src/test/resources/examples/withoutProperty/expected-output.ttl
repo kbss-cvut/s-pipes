@@ -60,6 +60,7 @@ _:b2    a       <http://www.w3.org/ns/csvw#Column> ;
                 "Start_Time" ;
         <http://www.w3.org/ns/csvw#propertyUrl>
                 <http://onto.fel.cvut.cz/data/Start_Time> ;
+
         <http://www.w3.org/ns/csvw#title>
                 "Start Time" .
 
@@ -98,7 +99,7 @@ _:b3    a       <http://www.w3.org/ns/csvw#Column> ;
                 "6568520" ;
         <http://onto.fel.cvut.cz/data/user_sign>
                 "KULICMAT" .
-
+                
 _:b1    a       <http://www.w3.org/ns/csvw#Column> ;
         <http://www.w3.org/ns/csvw#name>
                 "End_Date" ;

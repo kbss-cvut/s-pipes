@@ -103,6 +103,9 @@ public class TabularModule extends AbstractModule {
 
     private Model outputModel;
 
+    //:skip-header
+    private boolean skipHeader;
+
     /**
      * Represent a group of tables.
      */
@@ -154,6 +157,11 @@ public class TabularModule extends AbstractModule {
                 listReader = new CsvListReader(getReader(), csvPreference);
             }else if (hasTableSchema) {
                 header = getHeaderFromSchema(inputModel, header, 1);
+            }
+
+            if(skipHeader){
+                header = getHeaderFromSchema(inputModel, header, tableSchemaCount);
+                listReader = new CsvListReader(getReader(), csvPreference);
             }
 
             String mainErrorMsg = "CSV table schema is not compliant with provided custom schema.";
