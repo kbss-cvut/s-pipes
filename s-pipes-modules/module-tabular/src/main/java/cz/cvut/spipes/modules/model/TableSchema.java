@@ -3,7 +3,6 @@ package cz.cvut.spipes.modules.model;
 import cz.cvut.kbss.jopa.model.annotations.*;
 import cz.cvut.spipes.constants.CSVW;
 
-import java.net.URI;
 import java.util.*;
 
 /**
@@ -13,7 +12,7 @@ import java.util.*;
 @OWLClass(iri = CSVW.TableSchemaUri)
 public class TableSchema extends AbstractEntity {
 
-    @OWLAnnotationProperty(iri = CSVW.aboutUrlUri)
+    @OWLDataProperty(iri = CSVW.aboutUrlUri, datatype = CSVW.uriTemplate)
     private String aboutUrl;
 
     @OWLAnnotationProperty(iri = CSVW.propertyUrlUri)

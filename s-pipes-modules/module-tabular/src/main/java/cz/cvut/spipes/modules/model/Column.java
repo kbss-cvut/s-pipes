@@ -3,8 +3,6 @@ package cz.cvut.spipes.modules.model;
 import cz.cvut.kbss.jopa.model.annotations.*;
 import cz.cvut.spipes.constants.CSVW;
 
-import java.net.URI;
-
 /**
  * Part of {@link TableSchema}, each column can have different metadata.
  */
@@ -25,6 +23,9 @@ public class Column extends AbstractEntity {
     private String title;
 
     @OWLAnnotationProperty(iri = CSVW.extendedPropertyUri)
+    private String extendedProperty;
+
+    @OWLAnnotationProperty(iri = CSVW.propertyUri)
     private String property;
 
     @OWLAnnotationProperty(iri = CSVW.requiredUri)
@@ -36,7 +37,7 @@ public class Column extends AbstractEntity {
     @OWLAnnotationProperty(iri = CSVW.aboutUrlUri)
     private String aboutUrl;
 
-    @OWLAnnotationProperty(iri = CSVW.propertyUrlUri)
+    @OWLDataProperty(iri = CSVW.propertyUrlUri, datatype = "http://www.w3.org/2001/XMLSchema#string")
     private String propertyUrl;
 
     @OWLAnnotationProperty(iri = CSVW.valueUrlUri)
@@ -112,6 +113,14 @@ public class Column extends AbstractEntity {
 
     public void setSuppressOutput(Boolean suppressOutput) {
         this.suppressOutput = suppressOutput;
+    }
+
+    public String getExtendedProperty() {
+        return extendedProperty;
+    }
+
+    public void setExtendedProperty(String extendedProperty) {
+        this.extendedProperty = extendedProperty;
     }
 
     public String getProperty() {

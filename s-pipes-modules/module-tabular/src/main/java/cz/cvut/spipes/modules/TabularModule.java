@@ -120,8 +120,8 @@ public class TabularModule extends AbstractModule {
 
     @Override
     ExecutionContext executeSelf() {
-
-        Model inputModel = BNodesTransformer.convertBNodesToNonBNodes(executionContext.getDefaultModel());
+        BNodesTransformer bNodesTransformer = new BNodesTransformer();
+        Model inputModel = bNodesTransformer.convertBNodesToNonBNodes(executionContext.getDefaultModel());
 
         outputModel = ModelFactory.createDefaultModel();
         EntityManager em = JopaPersistenceUtils.getEntityManager("cz.cvut.spipes.modules.model", inputModel);
@@ -215,13 +215,20 @@ public class TabularModule extends AbstractModule {
             LOG.error("Error while reading file from resource uri {}", sourceResource, e);
         }
 
+        table.getTableSchema().setAboutUrl(null); // will be replaced by JOPA later
         em.persist(tableGroup);
         em.getTransaction().commit();
+
+        Model persistenceModel = JopaPersistenceUtils.getDataset(em).getDefaultModel();
+        persistenceModel.getResource(tableSchema.getUri().toString())
+                .addLiteral(persistenceModel.getProperty(CSVW.aboutUrlUri),
+                        persistenceModel.createTypedLiteral(sourceResource.getUri() + "#row-{_row}", CSVW.uriTemplate)
+                );
 
         addColumnsList(em, outputColumns, tableSchema);
 
         outputModel.add(
-                BNodesTransformer.transferJOPAEntitiesToBNodes
+                bNodesTransformer.transferJOPAEntitiesToBNodes
                         (JopaPersistenceUtils.getDataset(em).getDefaultModel()));
 
         em.close();
@@ -301,8 +308,19 @@ public class TabularModule extends AbstractModule {
     private void setColumnPropertyUrl(boolean hasTableSchema, List<Column> schemaColumns, int j,
                                       String columnName, Column column) throws UnsupportedEncodingException {
         String columnPropertyUrl = null;
-        if (hasTableSchema && schemaColumns.get(j).getPropertyUrl() != null) {
-            columnPropertyUrl = schemaColumns.get(j).getPropertyUrl();
+        if (hasTableSchema) {
+            if (schemaColumns.get(j).getPropertyUrl() != null) {
+                columnPropertyUrl = schemaColumns.get(j).getPropertyUrl();
+            }else if(schemaColumns.get(j).getProperty() != null){
+                columnPropertyUrl = schemaColumns.get(j).getProperty();
+            }
+
+            if (schemaColumns.get(j).getExtendedProperty() != null) {
+                column.setExtendedProperty(schemaColumns.get(j).getExtendedProperty());
+                if (columnPropertyUrl == null) {
+                    columnPropertyUrl = column.getExtendedProperty();
+                }
+            }
         }
 
         if (columnPropertyUrl != null && !columnPropertyUrl.isEmpty()) {

@@ -9,10 +9,9 @@ import java.util.*;
 
 public class BNodesTransformer {
 
-    private BNodesTransformer() {}
-    private static Map<Resource, Resource> convertedNodes =  new HashMap<>();
+    private Map<Resource, Resource> convertedNodes =  new HashMap<>();
 
-    public static Model convertBNodesToNonBNodes(Model model) {
+    public Model convertBNodesToNonBNodes(Model model) {
         Set<Resource> resourcesToConvert =  new HashSet<>();
 
         model
@@ -29,7 +28,7 @@ public class BNodesTransformer {
         return model;
     }
 
-    public static Model transferJOPAEntitiesToBNodes(Model model){
+    public Model transferJOPAEntitiesToBNodes(Model model){
         convertedNodes
                 .forEach((resource,convertedR) ->
                         ResourceUtils.renameResource(model.getResource(convertedR.getURI()), null));
@@ -38,7 +37,7 @@ public class BNodesTransformer {
         return model;
     }
 
-    public static void transferGeneratedJOPAEntitiesToBNodes(Model model){
+    public void transferGeneratedJOPAEntitiesToBNodes(Model model){
         model.listStatements()
                 .filterKeep(statement -> statement.getSubject().getURI() != null)
                 .filterKeep(statement -> statement.getSubject().getURI().contains("instance"))

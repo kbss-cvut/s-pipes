@@ -53,6 +53,7 @@ public class CSVW {
     public static final String describesUri = uri + "describes";
     public static final String TableUri = uri + "Table";
     public static final String tableSchemaUri = uri + "tableSchema";
+    public static final String propertyUri = uri + "property";
     public static final String extendedPropertyUri = extendedUri + "property";
     /**
      returns the URI for this schema
