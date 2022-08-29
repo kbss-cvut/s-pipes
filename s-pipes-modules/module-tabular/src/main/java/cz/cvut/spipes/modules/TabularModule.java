@@ -127,6 +127,7 @@ public class TabularModule extends AbstractModule {
         EntityManager em = JopaPersistenceUtils.getEntityManager("cz.cvut.spipes.modules.model", inputModel);
         em.getTransaction().begin();
 
+        // TODO add references to specification (they are already in git somewhere!!!)
         tableGroup = onTableGroup(null);
         table = onTable(null);
 
@@ -148,17 +149,17 @@ public class TabularModule extends AbstractModule {
             }
             Set<String> columnNames = new HashSet<>();
 
-            boolean hasTableSchema = getTableSchema(em);
+            this.inputTableSchema = getTableSchema(em);
             if(skipHeader){
-                header = getHeaderFromSchema(inputModel, header, hasTableSchema ? 1 : 0);
+                header = getHeaderFromSchema(inputModel, header, inputTableSchema != null ? 1 : 0);
                 listReader = new CsvListReader(getReader(), csvPreference);
-            }else if (hasTableSchema) {
+            }else if (inputTableSchema != null) {
                 header = getHeaderFromSchema(inputModel, header, 1);
             }
 
 
             String mainErrorMsg = "CSV table schema is not compliant with provided custom schema.";
-            if (hasTableSchema && header.length != inputTableSchema.getColumnsSet().size()) {
+            if (inputTableSchema != null && header.length != inputTableSchema.getColumnsSet().size()) {
 
                 String mergedMsg = mainErrorMsg + "\n" +
                         "The number of columns in the table schema does not match the number of columns in the table." + "\n"
@@ -177,13 +178,17 @@ public class TabularModule extends AbstractModule {
             for (String columnTitle : header) {
                 String columnName = normalize(columnTitle);
                 boolean isDuplicate = !columnNames.add(columnName);
-                if(hasTableSchema) checkMissingColumns(mainErrorMsg, schemaColumns, columnName);
+                if(inputTableSchema != null) checkMissingColumns(mainErrorMsg, schemaColumns, columnName);
 
                 Column column = new Column(columnName, columnTitle);
                 outputColumns.add(column);
 
-                setColumnAboutUrl(hasTableSchema, tableSchema, schemaColumns, j, column);
-                setColumnPropertyUrl(hasTableSchema, schemaColumns, j, columnName, column);
+                setColumnAboutUrl(inputTableSchema != null, tableSchema, schemaColumns, j, column);
+
+                Column schemaColumn = inputTableSchema != null ? schemaColumns.get(j) : null;
+                String propertyUrl = getColumnPropertyUrl(inputTableSchema != null, schemaColumn, columnName);
+                column.setProperty(propertyUrl);
+                column.setPropertyUrl(propertyUrl);
                 if(isDuplicate) throwNotUniqueException(column,columnTitle, columnName);
                 j++;
             }
@@ -281,8 +286,7 @@ public class TabularModule extends AbstractModule {
         }
     }
 
-    private boolean getTableSchema(EntityManager em) {
-        boolean hasTableSchema = false;
+    private TableSchema getTableSchema(EntityManager em) {
         TypedQuery<TableSchema> query = em.createNativeQuery(
                 "PREFIX csvw: <http://www.w3.org/ns/csvw#>\n" +
                         "SELECT ?t WHERE { \n" +
@@ -293,43 +297,33 @@ public class TabularModule extends AbstractModule {
 
         int tableSchemaCount = query.getResultList().size();
 
-        if(tableSchemaCount == 1) {
-            hasTableSchema = true;
-            inputTableSchema = query.getSingleResult();
-            LOG.debug("Custom table schema found.");
-        }else if(tableSchemaCount > 1) {
+        if(tableSchemaCount > 1) {
             LOG.warn("More than one table schema found. Ignoring schemas {}. ", query.getResultList());
-        }else {
-            LOG.debug("No custom table schema found.");
+            return null;
         }
-        return hasTableSchema;
+        if(tableSchemaCount == 0) {
+            LOG.debug("No custom table schema found.");
+            return null;
+        }
+        LOG.debug("Custom table schema found.");
+        return query.getSingleResult();
     }
 
-    private void setColumnPropertyUrl(boolean hasTableSchema, List<Column> schemaColumns, int j,
-                                      String columnName, Column column) throws UnsupportedEncodingException {
-        String columnPropertyUrl = null;
+    private String getColumnPropertyUrl(boolean hasTableSchema,
+                                        Column schemaColumn,
+                                      String columnName) throws UnsupportedEncodingException {;
         if (hasTableSchema) {
-            if (schemaColumns.get(j).getPropertyUrl() != null) {
-                columnPropertyUrl = schemaColumns.get(j).getPropertyUrl();
-            }else if(schemaColumns.get(j).getProperty() != null){
-                columnPropertyUrl = schemaColumns.get(j).getProperty();
+            if (schemaColumn.getPropertyUrl() != null) {
+                return schemaColumn.getPropertyUrl();
             }
-
-            if (schemaColumns.get(j).getExtendedProperty() != null) {
-                column.setExtendedProperty(schemaColumns.get(j).getExtendedProperty());
-                if (columnPropertyUrl == null) {
-                    columnPropertyUrl = column.getExtendedProperty();
-                }
+            if (schemaColumn.getProperty() != null) {
+                return schemaColumn.getProperty();
             }
         }
-
-        if (columnPropertyUrl != null && !columnPropertyUrl.isEmpty()) {
-            column.setPropertyUrl(columnPropertyUrl);
-        } else if (dataPrefix != null && !dataPrefix.isEmpty()) {
-            column.setPropertyUrl(dataPrefix + URLEncoder.encode(columnName, "UTF-8"));
-        } else {
-            column.setPropertyUrl(sourceResource.getUri() + "#" + URLEncoder.encode(columnName, "UTF-8"));
+        if (dataPrefix != null && !dataPrefix.isEmpty()) {
+            return dataPrefix + URLEncoder.encode(columnName, "UTF-8");
         }
+        return sourceResource.getUri() + "#" + URLEncoder.encode(columnName, "UTF-8");
     }
 
     private void throwNotUniqueException(Column column, String columnTitle, String columnName) {

@@ -2,6 +2,7 @@ package cz.cvut.spipes.modules.model;
 
 import cz.cvut.kbss.jopa.model.annotations.*;
 import cz.cvut.spipes.constants.CSVW;
+import cz.cvut.spipes.constants.KBSS_CSVW;
 
 /**
  * Part of {@link TableSchema}, each column can have different metadata.
@@ -22,10 +23,7 @@ public class Column extends AbstractEntity {
     @OWLAnnotationProperty(iri = CSVW.titleUri)
     private String title;
 
-    @OWLAnnotationProperty(iri = CSVW.extendedPropertyUri)
-    private String extendedProperty;
-
-    @OWLAnnotationProperty(iri = CSVW.propertyUri)
+    @OWLAnnotationProperty(iri = KBSS_CSVW.propertyUri)
     private String property;
 
     @OWLAnnotationProperty(iri = CSVW.requiredUri)
@@ -113,14 +111,6 @@ public class Column extends AbstractEntity {
 
     public void setSuppressOutput(Boolean suppressOutput) {
         this.suppressOutput = suppressOutput;
-    }
-
-    public String getExtendedProperty() {
-        return extendedProperty;
-    }
-
-    public void setExtendedProperty(String extendedProperty) {
-        this.extendedProperty = extendedProperty;
     }
 
     public String getProperty() {

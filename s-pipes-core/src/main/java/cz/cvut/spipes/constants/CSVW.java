@@ -6,11 +6,13 @@ import org.apache.jena.rdf.model.ResourceFactory;
 
 public class CSVW {
 
+    private CSVW(){
+    }
+
     /**
      * The namespace of the vocabulary as a string
      */
     public static final String uri = "http://www.w3.org/ns/csvw#";
-    public static final String extendedUri = "https://onto.fel.cvut.cz/ontologies/csvw-extension/";
 
     protected static Resource resource(String local )
     { return ResourceFactory.createResource( uri + local ); }
@@ -54,7 +56,7 @@ public class CSVW {
     public static final String TableUri = uri + "Table";
     public static final String tableSchemaUri = uri + "tableSchema";
     public static final String propertyUri = uri + "property";
-    public static final String extendedPropertyUri = extendedUri + "property";
+
     /**
      returns the URI for this schema
      @return the URI for this schema
