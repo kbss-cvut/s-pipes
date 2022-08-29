@@ -18,33 +18,33 @@
 
 _:bookingno_i_column   a csvw:Column;
     csvw:name "bookingno_i" ;
-    csvw:propertyUrl :bookingno_i_p ;
+    csvw:property :bookingno_i_p ;
 .
 _:Employee_No_column   a csvw:Column;
     csvw:name "Employee_No" ;
-    csvw:propertyUrl :Employee_No_p ;
+    csvw:property :Employee_No_p ;
 .
 _:user_sign_column   a csvw:Column;
     csvw:name "user_sign" ;
-    csvw:propertyUrl :user_sign_p ;
+    csvw:property :user_sign_p ;
 .
 _:Start_Date_column   a csvw:Column;
     csvw:name "Start_Date" ;
-    csvw:propertyUrl :Start_Date_p ;
+    csvw:property :Start_Date_p ;
 .
 
 _:Start_Time_column  a csvw:Column;
   csvw:name "Start_Time" ;
-  csvw:propertyUrl :Start_Time_p ;
+  csvw:property :Start_Time_p ;
 .
 
 _:End_Date_column a csvw:Column;
     csvw:name "End_Date" ;
-    csvw:propertyUrl :End_Date_p ;
+    csvw:property :End_Date_p ;
 .
 
-csvw:propertyUrl a rdf:Property .
-csvw:propertyUrl rdfs:range rdf:Property .
+csvw:property a rdf:Property .
+csvw:property rdfs:range rdf:Property .
 
 _:bookingno_i_p a rdf:Property .
 _:Employee_No_p a rdf:Property .

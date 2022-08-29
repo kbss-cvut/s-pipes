@@ -31,7 +31,7 @@
             <http://www.w3.org/ns/csvw#tableSchema>
                     [ a       <http://www.w3.org/ns/csvw#TableSchema> ;
                       <http://www.w3.org/ns/csvw#aboutUrl>
-                              "http://test-file#row-{_row}" ;
+                              "http://test-file#row-{_row}"^^<http://www.w3.org/ns/csvw#uriTemplate> ;
                       <http://www.w3.org/ns/csvw#column>
                               _:b2 , _:b0 , _:b1 , _:b3 ;
                       <http://www.w3.org/ns/csvw#columns>
@@ -50,7 +50,7 @@ _:b0    a       <http://www.w3.org/ns/csvw#Column> ;
         <http://www.w3.org/ns/csvw#name>
                 "longitude" ;
         <http://www.w3.org/ns/csvw#propertyUrl>
-                <http://onto.fel.cvut.cz/data/longitude> ;
+                "http://onto.fel.cvut.cz/data/longitude" ;
         <http://www.w3.org/ns/csvw#title>
                 "longitude" .
 
@@ -58,7 +58,7 @@ _:b1    a       <http://www.w3.org/ns/csvw#Column> ;
         <http://www.w3.org/ns/csvw#name>
                 "latitude" ;
         <http://www.w3.org/ns/csvw#propertyUrl>
-                <http://onto.fel.cvut.cz/data/latitude> ;
+                "http://onto.fel.cvut.cz/data/latitude" ;
         <http://www.w3.org/ns/csvw#title>
                 "latitude" .
 
@@ -66,7 +66,7 @@ _:b2    a       <http://www.w3.org/ns/csvw#Column> ;
         <http://www.w3.org/ns/csvw#name>
                 "name" ;
         <http://www.w3.org/ns/csvw#propertyUrl>
-                <http://onto.fel.cvut.cz/data/name> ;
+                "http://onto.fel.cvut.cz/data/name" ;
         <http://www.w3.org/ns/csvw#title>
                 "name" .
 
@@ -74,7 +74,7 @@ _:b3    a       <http://www.w3.org/ns/csvw#Column> ;
         <http://www.w3.org/ns/csvw#name>
                 "countryCode" ;
         <http://www.w3.org/ns/csvw#propertyUrl>
-                <http://onto.fel.cvut.cz/data/countryCode> ;
+                "http://onto.fel.cvut.cz/data/countryCode" ;
         <http://www.w3.org/ns/csvw#title>
                 "countryCode" .
 

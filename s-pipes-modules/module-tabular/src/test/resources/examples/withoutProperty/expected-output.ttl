@@ -2,7 +2,7 @@ _:b0    a       <http://www.w3.org/ns/csvw#Column> ;
         <http://www.w3.org/ns/csvw#name>
                 "bookingno_i" ;
         <http://www.w3.org/ns/csvw#propertyUrl>
-                <http://onto.fel.cvut.cz/data/bookingno_i> ;
+                "http://onto.fel.cvut.cz/data/bookingno_i" ;
         <http://www.w3.org/ns/csvw#title>
                 "bookingno i" .
 
@@ -30,7 +30,7 @@ _:b0    a       <http://www.w3.org/ns/csvw#Column> ;
             <http://www.w3.org/ns/csvw#tableSchema>
                     [ a       <http://www.w3.org/ns/csvw#TableSchema> ;
                       <http://www.w3.org/ns/csvw#aboutUrl>
-                              "http://onto.fel.cvut.cz/data/#row-{_row}" ;
+                              "http://onto.fel.cvut.cz/data/#row-{_row}"^^<http://www.w3.org/ns/csvw#uriTemplate> ;
                       <http://www.w3.org/ns/csvw#column>
                               _:b1 , _:b2 , _:b3 , _:b4 , _:b5 , _:b0 ;
                       <http://www.w3.org/ns/csvw#columns>
@@ -51,7 +51,7 @@ _:b4    a       <http://www.w3.org/ns/csvw#Column> ;
         <http://www.w3.org/ns/csvw#name>
                 "user_sign" ;
         <http://www.w3.org/ns/csvw#propertyUrl>
-                <http://onto.fel.cvut.cz/data/user_sign> ;
+                "http://onto.fel.cvut.cz/data/user_sign" ;
         <http://www.w3.org/ns/csvw#title>
                 "user sign" .
 
@@ -59,8 +59,7 @@ _:b2    a       <http://www.w3.org/ns/csvw#Column> ;
         <http://www.w3.org/ns/csvw#name>
                 "Start_Time" ;
         <http://www.w3.org/ns/csvw#propertyUrl>
-                <http://onto.fel.cvut.cz/data/Start_Time> ;
-
+                "http://onto.fel.cvut.cz/data/Start_Time" ;
         <http://www.w3.org/ns/csvw#title>
                 "Start Time" .
 
@@ -82,7 +81,7 @@ _:b3    a       <http://www.w3.org/ns/csvw#Column> ;
         <http://www.w3.org/ns/csvw#name>
                 "Start_Date" ;
         <http://www.w3.org/ns/csvw#propertyUrl>
-                <http://onto.fel.cvut.cz/data/Start_Date> ;
+                "http://onto.fel.cvut.cz/data/Start_Date" ;
         <http://www.w3.org/ns/csvw#title>
                 "Start Date" .
 
@@ -104,7 +103,7 @@ _:b1    a       <http://www.w3.org/ns/csvw#Column> ;
         <http://www.w3.org/ns/csvw#name>
                 "End_Date" ;
         <http://www.w3.org/ns/csvw#propertyUrl>
-                <http://onto.fel.cvut.cz/data/End_Date> ;
+                "http://onto.fel.cvut.cz/data/End_Date" ;
         <http://www.w3.org/ns/csvw#title>
                 "End Date" .
 
@@ -112,7 +111,7 @@ _:b5    a       <http://www.w3.org/ns/csvw#Column> ;
         <http://www.w3.org/ns/csvw#name>
                 "Employee_No" ;
         <http://www.w3.org/ns/csvw#propertyUrl>
-                <http://onto.fel.cvut.cz/data/Employee_No> ;
+                "http://onto.fel.cvut.cz/data/Employee_No" ;
         <http://www.w3.org/ns/csvw#title>
                 "Employee No" .
 

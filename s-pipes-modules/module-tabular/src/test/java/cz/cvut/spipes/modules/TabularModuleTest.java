@@ -16,7 +16,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.*;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -90,8 +89,8 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
     }
 
 
-     @DisplayName("Executes Tabular module with or without csvw:propertyUrl.")
-     @ParameterizedTest(name = "{index} => message=''Test {0} (csvw:propertyUrl) in the schema''")
+     @DisplayName("Executes Tabular module with or without csvw:property.")
+     @ParameterizedTest(name = "{index} => message=''Test {0} (csvw:property) in the schema''")
      @ValueSource(strings = {"withProperty", "withoutProperty"})
      void executeSelfChecksSchemaWithoutProperty(String folderName) throws URISyntaxException, IOException {
         module.setSourceResource(
