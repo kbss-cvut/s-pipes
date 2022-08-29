@@ -23,7 +23,7 @@ _:b0    a       <http://www.w3.org/ns/csvw#Column> ;
                       <http://www.w3.org/ns/csvw#describes>
                               <http://onto.fel.cvut.cz/data/#row-2> ;
                       <http://www.w3.org/ns/csvw#rownum>
-                             "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                              "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
                       <http://www.w3.org/ns/csvw#url>
                               <http://onto.fel.cvut.cz/data/#row=2>
                     ] ;
@@ -111,7 +111,7 @@ _:b5    a       <http://www.w3.org/ns/csvw#Column> ;
         <http://www.w3.org/ns/csvw#name>
                 "Employee_No" ;
         <http://www.w3.org/ns/csvw#propertyUrl>
-                <http://onto.fel.cvut.cz/data/Employee_No_p> ;
+                <http://onto.fel.cvut.cz/data/Employee_No_p>  ;
         <http://www.w3.org/ns/csvw#title>
                 "Employee No" .
 

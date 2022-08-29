@@ -16,6 +16,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.*;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -90,8 +91,8 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 
 
-     @DisplayName("Executes Tabular module with or without csvw:property.")
-     @ParameterizedTest(name = "{index} => message=''Test {0} (csvw:property) in the schema''")
+     @DisplayName("Executes Tabular module with or without csvw:propertyUrl.")
+     @ParameterizedTest(name = "{index} => message=''Test {0} (csvw:propertyUrl) in the schema''")
      @ValueSource(strings = {"withProperty", "withoutProperty"})
      void executeSelfChecksSchemaWithoutProperty(String folderName) throws URISyntaxException, IOException {
         module.setSourceResource(
@@ -142,7 +143,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
         String[] columns = new String[]{"col_1", "col_2", "col_3", "col_4", "col_5"};
 
-        for (int i = 1; i <= 3; i++) {
+        for (int i = 2; i <= 4; i++) {
             Resource resource = ResourceFactory.createResource(DATA_PREFIX + "#row-" + i);
             for (String column: columns) {
                 Property property = ResourceFactory.createProperty(DATA_PREFIX, column);
@@ -162,8 +163,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
         );
 
         ExecutionContext outputContext = module.executeSelf();
-
-        for (int i = 1; i <= 3; i++) {
+        for (int i = 2; i <= 4; i++) {
             Resource resource = ResourceFactory.createResource(DATA_PREFIX + "#row-" + i);
             for (int j = 1; j <= 6; j++) {
                 String columnName = "column_" + j;
@@ -173,6 +173,23 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
             }
         }
     }
+
+     @Test
+     void executeSelfWithBNodesInSchema() throws IOException, URISyntaxException {
+         module.setSourceResource(
+                 StreamResourceUtils.getStreamResource(DATA_PREFIX, getFilePath("examples/blankNodes/input.tsv"))
+         );
+
+         Model inputModel = JenaTestUtils.laodModelFromResource("/examples/blankNodes/input-data-schema.ttl");
+         module.setInputContext(ExecutionContextFactory.createContext(inputModel));
+
+         ExecutionContext outputContext = module.executeSelf();
+         Model actualModel = outputContext.getDefaultModel();
+
+         Model expectedModel = ModelFactory.createDefaultModel()
+                 .read(getFilePath("examples/blankNodes/expected-output.ttl").toString());
+         assertTrue(actualModel.isIsomorphicWith(expectedModel));
+     }
 
     @Override
     public String getModuleName() {
