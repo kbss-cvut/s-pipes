@@ -116,7 +116,7 @@ public class TabularModule extends AbstractModule {
     /**
      * Represents the table schema that was used to describe the table
      */
-    private TableSchema inputTableSchema = new TableSchema();
+    private TableSchema inputTableSchema;
 
     @Override
     ExecutionContext executeSelf() {
@@ -244,7 +244,10 @@ public class TabularModule extends AbstractModule {
                              List<String> row, int i, String columnAboutUrlStr) {
         String columnPropertyUrl = outputColumns.get(i).getPropertyUrl();
 
-        Column column = getColumnFromTableSchema(header[i], inputTableSchema);
+        Column column = null;
+        if (inputTableSchema != null){
+            column = getColumnFromTableSchema(header[i], inputTableSchema);
+        }
         String valueUrl = null;
         if(column != null) valueUrl = column.getValueUrl();
 
