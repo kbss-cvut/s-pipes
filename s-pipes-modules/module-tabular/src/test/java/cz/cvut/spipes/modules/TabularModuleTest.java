@@ -6,6 +6,7 @@ import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.exception.ResourceNotUniqueException;
 import cz.cvut.spipes.modules.exception.TableSchemaException;
 import cz.cvut.spipes.test.JenaTestUtils;
+import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.StreamResourceUtils;
 import org.apache.jena.rdf.model.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +14,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -26,6 +29,8 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
     private TabularModule module;
     private final String DATA_PREFIX = "http://onto.fel.cvut.cz/data/";
+
+    private static final Logger LOG = LoggerFactory.getLogger(TabularModuleTest.class);
 
     @BeforeEach
      void setUp() {
@@ -188,8 +193,19 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
          Model expectedModel = ModelFactory.createDefaultModel()
                  .read(getFilePath("examples/blankNodes/expected-output.ttl").toString());
-         assertTrue(actualModel.isIsomorphicWith(expectedModel));
+
+         assertIsomorphic(actualModel, expectedModel);
      }
+
+    void assertIsomorphic(Model actualModel, Model expectedModel){
+        if (! actualModel.isIsomorphicWith(expectedModel)) {
+            LOG.debug("Saving actual model ... ");
+            JenaUtils.saveModelToTemporaryFile(actualModel);
+            LOG.debug("Saving expected model ... ");
+            JenaUtils.saveModelToTemporaryFile(expectedModel);
+            fail("Actual model is not isomorphic with expected model (see additional information above).");
+        }
+    }
 
     @Override
     public String getModuleName() {
