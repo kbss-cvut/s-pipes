@@ -12,7 +12,7 @@ public class KBSS_CSVW {
     /**
      * The namespace of the vocabulary as a string
      */
-    public static final String uri = "https://onto.fel.cvut.cz/ontologies/extension/csvw#";
+    public static final String uri = "https://onto.fel.cvut.cz/ontologies/extension/csvw/";
 
     protected static Resource resource(String local )
     { return ResourceFactory.createResource( uri + local ); }
@@ -20,7 +20,7 @@ public class KBSS_CSVW {
     protected static Property property(String local )
     { return ResourceFactory.createProperty( uri, local ); }
 
-    public static final String propertyUri = uri + "propertyUri";
+    public static final String propertyUri = uri + "property";
 
     public static final Property property = ResourceFactory.createProperty(propertyUri);
 

@@ -51,7 +51,7 @@ _:b0    a       <http://www.w3.org/ns/csvw#Column> ;
                 "longitude" ;
         <http://www.w3.org/ns/csvw#propertyUrl>
                 "http://onto.fel.cvut.cz/data/longitude" ;
-         <https://onto.fel.cvut.cz/ontologies/extension/csvw#propertyUri>
+         <https://onto.fel.cvut.cz/ontologies/extension/csvw/property>
                 <http://onto.fel.cvut.cz/data/longitude> ;
         <http://www.w3.org/ns/csvw#title>
                 "longitude" .
@@ -61,7 +61,7 @@ _:b1    a       <http://www.w3.org/ns/csvw#Column> ;
                 "latitude" ;
         <http://www.w3.org/ns/csvw#propertyUrl>
                 "http://onto.fel.cvut.cz/data/latitude" ;
-        <https://onto.fel.cvut.cz/ontologies/extension/csvw#propertyUri>
+        <https://onto.fel.cvut.cz/ontologies/extension/csvw/property>
                 <http://onto.fel.cvut.cz/data/latitude> ;
         <http://www.w3.org/ns/csvw#title>
                 "latitude" .
@@ -71,7 +71,7 @@ _:b2    a       <http://www.w3.org/ns/csvw#Column> ;
                 "name" ;
         <http://www.w3.org/ns/csvw#propertyUrl>
                 "http://onto.fel.cvut.cz/data/name" ;
-        <https://onto.fel.cvut.cz/ontologies/extension/csvw#propertyUri>
+        <https://onto.fel.cvut.cz/ontologies/extension/csvw/property>
                 <http://onto.fel.cvut.cz/data/name> ;
         <http://www.w3.org/ns/csvw#title>
                 "name" .
@@ -81,7 +81,7 @@ _:b3    a       <http://www.w3.org/ns/csvw#Column> ;
                 "countryCode" ;
         <http://www.w3.org/ns/csvw#propertyUrl>
                 "http://onto.fel.cvut.cz/data/countryCode" ;
-        <https://onto.fel.cvut.cz/ontologies/extension/csvw#propertyUri>
+        <https://onto.fel.cvut.cz/ontologies/extension/csvw/property>
                 <http://onto.fel.cvut.cz/data/countryCode> ;
         <http://www.w3.org/ns/csvw#title>
                 "countryCode" .
