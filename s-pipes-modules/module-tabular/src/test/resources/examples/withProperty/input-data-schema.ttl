@@ -1,6 +1,6 @@
 @prefix : <http://onto.fel.cvut.cz/data/> .
 @prefix csvw: <http://www.w3.org/ns/csvw#> .
-@prefix csvw-e: <https://onto.fel.cvut.cz/ontologies/extension/csvw#> .
+@prefix kbss-csvw: <https://onto.fel.cvut.cz/ontologies/extension/csvw#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -19,33 +19,33 @@
 
 :bookingno_i_column   a csvw:Column;
     csvw:name "bookingno_i" ;
-    csvw-e:propertyUri :bookingno_i_p ;
+    kbss-csvw:property :bookingno_i_p ;
 .
 :Employee_No_column   a csvw:Column;
     csvw:name "Employee_No" ;
-    csvw-e:propertyUri :Employee_No_p ;
+    kbss-csvw:property :Employee_No_p ;
 .
 :user_sign_column   a csvw:Column;
     csvw:name "user_sign" ;
-    csvw-e:propertyUri :user_sign_p ;
+    kbss-csvw:property :user_sign_p ;
 .
 :Start_Date_column   a csvw:Column;
     csvw:name "Start_Date" ;
-    csvw-e:propertyUri :Start_Date_p ;
+    kbss-csvw:property :Start_Date_p ;
 .
 
 :Start_Time_column  a csvw:Column;
   csvw:name "Start_Time" ;
-  csvw-e:propertyUri :Start_Time_p ;
+  kbss-csvw:property :Start_Time_p ;
 .
 
 :End_Date_column a csvw:Column;
     csvw:name "End_Date" ;
-    csvw-e:propertyUri :End_Date_p ;
+    kbss-csvw:property :End_Date_p ;
 .
 
-csvw-e:propertyUri a rdf:Property .
-csvw-e:propertyUri rdfs:range rdf:Property .
+kbss-csvw:property a rdf:Property .
+kbss-csvw:property rdfs:range rdf:Property .
 
 :bookingno_i_p a rdf:Property .
 :Employee_No_p a rdf:Property .
