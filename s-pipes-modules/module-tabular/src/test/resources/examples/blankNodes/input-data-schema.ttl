@@ -9,37 +9,37 @@
 :input-data-schema a owl:Ontology .
 
 :input-table-schema a csvw:TableSchema ;
-                    csvw:column :bookingno_i_column ;
-                    csvw:column :Employee_No_column ;
-                    csvw:column :user_sign_column ;
-                    csvw:column :Start_Date_column ;
-                    csvw:column :Start_Time_column ;
-                    csvw:column :End_Date_column ;
+                     csvw:column _:bookingno_i_column ,
+                                 _:Employee_No_column ,
+                                 _:user_sign_column ,
+                                 _:Start_Date_column ,
+                                 _:Start_Time_column ,
+                                 _:End_Date_column
 .
 
-:bookingno_i_column   a csvw:Column;
+_:bookingno_i_column   a csvw:Column;
     csvw:name "bookingno_i" ;
     kbss-csvw:property :bookingno_i_p ;
 .
-:Employee_No_column   a csvw:Column;
+_:Employee_No_column   a csvw:Column;
     csvw:name "Employee_No" ;
     kbss-csvw:property :Employee_No_p ;
 .
-:user_sign_column   a csvw:Column;
+_:user_sign_column   a csvw:Column;
     csvw:name "user_sign" ;
     kbss-csvw:property :user_sign_p ;
 .
-:Start_Date_column   a csvw:Column;
+_:Start_Date_column   a csvw:Column;
     csvw:name "Start_Date" ;
     kbss-csvw:property :Start_Date_p ;
 .
 
-:Start_Time_column  a csvw:Column;
+_:Start_Time_column  a csvw:Column;
   csvw:name "Start_Time" ;
   kbss-csvw:property :Start_Time_p ;
 .
 
-:End_Date_column a csvw:Column;
+_:End_Date_column a csvw:Column;
     csvw:name "End_Date" ;
     kbss-csvw:property :End_Date_p ;
 .
@@ -47,9 +47,9 @@
 kbss-csvw:property a rdf:Property .
 kbss-csvw:property rdfs:range rdf:Property .
 
-:bookingno_i_p a rdf:Property .
-:Employee_No_p a rdf:Property .
-:user_sign_p a rdf:Property .
-:Start_Date_p a rdf:Property .
-:Start_Time_p a rdf:Property .
-:End_Date_p a rdf:Property .
+_:bookingno_i_p a rdf:Property .
+_:Employee_No_p a rdf:Property .
+_:user_sign_p a rdf:Property .
+_:Start_Date_p a rdf:Property .
+_:Start_Time_p a rdf:Property .
+_:End_Date_p a rdf:Property .

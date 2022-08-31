@@ -1,7 +1,10 @@
-_:b0    <http://www.w3.org/ns/csvw#name>
+_:b0    a       <http://www.w3.org/ns/csvw#Column> ;
+        <http://www.w3.org/ns/csvw#name>
                 "bookingno_i" ;
         <http://www.w3.org/ns/csvw#propertyUrl>
-                "http://onto.fel.cvut.cz/data/bookingno_i_p"^^<http://www.w3.org/ns/csvw#uriTemplate>  ;
+                "http://onto.fel.cvut.cz/data/bookingno_i_p"  ;
+        <https://onto.fel.cvut.cz/ontologies/extension/csvw/property>
+                <http://onto.fel.cvut.cz/data/bookingno_i_p> ;
         <http://www.w3.org/ns/csvw#title>
                 "bookingno_i" .
 
@@ -13,7 +16,7 @@ _:b0    <http://www.w3.org/ns/csvw#name>
                       <http://www.w3.org/ns/csvw#describes>
                               <http://onto.fel.cvut.cz/data/#row-3> ;
                       <http://www.w3.org/ns/csvw#rownum>
-                              2 ;
+                              "2"^^<http://www.w3.org/2001/XMLSchema#int> ;
                       <http://www.w3.org/ns/csvw#url>
                               <http://onto.fel.cvut.cz/data/#row=3>
                     ] ;
@@ -22,7 +25,7 @@ _:b0    <http://www.w3.org/ns/csvw#name>
                       <http://www.w3.org/ns/csvw#describes>
                               <http://onto.fel.cvut.cz/data/#row-2> ;
                       <http://www.w3.org/ns/csvw#rownum>
-                              1 ;
+                             "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
                       <http://www.w3.org/ns/csvw#url>
                               <http://onto.fel.cvut.cz/data/#row=2>
                     ] ;
@@ -46,17 +49,23 @@ _:b0    <http://www.w3.org/ns/csvw#name>
           ]
 ] .
 
-_:b4    <http://www.w3.org/ns/csvw#name>
+_:b4    a       <http://www.w3.org/ns/csvw#Column> ;
+        <http://www.w3.org/ns/csvw#name>
                 "user_sign" ;
         <http://www.w3.org/ns/csvw#propertyUrl>
-                "http://onto.fel.cvut.cz/data/user_sign_p"^^<http://www.w3.org/ns/csvw#uriTemplate>  ;
+                "http://onto.fel.cvut.cz/data/user_sign_p"  ;
+        <https://onto.fel.cvut.cz/ontologies/extension/csvw/property>
+                <http://onto.fel.cvut.cz/data/user_sign_p> ;
         <http://www.w3.org/ns/csvw#title>
                 "user_sign" .
 
-_:b2    <http://www.w3.org/ns/csvw#name>
+_:b2    a       <http://www.w3.org/ns/csvw#Column> ;
+        <http://www.w3.org/ns/csvw#name>
                 "Start_Time" ;
         <http://www.w3.org/ns/csvw#propertyUrl>
-                "http://onto.fel.cvut.cz/data/Start_Time_p"^^<http://www.w3.org/ns/csvw#uriTemplate>  ;
+                "http://onto.fel.cvut.cz/data/Start_Time_p"  ;
+        <https://onto.fel.cvut.cz/ontologies/extension/csvw/property>
+                <http://onto.fel.cvut.cz/data/Start_Time_p> ;
         <http://www.w3.org/ns/csvw#title>
                 "Start Time" .
 
@@ -74,10 +83,13 @@ _:b2    <http://www.w3.org/ns/csvw#name>
         <http://onto.fel.cvut.cz/data/user_sign_p>
                 "KULICMAT" .
 
-_:b3    <http://www.w3.org/ns/csvw#name>
+_:b3    a       <http://www.w3.org/ns/csvw#Column> ;
+        <http://www.w3.org/ns/csvw#name>
                 "Start_Date" ;
         <http://www.w3.org/ns/csvw#propertyUrl>
-                "http://onto.fel.cvut.cz/data/Start_Date_p"^^<http://www.w3.org/ns/csvw#uriTemplate>  ;
+                "http://onto.fel.cvut.cz/data/Start_Date_p"  ;
+        <https://onto.fel.cvut.cz/ontologies/extension/csvw/property>
+                <http://onto.fel.cvut.cz/data/Start_Date_p> ;
         <http://www.w3.org/ns/csvw#title>
                 "Start Date" .
 
@@ -95,17 +107,23 @@ _:b3    <http://www.w3.org/ns/csvw#name>
         <http://onto.fel.cvut.cz/data/user_sign_p>
                 "KULICMAT" .
 
-_:b1    <http://www.w3.org/ns/csvw#name>
+_:b1    a       <http://www.w3.org/ns/csvw#Column> ;
+        <http://www.w3.org/ns/csvw#name>
                 "End_Date" ;
         <http://www.w3.org/ns/csvw#propertyUrl>
-                "http://onto.fel.cvut.cz/data/End_Date_p"^^<http://www.w3.org/ns/csvw#uriTemplate>  ;
+                "http://onto.fel.cvut.cz/data/End_Date_p"  ;
+        <https://onto.fel.cvut.cz/ontologies/extension/csvw/property>
+                <http://onto.fel.cvut.cz/data/End_Date_p> ;
         <http://www.w3.org/ns/csvw#title>
                 "End Date" .
 
-_:b5    <http://www.w3.org/ns/csvw#name>
+_:b5    a       <http://www.w3.org/ns/csvw#Column> ;
+        <http://www.w3.org/ns/csvw#name>
                 "Employee_No" ;
         <http://www.w3.org/ns/csvw#propertyUrl>
-                "http://onto.fel.cvut.cz/data/Employee_No_p"^^<http://www.w3.org/ns/csvw#uriTemplate>  ;
+                "http://onto.fel.cvut.cz/data/Employee_No_p" ;
+        <https://onto.fel.cvut.cz/ontologies/extension/csvw/property>
+                <http://onto.fel.cvut.cz/data/Employee_No_p> ;
         <http://www.w3.org/ns/csvw#title>
                 "Employee No" .
 

@@ -3,7 +3,6 @@ package cz.cvut.spipes.modules.model;
 import cz.cvut.kbss.jopa.model.annotations.*;
 import cz.cvut.spipes.constants.CSVW;
 
-import java.net.URI;
 import java.util.*;
 
 /**
@@ -13,7 +12,7 @@ import java.util.*;
 @OWLClass(iri = CSVW.TableSchemaUri)
 public class TableSchema extends AbstractEntity {
 
-    @OWLAnnotationProperty(iri = CSVW.aboutUrlUri)
+    @OWLDataProperty(iri = CSVW.aboutUrlUri, datatype = CSVW.uriTemplate)
     private String aboutUrl;
 
     @OWLAnnotationProperty(iri = CSVW.propertyUrlUri)
@@ -57,13 +56,17 @@ public class TableSchema extends AbstractEntity {
         this.columnsSet = columnsSet;
     }
 
-    public List<Column> sortColumns(List<URI> orderList){
+
+    public List<Column> sortColumns(List<String> orderList){
+
         if (orderList.isEmpty()) return new ArrayList<>(columnsSet);
 
         List<Column> columnList = new ArrayList<>(orderList.size());
 
-        for (URI uri : orderList) {
-            Optional<Column> col = columnsSet.stream().filter(column -> column.getUri().equals(uri)).findFirst();
+
+        for (String uri : orderList) {
+            Optional<Column> col = columnsSet.stream().filter(column -> column.getUri().toString().equals(uri)).findFirst();
+
             col.ifPresent(columnList::add);
         }
         return columnList;

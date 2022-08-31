@@ -11,16 +11,14 @@ import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.exception.ResourceNotFoundException;
 import cz.cvut.spipes.exception.ResourceNotUniqueException;
 import cz.cvut.spipes.modules.exception.TableSchemaException;
-import cz.cvut.spipes.modules.model.Column;
-import cz.cvut.spipes.modules.model.TableSchema;
+import cz.cvut.spipes.modules.model.*;
+import cz.cvut.spipes.modules.util.BNodesTransformer;
 import cz.cvut.spipes.modules.util.JopaPersistenceUtils;
 import cz.cvut.spipes.registry.StreamResource;
 import cz.cvut.spipes.registry.StreamResourceRegistry;
 import cz.cvut.spipes.util.JenaUtils;
-import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.rdf.model.*;
-import org.apache.jena.vocabulary.RDF;
-import org.apache.jena.shared.PropertyNotFoundException;
+import org.apache.jena.util.ResourceUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +29,8 @@ import org.supercsv.prefs.CsvPreference;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -95,45 +93,46 @@ public class TabularModule extends AbstractModule {
     private char quoteCharacter;
 
     //:data-prefix
-    public String dataPrefix;
-
-    //:output-mode
-    private Mode outputMode;
+    private String dataPrefix;
 
     //:skip-header
     private boolean skipHeader;
 
-    /**
-     * Represent a root resource for group of tables.
-     */
-    private Resource G;
-
-    /**
-     * Represent a root resource for a table.
-     */
-    private Resource T;
-
-    /**
-     * Represents the resource for the table schema that was used to describe the table
-     */
-    private Resource T_Schema;
+    //:output-mode
+    private Mode outputMode;
 
     private Model outputModel;
 
-    private TableSchema inputTableSchema = new TableSchema();
+    /**
+     * Represent a group of tables.
+     */
+    private TableGroup tableGroup;
+
+    /**
+     * Represent a table.
+     */
+    private Table table;
+
+    /**
+     * Represents the table schema that was used to describe the table
+     */
+    private TableSchema inputTableSchema;
 
     @Override
     ExecutionContext executeSelf() {
-
-        boolean hasTableSchema = false;
-        Model inputModel = executionContext.getDefaultModel();
+        BNodesTransformer bNodesTransformer = new BNodesTransformer();
+        Model inputModel = bNodesTransformer.convertBNodesToNonBNodes(executionContext.getDefaultModel());
 
         outputModel = ModelFactory.createDefaultModel();
         EntityManager em = JopaPersistenceUtils.getEntityManager("cz.cvut.spipes.modules.model", inputModel);
         em.getTransaction().begin();
 
-        onTableGroup(null);
-        onTable(null);
+        // TODO add references to specification (they are already in git somewhere!!!)
+        tableGroup = onTableGroup(null);
+        table = onTable(null);
+
+        List<Column> outputColumns = new ArrayList<>();
+        TableSchema tableSchema = table.getTableSchema();
 
         CsvPreference csvPreference = new CsvPreference.Builder(
             quoteCharacter,
@@ -149,36 +148,18 @@ public class TabularModule extends AbstractModule {
                 return getExecutionContext(inputModel, outputModel);
             }
             Set<String> columnNames = new HashSet<>();
-            List<RDFNode> columns = new LinkedList<>();
 
-            TypedQuery<TableSchema> query = em.createNativeQuery(
-                    "PREFIX csvw: <http://www.w3.org/ns/csvw#>\n" +
-                            "SELECT ?t WHERE { \n" +
-                            "?t a csvw:TableSchema. \n" +
-                            "}",
-                    TableSchema.class
-            );
-
-            int tableSchemaCount = query.getResultList().size();
-
-            if(tableSchemaCount == 1) {
-                hasTableSchema = true;
-                inputTableSchema = query.getSingleResult();
-                LOG.debug("Custom table schema found.");
-            }else if(tableSchemaCount > 1) {
-                LOG.warn("More than one table schema found. Ignoring schemas {}. ", query.getResultList());
-            }else {
-                LOG.debug("No custom table schema found.");
-            }
-
+            this.inputTableSchema = getTableSchema(em);
             if(skipHeader){
-                header = getHeaderFromSchema(inputModel, header, tableSchemaCount);
+                header = getHeaderFromSchema(inputModel, header, inputTableSchema != null ? 1 : 0);
                 listReader = new CsvListReader(getReader(), csvPreference);
+            }else if (inputTableSchema != null) {
+                header = getHeaderFromSchema(inputModel, header, 1);
             }
+
 
             String mainErrorMsg = "CSV table schema is not compliant with provided custom schema.";
-
-            if (hasTableSchema && header.length != inputTableSchema.getColumnsSet().size()) {
+            if (inputTableSchema != null && header.length != inputTableSchema.getColumnsSet().size()) {
 
                 String mergedMsg = mainErrorMsg + "\n" +
                         "The number of columns in the table schema does not match the number of columns in the table." + "\n"
@@ -187,221 +168,51 @@ public class TabularModule extends AbstractModule {
                 logError(mergedMsg);
             }
 
+            em = JopaPersistenceUtils.getEntityManager("cz.cvut.spipes.modules.model", outputModel);
+            em.getTransaction().begin();
+
             List<Column> schemaColumns = new ArrayList<>(header.length);
+            outputColumns = new ArrayList<>(header.length);
 
             int j = 0;
             for (String columnTitle : header) {
-                Resource columnResource = ResourceFactory.createResource();
                 String columnName = normalize(columnTitle);
                 boolean isDuplicate = !columnNames.add(columnName);
-                columns.add(columnResource);
+                if(inputTableSchema != null) checkMissingColumns(mainErrorMsg, schemaColumns, columnName);
 
-                if (hasTableSchema){
-                    Column schemaColumn = getColumnFromTableSchema(columnName, inputTableSchema);
-                    schemaColumns.add(schemaColumn);
-                    if (schemaColumn == null) {
-                        String mergedMsg = mainErrorMsg + "\n" +
-                                "Column with name '" + columnTitle + "' is missing." + "\n"
-//                        .append(evidence).append("\n") TODO: rdf triples of evidence
-                                ;
+                Column column = new Column(columnName, columnTitle);
+                outputColumns.add(column);
 
-                        logError(mergedMsg);
-                    }
-                }
+                setColumnAboutUrl(inputTableSchema != null, tableSchema, schemaColumns, j, column);
 
-
-                if (isDuplicate) {
-                    Resource collidingColumn = getColumnByName(columnName);
-                    throw new ResourceNotUniqueException(
-                            String.format("Unable to create value of property %s due to collision. " +
-                                    "Both column titles '%s' and '%s' are normalized to '%s' " +
-                                    "and thus would refer to the same property url <%s>.",
-                                    CSVW.propertyUrl,
-                                    columnTitle,
-                                    collidingColumn.getRequiredProperty(CSVW.title).getObject().asLiteral().toString(),
-                                    columnName,
-                                    collidingColumn.getRequiredProperty(CSVW.propertyUrl).getObject().asLiteral().toString()));
-                }
-
-                outputModel.add(
-                        T_Schema,
-                        CSVW.column,
-                        columnResource
-                );
-                outputModel.add(
-                        columnResource,
-                        CSVW.name,
-                        ResourceFactory.createStringLiteral(columnName)
-                );
-                outputModel.add(
-                    columnResource,
-                    CSVW.title,
-                    ResourceFactory.createStringLiteral(columnTitle)
-                );
-
-                String columnAboutUrl = null;
-                if(hasTableSchema && schemaColumns.get(j).getAboutUrl() != null) columnAboutUrl = schemaColumns.get(j).getAboutUrl();
-
-                if (columnAboutUrl != null && !columnAboutUrl.isEmpty()) {
-                    outputModel.add(
-                            columnResource,
-                            CSVW.aboutUrl,
-                            outputModel.createTypedLiteral(columnAboutUrl, CSVW.uriTemplate)
-                    );
-                } else {
-                    outputModel.add(
-                            T_Schema,
-                            CSVW.aboutUrl,
-                            outputModel.createTypedLiteral(sourceResource.getUri() + "#row-{_row}", CSVW.uriTemplate)
-                    );
-                }
-
-
-                String columnPropertyUrl = null;
-                if (hasTableSchema && schemaColumns.get(j).getPropertyUrl() != null) {
-                    columnPropertyUrl = schemaColumns.get(j).getPropertyUrl();
-                    outputModel.add(
-                            columnResource,
-                            CSVW.propertyUrl, // TODO: csvw-e:property
-                            outputModel.createTypedLiteral(columnPropertyUrl, CSVW.uriTemplate)
-                    );
-                }
-
-                if (columnPropertyUrl != null && !columnPropertyUrl.isEmpty()) {
-                    outputModel.add(
-                            columnResource,
-                            CSVW.propertyUrl,
-                            outputModel.createTypedLiteral(columnPropertyUrl, CSVW.uriTemplate)
-                    );
-                } else if (dataPrefix != null && !dataPrefix.isEmpty()) {
-                    outputModel.add(
-                            columnResource,
-                            CSVW.propertyUrl,
-                            ResourceFactory.createPlainLiteral(dataPrefix + URLEncoder.encode(columnName, "UTF-8")) //TODO should be URL (according to specification) not URI
-                    );
-                } else {
-                    outputModel.add(
-                            columnResource,
-                            CSVW.propertyUrl,
-                            ResourceFactory.createPlainLiteral(sourceResource.getUri() + "#" + URLEncoder.encode(columnName, "UTF-8"))
-                    );
-                }
-
+                Column schemaColumn = inputTableSchema != null ? schemaColumns.get(j) : null;
+                String propertyUrl = getColumnPropertyUrl(inputTableSchema != null, schemaColumn, columnName);
+                column.setProperty(propertyUrl);
+                column.setPropertyUrl(propertyUrl);
+                if(isDuplicate) throwNotUniqueException(column,columnTitle, columnName);
                 j++;
             }
-
-            RDFList columnList = outputModel.createList(columns.iterator());
-
-            outputModel.add(
-                    T_Schema,
-                    CSVW.columns,
-                    columnList);
+            tableSchema.getColumnsSet().addAll(outputColumns);
 
             List<String> row;
             int rowNumber = 0;
             //for each row
             while( (row = listReader.read()) != null ) {
                 rowNumber++;
+                Row r = new Row();
+                table.getRows().add(r);
 
-                // 4.6
-                Resource R;
                 if (outputMode == Mode.STANDARD) {
-                    // 4.6.1
-                    R = ResourceFactory.createResource();
-                    // 4.6.2
-                    outputModel.add(
-                            T,
-                            CSVW.row,
-                            R);
-                    // 4.6.3
-                    outputModel.add(
-                            R,
-                            RDF.type,
-                            CSVW.Row);
-                    // 4.6.4
-                    outputModel.add(
-                            R,
-                            CSVW.rowNum,
-                            ResourceFactory.createTypedLiteral(Integer.toString(rowNumber),
-                                    XSDDatatype.XSDinteger));
-                    // 4.6.5
-                    final String rowIri = sourceResource.getUri() + "#row=" + listReader.getRowNumber();
-                    outputModel.add(
-                            R,
-                            CSVW.url,
-                            ResourceFactory.createResource(rowIri));
-                    // 4.6.6 - Add titles.
-                    // We do not support titles.
-
-                    // 4.6.7
-                    // In standard mode only, emit the triples generated by running
-                    // the algorithm specified in section 6. JSON-LD to RDF over any
-                    // non-core annotations specified for the row, with node R as
-                    // an initial subject, the non-core annotation as property, and the
-                    // value of the non-core annotation as value.
-                } else {
-                    R = null;
+                    table.getRows().add(r);
+                    r.setRownum(rowNumber);
+                    r.setUrl(sourceResource.getUri() + "#row=" + (rowNumber + 1));
                 }
 
                 for (int i = 0; i < header.length; i++) {
-                    Resource schemaColumnResource = columns.get(i).asResource();
-
-                    // 4.6.8.1
-                    String columnAboutUrlStr = getAboutUrlFromSchema(schemaColumnResource);
-
-                    //TODO: Is this neccesary?
-//                    String columnAboutUrlStr = getAboutUrlFromSchema(schemaColumnResource);
-//                    UriTemplate aboutUrlTemplate = new UriTemplate(columnAboutUrlStr);
-//                    aboutUrlTemplate.initialize(null, Arrays.asList(header));
-//                    IRI columnAboutUrl = aboutUrlTemplate.getUri(row);
-
-                    Resource S = ResourceFactory.createResource(columnAboutUrlStr.replace(
-                            "{_row}",
-                            Integer.toString(listReader.getRowNumber())
-                    ));
-
-                    // 4.6.8.2
-                    if (R != null) {
-                        outputModel.add(ResourceFactory.createStatement(
-                                R,
-                                CSVW.describes,
-                                S));
-                    }
-
-                    // 4.6.8.3
-                    String columnPropertyUrl = getPropertyUrlFromSchema(schemaColumnResource);
-                    Property P = ResourceFactory.createProperty(columnPropertyUrl);
-
-                    Column column = getColumnFromTableSchema(header[i], inputTableSchema);
-                    String valueUrl = null;
-                    if(column != null) valueUrl = column.getValueUrl();
-
-                    if (valueUrl != null && !valueUrl.isEmpty()) {
-                        // 4.6.8.4
-                        Resource V_url = ResourceFactory.createResource(valueUrl);
-                        outputModel.add(ResourceFactory.createStatement(
-                                S,
-                                P,
-                                V_url));
-
-                        outputModel.add(
-                                schemaColumnResource,
-                                CSVW.valueUrl,
-                                ResourceFactory.createPlainLiteral(valueUrl)
-                        );
-                    } else {
-                        final String cellValue = row.get(i);
-                        if (cellValue != null) {
-                            outputModel.add(ResourceFactory.createStatement(
-                                S,
-                                P,
-                                ResourceFactory.createPlainLiteral(cellValue)));
-                        }
-                    }
-
-                    // 4.6.8.5 - else, if value is list and cellOrdering == true
-                    // 4.6.8.6 - else, if value is list
-                    // 4.6.8.7 - else, if cellValue is not null
+                    String columnAboutUrlStr = setColumnAboutUrl(outputColumns, tableSchema, rowNumber, i);
+                    setValueUrl(inputModel, outputColumns, header, row, i, columnAboutUrlStr);
+                    r.setDescribes(columnAboutUrlStr);
+                    //TODO: URITemplate
                 }
             }
 
@@ -409,7 +220,158 @@ public class TabularModule extends AbstractModule {
             LOG.error("Error while reading file from resource uri {}", sourceResource, e);
         }
 
+        table.getTableSchema().setAboutUrl(null); // will be replaced by JOPA later
+        em.persist(tableGroup);
+        em.getTransaction().commit();
+
+        Model persistenceModel = JopaPersistenceUtils.getDataset(em).getDefaultModel();
+        persistenceModel.getResource(tableSchema.getUri().toString())
+                .addLiteral(persistenceModel.getProperty(CSVW.aboutUrlUri),
+                        persistenceModel.createTypedLiteral(sourceResource.getUri() + "#row-{_row}", CSVW.uriTemplate)
+                );
+
+        addColumnsList(em, outputColumns, tableSchema);
+
+        outputModel.add(
+                bNodesTransformer.transferJOPAEntitiesToBNodes
+                        (JopaPersistenceUtils.getDataset(em).getDefaultModel()));
+
+        em.close();
         return getExecutionContext(inputModel, outputModel);
+    }
+
+    private void setValueUrl(Model inputModel, List<Column> outputColumns, String[] header,
+                             List<String> row, int i, String columnAboutUrlStr) {
+        String columnPropertyUrl = outputColumns.get(i).getPropertyUrl();
+
+        Column column = null;
+        if (inputTableSchema != null){
+            column = getColumnFromTableSchema(header[i], inputTableSchema);
+        }
+        String valueUrl = null;
+        if(column != null) valueUrl = column.getValueUrl();
+
+        if (valueUrl != null && !valueUrl.isEmpty()) {
+            column.setValueUrl(valueUrl);
+        } else {
+            final String cellValue = row.get(i);
+            if (cellValue != null) {
+                Resource columnResource = ResourceFactory.createResource(columnAboutUrlStr);
+                outputModel.add(ResourceFactory.createStatement(
+                    columnResource,
+                    inputModel.createProperty(columnPropertyUrl),
+                    ResourceFactory.createPlainLiteral(cellValue)));
+            }
+        }
+    }
+
+    @NotNull
+    private static String setColumnAboutUrl(List<Column> outputColumns, TableSchema tableSchema, int rowNumber, int i) {
+        String columnAboutUrlStr = tableSchema.getAboutUrl();
+        if (columnAboutUrlStr == null) columnAboutUrlStr = outputColumns.get(i).getAboutUrl();
+        columnAboutUrlStr = columnAboutUrlStr.replace(
+                "{_row}",
+                Integer.toString(rowNumber + 1)
+        );
+        return columnAboutUrlStr;
+    }
+
+    private void setColumnAboutUrl(boolean hasTableSchema, TableSchema tableSchema, List<Column> schemaColumns,
+                                   int j, Column column) {
+        String columnAboutUrl = null;
+        if(hasTableSchema && schemaColumns.get(j).getAboutUrl() != null)
+            columnAboutUrl = schemaColumns.get(j).getAboutUrl();
+
+        if (columnAboutUrl != null && !columnAboutUrl.isEmpty()) {
+            column.setAboutUrl(columnAboutUrl);
+        } else {
+            tableSchema.setAboutUrl(sourceResource.getUri() + "#row-{_row}");
+        }
+    }
+
+    private TableSchema getTableSchema(EntityManager em) {
+        TypedQuery<TableSchema> query = em.createNativeQuery(
+                "PREFIX csvw: <http://www.w3.org/ns/csvw#>\n" +
+                        "SELECT ?t WHERE { \n" +
+                        "?t a csvw:TableSchema. \n" +
+                        "}",
+                TableSchema.class
+        );
+
+        int tableSchemaCount = query.getResultList().size();
+
+        if(tableSchemaCount > 1) {
+            LOG.warn("More than one table schema found. Ignoring schemas {}. ", query.getResultList());
+            return null;
+        }
+        if(tableSchemaCount == 0) {
+            LOG.debug("No custom table schema found.");
+            return null;
+        }
+        LOG.debug("Custom table schema found.");
+        return query.getSingleResult();
+    }
+
+    private String getColumnPropertyUrl(boolean hasTableSchema,
+                                        Column schemaColumn,
+                                      String columnName) throws UnsupportedEncodingException {;
+        if (hasTableSchema) {
+            if (schemaColumn.getPropertyUrl() != null) {
+                return schemaColumn.getPropertyUrl();
+            }
+            if (schemaColumn.getProperty() != null) {
+                return schemaColumn.getProperty();
+            }
+        }
+        if (dataPrefix != null && !dataPrefix.isEmpty()) {
+            return dataPrefix + URLEncoder.encode(columnName, "UTF-8");
+        }
+        return sourceResource.getUri() + "#" + URLEncoder.encode(columnName, "UTF-8");
+    }
+
+    private void throwNotUniqueException(Column column, String columnTitle, String columnName) {
+        throw new ResourceNotUniqueException(
+                String.format("Unable to create value of property %s due to collision. " +
+                        "Both column titles '%s' and '%s' are normalized to '%s' " +
+                        "and thus would refer to the same property url <%s>.",
+                        CSVW.propertyUrl,
+                        columnTitle,
+                        column.getTitle(),
+                        columnName,
+                        column.getPropertyUrl()));
+    }
+
+    private void checkMissingColumns(String mainErrorMsg, List<Column> schemaColumns,
+                                     String columnTitle) {
+        Column schemaColumn = getColumnFromTableSchema(columnTitle, inputTableSchema);
+        schemaColumns.add(schemaColumn);
+        if (schemaColumn == null) {
+            String mergedMsg = mainErrorMsg + "\n" +
+                    "Column with name '" + columnTitle + "' is missing." + "\n"
+//                        .append(evidence).append("\n") TODO: rdf triples of evidence
+                    ;
+
+            logError(mergedMsg);
+        }
+    }
+
+    private void addColumnsList(EntityManager em, List<Column> outputColumns, TableSchema tableSchema) {
+        Model persistenceModel = JopaPersistenceUtils.getDataset(em).getDefaultModel();
+        RDFNode[] elements = new RDFNode[outputColumns.size()];
+
+        for (int i = 0; i < outputColumns.size(); i++) {
+            Resource n = persistenceModel.getResource(outputColumns.get(i).getUri().toString());
+            elements[i] = n;
+        }
+
+        RDFList columnList = persistenceModel.createList(elements);
+        Resource convertedTableSchema =
+                ResourceUtils.renameResource(persistenceModel.getResource(tableSchema.getUri().toString()), null);
+
+        persistenceModel.add(
+                convertedTableSchema,
+                CSVW.columns,
+                columnList);
     }
 
     private ExecutionContext getExecutionContext(Model inputModel, Model outputModel) {
@@ -442,74 +404,29 @@ public class TabularModule extends AbstractModule {
         return ResourceFactory.createProperty(TYPE_URI + "/" + localPropertyName);
     }
 
-    private void onTableGroup(String tableGroupUri) {
-        if (outputMode == Mode.STANDARD) {
-            // 1
-            if (tableGroupUri != null && !tableGroupUri.isEmpty()) {
-                G = ResourceFactory.createResource(tableGroupUri);
-            } else {
-                G = ResourceFactory.createResource();
-            }
-            // 2
-            outputModel.add(
-                    G,
-                    RDF.type,
-                    CSVW.TableGroup);
-            // 3
-            // In standard mode only, emit the triples generated by running
-            // the algorithm specified in section 6. JSON-LD to RDF over any
-            // notes and non-core annotations specified for the group of tables,
-            // with node G as an initial subject, the notes or non-core
-            // annotation as property, and the value
-            // of the notes or non-core annotation as value.
+    private TableGroup onTableGroup(String tableGroupUri) {
+        tableGroup = new TableGroup();
+        if (outputMode == Mode.STANDARD && tableGroupUri != null && !tableGroupUri.isEmpty()) {
+            tableGroup.setUri(URI.create(tableGroupUri));
         }
+        return tableGroup;
     }
 
-    private void onTable(String tableUri) {
-        // 4 - we never skip table
+    private Table onTable(String tableUri) {
+        table = new Table();
+        table.setUrl(sourceResource.getUri());
+
         if (outputMode == Mode.STANDARD) {
-            // 4.1 (establish a new node T which represents the current table)
             if (tableUri != null && !tableUri.isEmpty()) {
-                T = ResourceFactory.createResource(tableUri);
-            } else {
-                T = ResourceFactory.createResource();
+                table.setUri(URI.create(tableUri));
             }
-            // 4.2
-            outputModel.add(
-                    G,
-                    CSVW.table,
-                    T);
-            // 4.3
-            outputModel.add(
-                    T,
-                    RDF.type,
-                    CSVW.Table);
-            // 4.4 (specify the source tabular data file URL for the current table based on the url annotation)
-            outputModel.add(
-                    T,
-                    CSVW.url,
-                    ResourceFactory.createResource(sourceResource.getUri())); //TODO should be URL (according to specification) not URI
 
-            // 4.5
-            // In standard mode only, emit the triples generated by running
-            // the algorithm specified in section 6. JSON-LD to RDF over any
-            // notes and non-core annotations specified for the table, with
-            // node T as an initial subject, the notes or non-core
-            // annotation as property, and the value
-            // of the notes or non-core annotation as value.
-
-            T_Schema = ResourceFactory.createResource();
-            outputModel.add(
-                    T,
-                    CSVW.tableSchema,
-                    T_Schema
-            );
-            outputModel.add(
-                    T_Schema,
-                    RDF.type,
-                    CSVW.TableSchema
-            );
+            TableSchema tableSchema = new TableSchema();
+            table.setTableSchema(tableSchema);
+            tableGroup.setTable(table);
         }
+
+        return table;
     }
 
     private String normalize(String label) {
@@ -522,20 +439,6 @@ public class TabularModule extends AbstractModule {
                 CSVW.name,
                 ResourceFactory.createStringLiteral(columnName)
         ).next().getSubject();
-    }
-
-    private String getAboutUrlFromSchema(Resource columnResource) {
-        String aboutUrl;
-        try {
-            aboutUrl = outputModel.getRequiredProperty(columnResource, CSVW.aboutUrl).getObject().asLiteral().getString();
-        } catch (PropertyNotFoundException e) {
-            aboutUrl = outputModel.getRequiredProperty(T_Schema, CSVW.aboutUrl).getObject().asLiteral().getString();
-        }
-        return aboutUrl;
-    }
-
-    private String getPropertyUrlFromSchema(Resource columnResource) {
-        return outputModel.getRequiredProperty(columnResource, CSVW.propertyUrl).getObject().asLiteral().getString();
     }
 
     private Reader getReader() {
@@ -607,7 +510,7 @@ public class TabularModule extends AbstractModule {
 
     private String[] getHeaderFromSchema(Model inputModel, String[] header, int tableSchemaCount) {
         if (tableSchemaCount == 1) {
-            List<URI> orderList = new ArrayList<>();
+            List<String> orderList = new ArrayList<>();
             Resource tableSchemaResource = inputModel.getResource(inputTableSchema.getUri().toString());
             Statement statement = tableSchemaResource.getProperty(CSVW.columns);
 
@@ -615,16 +518,10 @@ public class TabularModule extends AbstractModule {
                 RDFNode node = statement.getObject();
                 RDFList rdfList = node.as(RDFList.class);
 
-                rdfList.iterator().forEach(rdfNode -> {
-                    try {
-                        orderList.add(new URI(rdfNode.toString()));
-                    } catch (URISyntaxException e) {
-                        logError("Invalid URI: " + rdfNode);
-                    }
-                });
+                rdfList.iterator().forEach(rdfNode -> orderList.add(String.valueOf(rdfNode)));
                 header = createHeaders(header.length, inputTableSchema.sortColumns(orderList));
 
-            } else logError("Order of columns was not provided in the schema.");
+            } else LOG.info("Order of columns was not provided in the schema.");
         } else {
             header = createHeaders(header.length, new ArrayList<>());
         }
