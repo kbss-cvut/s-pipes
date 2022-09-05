@@ -68,6 +68,13 @@ Defines dependencies of all specific *module types* that are used in Web and Cli
 
 Contains specific SPipes *module types*.
 
+### SPipes Modules Utils
+
+Contains developer tools for working with SPipes module types. Specifically:
+- `s-pipes-module-archetype` is a Maven Archetype for generating a clean template for a new module type. `bin/generate-test-module.sh` can be used for quickstarting. See the [official Maven docs](https://maven.apache.org/guides/introduction/introduction-to-archetypes.html) for more info.
+- `s-pipes-module-creator-maven-plugin` is a Maven Plugin for post-processing existing modules. It takes care of updating the RDF ontologies within the module.
+
+
 ### SPipes Model
 
 Defines Java model that is used for serialization of metadata about execution of pipelines. It is based  on JOPA (Java OWL Persistence API) for accessing OWL ontologies, where those metadata are saved.
