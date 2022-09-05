@@ -3,6 +3,9 @@ package cz.cvut.spipes.modules.model;
 import cz.cvut.kbss.jopa.model.annotations.*;
 import cz.cvut.spipes.constants.CSVW;
 import cz.cvut.spipes.constants.KBSS_CSVW;
+import cz.cvut.spipes.modules.exception.NoMatchException;
+
+import java.util.function.UnaryOperator;
 
 /**
  * Part of {@link TableSchema}, each column can have different metadata.
@@ -46,7 +49,7 @@ public class Column extends AbstractEntity {
     }
 
     public void setName(String name) {
-        this.name = name;
+        setColumnVariable(this.name, name, value -> this.name = value, "name");
     }
 
     public boolean isRequired() {
@@ -70,7 +73,7 @@ public class Column extends AbstractEntity {
     }
 
     public void setAboutUrl(String aboutUrl) {
-        this.aboutUrl = aboutUrl;
+        setColumnVariable(this.aboutUrl, aboutUrl, value -> this.aboutUrl = value, "aboutUrl");
     }
 
     public String getPropertyUrl() {
@@ -78,7 +81,7 @@ public class Column extends AbstractEntity {
     }
 
     public void setPropertyUrl(String propertyUrl) {
-        this.propertyUrl = propertyUrl;
+        setColumnVariable(this.propertyUrl, propertyUrl, value -> this.propertyUrl = value, "propertyUrl");
     }
 
     public String getValueUrl() {
@@ -86,7 +89,7 @@ public class Column extends AbstractEntity {
     }
 
     public void setValueUrl(String valueUrl) {
-        this.valueUrl = valueUrl;
+        setColumnVariable(this.valueUrl, valueUrl, value -> this.valueUrl = value, "valueUrl");
     }
 
     public String getTitle() {
@@ -94,7 +97,7 @@ public class Column extends AbstractEntity {
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        setColumnVariable(this.title, title, value -> this.title = value, "title");
     }
 
     public Boolean getRequired() {
@@ -118,6 +121,22 @@ public class Column extends AbstractEntity {
     }
 
     public void setProperty(String property) {
-        this.property = property;
+        setColumnVariable(this.property, property, value -> this.property = value, "property");
+    }
+
+    private void setColumnVariable(String variable, String variable2, UnaryOperator<String> variableSetter, String variableName) {
+        if (variable != null){
+            checkVariable(variable, variable2, variableName);
+        }else {
+            variableSetter.apply(variable2);
+        }
+    }
+
+    private void checkVariable(String variable, String variable2, String variableName) {
+        if (!variable.equals(variable2)) {
+            throw new NoMatchException(
+                    String.format("Schema field '%s' with value '%s' does not match value '%s' from the input data ",
+                            variableName, variable, variable2));
+        }
     }
 }
