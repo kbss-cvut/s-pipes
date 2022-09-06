@@ -124,19 +124,29 @@ public class Column extends AbstractEntity {
         setColumnVariable(this.property, property, value -> this.property = value, "property");
     }
 
-    private void setColumnVariable(String variable, String variable2, UnaryOperator<String> variableSetter, String variableName) {
-        if (variable != null){
-            checkVariable(variable, variable2, variableName);
+    /**
+     * This method sets the value of the column variables (e.g. name, title, aboutUrl, ...)
+     * <p> If the value from schema is provided we check if it matches the value from the input data.
+     * else we set the column variable through variableSetter. </p>
+     * @param schemaBasedValue The value of the column variable from the input schema
+     * @param dataBasedValue The value of the column variable from the input data
+     * @param variableSetter The setter of the column variable
+     * @param variableName The name of the column variable we want to set
+     */
+    private void setColumnVariable(String schemaBasedValue, String dataBasedValue,
+                                   UnaryOperator<String> variableSetter, String variableName) {
+        if (schemaBasedValue != null){
+            checkVariable(schemaBasedValue, dataBasedValue, variableName);
         }else {
-            variableSetter.apply(variable2);
+            variableSetter.apply(dataBasedValue);
         }
     }
 
-    private void checkVariable(String variable, String variable2, String variableName) {
-        if (!variable.equals(variable2)) {
+    private void checkVariable(String schemaBasedValue, String dataBasedValue, String variableName) {
+        if (!schemaBasedValue.equals(dataBasedValue)) {
             throw new NoMatchException(
                     String.format("Schema field '%s' with value '%s' does not match value '%s' from the input data ",
-                            variableName, variable, variable2));
+                            variableName, schemaBasedValue, dataBasedValue));
         }
     }
 }
