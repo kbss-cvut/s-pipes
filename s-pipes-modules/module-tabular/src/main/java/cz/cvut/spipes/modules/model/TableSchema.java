@@ -7,7 +7,6 @@ import cz.cvut.spipes.constants.CSVW;
 import cz.cvut.spipes.modules.exception.TableSchemaException;
 import cz.cvut.spipes.modules.util.JopaPersistenceUtils;
 import cz.cvut.spipes.modules.util.TabularModuleUtils;
-import cz.cvut.spipes.registry.StreamResource;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFList;
 import org.apache.jena.rdf.model.RDFNode;
@@ -90,12 +89,12 @@ public class TableSchema extends AbstractEntity {
         return columnList;
     }
 
-    public void adjustProperties(boolean hasInputSchema, List<Column> outputColumns, StreamResource sourceResource) {
+    public void adjustProperties(boolean hasInputSchema, List<Column> outputColumns, String sourceResourceUri) {
         if (hasInputSchema){
             if(getColumnsSet().size() > outputColumns.size()) {
                 throwExtraColumnsError(outputColumns);
             }
-            setAboutUrl(sourceResource.getUri() + "#row-{_row}");
+            setAboutUrl(sourceResourceUri + "#row-{_row}");
             getColumnsSet().forEach(column -> column.setUri(null));
             setUri(null);
         }else{
@@ -136,7 +135,7 @@ public class TableSchema extends AbstractEntity {
                 columnList);
     }
 
-    public void setAboutUrl(Column column, StreamResource sourceResource) {
+    public void setAboutUrl(Column column, String sourceResourceUri) {
         String columnAboutUrl = null;
         if(column.getAboutUrl() != null){
             columnAboutUrl = column.getAboutUrl();
@@ -145,7 +144,7 @@ public class TableSchema extends AbstractEntity {
         if (columnAboutUrl != null && !columnAboutUrl.isEmpty()) {
             column.setAboutUrl(columnAboutUrl);
         } else {
-            String tableSchemaAboutUrl = sourceResource.getUri() + "#row-{_row}";
+            String tableSchemaAboutUrl = sourceResourceUri + "#row-{_row}";
             tabularModuleUtils.setVariable(aboutUrl, tableSchemaAboutUrl, value -> this.aboutUrl = value, "aboutUrl");
         }
     }
@@ -167,5 +166,15 @@ public class TableSchema extends AbstractEntity {
         if (ExecutionConfig.isExitOnError()) {
             throw new TableSchemaException(msg);
         }else LOG.error(msg);
+    }
+
+    public String createAboutUrl(int rowNumber) {
+        String columnAboutUrlStr = aboutUrl;
+        if (columnAboutUrlStr == null) columnAboutUrlStr = getAboutUrl();
+        columnAboutUrlStr = columnAboutUrlStr.replace(
+                "{_row}",
+                Integer.toString(rowNumber + 1)
+        );
+        return columnAboutUrlStr;
     }
 }

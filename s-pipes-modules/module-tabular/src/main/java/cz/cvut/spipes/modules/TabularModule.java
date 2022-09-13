@@ -125,6 +125,7 @@ public class TabularModule extends AbstractModule {
         table = onTable(null);
 
         List<Column> outputColumns = new ArrayList<>();
+        List<Statement> rowStatements = new ArrayList<>();
 
         CsvPreference csvPreference = new CsvPreference.Builder(
             quoteCharacter,
@@ -165,8 +166,8 @@ public class TabularModule extends AbstractModule {
                         : new Column(columnName, columnTitle);
                 outputColumns.add(schemaColumn);
 
-                tableSchema.setAboutUrl(schemaColumn, sourceResource);
-                schemaColumn.setProperty(dataPrefix, sourceResource);
+                tableSchema.setAboutUrl(schemaColumn, sourceResource.getUri());
+                schemaColumn.setProperty(dataPrefix, sourceResource.getUri());
                 schemaColumn.setTitle(columnTitle);
                 if(isDuplicate) throwNotUniqueException(schemaColumn,columnTitle, columnName);
             }
@@ -201,9 +202,9 @@ public class TabularModule extends AbstractModule {
                 for (int i = 0; i < header.length; i++) {
                     // 4.6.8.1
                     Column column = outputColumns.get(i);
-                    column.setValueUrl(outputModel, row.get(i), tableSchema.getAboutUrl(), rowNumber);
+                    rowStatements.add(createRowResource(row.get(i), rowNumber, column));
                     // 4.6.8.2
-                    r.setDescribes(column.createAboutUrl(tableSchema.getAboutUrl(), rowNumber));
+                    r.setDescribes(tableSchema.createAboutUrl(rowNumber));
                     //TODO: URITemplate
 
                     // 4.6.8.5 - else, if value is list and cellOrdering == true
@@ -216,17 +217,26 @@ public class TabularModule extends AbstractModule {
             LOG.error("Error while reading file from resource uri {}", sourceResource, e);
         }
 
-        tableSchema.adjustProperties(hasInputSchema, outputColumns, sourceResource);
+        tableSchema.adjustProperties(hasInputSchema, outputColumns, sourceResource.getUri());
         em.persist(tableGroup);
         em.getTransaction().commit();
         tableSchema.addColumnsList(em, outputColumns);
 
+        outputModel.add(rowStatements);
         outputModel.add(
                 bNodesTransformer.transferJOPAEntitiesToBNodes
                         (JopaPersistenceUtils.getDataset(em).getDefaultModel()));
-
         em.close();
         return getExecutionContext(inputModel, outputModel);
+    }
+
+    private Statement createRowResource(String cellValue, int rowNumber, Column column) {
+        Resource rowResource = ResourceFactory.createResource(tableSchema.createAboutUrl(rowNumber));
+
+        return ResourceFactory.createStatement(
+                rowResource,
+                ResourceFactory.createProperty(column.getPropertyUrl()),
+                ResourceFactory.createPlainLiteral(cellValue));
     }
 
     private boolean hasInputSchema(TableSchema inputTableSchema) {

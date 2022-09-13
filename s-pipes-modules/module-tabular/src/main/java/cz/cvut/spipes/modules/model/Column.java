@@ -4,10 +4,6 @@ import cz.cvut.kbss.jopa.model.annotations.*;
 import cz.cvut.spipes.constants.CSVW;
 import cz.cvut.spipes.constants.KBSS_CSVW;
 import cz.cvut.spipes.modules.util.TabularModuleUtils;
-import cz.cvut.spipes.registry.StreamResource;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.ResourceFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -127,13 +123,13 @@ public class Column extends AbstractEntity {
         return property;
     }
 
-    public void setProperty(String dataPrefix, StreamResource sourceResource) throws UnsupportedEncodingException {
-        String propertyValue = getPropertyUrl(dataPrefix, sourceResource);
+    public void setProperty(String dataPrefix, String sourceResourceUri) throws UnsupportedEncodingException {
+        String propertyValue = getPropertyUrl(dataPrefix, sourceResourceUri);
         tabularModuleUtils.setVariable(this.property, propertyValue, value -> this.property = value, "property");
         tabularModuleUtils.setVariable(this.propertyUrl, propertyValue, value -> this.propertyUrl = value, "propertyUrl");
     }
 
-    private String getPropertyUrl(String dataPrefix, StreamResource sourceResource)
+    private String getPropertyUrl(String dataPrefix, String sourceResourceUri)
             throws UnsupportedEncodingException {
         if (getPropertyUrl() != null) {
             return getPropertyUrl();
@@ -144,35 +140,6 @@ public class Column extends AbstractEntity {
         if (dataPrefix != null && !dataPrefix.isEmpty()) {
             return dataPrefix + URLEncoder.encode(name, "UTF-8");
         }
-        return sourceResource.getUri() + "#" + URLEncoder.encode(name, "UTF-8");
-    }
-
-    public void setValueUrl(Model outputModel, String cellValue, String tableSchemaAboutUrl, int rowNumber) {
-        String valueURL = null;
-        if(getValueUrl() != null) valueURL = getValueUrl();
-
-        if (valueURL != null && !valueURL.isEmpty()) {
-            setValueUrl(valueURL);
-        } else {
-            if (cellValue != null) {
-                Resource columnResource = ResourceFactory
-                        .createResource(createAboutUrl(tableSchemaAboutUrl, rowNumber));
-
-                outputModel.add(ResourceFactory.createStatement(
-                        columnResource,
-                        outputModel.createProperty(getPropertyUrl()),
-                        ResourceFactory.createPlainLiteral(cellValue)));
-            }
-        }
-    }
-
-    public String createAboutUrl(String tableSchemaAboutUrl, int rowNumber) {
-        String columnAboutUrlStr = tableSchemaAboutUrl;
-        if (columnAboutUrlStr == null) columnAboutUrlStr = getAboutUrl();
-        columnAboutUrlStr = columnAboutUrlStr.replace(
-                "{_row}",
-                Integer.toString(rowNumber + 1)
-        );
-        return columnAboutUrlStr;
+        return sourceResourceUri + "#" + URLEncoder.encode(name, "UTF-8");
     }
 }
