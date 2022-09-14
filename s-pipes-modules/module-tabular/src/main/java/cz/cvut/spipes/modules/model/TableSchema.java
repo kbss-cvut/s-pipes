@@ -18,8 +18,15 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 
 /**
- * Represents the custom tabular metadata (according to relevant W3C standard)
- * that are provided to tabular module as an input model.
+ * Represents schema of tabular data (according to relevant W3C standard),
+ * possibly specified partially. The schema is used to process/validate
+ * input tabular data. In case the schema is under-specified,
+ * the missing parts of the schema are inferred from the data.
+ *
+ * Thus, object provides setters to extend the tabular schema ONLY
+ * in a consistent way. If setters are used in inconsistent way,
+ * appropriate error is provided.
+ *
  */
 @OWLClass(iri = CSVW.TableSchemaUri)
 public class TableSchema extends AbstractEntity {
