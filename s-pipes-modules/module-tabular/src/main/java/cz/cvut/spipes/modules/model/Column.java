@@ -9,7 +9,17 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 /**
- * Part of {@link TableSchema}, each column can have different metadata.
+ * A column represents a vertical arrangement of cells within a table.
+ * The columns are used to process/validate input data
+ * and are also part of {@link TableSchema}.
+ * In case the column is under-specified,
+ * the missing parts of the column are inferred from the data.
+ * <p>
+ * Thus, object provides setters that extend column,
+ * moreover if input table schema is specified
+ * the setters also checks the consistency with the table schema.
+ * If setters are used in inconsistent way,
+ * appropriate error is provided.
  */
 @OWLClass(iri = CSVW.ColumnUri)
 public class Column extends AbstractEntity {
