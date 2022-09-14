@@ -22,7 +22,7 @@ import java.util.*;
  * possibly specified partially. The schema is used to process/validate
  * input tabular data. In case the schema is under-specified,
  * the missing parts of the schema are inferred from the data.
- *
+ * <p>
  * Thus, object provides setters to extend the tabular schema ONLY
  * in a consistent way. If setters are used in inconsistent way,
  * appropriate error is provided.
