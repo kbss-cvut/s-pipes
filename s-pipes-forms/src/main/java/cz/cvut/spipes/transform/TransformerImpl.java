@@ -32,6 +32,7 @@ import static cz.cvut.spipes.transform.SPipesUtil.isSPipesTerm;
 public class TransformerImpl implements Transformer {
 
     private static final Logger LOG = LoggerFactory.getLogger(TransformerImpl.class);
+    private ModelChangedListener listener;
 
     public TransformerImpl() {
         SPINModuleRegistry.get().init();
@@ -201,19 +202,22 @@ public class TransformerImpl implements Transformer {
                 OriginPair<URI, URI> originPair = new OriginPair<>(q.getOrigin(), getAnswer(q).map(Answer::getOrigin).orElse(null));
                 Statement s = questionStatements.get(originPair);
                 if (s != null) {
-                    final Model m = extractModel(s);
-                    final String uri = ((OntModel) inputScript).getBaseModel().listStatements(null, RDF.type, OWL.Ontology).next().getSubject().getURI();
-                    if (!changed.containsKey(uri)) {
+                    Model m = extractModel(s);
+                    StmtIterator stmtIterator = ((OntModel) inputScript).getBaseModel().listStatements(null, RDF.type, OWL.Ontology);
+                    String uri = stmtIterator.hasNext() ? stmtIterator.next().getSubject().getURI() : "";
+
+                    if (!changed.containsKey(uri))
                         changed.put(uri, ModelFactory.createDefaultModel().add(m instanceof OntModel ? ((OntModel) m).getBaseModel() : m));
+                    Model changingModel = changed.get(uri);
+                    if(listener != null){
+                        changingModel.register(listener);
                     }
-                    final Model changingModel = changed.get(uri);
+                    changingModel.remove(changingModel.listStatements(ResourceFactory.createResource(uri), null, (String) null));
 
                     changingModel.remove(s);
                     if (isSupportedAnon(q)) {
-                        if (q.getAnswers().stream()
-                            .anyMatch(a -> !DigestUtils.sha1Hex(a.getTextValue()).equals(a.getHash()) && !DigestUtils.sha1Hex(a.getCodeValue().toString()).equals(a.getHash()))) {
+                        if (q.getAnswers().stream().anyMatch(a -> !DigestUtils.sha1Hex(a.getTextValue()).equals(a.getHash()) && !DigestUtils.sha1Hex(a.getCodeValue().toString()).equals(a.getHash())))
                             throw new ConcurrentModificationException("TTL and form can not be edited at the same time");
-                        }
                         Query query = AnonNodeTransformer.parse(q, inputScript);
                         org.topbraid.spin.model.Query spinQuery = ARQ2SPIN.parseQuery(query.serialize(), inputScript);
                         changingModel.add(spinQuery.getModel());
@@ -223,11 +227,8 @@ public class TransformerImpl implements Transformer {
                                 ResourceFactory.createStringLiteral(q.getAnswers().iterator().next().getTextValue().replaceAll("\\n", "\n"))
                         );
                     } else {
-                        if (q.getAnswers().stream()
-                            .anyMatch(a -> !DigestUtils.sha1Hex(a.getTextValue()).equals(a.getHash()) && (a.getCodeValue() == null || !DigestUtils.sha1Hex(a.getCodeValue().toString()).equals(a.getHash()))) &&
-                            ttlChanged) {
+                        if (q.getAnswers().stream().anyMatch(a -> !DigestUtils.sha1Hex(a.getTextValue()).equals(a.getHash()) && (a.getCodeValue() == null || !DigestUtils.sha1Hex(a.getCodeValue().toString()).equals(a.getHash()))) && ttlChanged)
                             throw new ConcurrentModificationException("TTL and form can not be edited at the same time");
-                        }
                         RDFNode answerNode = getAnswerNode(getAnswer(q).orElse(null));
                         if (answerNode != null) {
                             changingModel.add(s.getSubject(), s.getPredicate(), answerNode);
@@ -248,18 +249,27 @@ public class TransformerImpl implements Transformer {
             changed.put(((OntModel) inputScript).getBaseModel().listStatements(null, RDF.type, OWL.Ontology).next().getSubject().getURI(), m);
         }
 
-        if (ttlChanged) {
+        if (ttlChanged)
             ttlModel.map(m ->
-                changed.put(
-                    m.listStatements(null, RDF.type, OWL.Ontology).next().getSubject().getURI(),
-                    m
-                )
+                    changed.put(
+                            m.listStatements(null, RDF.type, OWL.Ontology).next().getSubject().getURI(),
+                            m
+                    )
             );
-        }
 
-        ResourceUtils.renameResource(module, newUri.toString());
+        changed.forEach((k, v) -> ResourceUtils.renameResource(v.getResource(form.getOrigin().toString()), newUri.toString()));
 
         return changed;
+    }
+
+    @Override
+    public void registerListener(ModelChangedListener listener) {
+        this.listener = listener;
+    }
+
+    @Override
+    public void form2ScriptNew(Model scripts, Question form, String moduleType) {
+        //TODO
     }
 
     @Override
@@ -471,7 +481,7 @@ public class TransformerImpl implements Transformer {
     }
 
     private boolean isSupportedAnon(Question q) {
-        if (q.getProperties().containsKey(Vocabulary.s_p_has_answer_value_type)) {
+        if (q.getProperties() != null && q.getProperties().containsKey(Vocabulary.s_p_has_answer_value_type)) {
             Set<String> types = q.getProperties().get(Vocabulary.s_p_has_answer_value_type);
             return types.contains(Vocabulary.s_c_Ask) ||
                     types.contains(Vocabulary.s_c_Construct) ||
