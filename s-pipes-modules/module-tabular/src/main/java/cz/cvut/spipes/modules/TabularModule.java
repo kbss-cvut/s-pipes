@@ -2,7 +2,6 @@ package cz.cvut.spipes.modules;
 
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.query.TypedQuery;
-import cz.cvut.spipes.config.ExecutionConfig;
 import cz.cvut.spipes.constants.CSVW;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
@@ -10,7 +9,6 @@ import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.exception.ResourceNotFoundException;
 import cz.cvut.spipes.exception.ResourceNotUniqueException;
-import cz.cvut.spipes.modules.exception.TableSchemaException;
 import cz.cvut.spipes.modules.model.*;
 import cz.cvut.spipes.modules.util.BNodesTransformer;
 import cz.cvut.spipes.modules.util.JopaPersistenceUtils;
@@ -18,7 +16,6 @@ import cz.cvut.spipes.registry.StreamResource;
 import cz.cvut.spipes.registry.StreamResourceRegistry;
 import cz.cvut.spipes.util.JenaUtils;
 import org.apache.jena.rdf.model.*;
-import org.apache.jena.util.ResourceUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,9 +26,7 @@ import org.supercsv.prefs.CsvPreference;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.net.URLEncoder;
 import java.util.*;
 
 /**
@@ -101,8 +96,6 @@ public class TabularModule extends AbstractModule {
     //:output-mode
     private Mode outputMode;
 
-    private Model outputModel;
-
     /**
      * Represent a group of tables.
      */
@@ -124,7 +117,7 @@ public class TabularModule extends AbstractModule {
         Model inputModel = bNodesTransformer.convertBNodesToNonBNodes(executionContext.getDefaultModel());
         boolean hasInputSchema = false;
 
-        outputModel = ModelFactory.createDefaultModel();
+        Model outputModel = ModelFactory.createDefaultModel();
         EntityManager em = JopaPersistenceUtils.getEntityManager("cz.cvut.spipes.modules.model", inputModel);
         em.getTransaction().begin();
 
@@ -132,6 +125,7 @@ public class TabularModule extends AbstractModule {
         table = onTable(null);
 
         List<Column> outputColumns = new ArrayList<>();
+        List<Statement> rowStatements = new ArrayList<>();
 
         CsvPreference csvPreference = new CsvPreference.Builder(
             quoteCharacter,
@@ -158,39 +152,24 @@ public class TabularModule extends AbstractModule {
                 header = getHeaderFromSchema(inputModel, header, true);
             }
 
-            String mainErrorMsg = "CSV table schema is not compliant with provided custom schema.";
-            if (hasInputSchema && header.length != this.tableSchema.getColumnsSet().size()) {
-
-                String mergedMsg = mainErrorMsg + "\n" +
-                        "The number of columns in the table schema does not match the number of columns in the table." + "\n"
-//                        .append(evidence).append("\n") TODO: rdf triples of evidence
-                        ;
-                logError(mergedMsg);
-            }
-
             em = JopaPersistenceUtils.getEntityManager("cz.cvut.spipes.modules.model", outputModel);
             em.getTransaction().begin();
 
-            List<Column> schemaColumns = new ArrayList<>(header.length);
             outputColumns = new ArrayList<>(header.length);
 
-            int j = 0;
             for (String columnTitle : header) {
                 String columnName = normalize(columnTitle);
                 boolean isDuplicate = !columnNames.add(columnName);
-                if(hasInputSchema) checkMissingColumns(mainErrorMsg, schemaColumns, columnName);
 
-                Column schemaColumn = hasInputSchema ? schemaColumns.get(j) : new Column(columnName, columnTitle);
-                schemaColumn.setTitle(columnTitle);
+                Column schemaColumn = hasInputSchema && tableSchema.getColumn(columnName) != null
+                        ? tableSchema.getColumn(columnName)
+                        : new Column(columnName, columnTitle);
                 outputColumns.add(schemaColumn);
 
-                setColumnAboutUrl(hasInputSchema, tableSchema, schemaColumn);
-
-                String propertyUrl = getColumnPropertyUrl(hasInputSchema, schemaColumn, columnName);
-                schemaColumn.setProperty(propertyUrl);
-                schemaColumn.setPropertyUrl(propertyUrl);
+                tableSchema.setAboutUrl(schemaColumn, sourceResource.getUri());
+                schemaColumn.setProperty(dataPrefix, sourceResource.getUri());
+                schemaColumn.setTitle(columnTitle);
                 if(isDuplicate) throwNotUniqueException(schemaColumn,columnTitle, columnName);
-                j++;
             }
 
             List<String> row;
@@ -222,10 +201,10 @@ public class TabularModule extends AbstractModule {
 
                 for (int i = 0; i < header.length; i++) {
                     // 4.6.8.1
-                    String columnAboutUrlStr = setColumnAboutUrl(outputColumns.get(i), rowNumber);
-                    setValueUrl(inputModel, outputColumns, header, row, i, columnAboutUrlStr, hasInputSchema);
+                    Column column = outputColumns.get(i);
+                    rowStatements.add(createRowResource(row.get(i), rowNumber, column));
                     // 4.6.8.2
-                    r.setDescribes(columnAboutUrlStr);
+                    r.setDescribes(tableSchema.createAboutUrl(rowNumber));
                     //TODO: URITemplate
 
                     // 4.6.8.5 - else, if value is list and cellOrdering == true
@@ -238,17 +217,26 @@ public class TabularModule extends AbstractModule {
             LOG.error("Error while reading file from resource uri {}", sourceResource, e);
         }
 
-        setPropertiesInSchema(hasInputSchema, outputColumns);
+        tableSchema.adjustProperties(hasInputSchema, outputColumns, sourceResource.getUri());
         em.persist(tableGroup);
         em.getTransaction().commit();
-        addColumnsList(em, outputColumns, tableSchema);
+        tableSchema.addColumnsList(em, outputColumns);
 
+        outputModel.add(rowStatements);
         outputModel.add(
                 bNodesTransformer.transferJOPAEntitiesToBNodes
                         (JopaPersistenceUtils.getDataset(em).getDefaultModel()));
-
         em.close();
         return getExecutionContext(inputModel, outputModel);
+    }
+
+    private Statement createRowResource(String cellValue, int rowNumber, Column column) {
+        Resource rowResource = ResourceFactory.createResource(tableSchema.createAboutUrl(rowNumber));
+
+        return ResourceFactory.createStatement(
+                rowResource,
+                ResourceFactory.createProperty(column.getPropertyUrl()),
+                ResourceFactory.createPlainLiteral(cellValue));
     }
 
     private boolean hasInputSchema(TableSchema inputTableSchema) {
@@ -258,65 +246,6 @@ public class TabularModule extends AbstractModule {
             return true;
         }
         return false;
-    }
-
-    private void setPropertiesInSchema(boolean hasInputSchema, List<Column> outputColumns) {
-        if (hasInputSchema){
-            tableSchema.setAboutUrl(sourceResource.getUri() + "#row-{_row}");
-            tableSchema.getColumnsSet().forEach(column -> column.setUri(null));
-            tableSchema.setUri(null);
-        }else{
-            tableSchema.setColumnsSet(new HashSet<>(outputColumns));
-        }
-    }
-
-    private void setValueUrl(Model inputModel, List<Column> outputColumns, String[] header,
-                             List<String> row, int i, String columnAboutUrlStr, boolean hasInputSchema) {
-        String columnPropertyUrl = outputColumns.get(i).getPropertyUrl();
-
-        Column column = null;
-        if (hasInputSchema){
-            column = getColumnFromTableSchema(header[i], tableSchema);
-        }
-        String valueUrl = null;
-        if(column != null) valueUrl = column.getValueUrl();
-
-        if (valueUrl != null && !valueUrl.isEmpty()) {
-            column.setValueUrl(valueUrl);
-        } else {
-            final String cellValue = row.get(i);
-            if (cellValue != null) {
-                Resource columnResource = ResourceFactory.createResource(columnAboutUrlStr);
-                outputModel.add(ResourceFactory.createStatement(
-                    columnResource,
-                    inputModel.createProperty(columnPropertyUrl),
-                    ResourceFactory.createPlainLiteral(cellValue)));
-            }
-        }
-    }
-
-    @NotNull
-    private String setColumnAboutUrl(Column column, int rowNumber) {
-        String columnAboutUrlStr = tableSchema.getAboutUrl();
-        if (columnAboutUrlStr == null) columnAboutUrlStr = column.getAboutUrl();
-        columnAboutUrlStr = columnAboutUrlStr.replace(
-                "{_row}",
-                Integer.toString(rowNumber + 1)
-        );
-        return columnAboutUrlStr;
-    }
-
-    private void setColumnAboutUrl(boolean hasInputSchema, TableSchema tableSchema, Column column) {
-        String columnAboutUrl = null;
-        if(hasInputSchema && column.getAboutUrl() != null){
-            columnAboutUrl = column.getAboutUrl();
-        }
-
-        if (columnAboutUrl != null && !columnAboutUrl.isEmpty()) {
-            column.setAboutUrl(columnAboutUrl);
-        } else {
-            tableSchema.setAboutUrl(sourceResource.getUri() + "#row-{_row}");
-        }
     }
 
     private TableSchema getTableSchema(EntityManager em) {
@@ -342,22 +271,6 @@ public class TabularModule extends AbstractModule {
         return query.getSingleResult();
     }
 
-    private String getColumnPropertyUrl(boolean hasTableSchema, Column schemaColumn, String columnName)
-            throws UnsupportedEncodingException {
-        if (hasTableSchema) {
-            if (schemaColumn.getPropertyUrl() != null) {
-                return schemaColumn.getPropertyUrl();
-            }
-            if (schemaColumn.getProperty() != null) {
-                return schemaColumn.getProperty();
-            }
-        }
-        if (dataPrefix != null && !dataPrefix.isEmpty()) {
-            return dataPrefix + URLEncoder.encode(columnName, "UTF-8");
-        }
-        return sourceResource.getUri() + "#" + URLEncoder.encode(columnName, "UTF-8");
-    }
-
     private void throwNotUniqueException(Column column, String columnTitle, String columnName) {
         throw new ResourceNotUniqueException(
                 String.format("Unable to create value of property %s due to collision. " +
@@ -368,39 +281,6 @@ public class TabularModule extends AbstractModule {
                         column.getTitle(),
                         columnName,
                         column.getPropertyUrl()));
-    }
-
-    private void checkMissingColumns(String mainErrorMsg, List<Column> schemaColumns,
-                                     String columnTitle) {
-        Column schemaColumn = getColumnFromTableSchema(columnTitle, tableSchema);
-        schemaColumns.add(schemaColumn);
-        if (schemaColumn == null) {
-            String mergedMsg = mainErrorMsg + "\n" +
-                    "Column with name '" + columnTitle + "' is missing." + "\n"
-//                        .append(evidence).append("\n") TODO: rdf triples of evidence
-                    ;
-
-            logError(mergedMsg);
-        }
-    }
-
-    private void addColumnsList(EntityManager em, List<Column> outputColumns, TableSchema tableSchema) {
-        Model persistenceModel = JopaPersistenceUtils.getDataset(em).getDefaultModel();
-        RDFNode[] elements = new RDFNode[outputColumns.size()];
-
-        for (int i = 0; i < outputColumns.size(); i++) {
-            Resource n = persistenceModel.getResource(outputColumns.get(i).getUri().toString());
-            elements[i] = n;
-        }
-
-        RDFList columnList = persistenceModel.createList(elements);
-        Resource convertedTableSchema =
-                ResourceUtils.renameResource(persistenceModel.getResource(tableSchema.getUri().toString()), null);
-
-        persistenceModel.add(
-                convertedTableSchema,
-                CSVW.columns,
-                columnList);
     }
 
     private ExecutionContext getExecutionContext(Model inputModel, Model outputModel) {
@@ -579,20 +459,5 @@ public class TabularModule extends AbstractModule {
             }else headers[i] = "column_" + (i + 1);
         }
         return headers;
-    }
-
-    private Column getColumnFromTableSchema(String columnName, TableSchema tableSchema) {
-        for (Column column : tableSchema.getColumnsSet()) {
-            if (column.getName() != null && column.getName().equals(columnName)) {
-                return column;
-            }
-        }
-        return null;
-    }
-
-    private void logError(String msg) {
-        if (ExecutionConfig.isExitOnError()) {
-            throw new TableSchemaException(msg, this);
-        }else LOG.error(msg);
     }
 }
