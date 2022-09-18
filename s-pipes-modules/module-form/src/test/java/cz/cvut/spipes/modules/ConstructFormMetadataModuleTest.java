@@ -1,6 +1,6 @@
 package cz.cvut.spipes.modules;
 
-import cz.cvut.sforms.SformsVocabularyJena;
+import cz.cvut.sforms.SFormsVocabularyJena;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.test.JenaTestUtils;
@@ -29,26 +29,26 @@ class ConstructFormMetadataModuleTest {
 
         assertEquals(
             getNumberOfFormEntities(inputModel),
-            getNumberOfStatementForProperty(outputModel, SformsVocabularyJena.s_p_has_origin_path)
+            getNumberOfStatementForProperty(outputModel, SFormsVocabularyJena.s_p_has_origin_path)
         );
 
         assertEquals(
             getNumberOfFormEntities(inputModel),
-            getNumberOfStatementForProperty(outputModel, SformsVocabularyJena.s_p_has_origin_path_id)
+            getNumberOfStatementForProperty(outputModel, SFormsVocabularyJena.s_p_has_origin_path_id)
         );
     }
 
     private int getNumberOfQuestions(Model formModel) {
         return formModel.listSubjects()
             .filterKeep(
-                subj -> subj.hasProperty(RDF.type, SformsVocabularyJena.s_c_question)
+                subj -> subj.hasProperty(RDF.type, SFormsVocabularyJena.s_c_question)
             ).toList().size();
     }
 
     private int getNumberOfAnswers(Model formModel) {
         return formModel.listSubjects()
             .filterKeep(
-                subj -> subj.hasProperty(RDF.type, SformsVocabularyJena.s_c_answer)
+                subj -> subj.hasProperty(RDF.type, SFormsVocabularyJena.s_c_answer)
             ).toList().size();
     }
 

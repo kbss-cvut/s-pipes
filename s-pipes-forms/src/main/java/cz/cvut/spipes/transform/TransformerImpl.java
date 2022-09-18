@@ -1,7 +1,7 @@
 package cz.cvut.spipes.transform;
 
+import cz.cvut.sforms.SFormsVocabularyJena;
 import cz.cvut.sforms.Vocabulary;
-import cz.cvut.sforms.SformsVocabularyJena;
 import cz.cvut.sforms.model.Answer;
 import cz.cvut.sforms.model.PrefixDefinition;
 import cz.cvut.sforms.model.Question;
@@ -15,8 +15,6 @@ import org.apache.jena.util.ResourceUtils;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.topbraid.spin.arq.ARQ2SPIN;
 import org.topbraid.spin.system.SPINModuleRegistry;
 import org.topbraid.spin.vocabulary.SPIN;
@@ -31,7 +29,6 @@ import static cz.cvut.spipes.transform.SPipesUtil.isSPipesTerm;
 
 public class TransformerImpl implements Transformer {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TransformerImpl.class);
 
     public TransformerImpl() {
         SPINModuleRegistry.get().init();
@@ -107,9 +104,9 @@ public class TransformerImpl implements Transformer {
         }
 
         List<Statement> typeDefinitionStatements = moduleType.listProperties().filterKeep(
-                st -> st.getPredicate().hasURI(SformsVocabularyJena.s_p_constraint.getURI())).toList();
+                st -> st.getPredicate().hasURI(SFormsVocabularyJena.s_p_constraint.getURI())).toList();
         for (Statement st : typeDefinitionStatements) {
-            Resource p = st.getObject().asResource().getPropertyResourceValue(SformsVocabularyJena.s_p_predicate_A);
+            Resource p = st.getObject().asResource().getPropertyResourceValue(SFormsVocabularyJena.s_p_predicate_A);
 
             if (processedPredicates.contains(p)) {
                 continue;
@@ -396,9 +393,9 @@ public class TransformerImpl implements Transformer {
 
     private URI createAnswerOrigin(Statement statement) {
         if (!statement.getObject().isAnon())
-            return URI.create(SformsVocabularyJena.s_c_answer_origin.toString() +
+            return URI.create(SFormsVocabularyJena.s_c_answer_origin.toString() +
                     "/" + createMd5Hash(statement.getObject().toString()));
-        return URI.create(SformsVocabularyJena.s_c_answer_origin.toString() +
+        return URI.create(SFormsVocabularyJena.s_c_answer_origin.toString() +
                 "/" + createMd5Hash(AnonNodeTransformer.serialize(statement.getObject())));
     }
 
@@ -407,7 +404,7 @@ public class TransformerImpl implements Transformer {
     }
 
     private void initializeQuestionUri(Question q) {
-        q.setUri(URI.create(SformsVocabularyJena.s_c_question + "-" + UUID.randomUUID().toString()));
+        q.setUri(URI.create(SFormsVocabularyJena.s_c_question + "-" + UUID.randomUUID().toString()));
     }
 
     private Question createQuestion(Resource resource) {

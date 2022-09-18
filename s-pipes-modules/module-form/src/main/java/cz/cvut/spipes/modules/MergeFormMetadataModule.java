@@ -1,7 +1,7 @@
 package cz.cvut.spipes.modules;
 
 
-import cz.cvut.sforms.SformsVocabularyJena;
+import cz.cvut.sforms.SFormsVocabularyJena;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
@@ -39,7 +39,7 @@ public class MergeFormMetadataModule extends AnnotatedAbstractModule {
 
     @Parameter(name = "question-instance-template")
     private String questionInstanceTemplate =
-        SformsVocabularyJena.s_c_question.toString()
+        SFormsVocabularyJena.s_c_question.toString()
             + "-"
             + QUESTION_ORIGIN_HASH_VAR
             + "-"

@@ -2,7 +2,7 @@ package cz.cvut.spipes.modules;
 
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
-import cz.cvut.sforms.SformsVocabularyJena;
+import cz.cvut.sforms.SFormsVocabularyJena;
 import cz.cvut.sforms.model.Question;
 import cz.cvut.sforms.transformation.SForms2TextTransformer;
 import cz.cvut.sforms.transformation.TextTransformerConfig;
@@ -77,7 +77,7 @@ public class ConstructTextualViewModule extends AnnotatedAbstractModule {
 
             constructedModel.add(
                 qR,
-                SformsVocabularyJena.s_p_textual_view,
+                SFormsVocabularyJena.s_p_textual_view,
                 t.serialize(q, cfg)
             );
         }
@@ -129,7 +129,7 @@ public class ConstructTextualViewModule extends AnnotatedAbstractModule {
     private List<Resource> getQuestions(Model formModel, boolean isProcessNonRootQuestions) {
         Predicate<Resource> isRootQuestion =
             q -> ! formModel.listResourcesWithProperty(
-                    SformsVocabularyJena.s_p_has_related_question, q).hasNext();
+                    SFormsVocabularyJena.s_p_has_related_question, q).hasNext();
 
         Predicate<Resource> shouldProcessNonRootQuestions = q -> isProcessNonRootQuestions;
 

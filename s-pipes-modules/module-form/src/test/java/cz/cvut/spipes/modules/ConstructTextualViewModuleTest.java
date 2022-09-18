@@ -1,12 +1,12 @@
 package cz.cvut.spipes.modules;
 
 
-import cz.cvut.sforms.SformsVocabularyJena;
+import cz.cvut.sforms.SFormsVocabularyJena;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
+import cz.cvut.spipes.test.JenaTestUtils;
 import org.apache.jena.rdf.model.Model;
 import org.junit.jupiter.api.Test;
-import cz.cvut.spipes.test.JenaTestUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -18,7 +18,7 @@ class ConstructTextualViewModuleTest {
         ConstructTextualViewModule module = getModuleWithLoadedSampleForm();
         Model outputModel = module.executeSelf().getDefaultModel();
 
-        int outputTexutalViewsCount = outputModel.listSubjectsWithProperty(SformsVocabularyJena.s_p_textual_view).toList().size();
+        int outputTexutalViewsCount = outputModel.listSubjectsWithProperty(SFormsVocabularyJena.s_p_textual_view).toList().size();
         assertEquals(6, outputTexutalViewsCount);
     }
 
@@ -29,7 +29,7 @@ class ConstructTextualViewModuleTest {
         module.setProcessNonRootQuestions(false);
         Model outputModel = module.executeSelf().getDefaultModel();
 
-        int outputTexutalViewsCount = outputModel.listSubjectsWithProperty(SformsVocabularyJena.s_p_textual_view).toList().size();
+        int outputTexutalViewsCount = outputModel.listSubjectsWithProperty(SFormsVocabularyJena.s_p_textual_view).toList().size();
         assertEquals(1, outputTexutalViewsCount);
     }
 

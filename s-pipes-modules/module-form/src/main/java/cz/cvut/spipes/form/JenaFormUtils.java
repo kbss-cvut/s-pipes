@@ -1,6 +1,6 @@
 package cz.cvut.spipes.form;
 
-import cz.cvut.sforms.SformsVocabularyJena;
+import cz.cvut.sforms.SFormsVocabularyJena;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.util.iterator.ExtendedIterator;
@@ -17,16 +17,16 @@ public class JenaFormUtils {
             .filterKeep(
                 subj -> subj.hasProperty(
                     RDF.type,
-                    SformsVocabularyJena.s_c_question
+                    SFormsVocabularyJena.s_c_question
                 )
             );
     }
 
     public static Resource getQuestionOrigin(Resource formEntity) {
-        return formEntity.getPropertyResourceValue(SformsVocabularyJena.s_p_has_question_origin);
+        return formEntity.getPropertyResourceValue(SFormsVocabularyJena.s_p_has_question_origin);
     }
 
     public static Resource getAnswerOrigin(Resource formEntity) {
-        return formEntity.getPropertyResourceValue(SformsVocabularyJena.s_p_has_answer_origin);
+        return formEntity.getPropertyResourceValue(SFormsVocabularyJena.s_p_has_answer_origin);
     }
 }

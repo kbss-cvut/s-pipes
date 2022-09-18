@@ -1,6 +1,6 @@
 package cz.cvut.spipes.modules;
 
-import cz.cvut.sforms.SformsVocabularyJena;
+import cz.cvut.sforms.SFormsVocabularyJena;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
@@ -92,13 +92,13 @@ public class ConstructFormMetadataModule extends AnnotatedAbstractModule {
             e -> processFormEntity(e, path, constructedModel)
         );
 
-        constructedModel.add(formEntity, SformsVocabularyJena.s_p_has_origin_path, path);
-        constructedModel.add(formEntity, SformsVocabularyJena.s_p_has_origin_path_id, pathId);
+        constructedModel.add(formEntity, SFormsVocabularyJena.s_p_has_origin_path, path);
+        constructedModel.add(formEntity, SFormsVocabularyJena.s_p_has_origin_path_id, pathId);
     }
 
     private String getPathId(Resource question) {
         return question
-            .getProperty(SformsVocabularyJena.s_p_has_origin_path)
+            .getProperty(SFormsVocabularyJena.s_p_has_origin_path)
             .getObject()
             .asLiteral()
             .getString();
@@ -151,12 +151,12 @@ public class ConstructFormMetadataModule extends AnnotatedAbstractModule {
             .filterKeep(
                 subj -> subj.hasProperty(
                     RDF.type,
-                    SformsVocabularyJena.s_c_question
+                    SFormsVocabularyJena.s_c_question
                 )
             )
             .filterDrop(
                 subj -> formModel.listResourcesWithProperty(
-                    SformsVocabularyJena.s_p_has_related_question, subj).hasNext()
+                    SFormsVocabularyJena.s_p_has_related_question, subj).hasNext()
             ).toList();
     }
 
@@ -171,19 +171,19 @@ public class ConstructFormMetadataModule extends AnnotatedAbstractModule {
     }
 
     private static boolean isAnswer(Resource formEntity) {
-        return formEntity.hasProperty(RDF.type, SformsVocabularyJena.s_c_answer);
+        return formEntity.hasProperty(RDF.type, SFormsVocabularyJena.s_c_answer);
     }
 
     private static boolean isQuestion(Resource formEntity) {
-        return formEntity.hasProperty(RDF.type, SformsVocabularyJena.s_c_question);
+        return formEntity.hasProperty(RDF.type, SFormsVocabularyJena.s_c_question);
     }
 
     private static List<Resource> getRelatedQuestions(Resource question) {
-        return question.listProperties(SformsVocabularyJena.s_p_has_related_question).mapWith(st -> st.getObject().asResource()).toList();
+        return question.listProperties(SFormsVocabularyJena.s_p_has_related_question).mapWith(st -> st.getObject().asResource()).toList();
     }
 
     private static List<Resource> getAnswers(Resource question) {
-        return question.listProperties(SformsVocabularyJena.s_p_has_answer).mapWith(st -> st.getObject().asResource()).toList();
+        return question.listProperties(SFormsVocabularyJena.s_p_has_answer).mapWith(st -> st.getObject().asResource()).toList();
     }
 
     private static List<Resource> getSubEntities(Resource formEntity) {
@@ -199,10 +199,10 @@ public class ConstructFormMetadataModule extends AnnotatedAbstractModule {
 
     private static boolean isLeafFormEntity(Resource formEntity) {
 
-        if (formEntity.hasProperty(SformsVocabularyJena.s_p_has_related_question)) {
+        if (formEntity.hasProperty(SFormsVocabularyJena.s_p_has_related_question)) {
             return false;
         }
-        if (formEntity.hasProperty(SformsVocabularyJena.s_p_has_answer)) {
+        if (formEntity.hasProperty(SFormsVocabularyJena.s_p_has_answer)) {
             return false;
         }
         return true;
