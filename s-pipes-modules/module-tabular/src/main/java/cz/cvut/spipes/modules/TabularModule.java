@@ -202,7 +202,8 @@ public class TabularModule extends AbstractModule {
                 for (int i = 0; i < header.length; i++) {
                     // 4.6.8.1
                     Column column = outputColumns.get(i);
-                    rowStatements.add(createRowResource(row.get(i), rowNumber, column));
+                    String cellValue = row.get(i);
+                    if (cellValue != null) rowStatements.add(createRowResource(cellValue, rowNumber, column));
                     // 4.6.8.2
                     r.setDescribes(tableSchema.createAboutUrl(rowNumber));
                     //TODO: URITemplate
