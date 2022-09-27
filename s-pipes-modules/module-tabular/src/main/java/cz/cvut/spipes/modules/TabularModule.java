@@ -151,6 +151,7 @@ public class TabularModule extends AbstractModule {
             }else if (hasInputSchema) {
                 header = getHeaderFromSchema(inputModel, header, true);
             }
+            tableSchema.setHeader(header);
 
             em = JopaPersistenceUtils.getEntityManager("cz.cvut.spipes.modules.model", outputModel);
             em.getTransaction().begin();
@@ -161,13 +162,12 @@ public class TabularModule extends AbstractModule {
                 String columnName = normalize(columnTitle);
                 boolean isDuplicate = !columnNames.add(columnName);
 
-                Column schemaColumn = hasInputSchema && tableSchema.getColumn(columnName) != null
-                        ? tableSchema.getColumn(columnName)
-                        : new Column(columnName, columnTitle);
+                Column schemaColumn = new Column(columnName, columnTitle);
                 outputColumns.add(schemaColumn);
 
                 tableSchema.setAboutUrl(schemaColumn, sourceResource.getUri());
-                schemaColumn.setProperty(dataPrefix, sourceResource.getUri());
+                schemaColumn.setProperty(dataPrefix, sourceResource.getUri(),
+                        hasInputSchema ? tableSchema.getColumn(columnName) : null);
                 schemaColumn.setTitle(columnTitle);
                 if(isDuplicate) throwNotUniqueException(schemaColumn,columnTitle, columnName);
             }
@@ -220,6 +220,9 @@ public class TabularModule extends AbstractModule {
 
         tableSchema.adjustProperties(hasInputSchema, outputColumns, sourceResource.getUri());
         em.persist(tableGroup);
+
+        tableSchema.setColumnsSet(new HashSet<>(outputColumns));
+        em.merge(tableSchema);
         em.getTransaction().commit();
         tableSchema.addColumnsList(em, outputColumns);
 
