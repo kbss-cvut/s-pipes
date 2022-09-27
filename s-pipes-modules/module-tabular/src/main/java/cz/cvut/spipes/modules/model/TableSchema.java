@@ -112,10 +112,13 @@ public class TableSchema extends AbstractEntity {
 
     private void checkColumnsConsistency(List<Column> outputColumns) {
         StringBuilder errorMessage = new StringBuilder();
+        String missingColumnMessage = "There is missing column in retrieved input data compared to expected one.\n" +
+                "Missing columns:  ";
+        String additionalColumnMessage = "\nThere is an additional column in retrieved input data schema compared" +
+                " to expected one: \nExtra columns:\t  ";
 
-        errorMessage.append(throwColumnsError(outputColumns, new ArrayList<>(getColumnsSet()), "There is missing column in retrieved input data compared to expected one.\nMissing columns:  "));
-        errorMessage.append(throwColumnsError(new ArrayList<>(getColumnsSet()), outputColumns,"\nThere is an additional column in retrieved input data schema compared to expected one: \n" +
-                "Extra columns:\t  " ));
+        errorMessage.append(throwColumnsError(outputColumns, new ArrayList<>(getColumnsSet()), missingColumnMessage));
+        errorMessage.append(throwColumnsError(new ArrayList<>(getColumnsSet()), outputColumns, additionalColumnMessage));
 
         if (errorMessage.length() > 0) {
             errorMessage.append(addSchemaDiff());
