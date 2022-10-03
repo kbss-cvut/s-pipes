@@ -14,7 +14,7 @@ public class JenaTestUtils {
 
     public static void mapLocalSPipesDefinitionFiles() {
         OntDocumentManager dm = OntDocumentManager.getInstance();
-        dm.setFileManager(FileManager.get());
+        dm.setFileManager(FileManager.getInternal());
         dm.getFileManager().getLocationMapper().addAltEntry("http://onto.fel.cvut.cz/ontologies/s-pipes", "s-pipes.ttl");
         dm.getFileManager().getLocationMapper().addAltEntry("http://onto.fel.cvut.cz/ontologies/s-pipes-lib", "s-pipes-lib.ttl");
     }
@@ -24,7 +24,9 @@ public class JenaTestUtils {
         OntModel ontModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
 
         OntDocumentManager dm = OntDocumentManager.getInstance();
-        dm.setFileManager(FileManager.get());
+        dm.setFileManager(FileManager.getInternal());
+        mapLocalSPipesDefinitionFiles();
+
         //LocationMapper lm= FileManager.get().getLocationMapper();
 
         // load config
