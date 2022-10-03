@@ -37,6 +37,7 @@ public abstract class AbstractModuleTestHelper {
         //LocationMapper lm= FileManager.get().getLocationMapper();
         //dm.loadImports(ontModel);
 
+        JenaTestUtils.mapLocalSPipesDefinitionFiles();
 
         // load config
         ontModel.read(
