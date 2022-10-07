@@ -47,6 +47,8 @@ public class TableSchema extends AbstractEntity {
 
     private final transient TabularModuleUtils tabularModuleUtils = new TabularModuleUtils();
 
+    private transient String[] header;
+
     public String getAboutUrl() {
         return aboutUrl;
     }
@@ -98,29 +100,55 @@ public class TableSchema extends AbstractEntity {
 
     public void adjustProperties(boolean hasInputSchema, List<Column> outputColumns, String sourceResourceUri) {
         if (hasInputSchema){
-            if(getColumnsSet().size() > outputColumns.size()) {
-                throwExtraColumnsError(outputColumns);
+            if (columnsSet.isEmpty()) logError("Input schema has no columns.");
+            if (!columnsSet.isEmpty()){
+                checkColumnsConsistency(outputColumns);
             }
+            setColumnsSet(new HashSet<>());
             setAboutUrl(sourceResourceUri + "#row-{_row}");
-            getColumnsSet().forEach(column -> column.setUri(null));
             setUri(null);
-        }else{
-            setColumnsSet(new HashSet<>(outputColumns));
         }
     }
 
-    private void throwExtraColumnsError(List<Column> outputColumns) {
-        StringBuilder errorMessage =
-            new StringBuilder("There is an additional column in retrieved input data schema compared to expected one");
+    private void checkColumnsConsistency(List<Column> outputColumns) {
+        StringBuilder errorMessage = new StringBuilder();
+        String missingColumnMessage = "There is missing column in retrieved input data compared to expected one.\n" +
+                "Missing columns:  ";
+        String additionalColumnMessage = "\nThere is an additional column in retrieved input data schema compared" +
+                " to expected one: \nExtra columns:\t  ";
 
-        for (Column column : getColumnsSet()) {
-            if (outputColumns.stream().noneMatch(outputColumn -> outputColumn.getName().equals(column.getName()))) {
-                errorMessage
-                        .append("\n")
-                        .append(String.format("Column with name `%s` is extra.", column.getName()));
+        errorMessage.append(throwColumnsError(outputColumns, new ArrayList<>(getColumnsSet()), missingColumnMessage));
+        errorMessage.append(throwColumnsError(new ArrayList<>(getColumnsSet()), outputColumns, additionalColumnMessage));
+
+        if (errorMessage.length() > 0) {
+            errorMessage.append(addSchemaDiff());
+            logError(errorMessage.toString());
+        }
+    }
+
+    private StringBuilder throwColumnsError(List<Column> outputColumns, List<Column> columnsList, String message) {
+        StringBuilder errorMessage = new StringBuilder();
+
+        for (Column col: outputColumns){
+            if (columnsList.stream().noneMatch(column -> column.getName().equals(col.getName()))){
+                errorMessage.append("'").append(col.getName()).append(String.format("%-20s", "'\n"));
             }
         }
-       logError(errorMessage.toString());
+
+        if (errorMessage.length() > 0) errorMessage.insert(0, message);
+        return errorMessage;
+    }
+
+    private String addSchemaDiff() {
+        StringBuilder errorMessage = new StringBuilder("\nActual: \n")
+                .append("| ")
+                .append(String.join(" | ", header))
+                .append(" |\nExpected: \n| ");
+
+        columnsSet.stream()
+                .map(Column::getName)
+                .forEach(name -> errorMessage.append(name.replace("_"," ")).append(" | "));
+        return errorMessage.toString();
     }
 
     public void addColumnsList(EntityManager em, List<Column> outputColumns) {
@@ -163,10 +191,7 @@ public class TableSchema extends AbstractEntity {
             }
         }
 
-        String errorMessage = String.format("There is missing column in retrieved input schema compared to expected one" +
-                "\n Column `%s` does not exist in input schema.", columnName);
-        logError(errorMessage);
-        return null;
+        return new Column(columnName);
     }
 
     private void logError(String msg) {
@@ -183,5 +208,9 @@ public class TableSchema extends AbstractEntity {
                 Integer.toString(rowNumber + 1)
         );
         return columnAboutUrlStr;
+    }
+
+    public void setHeader(String[] header) {
+        this.header = header;
     }
 }

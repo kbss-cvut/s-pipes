@@ -26,6 +26,10 @@ public class Column extends AbstractEntity {
 
     public Column() {}
 
+    public Column(String name) {
+        this.name = name;
+    }
+
     public Column(String name, String title) {
         this.name = name;
         this.title = title;
@@ -133,19 +137,26 @@ public class Column extends AbstractEntity {
         return property;
     }
 
-    public void setProperty(String dataPrefix, String sourceResourceUri) throws UnsupportedEncodingException {
-        String propertyValue = getPropertyUrl(dataPrefix, sourceResourceUri);
+    public void setProperty(String dataPrefix, String sourceResourceUri, Column schemaColumn) throws UnsupportedEncodingException {
+        String propertyValue = getPropertyUrl(dataPrefix, sourceResourceUri, schemaColumn);
         tabularModuleUtils.setVariable(this.property, propertyValue, value -> this.property = value, "property");
         tabularModuleUtils.setVariable(this.propertyUrl, propertyValue, value -> this.propertyUrl = value, "propertyUrl");
     }
 
-    private String getPropertyUrl(String dataPrefix, String sourceResourceUri)
+    public void setProperty(String property){
+        this.property = property;
+        this.propertyUrl = property;
+    }
+
+    private String getPropertyUrl(String dataPrefix, String sourceResourceUri, Column schemaColumn)
             throws UnsupportedEncodingException {
-        if (getPropertyUrl() != null) {
-            return getPropertyUrl();
-        }
-        if (getProperty() != null) {
-            return getProperty();
+        if (schemaColumn != null){
+            if (schemaColumn.getPropertyUrl() != null){
+                return schemaColumn.getPropertyUrl();
+            }
+            if (schemaColumn.getProperty() != null){
+                return schemaColumn.getProperty();
+            }
         }
         if (dataPrefix != null && !dataPrefix.isEmpty()) {
             return dataPrefix + URLEncoder.encode(name, "UTF-8");
