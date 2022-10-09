@@ -128,9 +128,9 @@ public class TabularModule extends AbstractModule {
         List<Statement> rowStatements = new ArrayList<>();
 
         CsvPreference csvPreference = new CsvPreference.Builder(
-            quoteCharacter,
-            delimiter,
-            "\\n").build();
+                quoteCharacter,
+                delimiter,
+                "\\n").build();
 
         try{
             ICsvListReader listReader = new CsvListReader(getReader(), csvPreference);
@@ -151,6 +151,7 @@ public class TabularModule extends AbstractModule {
             }else if (hasInputSchema) {
                 header = getHeaderFromSchema(inputModel, header, true);
             }
+            tableSchema.setHeader(header);
 
             em = JopaPersistenceUtils.getEntityManager("cz.cvut.spipes.modules.model", outputModel);
             em.getTransaction().begin();
@@ -161,13 +162,12 @@ public class TabularModule extends AbstractModule {
                 String columnName = normalize(columnTitle);
                 boolean isDuplicate = !columnNames.add(columnName);
 
-                Column schemaColumn = hasInputSchema && tableSchema.getColumn(columnName) != null
-                        ? tableSchema.getColumn(columnName)
-                        : new Column(columnName, columnTitle);
+                Column schemaColumn = new Column(columnName, columnTitle);
                 outputColumns.add(schemaColumn);
 
                 tableSchema.setAboutUrl(schemaColumn, sourceResource.getUri());
-                schemaColumn.setProperty(dataPrefix, sourceResource.getUri());
+                schemaColumn.setProperty(dataPrefix, sourceResource.getUri(),
+                        hasInputSchema ? tableSchema.getColumn(columnName) : null);
                 schemaColumn.setTitle(columnTitle);
                 if(isDuplicate) throwNotUniqueException(schemaColumn,columnTitle, columnName);
             }
@@ -220,6 +220,9 @@ public class TabularModule extends AbstractModule {
 
         tableSchema.adjustProperties(hasInputSchema, outputColumns, sourceResource.getUri());
         em.persist(tableGroup);
+
+        tableSchema.setColumnsSet(new HashSet<>(outputColumns));
+        em.merge(tableSchema);
         em.getTransaction().commit();
         tableSchema.addColumnsList(em, outputColumns);
 
@@ -275,8 +278,8 @@ public class TabularModule extends AbstractModule {
     private void throwNotUniqueException(Column column, String columnTitle, String columnName) {
         throw new ResourceNotUniqueException(
                 String.format("Unable to create value of property %s due to collision. " +
-                        "Both column titles '%s' and '%s' are normalized to '%s' " +
-                        "and thus would refer to the same property url <%s>.",
+                                "Both column titles '%s' and '%s' are normalized to '%s' " +
+                                "and thus would refer to the same property url <%s>.",
                         CSVW.propertyUrl,
                         columnTitle,
                         column.getTitle(),
@@ -301,7 +304,7 @@ public class TabularModule extends AbstractModule {
         dataPrefix = getEffectiveValue(P_DATE_PREFIX).asLiteral().toString();
         sourceResource = getResourceByUri(getEffectiveValue(P_SOURCE_RESOURCE_URI).asLiteral().toString());
         outputMode = Mode.fromResource(
-            getPropertyValue(P_OUTPUT_MODE, Mode.STANDARD.getResource())
+                getPropertyValue(P_OUTPUT_MODE, Mode.STANDARD.getResource())
         );
     }
 
