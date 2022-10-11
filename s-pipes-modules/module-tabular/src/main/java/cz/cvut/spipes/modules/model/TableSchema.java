@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Represents schema of tabular data (according to relevant W3C standard),
@@ -47,7 +48,7 @@ public class TableSchema extends AbstractEntity {
 
     private final transient TabularModuleUtils tabularModuleUtils = new TabularModuleUtils();
 
-    private transient String[] header;
+    private transient List<String> orderList;
 
     public String getAboutUrl() {
         return aboutUrl;
@@ -117,16 +118,16 @@ public class TableSchema extends AbstractEntity {
         String additionalColumnMessage = "\nThere is an additional column in retrieved input data schema compared" +
                 " to expected one: \nExtra columns:\t  ";
 
-        errorMessage.append(throwColumnsError(outputColumns, new ArrayList<>(getColumnsSet()), missingColumnMessage));
-        errorMessage.append(throwColumnsError(new ArrayList<>(getColumnsSet()), outputColumns, additionalColumnMessage));
+        errorMessage.append(getColumnsError(outputColumns, new ArrayList<>(getColumnsSet()), missingColumnMessage));
+        errorMessage.append(getColumnsError(new ArrayList<>(getColumnsSet()), outputColumns, additionalColumnMessage));
 
         if (errorMessage.length() > 0) {
-            errorMessage.append(addSchemaDiff());
+            errorMessage.append(getSchemaDiff(outputColumns));
             logError(errorMessage.toString());
         }
     }
 
-    private StringBuilder throwColumnsError(List<Column> outputColumns, List<Column> columnsList, String message) {
+    private StringBuilder getColumnsError(List<Column> outputColumns, List<Column> columnsList, String message) {
         StringBuilder errorMessage = new StringBuilder();
 
         for (Column col: outputColumns){
@@ -139,16 +140,42 @@ public class TableSchema extends AbstractEntity {
         return errorMessage;
     }
 
-    private String addSchemaDiff() {
-        StringBuilder errorMessage = new StringBuilder("\nActual: \n")
-                .append("| ")
-                .append(String.join(" | ", header))
-                .append(" |\nExpected: \n| ");
+    private String getSchemaDiff(List<Column> outputColumns) {
+        StringBuilder errorMessage = new StringBuilder("\nActual: \n").append("| ");
 
-        columnsSet.stream()
+        outputColumns.stream()
                 .map(Column::getName)
-                .forEach(name -> errorMessage.append(name.replace("_"," ")).append(" | "));
+                .forEach(name -> errorMessage.append(name).append(" | "));
+
+        errorMessage.append("\nExpected: \n| ");
+
+        List<String> namesList;
+        if (orderList != null) {
+            namesList = sortColumns(orderList).stream().map(Column::getName).collect(Collectors.toList());
+        }else{
+            namesList = getOrderedNames(outputColumns);
+        }
+
+        namesList.forEach(name -> errorMessage.append(name).append(" | "));
         return errorMessage.toString();
+    }
+
+    private List<String> getOrderedNames(List<Column> outputColumns) {
+        List<String> orderedList = outputColumns.stream().map(Column::getName).collect(Collectors.toList());
+
+        Map<String, Integer> indexMap = new HashMap<>();
+        for (int i = 0; i < orderedList.size(); i++) {
+            indexMap.put(orderedList.get(i), i);
+        }
+
+        return getColumnsSet().stream().map(Column::getName).sorted((left, right) -> {
+            Integer leftIndex = indexMap.getOrDefault(left, Integer.MAX_VALUE);
+            Integer rightIndex = indexMap.getOrDefault(right, Integer.MAX_VALUE);
+            if (leftIndex  == null) return -1;
+            if (rightIndex == null) return  1;
+
+            return Integer.compare(leftIndex, rightIndex);
+        }).collect(Collectors.toList());
     }
 
     public void addColumnsList(EntityManager em, List<Column> outputColumns) {
@@ -210,7 +237,7 @@ public class TableSchema extends AbstractEntity {
         return columnAboutUrlStr;
     }
 
-    public void setHeader(String[] header) {
-        this.header = header;
+    public void setOrderList(List<String> orderList) {
+        this.orderList = orderList;
     }
 }

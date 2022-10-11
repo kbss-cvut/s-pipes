@@ -151,7 +151,6 @@ public class TabularModule extends AbstractModule {
             }else if (hasInputSchema) {
                 header = getHeaderFromSchema(inputModel, header, true);
             }
-            tableSchema.setHeader(header);
 
             em = JopaPersistenceUtils.getEntityManager("cz.cvut.spipes.modules.model", outputModel);
             em.getTransaction().begin();
@@ -445,6 +444,7 @@ public class TabularModule extends AbstractModule {
                 RDFList rdfList = node.as(RDFList.class);
 
                 rdfList.iterator().forEach(rdfNode -> orderList.add(String.valueOf(rdfNode)));
+                tableSchema.setOrderList(orderList);
                 header = createHeaders(header.length, tableSchema.sortColumns(orderList));
 
             } else LOG.info("Order of columns was not provided in the schema.");
