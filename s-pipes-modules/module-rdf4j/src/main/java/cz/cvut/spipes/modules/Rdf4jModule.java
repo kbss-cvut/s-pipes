@@ -3,7 +3,9 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
+import cz.cvut.spipes.engine.VariablesBinding;
 import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.riot.RDFLanguages;
 import org.eclipse.rdf4j.model.Resource;
@@ -12,6 +14,7 @@ import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.repository.config.RepositoryConfig;
 import org.eclipse.rdf4j.repository.config.RepositoryConfigException;
+import org.eclipse.rdf4j.repository.manager.RemoteRepositoryManager;
 import org.eclipse.rdf4j.repository.manager.RepositoryManager;
 import org.eclipse.rdf4j.repository.manager.RepositoryProvider;
 import org.eclipse.rdf4j.repository.sail.config.SailRepositoryConfig;
@@ -24,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.Optional;
 
 public class Rdf4jModule extends AbstractModule {
 
@@ -101,8 +105,26 @@ public class Rdf4jModule extends AbstractModule {
             rdf4jServerURL,
             rdf4jRepositoryName);
 
+        VariablesBinding variablesBinding = getExecutionContext().getVariablesBinding();
+
+        String username = Optional
+                .ofNullable(variablesBinding.getNode("p-username"))
+                .map(RDFNode::toString)
+                .orElse(null);
+
+        String password = Optional
+                .ofNullable(variablesBinding.getNode("p-password"))
+                .map(RDFNode::toString)
+                .orElse(null);
+
         try {
             RepositoryManager repositoryManager = RepositoryProvider.getRepositoryManager(rdf4jServerURL);
+
+            if (username != null && password != null) {
+                RemoteRepositoryManager remoteRepositoryManager = (RemoteRepositoryManager) repositoryManager;
+                remoteRepositoryManager.setUsernameAndPassword(username, password);
+            }
+
             repository = repositoryManager.getRepository(rdf4jRepositoryName);
             if (repository == null) {
                 LOG.info("Creating new repository {} within rdf4j server {} ...",
