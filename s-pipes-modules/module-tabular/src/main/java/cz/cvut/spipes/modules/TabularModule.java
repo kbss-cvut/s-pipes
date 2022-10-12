@@ -130,7 +130,7 @@ public class TabularModule extends AbstractModule {
         CsvPreference csvPreference = new CsvPreference.Builder(
                 quoteCharacter,
                 delimiter,
-                "\\n").build();
+                System.lineSeparator()).build();
 
         try{
             ICsvListReader listReader = new CsvListReader(getReader(), csvPreference);
@@ -165,7 +165,9 @@ public class TabularModule extends AbstractModule {
                 outputColumns.add(schemaColumn);
 
                 tableSchema.setAboutUrl(schemaColumn, sourceResource.getUri());
-                schemaColumn.setProperty(dataPrefix, sourceResource.getUri(),
+                schemaColumn.setProperty(
+                        dataPrefix,
+                        sourceResource.getUri(),
                         hasInputSchema ? tableSchema.getColumn(columnName) : null);
                 schemaColumn.setTitle(columnTitle);
                 if(isDuplicate) throwNotUniqueException(schemaColumn,columnTitle, columnName);
