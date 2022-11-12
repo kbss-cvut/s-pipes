@@ -83,7 +83,7 @@ Defines Java model that is used for serialization of metadata about execution of
 
 The following software needs to be installed on the system for development:
 
-- JDK 8
+- JDK 11
 - Maven
 
 ## Dockerization
