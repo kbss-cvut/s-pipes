@@ -47,6 +47,9 @@ public class ConstructTextualViewModule extends AnnotatedAbstractModule {
     @Parameter(urlPrefix = FORM_MODULE.uri, name = "indentation-string")
     private String indentationString = "  ";
 
+    @Parameter(urlPrefix = FORM_MODULE.uri, name = "language")
+    private String language = "en";
+
     @Override
     ExecutionContext executeSelf() {
 
@@ -61,7 +64,10 @@ public class ConstructTextualViewModule extends AnnotatedAbstractModule {
 
         Model constructedModel = ModelFactory.createDefaultModel();
 
-        EntityManagerFactory emf = JopaPersistenceUtils.createEntityManagerFactoryWithMemoryStore(FormUtils.SFORMS_MODEL_PACKAGE_NAME);
+        EntityManagerFactory emf = JopaPersistenceUtils.createEntityManagerFactoryWithMemoryStore(
+            FormUtils.SFORMS_MODEL_PACKAGE_NAME,
+            language
+        );
         EntityManager em = emf.createEntityManager();
 
         JopaPersistenceUtils.getDataset(em).setDefaultModel(inpModel);
