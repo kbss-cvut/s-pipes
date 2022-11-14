@@ -2,6 +2,7 @@ package cz.cvut.spipes.modules;
 
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.query.TypedQuery;
+import cz.cvut.spipes.CustomTokenizer;
 import cz.cvut.spipes.constants.CSVW;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
@@ -70,6 +71,7 @@ public class TabularModule extends AbstractModule {
 
     private final Property P_DELIMITER = getSpecificParameter("delimiter");
     private final Property P_QUOTE_CHARACTER = getSpecificParameter("quote-character");
+    private final Property P_CUSTOM_TOKENIZER = getSpecificParameter("use-custom-tokenizer");
     private final Property P_DATE_PREFIX = getSpecificParameter("data-prefix");
     private final Property P_OUTPUT_MODE = getSpecificParameter("output-mode");
     private final Property P_SOURCE_RESOURCE_URI = getSpecificParameter("source-resource-uri");
@@ -95,6 +97,9 @@ public class TabularModule extends AbstractModule {
 
     //:output-mode
     private Mode outputMode;
+
+    //:use-custom-tokenizer
+    private boolean useCustomTokenizer;
 
     /**
      * Represent a group of tables.
@@ -133,7 +138,13 @@ public class TabularModule extends AbstractModule {
                 System.lineSeparator()).build();
 
         try{
-            ICsvListReader listReader = new CsvListReader(getReader(), csvPreference);
+            ICsvListReader listReader;
+            if (useCustomTokenizer) {
+                listReader = new CsvListReader(new CustomTokenizer(getReader(),csvPreference), csvPreference);
+            }else{
+                listReader = new CsvListReader(getReader(), csvPreference);
+            }
+
             String[] header = listReader.getHeader(true); // skip the header (can't be used with CsvListReader)
 
             if (header == null) {
@@ -301,6 +312,7 @@ public class TabularModule extends AbstractModule {
         isReplace = getPropertyValue(SML.replace, false);
         delimiter = getPropertyValue(P_DELIMITER, '\t');
         skipHeader = getPropertyValue(P_SKIP_HEADER, false);
+        useCustomTokenizer = getPropertyValue(P_CUSTOM_TOKENIZER, false);
         quoteCharacter = getPropertyValue(P_QUOTE_CHARACTER, '\'');
         dataPrefix = getEffectiveValue(P_DATE_PREFIX).asLiteral().toString();
         sourceResource = getResourceByUri(getEffectiveValue(P_SOURCE_RESOURCE_URI).asLiteral().toString());
