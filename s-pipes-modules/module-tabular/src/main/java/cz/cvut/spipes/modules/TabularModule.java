@@ -2,7 +2,8 @@ package cz.cvut.spipes.modules;
 
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.query.TypedQuery;
-import cz.cvut.spipes.CustomTokenizer;
+import cz.cvut.spipes.InvalidQuotingTokenizer;
+import cz.cvut.spipes.config.ExecutionConfig;
 import cz.cvut.spipes.constants.CSVW;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
@@ -16,6 +17,7 @@ import cz.cvut.spipes.modules.util.JopaPersistenceUtils;
 import cz.cvut.spipes.registry.StreamResource;
 import cz.cvut.spipes.registry.StreamResourceRegistry;
 import cz.cvut.spipes.util.JenaUtils;
+import org.apache.commons.cli.MissingArgumentException;
 import org.apache.jena.rdf.model.*;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -71,7 +73,7 @@ public class TabularModule extends AbstractModule {
 
     private final Property P_DELIMITER = getSpecificParameter("delimiter");
     private final Property P_QUOTE_CHARACTER = getSpecificParameter("quote-character");
-    private final Property P_CUSTOM_TOKENIZER = getSpecificParameter("use-custom-tokenizer");
+    private final Property P_CUSTOM_TOKENIZER = getSpecificParameter("accept-invalid-quoting");
     private final Property P_DATE_PREFIX = getSpecificParameter("data-prefix");
     private final Property P_OUTPUT_MODE = getSpecificParameter("output-mode");
     private final Property P_SOURCE_RESOURCE_URI = getSpecificParameter("source-resource-uri");
@@ -98,8 +100,8 @@ public class TabularModule extends AbstractModule {
     //:output-mode
     private Mode outputMode;
 
-    //:use-custom-tokenizer
-    private boolean useCustomTokenizer;
+    //:accept-invalid-quoting
+    private boolean acceptInvalidQuoting;
 
     /**
      * Represent a group of tables.
@@ -138,11 +140,11 @@ public class TabularModule extends AbstractModule {
                 System.lineSeparator()).build();
 
         try{
-            ICsvListReader listReader;
-            if (useCustomTokenizer) {
-                listReader = new CsvListReader(new CustomTokenizer(getReader(),csvPreference), csvPreference);
-            }else{
-                listReader = new CsvListReader(getReader(), csvPreference);
+            ICsvListReader listReader = getCsvListReader(csvPreference);
+
+            if (listReader == null) {
+                logMissingQuoteError();
+                return getExecutionContext(inputModel, outputModel);
             }
 
             String[] header = listReader.getHeader(true); // skip the header (can't be used with CsvListReader)
@@ -226,7 +228,7 @@ public class TabularModule extends AbstractModule {
                 }
             }
 
-        } catch (IOException e) {
+        } catch (IOException | MissingArgumentException e) {
             LOG.error("Error while reading file from resource uri {}", sourceResource, e);
         }
 
@@ -244,6 +246,16 @@ public class TabularModule extends AbstractModule {
                         (JopaPersistenceUtils.getDataset(em).getDefaultModel()));
         em.close();
         return getExecutionContext(inputModel, outputModel);
+    }
+
+    private ICsvListReader getCsvListReader(CsvPreference csvPreference) {
+        if (acceptInvalidQuoting) {
+            if (getQuote() == '\0') {
+                return null;
+            }else
+                return new CsvListReader(new InvalidQuotingTokenizer(getReader(), csvPreference), csvPreference);
+        }
+        return new CsvListReader(getReader(), csvPreference);
     }
 
     private Statement createRowResource(String cellValue, int rowNumber, Column column) {
@@ -312,8 +324,8 @@ public class TabularModule extends AbstractModule {
         isReplace = getPropertyValue(SML.replace, false);
         delimiter = getPropertyValue(P_DELIMITER, '\t');
         skipHeader = getPropertyValue(P_SKIP_HEADER, false);
-        useCustomTokenizer = getPropertyValue(P_CUSTOM_TOKENIZER, false);
-        quoteCharacter = getPropertyValue(P_QUOTE_CHARACTER, '\'');
+        acceptInvalidQuoting = getPropertyValue(P_CUSTOM_TOKENIZER, false);
+        quoteCharacter = getPropertyValue(P_QUOTE_CHARACTER, '\0');
         dataPrefix = getEffectiveValue(P_DATE_PREFIX).asLiteral().toString();
         sourceResource = getResourceByUri(getEffectiveValue(P_SOURCE_RESOURCE_URI).asLiteral().toString());
         outputMode = Mode.fromResource(
@@ -477,5 +489,12 @@ public class TabularModule extends AbstractModule {
             }else headers[i] = "column_" + (i + 1);
         }
         return headers;
+    }
+
+    private void logMissingQuoteError() throws MissingArgumentException {
+        String message = "Quote character must be specified when using custom tokenizer.";
+        if (ExecutionConfig.isExitOnError()) {
+            throw new MissingArgumentException(message);
+        }else LOG.error(message);
     }
 }
