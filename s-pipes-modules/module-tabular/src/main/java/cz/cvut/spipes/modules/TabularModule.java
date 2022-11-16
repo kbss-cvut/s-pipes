@@ -73,7 +73,7 @@ public class TabularModule extends AbstractModule {
 
     private final Property P_DELIMITER = getSpecificParameter("delimiter");
     private final Property P_QUOTE_CHARACTER = getSpecificParameter("quote-character");
-    private final Property P_CUSTOM_TOKENIZER = getSpecificParameter("accept-invalid-quoting");
+    private final Property P_ACCEPT_INVALID_QUOTING = getSpecificParameter("accept-invalid-quoting");
     private final Property P_DATE_PREFIX = getSpecificParameter("data-prefix");
     private final Property P_OUTPUT_MODE = getSpecificParameter("output-mode");
     private final Property P_SOURCE_RESOURCE_URI = getSpecificParameter("source-resource-uri");
