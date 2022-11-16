@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -322,10 +323,10 @@ public class TabularModule extends AbstractModule {
     @Override
     public void loadConfiguration() {
         isReplace = getPropertyValue(SML.replace, false);
-        delimiter = getPropertyValue(P_DELIMITER, '\t');
+        delimiter = getPropertyValue(P_DELIMITER, ',');
         skipHeader = getPropertyValue(P_SKIP_HEADER, false);
         acceptInvalidQuoting = getPropertyValue(P_ACCEPT_INVALID_QUOTING, false);
-        quoteCharacter = getPropertyValue(P_QUOTE_CHARACTER, '\0');
+        quoteCharacter = getPropertyValue(P_QUOTE_CHARACTER, '"');
         dataPrefix = getEffectiveValue(P_DATE_PREFIX).asLiteral().toString();
         sourceResource = getResourceByUri(getEffectiveValue(P_SOURCE_RESOURCE_URI).asLiteral().toString());
         outputMode = Mode.fromResource(
@@ -393,7 +394,7 @@ public class TabularModule extends AbstractModule {
     }
 
     private Reader getReader() {
-        return new StringReader(new String(sourceResource.getContent()));
+        return new StringReader(new String(sourceResource.getContent(), StandardCharsets.UTF_8));
     }
 
     @NotNull
