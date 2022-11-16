@@ -324,7 +324,7 @@ public class TabularModule extends AbstractModule {
         isReplace = getPropertyValue(SML.replace, false);
         delimiter = getPropertyValue(P_DELIMITER, '\t');
         skipHeader = getPropertyValue(P_SKIP_HEADER, false);
-        acceptInvalidQuoting = getPropertyValue(P_CUSTOM_TOKENIZER, false);
+        acceptInvalidQuoting = getPropertyValue(P_ACCEPT_INVALID_QUOTING, false);
         quoteCharacter = getPropertyValue(P_QUOTE_CHARACTER, '\0');
         dataPrefix = getEffectiveValue(P_DATE_PREFIX).asLiteral().toString();
         sourceResource = getResourceByUri(getEffectiveValue(P_SOURCE_RESOURCE_URI).asLiteral().toString());
