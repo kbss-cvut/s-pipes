@@ -336,7 +336,7 @@ public class TabularModule extends AbstractModule {
     @Override
     public void loadConfiguration() {
         isReplace = getPropertyValue(SML.replace, false);
-        delimiter = getPropertyValue(P_DELIMITER, ',');
+        delimiter = getPropertyValue(P_DELIMITER, '\0');
         skipHeader = getPropertyValue(P_SKIP_HEADER, false);
         acceptInvalidQuoting = getPropertyValue(P_ACCEPT_INVALID_QUOTING, false);
         quoteCharacter = getPropertyValue(P_QUOTE_CHARACTER, '\0');
@@ -346,10 +346,10 @@ public class TabularModule extends AbstractModule {
                 getPropertyValue(P_OUTPUT_MODE, Mode.STANDARD.getResource())
         );
 
-        if(delimiter == ','){
+        if(delimiter == '\0'){
+            delimiter = ',';
             quoteCharacter = '"';
-        }else if (delimiter == '\t'){
-            quoteCharacter = '\0';
+            LOG.debug("Using default values for CSV, i.e. delimiter = ',' and quote character = '\"' and UTF-8");
         }
     }
 
