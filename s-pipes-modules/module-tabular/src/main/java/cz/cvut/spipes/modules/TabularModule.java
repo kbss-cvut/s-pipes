@@ -360,11 +360,11 @@ public class TabularModule extends AbstractModule {
     private void setInputCharset(int delimiter) {
         if (delimiter == ',') {
             inputCharset = StandardCharsets.UTF_8;
-            LOG.debug("Using UTF-8 as the encoding to be compliant with RDF 4180 (CSV)");
+            LOG.debug("Using UTF-8 as the encoding to be compliant with RFC 4180 (CSV)");
         }
     }
     private Supplier<Character> getDefaultDelimiterSupplier() {
-        LOG.debug("Delimiter not specified, using comma as default value to be compliant with RDF 4180 (CSV).");
+        LOG.debug("Delimiter not specified, using comma as default value to be compliant with RFC 4180 (CSV).");
         return () -> ',';
     }
 
@@ -372,7 +372,7 @@ public class TabularModule extends AbstractModule {
         if (delimiter != ',') {
             return () -> '\0';
         }
-        LOG.debug("Quote character not specified, using double-quote as default value to be compliant with RDF 4180 (CSV)");
+        LOG.debug("Quote character not specified, using double-quote as default value to be compliant with RFC 4180 (CSV)");
         return () -> ',';
     }
 
