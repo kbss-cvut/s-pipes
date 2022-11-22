@@ -36,8 +36,21 @@ import java.util.*;
 /**
  * Module for converting tabular data (e.g. CSV or TSV) to RDF
  * <p>
- * The implementation loosely follows the W3C Recommendation described here:
- * <a href="https://www.w3.org/TR/csv2rdf/">Generating RDF from Tabular Data on the Web</a>
+ * It supports two major processing standards that can be set by separator:
+ * <ul><li> separator ',' -- defaults to
+ * <a href="https://www.rfc-editor.org/rfc/rfc4180">CSV standard</a>, i.e. it uses by default quoting " and UTF-8 </li>
+ * <li> separator '\t' -- defaults to
+ * <a href="https://www.iana.org/assignments/media-types/text/tab-separated-values">TSV standard</a>, with no quoting
+ * (In the TSV standard, there is no mention of quotes, but in this implementation, we process the TSV quotes
+ * the same way as the CSV quotes.)</li>
+ * <li> other separator -- defaults to no standard, with no quoting</li>
+ * </ul>
+ * </p>
+ * In addition, it supports bad quoting according to CSV standard, see option
+ * {@link TabularModule#acceptInvalidQuoting}
+ * and class {@link InvalidQuotingTokenizer}
+ * <p>The implementation loosely follows the W3C Recommendation described here:
+ * <a href="https://www.w3.org/TR/csv2rdf/">Generating RDF from Tabular Data on the Web</a></p>
  * <p>
  * Within the recommendation, it is possible to define schema
  * defining the shape of the output RDF data
@@ -326,12 +339,18 @@ public class TabularModule extends AbstractModule {
         delimiter = getPropertyValue(P_DELIMITER, ',');
         skipHeader = getPropertyValue(P_SKIP_HEADER, false);
         acceptInvalidQuoting = getPropertyValue(P_ACCEPT_INVALID_QUOTING, false);
-        quoteCharacter = getPropertyValue(P_QUOTE_CHARACTER, '"');
+        quoteCharacter = getPropertyValue(P_QUOTE_CHARACTER, '\0');
         dataPrefix = getEffectiveValue(P_DATE_PREFIX).asLiteral().toString();
         sourceResource = getResourceByUri(getEffectiveValue(P_SOURCE_RESOURCE_URI).asLiteral().toString());
         outputMode = Mode.fromResource(
                 getPropertyValue(P_OUTPUT_MODE, Mode.STANDARD.getResource())
         );
+
+        if(delimiter == ','){
+            quoteCharacter = '"';
+        }else if (delimiter == '\t'){
+            quoteCharacter = '\0';
+        }
     }
 
     @Override
@@ -394,7 +413,10 @@ public class TabularModule extends AbstractModule {
     }
 
     private Reader getReader() {
-        return new StringReader(new String(sourceResource.getContent(), StandardCharsets.UTF_8));
+        return new StringReader(
+                delimiter == ','
+                        ? new String(sourceResource.getContent(), StandardCharsets.UTF_8)
+                        : new String(sourceResource.getContent()));
     }
 
     @NotNull
