@@ -30,19 +30,22 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * Module for converting tabular data (e.g. CSV or TSV) to RDF
  * <p>
  * It supports two major processing standards that can be set by separator:
  * <ul><li> separator ',' -- defaults to
- * <a href="https://www.rfc-editor.org/rfc/rfc4180">CSV standard</a>, i.e. it uses by default quoting " and UTF-8 </li>
+ * <a href="https://www.rfc-editor.org/rfc/rfc4180">CSV standard</a>, i.e. it uses by default the double-quote
+ * as a quote character, and UTF-8 as the encoding</li>
  * <li> separator '\t' -- defaults to
  * <a href="https://www.iana.org/assignments/media-types/text/tab-separated-values">TSV standard</a>, with no quoting
- * (In the TSV standard, there is no mention of quotes, but in this implementation, we process the TSV quotes
- * the same way as the CSV quotes.)</li>
+ * (In the TSV standard, fields that contain '\t' are not allowed and there is no mention of quotes,
+ * but in this implementation, we process the TSV quotes the same way as the CSV quotes.)</li>
  * <li> other separator -- defaults to no standard, with no quoting</li>
  * </ul>
  * </p>
@@ -131,6 +134,11 @@ public class TabularModule extends AbstractModule {
      * Represents the table schema that was used to describe the table
      */
     private TableSchema tableSchema;
+
+    /**
+     * Default charset to process input file.
+     */
+    private Charset inputCharset = Charset.defaultCharset();
 
     @Override
     ExecutionContext executeSelf() {
@@ -336,21 +344,43 @@ public class TabularModule extends AbstractModule {
     @Override
     public void loadConfiguration() {
         isReplace = getPropertyValue(SML.replace, false);
-        delimiter = getPropertyValue(P_DELIMITER, '\0');
+        delimiter = getPropertyValue(P_DELIMITER, getDefaultDelimiterSupplier());
         skipHeader = getPropertyValue(P_SKIP_HEADER, false);
         acceptInvalidQuoting = getPropertyValue(P_ACCEPT_INVALID_QUOTING, false);
-        quoteCharacter = getPropertyValue(P_QUOTE_CHARACTER, '\0');
+        quoteCharacter = getPropertyValue(P_QUOTE_CHARACTER, getDefaultQuoteCharacterSupplier(delimiter));
         dataPrefix = getEffectiveValue(P_DATE_PREFIX).asLiteral().toString();
         sourceResource = getResourceByUri(getEffectiveValue(P_SOURCE_RESOURCE_URI).asLiteral().toString());
         outputMode = Mode.fromResource(
                 getPropertyValue(P_OUTPUT_MODE, Mode.STANDARD.getResource())
         );
+        setInputCharset(delimiter);
+    }
 
-        if(delimiter == '\0'){
-            delimiter = ',';
-            quoteCharacter = '"';
-            LOG.debug("Using default values for CSV, i.e. delimiter = ',' and quote character = '\"' and UTF-8");
+
+    private void setInputCharset(int delimiter) {
+        if (delimiter == ',') {
+            inputCharset = StandardCharsets.UTF_8;
+            LOG.debug("Using UTF-8 as the encoding to be compliant with RDF 4180 (CSV)");
         }
+    }
+    private Supplier<Character> getDefaultDelimiterSupplier() {
+        LOG.debug("Delimiter not specified, using comma as default value to be compliant with RDF 4180 (CSV).");
+        return () -> ',';
+    }
+
+    private Supplier<Character> getDefaultQuoteCharacterSupplier(int delimiter) {
+        if (delimiter != ',') {
+            return () -> '\0';
+        }
+        LOG.debug("Quote character not specified, using double-quote as default value to be compliant with RDF 4180 (CSV)");
+        return () -> ',';
+    }
+
+    private char getPropertyValue(Property property,
+                          Supplier<Character> defaultValueSupplier) {
+        return Optional.ofNullable(getPropertyValue(property))
+            .map(n -> n.asLiteral().getChar())
+            .orElse(defaultValueSupplier.get());
     }
 
     @Override
@@ -413,10 +443,7 @@ public class TabularModule extends AbstractModule {
     }
 
     private Reader getReader() {
-        return new StringReader(
-                delimiter == ','
-                        ? new String(sourceResource.getContent(), StandardCharsets.UTF_8)
-                        : new String(sourceResource.getContent()));
+        return new StringReader(new String(sourceResource.getContent(), inputCharset));
     }
 
     @NotNull
