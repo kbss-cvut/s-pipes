@@ -2,6 +2,8 @@ package cz.cvut.spipes.modules;
 
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.query.TypedQuery;
+import cz.cvut.spipes.InvalidQuotingTokenizer;
+import cz.cvut.spipes.config.ExecutionConfig;
 import cz.cvut.spipes.constants.CSVW;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
@@ -15,6 +17,7 @@ import cz.cvut.spipes.modules.util.JopaPersistenceUtils;
 import cz.cvut.spipes.registry.StreamResource;
 import cz.cvut.spipes.registry.StreamResourceRegistry;
 import cz.cvut.spipes.util.JenaUtils;
+import org.apache.commons.cli.MissingArgumentException;
 import org.apache.jena.rdf.model.*;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -27,13 +30,30 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.URI;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * Module for converting tabular data (e.g. CSV or TSV) to RDF
  * <p>
- * The implementation loosely follows the W3C Recommendation described here:
- * <a href="https://www.w3.org/TR/csv2rdf/">Generating RDF from Tabular Data on the Web</a>
+ * It supports two major processing standards that can be set by separator:
+ * <ul><li> separator ',' -- defaults to
+ * <a href="https://www.rfc-editor.org/rfc/rfc4180">CSV standard</a>, i.e. it uses by default the double-quote
+ * as a quote character, and UTF-8 as the encoding</li>
+ * <li> separator '\t' -- defaults to
+ * <a href="https://www.iana.org/assignments/media-types/text/tab-separated-values">TSV standard</a>, with no quoting
+ * (In the TSV standard, fields that contain '\t' are not allowed and there is no mention of quotes,
+ * but in this implementation, we process the TSV quotes the same way as the CSV quotes.)</li>
+ * <li> other separator -- defaults to no standard, with no quoting</li>
+ * </ul>
+ * </p>
+ * In addition, it supports bad quoting according to CSV standard, see option
+ * {@link TabularModule#acceptInvalidQuoting}
+ * and class {@link InvalidQuotingTokenizer}
+ * <p>The implementation loosely follows the W3C Recommendation described here:
+ * <a href="https://www.w3.org/TR/csv2rdf/">Generating RDF from Tabular Data on the Web</a></p>
  * <p>
  * Within the recommendation, it is possible to define schema
  * defining the shape of the output RDF data
@@ -70,6 +90,7 @@ public class TabularModule extends AbstractModule {
 
     private final Property P_DELIMITER = getSpecificParameter("delimiter");
     private final Property P_QUOTE_CHARACTER = getSpecificParameter("quote-character");
+    private final Property P_ACCEPT_INVALID_QUOTING = getSpecificParameter("accept-invalid-quoting");
     private final Property P_DATE_PREFIX = getSpecificParameter("data-prefix");
     private final Property P_OUTPUT_MODE = getSpecificParameter("output-mode");
     private final Property P_SOURCE_RESOURCE_URI = getSpecificParameter("source-resource-uri");
@@ -96,6 +117,9 @@ public class TabularModule extends AbstractModule {
     //:output-mode
     private Mode outputMode;
 
+    //:accept-invalid-quoting
+    private boolean acceptInvalidQuoting;
+
     /**
      * Represent a group of tables.
      */
@@ -110,6 +134,11 @@ public class TabularModule extends AbstractModule {
      * Represents the table schema that was used to describe the table
      */
     private TableSchema tableSchema;
+
+    /**
+     * Default charset to process input file.
+     */
+    private Charset inputCharset = Charset.defaultCharset();
 
     @Override
     ExecutionContext executeSelf() {
@@ -133,7 +162,13 @@ public class TabularModule extends AbstractModule {
                 System.lineSeparator()).build();
 
         try{
-            ICsvListReader listReader = new CsvListReader(getReader(), csvPreference);
+            ICsvListReader listReader = getCsvListReader(csvPreference);
+
+            if (listReader == null) {
+                logMissingQuoteError();
+                return getExecutionContext(inputModel, outputModel);
+            }
+
             String[] header = listReader.getHeader(true); // skip the header (can't be used with CsvListReader)
 
             if (header == null) {
@@ -215,7 +250,7 @@ public class TabularModule extends AbstractModule {
                 }
             }
 
-        } catch (IOException e) {
+        } catch (IOException | MissingArgumentException e) {
             LOG.error("Error while reading file from resource uri {}", sourceResource, e);
         }
 
@@ -233,6 +268,16 @@ public class TabularModule extends AbstractModule {
                         (JopaPersistenceUtils.getDataset(em).getDefaultModel()));
         em.close();
         return getExecutionContext(inputModel, outputModel);
+    }
+
+    private ICsvListReader getCsvListReader(CsvPreference csvPreference) {
+        if (acceptInvalidQuoting) {
+            if (getQuote() == '\0') {
+                return null;
+            }else
+                return new CsvListReader(new InvalidQuotingTokenizer(getReader(), csvPreference), csvPreference);
+        }
+        return new CsvListReader(getReader(), csvPreference);
     }
 
     private Statement createRowResource(String cellValue, int rowNumber, Column column) {
@@ -299,14 +344,43 @@ public class TabularModule extends AbstractModule {
     @Override
     public void loadConfiguration() {
         isReplace = getPropertyValue(SML.replace, false);
-        delimiter = getPropertyValue(P_DELIMITER, '\t');
+        delimiter = getPropertyValue(P_DELIMITER, getDefaultDelimiterSupplier());
         skipHeader = getPropertyValue(P_SKIP_HEADER, false);
-        quoteCharacter = getPropertyValue(P_QUOTE_CHARACTER, '\'');
+        acceptInvalidQuoting = getPropertyValue(P_ACCEPT_INVALID_QUOTING, false);
+        quoteCharacter = getPropertyValue(P_QUOTE_CHARACTER, getDefaultQuoteCharacterSupplier(delimiter));
         dataPrefix = getEffectiveValue(P_DATE_PREFIX).asLiteral().toString();
         sourceResource = getResourceByUri(getEffectiveValue(P_SOURCE_RESOURCE_URI).asLiteral().toString());
         outputMode = Mode.fromResource(
                 getPropertyValue(P_OUTPUT_MODE, Mode.STANDARD.getResource())
         );
+        setInputCharset(delimiter);
+    }
+
+
+    private void setInputCharset(int delimiter) {
+        if (delimiter == ',') {
+            inputCharset = StandardCharsets.UTF_8;
+            LOG.debug("Using UTF-8 as the encoding to be compliant with RFC 4180 (CSV)");
+        }
+    }
+    private Supplier<Character> getDefaultDelimiterSupplier() {
+        LOG.debug("Delimiter not specified, using comma as default value to be compliant with RFC 4180 (CSV).");
+        return () -> ',';
+    }
+
+    private Supplier<Character> getDefaultQuoteCharacterSupplier(int delimiter) {
+        if (delimiter != ',') {
+            return () -> '\0';
+        }
+        LOG.debug("Quote character not specified, using double-quote as default value to be compliant with RFC 4180 (CSV)");
+        return () -> ',';
+    }
+
+    private char getPropertyValue(Property property,
+                          Supplier<Character> defaultValueSupplier) {
+        return Optional.ofNullable(getPropertyValue(property))
+            .map(n -> n.asLiteral().getChar())
+            .orElse(defaultValueSupplier.get());
     }
 
     @Override
@@ -369,7 +443,7 @@ public class TabularModule extends AbstractModule {
     }
 
     private Reader getReader() {
-        return new StringReader(new String(sourceResource.getContent()));
+        return new StringReader(new String(sourceResource.getContent(), inputCharset));
     }
 
     @NotNull
@@ -465,5 +539,12 @@ public class TabularModule extends AbstractModule {
             }else headers[i] = "column_" + (i + 1);
         }
         return headers;
+    }
+
+    private void logMissingQuoteError() throws MissingArgumentException {
+        String message = "Quote character must be specified when using custom tokenizer.";
+        if (ExecutionConfig.isExitOnError()) {
+            throw new MissingArgumentException(message);
+        }else LOG.error(message);
     }
 }
