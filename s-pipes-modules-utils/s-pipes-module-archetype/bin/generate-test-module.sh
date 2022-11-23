@@ -3,26 +3,27 @@
 # removing the old test module and generating a new one
 
 # Change the variables below as necessary
-ARCHETYPE_GROUP_ID="cz.cvut.kbss"
-ARCHETYPE_ARTIFACT_ID="s-pipes-module-archetype"
-ARCHETYPE_VERSION="0.4.0"
-
 NEW_MODULE_GROUP_ID="cz.cvut.spipes.modules"
 NEW_MODULE_ARTIFACT_ID="test-own-artifact"
 NEW_MODULE_NAME="foobar"
 
-ARCHETYPE_DIR=../
-SPIPES_MODULES_DIR=$ARCHETYPE_DIR/../s-pipes-modules
+SCRIPT_PATH=$(dirname "$(readlink -f "$0")")
 
+ARCHETYPE_DIR=$SCRIPT_PATH/..
+SPIPES_MODULES_DIR=$ARCHETYPE_DIR/../../s-pipes-modules
 
 cd $ARCHETYPE_DIR
+ARCHETYPE_VERSION="$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
+ARCHETYPE_GROUP_ID="$(mvn help:evaluate -Dexpression=project.groupId -q -DforceStdout)"
+ARCHETYPE_ARTIFACT_ID="$(mvn help:evaluate -Dexpression=project.artifactId  -q -DforceStdout)"
+
 mvn clean install archetype:update-local-catalog -q
 echo "Updated archetype in local maven repository"
 
 cd $SPIPES_MODULES_DIR
 # Cleanup of old versions
 rm -rf $NEW_MODULE_ARTIFACT_ID
-sed -i '' "s/<module>$NEW_MODULE_ARTIFACT_ID<\/module>//" pom.xml
+sed -i "s/<module>$NEW_MODULE_ARTIFACT_ID<\/module>//" pom.xml
 echo "Cleaned up the old version"
 
 mvn archetype:generate \

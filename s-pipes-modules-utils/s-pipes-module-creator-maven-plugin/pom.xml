@@ -10,7 +10,6 @@
 
     <name>SPipes Module Annotation Processor</name>
     <artifactId>s-pipes-module-creator-maven-plugin</artifactId>
-    <version>0.4.0</version>
     <packaging>maven-plugin</packaging>
 
     <properties>

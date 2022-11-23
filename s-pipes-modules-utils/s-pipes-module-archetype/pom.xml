@@ -10,7 +10,6 @@
 
     <name>SPipes Module Archetype</name>
     <artifactId>s-pipes-module-archetype</artifactId>
-    <version>1.0-SNAPSHOT</version>
     <packaging>maven-archetype</packaging>
 
     <properties>
