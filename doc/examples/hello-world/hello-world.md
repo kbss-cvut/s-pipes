@@ -66,21 +66,18 @@ of constructed RDF.
         rdfs:label "Bind person name" ;
     .
     :bind-person-id
-        a sml:BindWithConstant ;
-        sm:next :construct-greeting ;
-        sm:outputVariable "personId" ;
-        sml:value [
-            a sp:replace ;
-            sp:arg1 [
-                a sp:lcase ;
-                sp:arg1 [
-                    sp:varName "personName" ;
-                ] ;
-            ] ;
-            sp:arg2 " " ;
-            sp:arg3 "-" ;
-        ] ;
-        rdfs:label "Bind person id" ;
+  	a sml:BindBySelect ;
+  	sm:next :construct-greeting ;
+  	sml:selectQuery [
+      		a sp:Select ;
+      		sp:text """
+			SELECT ?personId
+			WHERE {
+    			BIND(replace(lcase(?personName)," ", "-") as ?personId)
+			}
+		""" ;
+    	] ;
+  	rdfs:label "Bind person id" ;
     .
     ```
 5) Construct RDF triples -- finally, we construct RDF triples using SPARQL construct query. 
