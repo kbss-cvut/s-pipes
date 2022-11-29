@@ -136,7 +136,7 @@ public class SPipesServiceController {
         value = "/service",
         consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
         produces = {
-            RDFMimeType.LD_JSON_STRING + ";chaset=utf-8",
+            RDFMimeType.LD_JSON_STRING + ";charset=utf-8",
             RDFMimeType.N_TRIPLES_STRING,
             RDFMimeType.RDF_XML_STRING,
             RDFMimeType.TURTLE_STRING
