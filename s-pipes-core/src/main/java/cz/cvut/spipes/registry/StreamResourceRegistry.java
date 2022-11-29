@@ -64,4 +64,11 @@ public class StreamResourceRegistry {
             LOG.trace("Resource map content after the registration: {}", id2resourcesMap);
         }
     }
+
+    public void clearAllResources(){
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Clearing all resources");
+        }
+        id2resourcesMap.clear();
+    }
 }

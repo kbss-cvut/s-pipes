@@ -5,6 +5,7 @@ import cz.cvut.spipes.engine.*;
 import cz.cvut.spipes.exception.SPipesServiceException;
 import cz.cvut.spipes.manager.SPipesScriptManager;
 import cz.cvut.spipes.modules.Module;
+import cz.cvut.spipes.registry.StreamResourceRegistry;
 import cz.cvut.spipes.rest.util.*;
 import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.RDFMimeType;
@@ -62,7 +63,7 @@ public class SPipesServiceController {
     )
     public Model processGetRequest(@RequestParam MultiValueMap<String, String> parameters) {
         LOG.info("Processing GET request.");
-        return runModule(ModelFactory.createDefaultModel(), parameters);
+        return run(ModelFactory.createDefaultModel(), parameters, false);
     }
 
     @ApiOperation(
@@ -109,7 +110,7 @@ public class SPipesServiceController {
     ) {
         LOG.info("Processing POST request.");
         // TODO process internal params passed arguments not parameters map
-        return runModule(inputModel, parameters);
+        return run(inputModel, parameters, false);
     }
 
     @GetMapping(
@@ -123,7 +124,7 @@ public class SPipesServiceController {
     )
     public Model processServiceGetRequest(@RequestParam MultiValueMap<String, String> parameters) {
         LOG.info("Processing service GET request.");
-        return runService(ModelFactory.createDefaultModel(), parameters);
+        return run(ModelFactory.createDefaultModel(), parameters, true);
     }
 
     /**
@@ -149,7 +150,7 @@ public class SPipesServiceController {
             new MultipartFileResourceResolver(resourceRegisterHelper).resolveResources(parameters, files);
 
         LOG.info("Processing service POST request, with {} multipart file(s).", files.length);
-        return runService(ModelFactory.createDefaultModel(), newParameters);
+        return run(ModelFactory.createDefaultModel(), newParameters, true);
     }
 
     @ExceptionHandler
@@ -170,37 +171,7 @@ public class SPipesServiceController {
         return querySolution;
     }
 
-
-    // TODO merge it with implementation in /module
-    private Model runService(final Model inputDataModel, final MultiValueMap<String, String> parameters) {
-        LOG.info("- parameters={}", parameters);
-
-        String id = extractId(parameters);
-
-        File outputBindingPath = extractOutputBindingPath(parameters);
-        Model configModel = extractConfigurationModel(parameters);
-        ExecutionContext inputExecutionContext = extractInputExecutionContext(inputDataModel, parameters);
-
-        ExecutionEngine engine = createExecutionEngine(configModel);
-
-        // EXECUTE PIPELINE
-        ContextLoaderHelper.updateContextsIfNecessary(scriptManager);
-        Module module = scriptManager.loadFunction(id);
-
-        if (module == null) {
-            throw new SPipesServiceException("Cannot load return module for a function with id=" + id);
-        }
-        ExecutionContext outputExecutionContext = engine.executePipeline(module, inputExecutionContext);
-
-        if (outputBindingPath != null) {
-            saveOutputBinding(outputBindingPath, outputExecutionContext.getVariablesBinding());
-        }
-
-        LOG.info("Processing successfully finished.");
-        return outputExecutionContext.getDefaultModel();
-    }
-
-    private Model runModule(final Model inputDataModel, final MultiValueMap<String, String> parameters) {
+    private Model run(final Model inputDataModel, final MultiValueMap<String, String> parameters, boolean isService) {
         LOG.info("- parameters={}", parameters);
 
         String id = extractId(parameters);
@@ -211,8 +182,13 @@ public class SPipesServiceController {
 
         ExecutionEngine engine = createExecutionEngine(configModel);
         ContextLoaderHelper.updateContextsIfNecessary(scriptManager);
-        Module module = PipelineFactory.loadModule(configModel.createResource(id));
+
+        Module module = isService
+                ? scriptManager.loadFunction(id)
+                : PipelineFactory.loadModule(configModel.createResource(id));
+
         if (module == null) {
+            clearStreamResources();
             throw new SPipesServiceException("Cannot load module with id=" + id);
         }
         ExecutionContext outputExecutionContext = engine.executePipeline(module, inputExecutionContext);
@@ -221,6 +197,7 @@ public class SPipesServiceController {
             saveOutputBinding(outputBindingPath, outputExecutionContext.getVariablesBinding());
         }
 
+        clearStreamResources();
         LOG.info("Processing successfully finished.");
         return outputExecutionContext.getDefaultModel();
     }
@@ -365,4 +342,7 @@ public class SPipesServiceController {
 
     }
 
+    private void clearStreamResources(){
+        StreamResourceRegistry.getInstance().clearAllResources();
+    }
 }
