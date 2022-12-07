@@ -1,6 +1,7 @@
 package cz.cvut.spipes.modules;
 
 import cz.cvut.spipes.config.ExecutionConfig;
+import cz.cvut.spipes.constants.CSVW;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.exception.ResourceNotUniqueException;
@@ -21,6 +22,8 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
@@ -195,6 +198,34 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
                  .read(getFilePath("examples/blankNodes/expected-output.ttl").toString());
 
          assertIsomorphic(actualModel, expectedModel);
+     }
+
+     @Test
+     void executeSelfWithHTMLFileInput() throws URISyntaxException, IOException {
+         module.setProcessHTMLFile(true);
+         module.setSourceResource(
+                StreamResourceUtils.getStreamResource(DATA_PREFIX, getFilePath("examples/htmlFile/input.html"))
+        );
+
+        ExecutionContext outputContext = module.executeSelf();
+        Model actualModel = outputContext.getDefaultModel();
+
+        List<String> header = Arrays.asList("No_", "Test_1", "Test_2", "Description");
+        List<List<String>> rows = Arrays.asList(
+                Arrays.asList("1.", "123", "456", "description 1"),
+                Arrays.asList("2.", "789", "123", "description 2"));
+
+        header.forEach(headerValue -> assertTrue(actualModel.contains(null, CSVW.name, headerValue)));
+
+        for (List<String> row: rows){
+            for(int idx = 0; idx < header.size(); idx++) {
+                String headerValue = header.get(idx);
+                String rowValue = row.get(idx);
+                assertTrue(actualModel
+                        .contains(null, actualModel.getProperty(DATA_PREFIX + headerValue), rowValue)
+                );
+            }
+        }
      }
 
     void assertIsomorphic(Model actualModel, Model expectedModel){
