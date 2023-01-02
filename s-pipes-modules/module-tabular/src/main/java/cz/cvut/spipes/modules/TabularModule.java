@@ -13,7 +13,7 @@ import cz.cvut.spipes.exception.ResourceNotFoundException;
 import cz.cvut.spipes.exception.ResourceNotUniqueException;
 import cz.cvut.spipes.modules.model.*;
 import cz.cvut.spipes.modules.util.BNodesTransformer;
-import cz.cvut.spipes.modules.util.HTML2CSVConvertor;
+import cz.cvut.spipes.modules.util.HTML2TSVConvertor;
 import cz.cvut.spipes.modules.util.JopaPersistenceUtils;
 import cz.cvut.spipes.registry.StreamResource;
 import cz.cvut.spipes.registry.StreamResourceRegistry;
@@ -78,9 +78,9 @@ import java.util.function.Supplier;
  * ]
  * </code></pre>
  * <p>
- * This module can also be used to process HTML tables. First, the HTML table is converted to CSV
+ * This module can also be used to process HTML tables. First, the HTML table is converted to TSV
  * and then processed as usual.
- * Take a look at the option {@link TabularModule#processHTMLFile} and class {@link HTML2CSVConvertor} for more details.
+ * Take a look at the option {@link TabularModule#processHTMLFile} and class {@link HTML2TSVConvertor} for more details.
  * <p>
  * <b>Important notes (differences from the recommendation):</b><br/>
  * Does not support custom table group URIs.<br/>
@@ -153,10 +153,9 @@ public class TabularModule extends AbstractModule {
     ExecutionContext executeSelf() {
 
         if(processHTMLFile) {
-            HTML2CSVConvertor htmlConvertor = new HTML2CSVConvertor();
-            setSourceResource(htmlConvertor.convertToCSV(sourceResource));
-            setDelimiter(',');
-            setQuoteCharacter('\"');
+            HTML2TSVConvertor htmlConvertor = new HTML2TSVConvertor();
+            setSourceResource(htmlConvertor.convertToTSV(sourceResource));
+            setDelimiter('\t');
         }
 
         BNodesTransformer bNodesTransformer = new BNodesTransformer();
