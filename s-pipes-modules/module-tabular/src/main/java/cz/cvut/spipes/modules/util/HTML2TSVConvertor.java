@@ -9,7 +9,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /**
- * This class can be used to read the HTML table from input and convert it to TSV file.
+ * This class can be used to read the HTML table from input and convert it to TSV file without quoting
+ * and tab characters ("\t") are replaced by two spaces.
  * The HTML table must contain at least these two tags ({@literal <}td/>, {@literal <}tr/>) to be processed correctly.
  * The recommended format is shown in the example below:
  * <table>
