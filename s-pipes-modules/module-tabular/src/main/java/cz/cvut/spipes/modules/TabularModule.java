@@ -78,7 +78,7 @@ import java.util.function.Supplier;
  * ]
  * </code></pre>
  * <p>
- * This module can also be used to process HTML tables. First, the HTML table is converted to TSV
+ * This module can also be used to process HTML tables. First, the HTML table is converted to TSV while replacing "\t" with two spaces
  * and then processed as usual.
  * Take a look at the option {@link TabularModule#processHTMLFile} and class {@link HTML2TSVConvertor} for more details.
  * <p>
