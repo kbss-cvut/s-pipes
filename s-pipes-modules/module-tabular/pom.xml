@@ -77,6 +77,11 @@
             <artifactId>ontodriver-jena</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.15.3</version>
+        </dependency>
+        <dependency>
             <groupId>cz.cvut.kbss</groupId>
             <artifactId>s-pipes-test</artifactId>
             <version>${project.version}</version>

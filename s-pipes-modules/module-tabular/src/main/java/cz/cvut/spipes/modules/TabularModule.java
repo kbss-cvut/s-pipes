@@ -13,6 +13,7 @@ import cz.cvut.spipes.exception.ResourceNotFoundException;
 import cz.cvut.spipes.exception.ResourceNotUniqueException;
 import cz.cvut.spipes.modules.model.*;
 import cz.cvut.spipes.modules.util.BNodesTransformer;
+import cz.cvut.spipes.modules.util.HTML2TSVConvertor;
 import cz.cvut.spipes.modules.util.JopaPersistenceUtils;
 import cz.cvut.spipes.registry.StreamResource;
 import cz.cvut.spipes.registry.StreamResourceRegistry;
@@ -77,6 +78,11 @@ import java.util.function.Supplier;
  * ]
  * </code></pre>
  * <p>
+ * This module can also be used to process HTML tables, see option {@link TabularModule#processHTMLFile}.
+ * First, the HTML table is converted to TSV while replacing "\t" with two spaces
+ * and then processed as usual.
+ * Take a look at the option {@link TabularModule#processHTMLFile} and class {@link HTML2TSVConvertor} for more details.
+ * <p>
  * <b>Important notes (differences from the recommendation):</b><br/>
  * Does not support custom table group URIs.<br/>
  * Does not support custom table URIs. <br/>
@@ -95,6 +101,7 @@ public class TabularModule extends AbstractModule {
     private final Property P_OUTPUT_MODE = getSpecificParameter("output-mode");
     private final Property P_SOURCE_RESOURCE_URI = getSpecificParameter("source-resource-uri");
     private final Property P_SKIP_HEADER = getSpecificParameter("skip-header");
+    private final Property P_PROCESS_HTML_FILE = getSpecificParameter("process-html-file");
 
     //sml:replace
     private boolean isReplace;
@@ -113,6 +120,9 @@ public class TabularModule extends AbstractModule {
 
     //:skip-header
     private boolean skipHeader;
+
+    //:process-html-file
+    private boolean processHTMLFile;
 
     //:output-mode
     private Mode outputMode;
@@ -142,6 +152,13 @@ public class TabularModule extends AbstractModule {
 
     @Override
     ExecutionContext executeSelf() {
+
+        if(processHTMLFile) {
+            HTML2TSVConvertor htmlConvertor = new HTML2TSVConvertor();
+            setSourceResource(htmlConvertor.convertToTSV(sourceResource));
+            setDelimiter('\t');
+        }
+
         BNodesTransformer bNodesTransformer = new BNodesTransformer();
         Model inputModel = bNodesTransformer.convertBNodesToNonBNodes(executionContext.getDefaultModel());
         boolean hasInputSchema = false;
@@ -346,6 +363,7 @@ public class TabularModule extends AbstractModule {
         isReplace = getPropertyValue(SML.replace, false);
         delimiter = getPropertyValue(P_DELIMITER, getDefaultDelimiterSupplier());
         skipHeader = getPropertyValue(P_SKIP_HEADER, false);
+        processHTMLFile = getPropertyValue(P_PROCESS_HTML_FILE, false);
         acceptInvalidQuoting = getPropertyValue(P_ACCEPT_INVALID_QUOTING, false);
         quoteCharacter = getPropertyValue(P_QUOTE_CHARACTER, getDefaultQuoteCharacterSupplier(delimiter));
         dataPrefix = getEffectiveValue(P_DATE_PREFIX).asLiteral().toString();
@@ -507,6 +525,10 @@ public class TabularModule extends AbstractModule {
 
     public void setSkipHeader(boolean skipHeader) {
         this.skipHeader = skipHeader;
+    }
+
+    public void setProcessHTMLFile(boolean processHTMLFile) {
+        this.processHTMLFile = processHTMLFile;
     }
 
     private String[] getHeaderFromSchema(Model inputModel, String[] header, boolean hasInputSchema) {
