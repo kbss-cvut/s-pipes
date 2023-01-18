@@ -9,6 +9,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /**
+ * Module for converting tabular data (e.g. CSV, TSV, table represented in HTML) to RDF
+ * <p>
  * This class can be used to read the HTML table from input and convert it to TSV file without quoting
  * and tab characters ("\t") are replaced by two spaces.
  * The HTML table must contain at least these two tags ({@literal <}td/>, {@literal <}tr/>) to be processed correctly.
