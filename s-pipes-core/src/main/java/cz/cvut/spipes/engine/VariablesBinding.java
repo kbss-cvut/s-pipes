@@ -179,12 +179,14 @@ public class VariablesBinding {
 
     @Override
     public String toString() {
-        return binding.asMap().toString();
+        return getVariablesWithoutConfigurationOnes().toString();
     }
 
     public String toTruncatedString() {
-        return binding.asMap().entrySet().stream()
-            .map(e -> new AbstractMap.SimpleEntry<>(e.getKey(), getTruncatedValue(e.getValue().toString()))).
+        Map<String,String> map = getVariablesWithoutConfigurationOnes();
+
+        return map.entrySet().stream()
+            .map(e -> new AbstractMap.SimpleEntry<>(e.getKey(), getTruncatedValue(e.getValue()))).
             collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)).toString();
     }
 
@@ -193,5 +195,11 @@ public class VariablesBinding {
             return "... " + value.substring(0, MAX_TRUNCATED_VALUE_SIZE).replace("\n", "\\n") + " ...";
         }
         return value;
+    }
+
+    private Map<String, String> getVariablesWithoutConfigurationOnes(){
+        return binding.asMap().entrySet()
+                .stream().filter(entry -> !entry.getKey().startsWith("variable.assignment"))
+                .collect(Collectors.toMap(Map.Entry::getKey, o -> o.getValue().toString(), (x, y) -> y, HashMap::new));
     }
 }

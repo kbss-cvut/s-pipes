@@ -108,12 +108,12 @@ public class Rdf4jModule extends AbstractModule {
         VariablesBinding variablesBinding = getExecutionContext().getVariablesBinding();
 
         String username = Optional
-                .ofNullable(variablesBinding.getNode("p-username"))
+                .ofNullable(variablesBinding.getNode("variable.assignment.rdf4jUsername"))
                 .map(RDFNode::toString)
                 .orElse(null);
 
         String password = Optional
-                .ofNullable(variablesBinding.getNode("p-password"))
+                .ofNullable(variablesBinding.getNode("variable.assignment.rdf4jPassword"))
                 .map(RDFNode::toString)
                 .orElse(null);
 
