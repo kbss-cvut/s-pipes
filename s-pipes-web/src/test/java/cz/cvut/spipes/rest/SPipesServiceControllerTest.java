@@ -1,4 +1,4 @@
-package cz.cvut.spipes.web;
+package cz.cvut.spipes.rest;
 
 import cz.cvut.spipes.config.WebAppConfig;
 import cz.cvut.spipes.engine.VariablesBinding;
