@@ -1,5 +1,6 @@
 package cz.cvut.spipes.rest.util;
 
+import cz.cvut.spipes.registry.StreamResource;
 import cz.cvut.spipes.registry.StreamResourceRegistry;
 import cz.cvut.spipes.rest.StreamResourceDTO;
 import org.apache.commons.io.IOUtils;
@@ -29,7 +30,9 @@ public class ResourceRegisterHelper {
         final byte[] data;
         try {
             data = IOUtils.toByteArray(body);
-            StreamResourceRegistry.getInstance().registerResource(res.getId(), data, contentType);
+            StreamResource streamResource = StreamResourceRegistry.getInstance()
+                .registerResource(res.getId(), data, contentType);
+            res.attachStreamResource(streamResource);
             LOG.info("Resource content size: {}", data.length);
         } catch (IOException e) {
             LOG.error("Unable to read payload: ", e);
