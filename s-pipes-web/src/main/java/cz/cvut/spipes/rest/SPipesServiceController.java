@@ -31,10 +31,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @EnableWebMvc
@@ -145,11 +143,24 @@ public class SPipesServiceController {
     public Model processServicePostRequest(@RequestParam MultiValueMap<String, String> parameters,
                                            @RequestParam("files") MultipartFile[] files) {
 
+
+        List<StreamResourceDTO> newStreamResources = new LinkedList<>();
         MultiValueMap<String, String> newParameters =
-            new MultipartFileResourceResolver(resourceRegisterHelper).resolveResources(parameters, files);
+            new MultipartFileResourceResolver(resourceRegisterHelper).resolveResources(
+                parameters,
+                files,
+                newStreamResources
+            );
 
         LOG.info("Processing service POST request, with {} multipart file(s).", files.length);
-        return runService(ModelFactory.createDefaultModel(), newParameters);
+        Model model =  runService(ModelFactory.createDefaultModel(), newParameters);
+        if (! newStreamResources.isEmpty()) {
+            LOG.info(
+                "Loosing reference to stream resources: " +
+                newStreamResources.stream().map(StreamResourceDTO::getId).collect(Collectors.toList())
+            );
+        }
+        return model;
     }
 
     @ExceptionHandler
