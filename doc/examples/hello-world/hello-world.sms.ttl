@@ -37,19 +37,16 @@
   rdfs:label "Bind person name" ;
 .
 :bind-person-id
-  a sml:BindWithConstant ;
+  a sml:BindBySelect ;
   sm:next :construct-greeting ;
-  sm:outputVariable "personId" ;
-  sml:value [
-      a sp:replace ;
-      sp:arg1 [
-          a sp:lcase ;
-          sp:arg1 [
-              sp:varName "personName" ;
-            ] ;
-        ] ;
-      sp:arg2 " " ;
-      sp:arg3 "-" ;
+  sml:selectQuery [
+      a sp:Select ;
+      sp:text """
+SELECT ?personId
+WHERE {
+    BIND(replace(lcase(?personName)," ", "-") as ?personId)
+}
+""" ;
     ] ;
   rdfs:label "Bind person id" ;
 .
@@ -74,7 +71,6 @@ CONSTRUCT {
 :execute-greeting
   a sm:Function ;
   sm:returnModule :express-greeting_Return ;
-  rdfs:subClassOf sm:Functions ;
 .
 :express-greeting_Return
   a sml:ReturnRDF ;
