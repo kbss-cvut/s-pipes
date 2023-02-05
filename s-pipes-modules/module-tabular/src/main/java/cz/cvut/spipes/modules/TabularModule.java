@@ -382,23 +382,27 @@ public class TabularModule extends AbstractModule {
         }
     }
     private Supplier<Character> getDefaultDelimiterSupplier() {
-        LOG.debug("Delimiter not specified, using comma as default value to be compliant with RFC 4180 (CSV).");
-        return () -> ',';
+        return () -> {
+            LOG.debug("Delimiter not specified, using comma as default value to be compliant with RFC 4180 (CSV).");
+            return ',';
+        };
     }
 
     private Supplier<Character> getDefaultQuoteCharacterSupplier(int delimiter) {
         if (delimiter != ',') {
             return () -> '\0';
         }
-        LOG.debug("Quote character not specified, using double-quote as default value to be compliant with RFC 4180 (CSV)");
-        return () -> ',';
+        return () ->  {
+            LOG.debug("Quote character not specified, using double-quote as default value to be compliant with RFC 4180 (CSV)");
+            return '"';
+        };
     }
 
     private char getPropertyValue(Property property,
                           Supplier<Character> defaultValueSupplier) {
         return Optional.ofNullable(getPropertyValue(property))
             .map(n -> n.asLiteral().getChar())
-            .orElse(defaultValueSupplier.get());
+            .orElseGet(defaultValueSupplier);
     }
 
     @Override
