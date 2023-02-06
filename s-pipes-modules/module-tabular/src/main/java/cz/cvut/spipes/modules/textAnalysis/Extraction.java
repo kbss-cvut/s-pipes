@@ -56,4 +56,8 @@ public class Extraction {
     public void addPrefix(String prefix, String value) {
         prefixes.put(prefix, value);
     }
+
+    public Map<String, String> getPrefixes() {
+        return prefixes;
+    }
 }

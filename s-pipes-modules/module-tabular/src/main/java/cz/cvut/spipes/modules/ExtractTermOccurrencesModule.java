@@ -41,6 +41,8 @@ public class ExtractTermOccurrencesModule extends AnnotatedAbstractModule {
     //:source-resource-uri
     private StreamResource sourceResource;
 
+    Extraction extraction = new Extraction();
+
     @Override
     protected ExecutionContext executeSelf() {
         Model inputRDF = this.getExecutionContext().getDefaultModel();
@@ -48,7 +50,6 @@ public class ExtractTermOccurrencesModule extends AnnotatedAbstractModule {
         ResIterator rows = inputRDF.listResourcesWithProperty(RDF.type, CSVW.RowUri);
         Map<String, List<Element>> annotatedElements = new HashMap<>();
 
-        Extraction extraction = new Extraction();
         extraction.addPrefix("ddo","http://onto.fel.cvut.cz/ontologies/application/termit/pojem/");
 
         rows.forEach(row -> {
@@ -73,6 +74,7 @@ public class ExtractTermOccurrencesModule extends AnnotatedAbstractModule {
             assert e.parentNode() != null;
             String parentTag = ((Element) e.parentNode()).text();
 
+            addLiteral(res, createProperty(Constants.RDFa.RESOURCE), fullIri(e.attr(Constants.RDFa.RESOURCE)));
             addLiteral(res, createProperty(Constants.WHOLE_TEXT), StringEscapeUtils.unescapeJava(((Element) e.parentNode()).html()));
             addLiteral(res, createProperty(Constants.REFERENCES_ANNOTATION), StringEscapeUtils.unescapeJava(e.toString()));
             addLiteral(res, createProperty(Constants.REFERENCES_TEXT), parentTag);
@@ -140,5 +142,19 @@ public class ExtractTermOccurrencesModule extends AnnotatedAbstractModule {
 
     public void setDataPrefix(String dataPrefix) {
         this.dataPrefix = dataPrefix;
+    }
+
+    private String fullIri(String possiblyPrefixed) {
+        possiblyPrefixed = possiblyPrefixed.trim();
+        final int colonIndex = possiblyPrefixed.indexOf(':');
+        if (colonIndex == -1) {
+            return possiblyPrefixed;
+        }
+        final String prefix = possiblyPrefixed.substring(0, colonIndex);
+        if (!extraction.getPrefixes().containsKey(prefix)) {
+            return possiblyPrefixed;
+        }
+        final String localName = possiblyPrefixed.substring(colonIndex + 1);
+        return extraction.getPrefixes().get(prefix) + localName;
     }
 }
