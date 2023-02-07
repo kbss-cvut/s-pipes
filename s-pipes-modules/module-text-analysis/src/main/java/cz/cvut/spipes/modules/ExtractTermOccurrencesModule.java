@@ -1,12 +1,11 @@
 package cz.cvut.spipes.modules;
 
-import cz.cvut.spipes.constants.CSVW;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
-import cz.cvut.spipes.constants.Constants;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.exception.ResourceNotFoundException;
+import cz.cvut.spipes.modules.constants.Constants;
 import cz.cvut.spipes.modules.textAnalysis.Extraction;
 import cz.cvut.spipes.registry.StreamResource;
 import cz.cvut.spipes.registry.StreamResourceRegistry;
@@ -20,7 +19,9 @@ import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ExtractTermOccurrencesModule extends AnnotatedAbstractModule {
 
@@ -29,16 +30,15 @@ public class ExtractTermOccurrencesModule extends AnnotatedAbstractModule {
     private static final String TYPE_URI = KBSS_MODULE.uri + "extract-term-occurrences";
     private static final String TYPE_PREFIX = TYPE_URI + "/";
 
-    private final Property P_DATE_PREFIX = getSpecificParameter("data-prefix");
-    private final Property P_SOURCE_RESOURCE_URI = getSpecificParameter("source-resource-uri");
-
-    //sml:replace
+    @Parameter(urlPrefix = SML.uri, name = "replace")
     private boolean isReplace;
 
-    //:data-prefix
+    @Parameter(urlPrefix = TYPE_PREFIX, name = "data-prefix")
     private String dataPrefix;
 
-    //:source-resource-uri
+    @Parameter(urlPrefix = TYPE_PREFIX, name = "source-resource-uri")
+    private String streamResourceUri;
+
     private StreamResource sourceResource;
 
     Extraction extraction = new Extraction();
@@ -47,7 +47,7 @@ public class ExtractTermOccurrencesModule extends AnnotatedAbstractModule {
     protected ExecutionContext executeSelf() {
         Model inputRDF = this.getExecutionContext().getDefaultModel();
 
-        ResIterator rows = inputRDF.listResourcesWithProperty(RDF.type, CSVW.RowUri);
+        ResIterator rows = inputRDF.listResourcesWithProperty(RDF.type, Constants.CSVW_ROW_URI);
         Map<String, List<Element>> annotatedElements = new HashMap<>();
 
         extraction.addPrefix("ddo","http://onto.fel.cvut.cz/ontologies/application/termit/pojem/");
@@ -100,9 +100,8 @@ public class ExtractTermOccurrencesModule extends AnnotatedAbstractModule {
 
     @Override
     public void loadConfiguration() {
-        isReplace = getPropertyValue(SML.replace, false);
-        sourceResource = getResourceByUri(getEffectiveValue(P_SOURCE_RESOURCE_URI).asLiteral().toString());
-        dataPrefix = getEffectiveValue(P_DATE_PREFIX).asLiteral().toString();
+        super.loadConfiguration();
+        sourceResource = getResourceByUri(streamResourceUri);
     }
 
     @NotNull

@@ -1,6 +1,6 @@
 package cz.cvut.spipes.modules.textAnalysis;
 
-import cz.cvut.spipes.constants.Constants;
+import cz.cvut.spipes.modules.constants.Constants;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 

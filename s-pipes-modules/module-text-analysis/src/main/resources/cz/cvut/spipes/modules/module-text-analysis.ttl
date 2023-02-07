@@ -1,0 +1,9 @@
+@prefix kbss-module: <http://onto.fel.cvut.cz/ontologies/lib/module/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+kbss-module:module-text-analysis-ontology
+    rdf:type owl:Ontology ;
+    owl:imports kbss-module:module-text-analysis-generated-ontology ;
+    owl:versionInfo "Created via Maven Archetype" ;
+.

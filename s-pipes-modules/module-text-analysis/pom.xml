@@ -1,0 +1,85 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>s-pipes-modules</artifactId>
+        <groupId>cz.cvut.kbss</groupId>
+        <version>0.4.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>cz.cvut.spipes.modules</groupId>
+    <artifactId>s-pipes-modules-text-analysis</artifactId>
+    <version>${project.parent.version}</version>
+    <packaging>jar</packaging>
+
+    <name>SPipes Generated Module - module-text-analysis</name>
+
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>cz.cvut.kbss</groupId>
+            <artifactId>s-pipes-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.9.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.supercsv</groupId>
+            <artifactId>super-csv</artifactId>
+            <version>2.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>cz.cvut.kbss.jopa</groupId>
+            <artifactId>ontodriver-jena</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.15.3</version>
+        </dependency>
+        <dependency>
+            <groupId>cz.cvut.kbss</groupId>
+            <artifactId>s-pipes-test</artifactId>
+            <version>${project.parent.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>cz.cvut.kbss</groupId>
+                <artifactId>s-pipes-module-creator-maven-plugin</artifactId>
+                <version>${project.parent.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>process-annotations</goal>
+                        </goals>
+                        <configuration>
+                            <moduleClassName>ExtractTermOccurrencesModule</moduleClassName>
+                            <ontologyFilename>module-text-analysis-generated.ttl</ontologyFilename>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

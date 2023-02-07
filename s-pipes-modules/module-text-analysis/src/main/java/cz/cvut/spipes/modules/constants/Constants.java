@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see
  * <https://www.gnu.org/licenses/>.
  */
-package cz.cvut.spipes.constants;
+package cz.cvut.spipes.modules.constants;
 
 /**
  * Application-wide constants.
@@ -73,5 +73,6 @@ public class Constants {
     public static final String REFERENCES_TEXT = "references-text";
     public static final String ANNOTATION_IN_TEXT_START = "annotation-in-text-start";
     public static final String ANNOTATION_IN_TEXT_END = "annotation-in-text-end";
+    public static final String CSVW_ROW_URI = "http://www.w3.org/ns/csvw#Row";
 
 }

@@ -3,44 +3,47 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.jena.rdf.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.supercsv.io.CsvListWriter;
+import org.supercsv.prefs.CsvPreference;
 
-import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static java.lang.Integer.*;
 
-public class RDF2CSVModule extends AbstractModule {
+public class RDF2CSVModule extends AnnotatedAbstractModule {
 
     public static final String TYPE_URI = KBSS_MODULE.uri + "RDF2CSV";
+    public static final String TYPE_PREFIX = TYPE_URI + "/";
+
     private static final Logger LOG = LoggerFactory.getLogger(RDF2CSVModule.class);
 
-    private final Property P_DATE_PREFIX = getSpecificParameter("data-prefix");
-    private final Property P_FILE_OUTPUT_PATH = getSpecificParameter("file-output-path");
-
-    //:data-prefix
+    @Parameter(urlPrefix = TYPE_PREFIX, name = "data-prefix")
     private String dataPrefix;
 
-    //:file-output-path
+    @Parameter(urlPrefix = TYPE_PREFIX, name = "file-output-path")
     private String fileOutputPath;
 
     @Override
     ExecutionContext executeSelf(){
         Model inputRDF = this.getExecutionContext().getDefaultModel();
 
-        try(BufferedWriter simpleWriter = new BufferedWriter(new FileWriter(fileOutputPath, false))){
-
-            writeStringsIntoRow(simpleWriter, "DocumentId","DocumentLineNumber", "WorkOrderId","TaskCardId",
-                    "ComponentURI","ComponentLabel","ComponentScore","MultipleComponents");
-            writeStringsIntoRow(simpleWriter
+        try(CsvListWriter simpleWriter = new CsvListWriter
+                (new FileWriter(fileOutputPath, false),
+                        CsvPreference.STANDARD_PREFERENCE)
+        ){
+            List<String> header = Arrays.asList( "DocumentId","DocumentLineNumber", "WorkOrderId","TaskCardId",
+                    "ComponentURI","ComponentLabel","ComponentScore","MultipleComponents"
                     ,"FailureURI","FailureLabel","FailureScore","MultipleFailures",
                     "AggregateScore","IsConfirmed" ,"OriginalText","AnnotatedText");
-            simpleWriter.append("\n");
+            simpleWriter.write(header);
 
             List<Resource> rows = inputRDF
                     .listStatements()
@@ -78,8 +81,7 @@ public class RDF2CSVModule extends AbstractModule {
                 StmtIterator multipleComps = res.listProperties(inputRDF.getProperty(dataPrefix + "MultipleComponents"));
                 StmtIterator multipleFailures = res.listProperties(inputRDF.getProperty(dataPrefix + "MultipleFailures"));
 
-
-                writeStringsIntoRow(simpleWriter,
+                List<String> row = Arrays.asList(
                         getStringValue(docId),
                         getStringValue(lineNumber),
                         getStringValue(woID),
@@ -87,9 +89,7 @@ public class RDF2CSVModule extends AbstractModule {
                         getStringValue(compUri),
                         getLiteralValue(compLabel),
                         getLiteralValue(compScore),
-                        getMultipleObjectValues(multipleComps));
-
-                writeStringsIntoRow(simpleWriter,
+                        getMultipleObjectValues(multipleComps),
                         getStringValue(failureUri),
                         getLiteralValue(failureLabel),
                         getLiteralValue(failureScore),
@@ -97,9 +97,10 @@ public class RDF2CSVModule extends AbstractModule {
                         getLiteralValue(aggregateScore),
                         getStringValue(isConfirmed),
                         getStringValue(originalText),
-                        getStringValue(annotatedText));
+                        StringEscapeUtils.unescapeJava(getStringValue(annotatedText))
+                );
 
-                simpleWriter.append("\n");
+                simpleWriter.write(row);
             }
         }catch (IOException e){
             e.printStackTrace();
@@ -119,32 +120,9 @@ public class RDF2CSVModule extends AbstractModule {
         return sb.toString();
     }
 
-    private void writeStringsIntoRow(BufferedWriter simpleWriter, String value1, String value2, String value3,
-                                     String value4, String value5, String value6, String value7, String value8
-    ) throws IOException {
-        simpleWriter.append(value1).append(",");
-        simpleWriter.append(value2).append(",");
-        simpleWriter.append(value3).append(",");
-        simpleWriter.append(value4).append(",");
-        simpleWriter.append(value5).append(",");
-        simpleWriter.append(value6).append(",");
-        simpleWriter.append(value7).append(",");
-        simpleWriter.append(value8).append(",");
-    }
-
     @Override
     public String getTypeURI() {
         return TYPE_URI;
-    }
-
-    @Override
-    public void loadConfiguration() {
-        dataPrefix = getEffectiveValue(P_DATE_PREFIX).asLiteral().toString();
-        fileOutputPath = getEffectiveValue(P_FILE_OUTPUT_PATH).asLiteral().toString();
-    }
-
-    private static Property getSpecificParameter(String localPropertyName) {
-        return ResourceFactory.createProperty(TYPE_URI + "/" + localPropertyName);
     }
 
     private String getLiteralValue(Statement st){
