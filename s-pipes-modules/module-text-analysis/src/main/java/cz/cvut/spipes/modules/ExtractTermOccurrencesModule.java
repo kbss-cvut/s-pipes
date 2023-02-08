@@ -4,15 +4,13 @@ import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
-import cz.cvut.spipes.exception.ResourceNotFoundException;
 import cz.cvut.spipes.modules.constants.Constants;
 import cz.cvut.spipes.modules.textAnalysis.Extraction;
-import cz.cvut.spipes.registry.StreamResource;
-import cz.cvut.spipes.registry.StreamResourceRegistry;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.jena.rdf.model.*;
+import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.RDFFormat;
 import org.apache.jena.vocabulary.RDF;
-import org.jetbrains.annotations.NotNull;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -35,11 +33,6 @@ public class ExtractTermOccurrencesModule extends AnnotatedAbstractModule {
 
     @Parameter(urlPrefix = TYPE_PREFIX, name = "data-prefix")
     private String dataPrefix;
-
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "source-resource-uri")
-    private String streamResourceUri;
-
-    private StreamResource sourceResource;
 
     Extraction extraction = new Extraction();
 
@@ -66,7 +59,7 @@ public class ExtractTermOccurrencesModule extends AnnotatedAbstractModule {
 
             if(e.hasAttr(Constants.SCORE)){
                 res.addLiteral(
-                        ResourceFactory.createProperty(getDataPrefix() + Constants.SCORE),
+                        ResourceFactory.createProperty(Constants.MA_SKORE),
                         inputRDF.createTypedLiteral(Float.valueOf(e.attr(Constants.SCORE)))
                 );
             }
@@ -79,7 +72,7 @@ public class ExtractTermOccurrencesModule extends AnnotatedAbstractModule {
             addLiteral(res, createProperty(Constants.REFERENCES_ANNOTATION), StringEscapeUtils.unescapeJava(e.toString()));
             addLiteral(res, createProperty(Constants.REFERENCES_TEXT), parentTag);
             addLiteral(res, ResourceFactory.createProperty(Constants.JE_VYSKYT_TERMU), e.text());
-            addLiteral(res, ResourceFactory.createProperty(Constants.MA_STARTOVNi_POZICI), parentTag.indexOf(e.text()));
+            addLiteral(res, ResourceFactory.createProperty(Constants.MA_STARTOVNI_POZICI), parentTag.indexOf(e.text()));
             addLiteral(res, ResourceFactory.createProperty(Constants.MA_KONCOVOU_POZICI), parentTag.indexOf(e.text()) + e.text().length());
         });
         return ExecutionContextFactory.createContext(inputRDF);
@@ -98,23 +91,6 @@ public class ExtractTermOccurrencesModule extends AnnotatedAbstractModule {
         return TYPE_URI;
     }
 
-    @Override
-    public void loadConfiguration() {
-        super.loadConfiguration();
-        sourceResource = getResourceByUri(streamResourceUri);
-    }
-
-    @NotNull
-    private StreamResource getResourceByUri(@NotNull String resourceUri) {
-
-        StreamResource res = StreamResourceRegistry.getInstance().getResourceByUrl(resourceUri);
-
-        if (res == null) {
-            throw new ResourceNotFoundException("Stream resource " + resourceUri + " not found. ");
-        }
-        return res;
-    }
-
     private static Property getSpecificParameter(String localPropertyName) {
         return ResourceFactory.createProperty(TYPE_PREFIX + localPropertyName);
     }
@@ -125,14 +101,6 @@ public class ExtractTermOccurrencesModule extends AnnotatedAbstractModule {
 
     public void setReplace(boolean replace) {
         isReplace = replace;
-    }
-
-    public StreamResource getSourceResource() {
-        return sourceResource;
-    }
-
-    public void setSourceResource(StreamResource sourceResource) {
-        this.sourceResource = sourceResource;
     }
 
     public String getDataPrefix() {

@@ -26,6 +26,7 @@ public class CSVW {
     public static final Property table = property( "table");
     public static final Property url = property( "url");
     public static final Property row = property( "row");
+    public static final Property Row = property( "Row");
     public static final Property propertyUrl = property("propertyUrl");
     public static final Property name = property("name");
     public static final Property title = property("title");

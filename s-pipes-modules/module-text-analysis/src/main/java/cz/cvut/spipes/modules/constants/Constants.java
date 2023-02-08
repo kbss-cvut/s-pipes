@@ -19,10 +19,12 @@ package cz.cvut.spipes.modules.constants;
  */
 public class Constants {
 
-    public static final String VYSKYT_TERMU = "http://onto.fel.cvut.cz/ontologies/application/termit/pojem/v\u00fdskyt-termu";
-    public static final String JE_VYSKYT_TERMU = "http://onto.fel.cvut.cz/ontologies/application/termit/pojem/je-v\u00fdskytem-termu";
-    public static final String MA_KONCOVOU_POZICI = "http://onto.fel.cvut.cz/ontologies/application/termit/pojem/má-koncovou-pozici";
-    public static final String MA_STARTOVNi_POZICI = "http://onto.fel.cvut.cz/ontologies/application/termit/pojem/má-startovní-pozici";
+    public static final String termitUri = "http://onto.fel.cvut.cz/ontologies/application/termit/pojem/";
+    public static final String VYSKYT_TERMU = termitUri + "v\u00fdskyt-termu";
+    public static final String JE_VYSKYT_TERMU = termitUri + "je-v\u00fdskytem-termu";
+    public static final String MA_KONCOVOU_POZICI = termitUri + "má-koncovou-pozici";
+    public static final String MA_STARTOVNI_POZICI = termitUri + "má-startovní-pozici";
+    public static final String MA_SKORE = termitUri + "má-skóre";
 
     private Constants() {
         throw new AssertionError();
