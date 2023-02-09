@@ -1,10 +1,11 @@
 package cz.cvut.spipes.modules;
 
+import cz.cvut.spipes.constants.CSVW;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
-import org.apache.commons.text.StringEscapeUtils;
 import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.supercsv.io.CsvListWriter;
@@ -12,12 +13,18 @@ import org.supercsv.prefs.CsvPreference;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-import static java.lang.Integer.*;
-
+/**
+ * Module for converting RDF (representing table) to CSV
+ * <p>
+ * The module is responsible for converting the input RDF data into a CSV format and saving the output to a file.
+ * The table is constructed from column and row resources defined in TableSchema and saves it as a new CSV file.
+ * </p>
+ */
 public class RDF2CSVModule extends AnnotatedAbstractModule {
 
     public static final String TYPE_URI = KBSS_MODULE.uri + "RDF2CSV";
@@ -25,9 +32,11 @@ public class RDF2CSVModule extends AnnotatedAbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(RDF2CSVModule.class);
 
+    /** The parameter representing the data prefix */
     @Parameter(urlPrefix = TYPE_PREFIX, name = "data-prefix")
     private String dataPrefix;
 
+    /** The parameter representing where the output file will be stored */
     @Parameter(urlPrefix = TYPE_PREFIX, name = "file-output-path")
     private String fileOutputPath;
 
@@ -39,67 +48,58 @@ public class RDF2CSVModule extends AnnotatedAbstractModule {
                 (new FileWriter(fileOutputPath, false),
                         CsvPreference.STANDARD_PREFERENCE)
         ){
-            List<String> header = Arrays.asList( "DocumentId","DocumentLineNumber", "WorkOrderId","TaskCardId",
-                    "ComponentURI","ComponentLabel","ComponentScore","MultipleComponents"
-                    ,"FailureURI","FailureLabel","FailureScore","MultipleFailures",
-                    "AggregateScore","IsConfirmed" ,"OriginalText","AnnotatedText");
+            Resource tableSchema = inputRDF.listSubjects()
+                    .filterKeep(resource -> resource.hasProperty(RDF.type, CSVW.TableSchema))
+                    .next();
+
+            if (tableSchema == null) {
+                LOG.warn("No TableSchema resource found in the input RDF.");
+                return ExecutionContextFactory.createContext(inputRDF);
+            }
+
+            Statement columnsStatement = tableSchema.getProperty(CSVW.columns);
+            if (columnsStatement == null) {
+                LOG.warn("Columns statement not found in the table schema.");
+                return ExecutionContextFactory.createContext(inputRDF);
+            }
+
+            Resource columnsList = columnsStatement.getObject().asResource();
+            RDFList columns = columnsList.as(RDFList.class);
+            if (columns == null || columns.isEmpty()) {
+                LOG.warn("Columns list not found or is empty in the columns statement.");
+                return null;
+            }
+
+            List<String> header = columns.asJavaList().stream()
+                    .map(rdfNode -> {
+                        Resource columnResource = rdfNode.asResource();
+                        Statement nameStatement = columnResource.getProperty(CSVW.name);
+                        if (nameStatement == null) {
+                            LOG.warn("Name property not found for column resource.");
+                            return "";
+                        }
+                        RDFNode titleNode = nameStatement.getObject();
+                        if (titleNode == null) {
+                            LOG.warn("Name node not found in the name statement.");
+                            return "";
+                        }
+                        return titleNode.toString();
+                    })
+                    .collect(Collectors.toList());
+
             simpleWriter.write(header);
 
             List<Resource> rows = inputRDF
                     .listStatements()
                     .filterKeep(st -> st.getObject().toString().equals(dataPrefix + "Row"))
-                    .mapWith(Statement::getSubject).toList();
-
-            rows.sort((o1, o2) -> {
-                int i1 = parseInt(o1
-                        .getProperty(inputRDF.getProperty(dataPrefix + "DocumentLineNumber"))
-                        .getObject()
-                        .toString());
-                int i2 = parseInt(o2
-                        .getProperty(inputRDF.getProperty(dataPrefix + "DocumentLineNumber"))
-                        .getObject()
-                        .toString());
-                return Integer.compare(i1, i2);
-            }) ;
+                    .mapWith(Statement::getSubject)
+                    .toList();
 
             for (Resource res : rows) {
-                Statement docId = res.getProperty(inputRDF.getProperty(dataPrefix + "TODO"));
-                Statement lineNumber = res.getProperty(inputRDF.getProperty(dataPrefix + "DocumentLineNumber"));
-                Statement woID = res.getProperty(inputRDF.getProperty(dataPrefix + "WorkOrderId"));
-                Statement tcID = res.getProperty(inputRDF.getProperty(dataPrefix + "TaskCardId"));
-                Statement compUri = res.getProperty(inputRDF.getProperty(dataPrefix + "ComponentUri"));
-                Statement compLabel = res.getProperty(inputRDF.getProperty(dataPrefix + "ComponentLabel"));
-                Statement compScore = res.getProperty(inputRDF.getProperty(dataPrefix + "ComponentScore"));
-                Statement failureUri = res.getProperty(inputRDF.getProperty(dataPrefix + "FailureUri"));
-                Statement failureLabel = res.getProperty(inputRDF.getProperty(dataPrefix + "FailureLabel"));
-                Statement failureScore = res.getProperty(inputRDF.getProperty(dataPrefix + "FailureScore"));
-                Statement aggregateScore = res.getProperty(inputRDF.getProperty(dataPrefix + "AggregateScore"));
-                Statement isConfirmed = res.getProperty(inputRDF.getProperty(dataPrefix + "IsConfirmed"));
-                Statement originalText = res.getProperty(inputRDF.getProperty(dataPrefix + "OriginalText"));
-                Statement annotatedText = res.getProperty(inputRDF.getProperty(dataPrefix + "AnnotatedText"));
-
-                StmtIterator multipleComps = res.listProperties(inputRDF.getProperty(dataPrefix + "MultipleComponents"));
-                StmtIterator multipleFailures = res.listProperties(inputRDF.getProperty(dataPrefix + "MultipleFailures"));
-
-                List<String> row = Arrays.asList(
-                        getStringValue(docId),
-                        getStringValue(lineNumber),
-                        getStringValue(woID),
-                        getStringValue(tcID),
-                        getStringValue(compUri),
-                        getLiteralValue(compLabel),
-                        getLiteralValue(compScore),
-                        getMultipleObjectValues(multipleComps),
-                        getStringValue(failureUri),
-                        getLiteralValue(failureLabel),
-                        getLiteralValue(failureScore),
-                        getMultipleObjectValues(multipleFailures),
-                        getLiteralValue(aggregateScore),
-                        getStringValue(isConfirmed),
-                        getStringValue(originalText),
-                        StringEscapeUtils.unescapeJava(getStringValue(annotatedText))
-                );
-
+                List<String> row = new ArrayList<>();
+                for (String columnName: header){
+                    row.add(getObjectValueFromStatement(res.getProperty(inputRDF.getProperty(dataPrefix + columnName))));
+                }
                 simpleWriter.write(row);
             }
         }catch (IOException e){
@@ -108,37 +108,18 @@ public class RDF2CSVModule extends AnnotatedAbstractModule {
         return ExecutionContextFactory.createContext(inputRDF);
     }
 
-    private String getMultipleObjectValues(StmtIterator iterator) {
-        StringBuilder sb = new StringBuilder();
-        int i = 0;
-        while (iterator.hasNext()){
-            Statement st = iterator.next();
-            if (i > 0) sb.append("; ");
-            sb.append(getLiteralValue(st));
-            i++;
-        }
-        return sb.toString();
-    }
-
     @Override
     public String getTypeURI() {
         return TYPE_URI;
     }
 
-    private String getLiteralValue(Statement st){
+    private String getObjectValueFromStatement(Statement st){
         if (st == null) return "";
         RDFNode node = st.getObject();
         if(node == null) return "";
-        return Optional.ofNullable(node.asNode().getLiteralValue().toString()).orElse("");
-    }
 
-    private String getStringValue(Statement st) {
-        if (st == null) return "";
-        RDFNode node = st.getObject();
-        if(node == null){
-            return "";
-        }
-        return Optional.ofNullable(node.toString()).orElse("");
+        return node.isLiteral()
+                ? Optional.ofNullable(node.asNode().getLiteralValue().toString()).orElse("")
+                : Optional.ofNullable(node.toString()).orElse("");
     }
-
 }

@@ -21,6 +21,35 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Module for extracting term occurrences from the input
+ * <p>
+ * The module is responsible for extracting term occurrences from input RDF data
+ * and then create corresponding properties in RDF.
+ * </p>
+ *
+ * Example of usage:
+ * <p>
+ * Input:
+ * <pre><code>
+ *  :x  a csvw:row
+ *      :csat-wo-tc "4339272" ;
+ *      :tc-reference "52-610-00-04" ;
+ *      :wo-text "<span about="_:a970-5" property="ddo:je-výskytem-termu" resource="http://example.com/term/missing-part" typeof="ddo:výskyt-termu" score="0.5">finding</span>" ;
+ * </code></pre>
+ * </p>
+ * The expected output:
+ * <pre><code>
+ *  _:a970-5 a ddo:výskyt-termu ;
+ *      ddo:je-výskytem-termu "http://example.com/term/missing-part";
+ *      :references-annotation "<span about="_:a970-5" property="ddo:je-výskytem-termu" resource="http://example.com/term/missing-part" typeof="ddo:výskyt-termu" score="0.5">finding</span>" ;
+ *      :references-text "finding"
+ *      termit:má-startovní-pozici "0"^^integer ;
+ *      termit:má-koncovou-pozici "7"^^integer ;
+ *      termit:má-skóre "0.5"^^integer ;
+ * .
+ * </code></pre>
+ */
 public class ExtractTermOccurrencesModule extends AnnotatedAbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExtractTermOccurrencesModule.class);
@@ -28,9 +57,11 @@ public class ExtractTermOccurrencesModule extends AnnotatedAbstractModule {
     private static final String TYPE_URI = KBSS_MODULE.uri + "extract-term-occurrences";
     private static final String TYPE_PREFIX = TYPE_URI + "/";
 
+    /** Indicates whether the existing RDF should be overwritten. */
     @Parameter(urlPrefix = SML.uri, name = "replace")
     private boolean isReplace;
 
+    /** The parameter representing the data prefix */
     @Parameter(urlPrefix = TYPE_PREFIX, name = "data-prefix")
     private String dataPrefix;
 
@@ -40,15 +71,17 @@ public class ExtractTermOccurrencesModule extends AnnotatedAbstractModule {
     protected ExecutionContext executeSelf() {
         Model inputRDF = this.getExecutionContext().getDefaultModel();
 
-        ResIterator rows = inputRDF.listResourcesWithProperty(RDF.type, Constants.CSVW_ROW_URI);
+        ResIterator rows = inputRDF.listResourcesWithProperty(RDF.type, inputRDF.getResource(Constants.CSVW_ROW_URI));
         Map<String, List<Element>> annotatedElements = new HashMap<>();
 
         extraction.addPrefix("ddo","http://onto.fel.cvut.cz/ontologies/application/termit/pojem/");
 
-        rows.forEach(row -> {
-            String text = row.getRequiredProperty(createProperty("WO_text")).getObject().toString();
-            Document doc = Jsoup.parse(StringEscapeUtils.unescapeJava(text));
-            annotatedElements.putAll(extraction.getTermOccurrences(doc.root()));
+        rows
+            .filterDrop(Resource::isAnon)
+            .forEach(row -> {
+                String text = row.getRequiredProperty(createProperty("WO_text")).getObject().toString();
+                Document doc = Jsoup.parse(StringEscapeUtils.unescapeJava(text));
+                annotatedElements.putAll(extraction.getTermOccurrences(doc.root()));
         });
 
 
