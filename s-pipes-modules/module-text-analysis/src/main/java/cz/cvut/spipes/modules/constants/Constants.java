@@ -73,8 +73,7 @@ public class Constants {
     public static final String WHOLE_TEXT = "whole-text";
     public static final String REFERENCES_ANNOTATION = "references-annotation";
     public static final String REFERENCES_TEXT = "references-text";
-    public static final String ANNOTATION_IN_TEXT_START = "annotation-in-text-start";
-    public static final String ANNOTATION_IN_TEXT_END = "annotation-in-text-end";
     public static final String CSVW_ROW_URI = "http://www.w3.org/ns/csvw#Row";
+    public static final String WO_TEXT = "WO_text";
 
 }

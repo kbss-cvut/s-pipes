@@ -74,12 +74,12 @@ public class ExtractTermOccurrencesModule extends AnnotatedAbstractModule {
         ResIterator rows = inputRDF.listResourcesWithProperty(RDF.type, inputRDF.getResource(Constants.CSVW_ROW_URI));
         Map<String, List<Element>> annotatedElements = new HashMap<>();
 
-        extraction.addPrefix("ddo","http://onto.fel.cvut.cz/ontologies/application/termit/pojem/");
+        extraction.addPrefix("ddo", Constants.termitUri);
 
         rows
             .filterDrop(Resource::isAnon)
             .forEach(row -> {
-                String text = row.getRequiredProperty(createProperty("WO_text")).getObject().toString();
+                String text = row.getRequiredProperty(createProperty(Constants.WO_TEXT)).getObject().toString();
                 Document doc = Jsoup.parse(StringEscapeUtils.unescapeJava(text));
                 annotatedElements.putAll(extraction.getTermOccurrences(doc.root()));
         });
