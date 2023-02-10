@@ -1,6 +1,7 @@
 package cz.cvut.spipes.modules;
 
 import cz.cvut.spipes.constants.CSVW;
+import cz.cvut.spipes.constants.KBSS_CSVW;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
@@ -91,14 +92,15 @@ public class RDF2CSVModule extends AnnotatedAbstractModule {
 
             List<Resource> rows = inputRDF
                     .listStatements()
-                    .filterKeep(st -> st.getObject().toString().equals(dataPrefix + "Row"))
+                    .filterKeep(st -> st.getObject().toString().equals(CSVW.RowUri))
                     .mapWith(Statement::getSubject)
                     .toList();
 
             for (Resource res : rows) {
                 List<String> row = new ArrayList<>();
-                for (String columnName: header){
-                    row.add(getObjectValueFromStatement(res.getProperty(inputRDF.getProperty(dataPrefix + columnName))));
+                for (RDFNode col : columns.asJavaList()) {
+                    Property property = inputRDF.getProperty(col.asResource().getProperty(KBSS_CSVW.property).getObject().toString());
+                    row.add(res.hasProperty(property) ? getObjectValueFromStatement(res.getProperty(property)) : "");
                 }
                 simpleWriter.write(row);
             }
