@@ -15,7 +15,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
-import java.util.LinkedList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -55,7 +54,7 @@ class MultipartFileResourceResolverTest {
 
         MultipartFile[] files = new MultipartFile[]{testFile1, testFile2};
 
-        MultiValueMap<String, String> newParameters = resolver.resolveResources(parameters, files, new LinkedList<>());
+        MultiValueMap<String, String> newParameters = resolver.resolveResources(parameters, files);
 
         assertEquals(parameters.keySet(), newParameters.keySet());
         assertEquals(1, newParameters.get("testKey1").size());
@@ -87,7 +86,7 @@ class MultipartFileResourceResolverTest {
 
         MultipartFile[] files = new MultipartFile[]{testFile1, testFile2};
 
-        MultiValueMap<String, String> newParameters = resolver.resolveResources(parameters, files, new LinkedList<>());
+        MultiValueMap<String, String> newParameters = resolver.resolveResources(parameters, files);
 
         assertEquals(parameters, newParameters);
     }

@@ -1,12 +1,9 @@
 package cz.cvut.spipes.rest;
 
-import cz.cvut.spipes.registry.StreamResource;
-
 public class StreamResourceDTO {
     String id;
     String persistentUri;
     String alternativeUri;
-    StreamResource resource;
 
     public StreamResourceDTO(String id,
                              String persistentUriPrefix,
@@ -26,9 +23,5 @@ public class StreamResourceDTO {
 
     public String getAlternativeUri() {
         return alternativeUri;
-    }
-
-    public void attachStreamResource(StreamResource resource) {
-        this.resource = resource;
     }
 }

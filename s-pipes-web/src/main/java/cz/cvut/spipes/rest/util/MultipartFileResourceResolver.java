@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -35,26 +34,19 @@ public class MultipartFileResourceResolver {
      * are prefixed by symbol "@" followed by name of the file. Referenced file are registered
      * as {@code cz.cvut.spipes.registry.StreamResource} which produces URI that is used to replace the original
      * parameter value.
-     * <p>
+     *
      * Example: "myParam"="@input.csv"
-     * <p>
+     *
      * Within the example, "input.csv" is name of file searched within the {@code files}. It such file is found,
      * it is registered as {@code cz.cvut.spipes.registry.StreamResource} whose generated URL is replaced
      * back to "myParam". Then the parameter is replaced by new value e.g.
      * "myParam"="http://onto.fel.cvut.cz/resources/dea95aca-590e-4e77-8a0c-458814cc82b5
      *
-     * @param parameters         Http query parameters.
-     * @param files              Multipart files referenced by the parameters.
-     * @param newStreamResources List of new stream resources created by this method,
-     *                           empty list should be provided here.
-     *                           // TODO this is parameter should be removed as it is workaround
-     *                           //for issue #XXX
+     * @param parameters Http query parameters.
+     * @param files Multipart files referenced by the parameters.
      * @return New parameters where each found reference is replaced by stream resource url.
      */
-    public MultiValueMap<String, String> resolveResources(
-        MultiValueMap<String, String> parameters,
-        MultipartFile[] files,
-        List<StreamResourceDTO> newStreamResources) {
+    public MultiValueMap<String, String> resolveResources(MultiValueMap<String, String> parameters, MultipartFile[] files) {
         MultiValueMap<String, String> newParameters = new LinkedMultiValueMap<>(parameters);
 
         parameters.entrySet().stream()
@@ -78,7 +70,6 @@ public class MultipartFileResourceResolver {
                     MultipartFile multipartFile = multipartFileOptional.get();
                     try {
                         StreamResourceDTO res = resourceRegisterHelper.registerStreamResource(multipartFile.getContentType(), multipartFile.getInputStream());
-                        newStreamResources.add(res);
                         newParameters.replace(e.getKey(), Collections.singletonList(res.getPersistentUri()));
                     } catch (IOException ex) {
                         LOG.error(ex.getMessage(), ex);

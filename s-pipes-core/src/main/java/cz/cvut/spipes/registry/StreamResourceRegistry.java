@@ -1,10 +1,11 @@
 package cz.cvut.spipes.registry;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.lang.ref.WeakReference;
-import java.util.*;
 
 public class StreamResourceRegistry {
     private static final Logger LOG = LoggerFactory.getLogger(StreamResourceRegistry.class);
@@ -12,7 +13,7 @@ public class StreamResourceRegistry {
     private static StreamResourceRegistry instance;
     private Set<String> resourcePrefixMap = new HashSet<>();
     private static final String PERSISTENT_CONTEXT_PREFIX = "http://onto.fel.cvut.cz/resources/";
-    private Map<String, WeakReference<StreamResource>> id2resourcesMap = new HashMap<>();
+    private Map<String, StreamResource> id2resourcesMap = new HashMap<>();
 
     private StreamResourceRegistry() {
     }
@@ -35,7 +36,7 @@ public class StreamResourceRegistry {
     }
 
     public StreamResource getResourceById(String id) {
-        return id2resourcesMap.get(id).get();
+        return id2resourcesMap.get(id);
     }
 
     public StreamResource getResourceByUrl(String url) {
@@ -48,20 +49,19 @@ public class StreamResourceRegistry {
                 .findAny().map(p -> url.substring(p.length()))
                 .orElse(null);
         LOG.debug("- found {}", id);
-        StreamResource res = id2resourcesMap.get(id).get();
+        StreamResource res = id2resourcesMap.get(id);
         if (res == null) {
             return null;
         }
         return new StringStreamResource(url, res.getContent(), res.getContentType()); //TODO remove
     }
 
-    public StreamResource registerResource(String id, byte[] content, String contentType) {
+    public void registerResource(String id, byte[] content, String contentType) {
         LOG.debug("Registering resource with id {}", id);
         StreamResource res = new StringStreamResource(id, content, contentType);
-        id2resourcesMap.put(id, new WeakReference<>(res));
+        id2resourcesMap.put(id, res);
         if (LOG.isTraceEnabled()) {
             LOG.trace("Resource map content after the registration: {}", id2resourcesMap);
         }
-        return res;
     }
 }
