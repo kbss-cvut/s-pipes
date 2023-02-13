@@ -4,6 +4,7 @@ import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
+import cz.cvut.spipes.modules.constants.CSVW;
 import cz.cvut.spipes.modules.constants.Constants;
 import cz.cvut.spipes.modules.textAnalysis.Extraction;
 import org.apache.commons.text.StringEscapeUtils;
@@ -71,18 +72,18 @@ public class ExtractTermOccurrencesModule extends AnnotatedAbstractModule {
     protected ExecutionContext executeSelf() {
         Model inputRDF = this.getExecutionContext().getDefaultModel();
 
-        ResIterator rows = inputRDF.listResourcesWithProperty(RDF.type, inputRDF.getResource(Constants.CSVW_ROW_URI));
+        ResIterator rows = inputRDF.listResourcesWithProperty(RDF.type, CSVW.Row);
         Map<String, List<Element>> annotatedElements = new HashMap<>();
 
         extraction.addPrefix("ddo", Constants.termitUri);
 
         rows
             .filterDrop(Resource::isAnon)
-            .forEach(row -> {
-                String text = row.getRequiredProperty(createProperty(Constants.WO_TEXT)).getObject().toString();
+            .forEach(row -> row.listProperties().forEach(statement -> {
+                String text = statement.getObject().toString();
                 Document doc = Jsoup.parse(StringEscapeUtils.unescapeJava(text));
                 annotatedElements.putAll(extraction.getTermOccurrences(doc.root()));
-        });
+            }));
 
 
         annotatedElements.forEach((key, el) -> {
