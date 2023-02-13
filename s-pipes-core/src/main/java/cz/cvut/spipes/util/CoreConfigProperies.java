@@ -6,8 +6,12 @@ import org.slf4j.LoggerFactory;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class CoreConfigProperies {
+    public static final String variableAssignmentPrefix = "variable.assignment";
     private static final String CONFIG_FILE = "config-core.properties";
     private static final java.util.Properties prop = new java.util.Properties();
     private static final Logger LOG = LoggerFactory.getLogger(CoreConfigProperies.class);
@@ -36,6 +40,13 @@ public class CoreConfigProperies {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static Map<String,String> getConfigurationVariables(){
+        Map<String, String> map = new HashMap<>((Map) prop);
+        return map.entrySet()
+                .stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> y, HashMap::new));
     }
 
     public static String get(String name) {
