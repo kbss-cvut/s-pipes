@@ -4,13 +4,10 @@ import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
-import cz.cvut.spipes.modules.constants.CSVW;
 import cz.cvut.spipes.modules.constants.Constants;
 import cz.cvut.spipes.modules.textAnalysis.Extraction;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.jena.rdf.model.*;
-import org.apache.jena.riot.RDFDataMgr;
-import org.apache.jena.riot.RDFFormat;
 import org.apache.jena.vocabulary.RDF;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -72,12 +69,12 @@ public class ExtractTermOccurrencesModule extends AnnotatedAbstractModule {
     protected ExecutionContext executeSelf() {
         Model inputRDF = this.getExecutionContext().getDefaultModel();
 
-        ResIterator rows = inputRDF.listResourcesWithProperty(RDF.type, CSVW.Row);
         Map<String, List<Element>> annotatedElements = new HashMap<>();
 
         extraction.addPrefix("ddo", Constants.termitUri);
 
-        rows
+        inputRDF
+            .listSubjects()
             .filterDrop(Resource::isAnon)
             .forEach(row -> row.listProperties().forEach(statement -> {
                 String text = statement.getObject().toString();
