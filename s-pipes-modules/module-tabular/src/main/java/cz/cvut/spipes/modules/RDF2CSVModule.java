@@ -92,7 +92,7 @@ public class RDF2CSVModule extends AnnotatedAbstractModule {
 
             List<Resource> rows = inputRDF
                     .listStatements()
-                    .filterKeep(st -> st.getObject().toString().equals(CSVW.RowUri))
+                    .filterKeep(st -> st.getObject().isResource() && st.getObject().asResource().equals(CSVW.Row))
                     .mapWith(Statement::getSubject)
                     .toList();
 
