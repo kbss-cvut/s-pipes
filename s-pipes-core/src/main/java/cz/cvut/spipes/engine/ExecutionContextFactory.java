@@ -53,7 +53,10 @@ public class ExecutionContextFactory {
     private static QuerySolution transform(final Map<String,String> parameters) {
         final QuerySolutionMap querySolution = new QuerySolutionMap();
 
-        parameters.entrySet().forEach(
+        parameters.entrySet()
+                .stream()
+                .filter(parameter -> parameter.getKey().startsWith(CoreConfigProperies.variableAssignmentPrefix))
+                .forEach(
                 e -> querySolution.add(e.getKey(), ResourceFactory.createPlainLiteral(e.getValue()))
         );
         return querySolution;

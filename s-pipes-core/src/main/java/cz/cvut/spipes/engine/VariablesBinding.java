@@ -1,5 +1,6 @@
 package cz.cvut.spipes.engine;
 
+import cz.cvut.spipes.util.CoreConfigProperies;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.rdf.model.*;
@@ -199,7 +200,8 @@ public class VariablesBinding {
 
     private Map<String, String> getVariablesWithoutConfigurationOnes(){
         return binding.asMap().entrySet()
-                .stream().filter(entry -> !entry.getKey().startsWith("variable.assignment"))
+                .stream()
+                .filter(entry -> !entry.getKey().startsWith(CoreConfigProperies.variableAssignmentPrefix))
                 .collect(Collectors.toMap(Map.Entry::getKey, o -> o.getValue().toString(), (x, y) -> y, HashMap::new));
     }
 }

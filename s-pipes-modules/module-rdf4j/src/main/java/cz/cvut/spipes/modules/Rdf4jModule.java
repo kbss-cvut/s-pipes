@@ -4,6 +4,7 @@ import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.engine.VariablesBinding;
+import cz.cvut.spipes.util.CoreConfigProperies;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.ResourceFactory;
@@ -29,12 +30,12 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Optional;
 
-public class Rdf4jModule extends AbstractModule {
+public class Rdf4jModule extends AnnotatedAbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(Rdf4jModule.class);
 
     private static String TYPE_URI = KBSS_MODULE.getURI()+"deploy";
-    private static String PROPERTY_PREFIX_URI = KBSS_MODULE.getURI()+"rdf4j";
+    private static final String PROPERTY_PREFIX_URI = KBSS_MODULE.uri + "rdf4j";
 
     private static Property getParameter(final String name) {
         return ResourceFactory.createProperty(PROPERTY_PREFIX_URI + "/" + name);
@@ -63,6 +64,12 @@ public class Rdf4jModule extends AbstractModule {
      */
     static final Property P_IS_REPLACE_CONTEXT_IRI = getParameter("p-is-replace");
     private boolean isReplaceContext;
+
+    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-rdf4j-secured-username-variable")
+    private String securedUsername;
+
+    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-rdf4j-secured-password-variable")
+    private String securedPassword;
 
     public String getRdf4jServerURL() {
         return rdf4jServerURL;
@@ -108,12 +115,12 @@ public class Rdf4jModule extends AbstractModule {
         VariablesBinding variablesBinding = getExecutionContext().getVariablesBinding();
 
         String username = Optional
-                .ofNullable(variablesBinding.getNode("variable.assignment.rdf4jUsername"))
+                .ofNullable(variablesBinding.getNode(CoreConfigProperies.variableAssignmentPrefix + "." + securedUsername))
                 .map(RDFNode::toString)
                 .orElse(null);
 
         String password = Optional
-                .ofNullable(variablesBinding.getNode("variable.assignment.rdf4jPassword"))
+                .ofNullable(variablesBinding.getNode(CoreConfigProperies.variableAssignmentPrefix + "." + securedPassword))
                 .map(RDFNode::toString)
                 .orElse(null);
 
@@ -181,6 +188,7 @@ public class Rdf4jModule extends AbstractModule {
 
     @Override
     public void loadConfiguration() {
+        super.loadConfiguration();
         rdf4jServerURL = getEffectiveValue(P_RDF4J_SERVER_URL).asLiteral().getString();
         rdf4jRepositoryName = getEffectiveValue(P_RDF4J_REPOSITORY_NAME).asLiteral().getString();
         if (this.getPropertyValue(P_RDF4J_CONTEXT_IRI) != null) {
