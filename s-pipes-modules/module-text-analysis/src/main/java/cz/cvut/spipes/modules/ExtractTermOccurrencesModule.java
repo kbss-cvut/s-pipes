@@ -39,7 +39,7 @@ import java.util.Map;
  * The expected output:
  * <pre><code>
  *  _:a970-5 a termit:výskyt-termu ;
- *      ddo:je-výskytem-termu "http://example.com/term/missing-part";
+ *      termit:je-výskytem-termu "http://example.com/term/missing-part";
  *      :references-annotation "<span about="_:a970-5" property="ddo:je-výskytem-termu" resource="http://example.com/term/missing-part" typeof="ddo:výskyt-termu" score="0.5">finding</span>" ;
  *      :references-text "finding"
  *      termit:má-startovní-pozici "0"^^integer ;
