@@ -49,7 +49,6 @@ public class RDF2CSVModule extends AnnotatedAbstractModule {
                         CsvPreference.STANDARD_PREFERENCE)
         ){
 
-            RDFDataMgr.write(System.out, inputRDF, RDFFormat.TTL);
             Resource table =  inputRDF.listResourcesWithProperty(RDF.type, CSVW.Table)
                     .next();
             if (table == null) {
