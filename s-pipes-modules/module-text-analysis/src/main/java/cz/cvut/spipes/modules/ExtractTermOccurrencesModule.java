@@ -7,6 +7,7 @@ import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.modules.constants.Constants;
 import cz.cvut.spipes.modules.textAnalysis.Extraction;
 import org.apache.commons.text.StringEscapeUtils;
+import org.apache.jena.datatypes.xsd.impl.XSDBaseStringType;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.RDF;
 import org.jsoup.Jsoup;
@@ -20,10 +21,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Module for extracting term occurrences from the input
+ * Module extracts term occurrences from annotated literals of input RDF.
  * <p>
- * The module is responsible for extracting term occurrences from input RDF data
- * and then create corresponding properties in RDF.
+ * Annotated literals are RDF string literals that are annotated by RDFa
+ * using TermIt terminology to mark occurrences of terms within the text.
  * </p>
  *
  * Example of usage:
@@ -39,9 +40,9 @@ import java.util.Map;
  * The expected output:
  * <pre><code>
  *  _:a970-5 a termit:výskyt-termu ;
- *      termit:je-výskytem-termu "http://example.com/term/missing-part";
+ *      termit:je-výskytem-termu <http://example.com/term/missing-part>;
  *      :references-annotation "<span about="_:a970-5" property="ddo:je-výskytem-termu" resource="http://example.com/term/missing-part" typeof="ddo:výskyt-termu" score="0.5">finding</span>" ;
- *      :references-text "finding"
+ *      termit:má-přesný-text-quote "finding"
  *      termit:má-startovní-pozici "0"^^integer ;
  *      termit:má-koncovou-pozici "7"^^integer ;
  *      termit:má-skóre "0.5"^^integer ;
@@ -59,10 +60,6 @@ public class ExtractTermOccurrencesModule extends AnnotatedAbstractModule {
     @Parameter(urlPrefix = SML.uri, name = "replace")
     private boolean isReplace;
 
-    /** The parameter representing the data prefix */
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "data-prefix")
-    private String dataPrefix;
-
     Extraction extraction = new Extraction();
 
     @Override
@@ -73,15 +70,15 @@ public class ExtractTermOccurrencesModule extends AnnotatedAbstractModule {
 
         extraction.addPrefix("ddo", Constants.termitUri);
 
-        inputRDF
-            .listSubjects()
-            .filterDrop(Resource::isAnon)
-            .forEach(row -> row.listProperties().forEach(statement -> {
-                String text = statement.getObject().toString();
-                Document doc = Jsoup.parse(StringEscapeUtils.unescapeJava(text));
-                annotatedElements.putAll(extraction.getTermOccurrences(doc.root()));
-            }));
-
+        inputRDF.listObjects().
+                filterKeep(o -> o.isLiteral() && o.asLiteral().getDatatype() instanceof XSDBaseStringType)
+                .forEach(
+                        str -> {
+                            String text = str.asLiteral().getString();
+                            Document doc = Jsoup.parse(StringEscapeUtils.unescapeJava(text));
+                            annotatedElements.putAll(extraction.getTermOccurrences(doc.root()));
+                        }
+                );
 
         annotatedElements.forEach((key, el) -> {
             Element e = el.get(0);
@@ -98,11 +95,10 @@ public class ExtractTermOccurrencesModule extends AnnotatedAbstractModule {
             assert e.parentNode() != null;
             String parentTag = ((Element) e.parentNode()).text();
 
-            addLiteral(res, createProperty(Constants.RDFa.RESOURCE), fullIri(e.attr(Constants.RDFa.RESOURCE)));
-            addLiteral(res, createProperty(Constants.WHOLE_TEXT), StringEscapeUtils.unescapeJava(((Element) e.parentNode()).html()));
-            addLiteral(res, createProperty(Constants.REFERENCES_ANNOTATION), StringEscapeUtils.unescapeJava(e.toString()));
-            addLiteral(res, createProperty(Constants.REFERENCES_TEXT), parentTag);
-            addLiteral(res, ResourceFactory.createProperty(Constants.JE_VYSKYT_TERMU), e.text());
+            res.addProperty(ResourceFactory.createProperty(Constants.JE_VYSKYT_TERMU), ResourceFactory.createResource(fullIri(e.attr(Constants.RDFa.RESOURCE))));
+            addLiteral(res, ResourceFactory.createProperty(Constants.WHOLE_TEXT), StringEscapeUtils.unescapeJava(((Element) e.parentNode()).html()));
+            addLiteral(res, ResourceFactory.createProperty(Constants.REFERENCES_ANNOTATION), StringEscapeUtils.unescapeJava(e.toString()));
+            addLiteral(res, ResourceFactory.createProperty(Constants.MA_PRESNY_TEXT_QUOTE), parentTag);
             addLiteral(res, ResourceFactory.createProperty(Constants.MA_STARTOVNI_POZICI), parentTag.indexOf(e.text()));
             addLiteral(res, ResourceFactory.createProperty(Constants.MA_KONCOVOU_POZICI), parentTag.indexOf(e.text()) + e.text().length());
         });
@@ -113,17 +109,9 @@ public class ExtractTermOccurrencesModule extends AnnotatedAbstractModule {
         resource.addLiteral(property, value);
     }
 
-    private Property createProperty(String uriRef){
-        return ResourceFactory.createProperty(getDataPrefix() + uriRef);
-    }
-
     @Override
     public String getTypeURI() {
         return TYPE_URI;
-    }
-
-    private static Property getSpecificParameter(String localPropertyName) {
-        return ResourceFactory.createProperty(TYPE_PREFIX + localPropertyName);
     }
 
     public boolean isReplace() {
@@ -132,14 +120,6 @@ public class ExtractTermOccurrencesModule extends AnnotatedAbstractModule {
 
     public void setReplace(boolean replace) {
         isReplace = replace;
-    }
-
-    public String getDataPrefix() {
-        return dataPrefix;
-    }
-
-    public void setDataPrefix(String dataPrefix) {
-        this.dataPrefix = dataPrefix;
     }
 
     private String fullIri(String possiblyPrefixed) {

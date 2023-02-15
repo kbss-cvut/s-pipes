@@ -20,11 +20,16 @@ package cz.cvut.spipes.modules.constants;
 public class Constants {
 
     public static final String termitUri = "http://onto.fel.cvut.cz/ontologies/application/termit/pojem/";
-    public static final String VYSKYT_TERMU = termitUri + "v\u00fdskyt-termu";
-    public static final String JE_VYSKYT_TERMU = termitUri + "je-v\u00fdskytem-termu";
+    public static final String VYSKYT_TERMU = termitUri + "výskyt-termu";
+    public static final String JE_VYSKYT_TERMU = termitUri + "je-výskytem-termu";
     public static final String MA_KONCOVOU_POZICI = termitUri + "má-koncovou-pozici";
     public static final String MA_STARTOVNI_POZICI = termitUri + "má-startovní-pozici";
     public static final String MA_SKORE = termitUri + "má-skóre";
+    public static final String WHOLE_TEXT = termitUri + "whole-text";
+    public static final String REFERENCES_ANNOTATION = termitUri + "references-annotation";
+    public static final String MA_PRESNY_TEXT_QUOTE = termitUri + "má-přesný-text-quote";
+
+    public static final String SCORE = "score";
 
     private Constants() {
         throw new AssertionError();
@@ -69,8 +74,4 @@ public class Constants {
         }
     }
 
-    public static final String SCORE = "score";
-    public static final String WHOLE_TEXT = "whole-text";
-    public static final String REFERENCES_ANNOTATION = "references-annotation";
-    public static final String REFERENCES_TEXT = "references-text";
 }
