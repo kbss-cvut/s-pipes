@@ -3,9 +3,8 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
-import cz.cvut.spipes.engine.VariablesBinding;
+import cz.cvut.spipes.util.CoreConfigProperies;
 import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.riot.RDFLanguages;
 import org.eclipse.rdf4j.model.Resource;
@@ -58,6 +57,11 @@ public class Rdf4jModule extends AbstractModule {
     static final Property P_RDF4J_CONTEXT_IRI = getParameter("p-rdf4j-context-iri");
     private String rdf4jContextIRI;
 
+    static final Property P_RDF4J_REPOSITORY_USERNAME = getParameter("p-rdf4j-secured-username-variable");
+    private String rdf4jSecuredUsernameVariable;
+
+    static final Property P_RDF4J_REPOSITORY_PASSWORD = getParameter("p-rdf4j-secured-password-variable");
+    private String rdf4jSecuredPasswordVariable;
     /**
      * Whether the context should be replaced (true) or just enriched (false).
      */
@@ -105,17 +109,8 @@ public class Rdf4jModule extends AbstractModule {
             rdf4jServerURL,
             rdf4jRepositoryName);
 
-        VariablesBinding variablesBinding = getExecutionContext().getVariablesBinding();
-
-        String username = Optional
-                .ofNullable(variablesBinding.getNode("p-username"))
-                .map(RDFNode::toString)
-                .orElse(null);
-
-        String password = Optional
-                .ofNullable(variablesBinding.getNode("p-password"))
-                .map(RDFNode::toString)
-                .orElse(null);
+        String username = CoreConfigProperies.getConfigurationVariable(rdf4jSecuredUsernameVariable);
+        String password = CoreConfigProperies.getConfigurationVariable(rdf4jSecuredPasswordVariable);
 
         try {
             RepositoryManager repositoryManager = RepositoryProvider.getRepositoryManager(rdf4jServerURL);
@@ -187,6 +182,8 @@ public class Rdf4jModule extends AbstractModule {
             rdf4jContextIRI = getEffectiveValue(P_RDF4J_CONTEXT_IRI).asLiteral().getString();
         }
         isReplaceContext = this.getPropertyValue(P_IS_REPLACE_CONTEXT_IRI, false);
+        rdf4jSecuredUsernameVariable = getEffectiveValue(P_RDF4J_REPOSITORY_USERNAME).asLiteral().getString();
+        rdf4jSecuredPasswordVariable = getEffectiveValue(P_RDF4J_REPOSITORY_PASSWORD).asLiteral().getString();
     }
 
     private boolean isRdf4jContextIRIDefined() {
