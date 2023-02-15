@@ -6,6 +6,8 @@ import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import org.apache.jena.rdf.model.*;
+import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.RDFFormat;
 import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +17,7 @@ import org.supercsv.prefs.CsvPreference;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,10 +36,6 @@ public class RDF2CSVModule extends AnnotatedAbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(RDF2CSVModule.class);
 
-    /** The parameter representing the data prefix */
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "data-prefix")
-    private String dataPrefix;
-
     /** The parameter representing where the output file will be stored */
     @Parameter(urlPrefix = TYPE_PREFIX, name = "file-output-path")
     private String fileOutputPath;
@@ -49,9 +48,16 @@ public class RDF2CSVModule extends AnnotatedAbstractModule {
                 (new FileWriter(fileOutputPath, false),
                         CsvPreference.STANDARD_PREFERENCE)
         ){
-            Resource tableSchema = inputRDF.listSubjects()
-                    .filterKeep(resource -> resource.hasProperty(RDF.type, CSVW.TableSchema))
+
+            RDFDataMgr.write(System.out, inputRDF, RDFFormat.TTL);
+            Resource table =  inputRDF.listResourcesWithProperty(RDF.type, CSVW.Table)
                     .next();
+            if (table == null) {
+                LOG.warn("No Table resource found in the input RDF.");
+                return ExecutionContextFactory.createContext(inputRDF);
+            }
+
+            Resource tableSchema = table.getProperty(CSVW.tableSchema).getObject().asResource();
 
             if (tableSchema == null) {
                 LOG.warn("No TableSchema resource found in the input RDF.");
@@ -90,14 +96,17 @@ public class RDF2CSVModule extends AnnotatedAbstractModule {
 
             simpleWriter.write(header);
 
-            List<Resource> rows = inputRDF
-                    .listStatements()
-                    .filterKeep(st -> st.getObject().isResource() && st.getObject().asResource().equals(CSVW.Row))
-                    .mapWith(Statement::getSubject)
+            List<RDFNode> rowList = table.listProperties(CSVW.row)
+                    .mapWith(Statement::getObject)
                     .toList();
 
-            for (Resource res : rows) {
+            rowList.sort(Comparator.comparingInt(o -> o.asResource().getProperty(CSVW.rowNum).getInt()));
+
+            for (RDFNode node: rowList){
                 List<String> row = new ArrayList<>();
+                Resource rowResource = node.asResource();
+                Resource res = rowResource.getProperty(CSVW.describes).getObject().asResource();
+
                 for (RDFNode col : columns.asJavaList()) {
                     Property property = inputRDF.getProperty(col.asResource().getProperty(KBSS_CSVW.property).getObject().toString());
                     row.add(res.hasProperty(property) ? getObjectValueFromStatement(res.getProperty(property)) : "");

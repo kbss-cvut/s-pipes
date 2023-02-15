@@ -31,9 +31,13 @@ public class CSVW {
     public static final Property title = property("title");
     public static final Property column = property("column");
     public static final Property columns = property("columns");
+    public static final Property tableSchema = property("tableSchema");
+    public static final Property describes = property("describes");
+    public static final Property rowNum = property( "rownum");
 
 
     public static final Resource TableSchema = resource("TableSchema");
+    public static final Resource Table = resource("Table");
 
     public static final String uriTemplate = uri + "uriTemplate";
     public static final String TableSchemaUri = uri + "TableSchema";
