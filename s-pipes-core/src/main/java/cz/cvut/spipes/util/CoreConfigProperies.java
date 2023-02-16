@@ -11,6 +11,7 @@ public class CoreConfigProperies {
     private static final String CONFIG_FILE = "config-core.properties";
     private static final java.util.Properties prop = new java.util.Properties();
     private static final Logger LOG = LoggerFactory.getLogger(CoreConfigProperies.class);
+    private static final String variableAssignmentPrefix = "variable.assignment";
 
     static {
         try {
@@ -59,4 +60,7 @@ public class CoreConfigProperies {
         return System.getenv(name.toUpperCase().replaceAll("\\.", "_"));
     }
 
+    public static String getConfigurationVariable(String name) {
+        return get(variableAssignmentPrefix + "." + name);
+    }
 }
