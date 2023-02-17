@@ -73,7 +73,7 @@ public class RDF2CSVModule extends AnnotatedAbstractModule {
             RDFList columns = columnsList.as(RDFList.class);
             if (columns == null || columns.isEmpty()) {
                 LOG.warn("Columns list not found or is empty in the columns statement.");
-                return null;
+                return ExecutionContextFactory.createContext(inputRDF);
             }
 
             List<String> header = columns.asJavaList().stream()

@@ -14,22 +14,42 @@
  */
 package cz.cvut.spipes.modules.constants;
 
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.ResourceFactory;
+
 /**
  * Application-wide constants.
  */
 public class Constants {
 
+    protected static Resource resource(String local )
+    { return ResourceFactory.createResource( termitUri + local ); }
+
+    protected static Property property(String local )
+    { return ResourceFactory.createProperty( termitUri + local ); }
+
     public static final String termitUri = "http://onto.fel.cvut.cz/ontologies/application/termit/pojem/";
-    public static final String VYSKYT_TERMU = termitUri + "výskyt-termu";
-    public static final String JE_VYSKYT_TERMU = termitUri + "je-výskytem-termu";
-    public static final String MA_KONCOVOU_POZICI = termitUri + "má-koncovou-pozici";
-    public static final String MA_STARTOVNI_POZICI = termitUri + "má-startovní-pozici";
-    public static final String MA_SKORE = termitUri + "má-skóre";
-    public static final String WHOLE_TEXT = termitUri + "whole-text";
-    public static final String REFERENCES_ANNOTATION = termitUri + "references-annotation";
-    public static final String MA_PRESNY_TEXT_QUOTE = termitUri + "má-přesný-text-quote";
 
     public static final String SCORE = "score";
+    public static final String VYSKYT_TERMU = termitUri + "výskyt-termu";
+
+    public static final Resource VYSKYT_TERMU_RESOURCE = resource("výskyt-termu");
+    public static final Resource CIL_VYSKYTU = resource("cíl-výskytu");
+    public static final Resource SELEKTOR_POZICI_V_TEXTU = resource("selektor-pozici-v-textu");
+    public static final Resource SELEKTOR_TEXT_QUOTE = resource("selektor-text-quote");
+
+    public static final Property MA_CIL = property("má-cíl");
+    public static final Property JE_PRIRAZENIM_TERMU = property("je-přiřazením-termu");
+    public static final Property MA_SELEKTOR = property("má-selektor");
+    public static final Property MA_PREFIX_TEXT_QUOTE = property("má-prefix-text-quote");
+    public static final Property MA_PRESNY_TEXT_QUOTE = property("má-přesný-text-quote");
+    public static final Property MA_SUFFIX_TEXT_QUOTE = property("má-suffix-text-quote");
+    public static final Property MA_KONCOVOU_POZICI = property("má-koncovou-pozici");
+    public static final Property MA_STARTOVNI_POZICI = property("má-startovní-pozici");
+    public static final Property ODKAZUJE_NA_ANOTACI = property("odkazuje-na-anotaci");
+    public static final Property ODKAZUJE_NA_ANOTOVANY_TEXT = property("odkazuje-na-anotovaný-text");
+    public static final Property MA_SKORE = property("má-skóre");
 
     private Constants() {
         throw new AssertionError();
