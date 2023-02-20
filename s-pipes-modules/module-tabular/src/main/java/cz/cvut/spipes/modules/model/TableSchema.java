@@ -1,11 +1,9 @@
 package cz.cvut.spipes.modules.model;
 
-import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.annotations.*;
 import cz.cvut.spipes.config.ExecutionConfig;
 import cz.cvut.spipes.constants.CSVW;
 import cz.cvut.spipes.modules.exception.TableSchemaException;
-import cz.cvut.spipes.modules.util.JopaPersistenceUtils;
 import cz.cvut.spipes.modules.util.TabularModuleUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFList;
@@ -86,7 +84,9 @@ public class TableSchema extends AbstractEntity {
 
     public List<Column> sortColumns(List<String> orderList){
 
-        if (orderList.isEmpty()) return new ArrayList<>(columnsSet);
+        if (orderList.isEmpty()) {
+            return new ArrayList<>(columnsSet);
+        }
 
         List<Column> columnList = new ArrayList<>(orderList.size());
 
@@ -101,7 +101,9 @@ public class TableSchema extends AbstractEntity {
 
     public void adjustProperties(boolean hasInputSchema, List<Column> outputColumns, String sourceResourceUri) {
         if (hasInputSchema){
-            if (columnsSet.isEmpty()) logError("Input schema has no columns.");
+            if (columnsSet.isEmpty()) {
+                logError("Input schema has no columns.");
+            }
             if (!columnsSet.isEmpty()){
                 checkColumnsConsistency(outputColumns);
             }
@@ -178,8 +180,7 @@ public class TableSchema extends AbstractEntity {
         }).collect(Collectors.toList());
     }
 
-    public void addColumnsList(EntityManager em, List<Column> outputColumns) {
-        Model persistenceModel = JopaPersistenceUtils.getDataset(em).getDefaultModel();
+    public void addColumnsList(Model persistenceModel, List<Column> outputColumns) {
         RDFNode[] elements = new RDFNode[outputColumns.size()];
 
         for (int i = 0; i < outputColumns.size(); i++) {

@@ -203,9 +203,9 @@ public class TabularModule extends AbstractModule {
             }else if (hasInputSchema) {
                 header = getHeaderFromSchema(inputModel, header, true);
             }
-
-            em = JopaPersistenceUtils.getEntityManager("cz.cvut.spipes.modules.model", outputModel);
-            em.getTransaction().begin();
+            em.getTransaction().commit();
+            em.close();
+            em.getEntityManagerFactory().close();
 
             outputColumns = new ArrayList<>(header.length);
 
@@ -266,24 +266,26 @@ public class TabularModule extends AbstractModule {
                     // 4.6.8.7 - else, if cellValue is not null
                 }
             }
-
+            listReader.close();
         } catch (IOException | MissingArgumentException e) {
             LOG.error("Error while reading file from resource uri {}", sourceResource, e);
         }
 
         tableSchema.adjustProperties(hasInputSchema, outputColumns, sourceResource.getUri());
-        em.persist(tableGroup);
-
         tableSchema.setColumnsSet(new HashSet<>(outputColumns));
+
+        em = JopaPersistenceUtils.getEntityManager("cz.cvut.spipes.modules.model", outputModel);
+        em.getTransaction().begin();
+        em.persist(tableGroup);
         em.merge(tableSchema);
         em.getTransaction().commit();
-        tableSchema.addColumnsList(em, outputColumns);
+        Model persistedModel = JopaPersistenceUtils.getDataset(em).getDefaultModel();
+        em.getEntityManagerFactory().close();
 
+        tableSchema.addColumnsList(persistedModel, outputColumns);
         outputModel.add(rowStatements);
-        outputModel.add(
-                bNodesTransformer.transferJOPAEntitiesToBNodes
-                        (JopaPersistenceUtils.getDataset(em).getDefaultModel()));
-        em.close();
+        outputModel.add(bNodesTransformer.transferJOPAEntitiesToBNodes(persistedModel));
+
         return getExecutionContext(inputModel, outputModel);
     }
 
