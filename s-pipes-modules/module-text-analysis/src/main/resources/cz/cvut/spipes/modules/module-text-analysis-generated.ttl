@@ -1,0 +1,17 @@
+@prefix kbss-module: <http://onto.fel.cvut.cz/ontologies/lib/module/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sm: <http://topbraid.org/sparqlmotion#> .
+@prefix spin: <http://spinrdf.org/spin#> .
+@prefix spl: <http://spinrdf.org/spl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+kbss-module:module-text-analysis-generated-ontology
+    rdf:type owl:Ontology ;
+.
+kbss-module:extract-term-occurrences
+    rdf:type sm:Module ;
+    rdfs:comment "Automatically generated s-pipes module. For more information, see ExtractTermOccurrencesModule.java." ;
+    rdfs:label "s-pipes-modules-text-analysis" ;
+.

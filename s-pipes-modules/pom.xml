@@ -27,6 +27,7 @@
         <module>module-sparql-endpoint</module>
         <module>module-tabular</module>
         <module>module-tarql</module>
+        <module>module-text-analysis</module>
     </modules>
 
     <dependencyManagement>
