@@ -6,6 +6,7 @@ import cz.cvut.kbss.jopa.vocabulary.DC;
 import cz.cvut.kbss.jopa.vocabulary.RDFS;
 import cz.cvut.spipes.Vocabulary;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 

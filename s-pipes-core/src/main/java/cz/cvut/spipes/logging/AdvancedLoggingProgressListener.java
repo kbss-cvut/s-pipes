@@ -8,26 +8,27 @@ import cz.cvut.spipes.Vocabulary;
 import cz.cvut.spipes.constants.SPIPES;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ProgressListener;
-import cz.cvut.spipes.model.SourceDatasetSnapshot;
-import cz.cvut.spipes.model.Thing;
-import cz.cvut.spipes.model.Transformation;
+import cz.cvut.spipes.model.*;
 import cz.cvut.spipes.modules.Module;
 import cz.cvut.spipes.util.DateUtils;
-import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.Rdf4jUtils;
 import cz.cvut.spipes.util.TempFileUtils;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.ResourceFactory;
+import cz.cvut.spipes.util.JenaUtils;
+import org.apache.jena.ontology.OntModel;
+import org.apache.jena.rdf.model.*;
 import org.apache.jena.riot.RDFLanguages;
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.LinkedHashModel;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.util.ModelBuilder;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.repository.RepositoryResult;
 import org.eclipse.rdf4j.repository.config.RepositoryConfigException;
+import org.eclipse.rdf4j.repository.http.HTTPRepository;
 import org.eclipse.rdf4j.repository.sail.SailRepository;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFParseException;
@@ -55,8 +56,8 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
     private static final Map<String, Object> metadataMap = new HashMap<>();
     private static final Map<String, EntityManager> entityManagerMap = new HashMap<>();
     private static final Map<Long, Path> logDir = new HashMap<>();
-    private static final String P_HAS_PART =
-        Vocabulary.ONTOLOGY_IRI_dataset_descriptor + "/has-part";
+    public static final String P_HAS_PART =
+            Vocabulary.ONTOLOGY_IRI_dataset_descriptor + "/has-part";
     private static final String P_HAS_NEXT =
         Vocabulary.ONTOLOGY_IRI_dataset_descriptor + "/has-next";
     private static final String P_HAS_INPUT_BINDDING =
@@ -84,11 +85,10 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
     private EntityManagerFactory dataEmf = null;
 
     public AdvancedLoggingProgressListener(Resource configResource) {
-        rdf4jServerUrl = getStringPropertyValue(configResource, P_RDF4J_SERVER_URL);
-        metadataRepositoryName = getStringPropertyValue(configResource, P_METADATA_REPOSITORY_NAME);
-        dataRepositoryName = getStringPropertyValue(configResource, P_DATA_REPOSITORY_NAME);
-        pipelineExecutionGroupId = getStringPropertyValue(configResource, P_PIPELINE_EXECUTION_GROUP_ID);
-
+        this.rdf4jServerUrl = getStringPropertyValue(configResource, P_RDF4J_SERVER_URL);
+        this.metadataRepositoryName = getStringPropertyValue(configResource, P_METADATA_REPOSITORY_NAME);
+        this.dataRepositoryName = getStringPropertyValue(configResource, P_DATA_REPOSITORY_NAME);
+        this.pipelineExecutionGroupId = getStringPropertyValue(configResource, P_PIPELINE_EXECUTION_GROUP_ID);
         if (
             (metadataRepositoryName != null)
                 && (dataRepositoryName != null)
@@ -179,16 +179,17 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
 
             String pipelineExecutionIri = getPipelineExecutionIri(pipelineExecutionId);
             final EntityDescriptor pd = new EntityDescriptor(URI.create(pipelineExecutionIri));
-            final Transformation pipelineExecution =
-                em.find(Transformation.class, pipelineExecutionIri, pd);
+            final PipelineExecution pipelineExecution =
+                    em.find(PipelineExecution.class, pipelineExecutionIri, pd);
 
+            String pipelineName = metadataMap.get(SPIPES.has_pipeline_name.toString()).toString();
             // new
             Date startDate = DateUtils.toDate(getSingletonPropertyValue(pipelineExecution, SPIPES.has_pipeline_execution_start_date));
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_finish_date, finishDate);
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_finish_date_unix, finishDate.getTime());
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_duration, computeDuration(startDate, finishDate));
-            addProperty(pipelineExecution, SPIPES.has_pipeline_name, metadataMap.get(SPIPES.has_pipeline_name.toString()));
-
+            addProperty(pipelineExecution, SPIPES.has_pipeline_name, pipelineName);
+//            addScript(pipelineExecution, scriptManager.getScriptByContextId(pipelineName));
             em.getTransaction().commit();
             em.close();
         }
@@ -225,7 +226,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
                                        final ExecutionContext inputContext,
                                        final String predecessorModuleExecutionId) {
         // construct model
-        Transformation moduleExecution = new Transformation();
+        ModuleExecution moduleExecution = new ModuleExecution();
         moduleExecution.setId(getModuleExecutionIri(moduleExecutionId));
 
         SourceDatasetSnapshot input = new SourceDatasetSnapshot();
@@ -234,6 +235,10 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
             getModulesSourceDatasetSnapshotUrl(pipelineExecutionId, moduleExecutionId, SnapshotRole.INPUT_GRAPH)
         );
         moduleExecution.setHas_input(input);
+        SourceDatasetSnapshot rdf4jOutput = new SourceDatasetSnapshot();
+        String rdf4jOutputContentIri = getContextIri(moduleExecution, "input");
+        rdf4jOutput.setId(rdf4jOutputContentIri);
+        moduleExecution.setHas_rdf4j_input(rdf4jOutput);
 
         if (predecessorModuleExecutionId != null) {
             addProperty(
@@ -249,7 +254,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
         addProperty(moduleExecution, SPIPES.has_module_execution_start_date, startDate);
         addProperty(moduleExecution, SPIPES.has_module_execution_start_date_unix, startDate.getTime());
         addProperty(moduleExecution, SPIPES.has_input_model_triple_count, inputContext.getDefaultModel().size());
-
+        addContentProperty(moduleExecution, inputContext, "input");
         // put model to map
         executionMap.put(moduleExecution.getId(), moduleExecution);
 
@@ -266,8 +271,8 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
         final EntityManager em = entityManagerMap.get(getPipelineExecutionIri(pipelineExecutionId));
 
         // retrieve model
-        Transformation moduleExecution =
-            (Transformation) executionMap.get(getModuleExecutionIri(moduleExecutionId));
+        ModuleExecution moduleExecution =
+                (ModuleExecution) executionMap.get(getModuleExecutionIri(moduleExecutionId));
 
         // construct model
         Map<String, Set<Object>> properties = new HashMap<>();
@@ -278,6 +283,9 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
             getModulesSourceDatasetSnapshotUrl(pipelineExecutionId, moduleExecutionId, SnapshotRole.OUTPUT_GRAPH)
         );
         moduleExecution.setHas_output(Collections.singleton(output));
+        SourceDatasetSnapshot rdf4jOutput = new SourceDatasetSnapshot();
+        rdf4jOutput.setId(getContextIri(moduleExecution, "output"));
+        moduleExecution.setHas_rdf4j_output(rdf4jOutput);
 
         synchronized (em) {
             if (em.isOpen()) {
@@ -285,9 +293,9 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
                 em.getTransaction().begin();
                 String pipelineExecutionIri = getPipelineExecutionIri(pipelineExecutionId);
                 final EntityDescriptor pd = new EntityDescriptor(URI.create(pipelineExecutionIri));
-                final Transformation pipelineExecution =
-                    em.find(Transformation.class, pipelineExecutionIri, pd);
-
+                final PipelineExecution pipelineExecution =
+                        em.find(PipelineExecution.class, pipelineExecutionIri, pd);
+                moduleExecution.setExecuted_in(pipelineExecution);
                 pipelineExecution.setProperties(properties);
 
                 if (moduleExecution.getProperties() != null && moduleExecution.getProperties().containsKey(
@@ -305,6 +313,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
                 addProperty(moduleExecution, SPIPES.has_module_execution_finish_date_unix, finishDate.getTime());
                 addProperty(moduleExecution, SPIPES.has_module_execution_duration, computeDuration(startDate, finishDate));
                 addProperty(moduleExecution, SPIPES.has_output_model_triple_count, module.getOutputContext().getDefaultModel().size());
+                addContentProperty(moduleExecution, module.getOutputContext(), "output");
                 addProperty(moduleExecution, SPIPES.has_pipeline_name, module.getResource().toString().replaceAll("\\/[^.]*$", ""));
                 if(!metadataMap.containsKey(SPIPES.has_pipeline_name.toString())){
                     metadataMap.put(SPIPES.has_pipeline_name.toString(), module.getResource().toString().replaceAll("\\/[^.]*$", ""));
@@ -323,11 +332,8 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
 
 
                 final Thing input = moduleExecution.getHas_input();
-                em.merge(input, pd);
-                em.merge(output, pd);
-                em.merge(moduleExecution, pd);
-                em.merge(inputBindings, pd);
-
+                final Thing rdf4jInput = moduleExecution.getHas_rdf4j_input();
+                mergeAll(em, pd, input, output, moduleExecution, inputBindings, rdf4jInput, rdf4jOutput);
                 // save metadata
                 Model ibModel = module.getExecutionContext().getVariablesBinding().getModel();
 
@@ -340,6 +346,12 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
 
         // save data
         saveModelToFile(output.getId(), module.getOutputContext().getDefaultModel());
+    }
+
+    private void mergeAll(EntityManager em, EntityDescriptor pd, Thing... thing) {
+        Arrays.stream(thing).forEach(t -> {
+            em.merge(t, pd);
+        });
     }
 
     private void writeRawData(EntityManager em, URI contextUri, Model model) {
@@ -391,11 +403,11 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
     }
 
     private String getPipelineExecutionIri(final long pipelineId) {
-        return Vocabulary.s_c_transformation + "/" + pipelineId;
+        return Vocabulary.s_c_pipeline_execution + "/" + pipelineId;
     }
 
     private String getModuleExecutionIri(final String moduleExecutionId) {
-        return Vocabulary.s_c_transformation + "/" + moduleExecutionId;
+        return Vocabulary.s_c_module_execution + "/" + moduleExecutionId;
     }
 
     private EntityManagerFactory getMetadataEmf() {
@@ -440,6 +452,78 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
         } else {
             props.put(key, new HashSet<>(Collections.singleton(value)));
         }
+    }
+
+    private void addContentProperty(ModuleExecution moduleExecution, ExecutionContext inputContext, String contentType) {
+        org.eclipse.rdf4j.model.Model rdf4jModel = convertJenaModelToRdf4j(inputContext.getDefaultModel());
+
+        String contextIri = getContextIri(moduleExecution, contentType);
+
+        rdf4jModel = changeContext(rdf4jModel, contextIri);
+        saveWithRepositoryConnection(rdf4jModel);
+    }
+
+    private String getContextIri(ModuleExecution moduleExecution, String contentType) {
+        return String.format(Vocabulary.s_c_module_execution + "/%s/%s",
+                extractIdFromTransformationIri(moduleExecution.getId()), contentType);
+    }
+
+    private void addScript(Transformation pipelineExecution, OntModel scriptJenaModel) {
+        org.eclipse.rdf4j.model.Model rdf4jScriptModel =  convertJenaModelToRdf4j(scriptJenaModel);
+        String contextIri = String.format("http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation/%s/%s",
+                extractIdFromTransformationIri(pipelineExecution.getId()), "script");
+        rdf4jScriptModel = changeContext(rdf4jScriptModel, contextIri);
+        saveWithRepositoryConnection(rdf4jScriptModel);
+    }
+
+    private org.eclipse.rdf4j.model.Model changeContext(org.eclipse.rdf4j.model.Model originalModel, String contextIri){
+        SimpleValueFactory valueFactory = SimpleValueFactory.getInstance();
+        IRI newContext = valueFactory.createIRI(contextIri);
+        org.eclipse.rdf4j.model.Model newModel = new LinkedHashModel();
+        originalModel.forEach(s -> {
+            Statement newStatement = valueFactory.createStatement(s.getSubject(), s.getPredicate(), s.getObject(), newContext);
+            newModel.add(newStatement);
+        });
+        return newModel;
+    }
+
+    private void saveWithRepositoryConnection(org.eclipse.rdf4j.model.Model modelToSave){
+        Repository repository = new HTTPRepository(rdf4jServerUrl, metadataRepositoryName);
+        RepositoryConnection con = repository.getConnection();
+        con.add(modelToSave);
+        con.close();
+    }
+
+    private org.eclipse.rdf4j.model.Model convertJenaModelToRdf4j(Model jenaModel){
+        ModelBuilder modelBuilder = new ModelBuilder();
+        jenaModel.listStatements().forEachRemaining(stmt -> {
+            if (stmt.getSubject().isAnon()) {
+                modelBuilder.namedGraph("_:" + stmt.getSubject().getId().toString())
+                        .add("_:" + stmt.getSubject().getId().toString(), stmt.getPredicate().toString(), convertRDFNode(stmt.getObject()));
+            } else {
+                modelBuilder.namedGraph(stmt.getSubject().toString())
+                        .add(stmt.getSubject().toString(), stmt.getPredicate().toString(), convertRDFNode(stmt.getObject()));
+            }
+        });
+        return modelBuilder.build();
+    }
+
+    private org.eclipse.rdf4j.model.Value convertRDFNode(RDFNode node) {
+        SimpleValueFactory valueFactory = SimpleValueFactory.getInstance();
+        if (node.isResource()) {
+            Resource resource = node.asResource();
+            if (resource.isAnon()) {
+                return valueFactory.createBNode(resource.getId().toString());
+            } else {
+                return valueFactory.createIRI(resource.getURI());
+            }
+        } else {
+            return valueFactory.createLiteral(node.asLiteral().getLexicalForm());
+        }
+    }
+
+    private String extractIdFromTransformationIri(String iri){
+        return iri.substring(iri.lastIndexOf("/") + 1);
     }
 
     private boolean hasProperty(@NotNull Thing thing, @NotNull Property property) {

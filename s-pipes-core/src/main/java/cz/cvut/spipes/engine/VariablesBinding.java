@@ -122,11 +122,11 @@ public class VariablesBinding {
     }
 
 
-    static final String BASE_URI = "http://onto.fel.cvut.cz/ontologies/s-pipes/";
-    static final String QUERY_SOLUTION = BASE_URI + "query_solution";
-    static final String HAS_BINDING = BASE_URI + "has_binding";
-    static final String HAS_BOUND_VARIABLE = BASE_URI + "has_bound_variable";
-    static final String HAS_BOUND_VALUE = BASE_URI + "has_bound_value";
+    public static final String BASE_URI = "http://onto.fel.cvut.cz/ontologies/s-pipes/";
+    public static final String QUERY_SOLUTION = BASE_URI + "query_solution";
+    public static final String HAS_BINDING = BASE_URI + "has_binding";
+    public static final String HAS_BOUND_VARIABLE = BASE_URI + "has_bound_variable";
+    public static final String HAS_BOUND_VALUE = BASE_URI + "has_bound_value";
 
     private static Property p(String property) {
         return ResourceFactory.createProperty(property);
