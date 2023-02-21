@@ -17,7 +17,7 @@
     a    spipes:progress-listener ;
     spipes:has-classname "cz.cvut.spipes.logging.AdvancedLoggingProgressListener" ;
     alpl:p-metadata-repository-name "s-pipes-skosify" ;
-    alpl:p-rdf4j-server-url "http://localhost:8080/rdf4j-server" ;
+    alpl:p-rdf4j-server-url "http://localhost:8081/rdf4j-server" ;
     alpl:p-execution-group-id "s-pipes-skosify-testing" ;
 ] .
 

@@ -1,15 +1,14 @@
 package cz.cvut.spipes.rest;
 
-import cz.cvut.spipes.config.ExecutionConfig;
-import cz.cvut.spipes.engine.*;
-import cz.cvut.spipes.exception.SPipesServiceException;
-import cz.cvut.spipes.manager.SPipesScriptManager;
-import cz.cvut.spipes.modules.Module;
-import cz.cvut.spipes.rest.util.*;
-import cz.cvut.spipes.util.JenaUtils;
-import cz.cvut.spipes.util.RDFMimeType;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.rdf.model.Model;

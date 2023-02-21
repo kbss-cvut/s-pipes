@@ -1,0 +1,134 @@
+@prefix : <http://onto.fel.cvut.cz/ontologies/dataset-descriptor#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://onto.fel.cvut.cz/ontologies/dataset-descriptor> .
+
+<http://onto.fel.cvut.cz/ontologies/s-pipes> rdf:type owl:Ontology .
+
+
+#################################################################
+#
+#    Object Properties
+#
+#################################################################
+
+
+
+<http://onto.fel.cvut.cz/ontologies/s-pipes/has-related-resource> rdf:type owl:ObjectProperty ;
+
+                                                                  rdfs:label "has related resource"^^xsd:string ;
+
+                                                                  rdfs:range <http://onto.fel.cvut.cz/ontologies/s-pipes/related-resource> ;
+
+                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/s-pipes/module-execution> ,
+                                                                              <http://onto.fel.cvut.cz/ontologies/s-pipes/pipeline-execution>  .
+
+
+<http://onto.fel.cvut.cz/ontologies/s-pipes/has-execution-start-date> rdf:type owl:DatatypeProperty ;
+
+                                                                  rdfs:label "has execution start date"^^xsd:string ;
+
+                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/s-pipes/module-execution>,
+                                                                  <http://onto.fel.cvut.cz/ontologies/s-pipes/pipeline-execution> ;
+
+                                                                  rdfs:range xsd:string .
+
+<http://onto.fel.cvut.cz/ontologies/s-pipes/has-execution-finish-date> rdf:type owl:DatatypeProperty ;
+
+                                                                  rdfs:label "has execution finish date"^^xsd:string ;
+
+                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/s-pipes/module-execution>,
+                                                                  <http://onto.fel.cvut.cz/ontologies/s-pipes/pipeline-execution> ;
+
+                                                                  rdfs:range xsd:string .
+
+<http://onto.fel.cvut.cz/ontologies/s-pipes/has-module-id>        rdf:type owl:DatatypeProperty ;
+
+                                                                  rdfs:label "has module id"^^xsd:string ;
+
+                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1> ;
+
+                                                                  rdfs:range xsd:string .
+
+<http://onto.fel.cvut.cz/ontologies/s-pipes/related-resource/value> rdf:type owl:DatatypeProperty ;
+
+                                                                  rdfs:label "has value"^^xsd:string ;
+
+                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/s-pipes/related-resource> ;
+
+                                                                  rdfs:range xsd:string .
+
+<http://onto.fel.cvut.cz/ontologies/s-pipes/name>    rdf:type owl:DatatypeProperty ;
+
+                                                                rdfs:label "name"^^xsd:string ;
+
+                                                                rdfs:domain owl:Thing ;
+
+                                                                rdfs:range xsd:string .
+
+<http://onto.fel.cvut.cz/ontologies/s-pipes/has-module-execution> rdf:type owl:DatatypeProperty ;
+
+                                                                rdfs:label "has module execution"^^xsd:string ;
+
+                                                                rdfs:domain <http://onto.fel.cvut.cz/ontologies/s-pipes/pipeline-execution> ;
+
+                                                                rdfs:range <http://onto.fel.cvut.cz/ontologies/s-pipes/module-execution> .
+
+<http://onto.fel.cvut.cz/ontologies/s-pipes/executed-in> rdf:type owl:DatatypeProperty ;
+
+                                                                rdfs:label "executed in"^^xsd:string ;
+
+                                                                rdfs:domain <http://onto.fel.cvut.cz/ontologies/s-pipes/module-execution> ;
+
+                                                                rdfs:range <http://onto.fel.cvut.cz/ontologies/s-pipes/pipeline-execution> .
+
+<http://onto.fel.cvut.cz/ontologies/s-pipes/has-execution-time> rdf:type owl:DatatypeProperty ;
+
+                                                                rdfs:label "has execution time"^^xsd:string ;
+
+                                                                rdfs:domain <http://onto.fel.cvut.cz/ontologies/s-pipes/module-execution> ;
+
+                                                                rdfs:range xsd:string .
+
+
+#################################################################
+#
+#    Data properties
+#
+#################################################################
+
+<http://onto.fel.cvut.cz/ontologies/s-pipes/module-execution>    rdf:type owl:Class ;
+
+                                                                         rdfs:label ""^^xsd:string ;
+
+                                                                         rdfs:subClassOf owl:Thing .
+
+
+<http://onto.fel.cvut.cz/ontologies/s-pipes/pipeline-execution> rdf:type owl:Class ;
+
+                                                                         rdfs:label ""^^xsd:string ;
+
+                                                                         rdfs:subClassOf owl:Thing .
+
+
+<http://onto.fel.cvut.cz/ontologies/s-pipes/related-resource>     rdf:type owl:Class ;
+
+                                                                  rdfs:label ""^^xsd:string ;
+
+                                                                  rdfs:subClassOf owl:Thing .
+
+
+
+#################################################################
+#
+#    General axioms
+#
+#################################################################
+
+
+
+###  Generated by the OWL API (version 3.4.4) http://owlapi.sourceforge.net
+

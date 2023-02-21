@@ -182,7 +182,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
                 em.find(Transformation.class, pipelineExecutionIri, pd);
 
             // new
-            Date startDate = (Date) getSingletonPropertyValue(pipelineExecution, SPIPES.has_pipeline_execution_start_date);
+            Date startDate = new Date();
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_finish_date, finishDate);
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_finish_date_unix, finishDate.getTime());
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_duration, computeDuration(startDate, finishDate));
