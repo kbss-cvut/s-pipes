@@ -13,7 +13,6 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -106,7 +105,7 @@ public class JenaPipelineUtils {
         return null;
     }
 
-    private static String loadResource(String path) {
+    public static String loadResource(String path) {
         try (InputStream is = JenaPipelineUtils.class.getResourceAsStream(path)) {
             if (is == null) {
                 throw new IllegalArgumentException("Resource with path " + path + " not found.");
