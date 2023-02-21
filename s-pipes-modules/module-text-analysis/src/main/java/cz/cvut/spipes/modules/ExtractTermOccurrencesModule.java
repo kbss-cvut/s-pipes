@@ -3,7 +3,7 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
-import cz.cvut.spipes.modules.constants.Constants;
+import cz.cvut.spipes.modules.constants.Termit;
 import cz.cvut.spipes.modules.textAnalysis.Extraction;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.text.StringEscapeUtils;
@@ -90,7 +90,7 @@ public class ExtractTermOccurrencesModule extends AnnotatedAbstractModule {
 
         Map<String, List<Element>> annotatedElements = new HashMap<>();
 
-        extraction.addPrefix("ddo", Constants.termitUri);
+        extraction.addPrefix("ddo", Termit.uri);
 
         inputRDF.listObjects().
                 filterKeep(o -> o.isLiteral() && o.asLiteral().getDatatype() instanceof XSDBaseStringType)
@@ -109,37 +109,37 @@ public class ExtractTermOccurrencesModule extends AnnotatedAbstractModule {
     private void createTermOccurrenceResources(Model outputModel, Element e) {
         assert e.parentNode() != null;
         String hash = DigestUtils.md5Hex(StringEscapeUtils.unescapeJava(e.toString()));
-        Resource termOccurrence = outputModel.createResource(Constants.VYSKYT_TERMU + "/instance" + hash);
+        Resource termOccurrence = outputModel.createResource(Termit.VYSKYT_TERMU + "/instance" + hash);
         Resource occurrenceTarget = outputModel.createResource();
         Resource positionSelector = outputModel.createResource();
         Resource textSelector = outputModel.createResource();
 
-        termOccurrence.addProperty(RDF.type, Constants.VYSKYT_TERMU_RESOURCE);
-        termOccurrence.addProperty(Constants.JE_PRIRAZENIM_TERMU, outputModel.createResource(fullIri(e.attr(Constants.RDFa.RESOURCE))));
-        termOccurrence.addProperty(Constants.MA_CIL, occurrenceTarget);
-        termOccurrence.addLiteral(Constants.ODKAZUJE_NA_ANOTOVANY_TEXT, StringEscapeUtils.unescapeJava(((Element) e.parentNode()).html()));
-        termOccurrence.addLiteral(Constants.ODKAZUJE_NA_ANOTACI, StringEscapeUtils.unescapeJava(e.toString()));
-        if(e.hasAttr(Constants.SCORE)){
-            termOccurrence.addLiteral(Constants.MA_SKORE, outputModel.createTypedLiteral(Float.valueOf(e.attr(Constants.SCORE))));
+        termOccurrence.addProperty(RDF.type, Termit.VYSKYT_TERMU_RESOURCE);
+        termOccurrence.addProperty(Termit.JE_PRIRAZENIM_TERMU, outputModel.createResource(fullIri(e.attr(Termit.RDFa.RESOURCE))));
+        termOccurrence.addProperty(Termit.MA_CIL, occurrenceTarget);
+        termOccurrence.addLiteral(Termit.ODKAZUJE_NA_ANOTOVANY_TEXT, StringEscapeUtils.unescapeJava(((Element) e.parentNode()).html()));
+        termOccurrence.addLiteral(Termit.ODKAZUJE_NA_ANOTACI, StringEscapeUtils.unescapeJava(e.toString()));
+        if(e.hasAttr(Termit.SCORE)){
+            termOccurrence.addLiteral(Termit.MA_SKORE, outputModel.createTypedLiteral(Float.valueOf(e.attr(Termit.SCORE))));
         }
 
-        occurrenceTarget.addProperty(RDF.type, Constants.CIL_VYSKYTU);
-        occurrenceTarget.addProperty(Constants.MA_SELEKTOR, textSelector);
-        occurrenceTarget.addProperty(Constants.MA_SELEKTOR, positionSelector);
+        occurrenceTarget.addProperty(RDF.type, Termit.CIL_VYSKYTU);
+        occurrenceTarget.addProperty(Termit.MA_SELEKTOR, textSelector);
+        occurrenceTarget.addProperty(Termit.MA_SELEKTOR, positionSelector);
 
-        positionSelector.addProperty(RDF.type, Constants.SELEKTOR_POZICI_V_TEXTU);
-        textSelector.addProperty(RDF.type, Constants.SELEKTOR_TEXT_QUOTE);
+        positionSelector.addProperty(RDF.type, Termit.SELEKTOR_POZICI_V_TEXTU);
+        textSelector.addProperty(RDF.type, Termit.SELEKTOR_TEXT_QUOTE);
 
         String parentTag = ((Element) e.parentNode()).text();
         String textQuote = ((TextNode) e.childNodes().get(0)).text();
         String prefix = parentTag.substring(0, parentTag.indexOf(textQuote));
         String suffix = parentTag.substring(parentTag.indexOf(textQuote) + textQuote.length());
 
-        positionSelector.addLiteral(Constants.MA_STARTOVNI_POZICI, Integer.valueOf(parentTag.indexOf(e.text())));
-        positionSelector.addLiteral(Constants.MA_KONCOVOU_POZICI, Integer.valueOf(parentTag.indexOf(e.text()) + e.text().length()));
-        textSelector.addLiteral(Constants.MA_PRESNY_TEXT_QUOTE, textQuote);
-        textSelector.addLiteral(Constants.MA_PREFIX_TEXT_QUOTE, prefix);
-        textSelector.addLiteral(Constants.MA_SUFFIX_TEXT_QUOTE, suffix);
+        positionSelector.addLiteral(Termit.MA_STARTOVNI_POZICI, Integer.valueOf(parentTag.indexOf(e.text())));
+        positionSelector.addLiteral(Termit.MA_KONCOVOU_POZICI, Integer.valueOf(parentTag.indexOf(e.text()) + e.text().length()));
+        textSelector.addLiteral(Termit.MA_PRESNY_TEXT_QUOTE, textQuote);
+        textSelector.addLiteral(Termit.MA_PREFIX_TEXT_QUOTE, prefix);
+        textSelector.addLiteral(Termit.MA_SUFFIX_TEXT_QUOTE, suffix);
     }
 
     @Override

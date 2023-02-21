@@ -21,19 +21,19 @@ import org.apache.jena.rdf.model.ResourceFactory;
 /**
  * Application-wide constants.
  */
-public class Constants {
+public class Termit {
 
     protected static Resource resource(String local )
-    { return ResourceFactory.createResource( termitUri + local ); }
+    { return ResourceFactory.createResource( getURI() + local ); }
 
     protected static Property property(String local )
-    { return ResourceFactory.createProperty( termitUri + local ); }
+    { return ResourceFactory.createProperty( getURI() + local ); }
 
-    public static final String termitUri = "http://onto.fel.cvut.cz/ontologies/application/termit/pojem/";
-
+    public static final String uri = "http://onto.fel.cvut.cz/ontologies/application/termit/pojem/";
     public static final String SCORE = "score";
-    public static final String VYSKYT_TERMU = termitUri + "výskyt-termu";
 
+    /* Stable TermIt terms */
+    public static final String VYSKYT_TERMU = uri + "výskyt-termu";
     public static final Resource VYSKYT_TERMU_RESOURCE = resource("výskyt-termu");
     public static final Resource CIL_VYSKYTU = resource("cíl-výskytu");
     public static final Resource SELEKTOR_POZICI_V_TEXTU = resource("selektor-pozici-v-textu");
@@ -47,11 +47,17 @@ public class Constants {
     public static final Property MA_SUFFIX_TEXT_QUOTE = property("má-suffix-text-quote");
     public static final Property MA_KONCOVOU_POZICI = property("má-koncovou-pozici");
     public static final Property MA_STARTOVNI_POZICI = property("má-startovní-pozici");
+
+    /* New TermIt terms */
     public static final Property ODKAZUJE_NA_ANOTACI = property("odkazuje-na-anotaci");
     public static final Property ODKAZUJE_NA_ANOTOVANY_TEXT = property("odkazuje-na-anotovaný-text");
     public static final Property MA_SKORE = property("má-skóre");
 
-    private Constants() {
+    public static String getURI() {
+        return uri;
+    }
+
+    private Termit() {
         throw new AssertionError();
     }
     /**

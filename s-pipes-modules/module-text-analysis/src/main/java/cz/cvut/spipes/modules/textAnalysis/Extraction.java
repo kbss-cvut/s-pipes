@@ -1,6 +1,6 @@
 package cz.cvut.spipes.modules.textAnalysis;
 
-import cz.cvut.spipes.modules.constants.Constants;
+import cz.cvut.spipes.modules.constants.Termit;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -13,26 +13,26 @@ public class Extraction {
 
     public Map<String, List<Element>> getTermOccurrences(Element rootElement) {
         Map<String, List<Element>> annotatedElements = new HashMap<>();
-        final Elements elements = rootElement.getElementsByAttribute(Constants.RDFa.ABOUT);
+        final Elements elements = rootElement.getElementsByAttribute(Termit.RDFa.ABOUT);
         for (Element element : elements) {
             if (isNotTermOccurrence(element)) {
                 continue;
             }
-            annotatedElements.computeIfAbsent(element.attr(Constants.RDFa.ABOUT), key -> new ArrayList<>())
+            annotatedElements.computeIfAbsent(element.attr(Termit.RDFa.ABOUT), key -> new ArrayList<>())
                     .add(element);
         }
         return annotatedElements;
     }
 
     private boolean isNotTermOccurrence(Element rdfaElem) {
-        if (!rdfaElem.hasAttr(Constants.RDFa.RESOURCE) && !rdfaElem.hasAttr(Constants.RDFa.CONTENT)) {
+        if (!rdfaElem.hasAttr(Termit.RDFa.RESOURCE) && !rdfaElem.hasAttr(Termit.RDFa.CONTENT)) {
             return true;
         }
-        final String typesString = rdfaElem.attr(Constants.RDFa.TYPE);
+        final String typesString = rdfaElem.attr(Termit.RDFa.TYPE);
         final String[] types = typesString.split(" ");
         for (String type : types) {
             final String fullType = fullIri(type);
-            if (fullType.equals(Constants.VYSKYT_TERMU)) {
+            if (fullType.equals(Termit.VYSKYT_TERMU)) {
                 return false;
             }
         }
