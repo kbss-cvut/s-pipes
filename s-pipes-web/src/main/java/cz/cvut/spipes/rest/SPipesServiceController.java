@@ -5,9 +5,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.QuerySolutionMap;
@@ -22,17 +24,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.URL;
-import java.util.*;
-import java.util.stream.Collectors;
-
+import cz.cvut.spipes.config.ExecutionConfig;
+import cz.cvut.spipes.engine.ExecutionContext;
+import cz.cvut.spipes.engine.ExecutionContextFactory;
+import cz.cvut.spipes.engine.ExecutionEngine;
+import cz.cvut.spipes.engine.ExecutionEngineFactory;
+import cz.cvut.spipes.engine.PipelineFactory;
+import cz.cvut.spipes.engine.VariablesBinding;
+import cz.cvut.spipes.exception.SPipesServiceException;
+import cz.cvut.spipes.manager.SPipesScriptManager;
+import cz.cvut.spipes.modules.Module;
+import cz.cvut.spipes.rest.util.ContextLoaderHelper;
+import cz.cvut.spipes.rest.util.MultipartFileResourceResolver;
+import cz.cvut.spipes.rest.util.ProgressListenerLoader;
+import cz.cvut.spipes.rest.util.ReservedParams;
+import cz.cvut.spipes.rest.util.ResourceRegisterHelper;
+import cz.cvut.spipes.rest.util.ScriptManagerFactory;
+import cz.cvut.spipes.rest.util.ServiceParametersHelper;
+import cz.cvut.spipes.util.JenaUtils;
+import cz.cvut.spipes.util.RDFMimeType;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 @RestController
 @EnableWebMvc
 public class SPipesServiceController {
