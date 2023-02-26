@@ -59,19 +59,16 @@ public class Transformation
     })
     protected ExecutionContextDatasetSource inv_dot_is_created_by;
 
-    @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-module-execution-start-date", fetch = FetchType.EAGER)
+    @OWLDataProperty(iri = Vocabulary.s_p_has_module_execution_start_date, fetch = FetchType.EAGER)
     protected Date start_date;
 
-    @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-module-execution-finish-date", fetch = FetchType.EAGER)
+    @OWLDataProperty(iri = Vocabulary.s_p_has_module_execution_finish_date, fetch = FetchType.EAGER)
     protected Date finish_date;
 
-    @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-pipeline-execution-start-date", fetch = FetchType.EAGER)
+    @OWLDataProperty(iri = Vocabulary.s_p_has_pipeline_execution_start_date, fetch = FetchType.EAGER)
     protected Date has_pipepline_execution_date;
 
-    @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-module-id", fetch = FetchType.EAGER)
-    @ParticipationConstraints({
-            @ParticipationConstraint(owlObjectIRI = "http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1", max = 1)
-    })
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_module_id, fetch = FetchType.EAGER)
     protected String has_module_id;
 
     public void setName(String name) {
