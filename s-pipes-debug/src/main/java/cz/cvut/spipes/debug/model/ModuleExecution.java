@@ -12,10 +12,7 @@ public class ModuleExecution extends ExecutionAbstract {
     @OWLDataProperty(iri = Vocabulary.s_p_has_execution_time)
     protected Long execution_time_ms;
 
-    @OWLObjectProperty(iri = Vocabulary.s_p_has_module_id)
-    @ParticipationConstraints({
-            @ParticipationConstraint(owlObjectIRI = "http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1", max = 1)
-    })
+    @OWLDataProperty(iri = Vocabulary.s_p_has_module_id)
     protected String has_module_id;
 
     @OWLObjectProperty(iri = Vocabulary.s_p_executed_in)

@@ -658,9 +658,45 @@
                                                              rdfs:range xsd:string .
 
 
+###  http://onto.fel.cvut.cz/ontologies/s-pipes/has-module-execution-start-date
 
+<http://onto.fel.cvut.cz/ontologies/s-pipes/has-module-execution-start-date> rdf:type owl:DatatypeProperty ;
 
+                                                                  rdfs:label "has module execution start date"^^xsd:string ;
 
+                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> ;
+
+                                                                  rdfs:range xsd:string .
+
+###  http://onto.fel.cvut.cz/ontologies/s-pipes/has-module-execution-finish-date
+
+<http://onto.fel.cvut.cz/ontologies/s-pipes/has-module-execution-finish-date> rdf:type owl:DatatypeProperty ;
+
+                                                                  rdfs:label "has module execution finish date"^^xsd:string ;
+
+                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> ;
+
+                                                                  rdfs:range xsd:string .
+
+###  http://onto.fel.cvut.cz/ontologies/s-pipes/has-pipeline-execution-start-date
+
+<http://onto.fel.cvut.cz/ontologies/s-pipes/has-pipeline-execution-start-date> rdf:type owl:DatatypeProperty ;
+
+                                                                  rdfs:label "has pipeline execution start date"^^xsd:string ;
+
+                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> ;
+
+                                                                  rdfs:range xsd:string .
+
+###  http://onto.fel.cvut.cz/ontologies/s-pipes/has-module-id
+
+<http://onto.fel.cvut.cz/ontologies/s-pipes/has-module-id> rdf:type owl:DatatypeProperty ;
+
+                                                                  rdfs:label "has module id"^^xsd:string ;
+
+                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> ;
+
+                                                                  rdfs:range xsd:string .
 #################################################################
 #
 #    Classes
