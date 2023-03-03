@@ -45,7 +45,6 @@ class ExecutionEngineImpl implements ExecutionEngine {
     private ExecutionContext _executePipeline(long pipelineExecutionId, Module module, ExecutionContext context, String predecessorId) {
         final String moduleExecutionId = pipelineExecutionId + "-"+module.hashCode() + "-"+context.hashCode();
 
-
         // module has run already
         if (module.getOutputContext() != null) {
             module.addOutputBindings(context.getVariablesBinding());

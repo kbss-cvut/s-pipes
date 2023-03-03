@@ -28,6 +28,10 @@
             <name>Spring Releases</name>
             <url>https://repo.spring.io/libs-release</url>
         </repository>
+            <repository>
+                <id>apache-releases</id>
+                <url>https://repository.apache.org/content/repositories/releases/</url>
+            </repository>
     </repositories>
 
 

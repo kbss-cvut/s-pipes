@@ -44,15 +44,15 @@ import cz.cvut.spipes.engine.VariablesBinding;
 import cz.cvut.spipes.exception.SPipesServiceException;
 import cz.cvut.spipes.manager.SPipesScriptManager;
 import cz.cvut.spipes.modules.Module;
-import cz.cvut.spipes.rest.util.ContextLoaderHelper;
 import cz.cvut.spipes.rest.util.MultipartFileResourceResolver;
 import cz.cvut.spipes.rest.util.ProgressListenerLoader;
 import cz.cvut.spipes.rest.util.ReservedParams;
 import cz.cvut.spipes.rest.util.ResourceRegisterHelper;
-import cz.cvut.spipes.rest.util.ScriptManagerFactory;
 import cz.cvut.spipes.rest.util.ServiceParametersHelper;
+import cz.cvut.spipes.util.ContextLoaderHelper;
 import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.RDFMimeType;
+import cz.cvut.spipes.util.ScriptManagerFactory;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 @RestController

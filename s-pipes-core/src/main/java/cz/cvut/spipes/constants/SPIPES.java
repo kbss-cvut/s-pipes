@@ -39,6 +39,12 @@ public class SPIPES {
     public static final Property has_pipeline_input_binding = property("has-pipeline-input-binding");
     public static final Property has_pipeline_name = property("has-pipeline-name");
 
+    public static final Property has_input_content = property("has-input-content");
+
+    public static final Property has_output_content = property("has-output-content");
+
+    public static final Property has_script = property("has-script");
+
 
     /**
      returns the URI for this schema

@@ -8,11 +8,13 @@ import cz.cvut.spipes.Vocabulary;
 import cz.cvut.spipes.constants.SPIPES;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ProgressListener;
+import cz.cvut.spipes.manager.SPipesScriptManager;
 import cz.cvut.spipes.model.SourceDatasetSnapshot;
 import cz.cvut.spipes.model.Thing;
 import cz.cvut.spipes.model.Transformation;
 import cz.cvut.spipes.modules.Module;
 import cz.cvut.spipes.util.Rdf4jUtils;
+import cz.cvut.spipes.util.ScriptManagerFactory;
 import cz.cvut.spipes.util.TempFileUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
@@ -81,13 +83,14 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
     private String pipelineExecutionGroupId;
     private EntityManagerFactory metadataEmf = null;
     private EntityManagerFactory dataEmf = null;
+    private SPipesScriptManager scriptManager = null;
 
     public AdvancedLoggingProgressListener(Resource configResource) {
-        rdf4jServerUrl = getStringPropertyValue(configResource, P_RDF4J_SERVER_URL);
-        metadataRepositoryName = getStringPropertyValue(configResource, P_METADATA_REPOSITORY_NAME);
-        dataRepositoryName = getStringPropertyValue(configResource, P_DATA_REPOSITORY_NAME);
-        pipelineExecutionGroupId = getStringPropertyValue(configResource, P_PIPELINE_EXECUTION_GROUP_ID);
-
+        this.rdf4jServerUrl = getStringPropertyValue(configResource, P_RDF4J_SERVER_URL);
+        this.metadataRepositoryName = getStringPropertyValue(configResource, P_METADATA_REPOSITORY_NAME);
+        this.dataRepositoryName = getStringPropertyValue(configResource, P_DATA_REPOSITORY_NAME);
+        this.pipelineExecutionGroupId = getStringPropertyValue(configResource, P_PIPELINE_EXECUTION_GROUP_ID);
+        this.scriptManager = ScriptManagerFactory.getSingletonSPipesScriptManager();
         if (
             (metadataRepositoryName != null)
                 && (dataRepositoryName != null)
@@ -133,6 +136,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
         Date startDate = new Date();
         addProperty(pipelineExecution, SPIPES.has_pipeline_execution_start_date, startDate);
         addProperty(pipelineExecution, SPIPES.has_pipeline_execution_start_date_unix, startDate.getTime());
+
         if (pipelineExecutionGroupId != null) {
             addProperty(pipelineExecution, PIPELINE_EXECUTION_GROUP_ID, pipelineExecutionGroupId);
         }
@@ -181,13 +185,14 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
             final Transformation pipelineExecution =
                 em.find(Transformation.class, pipelineExecutionIri, pd);
 
+            String pipelineName = metadataMap.get(SPIPES.has_pipeline_name.toString()).toString();
             // new
             Date startDate = new Date();
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_finish_date, finishDate);
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_finish_date_unix, finishDate.getTime());
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_duration, computeDuration(startDate, finishDate));
-            addProperty(pipelineExecution, SPIPES.has_pipeline_name, metadataMap.get(SPIPES.has_pipeline_name.toString()));
-
+            addProperty(pipelineExecution, SPIPES.has_pipeline_name, pipelineName);
+            addProperty(pipelineExecution, SPIPES.has_script, scriptManager.getScriptStringByContextId(pipelineName));
             em.getTransaction().commit();
             em.close();
         }
@@ -248,7 +253,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
         addProperty(moduleExecution, SPIPES.has_module_execution_start_date, startDate);
         addProperty(moduleExecution, SPIPES.has_module_execution_start_date_unix, startDate.getTime());
         addProperty(moduleExecution, SPIPES.has_input_model_triple_count, inputContext.getDefaultModel().size());
-
+        addContentProperty(moduleExecution, inputContext, SPIPES.has_input_content);
         // put model to map
         executionMap.put(moduleExecution.getId(), moduleExecution);
 
@@ -304,6 +309,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
                 addProperty(moduleExecution, SPIPES.has_module_execution_finish_date_unix, finishDate.getTime());
                 addProperty(moduleExecution, SPIPES.has_module_execution_duration, computeDuration(startDate, finishDate));
                 addProperty(moduleExecution, SPIPES.has_output_model_triple_count, module.getOutputContext().getDefaultModel().size());
+                addContentProperty(moduleExecution, module.getOutputContext(), SPIPES.has_output_content);
                 addProperty(moduleExecution, SPIPES.has_pipeline_name, module.getResource().toString().replaceAll("\\/[^.]*$", ""));
                 if(!metadataMap.containsKey(SPIPES.has_pipeline_name.toString())){
                     metadataMap.put(SPIPES.has_pipeline_name.toString(), module.getResource().toString().replaceAll("\\/[^.]*$", ""));
@@ -440,6 +446,13 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
             props.put(key, new HashSet<>(Collections.singleton(value)));
         }
     }
+
+    private void addContentProperty(Transformation moduleExecution, ExecutionContext inputContext, Property contentType) {
+        StringWriter stringWriter = new StringWriter();
+        inputContext.getDefaultModel().write(stringWriter, FileUtils.langTurtle);
+        addProperty(moduleExecution, contentType, stringWriter.toString());
+    }
+
 
     private boolean hasProperty(@NotNull Thing thing, @NotNull Property property) {
         if (thing.getProperties() == null) {

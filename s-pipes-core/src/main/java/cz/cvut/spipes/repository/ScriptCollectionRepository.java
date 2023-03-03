@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.Resource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,4 +34,6 @@ public interface ScriptCollectionRepository extends Repository {
      * @return
      */
     Map<String, Set<String>> getAlternativeEntityIds();
+
+    OntModel getContextClosure(String context);
 }

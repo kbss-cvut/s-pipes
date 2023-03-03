@@ -4,9 +4,10 @@ import cz.cvut.spipes.constants.SM;
 import cz.cvut.spipes.engine.PipelineFactory;
 import cz.cvut.spipes.manager.OntologyDocumentManager;
 import cz.cvut.spipes.manager.SPipesScriptManager;
-import cz.cvut.spipes.rest.util.ContextLoaderHelper;
-import cz.cvut.spipes.rest.util.ScriptManagerFactory;
+import cz.cvut.spipes.util.ContextLoaderHelper;
 import cz.cvut.spipes.util.RDFMimeType;
+import cz.cvut.spipes.util.ScriptManagerFactory;
+
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
