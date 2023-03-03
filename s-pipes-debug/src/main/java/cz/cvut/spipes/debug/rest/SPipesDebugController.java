@@ -17,6 +17,7 @@ import cz.cvut.spipes.debug.model.ModuleExecution;
 import cz.cvut.spipes.debug.model.PipelineExecution;
 import cz.cvut.spipes.debug.service.DebugService;
 import cz.cvut.spipes.debug.service.RelatedResourceService;
+import cz.cvut.spipes.debug.service.ScriptService;
 
 @EnableWebMvc
 @RestController
@@ -24,13 +25,15 @@ public class SPipesDebugController {
 
     private final DebugService debugService;
 
+    private final ScriptService scriptService;
     private final DtoMapper mapper;
 
     private final RelatedResourceService relatedResourceService;
 
     @Autowired
-    public SPipesDebugController(DebugService debugService, DtoMapper dtoMapper, RelatedResourceService relatedResourceService) {
+    public SPipesDebugController(DebugService debugService, ScriptService scriptService, DtoMapper dtoMapper, RelatedResourceService relatedResourceService) {
         this.debugService = debugService;
+        this.scriptService = scriptService;
         this.mapper = dtoMapper;
         this.relatedResourceService = relatedResourceService;
     }
@@ -52,6 +55,12 @@ public class SPipesDebugController {
     @GetMapping(value = "/executions/{executionId}", produces = {JsonLd.MEDIA_TYPE, MediaType.APPLICATION_JSON_VALUE})
     public PipelineExecution getPipelineExecution(@PathVariable String executionId) {
         return debugService.getPipelineExecutionById(executionId);
+    }
+
+    @GetMapping(value = "/triple-origin/{executionId}")
+    public List<ModuleExecution> test(@PathVariable String executionId, @RequestParam(required = false) String pattern) {
+        List<ModuleExecution> executions = scriptService.findTripleOrigin(executionId, pattern);
+        return null;
     }
 }
 
