@@ -71,6 +71,9 @@ public class Transformation
     @OWLObjectProperty(iri = Vocabulary.s_p_has_module_id, fetch = FetchType.EAGER)
     protected String has_module_id;
 
+    @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-next", fetch = FetchType.EAGER)
+    protected String has_next;
+
     public void setName(String name) {
         this.name = name;
     }
@@ -168,5 +171,13 @@ public class Transformation
 
     public void setHas_module_id(String has_module_id) {
         this.has_module_id = has_module_id;
+    }
+
+    public String getHas_next() {
+        return has_next;
+    }
+
+    public void setHas_next(String has_next) {
+        this.has_next = has_next;
     }
 }
