@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.jena.ontology.OntModel;
+import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -81,8 +82,6 @@ public class SMScriptCollectionRepository implements ScriptCollectionRepository 
     @Override
     public OntModel getContextClosure(@NotNull String context) {
         OntModel model = ontoDocManager.getOntology(context);
-        StringWriter stringWriter = new StringWriter();
-
         model.getNsPrefixMap().forEach((name, url) -> {
             if (!isValidURL(url)) {
                 LOG.warn("Invalid URI prefix: <{}> within <{}> ontology.", url, context);

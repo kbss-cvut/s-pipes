@@ -1,5 +1,52 @@
 package cz.cvut.spipes.logging;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.jena.ontology.OntModel;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.riot.RDFLanguages;
+import org.apache.jena.util.FileUtils;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.LinkedHashModel;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.util.ModelBuilder;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.repository.RepositoryResult;
+import org.eclipse.rdf4j.repository.config.RepositoryConfigException;
+import org.eclipse.rdf4j.repository.http.HTTPRepository;
+import org.eclipse.rdf4j.repository.sail.SailRepository;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFParseException;
+import org.eclipse.rdf4j.rio.turtle.TurtleWriter;
+import org.eclipse.rdf4j.rio.turtle.TurtleWriterFactory;
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import cz.cvut.kbss.jopa.model.JOPAPersistenceProperties;
@@ -16,35 +63,6 @@ import cz.cvut.spipes.modules.Module;
 import cz.cvut.spipes.util.Rdf4jUtils;
 import cz.cvut.spipes.util.ScriptManagerFactory;
 import cz.cvut.spipes.util.TempFileUtils;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.ResourceFactory;
-import org.apache.jena.riot.RDFLanguages;
-import org.apache.jena.util.FileUtils;
-import org.eclipse.rdf4j.model.Statement;
-import org.eclipse.rdf4j.model.ValueFactory;
-import org.eclipse.rdf4j.repository.Repository;
-import org.eclipse.rdf4j.repository.RepositoryConnection;
-import org.eclipse.rdf4j.repository.RepositoryException;
-import org.eclipse.rdf4j.repository.RepositoryResult;
-import org.eclipse.rdf4j.repository.config.RepositoryConfigException;
-import org.eclipse.rdf4j.repository.sail.SailRepository;
-import org.eclipse.rdf4j.rio.RDFFormat;
-import org.eclipse.rdf4j.rio.RDFParseException;
-import org.eclipse.rdf4j.rio.turtle.TurtleWriter;
-import org.eclipse.rdf4j.rio.turtle.TurtleWriterFactory;
-import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
 
 public class AdvancedLoggingProgressListener implements ProgressListener {
     private static final Logger LOG =
@@ -192,7 +210,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_finish_date_unix, finishDate.getTime());
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_duration, computeDuration(startDate, finishDate));
             addProperty(pipelineExecution, SPIPES.has_pipeline_name, pipelineName);
-            addProperty(pipelineExecution, SPIPES.has_script, scriptManager.getScriptStringByContextId(pipelineName));
+            addScript(pipelineExecution, scriptManager.getScriptByContextId(pipelineName));
             em.getTransaction().commit();
             em.close();
         }
@@ -253,7 +271,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
         addProperty(moduleExecution, SPIPES.has_module_execution_start_date, startDate);
         addProperty(moduleExecution, SPIPES.has_module_execution_start_date_unix, startDate.getTime());
         addProperty(moduleExecution, SPIPES.has_input_model_triple_count, inputContext.getDefaultModel().size());
-        addContentProperty(moduleExecution, inputContext, SPIPES.has_input_content);
+        addContentProperty(moduleExecution, inputContext, "input");
         // put model to map
         executionMap.put(moduleExecution.getId(), moduleExecution);
 
@@ -309,7 +327,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
                 addProperty(moduleExecution, SPIPES.has_module_execution_finish_date_unix, finishDate.getTime());
                 addProperty(moduleExecution, SPIPES.has_module_execution_duration, computeDuration(startDate, finishDate));
                 addProperty(moduleExecution, SPIPES.has_output_model_triple_count, module.getOutputContext().getDefaultModel().size());
-                addContentProperty(moduleExecution, module.getOutputContext(), SPIPES.has_output_content);
+                addContentProperty(moduleExecution, module.getOutputContext(), "output");
                 addProperty(moduleExecution, SPIPES.has_pipeline_name, module.getResource().toString().replaceAll("\\/[^.]*$", ""));
                 if(!metadataMap.containsKey(SPIPES.has_pipeline_name.toString())){
                     metadataMap.put(SPIPES.has_pipeline_name.toString(), module.getResource().toString().replaceAll("\\/[^.]*$", ""));
@@ -447,12 +465,73 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
         }
     }
 
-    private void addContentProperty(Transformation moduleExecution, ExecutionContext inputContext, Property contentType) {
-        StringWriter stringWriter = new StringWriter();
-        inputContext.getDefaultModel().write(stringWriter, FileUtils.langTurtle);
-        addProperty(moduleExecution, contentType, stringWriter.toString());
+    private void addContentProperty(Transformation moduleExecution, ExecutionContext inputContext, String contentType) {
+        org.eclipse.rdf4j.model.Model rdf4jModel = convertJenaModelToRdf4j(inputContext.getDefaultModel());
+
+        String contextIri = String.format("http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation/%s/%s",
+                extractIdFromTransformationIri(moduleExecution.getId()), contentType);
+
+        rdf4jModel = changeContext(rdf4jModel, contextIri);
+        saveWithRepositoryConnection(rdf4jModel);
     }
 
+    private void addScript(Transformation pipelineExecution, OntModel scriptJenaModel) {
+        org.eclipse.rdf4j.model.Model rdf4jScriptModel =  convertJenaModelToRdf4j(scriptJenaModel);
+        String contextIri = String.format("http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation/%s/%s",
+                extractIdFromTransformationIri(pipelineExecution.getId()), "script");
+        rdf4jScriptModel = changeContext(rdf4jScriptModel, contextIri);
+        saveWithRepositoryConnection(rdf4jScriptModel);
+    }
+
+    private org.eclipse.rdf4j.model.Model changeContext(org.eclipse.rdf4j.model.Model originalModel, String contextIri){
+        SimpleValueFactory valueFactory = SimpleValueFactory.getInstance();
+        IRI newContext = valueFactory.createIRI(contextIri);
+        org.eclipse.rdf4j.model.Model newModel = new LinkedHashModel();
+        originalModel.forEach(s -> {
+            Statement newStatement = valueFactory.createStatement(s.getSubject(), s.getPredicate(), s.getObject(), newContext);
+            newModel.add(newStatement);
+        });
+        return newModel;
+    }
+
+    private void saveWithRepositoryConnection(org.eclipse.rdf4j.model.Model modelToSave){
+        Repository repository = new HTTPRepository(rdf4jServerUrl, metadataRepositoryName);
+        RepositoryConnection con = repository.getConnection();
+        con.add(modelToSave);
+        con.close();
+    }
+
+    private org.eclipse.rdf4j.model.Model convertJenaModelToRdf4j(Model jenaModel){
+        ModelBuilder modelBuilder = new ModelBuilder();
+        jenaModel.listStatements().forEachRemaining(stmt -> {
+            if (stmt.getSubject().isAnon()) {
+                modelBuilder.namedGraph("_:" + stmt.getSubject().getId().toString())
+                        .add("_:" + stmt.getSubject().getId().toString(), stmt.getPredicate().toString(), convertRDFNode(stmt.getObject()));
+            } else {
+                modelBuilder.namedGraph(stmt.getSubject().toString())
+                        .add(stmt.getSubject().toString(), stmt.getPredicate().toString(), convertRDFNode(stmt.getObject()));
+            }
+        });
+        return modelBuilder.build();
+    }
+
+    private org.eclipse.rdf4j.model.Value convertRDFNode(RDFNode node) {
+        SimpleValueFactory valueFactory = SimpleValueFactory.getInstance();
+        if (node.isResource()) {
+            Resource resource = node.asResource();
+            if (resource.isAnon()) {
+                return valueFactory.createBNode(resource.getId().toString());
+            } else {
+                return valueFactory.createIRI(resource.getURI());
+            }
+        } else {
+            return valueFactory.createLiteral(node.asLiteral().getLexicalForm());
+        }
+    }
+
+    private String extractIdFromTransformationIri(String iri){
+        return iri.substring(iri.lastIndexOf("/") + 1);
+    }
 
     private boolean hasProperty(@NotNull Thing thing, @NotNull Property property) {
         if (thing.getProperties() == null) {
