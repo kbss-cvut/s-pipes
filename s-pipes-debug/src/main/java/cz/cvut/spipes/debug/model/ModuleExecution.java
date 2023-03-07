@@ -21,6 +21,9 @@ public class ModuleExecution extends ExecutionAbstract {
     })
     private String executed_in;
 
+    @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-next")
+    private String has_next;
+
     public Long getExecution_time_ms() {
         return execution_time_ms;
     }
@@ -43,5 +46,13 @@ public class ModuleExecution extends ExecutionAbstract {
 
     public void setExecuted_in(String executed_in) {
         this.executed_in = executed_in;
+    }
+
+    public String getHas_next() {
+        return has_next;
+    }
+
+    public void setHas_next(String has_next) {
+        this.has_next = has_next;
     }
 }

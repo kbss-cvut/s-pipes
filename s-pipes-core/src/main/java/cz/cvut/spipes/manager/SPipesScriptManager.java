@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.StringWriter;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -107,11 +108,8 @@ public class SPipesScriptManager {
         return PipelineFactory.loadModulePipeline(returnModuleRes);
     }
 
-    public String getScriptStringByContextId(String contextId){
-        OntModel ontModel = scriptsRepository.getContextClosure(contextId);
-        StringWriter stringWriter = new StringWriter();
-        ontModel.write(stringWriter, TURTLE);
-        return stringWriter.toString();
+    public OntModel getScriptByContextId(String contextId){
+        return scriptsRepository.getContextClosure(contextId);
     }
 
 
