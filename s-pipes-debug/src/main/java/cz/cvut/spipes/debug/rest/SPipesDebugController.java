@@ -58,9 +58,12 @@ public class SPipesDebugController {
     }
 
     @GetMapping(value = "/triple-origin/{executionId}")
-    public List<ModuleExecution> findTripleOrigin(@PathVariable String executionId, @RequestParam(required = false) String pattern) {
-        List<ModuleExecution> executions = scriptService.findTripleOrigin(executionId, pattern);
-        return null;
+    public List<ModuleExecution> findTripleOrigin(
+            @PathVariable String executionId,
+            @RequestParam(required = false) String subjectPattern,
+            @RequestParam(required = false) String predicatePattern,
+            @RequestParam(required = false) String objectPattern) {
+        return scriptService.findTripleOrigin(executionId, subjectPattern, predicatePattern, objectPattern);
     }
 }
 

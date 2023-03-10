@@ -1,6 +1,6 @@
 package cz.cvut.spipes.debug.persistance.dao;
 
-import java.net.URI;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import cz.cvut.kbss.jopa.exceptions.NoResultException;
 import cz.cvut.kbss.jopa.model.EntityManager;
-import cz.cvut.kbss.jopa.model.descriptors.EntityDescriptor;
+import cz.cvut.spipes.Vocabulary;
 import cz.cvut.spipes.model.Transformation;
 
 @Repository
@@ -35,36 +35,23 @@ public class TransformationDao {
         }
     }
 
-//    protected Transformation findByUsername(String username, EntityManager em) {
-//        try {
-//            return em.createNativeQuery("SELECT DISTINCT ?p WHERE { ?p ?hasUsername ?username .}", Person.class)
-//                    .setParameter("hasUsername", URI.create(Vocabulary.s_p_accountName))
-//                    .setParameter("username", username, Constants.LANGUAGE)
-//                    .setDescriptor(new EntityDescriptor(Constants.PERSONS_CONTEXT))
-//                    .getSingleResult();
-//        } catch (NoResultException e) {
-//            return null;
-//        }
-//    }
-    /*
-            SELECT ?subject ?predicate ?object ?context
-        WHERE {
-        GRAPH ?context {
-            ?subject ?predicate ?object
-            FILTER(REGEX(str(?context), "^http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation/1678036284039000.*output$"))
-            FILTER(?subject = <http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1/aaaa-bbbbb>)
-            FILTER(?predicate = <http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1/is-greeted-by-message>)
-            FILTER(?object = "Hello AAAA bbbbb.")
-     */
-    public List<String> findContexts(String username) {
+    public List<String> findModuleOutputContextsForTriple(String executionId, String subjectPattern, String predicatePattern, String objectPattern) {
         try {
-            return em.createNativeQuery("SELECT ?context WHERE { GRAPH ?context {?subject ?predicate ?object FILTER(REGEX(str(?context), \"^http://onto"
-                            + ".fel.cvut.cz/ontologies/dataset-descriptor/transformation/1678036284039000.*output$\")) FILTER(?subject = <http://onto.fel.cvut"
-                            + ".cz/ontologies/s-pipes/hello-world-example-0.1/aaaa-bbbbb>)  FILTER(?predicate = <http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0"
-                            + ".1/is-greeted-by-message>) FILTER(?object = \"Hello AAAA bbbbb.\")}}", String.class)
+            return em.createNativeQuery("SELECT ?context "
+                            + "WHERE {"
+                            + "  GRAPH ?context {"
+                            + "    ?subject ?predicate ?object"
+                            + "    FILTER(REGEX(str(?context), \"^" + Vocabulary.s_c_transformation + "/" + executionId + ".*output$\"))"
+                            + "    FILTER(REGEX(str(?subject), ?subjectPattern))"
+                            + "    FILTER(REGEX(str(?predicate), ?predicatePattern))"
+                            + "    FILTER(REGEX(str(?object), ?objectPattern))"
+                            + "  }}", String.class)
+                    .setParameter("subjectPattern", subjectPattern)
+                    .setParameter("predicatePattern", predicatePattern)
+                    .setParameter("objectPattern", objectPattern)
                     .getResultList();
         } catch (NoResultException e) {
-            return null;
+            return Collections.emptyList();
         }
     }
 }
