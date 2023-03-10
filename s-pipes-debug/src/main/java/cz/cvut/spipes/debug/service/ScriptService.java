@@ -27,77 +27,13 @@ public class ScriptService {
         scriptManager = ScriptManagerFactory.getSingletonSPipesScriptManager();
     }
 
-    public void a(String id) {
-        Module module = scriptManager.loadFunction(id);
-        int depth = 0;
-    }
-
-    //    private Module recursiveFindTriple(int depth, Module module) {
-    //        if (module.getInputModules().size() > 0) {
-    //            module.getInputModules().forEach(m -> {
-    //                recursiveFindTriple(depth + 1, m);
-    //            });
-    //        }
-    //
-    //    }
-
-    /*
-        SELECT ?subject ?predicate ?object ?context
-        WHERE {
-        GRAPH ?context {
-            ?subject ?predicate ?object
-            FILTER(REGEX(str(?context), "^http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation/1678036284039000.*output$"))
-            FILTER(?subject = <http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1/aaaa-bbbbb>)
-            FILTER(?predicate = <http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1/is-greeted-by-message>)
-            FILTER(?object = "Hello AAAA bbbbb.")
-  }
-}
-
-        SELECT ?s ?p ?o
-        WHERE {
-          GRAPH <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation/1678036284039000/script> {
-            ?s ?p ?o .
-            FILTER (?p = <http://topbraid.org/sparqlmotion#next>)
-          }
-        }
-     */
-    public List<ModuleExecution> findTripleOrigin(String executionId, String pattern) {
-        List<String> context = transformationDao.findContexts("whatever");
-        List<String> iris = context.stream()
+    public List<ModuleExecution> findTripleOrigin(String executionId, String subjectPattern, String predicatePattern, String objectPattern) {
+        List<String> context = transformationDao.findModuleOutputContextsForTriple(executionId, subjectPattern, predicatePattern, objectPattern);
+        List<String> moduleExecutionIris = context.stream()
                 .map(i -> i.replace("/output", ""))
                 .collect(Collectors.toList());
-        List<ModuleExecution> moduleExecutions = debugService.getAllModulesForExecution("1678036284039000", null);
+        List<ModuleExecution> moduleExecutions = debugService.getAllModulesForExecution(executionId, null);
         ExecutionTree executionTree = new ExecutionTree(moduleExecutions);
-        System.out.println(context);
-        return null;
+        return executionTree.findEarliest(moduleExecutionIris);
     }
 }
-
-//        Repository repository = new HTTPRepository("http://localhost:8081/rdf4j-server", "s-pipes-hello-world");
-//        RepositoryConnection con = repository.getConnection();
-//        Model jenaModel = ModelFactory.createDefaultModel();
-//        IRI context = con.getValueFactory().createIRI("http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation/1678036284039000/script");
-//        con.getStatements(null, null, null, context).forEach(statement -> {
-//            Resource subject = ResourceFactory.createResource(statement.getSubject().stringValue());
-//            Property predicate = ResourceFactory.createProperty(statement.getPredicate().stringValue());
-//            RDFNode object = null;
-//
-//            if (statement.getObject() instanceof Literal) {
-//                Literal literal = (Literal) statement.getObject();
-//                object = ResourceFactory.createTypedLiteral(literal.getValue().toString(), literal.getDatatype());
-//            } else {
-//                object = ResourceFactory.createResource(statement.getObject().stringValue());
-//            }
-//
-//            jenaModel.add(subject, predicate, object);
-//        });
-//        con.close();
-//        System.out.println(jenaModel);
-//        Resource resource = jenaModel.getResource("http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation/1678036284039000/script");
-//        Resource module = JenaPipelineUtils.getAllFunctionsWithReturnModules(resource.getModel()).get(resource);
-//        System.out.println(module);
-//1 Get Script Rdf4j Model
-//2 Convert it to jena model
-//3 Get List<Module/Resoruce>, so i can have next modules
-//4 Check if output of the modules contain given triple from big depth
-//5
