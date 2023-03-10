@@ -1,5 +1,6 @@
 package cz.cvut.spipes.debug.tree;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,4 +50,37 @@ public class ExecutionTree {
         this.rootNode = rootNode;
     }
 
+    public List<ModuleExecution> findEarliest(List<String> moduleExecutionIris) {
+        List<ModuleExecution> earliestExecutions = new ArrayList<>();
+        findEarliestRecursive(rootNode, moduleExecutionIris, earliestExecutions);
+        return earliestExecutions;
+    }
+
+    private boolean findEarliestRecursive(ModuleExecutionNode currentNode, List<String> targetIds, List<ModuleExecution> earliestExecutions) {
+        boolean foundTargetId = false;
+
+        if (targetIds.contains(currentNode.getId())) {
+            earliestExecutions.add(currentNode.getExecution());
+            foundTargetId = true;
+        }
+
+        for (ModuleExecutionNode childNode : currentNode.getInputExecutions()) {
+            boolean childFound = findEarliestRecursive(childNode, targetIds, earliestExecutions);
+            foundTargetId = foundTargetId || childFound;
+        }
+        if (foundTargetId && earliestExecutions.contains(currentNode.getExecution())) {
+            earliestExecutions.remove(currentNode.getExecution());
+
+            for (ModuleExecutionNode childNode : currentNode.getInputExecutions()) {
+                if (earliestExecutions.contains(childNode.getExecution())) {
+                    return false;
+                }
+            }
+
+            earliestExecutions.add(currentNode.getExecution());
+            return true;
+        }
+
+        return foundTargetId;
+    }
 }
