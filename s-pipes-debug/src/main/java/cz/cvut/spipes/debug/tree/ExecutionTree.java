@@ -41,15 +41,6 @@ public class ExecutionTree {
         return rootNode;
     }
 
-
-    public ModuleExecutionNode getRootNode() {
-        return rootNode;
-    }
-
-    public void setRootNode(ModuleExecutionNode rootNode) {
-        this.rootNode = rootNode;
-    }
-
     public List<ModuleExecution> findEarliest(List<String> moduleExecutionIris) {
         List<ModuleExecution> earliestExecutions = new ArrayList<>();
         findEarliestRecursive(rootNode, moduleExecutionIris, earliestExecutions);
