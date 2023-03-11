@@ -19,23 +19,17 @@ import cz.cvut.spipes.debug.service.DebugService;
 import cz.cvut.spipes.debug.service.RelatedResourceService;
 import cz.cvut.spipes.debug.service.ScriptService;
 
-@EnableWebMvc
 @RestController
 public class SPipesDebugController {
 
     private final DebugService debugService;
 
     private final ScriptService scriptService;
-    private final DtoMapper mapper;
-
-    private final RelatedResourceService relatedResourceService;
 
     @Autowired
-    public SPipesDebugController(DebugService debugService, ScriptService scriptService, DtoMapper dtoMapper, RelatedResourceService relatedResourceService) {
+    public SPipesDebugController(DebugService debugService, ScriptService scriptService) {
         this.debugService = debugService;
         this.scriptService = scriptService;
-        this.mapper = dtoMapper;
-        this.relatedResourceService = relatedResourceService;
     }
 
     @GetMapping(value = "/executions", produces = {

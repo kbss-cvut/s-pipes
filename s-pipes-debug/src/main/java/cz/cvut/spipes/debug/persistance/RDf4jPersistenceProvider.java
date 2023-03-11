@@ -1,18 +1,19 @@
 /**
  * Copyright (C) 2019 Czech Technical University in Prague
- *
+ * <p>
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any
  * later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details. You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package cz.cvut.spipes.debug.persistance.rdf4j;
+
+package cz.cvut.spipes.debug.persistance;
 
 import javax.annotation.PostConstruct;
 
@@ -35,13 +36,15 @@ import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 public class RDf4jPersistenceProvider {
 
     private static final Logger LOG = LoggerFactory.getLogger(RDf4jPersistenceProvider.class);
-    private static final String URL_PROPERTY = "repositoryUrl";
+    private static final String STORAGE_URL_PROPERTY = "storageUrl";
+    private static final String DEFAULT_REPOSITORY_NAME = "repositoryName";
 
     private final Environment environment;
 
     private final EntityManagerFactory emf;
 
     private Repository repository;
+
     @Autowired
     public RDf4jPersistenceProvider(Environment environment, EntityManagerFactory emf) {
         this.environment = environment;
@@ -55,12 +58,26 @@ public class RDf4jPersistenceProvider {
 
     @PostConstruct
     private void initializeStorage() {
-        final String repoUrl = environment.getRequiredProperty(URL_PROPERTY);
+        final String repoUrl = buildRepoUrl(environment.getRequiredProperty(DEFAULT_REPOSITORY_NAME));
+        initializeStorage(repoUrl);
+
+    }
+
+    public void changeRepository(String repositoryName) {
+        String url = buildRepoUrl(repositoryName);
+        initializeStorage(url);
+    }
+
+    public void initializeStorage(String repositoryUrl) {
         try {
-            this.repository = RepositoryProvider.getRepository(repoUrl);
+            this.repository = RepositoryProvider.getRepository(repositoryUrl);
             assert repository.isInitialized();
         } catch (RepositoryException | RepositoryConfigException e) {
-            LOG.error("Unable to connect to RDF4J repository at " + repoUrl, e);
+            LOG.error("Unable to connect to RDF4J repository at " + repositoryUrl, e);
         }
+    }
+
+    private String buildRepoUrl(String repoName) {
+        return environment.getRequiredProperty(STORAGE_URL_PROPERTY) + "/" + repoName;
     }
 }
