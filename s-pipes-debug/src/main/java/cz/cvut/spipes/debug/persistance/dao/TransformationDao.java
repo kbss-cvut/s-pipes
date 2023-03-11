@@ -13,13 +13,10 @@ import cz.cvut.spipes.Vocabulary;
 import cz.cvut.spipes.model.Transformation;
 
 @Repository
-public class TransformationDao {
+public class TransformationDao extends AbstractDao {
 
-    private final EntityManager em;
-
-    @Autowired
-    public TransformationDao(EntityManager em) {
-        this.em = em;
+    protected TransformationDao(EntityManager em) {
+        super(em);
     }
 
     public List<Transformation> findAll() {
