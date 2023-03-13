@@ -27,17 +27,6 @@ public class DispatcherServletInitializer extends AbstractAnnotationConfigDispat
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         System.out.println("****** Application Context Initialization ******");
-
-//        initSecurityFilter(servletContext);
-        servletContext.addListener(new RequestContextListener());
-        servletContext.getSessionCookieConfig().setName("INBAS_JSESSIONID");
         super.onStartup(servletContext);
     }
-
-//    private void initSecurityFilter(ServletContext servletContext) {
-//        FilterRegistration.Dynamic securityFilter = servletContext.addFilter("springSecurityFilterChain",
-//                DelegatingFilterProxy.class);
-//        final EnumSet<DispatcherType> es = EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD);
-//        securityFilter.addMappingForUrlPatterns(es, true, "/*");
-//    }
 }

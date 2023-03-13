@@ -8,7 +8,7 @@ import cz.cvut.spipes.debug.model.ModuleExecution;
 
 public class ExecutionTree {
 
-    private ModuleExecutionNode rootNode;
+    private final ModuleExecutionNode rootNode;
 
     public ExecutionTree(List<ModuleExecution> executionList) {
         rootNode = buildTree(executionList);
@@ -54,24 +54,20 @@ public class ExecutionTree {
             earliestExecutions.add(currentNode.getExecution());
             foundTargetId = true;
         }
-
         for (ModuleExecutionNode childNode : currentNode.getInputExecutions()) {
             boolean childFound = findEarliestRecursive(childNode, targetIds, earliestExecutions);
             foundTargetId = foundTargetId || childFound;
         }
         if (foundTargetId && earliestExecutions.contains(currentNode.getExecution())) {
             earliestExecutions.remove(currentNode.getExecution());
-
             for (ModuleExecutionNode childNode : currentNode.getInputExecutions()) {
                 if (earliestExecutions.contains(childNode.getExecution())) {
                     return false;
                 }
             }
-
             earliestExecutions.add(currentNode.getExecution());
             return true;
         }
-
         return foundTargetId;
     }
 }

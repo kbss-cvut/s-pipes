@@ -31,9 +31,7 @@ public class WebAppConfig {
         final ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        // Here we register the JSON-LD serialization/deserialization module
         final JsonLdModule module = new JsonLdModule();
-        // Package scan is important for polymorphic deserialization
         module.configure(ConfigParam.SCAN_PACKAGE, "cz.cvut.spipes");
         module.configure(SerializationConstants.FORM, SerializationConstants.FORM_COMPACT_WITH_CONTEXT);
         objectMapper.registerModule(module);
