@@ -1,5 +1,8 @@
 package cz.cvut.spipes.debug.service;
 
+import static java.util.Collections.reverseOrder;
+import static java.util.Comparator.comparing;
+
 import java.time.Duration;
 import java.util.Comparator;
 import java.util.List;
@@ -37,7 +40,7 @@ public class DebugService {
 
         List<PipelineExecution> pipelineExecutions = transformations.stream()
                 .filter(transformation -> matchesExecutionPattern(transformation.getId()))
-                .sorted(Comparator.comparing(Transformation::getHas_pipepline_execution_date, Comparator.reverseOrder()))
+                .sorted(comparing(Transformation::getHas_pipepline_execution_date, Comparator.reverseOrder()))
                 .map(dtoMapper::transformationToPipelineExecutionShort)
                 .collect(Collectors.toList());
 
@@ -45,34 +48,45 @@ public class DebugService {
         return pipelineExecutions;
     }
 
-    public List<ModuleExecution> getAllModulesForExecution(String executionId, String orderBy) {
+    public List<ModuleExecution> getAllModulesForExecutionWithExecutionTime(String executionId, String orderBy) {
         Transformation pipelineTransformation = transformationDao.findByUri(Vocabulary.s_c_transformation + "/" + executionId);
         PipelineExecution pipelineExecution = dtoMapper.transformationToPipelineExecution(pipelineTransformation);
-
-        List<ModuleExecution> modules = transformationDao.findAll().stream()
-                .filter(transformation -> matchesModelPattern(executionId, transformation.getId()))
-                .map(dtoMapper::transformationToModuleExecution)
-                .collect(Collectors.toList());
+        List<ModuleExecution> modules = getModulesByExecutionId(executionId, pipelineExecution.getId());
 
         modules.forEach(module -> {
-            module.setExecuted_in(pipelineExecution.getId());
             if (module.getStart_date() != null && module.getFinish_date() != null) {
                 module.setExecution_time_ms(getFormattedDuration(module));
             }
-            relatedResourceService.addModuleExecutionResources(module);
         });
         return getSortedModules(modules, orderBy);
     }
 
-    private List<ModuleExecution> getSortedModules(List<ModuleExecution> modules, String orderBy) {
-        if (orderBy == null || orderBy.equals("duration")) {
-            return modules.stream()
-                    .sorted(Comparator.comparing(ModuleExecution::getExecution_time_ms, Comparator.reverseOrder()))
-                    .collect(Collectors.toList());
-        }
-        return modules.stream()
-                .sorted(Comparator.comparing(ModuleExecution::getStart_date, Comparator.reverseOrder()))
+
+    private List<ModuleExecution> getModulesByExecutionId(String executionId, String pipelineExecutionIri) {
+        List<ModuleExecution> modules = transformationDao.findAll().stream()
+                .filter(transformation -> matchesModelPattern(executionId, transformation.getId()))
+                .map(dtoMapper::transformationToModuleExecution)
                 .collect(Collectors.toList());
+        modules.forEach(module -> {
+            module.setExecuted_in(pipelineExecutionIri);
+            relatedResourceService.addModuleExecutionResources(module);
+        });
+        return modules;
+    }
+
+    private List<ModuleExecution> getSortedModules(List<ModuleExecution> modules, String orderBy) {
+        if (orderBy == null) {
+            return sortModules(modules, comparing(ModuleExecution::getStart_date, reverseOrder()));
+        }
+        switch (orderBy) {
+            case "duration":
+                return sortModules(modules, comparing(ModuleExecution::getExecution_time_ms, reverseOrder()));
+            case "output-triples":
+                return sortModules(modules, comparing(ModuleExecution::getOutput_triple_count, reverseOrder()));
+            case "start-time":
+                return sortModules(modules, comparing(ModuleExecution::getStart_date, reverseOrder()));
+        }
+        return sortModules(modules, comparing(ModuleExecution::getStart_date, reverseOrder()));
     }
 
     public PipelineExecution getPipelineExecutionById(String executionId) {
@@ -102,5 +116,11 @@ public class DebugService {
 
     private boolean matchesModelPattern(String executionId, String potentialModuleId) {
         return potentialModuleId.matches(String.format(MODEL_IRI_PATTERN, executionId));
+    }
+
+    private List<ModuleExecution> sortModules(List<ModuleExecution> modules, Comparator<ModuleExecution> comparator) {
+        return modules.stream()
+                .sorted(comparator)
+                .collect(Collectors.toList());
     }
 }

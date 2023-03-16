@@ -24,6 +24,9 @@ public class ModuleExecution extends ExecutionAbstract {
     @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-next")
     private String has_next;
 
+    @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-output-model-triple-count")
+    private long output_triple_count;
+
     public Long getExecution_time_ms() {
         return execution_time_ms;
     }
@@ -54,5 +57,13 @@ public class ModuleExecution extends ExecutionAbstract {
 
     public void setHas_next(String has_next) {
         this.has_next = has_next;
+    }
+
+    public long getOutput_triple_count() {
+        return output_triple_count;
+    }
+
+    public void setOutput_triple_count(long output_triple_count) {
+        this.output_triple_count = output_triple_count;
     }
 }

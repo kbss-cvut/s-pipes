@@ -74,6 +74,9 @@ public class Transformation
     @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-next", fetch = FetchType.EAGER)
     protected String has_next;
 
+    @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-output-model-triple-count", fetch = FetchType.EAGER)
+    private Long output_triple_count;
+
     public void setName(String name) {
         this.name = name;
     }
@@ -179,5 +182,13 @@ public class Transformation
 
     public void setHas_next(String has_next) {
         this.has_next = has_next;
+    }
+
+    public long getOutput_triple_count() {
+        return output_triple_count;
+    }
+
+    public void setOutput_triple_count(long output_triple_count) {
+        this.output_triple_count = output_triple_count;
     }
 }

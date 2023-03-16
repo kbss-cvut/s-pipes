@@ -26,7 +26,7 @@ public class DispatcherServletInitializer extends AbstractAnnotationConfigDispat
 
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
-        System.out.println("****** Application Context Initialization ******");
+        System.out.println("****** SPipes-Debug Application Context Initialization ******");
         super.onStartup(servletContext);
     }
 }

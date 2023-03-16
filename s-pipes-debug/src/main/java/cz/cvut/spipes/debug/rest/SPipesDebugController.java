@@ -9,14 +9,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import cz.cvut.kbss.jsonld.JsonLd;
-import cz.cvut.spipes.debug.mapper.DtoMapper;
 import cz.cvut.spipes.debug.model.ModuleExecution;
 import cz.cvut.spipes.debug.model.PipelineExecution;
 import cz.cvut.spipes.debug.service.DebugService;
-import cz.cvut.spipes.debug.service.RelatedResourceService;
 import cz.cvut.spipes.debug.service.ScriptService;
 
 @RestController
@@ -42,8 +39,8 @@ public class SPipesDebugController {
     }
 
     @GetMapping(value = "/executions/{executionId}/modules", produces = {JsonLd.MEDIA_TYPE, MediaType.APPLICATION_JSON_VALUE})
-    public List<ModuleExecution> getAllModulesByExecutionId(@PathVariable String executionId, @RequestParam(required = false) String orderBy) {
-        return debugService.getAllModulesForExecution(executionId, orderBy);
+    public List<ModuleExecution> getAllModulesByExecutionIdWithExecutionTime(@PathVariable String executionId, @RequestParam(required = false) String orderBy) {
+        return debugService.getAllModulesForExecutionWithExecutionTime(executionId, orderBy);
     }
 
     @GetMapping(value = "/executions/{executionId}", produces = {JsonLd.MEDIA_TYPE, MediaType.APPLICATION_JSON_VALUE})
