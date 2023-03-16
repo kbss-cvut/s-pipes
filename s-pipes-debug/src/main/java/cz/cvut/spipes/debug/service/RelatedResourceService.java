@@ -2,7 +2,7 @@ package cz.cvut.spipes.debug.service;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-import static cz.cvut.spipes.debug.util.DebugUtils.getPipelineExecutionIdFromIri;
+import static cz.cvut.spipes.debug.util.DebugUtils.getExecutionIdFromIri;
 
 import org.springframework.stereotype.Service;
 
@@ -17,14 +17,14 @@ public class RelatedResourceService {
     public void addPipelineExecutionResources(PipelineExecution pipelineExecution) {
         //modules
         String linkToModules = linkTo(methodOn(SPipesDebugController.class)
-                .getAllModulesByExecutionId(getPipelineExecutionIdFromIri(pipelineExecution.getId()), null)).withRel("modules").getHref();
+                .getAllModulesByExecutionIdWithExecutionTime(getExecutionIdFromIri(pipelineExecution.getId()), null)).withRel("modules").getHref();
         RelatedResource relatedResourceModules = new RelatedResource();
         relatedResourceModules.setName("modules");
         relatedResourceModules.setLink(linkToModules);
 
         //pipeline execution
         String linkToPipelineExecution = linkTo(methodOn(SPipesDebugController.class)
-                .getPipelineExecution(getPipelineExecutionIdFromIri(pipelineExecution.getId()))).withRel("pipeline execution").getHref();
+                .getPipelineExecution(getExecutionIdFromIri(pipelineExecution.getId()))).withRel("pipeline execution").getHref();
         RelatedResource pipelineExecutionResource = new RelatedResource();
         pipelineExecutionResource.setName("pipeline");
         pipelineExecutionResource.setLink(linkToPipelineExecution);
@@ -36,7 +36,7 @@ public class RelatedResourceService {
     public void addModuleExecutionResources(ModuleExecution moduleExecution) {
         //pipeline execution
         String linkToPipelineExecution = linkTo(methodOn(SPipesDebugController.class)
-                .getPipelineExecution(getPipelineExecutionIdFromIri(moduleExecution.getExecuted_in())))
+                .getPipelineExecution(getExecutionIdFromIri(moduleExecution.getExecuted_in())))
                 .withRel("pipeline execution").getHref();
         RelatedResource pipelineExecutionResource = new RelatedResource();
         pipelineExecutionResource.setName("pipeline");
