@@ -9,7 +9,6 @@ import cz.cvut.spipes.debug.model.ModuleExecution;
 import cz.cvut.spipes.debug.persistance.dao.TransformationDao;
 import cz.cvut.spipes.debug.tree.ExecutionTree;
 import cz.cvut.spipes.manager.SPipesScriptManager;
-import cz.cvut.spipes.modules.Module;
 import cz.cvut.spipes.util.ScriptManagerFactory;
 
 
@@ -32,7 +31,7 @@ public class ScriptService {
         List<String> moduleExecutionIris = context.stream()
                 .map(i -> i.replace("/output", ""))
                 .collect(Collectors.toList());
-        List<ModuleExecution> moduleExecutions = debugService.getAllModulesForExecution(executionId, null);
+        List<ModuleExecution> moduleExecutions = debugService.getAllModulesForExecutionWithExecutionTime(executionId, null);
         ExecutionTree executionTree = new ExecutionTree(moduleExecutions);
         return executionTree.findEarliest(moduleExecutionIris);
     }
