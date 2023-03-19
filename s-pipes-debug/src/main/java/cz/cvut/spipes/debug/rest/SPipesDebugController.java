@@ -39,8 +39,10 @@ public class SPipesDebugController {
     }
 
     @GetMapping(value = "/executions/{executionId}/modules", produces = {JsonLd.MEDIA_TYPE, MediaType.APPLICATION_JSON_VALUE})
-    public List<ModuleExecution> getAllModulesByExecutionIdWithExecutionTime(@PathVariable String executionId, @RequestParam(required = false) String orderBy) {
-        return debugService.getAllModulesForExecutionWithExecutionTime(executionId, orderBy);
+    public List<ModuleExecution> getAllModulesByExecutionIdWithExecutionTime(
+            @PathVariable String executionId, @RequestParam(required = false) String orderBy,
+            @RequestParam(required = false) String orderType) {
+        return debugService.getAllModulesForExecutionWithExecutionTime(executionId, orderBy, orderType);
     }
 
     @GetMapping(value = "/executions/{executionId}", produces = {JsonLd.MEDIA_TYPE, MediaType.APPLICATION_JSON_VALUE})
@@ -51,10 +53,15 @@ public class SPipesDebugController {
     @GetMapping(value = "/triple-origin/{executionId}")
     public List<ModuleExecution> findTripleOrigin(
             @PathVariable String executionId,
-            @RequestParam(required = false) String subjectPattern,
-            @RequestParam(required = false) String predicatePattern,
-            @RequestParam(required = false) String objectPattern) {
-        return scriptService.findTripleOrigin(executionId, subjectPattern, predicatePattern, objectPattern);
+            @RequestParam String graphPattern){
+        return scriptService.findTripleOrigin(executionId, graphPattern);
+    }
+
+    @GetMapping(value = "/triple-elimination/{executionId}")
+    public List<ModuleExecution> findTripleElimination(
+            @PathVariable String executionId,
+            @RequestParam String graphPattern){
+        return scriptService.findTripleEliminationOrigin(executionId, graphPattern);
     }
 }
 

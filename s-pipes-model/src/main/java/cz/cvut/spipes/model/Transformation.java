@@ -53,6 +53,22 @@ public class Transformation
             @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_target_dataset_snapshot, max = 1)
     })
     protected Set<Thing> has_output;
+
+    @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-rdf4j-output", fetch = FetchType.EAGER)
+    @ParticipationConstraints(
+            @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_target_dataset_snapshot, max = 1))
+    protected Thing has_rdf4j_output;
+
+    @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-rdf4j-input", fetch = FetchType.EAGER)
+    @ParticipationConstraints(
+            @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_source_dataset_snapshot, max = 1))
+    protected Thing has_rdf4j_input;
+
+    @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-part", fetch = FetchType.EAGER)
+    @ParticipationConstraints(
+            @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_transformation))
+    protected Set<Transformation> has_part;
+
     @OWLObjectProperty(iri = Vocabulary.s_p_inv_dot_is_created_by)
     @ParticipationConstraints({
             @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_execution_context_dataset_source, max = 1)
@@ -189,6 +205,35 @@ public class Transformation
     }
 
     public void setOutput_triple_count(long output_triple_count) {
+        this.output_triple_count = output_triple_count;
+    }
+
+    public Thing getHas_rdf4j_output() {
+        return has_rdf4j_output;
+    }
+
+
+    public void setHas_rdf4j_output(Thing has_rdf4j_output) {
+        this.has_rdf4j_output = has_rdf4j_output;
+    }
+
+    public Thing getHas_rdf4j_input() {
+        return has_rdf4j_input;
+    }
+
+    public void setHas_rdf4j_input(Thing has_rdf4j_input) {
+        this.has_rdf4j_input = has_rdf4j_input;
+    }
+
+    public Set<Transformation> getHas_part() {
+        return has_part;
+    }
+
+    public void setHas_part(Set<Transformation> has_part) {
+        this.has_part = has_part;
+    }
+
+    public void setOutput_triple_count(Long output_triple_count) {
         this.output_triple_count = output_triple_count;
     }
 }

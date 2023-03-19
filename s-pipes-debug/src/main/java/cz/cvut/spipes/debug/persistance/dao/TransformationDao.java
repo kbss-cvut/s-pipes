@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import cz.cvut.kbss.jopa.exceptions.NoResultException;
 import cz.cvut.kbss.jopa.model.EntityManager;
-import cz.cvut.spipes.Vocabulary;
 import cz.cvut.spipes.model.Transformation;
 
 @Repository
@@ -31,23 +30,29 @@ public class TransformationDao extends AbstractDao {
         }
     }
 
-    public List<String> findModuleOutputContextsForTriple(String executionId, String subjectPattern, String predicatePattern, String objectPattern) {
+    public Boolean askContainOutput(String context, String graphPattern) {
         try {
-            return em.createNativeQuery("SELECT ?context "
-                            + "WHERE {"
-                            + "  GRAPH ?context {"
-                            + "    ?subject ?predicate ?object"
-                            + "    FILTER(REGEX(str(?context), \"^" + Vocabulary.s_c_transformation + "/" + executionId + ".*output$\"))"
-                            + "    FILTER(REGEX(str(?subject), ?subjectPattern))"
-                            + "    FILTER(REGEX(str(?predicate), ?predicatePattern))"
-                            + "    FILTER(REGEX(str(?object), ?objectPattern))"
-                            + "  }}", String.class)
-                    .setParameter("subjectPattern", subjectPattern)
-                    .setParameter("predicatePattern", predicatePattern)
-                    .setParameter("objectPattern", objectPattern)
-                    .getResultList();
-        } catch (NoResultException e) {
-            return Collections.emptyList();
+            return (Boolean) em.createNativeQuery("ASK {"
+                    + "  GRAPH <" + context + "> {"
+                    + graphPattern +
+                    "  }}").getSingleResult();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+
+    public Boolean askContainInputAndNotContainOutput(String inputContext,String outputContext, String graphPattern) {
+        try {
+           return (Boolean) em.createNativeQuery(String.format( "ASK {"
+                    + "  GRAPH <%s> {"
+                    + "    FILTER NOT EXISTS {%s}"
+                    + "  }"
+                    + "  GRAPH <%s> {%s}"
+                    + "}",inputContext, graphPattern, outputContext, graphPattern)).getSingleResult();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
         }
     }
 }
