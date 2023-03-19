@@ -1,6 +1,5 @@
 package cz.cvut.spipes.debug.service;
 
-import static java.util.Collections.reverseOrder;
 import static java.util.Comparator.comparing;
 
 import java.time.Duration;
@@ -48,7 +47,7 @@ public class DebugService {
         return pipelineExecutions;
     }
 
-    public List<ModuleExecution> getAllModulesForExecutionWithExecutionTime(String executionId, String orderBy) {
+    public List<ModuleExecution> getAllModulesForExecutionWithExecutionTime(String executionId, String orderBy, String orderType) {
         Transformation pipelineTransformation = transformationDao.findByUri(Vocabulary.s_c_transformation + "/" + executionId);
         PipelineExecution pipelineExecution = dtoMapper.transformationToPipelineExecution(pipelineTransformation);
         List<ModuleExecution> modules = getModulesByExecutionId(executionId, pipelineExecution.getId());
@@ -58,7 +57,7 @@ public class DebugService {
                 module.setExecution_time_ms(getFormattedDuration(module));
             }
         });
-        return getSortedModules(modules, orderBy);
+        return getSortedModules(modules, orderBy, orderType);
     }
 
 
@@ -74,21 +73,27 @@ public class DebugService {
         return modules;
     }
 
-    private List<ModuleExecution> getSortedModules(List<ModuleExecution> modules, String orderBy) {
-        if (orderBy == null) {
-            return sortModules(modules, comparing(ModuleExecution::getStart_date, reverseOrder()));
-        }
+    private List<ModuleExecution> getSortedModules(List<ModuleExecution> modules, String orderBy, String orderType) {
+        Comparator<ModuleExecution> comparator;
         switch (orderBy) {
             case "duration":
-                return sortModules(modules, comparing(ModuleExecution::getExecution_time_ms, reverseOrder()));
+                comparator = comparing(ModuleExecution::getExecution_time_ms);
+                break;
             case "output-triples":
-                return sortModules(modules, comparing(ModuleExecution::getOutput_triple_count, reverseOrder()));
+                comparator = comparing(ModuleExecution::getOutput_triple_count);
+                break;
             case "start-time":
-                return sortModules(modules, comparing(ModuleExecution::getStart_date, reverseOrder()));
+                comparator = comparing(ModuleExecution::getStart_date);
+                break;
+            default:
+                comparator = comparing(ModuleExecution::getStart_date);
+                break;
         }
-        return sortModules(modules, comparing(ModuleExecution::getStart_date, reverseOrder()));
+        if ("DESC".equalsIgnoreCase(orderType)) {
+            comparator = comparator.reversed();
+        }
+        return modules.stream().sorted(comparator).collect(Collectors.toList());
     }
-
     public PipelineExecution getPipelineExecutionById(String executionId) {
         List<Transformation> transformations = transformationDao.findAll();
         List<ModuleExecution> modules = transformations.stream()

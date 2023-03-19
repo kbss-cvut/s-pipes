@@ -2,6 +2,7 @@ package cz.cvut.spipes.debug.tree;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import cz.cvut.spipes.debug.model.ModuleExecution;
@@ -10,11 +11,11 @@ public class ExecutionTree {
 
     private final ModuleExecutionNode rootNode;
 
-    public ExecutionTree(List<ModuleExecution> executionList) {
+    public ExecutionTree(Set<ModuleExecution> executionList) {
         rootNode = buildTree(executionList);
     }
 
-    private ModuleExecutionNode buildTree(List<ModuleExecution> executionList) {
+    private ModuleExecutionNode buildTree(Set<ModuleExecution> executionList) {
         ModuleExecution rootExecution = executionList.stream()
                 .filter(e -> e.getHas_next() == null)
                 .findFirst()
@@ -26,8 +27,8 @@ public class ExecutionTree {
                 .map(ModuleExecutionNode::new)
                 .collect(Collectors.toList());
 
-        for (int i = 0; i < executionNodes.size(); i++){
-            if (executionNodes.get(i).getId().equals(rootExecution.getId())){
+        for (int i = 0; i < executionNodes.size(); i++) {
+            if (executionNodes.get(i).getId().equals(rootExecution.getId())) {
                 executionNodes.set(i, rootNode);
             }
             for (ModuleExecutionNode executionNode : executionNodes) {
@@ -41,9 +42,12 @@ public class ExecutionTree {
         return rootNode;
     }
 
-    public List<ModuleExecution> findEarliest(List<String> moduleExecutionIris) {
+    public List<ModuleExecution> findEarliest(Set<ModuleExecution> findList) {
         List<ModuleExecution> earliestExecutions = new ArrayList<>();
-        findEarliestRecursive(rootNode, moduleExecutionIris, earliestExecutions);
+        List<String> targetIds = findList.stream()
+                .map(ModuleExecution::getId)
+                .collect(Collectors.toList());
+        findEarliestRecursive(rootNode, targetIds, earliestExecutions);
         return earliestExecutions;
     }
 

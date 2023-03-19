@@ -11,6 +11,7 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -75,8 +76,8 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
     private static final Map<String, Object> metadataMap = new HashMap<>();
     private static final Map<String, EntityManager> entityManagerMap = new HashMap<>();
     private static final Map<Long, Path> logDir = new HashMap<>();
-    private static final String P_HAS_PART =
-        Vocabulary.ONTOLOGY_IRI_dataset_descriptor + "/has-part";
+    public static final String P_HAS_PART =
+            Vocabulary.ONTOLOGY_IRI_dataset_descriptor + "/has-part";
     private static final String P_HAS_NEXT =
         Vocabulary.ONTOLOGY_IRI_dataset_descriptor + "/has-next";
     private static final String P_HAS_INPUT_BINDDING =
@@ -257,6 +258,10 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
             getModulesSourceDatasetSnapshotUrl(pipelineExecutionId, moduleExecutionId, SnapshotRole.INPUT_GRAPH)
         );
         moduleExecution.setHas_input(input);
+        Thing rdf4jOutput = new Thing();
+        String rdf4jOutputContentIri = getContextIri(moduleExecution, "input");
+        rdf4jOutput.setId(rdf4jOutputContentIri);
+        moduleExecution.setHas_rdf4j_input(rdf4jOutput);
 
         if (predecessorModuleExecutionId != null) {
             addProperty(
@@ -301,6 +306,9 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
             getModulesSourceDatasetSnapshotUrl(pipelineExecutionId, moduleExecutionId, SnapshotRole.OUTPUT_GRAPH)
         );
         moduleExecution.setHas_output(Collections.singleton(output));
+        Thing rdf4jOutput = new Thing();
+        rdf4jOutput.setId(getContextIri(moduleExecution, "output"));
+        moduleExecution.setHas_rdf4j_output(rdf4jOutput);
 
         synchronized (em) {
             if (em.isOpen()) {
@@ -347,11 +355,8 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
 
 
                 final Thing input = moduleExecution.getHas_input();
-                em.merge(input, pd);
-                em.merge(output, pd);
-                em.merge(moduleExecution, pd);
-                em.merge(inputBindings, pd);
-
+                final Thing rdf4jInput = moduleExecution.getHas_rdf4j_input();
+                mergeAll(em, pd, input, output, moduleExecution, inputBindings, rdf4jInput, rdf4jOutput);
                 // save metadata
                 Model ibModel = module.getExecutionContext().getVariablesBinding().getModel();
 
@@ -364,6 +369,12 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
 
         // save data
         saveModelToFile(output.getId(), module.getOutputContext().getDefaultModel());
+    }
+
+    private void mergeAll(EntityManager em, EntityDescriptor pd, Thing... thing) {
+        Arrays.stream(thing).forEach(t-> {
+            em.merge(t, pd);
+        });
     }
 
     private void writeRawData(EntityManager em, URI contextUri, Model model) {
@@ -469,11 +480,15 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
     private void addContentProperty(Transformation moduleExecution, ExecutionContext inputContext, String contentType) {
         org.eclipse.rdf4j.model.Model rdf4jModel = convertJenaModelToRdf4j(inputContext.getDefaultModel());
 
-        String contextIri = String.format("http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation/%s/%s",
-                extractIdFromTransformationIri(moduleExecution.getId()), contentType);
+        String contextIri = getContextIri(moduleExecution, contentType);
 
         rdf4jModel = changeContext(rdf4jModel, contextIri);
         saveWithRepositoryConnection(rdf4jModel);
+    }
+
+    private String getContextIri(Transformation moduleExecution, String contentType) {
+        return String.format("http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation/%s/%s",
+                extractIdFromTransformationIri(moduleExecution.getId()), contentType);
     }
 
     private void addScript(Transformation pipelineExecution, OntModel scriptJenaModel) {

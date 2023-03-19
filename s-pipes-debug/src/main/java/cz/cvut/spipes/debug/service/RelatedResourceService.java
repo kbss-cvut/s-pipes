@@ -17,7 +17,7 @@ public class RelatedResourceService {
     public void addPipelineExecutionResources(PipelineExecution pipelineExecution) {
         //modules
         String linkToModules = linkTo(methodOn(SPipesDebugController.class)
-                .getAllModulesByExecutionIdWithExecutionTime(getExecutionIdFromIri(pipelineExecution.getId()), null)).withRel("modules").getHref();
+                .getAllModulesByExecutionIdWithExecutionTime(getExecutionIdFromIri(pipelineExecution.getId()), null, null)).withRel("modules").getHref();
         RelatedResource relatedResourceModules = new RelatedResource();
         relatedResourceModules.setName("modules");
         relatedResourceModules.setLink(linkToModules);
