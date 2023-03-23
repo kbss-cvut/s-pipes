@@ -2,6 +2,7 @@ package cz.cvut.spipes.debug.service;
 
 import static cz.cvut.spipes.debug.util.DebugUtils.getTransformationIriFromId;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -50,9 +51,9 @@ public class ScriptService {
     public List<ModuleExecution> findFirstModule(String executionId, Predicate<ModuleExecution> predicate) {
         String pipelineExecutionIri = getTransformationIriFromId(executionId);
         Transformation transformation = transformationDao.findByUri(pipelineExecutionIri);
-        Set<ModuleExecution> moduleExecutions = transformation.getHas_part()
-                .stream().map(mapper::transformationToModuleExecution).collect(Collectors.toSet());
-        Set<ModuleExecution> modulesWithMatchingPattern = new HashSet<>();
+        List<ModuleExecution> moduleExecutions = transformation.getHas_part()
+                .stream().map(mapper::transformationToModuleExecution).collect(Collectors.toList());
+        List<ModuleExecution> modulesWithMatchingPattern = new ArrayList<>();
         for (ModuleExecution moduleExecution : moduleExecutions) {
             if (predicate.test(moduleExecution)) {
                 modulesWithMatchingPattern.add(moduleExecution);

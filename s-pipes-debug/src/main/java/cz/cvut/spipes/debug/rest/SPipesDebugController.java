@@ -15,6 +15,7 @@ import cz.cvut.spipes.debug.model.ModuleExecution;
 import cz.cvut.spipes.debug.model.PipelineExecution;
 import cz.cvut.spipes.debug.service.DebugService;
 import cz.cvut.spipes.debug.service.ScriptService;
+import cz.cvut.spipes.modules.Module;
 
 @RestController
 public class SPipesDebugController {
@@ -50,6 +51,11 @@ public class SPipesDebugController {
         return debugService.getPipelineExecutionById(executionId);
     }
 
+
+    @GetMapping(value = "/executions/{executionId}/compare/{executionToCompareId}")
+    public ModuleExecution compareExecutions(@PathVariable String executionId, @PathVariable String executionToCompareId){
+        return debugService.compareExecutions(executionId, executionToCompareId);
+    }
     @GetMapping(value = "/triple-origin/{executionId}")
     public List<ModuleExecution> findTripleOrigin(
             @PathVariable String executionId,

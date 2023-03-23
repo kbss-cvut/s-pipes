@@ -1,12 +1,14 @@
 package cz.cvut.spipes.debug.service;
 
 import static java.util.Comparator.comparing;
+import static cz.cvut.spipes.debug.util.DebugUtils.getTransformationIriFromId;
 
 import java.time.Duration;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cz.cvut.spipes.Vocabulary;
@@ -14,6 +16,7 @@ import cz.cvut.spipes.debug.mapper.DtoMapper;
 import cz.cvut.spipes.debug.model.ModuleExecution;
 import cz.cvut.spipes.debug.model.PipelineExecution;
 import cz.cvut.spipes.debug.persistance.dao.TransformationDao;
+import cz.cvut.spipes.debug.tree.ExecutionTree;
 import cz.cvut.spipes.model.Transformation;
 
 @Service
@@ -25,13 +28,17 @@ public class DebugService {
 
     private final RelatedResourceService relatedResourceService;
 
+    private final TreeService treeService;
+
     private static final String EXECUTION_IRI_PATTERN = "^http://onto\\.fel\\.cvut\\.cz/ontologies/dataset-descriptor/transformation/\\d+$";
     private static final String MODEL_IRI_PATTERN = "^http://onto\\.fel\\.cvut\\.cz/ontologies/dataset-descriptor/transformation/%s-\\d+-\\d+$";
 
-    public DebugService(TransformationDao transformationDao, DtoMapper dtoMapper, RelatedResourceService relatedResourceService) {
+    @Autowired
+    public DebugService(TransformationDao transformationDao, DtoMapper dtoMapper, RelatedResourceService relatedResourceService, TreeService treeService) {
         this.transformationDao = transformationDao;
         this.dtoMapper = dtoMapper;
         this.relatedResourceService = relatedResourceService;
+        this.treeService = treeService;
     }
 
     public List<PipelineExecution> getAllPipelineExecutions() {
@@ -94,6 +101,7 @@ public class DebugService {
         }
         return modules.stream().sorted(comparator).collect(Collectors.toList());
     }
+
     public PipelineExecution getPipelineExecutionById(String executionId) {
         List<Transformation> transformations = transformationDao.findAll();
         List<ModuleExecution> modules = transformations.stream()
@@ -106,6 +114,23 @@ public class DebugService {
         pipelineExecution.setHas_module_executions(modules);
         relatedResourceService.addPipelineExecutionResources(pipelineExecution);
         return pipelineExecution;
+    }
+
+
+    public ModuleExecution compareExecutions(String executionId, String executionToCompareId) {
+        Transformation firstPipelineExecution = transformationDao.findByUri(getTransformationIriFromId(executionId));
+        Transformation secondPipelineExecution = transformationDao.findByUri(getTransformationIriFromId(executionToCompareId));
+        List<ModuleExecution> moduleExecutions1 = getModuleExecutionsFromPipelineTransformation(firstPipelineExecution);
+        List<ModuleExecution> moduleExecutions2 = getModuleExecutionsFromPipelineTransformation(secondPipelineExecution);
+        ExecutionTree tree1 = new ExecutionTree(moduleExecutions1);
+        ExecutionTree tree2 = new ExecutionTree(moduleExecutions2);
+        return treeService.findFirstOutputDifference(tree1, tree2);
+    }
+
+    private List<ModuleExecution> getModuleExecutionsFromPipelineTransformation(Transformation pipelineTransformation) {
+        return pipelineTransformation.getHas_part().stream()
+                .map(dtoMapper::transformationToModuleExecution)
+                .collect(Collectors.toList());
     }
 
     private long getFormattedDuration(ModuleExecution moduleExecution) {
@@ -121,11 +146,5 @@ public class DebugService {
 
     private boolean matchesModelPattern(String executionId, String potentialModuleId) {
         return potentialModuleId.matches(String.format(MODEL_IRI_PATTERN, executionId));
-    }
-
-    private List<ModuleExecution> sortModules(List<ModuleExecution> modules, Comparator<ModuleExecution> comparator) {
-        return modules.stream()
-                .sorted(comparator)
-                .collect(Collectors.toList());
     }
 }
