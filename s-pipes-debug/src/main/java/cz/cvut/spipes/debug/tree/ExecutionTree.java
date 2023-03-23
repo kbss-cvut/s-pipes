@@ -1,8 +1,8 @@
 package cz.cvut.spipes.debug.tree;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import cz.cvut.spipes.debug.model.ModuleExecution;
@@ -11,11 +11,11 @@ public class ExecutionTree {
 
     private final ModuleExecutionNode rootNode;
 
-    public ExecutionTree(Set<ModuleExecution> executionList) {
+    public ExecutionTree(List<ModuleExecution> executionList) {
         rootNode = buildTree(executionList);
     }
 
-    private ModuleExecutionNode buildTree(Set<ModuleExecution> executionList) {
+    private ModuleExecutionNode buildTree(List<ModuleExecution> executionList) {
         ModuleExecution rootExecution = executionList.stream()
                 .filter(e -> e.getHas_next() == null)
                 .findFirst()
@@ -24,6 +24,7 @@ public class ExecutionTree {
         ModuleExecutionNode rootNode = new ModuleExecutionNode(rootExecution);
 
         List<ModuleExecutionNode> executionNodes = executionList.stream()
+                .sorted(Comparator.comparing(ModuleExecution::getHas_module_id))
                 .map(ModuleExecutionNode::new)
                 .collect(Collectors.toList());
 
@@ -42,7 +43,7 @@ public class ExecutionTree {
         return rootNode;
     }
 
-    public List<ModuleExecution> findEarliest(Set<ModuleExecution> findList) {
+    public List<ModuleExecution> findEarliest(List<ModuleExecution> findList) {
         List<ModuleExecution> earliestExecutions = new ArrayList<>();
         List<String> targetIds = findList.stream()
                 .map(ModuleExecution::getId)
@@ -73,5 +74,9 @@ public class ExecutionTree {
             return true;
         }
         return foundTargetId;
+    }
+
+    public ModuleExecutionNode getRootNode() {
+        return rootNode;
     }
 }
