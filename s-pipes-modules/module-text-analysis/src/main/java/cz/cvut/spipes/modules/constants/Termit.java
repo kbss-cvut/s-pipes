@@ -38,7 +38,7 @@ public class Termit {
     public static final Resource CIL_VYSKYTU = resource("cíl-výskytu");
     public static final Resource SELEKTOR_POZICI_V_TEXTU = resource("selektor-pozici-v-textu");
     public static final Resource SELEKTOR_TEXT_QUOTE = resource("selektor-text-quote");
-
+    public static final Resource ANNOTATION = resource("annotation");
     public static final Property MA_CIL = property("má-cíl");
     public static final Property JE_PRIRAZENIM_TERMU = property("je-přiřazením-termu");
     public static final Property MA_SELEKTOR = property("má-selektor");
@@ -52,6 +52,8 @@ public class Termit {
     public static final Property ODKAZUJE_NA_ANOTACI = property("odkazuje-na-anotaci");
     public static final Property ODKAZUJE_NA_ANOTOVANY_TEXT = property("odkazuje-na-anotovaný-text");
     public static final Property MA_SKORE = property("má-skóre");
+    public static final Property ORIGINAL_TEXT = property("has-original-text");
+    public static final Property ANNOTATED_TEXT = property("has-annotated-text");
 
     public static String getURI() {
         return uri;
