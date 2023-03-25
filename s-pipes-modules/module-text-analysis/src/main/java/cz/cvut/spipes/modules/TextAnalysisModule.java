@@ -4,6 +4,7 @@ import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.modules.constants.Termit;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -25,11 +26,12 @@ import org.topbraid.spin.arq.ARQFactory;
 import org.topbraid.spin.model.Select;
 
 import java.io.IOException;
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 
-public class TextAnalysis extends AnnotatedAbstractModule{
+public class TextAnalysisModule extends AnnotatedAbstractModule{
 
-    private static final Logger LOG = LoggerFactory.getLogger(TextAnalysis.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TextAnalysisModule.class);
     private static final String TYPE_URI = KBSS_MODULE.uri + "text-analysis";
     private static final String TYPE_PREFIX = TYPE_URI + "/";
 
@@ -48,6 +50,9 @@ public class TextAnalysis extends AnnotatedAbstractModule{
     @Parameter(urlPrefix = SML.uri, name = "replace")
     private boolean isReplace = false;
 
+    @Parameter(urlPrefix = TYPE_PREFIX, name = "literals-per-request")
+    private Integer literalsPerRequest;
+
     private Select selectQuery;
 
     @Override
@@ -63,45 +68,82 @@ public class TextAnalysis extends AnnotatedAbstractModule{
         Query query = ARQFactory.get().createQuery(selectQuery);
         try (QueryExecution queryExecution = QueryExecutionFactory.create(query, inputModel)) {
             ResultSet resultSet = queryExecution.execSelect();
+            ResIterator subjects = resultSet.getResourceModel().listSubjects();
+            while (subjects.hasNext()) {
+                Resource subject = subjects.next();
+                StmtIterator statements = subject.listProperties();
 
-            while (resultSet.hasNext()) {
-                QuerySolution solution = resultSet.next();
+                List<String> listOfTexts = new ArrayList<>();
+                List<Resource> listOfSubjects = new ArrayList<>();
+                StringBuilder sb = new StringBuilder();
+                int counter = 0;
 
-                // iterate over all variables in the query solution
-                Iterator<String> varNames = solution.varNames();
-
-                while (varNames.hasNext()) {
-                    String varName = varNames.next();
-                    RDFNode node = solution.get(varName);
-                    if (node.isResource()) {
-                        Resource subject = node.asResource();
-                        StmtIterator stmtIterator = subject.listProperties();
-                        while (stmtIterator.hasNext()) {
-
-                            Statement stmt = stmtIterator.next();
-                            Property predicate = stmt.getPredicate();
-                            RDFNode object = stmt.getObject();
-
-                            if (object.isLiteral() && object.asLiteral().getDatatype() instanceof XSDBaseStringType) {
-                                Resource annotationResource = outputModel.createResource();
-                                Element el = Jsoup.parse(object.asLiteral().toString());
-
-                                String text = el.text();
-                                String annotatedLiteral = annotateObjectLiteral(text);
-
-                                annotationResource.addProperty(RDF.type, Termit.ANNOTATION);
-                                annotationResource.addLiteral(Termit.ORIGINAL_TEXT, text);
-                                annotationResource.addLiteral(Termit.ANNOTATED_TEXT, annotatedLiteral);
-
-                                Statement annotatedStatement = outputModel.createStatement(subject, predicate, annotatedLiteral);
-                                outputModel.add(annotatedStatement);
-                            }
-                        }
+                while (statements.hasNext()) {
+                    Statement statement = statements.next();
+                    if (!statement.getObject().isLiteral()) {
+                        continue;
                     }
+
+                    Literal literal = statement.getObject().asLiteral();
+                    if (!(literal.getDatatype() instanceof XSDBaseStringType)) {
+                        continue;
+                    }
+
+                    String text = literal.getString();
+                    listOfTexts.add(text);
+                    listOfSubjects.add(subject);
+                    sb.append(text).append("<br>");
+                    counter++;
+
+                    if (counter >= literalsPerRequest) {
+                        addAnnotatedLiteralsToModel(outputModel, listOfTexts, listOfSubjects, sb);
+                        listOfTexts.clear();
+                        listOfSubjects.clear();
+                        sb.setLength(0);
+                        counter = 0;
+                    }
+                }
+
+                if (counter > 0) { // add remaining literals
+                    addAnnotatedLiteralsToModel(outputModel, listOfTexts, listOfSubjects, sb);
                 }
             }
         }
         return createOutputContext(isReplace, inputModel, outputModel);
+    }
+
+    private void addAnnotatedLiteralsToModel(Model outputModel, List<String> listOfTexts, List<Resource> listOfSubjects, StringBuilder sb) {
+        String annotatedText = annotateObjectLiteral(sb.toString());
+        String[] elements = splitAnnotatedText(annotatedText);
+
+        for (int i = 0; i < listOfSubjects.size(); i++) {
+            Resource sub = listOfSubjects.get(i);
+            String textElement = listOfTexts.get(i);
+            String annotatedTextElement = elements[i];
+            Resource annotatedResource = createAnnotatedResource(sub, textElement, annotatedTextElement, outputModel);
+            outputModel.add(annotatedResource.getModel());
+        }
+    }
+
+
+    private Resource createAnnotatedResource(Resource subject, String originalText, String annotatedText, Model model) {
+        Resource annotatedResource;
+        if (subject.isAnon()){
+            annotatedResource = model.createResource();
+        } else {
+            String newSubjectUri = subject.getURI() + "-annotated-" + DigestUtils.md5Hex(subject.getURI() + originalText);
+            annotatedResource = model.createResource(newSubjectUri);
+        }
+
+        annotatedResource.addProperty(RDF.type, Termit.ANNOTATION);
+        annotatedResource.addProperty(Termit.ORIGINAL_TEXT, originalText);
+        annotatedResource.addProperty(Termit.ANNOTATED_TEXT, annotatedText);
+
+        return annotatedResource;
+    }
+
+    private String[] splitAnnotatedText(String annotatedText) {
+        return Jsoup.parse(annotatedText).body().html().split(" <br>");
     }
 
     @NotNull
@@ -138,6 +180,6 @@ public class TextAnalysis extends AnnotatedAbstractModule{
 
     @Override
     public String getTypeURI() {
-        return TYPE_URI + "/";
+        return TYPE_URI;
     }
 }
