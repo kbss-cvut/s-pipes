@@ -3,6 +3,7 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
+import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.modules.constants.Termit;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.http.HttpResponse;
@@ -29,7 +30,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TextAnalysisModule extends AnnotatedAbstractModule{
+@SPipesModule(label = "Text analysis module", comment = "test comment")
+public class TextAnalysisModule extends AnnotatedAbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(TextAnalysisModule.class);
     private static final String TYPE_URI = KBSS_MODULE.uri + "text-analysis";
