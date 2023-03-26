@@ -69,14 +69,14 @@ public class TextAnalysisModule extends AnnotatedAbstractModule{
         try (QueryExecution queryExecution = QueryExecutionFactory.create(query, inputModel)) {
             ResultSet resultSet = queryExecution.execSelect();
             ResIterator subjects = resultSet.getResourceModel().listSubjects();
+            List<String> listOfTexts = new ArrayList<>();
+            List<Resource> listOfSubjects = new ArrayList<>();
+            StringBuilder sb = new StringBuilder();
+            int counter = 0;
+
             while (subjects.hasNext()) {
                 Resource subject = subjects.next();
                 StmtIterator statements = subject.listProperties();
-
-                List<String> listOfTexts = new ArrayList<>();
-                List<Resource> listOfSubjects = new ArrayList<>();
-                StringBuilder sb = new StringBuilder();
-                int counter = 0;
 
                 while (statements.hasNext()) {
                     Statement statement = statements.next();
@@ -103,10 +103,9 @@ public class TextAnalysisModule extends AnnotatedAbstractModule{
                         counter = 0;
                     }
                 }
-
-                if (counter > 0) { // add remaining literals
-                    addAnnotatedLiteralsToModel(outputModel, listOfTexts, listOfSubjects, sb);
-                }
+            }
+            if (counter > 0) { // add remaining literals
+                addAnnotatedLiteralsToModel(outputModel, listOfTexts, listOfSubjects, sb);
             }
         }
         return createOutputContext(isReplace, inputModel, outputModel);
