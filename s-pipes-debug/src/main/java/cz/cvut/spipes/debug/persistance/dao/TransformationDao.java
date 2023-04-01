@@ -23,17 +23,18 @@ import org.eclipse.rdf4j.repository.http.HTTPRepository;
 import org.springframework.stereotype.Repository;
 
 import cz.cvut.kbss.jopa.model.EntityManager;
+import cz.cvut.spipes.Vocabulary;
 import cz.cvut.spipes.model.Transformation;
 
 @Repository
-public class TransformationDao extends AbstractDao {
+public class TransformationDao extends AbstractDao<Transformation> {
 
     protected TransformationDao(EntityManager em) {
         super(em);
     }
 
     public List<Transformation> findAll() {
-        return em.createNamedQuery("Transformation.findAll", Transformation.class).getResultList();
+        return em.createNativeQuery("SELECT ?x WHERE { ?x a <" + Vocabulary.s_c_transformation + "> .}", Transformation.class).getResultList();
     }
 
     public Transformation findByUri(String uri) {
@@ -72,7 +73,7 @@ public class TransformationDao extends AbstractDao {
         }
     }
 
-    public Set<Statement> getModelForOutputContext(String context){
+    public Set<Statement> getModelForOutputContext(String context) {
         String query = String.format("SELECT ?s ?p ?o { GRAPH <%s> { ?s ?p ?o}}", context);
         return executeSelectQuery(query);
     }
