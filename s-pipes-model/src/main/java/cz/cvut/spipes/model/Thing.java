@@ -6,6 +6,7 @@ import cz.cvut.kbss.jopa.vocabulary.DC;
 import cz.cvut.kbss.jopa.vocabulary.RDFS;
 import cz.cvut.spipes.Vocabulary;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -22,7 +23,7 @@ public class Thing {
     @OWLAnnotationProperty(iri = DC.Elements.DESCRIPTION)
     protected String description;
     @Types
-    protected Set<String> types;
+    protected Set<String> types = new HashSet<>();
     @Id(generated = true)
     protected String id;
     @Properties

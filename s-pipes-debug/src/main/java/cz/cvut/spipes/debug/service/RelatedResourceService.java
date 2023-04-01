@@ -2,14 +2,14 @@ package cz.cvut.spipes.debug.service;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-import static cz.cvut.spipes.debug.util.DebugUtils.getExecutionIdFromIri;
+import static cz.cvut.spipes.debug.util.IdUtils.getExecutionIdFromIri;
 
 import org.springframework.stereotype.Service;
 
 import cz.cvut.spipes.debug.model.ModuleExecution;
 import cz.cvut.spipes.debug.model.PipelineExecution;
 import cz.cvut.spipes.debug.model.RelatedResource;
-import cz.cvut.spipes.debug.rest.SPipesDebugController;
+import cz.cvut.spipes.debug.rest.controller.SPipesDebugController;
 
 @Service
 public class RelatedResourceService {

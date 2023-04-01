@@ -1,4 +1,4 @@
-package cz.cvut.spipes.debug.rest;
+package cz.cvut.spipes.debug.rest.controller;
 
 import java.util.List;
 
@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import cz.cvut.kbss.jsonld.JsonLd;
+import cz.cvut.spipes.debug.dto.PipelineComparisonResultDto;
 import cz.cvut.spipes.debug.model.ModuleExecution;
 import cz.cvut.spipes.debug.model.PipelineExecution;
 import cz.cvut.spipes.debug.service.DebugService;
 import cz.cvut.spipes.debug.service.ScriptService;
-import cz.cvut.spipes.modules.Module;
 
 @RestController
 public class SPipesDebugController {
@@ -43,7 +43,7 @@ public class SPipesDebugController {
     public List<ModuleExecution> getAllModulesByExecutionIdWithExecutionTime(
             @PathVariable String executionId, @RequestParam(required = false) String orderBy,
             @RequestParam(required = false) String orderType) {
-        return debugService.getAllModulesForExecutionWithExecutionTime(executionId, orderBy, orderType);
+        return debugService.getAllModuleExecutionsSorted(executionId, orderBy, orderType);
     }
 
     @GetMapping(value = "/executions/{executionId}", produces = {JsonLd.MEDIA_TYPE, MediaType.APPLICATION_JSON_VALUE})
@@ -52,8 +52,8 @@ public class SPipesDebugController {
     }
 
 
-    @GetMapping(value = "/executions/{executionId}/compare/{executionToCompareId}")
-    public ModuleExecution compareExecutions(@PathVariable String executionId, @PathVariable String executionToCompareId){
+    @GetMapping(value = "/executions/{executionId}/compare/{executionToCompareId}", produces = {JsonLd.MEDIA_TYPE, MediaType.APPLICATION_JSON_VALUE})
+    public PipelineComparisonResultDto compareExecutions(@PathVariable String executionId, @PathVariable String executionToCompareId){
         return debugService.compareExecutions(executionId, executionToCompareId);
     }
     @GetMapping(value = "/triple-origin/{executionId}")

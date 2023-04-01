@@ -1,4 +1,4 @@
-package cz.cvut.spipes.debug.rest;
+package cz.cvut.spipes.debug.rest.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

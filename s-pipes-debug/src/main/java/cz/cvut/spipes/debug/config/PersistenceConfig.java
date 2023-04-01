@@ -9,9 +9,11 @@ import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @ComponentScan(basePackages = "cz.cvut.spipes.debug.persistance.dao")
+@EnableTransactionManagement
 public class PersistenceConfig {
     @Bean
     public DelegatingEntityManager entityManager() {
