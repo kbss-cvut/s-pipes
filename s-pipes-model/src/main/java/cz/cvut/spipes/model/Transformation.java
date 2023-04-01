@@ -7,8 +7,6 @@ import java.util.Set;
 
 import cz.cvut.kbss.jopa.model.annotations.FetchType;
 import cz.cvut.kbss.jopa.model.annotations.Id;
-import cz.cvut.kbss.jopa.model.annotations.NamedNativeQueries;
-import cz.cvut.kbss.jopa.model.annotations.NamedNativeQuery;
 import cz.cvut.kbss.jopa.model.annotations.OWLAnnotationProperty;
 import cz.cvut.kbss.jopa.model.annotations.OWLClass;
 import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
@@ -50,20 +48,25 @@ public class Transformation
     })
     protected Set<Thing> has_output;
 
-    @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-rdf4j-output", fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_rdf4j_output, fetch = FetchType.EAGER)
     @ParticipationConstraints(
             @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_target_dataset_snapshot, max = 1))
     protected Thing has_rdf4j_output;
 
-    @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-rdf4j-input", fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_rdf4j_input, fetch = FetchType.EAGER)
     @ParticipationConstraints(
             @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_source_dataset_snapshot, max = 1))
     protected Thing has_rdf4j_input;
 
-    @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-part", fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_part, fetch = FetchType.EAGER)
     @ParticipationConstraints(
             @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_transformation))
     protected Set<Transformation> has_part;
+
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_next, fetch = FetchType.EAGER)
+    @ParticipationConstraints(
+            @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_transformation))
+    protected Transformation has_next;
 
     @OWLObjectProperty(iri = Vocabulary.s_p_inv_dot_is_created_by)
     @ParticipationConstraints({
@@ -83,12 +86,7 @@ public class Transformation
     @OWLObjectProperty(iri = Vocabulary.s_p_has_module_id, fetch = FetchType.EAGER)
     protected String has_module_id;
 
-    @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-next", fetch = FetchType.EAGER)
-    @ParticipationConstraints(
-            @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_transformation))
-    protected Transformation has_next;
-
-    @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-output-model-triple-count", fetch = FetchType.EAGER)
+    @OWLDataProperty(iri = Vocabulary.s_p_has_output_model_triple_count, fetch = FetchType.EAGER)
     private Long output_triple_count;
 
     public void setName(String name) {

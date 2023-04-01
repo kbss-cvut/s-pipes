@@ -6,7 +6,7 @@ import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
 import cz.cvut.kbss.jopa.model.annotations.OWLObjectProperty;
 import cz.cvut.kbss.jopa.model.annotations.ParticipationConstraint;
 import cz.cvut.kbss.jopa.model.annotations.ParticipationConstraints;
-import cz.cvut.spipes.debug.Vocabulary;
+import cz.cvut.spipes.Vocabulary;
 import cz.cvut.spipes.model.Thing;
 
 @OWLClass(iri = Vocabulary.s_c_module_execution)
@@ -23,18 +23,18 @@ public class ModuleExecution extends ExecutionAbstract {
     })
     private String executed_in;
 
-    @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-next")
+    @OWLDataProperty(iri = Vocabulary.s_p_has_next)
     private String has_next;
 
-    @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-output-model-triple-count")
+    @OWLDataProperty(iri = Vocabulary.s_p_has_output_model_triple_count)
     private Long output_triple_count;
 
-    @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-rdf4j-output", fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_rdf4j_output, fetch = FetchType.EAGER)
     @ParticipationConstraints(
             @ParticipationConstraint(owlObjectIRI = cz.cvut.spipes.Vocabulary.s_c_target_dataset_snapshot, max = 1))
     protected Thing has_rdf4j_output;
 
-    @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-rdf4j-input", fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_rdf4j_input, fetch = FetchType.EAGER)
     @ParticipationConstraints(
             @ParticipationConstraint(owlObjectIRI = cz.cvut.spipes.Vocabulary.s_c_source_dataset_snapshot, max = 1))
     protected Thing has_rdf4j_input;

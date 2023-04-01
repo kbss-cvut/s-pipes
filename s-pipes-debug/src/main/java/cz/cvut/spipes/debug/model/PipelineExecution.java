@@ -8,7 +8,7 @@ import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
 import cz.cvut.kbss.jopa.model.annotations.OWLObjectProperty;
 import cz.cvut.kbss.jopa.model.annotations.ParticipationConstraint;
 import cz.cvut.kbss.jopa.model.annotations.ParticipationConstraints;
-import cz.cvut.spipes.debug.Vocabulary;
+import cz.cvut.spipes.Vocabulary;
 
 @OWLClass(iri = Vocabulary.s_c_pipeline_execution)
 public class PipelineExecution extends ExecutionAbstract {

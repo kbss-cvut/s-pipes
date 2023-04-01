@@ -211,7 +211,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_finish_date_unix, finishDate.getTime());
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_duration, computeDuration(startDate, finishDate));
             addProperty(pipelineExecution, SPIPES.has_pipeline_name, pipelineName);
-            addScript(pipelineExecution, scriptManager.getScriptByContextId(pipelineName));
+//            addScript(pipelineExecution, scriptManager.getScriptByContextId(pipelineName));
             em.getTransaction().commit();
             em.close();
         }

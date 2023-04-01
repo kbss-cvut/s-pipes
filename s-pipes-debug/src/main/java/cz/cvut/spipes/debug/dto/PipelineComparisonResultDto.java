@@ -11,22 +11,22 @@ import cz.cvut.spipes.debug.model.PipelineExecution;
 
 public class PipelineComparisonResultDto extends AbstractDto {
 
-    @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison/comparing")
+    @OWLObjectProperty(iri = Vocabulary.s_p_pipeline)
     @ParticipationConstraints({
             @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_transformation)
     })
     private PipelineExecution pipeline;
 
-    @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison/compare-to")
+    @OWLObjectProperty(iri = Vocabulary.s_p_compare_to)
     @ParticipationConstraints({
             @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_transformation)
     })
     private PipelineExecution compare_to;
 
-    @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison/are-same")
+    @OWLDataProperty(iri = Vocabulary.s_p_are_same)
     private Boolean are_same;
 
-    @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison/difference-found-in")
+    @OWLObjectProperty(iri = Vocabulary.s_p_difference_found_in)
     @ParticipationConstraints({
             @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_transformation)
     })

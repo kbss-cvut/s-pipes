@@ -15,7 +15,6 @@ import cz.cvut.spipes.debug.model.ModuleExecution;
 import cz.cvut.spipes.debug.persistance.dao.TransformationDao;
 import cz.cvut.spipes.debug.tree.ExecutionTree;
 import cz.cvut.spipes.debug.tree.ModuleExecutionNode;
-import cz.cvut.spipes.model.PipelineComparison;
 
 @Service
 public class TreeService {
