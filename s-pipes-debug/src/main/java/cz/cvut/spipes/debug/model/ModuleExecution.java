@@ -27,7 +27,7 @@ public class ModuleExecution extends ExecutionAbstract {
     private String has_next;
 
     @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-output-model-triple-count")
-    private long output_triple_count;
+    private Long output_triple_count;
 
     @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-rdf4j-output", fetch = FetchType.EAGER)
     @ParticipationConstraints(
@@ -71,11 +71,11 @@ public class ModuleExecution extends ExecutionAbstract {
         this.has_next = has_next;
     }
 
-    public long getOutput_triple_count() {
+    public Long getOutput_triple_count() {
         return output_triple_count;
     }
 
-    public void setOutput_triple_count(long output_triple_count) {
+    public void setOutput_triple_count(Long output_triple_count) {
         this.output_triple_count = output_triple_count;
     }
 
