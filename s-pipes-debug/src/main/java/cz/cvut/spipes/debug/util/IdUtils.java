@@ -1,5 +1,6 @@
 package cz.cvut.spipes.debug.util;
 
+import static cz.cvut.spipes.Vocabulary.s_c_pipeline_comparison;
 import static cz.cvut.spipes.Vocabulary.s_c_transformation;
 
 public class IdUtils {
@@ -14,7 +15,7 @@ public class IdUtils {
     }
 
     public static String generatePipelineComparisonIri(){
-        return "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison/" + generateId();
+        return s_c_pipeline_comparison + "/" + generateId();
     }
 
     private static String generateId() {
