@@ -7,29 +7,29 @@ import cz.cvut.kbss.jopa.model.annotations.ParticipationConstraint;
 import cz.cvut.kbss.jopa.model.annotations.ParticipationConstraints;
 import cz.cvut.spipes.Vocabulary;
 
-@OWLClass(iri = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison")
-public class PipelineComparison extends Thing{
+@OWLClass(iri = Vocabulary.s_c_pipeline_comparison)
+public class PipelineComparison extends Thing {
 
     public PipelineComparison() {
-        types.add("http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison");
+        types.add(Vocabulary.s_c_pipeline_comparison);
     }
 
-    @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison/compare")
+    @OWLObjectProperty(iri = Vocabulary.s_p_pipeline)
     @ParticipationConstraints({
             @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_transformation)
     })
     private Transformation pipeline;
 
-    @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison/compare-to")
+    @OWLObjectProperty(iri = Vocabulary.s_p_compare_to)
     @ParticipationConstraints({
             @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_transformation)
     })
     private Transformation compare_to;
 
-    @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison/are-same")
+    @OWLDataProperty(iri = Vocabulary.s_p_are_same)
     private Boolean are_same;
 
-    @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison/difference-found-in")
+    @OWLObjectProperty(iri = Vocabulary.s_p_difference_found_in)
     @ParticipationConstraints({
             @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_transformation)
     })

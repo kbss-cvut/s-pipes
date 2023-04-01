@@ -3,7 +3,7 @@ package cz.cvut.spipes.debug.model;
 import cz.cvut.kbss.jopa.model.annotations.Id;
 import cz.cvut.kbss.jopa.model.annotations.OWLClass;
 import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
-import cz.cvut.spipes.debug.Vocabulary;
+import cz.cvut.spipes.Vocabulary;
 
 
 @OWLClass(iri = Vocabulary.s_c_related_resource)
