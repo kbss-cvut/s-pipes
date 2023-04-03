@@ -20,19 +20,15 @@ import cz.cvut.spipes.util.ScriptManagerFactory;
 
 @Service
 public class ScriptService {
-    private final SPipesScriptManager scriptManager;
 
     private final TransformationDao transformationDao;
-
-    private final DebugService debugService;
 
     private final TransformationDtoMapper mapper;
 
     public ScriptService(TransformationDao transformationDao, DebugService debugService, TransformationDtoMapper mapper) {
         this.transformationDao = transformationDao;
-        this.debugService = debugService;
         this.mapper = mapper;
-        scriptManager = ScriptManagerFactory.getSingletonSPipesScriptManager();
+        SPipesScriptManager scriptManager = ScriptManagerFactory.getSingletonSPipesScriptManager();
     }
 
     public List<ModuleExecution> findTripleOrigin(String executionId, String graphPattern) {
