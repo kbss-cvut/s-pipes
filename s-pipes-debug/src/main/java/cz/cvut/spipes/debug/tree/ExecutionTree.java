@@ -3,6 +3,7 @@ package cz.cvut.spipes.debug.tree;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import cz.cvut.spipes.debug.model.ModuleExecution;
@@ -44,37 +45,32 @@ public class ExecutionTree {
     }
 
     public List<ModuleExecution> findEarliest(List<ModuleExecution> findList) {
-        List<ModuleExecution> earliestExecutions = new ArrayList<>();
+        List<ModuleExecutionNode> matchingNodes = new ArrayList<>();
         List<String> targetIds = findList.stream()
                 .map(ModuleExecution::getId)
                 .collect(Collectors.toList());
-        findEarliestRecursive(rootNode, targetIds, earliestExecutions);
-        return earliestExecutions;
+        List<ModuleExecutionNode> nodes = findDepthForTargetIds(rootNode, targetIds, matchingNodes, 0);
+        Optional<Integer> maxDepth = nodes.stream()
+                .map(ModuleExecutionNode::getDepth)
+                .max(Integer::compare);
+
+        return nodes.stream()
+                .filter(n -> n.getDepth() == maxDepth.get())
+                .map(ModuleExecutionNode::getExecution)
+                .collect(Collectors.toList());
     }
 
-    private boolean findEarliestRecursive(ModuleExecutionNode currentNode, List<String> targetIds, List<ModuleExecution> earliestExecutions) {
-        boolean foundTargetId = false;
-
+    private List<ModuleExecutionNode> findDepthForTargetIds(ModuleExecutionNode currentNode, List<String> targetIds, List<ModuleExecutionNode> matchingNodes, int depth) {
         if (targetIds.contains(currentNode.getId())) {
-            earliestExecutions.add(currentNode.getExecution());
-            foundTargetId = true;
+            currentNode.setDepth(depth);
+            matchingNodes.add(currentNode);
         }
-        for (ModuleExecutionNode childNode : currentNode.getInputExecutions()) {
-            boolean childFound = findEarliestRecursive(childNode, targetIds, earliestExecutions);
-            foundTargetId = foundTargetId || childFound;
+        for (ModuleExecutionNode moduleExecutionNode : currentNode.getInputExecutions()) {
+            findDepthForTargetIds(moduleExecutionNode, targetIds, matchingNodes, depth + 1);
         }
-        if (foundTargetId && earliestExecutions.contains(currentNode.getExecution())) {
-            earliestExecutions.remove(currentNode.getExecution());
-            for (ModuleExecutionNode childNode : currentNode.getInputExecutions()) {
-                if (earliestExecutions.contains(childNode.getExecution())) {
-                    return false;
-                }
-            }
-            earliestExecutions.add(currentNode.getExecution());
-            return true;
-        }
-        return foundTargetId;
+        return matchingNodes;
     }
+
 
     public ModuleExecutionNode getRootNode() {
         return rootNode;

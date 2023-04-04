@@ -11,6 +11,7 @@ import cz.cvut.spipes.model.Thing;
 
 @OWLClass(iri = Vocabulary.s_c_module_execution)
 public class ModuleExecution extends ExecutionAbstract {
+
     @OWLDataProperty(iri = Vocabulary.s_p_has_execution_time)
     protected Long execution_time_ms;
 
@@ -28,6 +29,12 @@ public class ModuleExecution extends ExecutionAbstract {
 
     @OWLDataProperty(iri = Vocabulary.s_p_has_output_model_triple_count)
     private Long output_triple_count;
+
+    @OWLDataProperty(iri = Vocabulary.s_p_has_input_model_triple_count)
+    private Long input_triple_count;
+
+    @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-input-binding", fetch = FetchType.EAGER)
+    private Thing has_input_binding;
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_rdf4j_output, fetch = FetchType.EAGER)
     @ParticipationConstraints(
@@ -79,6 +86,14 @@ public class ModuleExecution extends ExecutionAbstract {
         this.output_triple_count = output_triple_count;
     }
 
+    public Long getInput_triple_count() {
+        return input_triple_count;
+    }
+
+    public void setInput_triple_count(Long input_triple_count) {
+        this.input_triple_count = input_triple_count;
+    }
+
     public Thing getHas_rdf4j_output() {
         return has_rdf4j_output;
     }
@@ -93,5 +108,13 @@ public class ModuleExecution extends ExecutionAbstract {
 
     public void setHas_rdf4j_input(Thing has_rdf4j_input) {
         this.has_rdf4j_input = has_rdf4j_input;
+    }
+
+    public Thing getHas_input_binding() {
+        return has_input_binding;
+    }
+
+    public void setHas_input_binding(Thing has_input_binding) {
+        this.has_input_binding = has_input_binding;
     }
 }

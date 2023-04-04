@@ -69,5 +69,12 @@ public class SPipesDebugController {
             @RequestParam String graphPattern){
         return scriptService.findTripleEliminationOrigin(executionId, graphPattern);
     }
+
+    @GetMapping(value = "/variable-origin/{executionId}")
+    public List<ModuleExecution> findVariableOrigin(
+            @PathVariable String executionId,
+            @RequestParam String variable){
+        return scriptService.findVariableOrigin(executionId, variable);
+    }
 }
 

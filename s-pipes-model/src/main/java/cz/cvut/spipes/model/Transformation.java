@@ -74,6 +74,9 @@ public class Transformation
     })
     protected ExecutionContextDatasetSource inv_dot_is_created_by;
 
+    @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-input-binding", fetch = FetchType.EAGER)
+    private Thing has_input_binding;
+
     @OWLDataProperty(iri = Vocabulary.s_p_has_module_execution_start_date, fetch = FetchType.EAGER)
     protected Date start_date;
 
@@ -88,6 +91,9 @@ public class Transformation
 
     @OWLDataProperty(iri = Vocabulary.s_p_has_output_model_triple_count, fetch = FetchType.EAGER)
     private Long output_triple_count;
+
+    @OWLDataProperty(iri = Vocabulary.s_p_has_input_model_triple_count, fetch = FetchType.EAGER)
+    private Long input_triple_count;
 
     public void setName(String name) {
         this.name = name;
@@ -231,5 +237,21 @@ public class Transformation
 
     public void setOutput_triple_count(Long output_triple_count) {
         this.output_triple_count = output_triple_count;
+    }
+
+    public Long getInput_triple_count() {
+        return input_triple_count;
+    }
+
+    public void setInput_triple_count(Long input_triple_count) {
+        this.input_triple_count = input_triple_count;
+    }
+
+    public void setHas_input_binding(Thing has_input_binding) {
+        this.has_input_binding = has_input_binding;
+    }
+
+    public Thing getHas_input_binding() {
+        return has_input_binding;
     }
 }

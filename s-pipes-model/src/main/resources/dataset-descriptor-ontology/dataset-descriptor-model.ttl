@@ -791,6 +791,16 @@
 
                                                                   rdfs:range xsd:long .
 
+###  http://onto.fel.cvut.cz/ontologies/s-pipes/has-input-model-triple-count
+
+<http://onto.fel.cvut.cz/ontologies/s-pipes/has-input-model-triple-count> rdf:type owl:DatatypeProperty ;
+
+                                                                  rdfs:label "has input triple count"^^xsd:string ;
+
+                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> ;
+
+                                                                  rdfs:range xsd:long .
+
 
 ### http://onto.fel.cvut.cz/ontologies/s-pipes/has-execution-start-date
 

@@ -84,44 +84,6 @@ public class DebugService {
         return getSortedModules(modules, orderBy, orderType);
     }
 
-
-    private List<ModuleExecution> getModulesByExecutionId(Transformation pipelineExecution) {
-        List<ModuleExecution> modules = pipelineExecution.getHas_part().stream()
-                .map(transformationDtoMapper::transformationToModuleExecution)
-                .collect(Collectors.toList());
-        modules.forEach(module -> {
-            module.setExecuted_in(pipelineExecution.getId());
-            relatedResourceService.addModuleExecutionResources(module);
-        });
-        return modules;
-    }
-
-    private List<ModuleExecution> getSortedModules(List<ModuleExecution> modules, String orderBy, String orderType) {
-        Comparator<ModuleExecution> comparator;
-        if (orderBy == null) {
-            comparator = defaultComparator();
-        } else {
-            switch (orderBy) {
-                case "duration":
-                    comparator = comparing(ModuleExecution::getExecution_time_ms);
-                    break;
-                case "output-triples":
-                    comparator = comparing(ModuleExecution::getOutput_triple_count);
-                    break;
-                case "start-time":
-                    comparator = defaultComparator();
-                    break;
-                default:
-                    comparator = defaultComparator();
-                    break;
-            }
-        }
-        if ("DESC".equalsIgnoreCase(orderType)) {
-            comparator = comparator.reversed();
-        }
-        return modules.stream().sorted(comparator).collect(Collectors.toList());
-    }
-
     public PipelineExecution getPipelineExecutionById(String executionId) {
         String iriString = getTransformationIriFromId(executionId);
         Transformation transformation = transformationDao.findByUri(iriString);
@@ -158,6 +120,47 @@ public class DebugService {
         result = buildPipelineComparisonResult(firstPipelineExecution, secondPipelineExecution, differenceIn);
         comparisonResultDao.persist(result);
         return pipelineComparisonDtoMapper.toDto(result);
+    }
+
+
+    private List<ModuleExecution> getModulesByExecutionId(Transformation pipelineExecution) {
+        List<ModuleExecution> modules = pipelineExecution.getHas_part().stream()
+                .map(transformationDtoMapper::transformationToModuleExecution)
+                .collect(Collectors.toList());
+        modules.forEach(module -> {
+            module.setExecuted_in(pipelineExecution.getId());
+            relatedResourceService.addModuleExecutionResources(module);
+        });
+        return modules;
+    }
+
+    private List<ModuleExecution> getSortedModules(List<ModuleExecution> modules, String orderBy, String orderType) {
+        Comparator<ModuleExecution> comparator;
+        if (orderBy == null) {
+            comparator = defaultComparator();
+        } else {
+            switch (orderBy) {
+                case "duration":
+                    comparator = comparing(ModuleExecution::getExecution_time_ms);
+                    break;
+                case "output-triples":
+                    comparator = comparing(ModuleExecution::getOutput_triple_count);
+                    break;
+                case "input-triples":
+                    comparator = comparing(ModuleExecution::getInput_triple_count);
+                    break;
+                case "start-time":
+                    comparator = defaultComparator();
+                    break;
+                default:
+                    comparator = defaultComparator();
+                    break;
+            }
+        }
+        if ("DESC".equalsIgnoreCase(orderType)) {
+            comparator = comparator.reversed();
+        }
+        return modules.stream().sorted(comparator).collect(Collectors.toList());
     }
 
     private PipelineComparison buildPipelineComparisonResult(Transformation pipelineExecution, Transformation compareTo, ModuleExecution difference) {

@@ -19,6 +19,7 @@ public interface TransformationDtoMapper {
     @Mapping(target = "start_date", ignore = true)
     @Mapping(target = "finish_date", ignore = true)
     @Mapping(target = "output_triple_count", ignore = true)
+    @Mapping(target = "input_triple_count", ignore = true)
     @Mapping(target = "has_rdf4j_output", ignore = true)
     @Mapping(target = "has_rdf4j_input", ignore = true)
     @Mapping(target = "has_next", ignore = true)
