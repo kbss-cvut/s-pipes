@@ -11,6 +11,8 @@ public class ModuleExecutionNode {
 
     private List<ModuleExecutionNode> inputExecutions = new ArrayList<>();
 
+    private int depth;
+
     public ModuleExecutionNode(ModuleExecution execution) {
         this.execution = execution;
     }
@@ -31,11 +33,19 @@ public class ModuleExecutionNode {
         this.inputExecutions = inputExecutions;
     }
 
-    public void addInputExecution(ModuleExecutionNode execution){
+    public void addInputExecution(ModuleExecutionNode execution) {
         this.inputExecutions.add(execution);
     }
 
     public String getId() {
         return execution.getId();
+    }
+
+    public int getDepth() {
+        return depth;
+    }
+
+    public void setDepth(int depth) {
+        this.depth = depth;
     }
 }
