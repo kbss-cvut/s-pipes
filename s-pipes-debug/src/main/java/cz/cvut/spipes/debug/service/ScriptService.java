@@ -71,8 +71,8 @@ public class ScriptService {
         List<ModuleExecution> modulesWithBoundVariable = new ArrayList<>();
         moduleExecutions.forEach(m -> {
             Thing inputBinding = m.getHas_input_binding();
-            if(inputBinding != null){
-                if(inputBindingDao.askHasBoundVariable(m.getHas_input_binding().getId(), variable)){
+            if (inputBinding != null) {
+                if (inputBindingDao.askHasBoundVariable(m.getHas_input_binding().getId(), variable)) {
                     modulesWithBoundVariable.add(m);
                 }
             }
