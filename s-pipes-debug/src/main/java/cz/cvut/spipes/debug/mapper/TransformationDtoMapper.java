@@ -22,6 +22,7 @@ public interface TransformationDtoMapper {
     @Mapping(target = "input_triple_count", ignore = true)
     @Mapping(target = "has_rdf4j_output", ignore = true)
     @Mapping(target = "has_rdf4j_input", ignore = true)
+    @Mapping(target = "has_input_binding", ignore = true)
     @Mapping(target = "has_next", ignore = true)
     ModuleExecution transformationToModuleExecutionShort(Transformation transformation);
 }

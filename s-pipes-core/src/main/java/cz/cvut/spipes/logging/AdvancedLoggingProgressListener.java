@@ -103,14 +103,12 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
     private final String pipelineExecutionGroupId;
     private EntityManagerFactory metadataEmf = null;
     private EntityManagerFactory dataEmf = null;
-    private SPipesScriptManager scriptManager = null;
 
     public AdvancedLoggingProgressListener(Resource configResource) {
         this.rdf4jServerUrl = getStringPropertyValue(configResource, P_RDF4J_SERVER_URL);
         this.metadataRepositoryName = getStringPropertyValue(configResource, P_METADATA_REPOSITORY_NAME);
         this.dataRepositoryName = getStringPropertyValue(configResource, P_DATA_REPOSITORY_NAME);
         this.pipelineExecutionGroupId = getStringPropertyValue(configResource, P_PIPELINE_EXECUTION_GROUP_ID);
-        this.scriptManager = ScriptManagerFactory.getSingletonSPipesScriptManager();
         if (
             (metadataRepositoryName != null)
                 && (dataRepositoryName != null)
@@ -258,7 +256,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
             getModulesSourceDatasetSnapshotUrl(pipelineExecutionId, moduleExecutionId, SnapshotRole.INPUT_GRAPH)
         );
         moduleExecution.setHas_input(input);
-        Thing rdf4jOutput = new Thing();
+        SourceDatasetSnapshot rdf4jOutput = new SourceDatasetSnapshot();
         String rdf4jOutputContentIri = getContextIri(moduleExecution, "input");
         rdf4jOutput.setId(rdf4jOutputContentIri);
         moduleExecution.setHas_rdf4j_input(rdf4jOutput);
@@ -306,7 +304,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
             getModulesSourceDatasetSnapshotUrl(pipelineExecutionId, moduleExecutionId, SnapshotRole.OUTPUT_GRAPH)
         );
         moduleExecution.setHas_output(Collections.singleton(output));
-        Thing rdf4jOutput = new Thing();
+        SourceDatasetSnapshot rdf4jOutput = new SourceDatasetSnapshot();
         rdf4jOutput.setId(getContextIri(moduleExecution, "output"));
         moduleExecution.setHas_rdf4j_output(rdf4jOutput);
 

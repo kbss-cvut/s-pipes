@@ -20,8 +20,6 @@ public class ConfigurationService {
 
     private final List<AbstractDao> allDaos;
 
-    private final PersistenceConfig persistenceConfig;
-
     @Autowired
     public ConfigurationService(
             PersistenceFactory persistenceFactory,
@@ -31,7 +29,6 @@ public class ConfigurationService {
         this.persistenceFactory = persistenceFactory;
         this.rDf4jPersistenceProvider = rDf4jPersistenceProvider;
         this.allDaos = allDaos;
-        this.persistenceConfig = persistenceConfig;
     }
 
 

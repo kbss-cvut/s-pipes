@@ -65,7 +65,7 @@ public class TransformationDao extends AbstractDao<Transformation> {
                             + "    FILTER NOT EXISTS {%s}"
                             + "  }"
                             + "  GRAPH <%s> {%s}"
-                            + "}", inputContext, graphPattern, outputContext, graphPattern))
+                            + "}", outputContext, graphPattern, inputContext, graphPattern))
                     .getSingleResult();
         } catch (Exception e) {
             System.out.println(e.getMessage());

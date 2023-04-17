@@ -1,5 +1,9 @@
 package cz.cvut.spipes.debug.model;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import cz.cvut.kbss.jopa.model.annotations.Id;
 import cz.cvut.kbss.jopa.model.annotations.OWLClass;
 import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
@@ -17,6 +21,9 @@ public class RelatedResource {
 
     @OWLDataProperty(iri = Vocabulary.s_p_value)
     private String link;
+
+    @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/related-resource/params")
+    private Map<String, List<String>> paramsOptions;
 
     public String getName() {
         return name;
@@ -36,5 +43,16 @@ public class RelatedResource {
 
     public String getId() {
         return id;
+    }
+
+    public void addParam(String param, List<String> options){
+        if(paramsOptions == null){
+            paramsOptions = new HashMap<>();
+        }
+        paramsOptions.put(param, options);
+    }
+
+    public Map<String, List<String>> getParamsOptions() {
+        return paramsOptions;
     }
 }
