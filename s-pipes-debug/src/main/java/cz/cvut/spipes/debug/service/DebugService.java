@@ -36,8 +36,6 @@ public class DebugService {
 
     private final PipelineComparisonDtoMapper pipelineComparisonDtoMapper;
 
-    private final RelatedResourceService relatedResourceService;
-
     private final TreeService treeService;
 
     private final ComparisonResultDao comparisonResultDao;
@@ -50,7 +48,6 @@ public class DebugService {
             ComparisonResultDao comparisonResultDao, PipelineComparisonDtoMapper pipelineComparisonDtoMapper) {
         this.transformationDao = transformationDao;
         this.transformationDtoMapper = transformationDtoMapper;
-        this.relatedResourceService = relatedResourceService;
         this.treeService = treeService;
         this.comparisonResultDao = comparisonResultDao;
         this.pipelineComparisonDtoMapper = pipelineComparisonDtoMapper;
@@ -59,14 +56,11 @@ public class DebugService {
     public List<PipelineExecution> getAllPipelineExecutions() {
         List<Transformation> transformations = transformationDao.findAll();
 
-        List<PipelineExecution> pipelineExecutions = transformations.stream()
+        return transformations.stream()
                 .filter(transformation -> matchesExecutionPattern(transformation.getId()))
                 .sorted(comparing(Transformation::getHas_pipepline_execution_date, Comparator.reverseOrder()))
                 .map(transformationDtoMapper::transformationToPipelineExecutionShort)
                 .collect(Collectors.toList());
-
-        pipelineExecutions.forEach(relatedResourceService::addPipelineExecutionResources);
-        return pipelineExecutions;
     }
 
     public List<ModuleExecution> getAllModuleExecutionsSorted(String executionId, String orderBy, String orderType) {
@@ -78,7 +72,7 @@ public class DebugService {
         List<ModuleExecution> modules = getModulesByExecutionId(pipelineTransformation);
         modules.forEach(module -> {
             if (module.getStart_date() != null && module.getFinish_date() != null) {
-                module.setExecution_time_ms(getFormattedDuration(module));
+                module.setDuration(getFormattedDuration(module));
             }
         });
         return getSortedModules(modules, orderBy, orderType);
@@ -92,13 +86,12 @@ public class DebugService {
         }
         Set<Transformation> parts = transformation.getHas_part();
         List<ModuleExecution> modules = parts.stream()
-                .map(transformationDtoMapper::transformationToModuleExecution)
+                .map(transformationDtoMapper::transformationToModuleExecutionShort)
                 .collect(Collectors.toList());
 
         Transformation pipelineTransformation = transformationDao.findByUri(Vocabulary.s_c_transformation + "/" + executionId);
         PipelineExecution pipelineExecution = transformationDtoMapper.transformationToPipelineExecution(pipelineTransformation);
         pipelineExecution.setHas_module_executions(modules);
-        relatedResourceService.addPipelineExecutionResources(pipelineExecution);
         return pipelineExecution;
     }
 
@@ -129,7 +122,6 @@ public class DebugService {
                 .collect(Collectors.toList());
         modules.forEach(module -> {
             module.setExecuted_in(pipelineExecution.getId());
-            relatedResourceService.addModuleExecutionResources(module);
         });
         return modules;
     }
@@ -141,7 +133,7 @@ public class DebugService {
         } else {
             switch (orderBy) {
                 case "duration":
-                    comparator = comparing(ModuleExecution::getExecution_time_ms);
+                    comparator = comparing(ModuleExecution::getDuration);
                     break;
                 case "output-triples":
                     comparator = comparing(ModuleExecution::getOutput_triple_count);

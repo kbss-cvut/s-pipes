@@ -2,6 +2,7 @@
 package cz.cvut.spipes.model;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -61,7 +62,7 @@ public class Transformation
     @OWLObjectProperty(iri = Vocabulary.s_p_has_part, fetch = FetchType.EAGER)
     @ParticipationConstraints(
             @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_transformation))
-    protected Set<Transformation> has_part;
+    protected Set<Transformation> has_part = new HashSet<>();
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_next, fetch = FetchType.EAGER)
     @ParticipationConstraints(
@@ -215,7 +216,7 @@ public class Transformation
     }
 
 
-    public void setHas_rdf4j_output(Thing has_rdf4j_output) {
+    public void setHas_rdf4j_output(SourceDatasetSnapshot has_rdf4j_output) {
         this.has_rdf4j_output = has_rdf4j_output;
     }
 
@@ -223,7 +224,7 @@ public class Transformation
         return has_rdf4j_input;
     }
 
-    public void setHas_rdf4j_input(Thing has_rdf4j_input) {
+    public void setHas_rdf4j_input(SourceDatasetSnapshot has_rdf4j_input) {
         this.has_rdf4j_input = has_rdf4j_input;
     }
 

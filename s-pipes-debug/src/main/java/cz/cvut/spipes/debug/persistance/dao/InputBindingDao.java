@@ -1,5 +1,7 @@
 package cz.cvut.spipes.debug.persistance.dao;
 
+import static cz.cvut.spipes.engine.VariablesBinding.HAS_BOUND_VARIABLE;
+
 import org.springframework.stereotype.Repository;
 
 import cz.cvut.kbss.jopa.model.EntityManager;
@@ -13,9 +15,9 @@ public class InputBindingDao extends AbstractDao {
     public boolean askHasBoundVariable(String binding, String variableName) {
         String query = String.format("ASK { "
                 + "  GRAPH <%s>{ "
-                + "    ?s <http://onto.fel.cvut.cz/ontologies/s-pipes/has_bound_value> \"%s\""
+                + "    ?s <%s> \"%s\""
                 + "  }"
-                + "}", binding, variableName);
+                + "}", binding, HAS_BOUND_VARIABLE, variableName);
         try {
             return (Boolean) em.createNativeQuery(query).getSingleResult();
         } catch (Exception e) {

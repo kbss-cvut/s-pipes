@@ -16,7 +16,6 @@ public class AbstractDto implements Serializable {
     @Types
     protected Set<String> types;
 
-
     public String getId() {
         return id;
     }

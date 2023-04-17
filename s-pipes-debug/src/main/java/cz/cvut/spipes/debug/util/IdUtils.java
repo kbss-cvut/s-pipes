@@ -10,12 +10,19 @@ public class IdUtils {
         return iri.substring(startIndex, endIndex);
     }
 
-    public static String getTransformationIriFromId(String executionId){
+    public static String getTransformationIriFromId(String executionId) {
         return s_c_transformation + "/" + executionId;
     }
 
-    public static String generatePipelineComparisonIri(){
+    public static String generatePipelineComparisonIri() {
         return s_c_pipeline_comparison + "/" + generateId();
+    }
+
+    public static String extractPipelineExecutionId(String moduleExecutionId) {
+        int lastSlashIndex = moduleExecutionId.lastIndexOf("/");
+        String id = moduleExecutionId.substring(lastSlashIndex + 1);
+        String[] nums = id.split("-");
+        return moduleExecutionId.replace(id, nums[0]);
     }
 
     private static String generateId() {

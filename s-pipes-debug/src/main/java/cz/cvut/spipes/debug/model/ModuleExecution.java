@@ -1,19 +1,19 @@
 package cz.cvut.spipes.debug.model;
 
-import cz.cvut.kbss.jopa.model.annotations.FetchType;
 import cz.cvut.kbss.jopa.model.annotations.OWLClass;
 import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
 import cz.cvut.kbss.jopa.model.annotations.OWLObjectProperty;
 import cz.cvut.kbss.jopa.model.annotations.ParticipationConstraint;
 import cz.cvut.kbss.jopa.model.annotations.ParticipationConstraints;
 import cz.cvut.spipes.Vocabulary;
+import cz.cvut.spipes.model.SourceDatasetSnapshot;
 import cz.cvut.spipes.model.Thing;
 
 @OWLClass(iri = Vocabulary.s_c_module_execution)
 public class ModuleExecution extends ExecutionAbstract {
 
-    @OWLDataProperty(iri = Vocabulary.s_p_has_execution_time)
-    protected Long execution_time_ms;
+    @OWLDataProperty(iri = Vocabulary.s_p_has_duration)
+    protected Long duration;
 
     @OWLDataProperty(iri = Vocabulary.s_p_has_module_id)
     protected String has_module_id;
@@ -33,25 +33,25 @@ public class ModuleExecution extends ExecutionAbstract {
     @OWLDataProperty(iri = Vocabulary.s_p_has_input_model_triple_count)
     private Long input_triple_count;
 
-    @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-input-binding", fetch = FetchType.EAGER)
+    @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-input-binding")
     private Thing has_input_binding;
 
-    @OWLObjectProperty(iri = Vocabulary.s_p_has_rdf4j_output, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_rdf4j_output)
     @ParticipationConstraints(
-            @ParticipationConstraint(owlObjectIRI = cz.cvut.spipes.Vocabulary.s_c_target_dataset_snapshot, max = 1))
-    protected Thing has_rdf4j_output;
+            @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_target_dataset_snapshot, max = 1))
+    protected SourceDatasetSnapshot has_rdf4j_output;
 
-    @OWLObjectProperty(iri = Vocabulary.s_p_has_rdf4j_input, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_rdf4j_input)
     @ParticipationConstraints(
-            @ParticipationConstraint(owlObjectIRI = cz.cvut.spipes.Vocabulary.s_c_source_dataset_snapshot, max = 1))
-    protected Thing has_rdf4j_input;
+            @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_source_dataset_snapshot, max = 1))
+    protected SourceDatasetSnapshot has_rdf4j_input;
 
-    public Long getExecution_time_ms() {
-        return execution_time_ms;
+    public Long getDuration() {
+        return duration;
     }
 
-    public void setExecution_time_ms(Long execution_time_ms) {
-        this.execution_time_ms = execution_time_ms;
+    public void setDuration(Long duration) {
+        this.duration = duration;
     }
 
     public String getHas_module_id() {
@@ -98,15 +98,15 @@ public class ModuleExecution extends ExecutionAbstract {
         return has_rdf4j_output;
     }
 
-    public void setHas_rdf4j_output(Thing has_rdf4j_output) {
+    public void setHas_rdf4j_output(SourceDatasetSnapshot has_rdf4j_output) {
         this.has_rdf4j_output = has_rdf4j_output;
     }
 
-    public Thing getHas_rdf4j_input() {
+    public SourceDatasetSnapshot getHas_rdf4j_input() {
         return has_rdf4j_input;
     }
 
-    public void setHas_rdf4j_input(Thing has_rdf4j_input) {
+    public void setHas_rdf4j_input(SourceDatasetSnapshot has_rdf4j_input) {
         this.has_rdf4j_input = has_rdf4j_input;
     }
 

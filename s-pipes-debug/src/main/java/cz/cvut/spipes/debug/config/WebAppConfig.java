@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -24,7 +25,7 @@ import cz.cvut.kbss.jsonld.jackson.serialization.SerializationConstants;
 @Configuration
 @EnableWebMvc
 @ComponentScan("cz.cvut.spipes.debug")
-public class WebAppConfig {
+public class WebAppConfig implements WebMvcConfigurer {
 
     @Bean(name = "jsonLdMapper")
     public ObjectMapper jsonLdObjectMapper() {
