@@ -880,11 +880,11 @@
 
                                                                 rdfs:range <http://onto.fel.cvut.cz/ontologies/s-pipes/pipeline-execution> .
 
-### http://onto.fel.cvut.cz/ontologies/s-pipes/has-execution-time
+### http://onto.fel.cvut.cz/ontologies/s-pipes/has-duration
 
-<http://onto.fel.cvut.cz/ontologies/s-pipes/has-execution-time> rdf:type owl:DatatypeProperty ;
+<http://onto.fel.cvut.cz/ontologies/s-pipes/has-duration> rdf:type owl:DatatypeProperty ;
 
-                                                                rdfs:label "has execution time"^^xsd:string ;
+                                                                rdfs:label "has duration ms"^^xsd:string ;
 
                                                                 rdfs:domain <http://onto.fel.cvut.cz/ontologies/s-pipes/module-execution> ;
 
