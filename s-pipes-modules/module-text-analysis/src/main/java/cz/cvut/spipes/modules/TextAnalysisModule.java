@@ -27,6 +27,7 @@ import org.topbraid.spin.model.Select;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class TextAnalysisModule extends AnnotatedAbstractModule{
@@ -68,14 +69,30 @@ public class TextAnalysisModule extends AnnotatedAbstractModule{
         Query query = ARQFactory.get().createQuery(selectQuery);
         try (QueryExecution queryExecution = QueryExecutionFactory.create(query, inputModel)) {
             ResultSet resultSet = queryExecution.execSelect();
-            ResIterator subjects = resultSet.getResourceModel().listSubjects();
+            List<Resource> subjects = new ArrayList<>();
+
+            // get all subjects from the result set
+            while(resultSet.hasNext()){
+                QuerySolution qs = resultSet.nextSolution();
+                Iterator<String> varNames = qs.varNames();
+                while(varNames.hasNext()){
+                    String varName = varNames.next();
+                    RDFNode node = qs.get(varName);
+                    if(node.isResource()){
+                        Resource resource = node.asResource();
+                        subjects.add(resource);
+                    }
+                }
+            }
+
+            Iterator<Resource> subjectsIterator = subjects.iterator();
             List<String> listOfTexts = new ArrayList<>();
             List<Resource> listOfSubjects = new ArrayList<>();
             StringBuilder sb = new StringBuilder();
             int counter = 0;
 
-            while (subjects.hasNext()) {
-                Resource subject = subjects.next();
+            while (subjectsIterator.hasNext()) {
+                Resource subject = subjectsIterator.next();
                 StmtIterator statements = subject.listProperties();
 
                 while (statements.hasNext()) {
@@ -90,6 +107,9 @@ public class TextAnalysisModule extends AnnotatedAbstractModule{
                     }
 
                     String text = literal.getString();
+                    if (text == null || text.isEmpty()) {
+                        continue;
+                    }
                     listOfTexts.add(text);
                     listOfSubjects.add(subject);
                     sb.append(text).append("<br>");
@@ -115,7 +135,7 @@ public class TextAnalysisModule extends AnnotatedAbstractModule{
         String annotatedText = annotateObjectLiteral(sb.toString());
         String[] elements = splitAnnotatedText(annotatedText);
 
-        for (int i = 0; i < listOfSubjects.size(); i++) {
+        for (int i = 0; i < elements.length; i++) {
             Resource sub = listOfSubjects.get(i);
             String textElement = listOfTexts.get(i);
             String annotatedTextElement = elements[i];
