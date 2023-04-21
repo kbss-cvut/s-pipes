@@ -3,6 +3,7 @@ package cz.cvut.spipes.model;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -15,6 +16,7 @@ import cz.cvut.kbss.jopa.model.annotations.OWLObjectProperty;
 import cz.cvut.kbss.jopa.model.annotations.ParticipationConstraint;
 import cz.cvut.kbss.jopa.model.annotations.ParticipationConstraints;
 import cz.cvut.kbss.jopa.model.annotations.Properties;
+import cz.cvut.kbss.jopa.model.annotations.Sequence;
 import cz.cvut.kbss.jopa.model.annotations.Types;
 import cz.cvut.kbss.jopa.vocabulary.DC;
 import cz.cvut.kbss.jopa.vocabulary.RDFS;
@@ -69,14 +71,12 @@ public class Transformation
             @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_transformation))
     protected Transformation has_next;
 
-    @OWLObjectProperty(iri = Vocabulary.s_p_inv_dot_is_created_by)
-    @ParticipationConstraints({
-            @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_execution_context_dataset_source, max = 1)
-    })
-    protected ExecutionContextDatasetSource inv_dot_is_created_by;
 
     @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-input-binding", fetch = FetchType.EAGER)
-    private Thing has_input_binding;
+    @ParticipationConstraints({
+            @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_target_dataset_snapshot)
+    })
+    protected Set<Thing> has_input_binding;
 
     @OWLDataProperty(iri = Vocabulary.s_p_has_module_execution_start_date, fetch = FetchType.EAGER)
     protected Date start_date;
@@ -151,15 +151,6 @@ public class Transformation
     public Set<Thing> getHas_output() {
         return has_output;
     }
-
-    public void setInv_dot_is_created_by(ExecutionContextDatasetSource inv_dot_is_created_by) {
-        this.inv_dot_is_created_by = inv_dot_is_created_by;
-    }
-
-    public ExecutionContextDatasetSource getInv_dot_is_created_by() {
-        return inv_dot_is_created_by;
-    }
-
 
     public Date getStart_date() {
         return start_date;
@@ -248,11 +239,11 @@ public class Transformation
         this.input_triple_count = input_triple_count;
     }
 
-    public void setHas_input_binding(Thing has_input_binding) {
-        this.has_input_binding = has_input_binding;
+    public Set<Thing> getHas_input_binding() {
+        return has_input_binding;
     }
 
-    public Thing getHas_input_binding() {
-        return has_input_binding;
+    public void setHas_input_binding(Set<Thing> has_input_binding) {
+        this.has_input_binding = has_input_binding;
     }
 }

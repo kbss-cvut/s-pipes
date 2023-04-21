@@ -4,6 +4,7 @@ import static cz.cvut.spipes.debug.util.IdUtils.getTransformationIriFromId;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -69,14 +70,10 @@ public class ScriptService {
     public List<ModuleExecution> findVariableOrigin(String executionId, String variable) {
         List<ModuleExecution> moduleExecutions = getModuleExecutions(executionId);
         List<ModuleExecution> modulesWithBoundVariable = new ArrayList<>();
-        moduleExecutions.forEach(m -> {
-            Thing inputBinding = m.getHas_input_binding();
-            if (inputBinding != null) {
-                if (inputBindingDao.askHasBoundVariable(m.getHas_input_binding().getId(), variable)) {
-                    modulesWithBoundVariable.add(m);
-                }
-            }
-        });
+        for (ModuleExecution m : moduleExecutions) {
+            Set<Thing> inputBindings = m.getHas_input_binding();
+            addModuleIfHasBoundVariable(m, inputBindings, modulesWithBoundVariable, variable);
+        }
         if (modulesWithBoundVariable.isEmpty()) {
             throw new NotFoundException(String.format(NOT_FOUND_ERROR_VARIABLE, variable));
         }
@@ -90,5 +87,16 @@ public class ScriptService {
 
         return transformation.getHas_part()
                 .stream().map(mapper::transformationToModuleExecution).collect(Collectors.toList());
+    }
+
+    private void addModuleIfHasBoundVariable(ModuleExecution moduleExecution, Set<Thing> inputBindings, List<ModuleExecution> modulesWithBoundVariable, String variable) {
+        for (Thing binding : inputBindings) {
+            if (binding != null) {
+                if (inputBindingDao.askHasBoundVariable(binding.getId(), variable)) {
+                    modulesWithBoundVariable.add(moduleExecution);
+                    return;
+                }
+            }
+        }
     }
 }

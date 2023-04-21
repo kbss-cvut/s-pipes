@@ -1,5 +1,8 @@
 package cz.cvut.spipes.debug.model;
 
+import java.util.List;
+import java.util.Set;
+
 import cz.cvut.kbss.jopa.model.annotations.OWLClass;
 import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
 import cz.cvut.kbss.jopa.model.annotations.OWLObjectProperty;
@@ -34,7 +37,7 @@ public class ModuleExecution extends ExecutionAbstract {
     private Long input_triple_count;
 
     @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-input-binding")
-    private Thing has_input_binding;
+    private Set<Thing> has_input_binding;
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_rdf4j_output)
     @ParticipationConstraints(
@@ -110,11 +113,11 @@ public class ModuleExecution extends ExecutionAbstract {
         this.has_rdf4j_input = has_rdf4j_input;
     }
 
-    public Thing getHas_input_binding() {
+    public Set<Thing> getHas_input_binding() {
         return has_input_binding;
     }
 
-    public void setHas_input_binding(Thing has_input_binding) {
+    public void setHas_input_binding(Set<Thing> has_input_binding) {
         this.has_input_binding = has_input_binding;
     }
 }

@@ -5,9 +5,10 @@ import static cz.cvut.spipes.engine.VariablesBinding.HAS_BOUND_VARIABLE;
 import org.springframework.stereotype.Repository;
 
 import cz.cvut.kbss.jopa.model.EntityManager;
+import cz.cvut.spipes.model.Thing;
 
 @Repository
-public class InputBindingDao extends AbstractDao {
+public class InputBindingDao extends AbstractDao<Thing> {
     protected InputBindingDao(EntityManager em) {
         super(em);
     }
