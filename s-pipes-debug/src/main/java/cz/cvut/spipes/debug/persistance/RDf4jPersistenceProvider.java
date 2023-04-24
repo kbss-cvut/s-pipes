@@ -30,6 +30,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
+import cz.cvut.spipes.debug.config.PropertyResolver;
 
 @Configuration
 @PropertySource("classpath:config.properties")
@@ -39,15 +40,15 @@ public class RDf4jPersistenceProvider {
     private static final String STORAGE_URL_PROPERTY = "storageUrl";
     private static final String DEFAULT_REPOSITORY_NAME = "repositoryName";
 
-    private final Environment environment;
+    private final PropertyResolver propertyResolver;
 
     private final EntityManagerFactory emf;
 
     private Repository repository;
 
     @Autowired
-    public RDf4jPersistenceProvider(Environment environment, EntityManagerFactory emf) {
-        this.environment = environment;
+    public RDf4jPersistenceProvider(PropertyResolver propertyResolver, EntityManagerFactory emf) {
+        this.propertyResolver = propertyResolver;
         this.emf = emf;
     }
 
@@ -58,7 +59,7 @@ public class RDf4jPersistenceProvider {
 
     @PostConstruct
     private void initializeStorage() {
-        final String repoUrl = buildRepoUrl(environment.getRequiredProperty(DEFAULT_REPOSITORY_NAME));
+        final String repoUrl = buildRepoUrl(propertyResolver.getProperty(DEFAULT_REPOSITORY_NAME));
         initializeStorage(repoUrl);
 
     }
@@ -78,6 +79,6 @@ public class RDf4jPersistenceProvider {
     }
 
     private String buildRepoUrl(String repoName) {
-        return environment.getRequiredProperty(STORAGE_URL_PROPERTY) + "/" + repoName;
+        return propertyResolver.getProperty(STORAGE_URL_PROPERTY) + "/" + repoName;
     }
 }
