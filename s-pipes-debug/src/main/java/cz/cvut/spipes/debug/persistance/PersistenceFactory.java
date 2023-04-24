@@ -25,12 +25,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
 
 import cz.cvut.kbss.jopa.Persistence;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import cz.cvut.kbss.jopa.model.JOPAPersistenceProperties;
 import cz.cvut.kbss.jopa.model.JOPAPersistenceProvider;
+import cz.cvut.spipes.debug.config.PropertyResolver;
 
 /**
  * Provides entity manager factory as a Spring bean.
@@ -46,13 +46,13 @@ public class PersistenceFactory {
 
     public static final Map<String, String> PARAMS = initParams();
 
-    private final Environment environment;
+    private final PropertyResolver propertyResolver;
 
     private EntityManagerFactory emf;
 
     @Autowired
-    public PersistenceFactory(Environment environment) {
-        this.environment = environment;
+    public PersistenceFactory(PropertyResolver propertyResolver) {
+        this.propertyResolver = propertyResolver;
     }
 
     @Bean
@@ -62,7 +62,7 @@ public class PersistenceFactory {
 
     @PostConstruct
     private void init() {
-        String repositoryUrl = buildRepositoryUrl(environment.getProperty(REPOSITORY_NAME_PROPERTY));
+        String repositoryUrl = buildRepositoryUrl(propertyResolver.getProperty(REPOSITORY_NAME_PROPERTY));
         init(repositoryUrl);
     }
 
@@ -81,12 +81,12 @@ public class PersistenceFactory {
     private void init(String repositoryUrl) {
         final Map<String, String> properties = new HashMap<>(PARAMS);
         properties.put(JOPAPersistenceProperties.ONTOLOGY_PHYSICAL_URI_KEY, repositoryUrl);
-        properties.put(JOPAPersistenceProperties.DATA_SOURCE_CLASS, environment.getProperty(DRIVER_PROPERTY));
+        properties.put(JOPAPersistenceProperties.DATA_SOURCE_CLASS, propertyResolver.getProperty(DRIVER_PROPERTY));
         this.emf = Persistence.createEntityManagerFactory("debug", properties);
     }
 
     private String buildRepositoryUrl(String repositoryName) {
-        return environment.getProperty(STORAGE_URL) + "/" + repositoryName;
+        return propertyResolver.getProperty(STORAGE_URL) + "/" + repositoryName;
     }
 
     private static Map<String, String> initParams() {
@@ -96,7 +96,7 @@ public class PersistenceFactory {
         return map;
     }
 
-    public EntityManagerFactory getEmf(){
+    public EntityManagerFactory getEmf() {
         return this.emf;
     }
 }

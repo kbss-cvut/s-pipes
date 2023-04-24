@@ -1,0 +1,48 @@
+version: '3.7'
+
+services:
+  s-pipes-engine:
+    image: 'spipes-engine:latest'
+    container_name: s-pipes-engine
+    ports:
+      - "8081:8080"
+      - "5005:5005"
+    expose:
+      - "8080"
+    networks:
+      - overlay
+    depends_on:
+      - rdf4j
+    environment:
+      - JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+      - CONTEXTS_SCRIPTPATHS=/home/mircheq/IdeaProjects/BP/s-pipes/s-pipes-modules;/home/mircheq/IdeaProjects/sgov-forms;/home/mircheq/IdeaProjects/BP/s-pipes/doc/examples;
+      - CATALINA_OPTS=-Dcatalina.http.port=8080
+      - STORAGE_URL=http://rdf4j:8080/rdf4j-server/repositories
+    volumes:
+      - /tmp:/tmp
+      - /home:/home
+      - /usr/local/tomcat/temp/:/usr/local/tomcat/temp/
+
+  rdf4j:
+    build:
+      context: .
+      dockerfile: Dockerfile_rdfj4
+    container_name: rdf4j
+    ports:
+      - "8080:8080"
+    expose:
+      - "8080"
+    networks:
+      - overlay
+    environment:
+      - JAVA_OPTS=-Xms1g -Xmx4g
+    volumes:
+      - data:/var/rdf4j
+      - logs:/usr/local/tomcat/logs
+
+volumes:
+  data:
+  logs:
+
+networks:
+  overlay:

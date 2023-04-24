@@ -6,12 +6,14 @@ COPY ./ ./
 RUN mvn clean package -T 2C -DskipTests -q
 
 # the second stage of our build will use a tomcat:9.0-jdk8-slim
-FROM tomcat:9.0-jdk8-slim
+FROM tomcat:9.0-jdk11-corretto
 
 EXPOSE 8080
 
 RUN rm -rf /usr/local/tomcat/webapps/*
 
 COPY --from=MAVEN_BUILD /s-pipes-web/target/s-pipes-web-*.war /usr/local/tomcat/webapps/s-pipes.war
+
+COPY --from=MAVEN_BUILD /s-pipes-debug/target/s-pipes-debug-*.war /usr/local/tomcat/webapps/debug.war
 
 CMD ["catalina.sh","run"]
