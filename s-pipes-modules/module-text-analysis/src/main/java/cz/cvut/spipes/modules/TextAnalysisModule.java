@@ -4,7 +4,6 @@ import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.modules.constants.Termit;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -27,7 +26,6 @@ import org.topbraid.spin.model.Select;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class TextAnalysisModule extends AnnotatedAbstractModule{
@@ -69,96 +67,58 @@ public class TextAnalysisModule extends AnnotatedAbstractModule{
         Query query = ARQFactory.get().createQuery(selectQuery);
         try (QueryExecution queryExecution = QueryExecutionFactory.create(query, inputModel)) {
             ResultSet resultSet = queryExecution.execSelect();
-            List<Resource> subjects = new ArrayList<>();
-
-            // get all subjects from the result set
-            while(resultSet.hasNext()){
-                QuerySolution qs = resultSet.nextSolution();
-                Iterator<String> varNames = qs.varNames();
-                while(varNames.hasNext()){
-                    String varName = varNames.next();
-                    RDFNode node = qs.get(varName);
-                    if(node.isResource()){
-                        Resource resource = node.asResource();
-                        subjects.add(resource);
-                    }
-                }
-            }
-
-            Iterator<Resource> subjectsIterator = subjects.iterator();
-            List<String> listOfTexts = new ArrayList<>();
-            List<Resource> listOfSubjects = new ArrayList<>();
+            List<RDFNode> listOfObjects = new ArrayList<>();
             StringBuilder sb = new StringBuilder();
             int counter = 0;
 
-            while (subjectsIterator.hasNext()) {
-                Resource subject = subjectsIterator.next();
-                StmtIterator statements = subject.listProperties();
+            while (resultSet.hasNext()) {
+                QuerySolution solution = resultSet.nextSolution();
+                RDFNode object = solution.get("o");
 
-                while (statements.hasNext()) {
-                    Statement statement = statements.next();
-                    if (!statement.getObject().isLiteral()) {
-                        continue;
-                    }
-
-                    Literal literal = statement.getObject().asLiteral();
-                    if (!(literal.getDatatype() instanceof XSDBaseStringType)) {
-                        continue;
-                    }
-
-                    String text = literal.getString();
-                    if (text == null || text.isEmpty()) {
-                        continue;
-                    }
-                    listOfTexts.add(text);
-                    listOfSubjects.add(subject);
-                    sb.append(text).append("<br>");
-                    counter++;
-
+                if (object != null && object.isLiteral() && object.asLiteral().getDatatype() instanceof XSDBaseStringType) {
+                    Literal literal = object.asLiteral();
+                    String textElement = literal.getString();
                     if (counter >= literalsPerRequest) {
-                        addAnnotatedLiteralsToModel(outputModel, listOfTexts, listOfSubjects, sb);
-                        listOfTexts.clear();
-                        listOfSubjects.clear();
-                        sb.setLength(0);
+                        String annotatedText = annotateObjectLiteral(sb.toString());
+                        String[] elements = splitAnnotatedText(annotatedText);
+
+                        for (int i = 0; i < listOfObjects.size(); i++) {
+                            String annotatedTerm = elements[i];
+                            createAnnotatedResource(outputModel, textElement, annotatedTerm);
+                        }
+                        listOfObjects.clear();
+                        sb = new StringBuilder();
                         counter = 0;
                     }
+
+                    listOfObjects.add(object);
+                    sb.append(textElement);
+                    sb.append("<br>");
+                    counter++;
                 }
             }
-            if (counter > 0) { // add remaining literals
-                addAnnotatedLiteralsToModel(outputModel, listOfTexts, listOfSubjects, sb);
+
+            if (counter > 0) {
+                String annotatedText = annotateObjectLiteral(sb.toString());
+                String[] elements = splitAnnotatedText(annotatedText);
+
+                for (int i = 0; i < listOfObjects.size(); i++) {
+                    RDFNode obj = listOfObjects.get(i);
+                    String textElement = obj.asLiteral().getString();
+                    String annotatedTerm = elements[i];
+                    createAnnotatedResource(outputModel, textElement, annotatedTerm);
+                }
             }
         }
         return createOutputContext(isReplace, inputModel, outputModel);
     }
 
-    private void addAnnotatedLiteralsToModel(Model outputModel, List<String> listOfTexts, List<Resource> listOfSubjects, StringBuilder sb) {
-        String annotatedText = annotateObjectLiteral(sb.toString());
-        String[] elements = splitAnnotatedText(annotatedText);
-
-        for (int i = 0; i < elements.length; i++) {
-            Resource sub = listOfSubjects.get(i);
-            String textElement = listOfTexts.get(i);
-            String annotatedTextElement = elements[i];
-            Resource annotatedResource = createAnnotatedResource(sub, textElement, annotatedTextElement, outputModel);
-            outputModel.add(annotatedResource.getModel());
-        }
-    }
-
-
-    private Resource createAnnotatedResource(Resource subject, String originalText, String annotatedText, Model model) {
-        Resource annotatedResource;
-        if (subject.isAnon()){
-            annotatedResource = model.createResource();
-        } else {
-            String newSubjectUri = subject.getURI() + "-annotated-" + DigestUtils.md5Hex(subject.getURI() + originalText);
-            annotatedResource = model.createResource(newSubjectUri);
-        }
+    private void createAnnotatedResource(Model outputModel, String originalText, String annotatedText) {
+        Resource annotatedResource = outputModel.createResource();
 
         annotatedResource.addProperty(RDF.type, Termit.ANNOTATION);
         annotatedResource.addProperty(Termit.ORIGINAL_TEXT, originalText);
         annotatedResource.addProperty(Termit.ANNOTATED_TEXT, annotatedText);
-
-        return annotatedResource;
     }
 
     private String[] splitAnnotatedText(String annotatedText) {
