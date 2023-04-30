@@ -3,7 +3,7 @@ package cz.cvut.spipes.debug.tree;
 import java.util.ArrayList;
 import java.util.List;
 
-import cz.cvut.spipes.debug.model.ModuleExecution;
+import cz.cvut.spipes.model.ModuleExecution;
 
 public class ModuleExecutionNode {
 

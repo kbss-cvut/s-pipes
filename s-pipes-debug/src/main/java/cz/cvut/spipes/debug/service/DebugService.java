@@ -2,7 +2,6 @@ package cz.cvut.spipes.debug.service;
 
 import static java.util.Comparator.comparing;
 import static cz.cvut.spipes.debug.util.IdUtils.generatePipelineComparisonIri;
-import static cz.cvut.spipes.debug.util.IdUtils.getTransformationIriFromId;
 
 import java.time.Duration;
 import java.util.Comparator;
@@ -13,26 +12,31 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cz.cvut.spipes.Vocabulary;
 import cz.cvut.spipes.debug.dto.PipelineComparisonResultDto;
 import cz.cvut.spipes.debug.exception.NotFoundException;
+import cz.cvut.spipes.debug.mapper.ModuleExecutionMapper;
 import cz.cvut.spipes.debug.mapper.PipelineComparisonDtoMapper;
-import cz.cvut.spipes.debug.mapper.TransformationDtoMapper;
-import cz.cvut.spipes.debug.model.ModuleExecution;
-import cz.cvut.spipes.debug.model.PipelineExecution;
+import cz.cvut.spipes.debug.mapper.PipelineExecutionMapper;
+import cz.cvut.spipes.debug.dto.ModuleExecutionDto;
+import cz.cvut.spipes.debug.dto.PipelineExecutionDto;
 import cz.cvut.spipes.debug.persistance.dao.ComparisonResultDao;
-import cz.cvut.spipes.debug.persistance.dao.TransformationDao;
+import cz.cvut.spipes.debug.persistance.dao.ModuleExecutionDao;
+import cz.cvut.spipes.debug.persistance.dao.PipelineExecutionDao;
 import cz.cvut.spipes.debug.tree.ExecutionTree;
-import cz.cvut.spipes.debug.util.IdUtils;
+import cz.cvut.spipes.model.ModuleExecution;
 import cz.cvut.spipes.model.PipelineComparison;
-import cz.cvut.spipes.model.Transformation;
+import cz.cvut.spipes.model.PipelineExecution;
 
 @Service
 public class DebugService {
 
-    private final TransformationDao transformationDao;
+    private final ModuleExecutionDao moduleExecutionDao;
 
-    private final TransformationDtoMapper transformationDtoMapper;
+    private final PipelineExecutionDao pipelineExecutionDao;
+
+    private final ModuleExecutionMapper moduleExecutionMapper;
+
+    private final PipelineExecutionMapper pipelineExecutionMapper;
 
     private final PipelineComparisonDtoMapper pipelineComparisonDtoMapper;
 
@@ -40,64 +44,57 @@ public class DebugService {
 
     private final ComparisonResultDao comparisonResultDao;
 
-    private static final String EXECUTION_IRI_PATTERN = "^http://onto\\.fel\\.cvut\\.cz/ontologies/dataset-descriptor/transformation/\\d+$";
-
     @Autowired
     public DebugService(
-            TransformationDao transformationDao, TransformationDtoMapper transformationDtoMapper, RelatedResourceService relatedResourceService, TreeService treeService,
+            ModuleExecutionDao moduleExecutionDao,
+            PipelineExecutionDao pipelineExecutionDao,
+            ModuleExecutionMapper moduleExecutionMapper, PipelineExecutionMapper pipelineExecutionMapper, TreeService treeService,
             ComparisonResultDao comparisonResultDao, PipelineComparisonDtoMapper pipelineComparisonDtoMapper) {
-        this.transformationDao = transformationDao;
-        this.transformationDtoMapper = transformationDtoMapper;
+        this.moduleExecutionMapper = moduleExecutionMapper;
+        this.pipelineExecutionMapper = pipelineExecutionMapper;
+        this.moduleExecutionDao = moduleExecutionDao;
+        this.pipelineExecutionDao = pipelineExecutionDao;
         this.treeService = treeService;
         this.comparisonResultDao = comparisonResultDao;
         this.pipelineComparisonDtoMapper = pipelineComparisonDtoMapper;
     }
 
-    public List<PipelineExecution> getAllPipelineExecutions() {
-        List<Transformation> transformations = transformationDao.findAll();
-
-        return transformations.stream()
-                .filter(transformation -> matchesExecutionPattern(transformation.getId()))
-                .sorted(comparing(Transformation::getHas_pipepline_execution_date, Comparator.reverseOrder()))
-                .map(transformationDtoMapper::transformationToPipelineExecutionShort)
+    public List<PipelineExecutionDto> getAllPipelineExecutions() {
+        List<PipelineExecution> pipelineExecutionDtos = pipelineExecutionDao.findAll();
+        return pipelineExecutionDtos.stream()
+                .sorted(comparing(PipelineExecution::getHas_pipepline_execution_date, Comparator.reverseOrder()))
+                .map(pipelineExecutionMapper::toDto)
                 .collect(Collectors.toList());
     }
 
-    public List<ModuleExecution> getAllModuleExecutionsSorted(String executionId, String orderBy, String orderType) {
-        String iriString = IdUtils.getTransformationIriFromId(executionId);
-        Transformation pipelineTransformation = transformationDao.findByUri(iriString);
+    public List<ModuleExecutionDto> getAllModuleExecutionsSorted(String executionId, String orderBy, String orderType) {
+        PipelineExecution pipelineTransformation = pipelineExecutionDao.findById(executionId);
         if (pipelineTransformation == null) {
-            throw new NotFoundException("Pipeline execution " + iriString + " was not found");
+            throw new NotFoundException("Pipeline execution with id " + executionId + " was not found");
         }
-        List<ModuleExecution> modules = getModulesByExecutionId(pipelineTransformation);
+        Set<ModuleExecution> modules = pipelineTransformation.getHas_part();
         modules.forEach(module -> {
             if (module.getStart_date() != null && module.getFinish_date() != null) {
                 module.setDuration(getFormattedDuration(module));
             }
         });
-        return getSortedModules(modules, orderBy, orderType);
+        return getSortedModules(modules, orderBy, orderType)
+                .stream()
+                .map(moduleExecutionMapper::toDto)
+                .collect(Collectors.toList());
     }
 
-    public PipelineExecution getPipelineExecutionById(String executionId) {
-        String iriString = getTransformationIriFromId(executionId);
-        Transformation transformation = transformationDao.findByUri(iriString);
-        if (transformation == null) {
-            throw new NotFoundException("Pipeline execution with id " + iriString);
+    public PipelineExecutionDto getPipelineExecutionById(String executionId) {
+        PipelineExecution pipelineExecution = pipelineExecutionDao.findById(executionId);
+        if (pipelineExecution == null) {
+            throw new NotFoundException("Pipeline execution with id " + executionId);
         }
-        Set<Transformation> parts = transformation.getHas_part();
-        List<ModuleExecution> modules = parts.stream()
-                .map(transformationDtoMapper::transformationToModuleExecutionShort)
-                .collect(Collectors.toList());
-
-        Transformation pipelineTransformation = transformationDao.findByUri(Vocabulary.s_c_transformation + "/" + executionId);
-        PipelineExecution pipelineExecution = transformationDtoMapper.transformationToPipelineExecution(pipelineTransformation);
-        pipelineExecution.setHas_module_executions(modules);
-        return pipelineExecution;
+        return pipelineExecutionMapper.toDto(pipelineExecution);
     }
 
     public PipelineComparisonResultDto compareExecutions(String executionId, String executionToCompareId) {
-        Transformation firstPipelineExecution = transformationDao.findByUri(getTransformationIriFromId(executionId));
-        Transformation secondPipelineExecution = transformationDao.findByUri(getTransformationIriFromId(executionToCompareId));
+        PipelineExecution firstPipelineExecution = pipelineExecutionDao.findById(executionId);
+        PipelineExecution secondPipelineExecution = pipelineExecutionDao.findById(executionToCompareId);
         if (firstPipelineExecution == null || secondPipelineExecution == null) {
             throw new NotFoundException("Pipeline execution(s) not found, check the id's");
         }
@@ -105,10 +102,8 @@ public class DebugService {
         if (result != null) {
             return pipelineComparisonDtoMapper.toDto(result);
         }
-        List<ModuleExecution> moduleExecutions1 = getModuleExecutionsFromPipelineTransformation(firstPipelineExecution);
-        List<ModuleExecution> moduleExecutions2 = getModuleExecutionsFromPipelineTransformation(secondPipelineExecution);
-        ExecutionTree tree1 = new ExecutionTree(moduleExecutions1);
-        ExecutionTree tree2 = new ExecutionTree(moduleExecutions2);
+        ExecutionTree tree1 = new ExecutionTree(firstPipelineExecution.getHas_part());
+        ExecutionTree tree2 = new ExecutionTree(secondPipelineExecution.getHas_part());
         ModuleExecution differenceIn = treeService.findFirstOutputDifference(tree1, tree2);
         result = buildPipelineComparisonResult(firstPipelineExecution, secondPipelineExecution, differenceIn);
         comparisonResultDao.persist(result);
@@ -116,17 +111,7 @@ public class DebugService {
     }
 
 
-    private List<ModuleExecution> getModulesByExecutionId(Transformation pipelineExecution) {
-        List<ModuleExecution> modules = pipelineExecution.getHas_part().stream()
-                .map(transformationDtoMapper::transformationToModuleExecution)
-                .collect(Collectors.toList());
-        modules.forEach(module -> {
-            module.setExecuted_in(pipelineExecution.getId());
-        });
-        return modules;
-    }
-
-    private List<ModuleExecution> getSortedModules(List<ModuleExecution> modules, String orderBy, String orderType) {
+    private List<ModuleExecution> getSortedModules(Set<ModuleExecution> modules, String orderBy, String orderType) {
         Comparator<ModuleExecution> comparator;
         if (orderBy == null) {
             comparator = defaultComparator();
@@ -155,7 +140,7 @@ public class DebugService {
         return modules.stream().sorted(comparator).collect(Collectors.toList());
     }
 
-    private PipelineComparison buildPipelineComparisonResult(Transformation pipelineExecution, Transformation compareTo, ModuleExecution difference) {
+    private PipelineComparison buildPipelineComparisonResult(PipelineExecution pipelineExecution, PipelineExecution compareTo, ModuleExecution difference) {
         PipelineComparison result = new PipelineComparison();
         result.setPipeline(pipelineExecution);
         result.setCompare_to(compareTo);
@@ -164,27 +149,14 @@ public class DebugService {
             result.setAre_same(true);
             return result;
         }
-        result.setAre_same(false);
-        Transformation transformation = transformationDao.findByUri(difference.getId());
-        result.setDifference_found_in(transformation);
+        result.setDifference_found_in(difference);
         return result;
-    }
-
-    private List<ModuleExecution> getModuleExecutionsFromPipelineTransformation(Transformation pipelineTransformation) {
-        return pipelineTransformation.getHas_part().stream()
-                .map(transformationDtoMapper::transformationToModuleExecution)
-                .collect(Collectors.toList());
     }
 
     private long getFormattedDuration(ModuleExecution moduleExecution) {
         Duration duration = Duration.between(moduleExecution.getStart_date().toInstant(),
                 moduleExecution.getFinish_date().toInstant());
         return duration.toMillis();
-    }
-
-    private boolean matchesExecutionPattern(String id) {
-        return id.matches(EXECUTION_IRI_PATTERN);
-
     }
 
     private Comparator<ModuleExecution> defaultComparator() {

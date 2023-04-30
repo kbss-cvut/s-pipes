@@ -1,20 +1,21 @@
-package cz.cvut.spipes.debug.model;
+package cz.cvut.spipes.debug.dto;
 
-import java.io.Serializable;
 import java.util.Set;
 
 import cz.cvut.kbss.jopa.model.annotations.Id;
+import cz.cvut.kbss.jopa.model.annotations.OWLClass;
 import cz.cvut.kbss.jopa.model.annotations.Types;
 import cz.cvut.kbss.jopa.model.annotations.util.NonEntity;
+import cz.cvut.spipes.Vocabulary;
 
-@NonEntity
-public class AbstractDto implements Serializable {
+@OWLClass(iri = Vocabulary.s_c_Thing)
+public class ThingDto{
 
     @Id(generated = true)
-    protected String id;
+    public String id;
 
     @Types
-    protected Set<String> types;
+    public Set<String> types;
 
     public String getId() {
         return id;

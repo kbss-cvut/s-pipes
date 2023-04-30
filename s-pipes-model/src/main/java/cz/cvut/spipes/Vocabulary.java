@@ -32,11 +32,13 @@ public class Vocabulary {
     public final static String s_c_execution_context_dataset_source = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/execution-context-dataset-source";
     public final static String s_c_human_interpretation = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/human-interpretation";
     public final static String s_c_intent = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/intent";
+    public final static String s_c_module_execution = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution";
     public final static String s_c_named_graph_sparql_endpoint_dataset_source = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/named-graph-sparql-endpoint-dataset-source";
     public final static String s_c_non_content_descriptor = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/non-content-descriptor";
     public final static String s_c_organization = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/organization";
     public final static String s_c_person = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/person";
     public final static String s_c_pipeline_comparison = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison";
+    public final static String s_c_pipeline_execution = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-execution";
     public final static String s_c_publisher = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/publisher";
     public final static String s_c_single_item_selector = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/single-item-selector";
     public final static String s_c_single_snapshot_dataset_source = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/single-snapshot-dataset-source";
@@ -53,9 +55,6 @@ public class Vocabulary {
     public final static String s_c_vocabulary_class_partition = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/vocabulary-class-partition";
     public final static String s_c_vocabulary_instance = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/vocabulary-instance";
     public final static String s_c_vocabulary_property_partition = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/vocabulary-property-partition";
-    public final static String s_c_hello_world_example_0_dot_1 = "http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1";
-    public final static String s_c_module_execution = "http://onto.fel.cvut.cz/ontologies/s-pipes/module-execution";
-    public final static String s_c_pipeline_execution = "http://onto.fel.cvut.cz/ontologies/s-pipes/pipeline-execution";
     public final static String s_c_related_resource = "http://onto.fel.cvut.cz/ontologies/s-pipes/related-resource";
     public final static String s_p_constitutes = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/constitutes";
     public final static String s_p_describes = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/describes";
