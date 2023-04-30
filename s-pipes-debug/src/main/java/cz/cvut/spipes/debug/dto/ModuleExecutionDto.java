@@ -1,6 +1,5 @@
-package cz.cvut.spipes.debug.model;
+package cz.cvut.spipes.debug.dto;
 
-import java.util.List;
 import java.util.Set;
 
 import cz.cvut.kbss.jopa.model.annotations.OWLClass;
@@ -13,7 +12,7 @@ import cz.cvut.spipes.model.SourceDatasetSnapshot;
 import cz.cvut.spipes.model.Thing;
 
 @OWLClass(iri = Vocabulary.s_c_module_execution)
-public class ModuleExecution extends ExecutionAbstract {
+public class ModuleExecutionDto extends ExecutionThing {
 
     @OWLDataProperty(iri = Vocabulary.s_p_has_duration)
     protected Long duration;
@@ -25,7 +24,7 @@ public class ModuleExecution extends ExecutionAbstract {
     @ParticipationConstraints({
             @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_pipeline_execution, max = 1)
     })
-    private String executed_in;
+    private ThingDto executed_in;
 
     @OWLDataProperty(iri = Vocabulary.s_p_has_next)
     private String has_next;
@@ -36,18 +35,20 @@ public class ModuleExecution extends ExecutionAbstract {
     @OWLDataProperty(iri = Vocabulary.s_p_has_input_model_triple_count)
     private Long input_triple_count;
 
-    @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-input-binding")
-    private Set<Thing> has_input_binding;
+    @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-input-binding")
+    @ParticipationConstraints(
+            @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_Thing))
+    private Set<ThingDto> has_input_binding;
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_rdf4j_output)
     @ParticipationConstraints(
             @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_target_dataset_snapshot, max = 1))
-    protected SourceDatasetSnapshot has_rdf4j_output;
+    protected ThingDto has_rdf4j_output;
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_rdf4j_input)
     @ParticipationConstraints(
             @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_source_dataset_snapshot, max = 1))
-    protected SourceDatasetSnapshot has_rdf4j_input;
+    protected ThingDto has_rdf4j_input;
 
     public Long getDuration() {
         return duration;
@@ -65,11 +66,11 @@ public class ModuleExecution extends ExecutionAbstract {
         this.has_module_id = has_module_id;
     }
 
-    public String getExecuted_in() {
+    public ThingDto getExecuted_in() {
         return executed_in;
     }
 
-    public void setExecuted_in(String executed_in) {
+    public void setExecuted_in(ThingDto executed_in) {
         this.executed_in = executed_in;
     }
 
@@ -97,27 +98,27 @@ public class ModuleExecution extends ExecutionAbstract {
         this.input_triple_count = input_triple_count;
     }
 
-    public Thing getHas_rdf4j_output() {
+    public ThingDto getHas_rdf4j_output() {
         return has_rdf4j_output;
     }
 
-    public void setHas_rdf4j_output(SourceDatasetSnapshot has_rdf4j_output) {
+    public void setHas_rdf4j_output(ThingDto has_rdf4j_output) {
         this.has_rdf4j_output = has_rdf4j_output;
     }
 
-    public SourceDatasetSnapshot getHas_rdf4j_input() {
+    public ThingDto getHas_rdf4j_input() {
         return has_rdf4j_input;
     }
 
-    public void setHas_rdf4j_input(SourceDatasetSnapshot has_rdf4j_input) {
+    public void setHas_rdf4j_input(ThingDto has_rdf4j_input) {
         this.has_rdf4j_input = has_rdf4j_input;
     }
 
-    public Set<Thing> getHas_input_binding() {
+    public Set<ThingDto> getHas_input_binding() {
         return has_input_binding;
     }
 
-    public void setHas_input_binding(Set<Thing> has_input_binding) {
+    public void setHas_input_binding(Set<ThingDto> has_input_binding) {
         this.has_input_binding = has_input_binding;
     }
 }

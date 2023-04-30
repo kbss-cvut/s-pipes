@@ -1,7 +1,5 @@
 package cz.cvut.spipes.debug.service;
 
-import static cz.cvut.spipes.debug.util.IdUtils.getTransformationIriFromId;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -11,23 +9,25 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import cz.cvut.spipes.debug.exception.NotFoundException;
-import cz.cvut.spipes.debug.mapper.TransformationDtoMapper;
-import cz.cvut.spipes.debug.model.ModuleExecution;
+import cz.cvut.spipes.debug.mapper.ModuleExecutionMapper;
+import cz.cvut.spipes.debug.dto.ModuleExecutionDto;
 import cz.cvut.spipes.debug.persistance.dao.InputBindingDao;
-import cz.cvut.spipes.debug.persistance.dao.TransformationDao;
+import cz.cvut.spipes.debug.persistance.dao.ModuleExecutionDao;
+import cz.cvut.spipes.debug.persistance.dao.PipelineExecutionDao;
 import cz.cvut.spipes.debug.tree.ExecutionTree;
+import cz.cvut.spipes.model.ModuleExecution;
+import cz.cvut.spipes.model.PipelineExecution;
 import cz.cvut.spipes.model.Thing;
-import cz.cvut.spipes.model.Transformation;
 
 
 @Service
 public class ScriptService {
 
-    private final TransformationDao transformationDao;
-
+    private final ModuleExecutionDao moduleExecutionDao;
+    private final PipelineExecutionDao pipelineExecutionDao;
     private final InputBindingDao inputBindingDao;
 
-    private final TransformationDtoMapper mapper;
+    private final ModuleExecutionMapper moduleExecutionMapper;
 
     private static final String NO_MATCHING_MODULES = "No matching modules found for ";
 
@@ -35,65 +35,71 @@ public class ScriptService {
 
     private static final String NOT_FOUND_ERROR_VARIABLE = NO_MATCHING_MODULES + "variable %s";
 
-    public ScriptService(TransformationDao transformationDao, InputBindingDao inputBindingDao, TransformationDtoMapper mapper) {
-        this.transformationDao = transformationDao;
+    public ScriptService(
+            ModuleExecutionDao moduleExecutionDao,
+            PipelineExecutionDao pipelineExecutionDao,
+            InputBindingDao inputBindingDao,
+            ModuleExecutionMapper moduleExecutionMapper) {
+        this.moduleExecutionDao = moduleExecutionDao;
+        this.pipelineExecutionDao = pipelineExecutionDao;
         this.inputBindingDao = inputBindingDao;
-        this.mapper = mapper;
+        this.moduleExecutionMapper = moduleExecutionMapper;
     }
 
-    public List<ModuleExecution> findTripleOrigin(String executionId, String graphPattern) {
-        Predicate<ModuleExecution> predicate = moduleExecution -> transformationDao.askContainOutput(moduleExecution.getHas_rdf4j_output().getId(), graphPattern);
-        return findFirstModule(executionId, predicate, graphPattern);
+    public List<ModuleExecutionDto> findTripleOrigin(String executionId, String graphPattern) {
+        Predicate<ModuleExecution> predicate = moduleExecution -> moduleExecutionDao.askContainOutput(moduleExecution.getHas_rdf4j_output().getId(), graphPattern);
+        return findFirstModule(executionId, predicate, graphPattern)
+                .stream()
+                .map(moduleExecutionMapper::toDto)
+                .collect(Collectors.toList());
     }
 
-    public List<ModuleExecution> findTripleEliminationOrigin(String executionId, String graphPattern) {
-        Predicate<ModuleExecution> predicate = moduleExecution -> transformationDao.askContainInputAndNotContainOutput(moduleExecution.getHas_rdf4j_input().getId(),
+    public List<ModuleExecutionDto> findTripleEliminationOrigin(String executionId, String graphPattern) {
+        Predicate<ModuleExecution> predicate = moduleExecution -> moduleExecutionDao.askContainInputAndNotContainOutput(moduleExecution.getHas_rdf4j_input().getId(),
                 moduleExecution.getHas_rdf4j_output().getId(), graphPattern);
-        return findFirstModule(executionId, predicate, graphPattern);
+        return findFirstModule(executionId, predicate, graphPattern).stream()
+                .map(moduleExecutionMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     public List<ModuleExecution> findFirstModule(String executionId, Predicate<ModuleExecution> predicate, String pattern) {
-        List<ModuleExecution> moduleExecutions = getModuleExecutions(executionId);
+        Set<ModuleExecution> ModuleExecutions = pipelineExecutionDao.findById(executionId).getHas_part();
         List<ModuleExecution> modulesWithMatchingPattern = new ArrayList<>();
-        for (ModuleExecution moduleExecution : moduleExecutions) {
-            if (predicate.test(moduleExecution)) {
-                modulesWithMatchingPattern.add(moduleExecution);
+        for (ModuleExecution ModuleExecution : ModuleExecutions) {
+            if (predicate.test(ModuleExecution)) {
+                modulesWithMatchingPattern.add(ModuleExecution);
             }
         }
         if (modulesWithMatchingPattern.isEmpty()) {
             throw new NotFoundException(String.format(NOT_FOUND_ERROR_PATTERN, pattern));
         }
-        ExecutionTree executionTree = new ExecutionTree(moduleExecutions);
+        ExecutionTree executionTree = new ExecutionTree(ModuleExecutions);
         return executionTree.findEarliest(modulesWithMatchingPattern);
     }
 
-    public List<ModuleExecution> findVariableOrigin(String executionId, String variable) {
-        List<ModuleExecution> moduleExecutions = getModuleExecutions(executionId);
+    public List<ModuleExecutionDto> findVariableOrigin(String executionId, String variable) {
+        PipelineExecution pipelineExecution = pipelineExecutionDao.findById(executionId);
+        Set<ModuleExecution> ModuleExecutions = pipelineExecution.getHas_part();
+
         List<ModuleExecution> modulesWithBoundVariable = new ArrayList<>();
-        for (ModuleExecution m : moduleExecutions) {
+        for (ModuleExecution m : ModuleExecutions) {
             Set<Thing> inputBindings = m.getHas_input_binding();
             addModuleIfHasBoundVariable(m, inputBindings, modulesWithBoundVariable, variable);
         }
         if (modulesWithBoundVariable.isEmpty()) {
             throw new NotFoundException(String.format(NOT_FOUND_ERROR_VARIABLE, variable));
         }
-        ExecutionTree executionTree = new ExecutionTree(moduleExecutions);
-        return executionTree.findEarliest(modulesWithBoundVariable);
+        ExecutionTree executionTree = new ExecutionTree(ModuleExecutions);
+        return executionTree.findEarliest(modulesWithBoundVariable).stream()
+                .map(moduleExecutionMapper::toDto)
+                .collect(Collectors.toList());
     }
 
-    private List<ModuleExecution> getModuleExecutions(String executionId) {
-        String pipelineExecutionIri = getTransformationIriFromId(executionId);
-        Transformation transformation = transformationDao.findByUri(pipelineExecutionIri);
-
-        return transformation.getHas_part()
-                .stream().map(mapper::transformationToModuleExecution).collect(Collectors.toList());
-    }
-
-    private void addModuleIfHasBoundVariable(ModuleExecution moduleExecution, Set<Thing> inputBindings, List<ModuleExecution> modulesWithBoundVariable, String variable) {
+    private void addModuleIfHasBoundVariable(ModuleExecution ModuleExecution, Set<Thing> inputBindings, List<ModuleExecution> modulesWithBoundVariable, String variable) {
         for (Thing binding : inputBindings) {
             if (binding != null) {
                 if (inputBindingDao.askHasBoundVariable(binding.getId(), variable)) {
-                    modulesWithBoundVariable.add(moduleExecution);
+                    modulesWithBoundVariable.add(ModuleExecution);
                     return;
                 }
             }

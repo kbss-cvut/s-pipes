@@ -2,9 +2,7 @@ package cz.cvut.spipes.debug.persistance.dao;
 
 import static cz.cvut.kbss.jopa.model.JOPAPersistenceProperties.ONTOLOGY_PHYSICAL_URI_KEY;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 import org.eclipse.rdf4j.model.IRI;
@@ -23,27 +21,13 @@ import org.eclipse.rdf4j.repository.http.HTTPRepository;
 import org.springframework.stereotype.Repository;
 
 import cz.cvut.kbss.jopa.model.EntityManager;
-import cz.cvut.spipes.Vocabulary;
-import cz.cvut.spipes.model.Transformation;
+import cz.cvut.spipes.model.ModuleExecution;
 
 @Repository
-public class TransformationDao extends AbstractDao<Transformation> {
+public class ModuleExecutionDao extends AbstractDao<ModuleExecution> {
 
-    protected TransformationDao(EntityManager em) {
+    protected ModuleExecutionDao(EntityManager em) {
         super(em);
-    }
-
-    public List<Transformation> findAll() {
-        return em.createNativeQuery("SELECT ?x WHERE { ?x a <" + Vocabulary.s_c_transformation + "> .}", Transformation.class).getResultList();
-    }
-
-    public Transformation findByUri(String uri) {
-        Objects.requireNonNull(uri);
-        try {
-            return em.find(Transformation.class, uri);
-        } finally {
-            em.close();
-        }
     }
 
     public Boolean askContainOutput(String context, String graphPattern) {

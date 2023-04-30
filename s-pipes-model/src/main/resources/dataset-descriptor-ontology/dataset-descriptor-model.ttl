@@ -110,7 +110,8 @@
                                                                   
                                                                   rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/source-dataset-snapshot> ;
                                                                   
-                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> .
+                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> ,
+                                                                              <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> .
 
 
 
@@ -166,7 +167,8 @@
                                                                    
                                                                    rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/target-dataset-snapshot> ;
                                                                    
-                                                                   rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> .
+                                                                   rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> ,
+                                                                               <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> .
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-rdf4j-output
 
@@ -176,7 +178,8 @@
 
                                                                    rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/target-dataset-snapshot> ;
 
-                                                                   rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> .
+                                                                   rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> ,
+                                                                               <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> .
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-rdf4j-input
 
@@ -186,7 +189,8 @@
 
                                                                    rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/target-dataset-snapshot> ;
 
-                                                                   rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> .
+                                                                   rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> ,
+                                                                               <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-published-dataset-snapshot
@@ -340,7 +344,8 @@
                                                                       
                                                                       rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/source-dataset-snapshot> ;
                                                                       
-                                                                      rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> .
+                                                                      rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation>,
+                                                                                 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> .
 
 
 
@@ -388,7 +393,8 @@
                                                                        
                                                                        rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/target-dataset-snapshot> ;
                                                                        
-                                                                       rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> .
+                                                                       rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> ,
+                                                                                  <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> .
 
 
 
@@ -461,7 +467,8 @@
                                                                           
                                                                           rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/execution-context-dataset-source> ;
                                                                           
-                                                                          rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> .
+                                                                          rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> ,
+                                                                                      <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> .
 
 
 
@@ -523,7 +530,8 @@
                                                                       
                                                                       owl:inverseOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.is-created-by> ;
                                                                       
-                                                                      rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> .
+                                                                      rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation>,
+                                                                                 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> .
 
 
 
@@ -588,9 +596,11 @@
 
                                                                       rdfs:label "has part"^^xsd:string ;
 
-                                                                      rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> ;
+                                                                      rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> ,
+                                                                                  <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-execution> ;
 
-                                                                      rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> .
+                                                                      rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> ,
+                                                                                 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-next
@@ -599,9 +609,11 @@
 
                                                                       rdfs:label "has next"^^xsd:string ;
 
-                                                                      rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> ;
+                                                                      rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> ,
+                                                                                  <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> ;
 
-                                                                      rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> .
+                                                                      rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> ,
+                                                                                 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> .
 
 
 ### http://onto.fel.cvut.cz/ontologies/s-pipes/has-related-resource
@@ -612,8 +624,8 @@
 
                                                                   rdfs:range <http://onto.fel.cvut.cz/ontologies/s-pipes/related-resource> ;
 
-                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/s-pipes/module-execution> ,
-                                                                              <http://onto.fel.cvut.cz/ontologies/s-pipes/pipeline-execution>  .
+                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> ,
+                                                                              <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-execution>  .
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison/pipeline
 
@@ -623,7 +635,7 @@
 
                                                                       rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison> ;
 
-                                                                      rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> .
+                                                                      rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-execution> .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison/compare-to
@@ -634,7 +646,7 @@
 
                                                                       rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison> ;
 
-                                                                      rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> .
+                                                                      rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-execution> .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison/difference-found-in
@@ -645,7 +657,7 @@
 
                                                                       rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison> ;
 
-                                                                      rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> .
+                                                                      rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> .
 
 
 #################################################################
@@ -746,7 +758,7 @@
 
                                                                   rdfs:label "has module execution start date"^^xsd:string ;
 
-                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> ;
+                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> ;
 
                                                                   rdfs:range xsd:string .
 
@@ -756,7 +768,7 @@
 
                                                                   rdfs:label "has module execution finish date"^^xsd:string ;
 
-                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> ;
+                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> ;
 
                                                                   rdfs:range xsd:string .
 
@@ -766,7 +778,7 @@
 
                                                                   rdfs:label "has pipeline execution start date"^^xsd:string ;
 
-                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> ;
+                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-execution> ;
 
                                                                   rdfs:range xsd:string .
 
@@ -776,7 +788,7 @@
 
                                                                   rdfs:label "has module id"^^xsd:string ;
 
-                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> ;
+                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> ;
 
                                                                   rdfs:range xsd:string .
 
@@ -787,7 +799,7 @@
 
                                                                   rdfs:label "has output triple count"^^xsd:string ;
 
-                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> ;
+                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> ;
 
                                                                   rdfs:range xsd:long .
 
@@ -797,7 +809,7 @@
 
                                                                   rdfs:label "has input triple count"^^xsd:string ;
 
-                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> ;
+                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> ;
 
                                                                   rdfs:range xsd:long .
 
@@ -808,8 +820,8 @@
 
                                                                   rdfs:label "has execution start date"^^xsd:string ;
 
-                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/s-pipes/module-execution>,
-                                                                  <http://onto.fel.cvut.cz/ontologies/s-pipes/pipeline-execution> ;
+                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> ,
+                                                                              <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-execution> ;
 
                                                                   rdfs:range xsd:string .
 
@@ -820,8 +832,8 @@
 
                                                                   rdfs:label "has execution finish date"^^xsd:string ;
 
-                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/s-pipes/module-execution>,
-                                                                  <http://onto.fel.cvut.cz/ontologies/s-pipes/pipeline-execution> ;
+                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> ,
+                                                                              <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-execution> ;
 
                                                                   rdfs:range xsd:string .
 
@@ -832,7 +844,7 @@
 
                                                                   rdfs:label "has module id"^^xsd:string ;
 
-                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1> ;
+                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> ;
 
                                                                   rdfs:range xsd:string .
 
@@ -865,9 +877,9 @@
 
                                                                 rdfs:label "has module execution"^^xsd:string ;
 
-                                                                rdfs:domain <http://onto.fel.cvut.cz/ontologies/s-pipes/pipeline-execution> ;
+                                                                rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-execution> ;
 
-                                                                rdfs:range <http://onto.fel.cvut.cz/ontologies/s-pipes/module-execution> .
+                                                                rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> .
 
 
 ### http://onto.fel.cvut.cz/ontologies/s-pipes/executed-in
@@ -876,9 +888,9 @@
 
                                                                 rdfs:label "executed in"^^xsd:string ;
 
-                                                                rdfs:domain <http://onto.fel.cvut.cz/ontologies/s-pipes/module-execution> ;
+                                                                rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> ;
 
-                                                                rdfs:range <http://onto.fel.cvut.cz/ontologies/s-pipes/pipeline-execution> .
+                                                                rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-execution> .
 
 ### http://onto.fel.cvut.cz/ontologies/s-pipes/has-duration
 
@@ -886,7 +898,7 @@
 
                                                                 rdfs:label "has duration ms"^^xsd:string ;
 
-                                                                rdfs:domain <http://onto.fel.cvut.cz/ontologies/s-pipes/module-execution> ;
+                                                                rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> ;
 
                                                                 rdfs:range xsd:string .
 
@@ -1462,31 +1474,61 @@
                                                                                          owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger
                                                                                        ] .
 
+###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution
+
+<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> rdf:type owl:Class ;
+
+                                                                       rdfs:label "Module execution"^^xsd:string ;
+
+                                                                       rdfs:subClassOf owl:Thing ,
+                                                                                       [ rdf:type owl:Restriction ;
+                                                                                         owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-input> ;
+                                                                                         owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/source-dataset-snapshot> ;
+                                                                                         owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                                                                       ] ,
+                                                                                       [ rdf:type owl:Restriction ;
+                                                                                         owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.is-created-by> ;
+                                                                                         owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/execution-context-dataset-source> ;
+                                                                                         owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                                                                       ] ,
+                                                                                       [ rdf:type owl:Restriction ;
+                                                                                         owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-output> ;
+                                                                                         owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/target-dataset-snapshot> ;
+                                                                                         owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                                                                       ] .
+
+###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-execution
+
+<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-execution> rdf:type owl:Class ;
+
+                                                                       rdfs:label "Pipeline execution"^^xsd:string ;
+
+                                                                       rdfs:subClassOf owl:Thing ,
+                                                                                       [ rdf:type owl:Restriction ;
+                                                                                         owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-input> ;
+                                                                                         owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/source-dataset-snapshot> ;
+                                                                                         owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                                                                       ] ,
+                                                                                       [ rdf:type owl:Restriction ;
+                                                                                         owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.is-created-by> ;
+                                                                                         owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/execution-context-dataset-source> ;
+                                                                                         owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                                                                       ] ,
+                                                                                       [ rdf:type owl:Restriction ;
+                                                                                         owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-output> ;
+                                                                                         owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/target-dataset-snapshot> ;
+                                                                                         owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger
+                                                                                       ] .
+
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison
 
-<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> rdf:type owl:Class ;
+<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison> rdf:type owl:Class ;
 
                                                                        rdfs:label "Pipeline execution comparison"^^xsd:string ;
 
                                                                        rdfs:subClassOf owl:Thing .
 
-### http://onto.fel.cvut.cz/ontologies/s-pipes/module-execution
-
-<http://onto.fel.cvut.cz/ontologies/s-pipes/module-execution>    rdf:type owl:Class ;
-
-                                                                         rdfs:label ""^^xsd:string ;
-
-                                                                         rdfs:subClassOf owl:Thing .
-
-
-### http://onto.fel.cvut.cz/ontologies/s-pipes/pipeline-execution
-
-<http://onto.fel.cvut.cz/ontologies/s-pipes/pipeline-execution> rdf:type owl:Class ;
-
-                                                                         rdfs:label ""^^xsd:string ;
-
-                                                                         rdfs:subClassOf owl:Thing .
 
 
 ### http://onto.fel.cvut.cz/ontologies/s-pipes/related-resource
@@ -1572,6 +1614,8 @@
                 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/person>
                 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/sparql-construct>
                 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation>
+                <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-execution>
+                <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution>
               )
 ] .
 

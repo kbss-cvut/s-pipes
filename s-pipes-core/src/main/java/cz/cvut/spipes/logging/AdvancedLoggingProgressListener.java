@@ -56,7 +56,8 @@ import cz.cvut.spipes.Vocabulary;
 import cz.cvut.spipes.constants.SPIPES;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ProgressListener;
-import cz.cvut.spipes.manager.SPipesScriptManager;
+import cz.cvut.spipes.model.ModuleExecution;
+import cz.cvut.spipes.model.PipelineExecution;
 import cz.cvut.spipes.model.SourceDatasetSnapshot;
 import cz.cvut.spipes.model.Thing;
 import cz.cvut.spipes.model.Transformation;
@@ -200,8 +201,8 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
 
             String pipelineExecutionIri = getPipelineExecutionIri(pipelineExecutionId);
             final EntityDescriptor pd = new EntityDescriptor(URI.create(pipelineExecutionIri));
-            final Transformation pipelineExecution =
-                em.find(Transformation.class, pipelineExecutionIri, pd);
+            final PipelineExecution pipelineExecution =
+                    em.find(PipelineExecution.class, pipelineExecutionIri, pd);
 
             String pipelineName = metadataMap.get(SPIPES.has_pipeline_name.toString()).toString();
             // new
@@ -247,7 +248,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
                                        final ExecutionContext inputContext,
                                        final String predecessorModuleExecutionId) {
         // construct model
-        Transformation moduleExecution = new Transformation();
+        ModuleExecution moduleExecution = new ModuleExecution();
         moduleExecution.setId(getModuleExecutionIri(moduleExecutionId));
 
         SourceDatasetSnapshot input = new SourceDatasetSnapshot();
@@ -292,8 +293,8 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
         final EntityManager em = entityManagerMap.get(getPipelineExecutionIri(pipelineExecutionId));
 
         // retrieve model
-        Transformation moduleExecution =
-            (Transformation) executionMap.get(getModuleExecutionIri(moduleExecutionId));
+        ModuleExecution moduleExecution =
+                (ModuleExecution) executionMap.get(getModuleExecutionIri(moduleExecutionId));
 
         // construct model
         Map<String, Set<Object>> properties = new HashMap<>();
@@ -314,9 +315,9 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
                 em.getTransaction().begin();
                 String pipelineExecutionIri = getPipelineExecutionIri(pipelineExecutionId);
                 final EntityDescriptor pd = new EntityDescriptor(URI.create(pipelineExecutionIri));
-                final Transformation pipelineExecution =
-                    em.find(Transformation.class, pipelineExecutionIri, pd);
-
+                final PipelineExecution pipelineExecution =
+                        em.find(PipelineExecution.class, pipelineExecutionIri, pd);
+                moduleExecution.setExecuted_in(pipelineExecution);
                 pipelineExecution.setProperties(properties);
 
                 if (moduleExecution.getProperties() != null && moduleExecution.getProperties().containsKey(
@@ -370,7 +371,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
     }
 
     private void mergeAll(EntityManager em, EntityDescriptor pd, Thing... thing) {
-        Arrays.stream(thing).forEach(t-> {
+        Arrays.stream(thing).forEach(t -> {
             em.merge(t, pd);
         });
     }
@@ -424,11 +425,11 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
     }
 
     private String getPipelineExecutionIri(final long pipelineId) {
-        return Vocabulary.s_c_transformation + "/" + pipelineId;
+        return Vocabulary.s_c_pipeline_execution + "/" + pipelineId;
     }
 
     private String getModuleExecutionIri(final String moduleExecutionId) {
-        return Vocabulary.s_c_transformation + "/" + moduleExecutionId;
+        return Vocabulary.s_c_module_execution + "/" + moduleExecutionId;
     }
 
     private EntityManagerFactory getMetadataEmf() {
@@ -475,7 +476,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
         }
     }
 
-    private void addContentProperty(Transformation moduleExecution, ExecutionContext inputContext, String contentType) {
+    private void addContentProperty(ModuleExecution moduleExecution, ExecutionContext inputContext, String contentType) {
         org.eclipse.rdf4j.model.Model rdf4jModel = convertJenaModelToRdf4j(inputContext.getDefaultModel());
 
         String contextIri = getContextIri(moduleExecution, contentType);
@@ -484,8 +485,8 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
         saveWithRepositoryConnection(rdf4jModel);
     }
 
-    private String getContextIri(Transformation moduleExecution, String contentType) {
-        return String.format("http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation/%s/%s",
+    private String getContextIri(ModuleExecution moduleExecution, String contentType) {
+        return String.format(Vocabulary.s_c_module_execution + "/%s/%s",
                 extractIdFromTransformationIri(moduleExecution.getId()), contentType);
     }
 

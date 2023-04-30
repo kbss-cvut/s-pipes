@@ -12,7 +12,7 @@ import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
-import cz.cvut.spipes.debug.model.ModuleExecution;
+import cz.cvut.spipes.debug.dto.ModuleExecutionDto;
 import cz.cvut.spipes.debug.service.RelatedResourceService;
 
 @ControllerAdvice
@@ -27,20 +27,20 @@ public class ModuleExecutionResponseBodyAdvice implements ResponseBodyAdvice<Obj
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
         return List.class.isAssignableFrom(returnType.getParameterType())
-                && ModuleExecution.class.isAssignableFrom(getListElementType(returnType))
-                || ModuleExecution.class.isAssignableFrom(returnType.getParameterType());
+                && ModuleExecutionDto.class.isAssignableFrom(getListElementType(returnType))
+                || ModuleExecutionDto.class.isAssignableFrom(returnType.getParameterType());
     }
 
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
-        if (body instanceof List && ModuleExecution.class.isAssignableFrom(getListElementType(returnType))) {
-            List<ModuleExecution> moduleExecutions = (List<ModuleExecution>) body;
-            for (ModuleExecution moduleExecution : moduleExecutions) {
-                relatedResourceService.addModuleExecutionResources(moduleExecution);
+        if (body instanceof List && ModuleExecutionDto.class.isAssignableFrom(getListElementType(returnType))) {
+            List<ModuleExecutionDto> moduleExecutionDtos = (List<ModuleExecutionDto>) body;
+            for (ModuleExecutionDto moduleExecutionDto : moduleExecutionDtos) {
+                relatedResourceService.addModuleExecutionResources(moduleExecutionDto);
             }
-        } else if (body instanceof ModuleExecution) {
-            ModuleExecution moduleExecution = (ModuleExecution) body;
-            relatedResourceService.addModuleExecutionResources(moduleExecution);
+        } else if (body instanceof ModuleExecutionDto) {
+            ModuleExecutionDto moduleExecutionDto = (ModuleExecutionDto) body;
+            relatedResourceService.addModuleExecutionResources(moduleExecutionDto);
         }
         return body;
     }

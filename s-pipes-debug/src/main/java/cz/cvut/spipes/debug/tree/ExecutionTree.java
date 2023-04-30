@@ -4,19 +4,21 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import cz.cvut.spipes.debug.model.ModuleExecution;
+import cz.cvut.spipes.model.ModuleExecution;
+
 
 public class ExecutionTree {
 
     private final ModuleExecutionNode rootNode;
 
-    public ExecutionTree(List<ModuleExecution> executionList) {
+    public ExecutionTree(Set<ModuleExecution> executionList) {
         rootNode = buildTree(executionList);
     }
 
-    private ModuleExecutionNode buildTree(List<ModuleExecution> executionList) {
+    private ModuleExecutionNode buildTree(Set<ModuleExecution> executionList) {
         ModuleExecution rootExecution = executionList.stream()
                 .filter(e -> e.getHas_next() == null)
                 .findFirst()
@@ -34,7 +36,7 @@ public class ExecutionTree {
                 executionNodes.set(i, rootNode);
             }
             for (ModuleExecutionNode executionNode : executionNodes) {
-                String nextId = executionNode.getExecution().getHas_next();
+                String nextId = executionNode.getExecution().getHas_next().getId();
                 String currentId = executionNodes.get(i).getId();
                 if (nextId != null && nextId.equals(currentId)) {
                     executionNodes.get(i).addInputExecution(executionNode);
