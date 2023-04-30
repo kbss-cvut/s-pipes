@@ -1,4 +1,4 @@
-package cz.cvut.spipes.debug.model;
+package cz.cvut.spipes.debug.dto;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -10,7 +10,7 @@ import cz.cvut.kbss.jopa.model.annotations.ParticipationConstraint;
 import cz.cvut.kbss.jopa.model.annotations.ParticipationConstraints;
 import cz.cvut.spipes.Vocabulary;
 
-public abstract class ExecutionAbstract extends AbstractDto {
+public abstract class ExecutionThing extends ThingDto {
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_related_resource)
     @ParticipationConstraints({

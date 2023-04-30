@@ -5,46 +5,43 @@ import cz.cvut.kbss.jopa.model.annotations.OWLObjectProperty;
 import cz.cvut.kbss.jopa.model.annotations.ParticipationConstraint;
 import cz.cvut.kbss.jopa.model.annotations.ParticipationConstraints;
 import cz.cvut.spipes.Vocabulary;
-import cz.cvut.spipes.debug.model.AbstractDto;
-import cz.cvut.spipes.debug.model.ModuleExecution;
-import cz.cvut.spipes.debug.model.PipelineExecution;
 
-public class PipelineComparisonResultDto extends AbstractDto {
+public class PipelineComparisonResultDto extends ThingDto {
 
     @OWLObjectProperty(iri = Vocabulary.s_p_pipeline)
     @ParticipationConstraints({
-            @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_transformation)
+            @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_pipeline_execution)
     })
-    private PipelineExecution pipeline;
+    private PipelineExecutionDto pipeline;
 
     @OWLObjectProperty(iri = Vocabulary.s_p_compare_to)
     @ParticipationConstraints({
-            @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_transformation)
+            @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_pipeline_execution)
     })
-    private PipelineExecution compare_to;
+    private PipelineExecutionDto compare_to;
 
     @OWLDataProperty(iri = Vocabulary.s_p_are_same)
     private Boolean are_same;
 
     @OWLObjectProperty(iri = Vocabulary.s_p_difference_found_in)
     @ParticipationConstraints({
-            @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_transformation)
+            @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_module_execution)
     })
-    private ModuleExecution difference_found_in;
+    private ModuleExecutionDto difference_found_in;
 
-    public PipelineExecution getPipeline() {
+    public PipelineExecutionDto getPipeline() {
         return pipeline;
     }
 
-    public void setPipeline(PipelineExecution pipeline) {
+    public void setPipeline(PipelineExecutionDto pipeline) {
         this.pipeline = pipeline;
     }
 
-    public PipelineExecution getCompare_to() {
+    public PipelineExecutionDto getCompare_to() {
         return compare_to;
     }
 
-    public void setCompare_to(PipelineExecution compare_to) {
+    public void setCompare_to(PipelineExecutionDto compare_to) {
         this.compare_to = compare_to;
     }
 
@@ -56,11 +53,11 @@ public class PipelineComparisonResultDto extends AbstractDto {
         this.are_same = are_same;
     }
 
-    public ModuleExecution getDifference_found_in() {
+    public ModuleExecutionDto getDifference_found_in() {
         return difference_found_in;
     }
 
-    public void setDifference_found_in(ModuleExecution difference_found_in) {
+    public void setDifference_found_in(ModuleExecutionDto difference_found_in) {
         this.difference_found_in = difference_found_in;
     }
 }

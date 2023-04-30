@@ -11,19 +11,23 @@ import org.eclipse.rdf4j.model.util.Models;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cz.cvut.spipes.debug.model.ModuleExecution;
-import cz.cvut.spipes.debug.persistance.dao.TransformationDao;
+import cz.cvut.spipes.debug.mapper.ModuleExecutionMapper;
+import cz.cvut.spipes.debug.persistance.dao.ModuleExecutionDao;
 import cz.cvut.spipes.debug.tree.ExecutionTree;
 import cz.cvut.spipes.debug.tree.ModuleExecutionNode;
+import cz.cvut.spipes.model.ModuleExecution;
 
 @Service
 public class TreeService {
 
-    private final TransformationDao transformationDao;
+    private final ModuleExecutionDao moduleExecutionDao;
+
+    private final ModuleExecutionMapper moduleExecutionMapper;
 
     @Autowired
-    public TreeService(TransformationDao transformationDao) {
-        this.transformationDao = transformationDao;
+    public TreeService(ModuleExecutionDao moduleExecutionDao, ModuleExecutionMapper moduleExecutionMapper) {
+        this.moduleExecutionDao = moduleExecutionDao;
+        this.moduleExecutionMapper = moduleExecutionMapper;
     }
 
     public ModuleExecution findFirstOutputDifference(ExecutionTree tree1, ExecutionTree tree2) {
@@ -38,7 +42,7 @@ public class TreeService {
 
             ModuleExecution result = compareNodes(leaf1, leaf2);
             if (result != null) {
-                return result;
+                return  result;
             }
         }
         return null;
@@ -66,8 +70,8 @@ public class TreeService {
         }
         String outputIri1 = node1.getExecution().getHas_rdf4j_output().getId();
         String outputIri2 = node2.getExecution().getHas_rdf4j_output().getId();
-        Set<Statement> statements1 = transformationDao.getModelForOutputContext(outputIri1);
-        Set<Statement> statements2 = transformationDao.getModelForOutputContext(outputIri2);
+        Set<Statement> statements1 = moduleExecutionDao.getModelForOutputContext(outputIri1);
+        Set<Statement> statements2 = moduleExecutionDao.getModelForOutputContext(outputIri2);
         if (!areModulesIsomorphic(statements1, statements2)) {
             return node1.getExecution();
         }

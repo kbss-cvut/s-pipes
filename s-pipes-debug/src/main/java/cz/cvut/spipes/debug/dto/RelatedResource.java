@@ -1,4 +1,4 @@
-package cz.cvut.spipes.debug.model;
+package cz.cvut.spipes.debug.dto;
 
 import java.util.HashMap;
 import java.util.List;

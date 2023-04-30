@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cz.cvut.kbss.jsonld.JsonLd;
 import cz.cvut.spipes.debug.dto.PipelineComparisonResultDto;
-import cz.cvut.spipes.debug.model.ModuleExecution;
-import cz.cvut.spipes.debug.model.PipelineExecution;
+import cz.cvut.spipes.debug.dto.ModuleExecutionDto;
+import cz.cvut.spipes.debug.dto.PipelineExecutionDto;
 import cz.cvut.spipes.debug.service.DebugService;
 import cz.cvut.spipes.debug.service.ScriptService;
 import io.swagger.annotations.ApiOperation;
@@ -39,21 +39,21 @@ public class SPipesDebugController {
             MediaType.APPLICATION_JSON_VALUE,
             MediaTypes.HAL_JSON_VALUE
     })
-    public List<PipelineExecution> getAllExecutions() {
+    public List<PipelineExecutionDto> getAllExecutions() {
         return debugService.getAllPipelineExecutions();
     }
 
     @GetMapping(value = "/executions/{executionId}/modules", produces = {JsonLd.MEDIA_TYPE, MediaType.APPLICATION_JSON_VALUE})
     @ApiOperation(value = "Get all modules in execution", response = List.class)
-    public List<ModuleExecution> getAllModulesByExecutionIdWithExecutionTime(
+    public List<ModuleExecutionDto> getAllModulesByExecutionIdWithExecutionTime(
             @PathVariable String executionId, @RequestParam(required = false) String orderBy,
             @RequestParam(required = false) String orderType) {
         return debugService.getAllModuleExecutionsSorted(executionId, orderBy, orderType);
     }
 
     @GetMapping(value = "/executions/{executionId}", produces = {JsonLd.MEDIA_TYPE, MediaType.APPLICATION_JSON_VALUE})
-    @ApiOperation(value = "Get pipeline execution", response = PipelineExecution.class)
-    public PipelineExecution getPipelineExecution(@PathVariable String executionId) {
+    @ApiOperation(value = "Get pipeline execution", response = PipelineExecutionDto.class)
+    public PipelineExecutionDto getPipelineExecution(@PathVariable String executionId) {
         return debugService.getPipelineExecutionById(executionId);
     }
 
@@ -66,7 +66,7 @@ public class SPipesDebugController {
 
     @GetMapping(value = "/triple-origin/{executionId}")
     @ApiOperation(value = "Find triple origin", response = List.class, notes = TRIPLE_FORMAT_NOTE)
-    public List<ModuleExecution> findTripleOrigin(
+    public List<ModuleExecutionDto> findTripleOrigin(
             @PathVariable String executionId,
             @RequestParam String graphPattern) {
         return scriptService.findTripleOrigin(executionId, graphPattern);
@@ -74,7 +74,7 @@ public class SPipesDebugController {
 
     @GetMapping(value = "/triple-elimination/{executionId}")
     @ApiOperation(value = "Find where triple was removed", response = List.class, notes = TRIPLE_FORMAT_NOTE)
-    public List<ModuleExecution> findTripleElimination(
+    public List<ModuleExecutionDto> findTripleElimination(
             @PathVariable String executionId,
             @RequestParam String graphPattern) {
         return scriptService.findTripleEliminationOrigin(executionId, graphPattern);
@@ -82,7 +82,7 @@ public class SPipesDebugController {
 
     @GetMapping(value = "/variable-origin/{executionId}")
     @ApiOperation(value = "Find where variable was created", response = List.class)
-    public List<ModuleExecution> findVariableOrigin(
+    public List<ModuleExecutionDto> findVariableOrigin(
             @PathVariable String executionId,
             @RequestParam String variable) {
         return scriptService.findVariableOrigin(executionId, variable);

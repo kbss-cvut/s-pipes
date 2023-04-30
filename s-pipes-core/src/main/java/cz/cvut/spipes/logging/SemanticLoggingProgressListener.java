@@ -1,16 +1,17 @@
 package cz.cvut.spipes.logging;
 
-import cz.cvut.kbss.jopa.model.EntityManager;
-import cz.cvut.kbss.jopa.model.JOPAPersistenceProperties;
-import cz.cvut.kbss.jopa.model.descriptors.EntityDescriptor;
-import cz.cvut.spipes.Vocabulary;
-import cz.cvut.spipes.engine.ExecutionContext;
-import cz.cvut.spipes.engine.ProgressListener;
-import cz.cvut.spipes.model.SourceDatasetSnapshot;
-import cz.cvut.spipes.model.Thing;
-import cz.cvut.spipes.model.Transformation;
-import cz.cvut.spipes.modules.Module;
-import cz.cvut.spipes.util.TempFileUtils;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.util.FileUtils;
@@ -24,17 +25,18 @@ import org.eclipse.rdf4j.rio.turtle.TurtleWriterFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import cz.cvut.kbss.jopa.model.EntityManager;
+import cz.cvut.kbss.jopa.model.JOPAPersistenceProperties;
+import cz.cvut.kbss.jopa.model.descriptors.EntityDescriptor;
+import cz.cvut.spipes.Vocabulary;
+import cz.cvut.spipes.engine.ExecutionContext;
+import cz.cvut.spipes.engine.ProgressListener;
+import cz.cvut.spipes.model.ModuleExecution;
+import cz.cvut.spipes.model.PipelineExecution;
+import cz.cvut.spipes.model.SourceDatasetSnapshot;
+import cz.cvut.spipes.model.Thing;
+import cz.cvut.spipes.modules.Module;
+import cz.cvut.spipes.util.TempFileUtils;
 
 public class SemanticLoggingProgressListener implements ProgressListener {
     private static final Logger LOG =
@@ -70,7 +72,7 @@ public class SemanticLoggingProgressListener implements ProgressListener {
     @Override public void pipelineExecutionStarted(final long pipelineExecutionId) {
         Thing pipelineExecution = new Thing();
         pipelineExecution.setId(getPipelineExecutionIri(pipelineExecutionId));
-        pipelineExecution.setTypes(Collections.singleton(Vocabulary.s_c_transformation));
+        pipelineExecution.setTypes(Collections.singleton(Vocabulary.s_c_pipeline_execution));
 
         executionMap.put(pipelineExecution.getId(), pipelineExecution);
         final Path pipelineExecutionDir = FileSystemLogger.resolvePipelineExecution(pipelineExecutionId);
@@ -118,7 +120,7 @@ public class SemanticLoggingProgressListener implements ProgressListener {
                                                  final Module outputModule,
                                                  final ExecutionContext inputContext,
                                                  final String predecessorModuleExecutionId) {
-        Transformation moduleExecution = new Transformation();
+        ModuleExecution moduleExecution = new ModuleExecution();
         moduleExecution.setId(getModuleExecutionIri(moduleExecutionId));
         executionMap.put(moduleExecution.getId(), moduleExecution);
 
@@ -138,8 +140,8 @@ public class SemanticLoggingProgressListener implements ProgressListener {
     @Override public void moduleExecutionFinished(long pipelineExecutionId, final String moduleExecutionId,
                                                   final Module module) {
         final EntityManager em = entityManagerMap.get(getPipelineExecutionIri(pipelineExecutionId));
-        Transformation moduleExecution =
-            (Transformation) executionMap.get(getModuleExecutionIri(moduleExecutionId));
+        ModuleExecution moduleExecution =
+            (ModuleExecution) executionMap.get(getModuleExecutionIri(moduleExecutionId));
 
         Map<String, Set<Object>> properties = new HashMap<>();
         properties.put(P_HAS_PART, Collections.singleton(URI.create(moduleExecution.getId())));
@@ -151,8 +153,8 @@ public class SemanticLoggingProgressListener implements ProgressListener {
         synchronized (em) {
             if (em.isOpen()) {
                 em.getTransaction().begin();
-                final Transformation pipelineExecution =
-                    em.find(Transformation.class, getPipelineExecutionIri(pipelineExecutionId));
+                final PipelineExecution pipelineExecution =
+                    em.find(PipelineExecution.class, getPipelineExecutionIri(pipelineExecutionId));
                 final EntityDescriptor pd = new EntityDescriptor(URI.create(pipelineExecution.getId()));
 
                 pipelineExecution.setProperties(properties);
@@ -198,10 +200,10 @@ public class SemanticLoggingProgressListener implements ProgressListener {
     }
 
     private String getPipelineExecutionIri(final long pipelineId) {
-        return Vocabulary.s_c_transformation + "/" + pipelineId;
+        return Vocabulary.s_c_pipeline_execution + "/" + pipelineId;
     }
 
     private String getModuleExecutionIri(final String moduleExecutionId) {
-        return Vocabulary.s_c_transformation + "/" + moduleExecutionId;
+        return Vocabulary.s_c_module_execution + "/" + moduleExecutionId;
     }
 }
