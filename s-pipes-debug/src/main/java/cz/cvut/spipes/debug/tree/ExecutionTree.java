@@ -36,7 +36,10 @@ public class ExecutionTree {
                 executionNodes.set(i, rootNode);
             }
             for (ModuleExecutionNode executionNode : executionNodes) {
-                String nextId = executionNode.getExecution().getHas_next().getId();
+                String nextId = null;
+                if (executionNode.getExecution().getHas_next() != null) {
+                    nextId = executionNode.getExecution().getHas_next().getId();
+                }
                 String currentId = executionNodes.get(i).getId();
                 if (nextId != null && nextId.equals(currentId)) {
                     executionNodes.get(i).addInputExecution(executionNode);
