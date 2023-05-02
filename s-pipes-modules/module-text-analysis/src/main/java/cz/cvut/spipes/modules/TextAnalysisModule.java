@@ -50,7 +50,7 @@ public class TextAnalysisModule extends AnnotatedAbstractModule{
     @Parameter(urlPrefix = TYPE_PREFIX, name = "vocabulary-iri")
     private String vocabularyIri;
 
-    /** The name of the repository where the vocabulary is stored. */
+    /** The IRI of the repository where the vocabulary is stored. */
     @Parameter(urlPrefix = TYPE_PREFIX, name = "vocabulary-repository")
     private String vocabularyRepository;
 
@@ -58,7 +58,7 @@ public class TextAnalysisModule extends AnnotatedAbstractModule{
     @Parameter(urlPrefix = TYPE_PREFIX, name = "language")
     private String language;
 
-    /** A boolean flag indicating whether to replace the original text with the analyzed text. */
+    //sml:replace
     @Parameter(urlPrefix = SML.uri, name = "replace")
     private boolean isReplace = false;
 
