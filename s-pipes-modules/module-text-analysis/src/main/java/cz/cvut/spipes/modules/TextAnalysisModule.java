@@ -33,6 +33,7 @@ import java.util.List;
  * <p>
  * This class provides a module for text analysis.
  * It uses an external web service to analyze text data and retrieve annotated text.
+ * It analyse the text using a SKOS vocabulary that is stored in RDF4J repository.
  * </p>
  */
 public class TextAnalysisModule extends AnnotatedAbstractModule{
