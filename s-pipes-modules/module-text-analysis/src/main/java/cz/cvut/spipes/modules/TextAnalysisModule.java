@@ -26,32 +26,56 @@ import org.topbraid.spin.model.Select;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-
+/**
+ * Module for text analysis.
+ * <p>
+ * This class provides a module for text analysis.
+ * It uses an external web service to analyze text data and retrieve annotated text.
+ * </p>
+ */
 public class TextAnalysisModule extends AnnotatedAbstractModule{
 
     private static final Logger LOG = LoggerFactory.getLogger(TextAnalysisModule.class);
     private static final String TYPE_URI = KBSS_MODULE.uri + "text-analysis";
     private static final String TYPE_PREFIX = TYPE_URI + "/";
 
+    /** The URL of the text analysis service to be used. */
     @Parameter(urlPrefix = TYPE_PREFIX, name = "service-url")
     private String serviceUrl;
 
+    /** The IRI of the vocabulary to be used for entity recognition. */
     @Parameter(urlPrefix = TYPE_PREFIX, name = "vocabulary-iri")
     private String vocabularyIri;
 
+    /** The name of the repository where the vocabulary is stored. */
     @Parameter(urlPrefix = TYPE_PREFIX, name = "vocabulary-repository")
     private String vocabularyRepository;
 
+    /** The language of the text to be analyzed. */
     @Parameter(urlPrefix = TYPE_PREFIX, name = "language")
     private String language;
 
+    /** A boolean flag indicating whether to replace the original text with the analyzed text. */
     @Parameter(urlPrefix = SML.uri, name = "replace")
     private boolean isReplace = false;
 
+    /** The number of literals to be processed per request to the web service. */
     @Parameter(urlPrefix = TYPE_PREFIX, name = "literals-per-request")
     private Integer literalsPerRequest;
 
+    /** The SPARQL query to be used for selecting literals from the repository.
+     * <p>
+     * Example:
+     * <pre>{@code
+     * SELECT ?literal
+     * WHERE {
+     *    ?s ?p ?literal .
+     *    FILTER(isLiteral(?literal) && datatype(?literal) = xsd:string)
+     * }
+     * }</pre>
+     */
     private Select selectQuery;
 
     @Override
@@ -70,15 +94,23 @@ public class TextAnalysisModule extends AnnotatedAbstractModule{
             List<RDFNode> listOfObjects = new ArrayList<>();
             StringBuilder sb = new StringBuilder();
             int counter = 0;
+            int totalCounter = 0;
 
             while (resultSet.hasNext()) {
                 QuerySolution solution = resultSet.nextSolution();
-                RDFNode object = solution.get("o");
+                Iterator<String> variableBindings = solution.varNames();
+                while (variableBindings.hasNext()){
+                    RDFNode object = solution.get(variableBindings.next());
 
-                if (object != null && object.isLiteral() && object.asLiteral().getDatatype() instanceof XSDBaseStringType) {
+                    if (!object.isLiteral() || !(object.asLiteral().getDatatype() instanceof XSDBaseStringType)) {
+                        LOG.warn("Object {} is not a literal. Skipping.", object);
+                        continue;
+                    }
+
                     Literal literal = object.asLiteral();
                     String textElement = literal.getString();
                     if (counter >= literalsPerRequest) {
+                        LOG.debug("Annotating {} literals. Progress {}%.", literalsPerRequest, totalCounter * 100L / inputModel.size());
                         String annotatedText = annotateObjectLiteral(sb.toString());
                         String[] elements = splitAnnotatedText(annotatedText);
 
@@ -95,10 +127,12 @@ public class TextAnalysisModule extends AnnotatedAbstractModule{
                     sb.append(textElement);
                     sb.append("<br>");
                     counter++;
+                    totalCounter++;
                 }
             }
 
             if (counter > 0) {
+                LOG.debug("Annotating {} literals. Progress {}%.", literalsPerRequest, totalCounter * 100L / inputModel.size());
                 String annotatedText = annotateObjectLiteral(sb.toString());
                 String[] elements = splitAnnotatedText(annotatedText);
 
