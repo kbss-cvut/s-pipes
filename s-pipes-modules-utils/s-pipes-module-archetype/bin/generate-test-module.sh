@@ -12,7 +12,7 @@ echo "Step 1: Getting the directory paths"
 
 SCRIPT_PATH=$(dirname $(dirname "$(readlink -f "$0")"))
 ARCHETYPE_DIR=$SCRIPT_PATH/..
-SPIPES_MODULES_DIR=$ARCHETYPE_DIR/../../s-pipes-modules
+SPIPES_MODULES_DIR=$ARCHETYPE_DIR/../s-pipes-modules
 
 echo "SCRIPT_PATH = $SCRIPT_PATH"
 echo "ARCHETYPE_DIR = $ARCHETYPE_DIR"
@@ -49,7 +49,7 @@ echo "-------------------------------------------------------------------------"
 echo "Step 4: Cleaning up in pom in $SPIPES_MODULES_DIR"
 cd "$SPIPES_MODULES_DIR" || exit 4
 rm -rf $NEW_MODULE_ARTIFACT_ID
-sed -i '' "/\<module\>$NEW_MODULE_ARTIFACT_ID\<\/module\>/d" pom.xml
+sed -i "/\<module\>$NEW_MODULE_ARTIFACT_ID\<\/module\>/d" pom.xml
 echo "Cleaned up any existing old versions"
 
 
