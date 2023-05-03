@@ -10,7 +10,7 @@ NEW_MODULE_NAME="foobar"
 echo "-------------------------------------------------------------------------"
 echo "Step 1: Getting the directory paths"
 
-SCRIPT_PATH=$(pwd)
+SCRIPT_PATH=$(dirname $(dirname "$(readlink -f "$0")"))
 ARCHETYPE_DIR=$SCRIPT_PATH/..
 SPIPES_MODULES_DIR=$ARCHETYPE_DIR/../../s-pipes-modules
 
