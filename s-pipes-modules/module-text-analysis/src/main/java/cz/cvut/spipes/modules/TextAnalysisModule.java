@@ -23,6 +23,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.topbraid.spin.arq.ARQFactory;
 import org.topbraid.spin.model.Select;
+import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
+import static org.apache.commons.lang.StringEscapeUtils.unescapeHtml;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -109,14 +111,14 @@ public class TextAnalysisModule extends AnnotatedAbstractModule{
                     }
 
                     Literal literal = object.asLiteral();
-                    String textElement = literal.getString();
+                    String textElement = escapeHtml(literal.getString());
                     if (counter >= literalsPerRequest) {
                         LOG.debug("Annotating {} literals. Progress {}%.", literalsPerRequest, totalCounter * 100L / inputModel.size());
                         String annotatedText = annotateObjectLiteral(sb.toString());
                         String[] elements = splitAnnotatedText(annotatedText);
 
                         for (int i = 0; i < listOfObjects.size(); i++) {
-                            String annotatedTerm = elements[i];
+                            String annotatedTerm = unescapeHtml(elements[i]);
                             createAnnotatedResource(outputModel, textElement, annotatedTerm);
                         }
                         listOfObjects.clear();
