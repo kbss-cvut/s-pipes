@@ -1,7 +1,7 @@
 package cz.cvut.spipes.debug.rest.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import cz.cvut.spipes.debug.service.ConfigurationService;
@@ -15,9 +15,10 @@ public class SPipesDebugConfigurationController {
     public SPipesDebugConfigurationController(ConfigurationService configurationService) {
         this.configurationService = configurationService;
     }
+
     @ApiOperation(value = "Change repository")
-    @GetMapping("/repository/{repositoryName}")
-    public void changeRepository(@PathVariable String repositoryName){
+    @PutMapping("/repository/{repositoryName}")
+    public void changeRepository(@PathVariable String repositoryName) {
         configurationService.changeRepository(repositoryName);
     }
 }

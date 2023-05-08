@@ -76,9 +76,6 @@ public class ModuleExecution extends Thing {
     @OWLDataProperty(iri = Vocabulary.s_p_has_module_execution_finish_date, fetch = FetchType.EAGER)
     protected Date finish_date;
 
-    @OWLDataProperty(iri = Vocabulary.s_p_has_pipeline_execution_start_date, fetch = FetchType.EAGER)
-    protected Date has_pipepline_execution_date;
-
     @OWLObjectProperty(iri = Vocabulary.s_p_has_module_id, fetch = FetchType.EAGER)
     protected String has_module_id;
 
@@ -162,16 +159,6 @@ public class ModuleExecution extends Thing {
     public void setFinish_date(Date finish_date) {
         this.finish_date = finish_date;
     }
-
-
-    public Date getHas_pipepline_execution_date() {
-        return has_pipepline_execution_date;
-    }
-
-    public void setHas_pipepline_execution_date(Date has_pipepline_execution_date) {
-        this.has_pipepline_execution_date = has_pipepline_execution_date;
-    }
-
 
     public String getHas_module_id() {
         return has_module_id;

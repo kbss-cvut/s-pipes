@@ -14,4 +14,6 @@ RUN rm -rf /usr/local/tomcat/webapps/*
 
 COPY --from=MAVEN_BUILD /s-pipes-web/target/s-pipes-web-*.war /usr/local/tomcat/webapps/s-pipes.war
 
+COPY --from=MAVEN_BUILD /s-pipes-debug/target/s-pipes-debug-*.war /usr/local/tomcat/webapps/s-pipes-debug.war
+
 CMD ["catalina.sh","run"]
