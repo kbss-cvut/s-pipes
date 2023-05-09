@@ -17,3 +17,15 @@ COPY --from=MAVEN_BUILD /s-pipes-web/target/s-pipes-web-*.war /usr/local/tomcat/
 COPY --from=MAVEN_BUILD /s-pipes-debug/target/s-pipes-debug-*.war /usr/local/tomcat/webapps/s-pipes-debug.war
 
 CMD ["catalina.sh","run"]
+
+FROM alpine/git:v2.32.0 AS modules
+
+WORKDIR /
+
+RUN git clone https://kbss.felk.cvut.cz/gitblit/r/s-pipes-modules.git
+
+FROM ghcr.io/kbss-cvut/s-pipes/s-pipes-engine:latest
+
+COPY --from=modules ./s-pipes-modules /scripts/s-pipes-modules
+
+COPY . /scripts/root
