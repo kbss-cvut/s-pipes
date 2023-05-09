@@ -13,7 +13,7 @@ services:
     depends_on:
       - rdf4j
     environment:
-      - CONTEXTS_SCRIPTPATHS=/home/mircheq/IdeaProjects/BP/s-pipes/doc/examples;
+      - CONTEXTS_SCRIPTPATHS=/home/mircheq/IdeaProjects/s-pipes-modules;/home/mircheq/IdeaProjects/BP/s-pipes/doc/examples;
       - STORAGE_URL=http://rdf4j:8080/rdf4j-server/repositories
     volumes:
       - /tmp:/tmp

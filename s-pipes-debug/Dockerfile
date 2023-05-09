@@ -1,15 +1,3 @@
-FROM alpine/git:v2.32.0 AS modules
-
-WORKDIR /
-
-RUN git clone https://kbss.felk.cvut.cz/gitblit/r/s-pipes-modules.git
-
-FROM ghcr.io/kbss-cvut/s-pipes/s-pipes-engine:latest
-
-COPY --from=modules ./s-pipes-modules /scripts/s-pipes-modules
-
-COPY . /scripts/root
-
 # the first stage of our build will use a maven 3.6.1 parent image
 FROM maven:3.8.6-openjdk-11 AS MAVEN_BUILD
 
