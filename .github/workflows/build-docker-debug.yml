@@ -1,4 +1,4 @@
-name: Build docker
+name: Build docker debug
 on:
   push:
     branches: [ main ]
