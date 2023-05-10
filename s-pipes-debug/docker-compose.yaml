@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   s-pipes-engine:
-    image: ghcr.io/mircheqtm/s-pipes/s-pipes-engine:latest
+    image: ghcr.io/mircheqtm/s-pipes/s-pipes-engine-debug:latest
     container_name: s-pipes-engine
     ports:
       - "8081:8080"
