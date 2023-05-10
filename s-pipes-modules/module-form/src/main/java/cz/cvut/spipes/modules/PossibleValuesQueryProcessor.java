@@ -1,12 +1,5 @@
 package cz.cvut.spipes.modules;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.net.URI;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
@@ -18,6 +11,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.net.URI;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 class PossibleValuesQueryProcessor {
 
@@ -46,7 +46,7 @@ class PossibleValuesQueryProcessor {
         RestTemplate restTemplate = new RestTemplate();
         try {
             final ResponseEntity<String> result = restTemplate.exchange(urlWithQuery, HttpMethod.GET, entity,
-                    String.class);
+                String.class);
             return result.getBody();
         } catch (Exception e) {
             LOG.error("Error when requesting remote data, url: {}.", urlWithQuery, e);
