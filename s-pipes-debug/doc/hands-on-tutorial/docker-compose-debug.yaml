@@ -1,0 +1,47 @@
+version: '3.7'
+
+services:
+  s-pipes-engine:
+    image: ghcr.io/mircheqtm/s-pipes/s-pipes-engine-debug:latest
+    ports:
+      - "8081:8080"
+      - "5005:5005"
+    expose:
+      - "8080"
+    networks:
+      - overlay
+    depends_on:
+      - rdf4j
+    environment:
+      - JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+      - CONTEXTS_SCRIPTPATHS=/scripts;${PWD}/../../../doc/examples;
+      - STORAGE_URL=http://rdf4j:8080/rdf4j-server/repositories
+    volumes:
+      - /tmp:/tmp
+      - /home:/home
+      - /usr/local/tomcat/temp/:/usr/local/tomcat/temp/
+#      - ./s-pipes-engine/s-pipes-progress-listener-config.ttl:/usr/local/tomcat/webapps/s-pipes/WEB-INF/classes/config.ttl
+#      - ./s-pipes-engine/s-pipes-web-logback.xml/:/usr/local/tomcat/webapps/s-pipes/WEB-INF/classes/logback.xml
+
+  rdf4j:
+    build:
+      context: .
+      dockerfile: Dockerfile_rdfj4
+    ports:
+      - "8080:8080"
+    expose:
+      - "8080"
+    networks:
+      - overlay
+    environment:
+      - JAVA_OPTS=-Xms1g -Xmx4g
+    volumes:
+      - data:/var/rdf4j
+      - logs:/usr/local/tomcat/logs
+
+volumes:
+  data:
+  logs:
+
+networks:
+  overlay:
