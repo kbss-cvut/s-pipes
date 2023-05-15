@@ -34,7 +34,7 @@ public class SPipesDebugController {
         this.scriptService = scriptService;
     }
 
-    @ApiOperation(value = "Get all executions", response = List.class)
+    @ApiOperation(value = "Get all pipeline executions", response = List.class)
     @GetMapping(value = "/executions", produces = {
             JsonLd.MEDIA_TYPE,
             MediaType.APPLICATION_JSON_VALUE,
@@ -45,7 +45,7 @@ public class SPipesDebugController {
     }
 
     @GetMapping(value = "/executions/{executionId}/modules", produces = {JsonLd.MEDIA_TYPE, MediaType.APPLICATION_JSON_VALUE})
-    @ApiOperation(value = "Get all modules in execution", response = List.class)
+    @ApiOperation(value = "Get all module executions in pipeline execution", response = List.class)
     public List<ModuleExecutionDto> getAllModulesByExecutionIdWithExecutionTime(
             @ApiParam(
                     name = "executionId",

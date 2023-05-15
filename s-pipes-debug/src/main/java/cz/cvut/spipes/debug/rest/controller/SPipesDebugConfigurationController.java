@@ -16,7 +16,7 @@ public class SPipesDebugConfigurationController {
         this.configurationService = configurationService;
     }
 
-    @ApiOperation(value = "Change repository")
+    @ApiOperation(value = "Change rdf4j repository for SPipes debug")
     @PutMapping("/repository/{repositoryName}")
     public void changeRepository(@PathVariable String repositoryName) {
         configurationService.changeRepository(repositoryName);
