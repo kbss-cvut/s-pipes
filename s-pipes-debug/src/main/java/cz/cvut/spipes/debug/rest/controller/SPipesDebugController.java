@@ -84,7 +84,7 @@ public class SPipesDebugController {
 
 
     @GetMapping(value = "/executions/{executionId}/compare/{executionToCompareId}", produces = {JsonLd.MEDIA_TYPE, MediaType.APPLICATION_JSON_VALUE})
-    @ApiOperation(value = "Compare pipeline executions", response = PipelineComparisonResultDto.class)
+    @ApiOperation(value = "Compare pipeline executions and find module execution with first difference", response = PipelineComparisonResultDto.class)
     public PipelineComparisonResultDto compareExecutions(
             @ApiParam(
                     name = "executionId",
@@ -104,7 +104,7 @@ public class SPipesDebugController {
     }
 
     @GetMapping(value = "/triple-origin/{executionId}")
-    @ApiOperation(value = "Find triple origin", response = List.class, notes = TRIPLE_FORMAT_NOTE)
+    @ApiOperation(value = "Find module execution which created given triple", response = List.class, notes = TRIPLE_FORMAT_NOTE)
     public List<ModuleExecutionDto> findTripleOrigin(
             @ApiParam(
                     name = "executionId",
@@ -124,7 +124,7 @@ public class SPipesDebugController {
     }
 
     @GetMapping(value = "/triple-elimination/{executionId}")
-    @ApiOperation(value = "Find where triple was removed", response = List.class, notes = TRIPLE_FORMAT_NOTE)
+    @ApiOperation(value = "Find module execution where triple was removed", response = List.class, notes = TRIPLE_FORMAT_NOTE)
     public List<ModuleExecutionDto> findTripleElimination(
             @ApiParam(
                     name = "executionId",
@@ -144,7 +144,7 @@ public class SPipesDebugController {
     }
 
     @GetMapping(value = "/variable-origin/{executionId}")
-    @ApiOperation(value = "Find where variable was created", response = List.class)
+    @ApiOperation(value = "Find module execution where variable was created", response = List.class)
     public List<ModuleExecutionDto> findVariableOrigin(
             @ApiParam(
                     name = "executionId",
