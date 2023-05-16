@@ -68,11 +68,11 @@ public class DebugService {
     }
 
     public List<ModuleExecutionDto> getAllModuleExecutionsSorted(String executionId, String orderBy, String orderType) {
-        PipelineExecution pipelineTransformation = pipelineExecutionDao.findById(executionId);
-        if (pipelineTransformation == null) {
+        PipelineExecution pipelineExecution = pipelineExecutionDao.findById(executionId);
+        if (pipelineExecution == null) {
             throw new NotFoundException("Pipeline execution with id " + executionId + " was not found");
         }
-        Set<ModuleExecution> modules = pipelineTransformation.getHas_part();
+        Set<ModuleExecution> modules = pipelineExecution.getHas_part();
         modules.forEach(module -> {
             if (module.getStart_date() != null && module.getFinish_date() != null) {
                 module.setDuration(getFormattedDuration(module));
@@ -87,7 +87,7 @@ public class DebugService {
     public PipelineExecutionDto getPipelineExecutionById(String executionId) {
         PipelineExecution pipelineExecution = pipelineExecutionDao.findById(executionId);
         if (pipelineExecution == null) {
-            throw new NotFoundException("Pipeline execution with id " + executionId);
+            throw new NotFoundException("Pipeline execution with id " + executionId + " was not found");
         }
         return pipelineExecutionMapper.toDto(pipelineExecution);
     }
