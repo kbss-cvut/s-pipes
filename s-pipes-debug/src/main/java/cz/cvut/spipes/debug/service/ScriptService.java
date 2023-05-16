@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.apache.catalina.Pipeline;
 import org.springframework.stereotype.Service;
 
 import cz.cvut.spipes.debug.exception.NotFoundException;
@@ -63,9 +64,10 @@ public class ScriptService {
     }
 
     public List<ModuleExecution> findFirstModule(String executionId, Predicate<ModuleExecution> predicate, String pattern) {
-        Set<ModuleExecution> ModuleExecutions = pipelineExecutionDao.findById(executionId).getHas_part();
+        Set<ModuleExecution> moduleExecutions = getModulesForPipelineExecutionId(executionId);
+
         List<ModuleExecution> modulesWithMatchingPattern = new ArrayList<>();
-        for (ModuleExecution ModuleExecution : ModuleExecutions) {
+        for (ModuleExecution ModuleExecution : moduleExecutions) {
             if (predicate.test(ModuleExecution)) {
                 modulesWithMatchingPattern.add(ModuleExecution);
             }
@@ -73,26 +75,33 @@ public class ScriptService {
         if (modulesWithMatchingPattern.isEmpty()) {
             throw new NotFoundException(String.format(NOT_FOUND_ERROR_PATTERN, pattern));
         }
-        ExecutionTree executionTree = new ExecutionTree(ModuleExecutions);
+        ExecutionTree executionTree = new ExecutionTree(moduleExecutions);
         return executionTree.findEarliest(modulesWithMatchingPattern);
     }
 
     public List<ModuleExecutionDto> findVariableOrigin(String executionId, String variable) {
-        PipelineExecution pipelineExecution = pipelineExecutionDao.findById(executionId);
-        Set<ModuleExecution> ModuleExecutions = pipelineExecution.getHas_part();
+        Set<ModuleExecution> moduleExecutions = getModulesForPipelineExecutionId(executionId);
 
         List<ModuleExecution> modulesWithBoundVariable = new ArrayList<>();
-        for (ModuleExecution m : ModuleExecutions) {
+        for (ModuleExecution m : moduleExecutions) {
             Set<Thing> inputBindings = m.getHas_input_binding();
             addModuleIfHasBoundVariable(m, inputBindings, modulesWithBoundVariable, variable);
         }
         if (modulesWithBoundVariable.isEmpty()) {
             throw new NotFoundException(String.format(NOT_FOUND_ERROR_VARIABLE, variable));
         }
-        ExecutionTree executionTree = new ExecutionTree(ModuleExecutions);
+        ExecutionTree executionTree = new ExecutionTree(moduleExecutions);
         return executionTree.findEarliest(modulesWithBoundVariable).stream()
                 .map(moduleExecutionMapper::toDto)
                 .collect(Collectors.toList());
+    }
+
+    private Set<ModuleExecution> getModulesForPipelineExecutionId(String pipelineExecutionId){
+        PipelineExecution pipelineExecution = pipelineExecutionDao.findById(pipelineExecutionId);
+        if(pipelineExecution == null){
+            throw new NotFoundException("Pipeline execution with id " + pipelineExecutionId + " was not found");
+        }
+        return pipelineExecution.getHas_part();
     }
 
     private void addModuleIfHasBoundVariable(ModuleExecution ModuleExecution, Set<Thing> inputBindings, List<ModuleExecution> modulesWithBoundVariable, String variable) {
