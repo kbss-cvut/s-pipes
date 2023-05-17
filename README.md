@@ -85,6 +85,7 @@ The following software needs to be installed on the system for development:
 
 - JDK 11
 - Maven
+- Apache Tomcat 9.0
 
 ## Dockerization
   The docker image of SPipes backend can be built by

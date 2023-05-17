@@ -2,11 +2,14 @@ name: Build docker
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
   workflow_dispatch:
 env:
   IMAGE_NAME: s-pipes-engine
   USERNAME: ${{ github.actor }}
   TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  MAIN_BRANCH_NAME: main
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
@@ -16,7 +19,7 @@ jobs:
       - name: Build image
         run: docker build . --file ./Dockerfile --tag $IMAGE_NAME
 
-      - name: Log into registry
+      - name: Log in to the Container registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
 
       - name: Push image
@@ -24,12 +27,16 @@ jobs:
           IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
           # Change all uppercase to lowercase
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-          # Strip git ref prefix from version
-          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-          # Strip "v" prefix from tag name
-          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          # Get branch name if merge to a branch
+          GIT_BRANCH_NAME=$(echo "${{ github.ref }}" | grep 'refs/heads/.*' | cut -d"/" -f 3)
+          # Get pull request id (e.g. "pr-123" from "/123pulls/")
+          PULL_REQUEST_ID=$(echo "${{ github.event.pull_request.number }}" | grep -v "^$" | sed 's/^/pr-/')
+          # Get tag id while strip "v" prefix (e.g. "1.2" from "v1.2")
+          TAG_ID=$(echo "${{ github.ref }}" | grep 'refs/tags/.*' | cut -d"/" -f 3 | sed -e 's/^v//')
+          # Version is either "git branch name"/"pull request id"/"tag id"                    
+          VERSION=${GIT_BRANCH_NAME:-${PULL_REQUEST_ID:-${TAG_ID}}}
           # Use Docker `latest` tag convention
-          [ "$VERSION" == "main" ] && VERSION=latest
+          [ "$VERSION" == $MAIN_BRANCH_NAME ] && VERSION=latest
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
