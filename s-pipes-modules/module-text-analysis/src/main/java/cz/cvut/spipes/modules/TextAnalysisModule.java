@@ -4,7 +4,6 @@ import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.modules.constants.Termit;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -24,35 +23,62 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.topbraid.spin.arq.ARQFactory;
 import org.topbraid.spin.model.Select;
+import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
+import static org.apache.commons.lang.StringEscapeUtils.unescapeHtml;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-
+/**
+ * Module for text analysis.
+ * <p>
+ * This class provides a module for text analysis.
+ * It uses an external web service to analyze text data and retrieve annotated text.
+ * It analyse the text using a SKOS vocabulary that is stored in RDF4J repository.
+ * </p>
+ */
 public class TextAnalysisModule extends AnnotatedAbstractModule{
 
     private static final Logger LOG = LoggerFactory.getLogger(TextAnalysisModule.class);
     private static final String TYPE_URI = KBSS_MODULE.uri + "text-analysis";
     private static final String TYPE_PREFIX = TYPE_URI + "/";
 
+    /** The URL of the text analysis service to be used. */
     @Parameter(urlPrefix = TYPE_PREFIX, name = "service-url")
     private String serviceUrl;
 
+    /** The IRI of the vocabulary to be used for entity recognition. */
     @Parameter(urlPrefix = TYPE_PREFIX, name = "vocabulary-iri")
     private String vocabularyIri;
 
+    /** The IRI of the repository where the vocabulary is stored. */
     @Parameter(urlPrefix = TYPE_PREFIX, name = "vocabulary-repository")
     private String vocabularyRepository;
 
+    /** The language of the text to be analyzed. */
     @Parameter(urlPrefix = TYPE_PREFIX, name = "language")
     private String language;
 
+    //sml:replace
     @Parameter(urlPrefix = SML.uri, name = "replace")
     private boolean isReplace = false;
 
+    /** The number of literals to be processed per request to the web service. */
     @Parameter(urlPrefix = TYPE_PREFIX, name = "literals-per-request")
     private Integer literalsPerRequest;
 
+    /** The SPARQL query to be used for selecting literals from the repository.
+     * <p>
+     * Example:
+     * <pre>{@code
+     * SELECT ?literal
+     * WHERE {
+     *    ?s ?p ?literal .
+     *    FILTER(isLiteral(?literal) && datatype(?literal) = xsd:string)
+     * }
+     * }</pre>
+     */
     private Select selectQuery;
 
     @Override
@@ -68,77 +94,68 @@ public class TextAnalysisModule extends AnnotatedAbstractModule{
         Query query = ARQFactory.get().createQuery(selectQuery);
         try (QueryExecution queryExecution = QueryExecutionFactory.create(query, inputModel)) {
             ResultSet resultSet = queryExecution.execSelect();
-            ResIterator subjects = resultSet.getResourceModel().listSubjects();
-            List<String> listOfTexts = new ArrayList<>();
-            List<Resource> listOfSubjects = new ArrayList<>();
+            List<RDFNode> listOfObjects = new ArrayList<>();
             StringBuilder sb = new StringBuilder();
             int counter = 0;
+            int totalCounter = 0;
 
-            while (subjects.hasNext()) {
-                Resource subject = subjects.next();
-                StmtIterator statements = subject.listProperties();
+            while (resultSet.hasNext()) {
+                QuerySolution solution = resultSet.nextSolution();
+                Iterator<String> variableBindings = solution.varNames();
+                while (variableBindings.hasNext()){
+                    RDFNode object = solution.get(variableBindings.next());
 
-                while (statements.hasNext()) {
-                    Statement statement = statements.next();
-                    if (!statement.getObject().isLiteral()) {
+                    if (!object.isLiteral() || !(object.asLiteral().getDatatype() instanceof XSDBaseStringType)) {
+                        LOG.warn("Object {} is not a literal. Skipping.", object);
                         continue;
                     }
 
-                    Literal literal = statement.getObject().asLiteral();
-                    if (!(literal.getDatatype() instanceof XSDBaseStringType)) {
-                        continue;
-                    }
-
-                    String text = literal.getString();
-                    listOfTexts.add(text);
-                    listOfSubjects.add(subject);
-                    sb.append(text).append("<br>");
-                    counter++;
-
+                    Literal literal = object.asLiteral();
+                    String textElement = escapeHtml(literal.getString());
                     if (counter >= literalsPerRequest) {
-                        addAnnotatedLiteralsToModel(outputModel, listOfTexts, listOfSubjects, sb);
-                        listOfTexts.clear();
-                        listOfSubjects.clear();
-                        sb.setLength(0);
+                        LOG.debug("Annotating {} literals. Progress {}%.", literalsPerRequest, totalCounter * 100L / inputModel.size());
+                        String annotatedText = annotateObjectLiteral(sb.toString());
+                        String[] elements = splitAnnotatedText(annotatedText);
+
+                        for (int i = 0; i < listOfObjects.size(); i++) {
+                            String annotatedTerm = unescapeHtml(elements[i]);
+                            createAnnotatedResource(outputModel, textElement, annotatedTerm);
+                        }
+                        listOfObjects.clear();
+                        sb = new StringBuilder();
                         counter = 0;
                     }
+
+                    listOfObjects.add(object);
+                    sb.append(textElement);
+                    sb.append("<br>");
+                    counter++;
+                    totalCounter++;
                 }
             }
-            if (counter > 0) { // add remaining literals
-                addAnnotatedLiteralsToModel(outputModel, listOfTexts, listOfSubjects, sb);
+
+            if (counter > 0) {
+                LOG.debug("Annotating {} literals. Progress {}%.", literalsPerRequest, totalCounter * 100L / inputModel.size());
+                String annotatedText = annotateObjectLiteral(sb.toString());
+                String[] elements = splitAnnotatedText(annotatedText);
+
+                for (int i = 0; i < listOfObjects.size(); i++) {
+                    RDFNode obj = listOfObjects.get(i);
+                    String textElement = obj.asLiteral().getString();
+                    String annotatedTerm = elements[i];
+                    createAnnotatedResource(outputModel, textElement, annotatedTerm);
+                }
             }
         }
         return createOutputContext(isReplace, inputModel, outputModel);
     }
 
-    private void addAnnotatedLiteralsToModel(Model outputModel, List<String> listOfTexts, List<Resource> listOfSubjects, StringBuilder sb) {
-        String annotatedText = annotateObjectLiteral(sb.toString());
-        String[] elements = splitAnnotatedText(annotatedText);
-
-        for (int i = 0; i < listOfSubjects.size(); i++) {
-            Resource sub = listOfSubjects.get(i);
-            String textElement = listOfTexts.get(i);
-            String annotatedTextElement = elements[i];
-            Resource annotatedResource = createAnnotatedResource(sub, textElement, annotatedTextElement, outputModel);
-            outputModel.add(annotatedResource.getModel());
-        }
-    }
-
-
-    private Resource createAnnotatedResource(Resource subject, String originalText, String annotatedText, Model model) {
-        Resource annotatedResource;
-        if (subject.isAnon()){
-            annotatedResource = model.createResource();
-        } else {
-            String newSubjectUri = subject.getURI() + "-annotated-" + DigestUtils.md5Hex(subject.getURI() + originalText);
-            annotatedResource = model.createResource(newSubjectUri);
-        }
+    private void createAnnotatedResource(Model outputModel, String originalText, String annotatedText) {
+        Resource annotatedResource = outputModel.createResource();
 
         annotatedResource.addProperty(RDF.type, Termit.ANNOTATION);
         annotatedResource.addProperty(Termit.ORIGINAL_TEXT, originalText);
         annotatedResource.addProperty(Termit.ANNOTATED_TEXT, annotatedText);
-
-        return annotatedResource;
     }
 
     private String[] splitAnnotatedText(String annotatedText) {
