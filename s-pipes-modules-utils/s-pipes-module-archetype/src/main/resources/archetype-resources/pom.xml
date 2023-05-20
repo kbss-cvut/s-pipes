@@ -1,18 +1,17 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>s-pipes-modules</artifactId>
         <groupId>cz.cvut.kbss</groupId>
-        <version>0.4.0</version>
+        <version>${moduleParentVersion}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>${groupId}</groupId>
     <artifactId>${artifactId}</artifactId>
-    <version>${version}</version>
-    <packaging>jar</packaging>
-
     <name>SPipes Generated Module - ${artifactId}</name>
+    <packaging>jar</packaging>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -50,6 +49,7 @@
                         </goals>
                         <configuration>
                             <moduleClassName>${moduleNameCamelCase}Module</moduleClassName>
+                            <modulePackageName>cz.cvut.spipes.modules</modulePackageName>
                             <ontologyFilename>${artifactId}-generated.ttl</ontologyFilename>
                         </configuration>
                     </execution>
