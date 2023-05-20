@@ -18,19 +18,19 @@ import cz.cvut.spipes.debug.rest.controller.SPipesDebugController;
 public class RelatedResourceService {
 
     public void addPipelineExecutionResources(PipelineExecutionDto pipelineExecutionDto) {
-        String moduleExecutionName = "Module execution";
+        String moduleExecutionName = "Get all module executions in the pipeline execution";
         String linkToModules = linkTo(methodOn(SPipesDebugController.class)
                 .getAllModulesByExecutionIdWithExecutionTime(getExecutionIdFromIri(pipelineExecutionDto.getId()), "ORDER_BY", "ORDER_TYPE")).withRel(moduleExecutionName).getHref();
         RelatedResource relatedResourceModules = createResource(moduleExecutionName, linkToModules);
         relatedResourceModules.addParam("ORDER_BY", List.of("duration", "output-triples", "input-triples", "start-time"));
         relatedResourceModules.addParam("ORDER_TYPE", List.of("ASC", "DESC"));
 
-        String pipelineExecutionName = "Pipeline execution";
+        String pipelineExecutionName = "Get pipeline execution";
         String linkToPipelineExecution = linkTo(methodOn(SPipesDebugController.class)
                 .getPipelineExecution(getExecutionIdFromIri(pipelineExecutionDto.getId()))).withRel(pipelineExecutionName).getHref();
         RelatedResource pipelineExecutionResource = createResource(pipelineExecutionName,linkToPipelineExecution);
 
-        String comparePipelinesName = "Compare pipelines";
+        String comparePipelinesName = "Compare pipelines and find difference";
         String comparePipelinesLink = linkTo(methodOn(SPipesDebugController.class)
                 .compareExecutions(getExecutionIdFromIri(pipelineExecutionDto.getId()), "otherPipelineExecutionId"))
                 .withRel(comparePipelinesName).getHref();
