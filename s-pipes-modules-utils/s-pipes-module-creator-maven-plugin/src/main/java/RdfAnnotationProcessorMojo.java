@@ -21,10 +21,11 @@ import org.reflections.util.FilterBuilder;
 import org.topbraid.spin.vocabulary.SPIN;
 import org.topbraid.spin.vocabulary.SPL;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -94,23 +95,28 @@ public class RdfAnnotationProcessorMojo extends AbstractMojo {
 
     }
 
-    private void generateRdfForAllModules() throws MalformedURLException, ClassNotFoundException {
+    private void generateRdfForAllModules() throws MalformedURLException, ClassNotFoundException, FileNotFoundException {
         //read all submodules
         log.info("Generating an RDF for all sub-modules");
         List<MavenProject> submodules = project.getCollectedProjects();
 
-        //create base RDF structure
+        //todo create base RDF structure
+
+        //populate RDF with module info
         for (MavenProject submodule : submodules) {
-            var name = submodule.getName();
-            var basedir = submodule.getBuild().getSourceDirectory();
-
-//            log.info("Module: " + name + " :: " + basedir);
-
             //find module's main class
             var moduleClasses = readAllModuleClasses(submodule);
-            log.info("Module: " + name + " :: " + moduleClasses.stream().map(Class::getSimpleName).collect(Collectors.joining(", ")));
+            log.info("Module: " + submodule.getName() + " | Classes: [" + moduleClasses.stream()
+                    .map(Class::getSimpleName)
+                    .collect(Collectors.joining(", ")) + "]");
 
             //add module to the RDF structure
+            for (Class<?> moduleClass : moduleClasses) {
+                log.info("Creating RDF for module '" + moduleClass.getCanonicalName() + "'");
+                final var moduleAnnotation = readModuleAnnotationFromClass(moduleClass);
+                final var constraints = readConstraintsFromClass(moduleClass);
+                writeConstraintsToOutputFile(constraints, moduleAnnotation);
+            }
 
             log.info("--------------------------------------");
         }
@@ -149,19 +155,17 @@ public class RdfAnnotationProcessorMojo extends AbstractMojo {
                 .filterInputsBy(new FilterBuilder().includePackage(modulePackageName));
         Reflections reflections = new Reflections(reflectionConfig);
 
-
         //Find classes with the module annotation
         Set<Class<?>> moduleClasses = new HashSet<>();
         for (String type : reflections.getAllTypes()) {
             final Class<?> classObject = classLoader.loadClass(type);
-
-//            log.debug("Class: " + type + " - " + Arrays.stream(classObject.getAnnotations())
-//                    .map(Annotation::annotationType)
-//                    .map(Class::getSimpleName)
-//                    .collect(Collectors.joining(", ")));
+            log.debug("Class: " + type + " | Annotations: ["
+                    + Arrays.stream(classObject.getAnnotations())
+                    .map(Annotation::annotationType)
+                    .map(Class::getSimpleName)
+                    .collect(Collectors.joining(", ")) + "]");
 
             if (classObject.isAnnotationPresent(MODULE_ANNOTATION)) {
-//                log.info("TYPE W/ ANNOTATION: " + type);
                 moduleClasses.add(classObject);
             }
         }
@@ -174,19 +178,40 @@ public class RdfAnnotationProcessorMojo extends AbstractMojo {
 
     private List<cz.cvut.spipes.modules.Parameter> readConstraintsFromClass(Class<?> classObject) {
         return Arrays.stream(classObject.getDeclaredFields())
-                .filter((field) -> field.isAnnotationPresent(PARAM_ANNOTATION))
-                .map((field) -> field.getAnnotation(PARAM_ANNOTATION))
+                .filter(field -> field.isAnnotationPresent(PARAM_ANNOTATION))
+                .map(field -> field.getAnnotation(PARAM_ANNOTATION))
                 .collect(Collectors.toUnmodifiableList());
     }
 
     private void writeConstraintsToOutputFile(List<cz.cvut.spipes.modules.Parameter> constraintAnnotations,
                                               SPipesModule moduleAnnotation) throws FileNotFoundException {
-        final var ontologyFolder = "/" + modulePackageName.replaceAll("[.]", "/") + "/"; //todo fragile?
-        final var ontologyFilepath = project.getBuild().getOutputDirectory() + ontologyFolder + ontologyFilename;
+//        final var ontologyFolder = "/" + modulePackageName.replaceAll("[.]", "/") + "/";
+//        final var ontologyFilepath = project.getBuild().getOutputDirectory() + ontologyFolder + ontologyFilename;
 
-        log.info("Reading ontology file: " + ontologyFilepath);
+//        log.info("Reading ontology file: " + ontologyFilepath);
         final var model = ModelFactory.createDefaultModel();
-        model.read(ontologyFilepath);
+//        model.read(ontologyFilepath);
+
+        //region todo replace with a proper initialization
+//        String prefixes = "@prefix kbss-module: <http://onto.fel.cvut.cz/ontologies/lib/module/> .\n" +
+//                "@prefix owl: <http://www.w3.org/2002/07/owl#> .\n" +
+//                "@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n" +
+//                "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n" +
+//                "@prefix sm: <http://topbraid.org/sparqlmotion#> .\n" +
+//                "@prefix spin: <http://spinrdf.org/spin#> .\n" +
+//                "@prefix spl: <http://spinrdf.org/spl#> .\n" +
+//                "@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n" +
+//                "kbss-module:test-own-artifact-generated-ontology\n" +
+//                "    rdf:type owl:Ontology ;\n" +
+//                ".";
+//        var prefixStream = new ByteArrayInputStream(prefixes.getBytes(StandardCharsets.UTF_8));
+//        model.read(prefixStream, FileUtils.langTurtle);
+        //endregion
+
+        final var root = ResourceFactory.createResource();
+        model.add(root, RDF.type, SM.Module);
+        model.add(root, RDFS.comment, moduleAnnotation.comment());
+        model.add(root, RDFS.label, moduleAnnotation.label());
         final var statements = model.listStatements(null, RDF.type, SM.Module);
         while (statements.hasNext()) {
             final var statement = statements.next();
@@ -201,9 +226,11 @@ public class RdfAnnotationProcessorMojo extends AbstractMojo {
                 log.info("Added model constraint based on annotation: " +
                         "(name = " + annotation.name() + ", urlPrefix = " + annotation.urlPrefix() + ")");
             }
-//            model.add(subject, RDFS.comment, moduleAnnotation.comment()); todo add comments to the thing
         }
-        model.write(new FileOutputStream(ontologyFilepath), FileUtils.langTurtle);
-        log.info("Successfully written constraints to the ontology file: " + ontologyFilepath);
+//        model.write(new FileOutputStream(ontologyFilepath), FileUtils.langTurtle);
+//        log.info("Successfully written constraints to the ontology file: " + ontologyFilepath);
+        var out = new ByteArrayOutputStream();
+        model.write(out, FileUtils.langTurtle);
+        log.info("RDF for module: " + out);
     }
 }
