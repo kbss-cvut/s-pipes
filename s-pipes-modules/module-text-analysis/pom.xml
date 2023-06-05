@@ -85,6 +85,8 @@
                             <goal>process-annotations</goal>
                         </goals>
                         <configuration>
+                            <mode>RDF_FOR_MODULE</mode>
+                            <modulePackageName>cz.cvut.spipes.modules</modulePackageName>
                             <moduleClassName>ExtractTermOccurrencesModule</moduleClassName>
                             <ontologyFilename>module-text-analysis-generated.ttl</ontologyFilename>
                         </configuration>

@@ -5,9 +5,12 @@ package cz.cvut.spipes.modules;
 
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.engine.ExecutionContext;
+import cz.cvut.spipes.modules.annotations.SPipesModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
+@SPipesModule(label = "$artifactId", comment = "Automatically generated s-pipes module. For more information, see $className.java.")
 public class $className extends AnnotatedAbstractModule {
     private static final Logger LOG = LoggerFactory.getLogger(${className}.class);
 

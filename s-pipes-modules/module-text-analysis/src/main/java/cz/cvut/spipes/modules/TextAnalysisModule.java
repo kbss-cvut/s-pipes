@@ -3,6 +3,7 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
+import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.modules.constants.Termit;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -30,6 +31,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 /**
  * Module for text analysis.
  * <p>
@@ -38,6 +40,7 @@ import java.util.List;
  * It analyse the text using a SKOS vocabulary that is stored in RDF4J repository.
  * </p>
  */
+@SPipesModule(label = "Text analysis module", comment = "test comment")
 public class TextAnalysisModule extends AnnotatedAbstractModule{
 
     private static final Logger LOG = LoggerFactory.getLogger(TextAnalysisModule.class);
