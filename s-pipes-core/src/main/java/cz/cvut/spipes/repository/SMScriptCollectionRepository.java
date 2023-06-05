@@ -1,20 +1,23 @@
 package cz.cvut.spipes.repository;
 
-import cz.cvut.spipes.manager.OntologyDocumentManager;
-import cz.cvut.spipes.util.JenaPipelineUtils;
-import org.apache.jena.ontology.OntModel;
-import org.apache.jena.rdf.model.Resource;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.io.StringWriter;
 import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.apache.jena.ontology.OntModel;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import cz.cvut.spipes.manager.OntologyDocumentManager;
+import cz.cvut.spipes.util.JenaPipelineUtils;
 
 /**
  * Know nothing about alternative entity ids -- e.g. prefixed-names, local-names.
@@ -31,7 +34,7 @@ public class SMScriptCollectionRepository implements ScriptCollectionRepository 
     public SMScriptCollectionRepository(OntologyDocumentManager ontoDocManager) {
         this.ontoDocManager = ontoDocManager;
 
-       // contexts = ontoDocManager.getRegisteredOntologyUris();
+        // contexts = ontoDocManager.getRegisteredOntologyUris();
     }
 
 
@@ -76,12 +79,11 @@ public class SMScriptCollectionRepository implements ScriptCollectionRepository 
         throw new UnsupportedOperationException();
     }
 
-
-    private OntModel getContextClosure(@NotNull  String context) {
+    @Override
+    public OntModel getContextClosure(@NotNull String context) {
         OntModel model = ontoDocManager.getOntology(context);
-
         model.getNsPrefixMap().forEach((name, url) -> {
-            if (!isValidURL(url)){
+            if (!isValidURL(url)) {
                 LOG.warn("Invalid URI prefix: <{}> within <{}> ontology.", url, context);
             }
         });
@@ -90,8 +92,7 @@ public class SMScriptCollectionRepository implements ScriptCollectionRepository 
         return model;
     }
 
-    private boolean isValidURL(String url)
-    {
+    private boolean isValidURL(String url) {
         try {
             new URL(url).toURI();
             return true;
@@ -114,37 +115,37 @@ public class SMScriptCollectionRepository implements ScriptCollectionRepository 
      */
 
 
-//    String getFunctions() {
-//
-//        // input
-//
-//            // config
-//            // everything
-//
-//        // output
-//        //      id + context
-//        //
-//    }
-//
-//    String getModules() {
-//
-//        // input
-//
-//        // output
-//        //
-//    }
-//
-//    String getModuleTypes() {
-//
-//        // output
-//        //      ?! module type + context
-//    }
-//
-//
-//    // TODO -- per context,
-//    public List<String> getAllModuleTypes() {
-//
-//    }
+    //    String getFunctions() {
+    //
+    //        // input
+    //
+    //            // config
+    //            // everything
+    //
+    //        // output
+    //        //      id + context
+    //        //
+    //    }
+    //
+    //    String getModules() {
+    //
+    //        // input
+    //
+    //        // output
+    //        //
+    //    }
+    //
+    //    String getModuleTypes() {
+    //
+    //        // output
+    //        //      ?! module type + context
+    //    }
+    //
+    //
+    //    // TODO -- per context,
+    //    public List<String> getAllModuleTypes() {
+    //
+    //    }
 
 
 }

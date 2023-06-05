@@ -1,4 +1,4 @@
-package cz.cvut.spipes.rest.util;
+package cz.cvut.spipes.util;
 
 import cz.cvut.spipes.config.ContextLoaderConfig;
 import cz.cvut.spipes.manager.OntoDocManager;

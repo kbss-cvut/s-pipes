@@ -6,6 +6,7 @@ COPY ./ ./
 RUN mvn clean package -T 2C -DskipTests -q
 
 
+
 # STAGE MODULES_CHECKOUT
 FROM alpine/git:v2.32.0 AS MODULES_CHECKOUT
 

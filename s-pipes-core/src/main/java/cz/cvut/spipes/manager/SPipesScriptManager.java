@@ -9,11 +9,15 @@ import cz.cvut.spipes.registry.ResourceRegistry;
 import cz.cvut.spipes.repository.SMScriptCollectionRepository;
 import cz.cvut.spipes.repository.ScriptCollectionRepository;
 import cz.cvut.spipes.util.JenaPipelineUtils;
+
+import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.StringWriter;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -30,6 +34,8 @@ import java.util.Set;
 public class SPipesScriptManager {
 
     private static final Logger LOG = LoggerFactory.getLogger(SPipesScriptManager.class);
+
+    private static final String TURTLE = "TURTLE";
 
     // TODO instead of ontoDocManager should point to ScriptCollectionRepository
     private Set<String> globalScripts;
@@ -100,6 +106,10 @@ public class SPipesScriptManager {
 
         Resource returnModuleRes = getReturnModule(functionRes);
         return PipelineFactory.loadModulePipeline(returnModuleRes);
+    }
+
+    public OntModel getScriptByContextId(String contextId){
+        return scriptsRepository.getContextClosure(contextId);
     }
 
 
