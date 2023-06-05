@@ -39,7 +39,7 @@ class ExecutionContextImpl implements ExecutionContext {
 
         sb.append("Context ").append(this.hashCode()).append("[ \n")
             .append("\t varBindings = ").append(getVariablesBindingString(truncate)).append("\n")
-            .append("\t modelSize = ").append(defaultModel.listStatements().toList().size())
+            .append("\t modelSize = ").append(defaultModel.size())
             .append("]");
 
         return sb.toString();
