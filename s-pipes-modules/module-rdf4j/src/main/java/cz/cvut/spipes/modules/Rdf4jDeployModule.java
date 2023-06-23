@@ -26,11 +26,10 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.Optional;
 
-public class Rdf4jModule extends AbstractModule {
+public class Rdf4jDeployModule extends AbstractModule {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Rdf4jModule.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Rdf4jDeployModule.class);
 
     private static String TYPE_URI = KBSS_MODULE.getURI()+"deploy";
     private static String PROPERTY_PREFIX_URI = KBSS_MODULE.getURI()+"rdf4j";
