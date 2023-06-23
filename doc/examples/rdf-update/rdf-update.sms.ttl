@@ -1,7 +1,7 @@
-# baseURI: http://onto.fel.cvut.cz/ontologies/s-pipes/update-script
+# baseURI: http://onto.fel.cvut.cz/ontologies/s-pipes/rdf-update-example
 # imports: http://onto.fel.cvut.cz/ontologies/s-pipes-lib
 
-@prefix : <http://onto.fel.cvut.cz/ontologies/s-pipes/update-script/> .
+@prefix : <http://onto.fel.cvut.cz/ontologies/s-pipes/rdf-update-example/> .
 @prefix doc: <http://onto.fel.cvut.cz/ontologies/documentation/> .
 @prefix kbss: <http://onto.fel.cvut.cz/ontologies/lib/module/> .
 @prefix km-sesame: <http://onto.fel.cvut.cz/ontologies/lib/module/sesame/> .
@@ -16,13 +16,14 @@
 @prefix spl: <http://spinrdf.org/spl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<http://onto.fel.cvut.cz/ontologies/s-pipes/update-script>
+<http://onto.fel.cvut.cz/ontologies/s-pipes/rdf-update-example>
   a owl:Ontology ;
   owl:imports <http://onto.fel.cvut.cz/ontologies/s-pipes-lib> ;
 .
 
 :update
   a kbss:rdf4j-update ;
+  sm:next :update-repository_Return ;
   sml:updateQuery [
       a sp:Update ;
       sp:text """
@@ -34,12 +35,14 @@
   rdfs:label "Make insert update" ;
 .
 
-:func2_Return
+:update-repository_Return
   a sml:ReturnRDF ;
   sml:serialization sml:JSONLD ;
-  rdfs:label "Return data".
+  rdfs:label "Update repository" ;
+.
 
-:func2
+:update-repository
    a sm:Function ;
-   sm:returnModule :func2_Return ;
-   rdfs:subClassOf sm:Functions .
+   sm:returnModule :update-repository_Return ;
+   rdfs:subClassOf sm:Functions ;
+.
