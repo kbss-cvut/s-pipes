@@ -28,17 +28,17 @@
   sml:updateQuery [
       a sp:Update ;
       sp:text """
-        INSERT DATA {
-            <http://example.org/people/john>  <http://example.org/ontology/name> "John" .
-            <http://example.org/people/alice>  <http://example.org/ontology/name> "Alice" .
-            <http://example.org/people/bob>  <http://example.org/ontology/name> "Bob" .
-        }
-        DELETE {
-            ?s  <http://example.org/ontology/name> "John" .
-        }
-        WHERE {
-            ?s  <http://example.org/ontology/name> "John" .
-        }
+DELETE {
+	<http://example.org/people/john>  <http://example.org/people/age> ?oldAge .
+}
+INSERT {
+	<http://example.org/people/john>  <http://example.org/people/age> ?newAge .
+} WHERE {
+   OPTIONAL {
+      <http://example.org/people/john>  <http://example.org/people/age> ?oldAge .
+   }
+   BIND(COALESCE(?oldAge+1, 1) as ?newAge)
+}
       """ ;
     ];
   rdf4j:p-rdf4j-server-url "http://localhost:8080/rdf4j-server/" ;
