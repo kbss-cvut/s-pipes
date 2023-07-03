@@ -58,13 +58,13 @@ You can see following logs while execution:
 
     [http-nio-8080-exec-7] INFO  c.c.s.e.ExecutionEngineImpl -  ##### create-repository
     ...
-    INFO [http-nio-8080-exec-7] cz.cvut.spipes.modules.Rdf4jCreateRepositoryModule.executeSelf Server url: http://localhost:8080/rdf4j-server/, Repository name: test-update, Ignore if repository exists: true
-    INFO [http-nio-8080-exec-6] cz.cvut.spipes.modules.Rdf4jCreateRepositoryModule.executeSelf Repository "test-update" already exists
+    [http-nio-8080-exec-1] INFO  c.c.s.m.Rdf4jUpdateModule - Server url: http://localhost:8080/rdf4j-server/, Repsitory name: test-update, Ignore if repository exist: true
+    [http-nio-8080-exec-6] INFO  c.c.s.m.Rdf4jUpdateModule - Repository "test-update" already exists
     ...
     [http-nio-8080-exec-7] INFO  c.c.s.e.ExecutionEngineImpl -  ##### Make insert update
     ...
-    DEBUG [http-nio-8080-exec-7] cz.cvut.spipes.modules.Rdf4jUpdateModule.loadConfiguration Connected to repository test-update
-    DEBUG [http-nio-8080-exec-7] cz.cvut.spipes.modules.Rdf4jUpdateModule.makeUpdate Update successful
+    [http-nio-8080-exec-7] DEBUG c.c.s.m.Rdf4jUpdateModule - Connected to test-update
+    [http-nio-8080-exec-7] DEBUG  c.c.s.m.Rdf4jUpdateModule - Update successful
 
 This log will occur when Ignore flag is set to true and repository already exists:
-`INFO [http-nio-8080-exec-6] cz.cvut.spipes.modules.Rdf4jCreateRepositoryModule.executeSelf Repository "test-update" already exists`
+`[http-nio-8080-exec-6] INFO  c.c.s.m.Rdf4jUpdateModule - Repository "test-update" already exists`

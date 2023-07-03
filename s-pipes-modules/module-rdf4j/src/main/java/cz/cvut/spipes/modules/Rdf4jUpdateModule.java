@@ -10,6 +10,7 @@ import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.vocabulary.RDF;
 import org.eclipse.rdf4j.query.MalformedQueryException;
 import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.Update;
 import org.eclipse.rdf4j.query.UpdateExecutionException;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
@@ -18,10 +19,11 @@ import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
 import org.topbraid.spin.vocabulary.SP;
 
 import java.util.List;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Rdf4jUpdateModule extends AbstractModule {
-    private static final Logger logger = Logger.getLogger(Rdf4jUpdateModule.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(Rdf4jUpdateModule.class.getName());
     private static final String TYPE_URI = KBSS_MODULE.getURI() + "rdf4j-update";
     private static final String PROPERTY_PREFIX_URI = KBSS_MODULE.getURI() + "rdf4j";
     private RepositoryConnection updateConnection;
@@ -78,22 +80,22 @@ public class Rdf4jUpdateModule extends AbstractModule {
     }
 
     void makeUpdate(String updateString) {
-        org.eclipse.rdf4j.query.Update prepareUpdate = null;
+        Update prepareUpdate = null;
         try {
             prepareUpdate = updateConnection.prepareUpdate(QueryLanguage.SPARQL, updateString);
         } catch (MalformedQueryException e) {
-            logger.severe("Malformed Query, query text:\n" + updateString);
+            logger.error("Malformed Query, query text:\n" + updateString);
             return;
         } catch (RepositoryException e) {
-            logger.severe("Repository exception\n" + e.getMessage());
+            logger.error("Repository exception\n" + e.getMessage());
             return;
         }
         try {
             assert prepareUpdate != null;
             prepareUpdate.execute();
-            logger.info("Update executed");
+            logger.debug("Update successful");
         } catch (UpdateExecutionException e) {
-            logger.severe("Update execution exception, query text:\n" + updateString + "\n" + e.getMessage());
+            logger.error("Update execution exception, query text:\n" + updateString + "\n" + e.getMessage());
         }
     }
 
@@ -110,9 +112,9 @@ public class Rdf4jUpdateModule extends AbstractModule {
         updateQueries = getResourcesByProperty(SML.updateQuery);
         try {
             updateConnection = updateRepository.getConnection();
-            logger.info("Connection created for repository " + rdf4jRepositoryName);
+            logger.debug("Connected to " + rdf4jRepositoryName);
         } catch (RepositoryException e) {
-            logger.severe("Repository exception\n" + e.getMessage());
+            logger.error("Repository exception\n" + e.getMessage());
         }
     }
 }
