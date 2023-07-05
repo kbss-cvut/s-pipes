@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Rdf4jCreateRepositoryModule extends AbstractModule {
-    private static final Logger logger = LoggerFactory.getLogger(Rdf4jUpdateModule.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(Rdf4jUpdateModule.class.getName());
     private static final String TYPE_URI = KBSS_MODULE.getURI() + "rdf4j-create-repository";
     private static final String PROPERTY_PREFIX_URI = KBSS_MODULE.getURI() + "rdf4j";
 
@@ -64,10 +64,15 @@ public class Rdf4jCreateRepositoryModule extends AbstractModule {
 
         RepositoryManager repositoryManager = new RemoteRepositoryManager(rdf4jServerURL);
         repositoryManager.init();
-        logger.info("Server url: "+rdf4jServerURL+", Repsitory name: "+rdf4jRepositoryName+ ", Ignore if repository exist: "+rdf4jIgnoreIfExists);
+        LOG.info("Server url:{}, Repsitory name:{}, Ignore if repository exist:{}.",
+                rdf4jServerURL,
+                rdf4jRepositoryName,
+                rdf4jIgnoreIfExists);
 
         if(rdf4jIgnoreIfExists && repositoryManager.hasRepositoryConfig(rdf4jRepositoryName)){
-            logger.info("Repository \""+rdf4jRepositoryName+"\" already exists");
+
+            LOG.info("Repository \"{}\" already exists",
+                    rdf4jRepositoryName);
             return executionContext;
         }
 
