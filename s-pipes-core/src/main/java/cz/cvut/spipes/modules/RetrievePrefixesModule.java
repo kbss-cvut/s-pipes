@@ -58,4 +58,8 @@ public class RetrievePrefixesModule extends AbstractModule {
     @Override
     public void loadConfiguration() {
     }
+
+    void setOntologyDocumentManager(OntologyDocumentManager ontologyDocumentManager) {
+        this.ontologyDocumentManager = ontologyDocumentManager;
+    }
 }
