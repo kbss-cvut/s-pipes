@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.Optional;
 
 public class Rdf4jDeployModule extends AbstractModule {
 
@@ -181,8 +182,12 @@ public class Rdf4jDeployModule extends AbstractModule {
             rdf4jContextIRI = getEffectiveValue(P_RDF4J_CONTEXT_IRI).asLiteral().getString();
         }
         isReplaceContext = this.getPropertyValue(P_IS_REPLACE_CONTEXT_IRI, false);
-        rdf4jSecuredUsernameVariable = getEffectiveValue(P_RDF4J_REPOSITORY_USERNAME).asLiteral().getString();
-        rdf4jSecuredPasswordVariable = getEffectiveValue(P_RDF4J_REPOSITORY_PASSWORD).asLiteral().getString();
+        rdf4jSecuredUsernameVariable = Optional.ofNullable(
+            getEffectiveValue(P_RDF4J_REPOSITORY_USERNAME)).map(n -> n.asLiteral().getString()
+        ).orElse(null);
+        rdf4jSecuredPasswordVariable = Optional.ofNullable(
+            getEffectiveValue(P_RDF4J_REPOSITORY_PASSWORD)).map(n -> n.asLiteral().getString()
+        ).orElse(null);
     }
 
     private boolean isRdf4jContextIRIDefined() {
