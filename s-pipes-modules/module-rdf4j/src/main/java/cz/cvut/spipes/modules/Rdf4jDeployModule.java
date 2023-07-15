@@ -23,6 +23,7 @@ import org.eclipse.rdf4j.sail.nativerdf.config.NativeStoreConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -108,9 +109,8 @@ public class Rdf4jDeployModule extends AbstractModule {
             isRdf4jContextIRIDefined() ? "context " + rdf4jContextIRI : "default context",
             rdf4jServerURL,
             rdf4jRepositoryName);
-
-        String username = CoreConfigProperies.getConfigurationVariable(rdf4jSecuredUsernameVariable);
-        String password = CoreConfigProperies.getConfigurationVariable(rdf4jSecuredPasswordVariable);
+        String username = getConfigurationVariable(rdf4jSecuredUsernameVariable);
+        String password = getConfigurationVariable(rdf4jSecuredPasswordVariable);
 
         try {
             RepositoryManager repositoryManager = RepositoryProvider.getRepositoryManager(rdf4jServerURL);
@@ -188,6 +188,12 @@ public class Rdf4jDeployModule extends AbstractModule {
         rdf4jSecuredPasswordVariable = Optional.ofNullable(
             getEffectiveValue(P_RDF4J_REPOSITORY_PASSWORD)).map(n -> n.asLiteral().getString()
         ).orElse(null);
+    }
+    private static @Nullable String getConfigurationVariable(String variableName) {
+        if (variableName == null) {
+            return null;
+        }
+        return CoreConfigProperies.getConfigurationVariable(variableName);
     }
 
     private boolean isRdf4jContextIRIDefined() {
