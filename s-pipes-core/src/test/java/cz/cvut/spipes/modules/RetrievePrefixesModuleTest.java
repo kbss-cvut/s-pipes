@@ -7,6 +7,7 @@ import org.apache.jena.ontology.OntDocumentManager;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.shared.PrefixMapping;
 import org.apache.jena.util.FileManager;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.OWL;
@@ -22,6 +23,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doReturn;
 
 @ExtendWith(MockitoExtension.class)
 class RetrievePrefixesModuleTest {
@@ -52,7 +54,9 @@ class RetrievePrefixesModuleTest {
     @Test
     void testExecuteSelf() {
         given(ontoDocManager.getRegisteredOntologyUris()).willReturn(uri2ontModel.keySet());
-        uri2ontModel.forEach((key, value) -> given(ontoDocManager.getOntology(key)).willReturn(value));
+        uri2ontModel.forEach((key, value) -> {
+            doReturn(value).when(ontoDocManager).getOntology(key);
+        });
 
         ExecutionContext inputExecutionContext = ExecutionContextFactory.createEmptyContext();
 
