@@ -51,25 +51,25 @@
                 </configuration>
             </plugin>
 
-            <plugin>
-                <groupId>cz.cvut.kbss</groupId>
-                <artifactId>s-pipes-module-creator-maven-plugin</artifactId>
-                <version>0.4.0</version>
-                <inherited>false</inherited>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>process-annotations</goal>
-                        </goals>
-                        <configuration>
-                            <mode>RDF_FOR_ALL_CHILDREN</mode>
-                            <moduleClassName>FoobarModule</moduleClassName>
-                            <modulePackageName>cz.cvut.spipes.modules</modulePackageName>
-                            <ontologyFilename>test-own-artifact-generated.ttl</ontologyFilename>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>cz.cvut.kbss</groupId>-->
+<!--                <artifactId>s-pipes-module-creator-maven-plugin</artifactId>-->
+<!--                <version>${project.parent.version}</version>-->
+<!--                <inherited>false</inherited>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <goals>-->
+<!--                            <goal>process-annotations</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <mode>RDF_FOR_ALL_CHILDREN</mode>-->
+<!--                            <moduleClassName>FoobarModule</moduleClassName>-->
+<!--                            <modulePackageName>cz.cvut.spipes.modules</modulePackageName>-->
+<!--                            <ontologyFilename>test-own-artifact-generated.ttl</ontologyFilename>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
 
         </plugins>
     </build>
