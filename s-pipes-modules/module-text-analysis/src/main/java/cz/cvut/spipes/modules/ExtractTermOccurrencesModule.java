@@ -103,7 +103,7 @@ public class ExtractTermOccurrencesModule extends AnnotatedAbstractModule {
                 );
 
         annotatedElements.forEach((key, el) -> createTermOccurrenceResources(outputModel, el.get(0)));
-        return this.createOutputContext(isReplace, inputRDF, outputModel);
+        return this.createOutputContext(isReplace,  outputModel);
     }
 
     private void createTermOccurrenceResources(Model outputModel, Element e) {

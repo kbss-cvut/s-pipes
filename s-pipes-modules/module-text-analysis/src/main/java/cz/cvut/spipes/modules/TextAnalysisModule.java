@@ -24,13 +24,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.topbraid.spin.arq.ARQFactory;
 import org.topbraid.spin.model.Select;
-import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
-import static org.apache.commons.lang.StringEscapeUtils.unescapeHtml;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
+import static org.apache.commons.lang.StringEscapeUtils.unescapeHtml;
 
 /**
  * Module for text analysis.
@@ -150,7 +151,7 @@ public class TextAnalysisModule extends AnnotatedAbstractModule{
                 }
             }
         }
-        return createOutputContext(isReplace, inputModel, outputModel);
+        return createOutputContext(isReplace, outputModel);
     }
 
     private void createAnnotatedResource(Model outputModel, String originalText, String annotatedText) {
