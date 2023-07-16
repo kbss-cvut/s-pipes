@@ -1,8 +1,8 @@
 package cz.cvut.spipes.modules;
 
 import cz.cvut.spipes.constants.KBSS_MODULE;
+import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
-import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.manager.OntoDocManager;
 import cz.cvut.spipes.manager.OntologyDocumentManager;
 import org.apache.jena.assembler.JA;
@@ -17,6 +17,9 @@ public class RetrievePrefixesModule extends AbstractModule {
     private static final Logger LOG = LoggerFactory.getLogger(RetrievePrefixesModule.class.getName());
 
     private static String TYPE_URI = KBSS_MODULE.getURI() + "retrieve-prefixes";
+
+    //sml:replace
+    private boolean isReplace;
 
     //TODO refactor -> should be part of execution context
     OntologyDocumentManager ontologyDocumentManager = OntoDocManager.getInstance();
@@ -46,8 +49,7 @@ public class RetrievePrefixesModule extends AbstractModule {
             });
         }
 
-        return ExecutionContextFactory.createContext(outputModel);
-
+        return this.createOutputContext(isReplace, executionContext.getDefaultModel(), outputModel);
     }
 
     @Override
@@ -57,6 +59,7 @@ public class RetrievePrefixesModule extends AbstractModule {
 
     @Override
     public void loadConfiguration() {
+        isReplace = this.getPropertyValue(SML.replace, false);
     }
 
     void setOntologyDocumentManager(OntologyDocumentManager ontologyDocumentManager) {
