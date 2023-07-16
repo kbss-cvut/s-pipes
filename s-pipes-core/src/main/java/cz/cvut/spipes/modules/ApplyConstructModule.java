@@ -157,7 +157,7 @@ public class ApplyConstructModule extends AbstractModule {
             nNew = inferredInSingleIterationModel.size();
         }
 
-        return this.createOutputContext(isReplace, defaultModel, inferredModel);
+        return this.createOutputContext(isReplace, inferredModel);
     }
 
     @Override

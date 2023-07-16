@@ -49,7 +49,7 @@ public class RetrievePrefixesModule extends AbstractModule {
             });
         }
 
-        return this.createOutputContext(isReplace, executionContext.getDefaultModel(), outputModel);
+        return this.createOutputContext(isReplace, outputModel);
     }
 
     @Override
