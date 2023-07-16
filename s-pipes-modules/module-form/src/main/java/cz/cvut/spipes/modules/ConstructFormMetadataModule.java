@@ -4,7 +4,6 @@ import cz.cvut.sforms.SFormsVocabularyJena;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
-import cz.cvut.spipes.engine.ExecutionContextFactory;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.RDF;
@@ -68,11 +67,7 @@ public class ConstructFormMetadataModule extends AnnotatedAbstractModule {
             q -> processFormEntity(q, null, constructedModel)
         );
 
-        if (isReplace) {
-            return ExecutionContextFactory.createContext(constructedModel);
-        } else {
-            return ExecutionContextFactory.createContext(ModelFactory.createUnion(constructedModel, inpModel));
-        }
+        return createOutputContext(isReplace, constructedModel);
     }
 
     public boolean isReplace() {

@@ -10,7 +10,6 @@ import cz.cvut.sforms.util.FormUtils;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
-import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.form.JenaFormUtils;
 import cz.cvut.spipes.form.JopaPersistenceUtils;
 import org.apache.jena.rdf.model.Model;
@@ -88,11 +87,7 @@ public class ConstructTextualViewModule extends AnnotatedAbstractModule {
             );
         }
 
-        if (isReplace) {
-            return ExecutionContextFactory.createContext(constructedModel);
-        } else {
-            return ExecutionContextFactory.createContext(ModelFactory.createUnion(constructedModel, inpModel));
-        }
+        return createOutputContext(isReplace, constructedModel);
     }
 
     public boolean isSerializeUnansweredQuestions() {
