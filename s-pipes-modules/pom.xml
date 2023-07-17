@@ -54,7 +54,7 @@
             <plugin>
                 <groupId>cz.cvut.kbss</groupId>
                 <artifactId>s-pipes-module-creator-maven-plugin</artifactId>
-                <version>0.4.0</version>
+                <version>${project.parent.version}</version>
                 <inherited>false</inherited>
                 <executions>
                     <execution>
