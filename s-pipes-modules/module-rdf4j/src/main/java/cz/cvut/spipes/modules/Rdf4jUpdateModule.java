@@ -3,6 +3,7 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
+import cz.cvut.spipes.exceptions.RepositoryAccessException;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
@@ -16,17 +17,16 @@ import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.topbraid.spin.vocabulary.SP;
 
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class Rdf4jUpdateModule extends AbstractModule {
     private static final Logger LOG = LoggerFactory.getLogger(Rdf4jUpdateModule.class.getName());
     private static final String TYPE_URI = KBSS_MODULE.getURI() + "rdf4j-update";
     private static final String PROPERTY_PREFIX_URI = KBSS_MODULE.getURI() + "rdf4j";
-    private RepositoryConnection updateConnection;
 
     /**
      * URL of the Rdf4j server
@@ -39,6 +39,9 @@ public class Rdf4jUpdateModule extends AbstractModule {
      */
     static final Property P_RDF4J_REPOSITORY_NAME = getParameter("p-rdf4j-repository-name");
     private String rdf4jRepositoryName;
+    private List<Resource> updateQueries;
+
+    private Repository updateRepository;
 
     public String getRdf4jServerURL() {
         return rdf4jServerURL;
@@ -56,8 +59,6 @@ public class Rdf4jUpdateModule extends AbstractModule {
         this.rdf4jRepositoryName = rdf4jRepositoryName;
     }
 
-    private List<Resource> updateQueries;
-
     public static Resource createUpdateQueryResource(Model model, String updateQuery) {
         return
             model.createResource()
@@ -71,15 +72,21 @@ public class Rdf4jUpdateModule extends AbstractModule {
 
     @Override
     ExecutionContext executeSelf() {
-        for (Resource updateQueryResource : updateQueries) {
-            String updateQuery = updateQueryResource.getProperty(SP.text).getLiteral().getString();
-            makeUpdate(updateQuery);
+        try (RepositoryConnection updateConnection = updateRepository.getConnection()) {
+            LOG.debug("Connected to {}", rdf4jRepositoryName);
+
+            for (Resource updateQueryResource : updateQueries) {
+                String updateQuery = updateQueryResource.getProperty(SP.text).getLiteral().getString();
+                makeUpdate(updateQuery, updateConnection);
+            }
+        } catch (RepositoryException e) {
+            throw new RepositoryAccessException(rdf4jRepositoryName, e);
         }
-        updateConnection.close();
+
         return this.executionContext;
     }
 
-    void makeUpdate(String updateString) {
+    void makeUpdate(String updateString, RepositoryConnection updateConnection) {
         Update prepareUpdate = null;
         try {
             prepareUpdate = updateConnection.prepareUpdate(QueryLanguage.SPARQL, updateString);
@@ -112,15 +119,7 @@ public class Rdf4jUpdateModule extends AbstractModule {
     public void loadConfiguration() {
         String rdf4jServerURL = getEffectiveValue(P_RDF4J_SERVER_URL).asLiteral().getString();
         String rdf4jRepositoryName = getEffectiveValue(P_RDF4J_REPOSITORY_NAME).asLiteral().getString();
-        Repository updateRepository = new SPARQLRepository(rdf4jServerURL + "repositories/" + rdf4jRepositoryName + "/statements");
+        updateRepository = new SPARQLRepository(rdf4jServerURL + "repositories/" + rdf4jRepositoryName + "/statements");
         updateQueries = getResourcesByProperty(SML.updateQuery);
-        try {
-            updateConnection = updateRepository.getConnection();
-            LOG.debug("Connected to {}",
-                    rdf4jRepositoryName);
-        } catch (RepositoryException e) {
-            LOG.error("Repository exception\n{}",
-                    e.getMessage());
-        }
     }
 }
