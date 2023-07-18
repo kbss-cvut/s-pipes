@@ -2,6 +2,7 @@ package cz.cvut.spipes.modules;
 
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.engine.ExecutionContext;
+import cz.cvut.spipes.exceptions.RepositoryAlreadyExistsException;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.eclipse.rdf4j.repository.config.RepositoryConfig;
@@ -9,10 +10,10 @@ import org.eclipse.rdf4j.repository.manager.RemoteRepositoryManager;
 import org.eclipse.rdf4j.repository.manager.RepositoryManager;
 import org.eclipse.rdf4j.repository.sail.config.SailRepositoryConfig;
 import org.eclipse.rdf4j.sail.nativerdf.config.NativeStoreConfig;
-
-import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Objects;
 
 public class Rdf4jCreateRepositoryModule extends AbstractModule {
     private static final Logger LOG = LoggerFactory.getLogger(Rdf4jUpdateModule.class.getName());
@@ -37,6 +38,8 @@ public class Rdf4jCreateRepositoryModule extends AbstractModule {
     static final Property P_RDF4J_IGNORE_IF_EXISTS = getParameter("p-rdf4j-ignore-if-exists");
     private boolean rdf4jIgnoreIfExists;
 
+    private RepositoryManager repositoryManager;
+
     public String getRdf4jServerURL() {
         return rdf4jServerURL;
     }
@@ -53,8 +56,20 @@ public class Rdf4jCreateRepositoryModule extends AbstractModule {
         this.rdf4jRepositoryName = rdf4jRepositoryName;
     }
 
+    public boolean isRdf4jIgnoreIfExists() {
+        return rdf4jIgnoreIfExists;
+    }
+
+    public void setRdf4jIgnoreIfExists(boolean rdf4jIgnoreIfExists) {
+        this.rdf4jIgnoreIfExists = rdf4jIgnoreIfExists;
+    }
+
     private static Property getParameter(final String name) {
         return ResourceFactory.createProperty(PROPERTY_PREFIX_URI + "/" + name);
+    }
+
+    void setRepositoryManager(RepositoryManager repositoryManager) {
+        this.repositoryManager = repositoryManager;
     }
 
     @Override
@@ -62,18 +77,17 @@ public class Rdf4jCreateRepositoryModule extends AbstractModule {
         NativeStoreConfig nativeStoreConfig = new NativeStoreConfig();
         SailRepositoryConfig sailRepositoryConfig = new SailRepositoryConfig(nativeStoreConfig);
 
-        RepositoryManager repositoryManager = new RemoteRepositoryManager(rdf4jServerURL);
         repositoryManager.init();
         LOG.info("Server url:{}, Repsitory name:{}, Ignore if repository exist:{}.",
                 rdf4jServerURL,
                 rdf4jRepositoryName,
                 rdf4jIgnoreIfExists);
 
-        if(rdf4jIgnoreIfExists && repositoryManager.hasRepositoryConfig(rdf4jRepositoryName)){
+        if((!rdf4jIgnoreIfExists) && repositoryManager.hasRepositoryConfig(rdf4jRepositoryName)){
 
             LOG.info("Repository \"{}\" already exists",
                     rdf4jRepositoryName);
-            return executionContext;
+            throw new RepositoryAlreadyExistsException(rdf4jRepositoryName);
         }
 
         RepositoryConfig repositoryConfig = new RepositoryConfig(rdf4jRepositoryName,sailRepositoryConfig);
@@ -93,5 +107,6 @@ public class Rdf4jCreateRepositoryModule extends AbstractModule {
         rdf4jServerURL = getEffectiveValue(P_RDF4J_SERVER_URL).asLiteral().getString();
         rdf4jRepositoryName = getEffectiveValue(P_RDF4J_REPOSITORY_NAME).asLiteral().getString();
         rdf4jIgnoreIfExists = (Objects.equals(getEffectiveValue(P_RDF4J_IGNORE_IF_EXISTS).asLiteral().getString(), "true"));
+        repositoryManager = new RemoteRepositoryManager(rdf4jServerURL);
     }
 }
