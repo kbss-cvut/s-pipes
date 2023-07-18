@@ -3,7 +3,6 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
-import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.QueryUtils;
 import org.apache.jena.query.Query;
@@ -155,11 +154,7 @@ public abstract class ApplyConstructAbstractModule extends AnnotatedAbstractModu
             }
         }
 
-        if (isReplace) {
-            return ExecutionContextFactory.createContext(inferredModel);
-        } else {
-            return ExecutionContextFactory.createContext(ModelFactory.createUnion(defaultModel, inferredModel));
-        }
+        return createOutputContext(isReplace, inferredModel);
     }
 
     protected String substituteQueryMarkers(int currentIteration, String queryStr) {

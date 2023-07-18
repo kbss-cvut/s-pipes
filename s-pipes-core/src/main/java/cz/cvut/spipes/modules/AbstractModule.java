@@ -414,14 +414,24 @@ public abstract class AbstractModule implements Module {
         }
     }
 
-    protected ExecutionContext createOutputContext(boolean isReplace, Model inputModel, Model computedModel) {
+    /**
+     * Helper method to creates output execution context considering isReplace flag
+     * indicating if newly computed model should replace input model of the module
+     * or be appended to it.
+     * @param isReplace if true replace input model otherwise append to it.
+     * @param computedModel model to be reflected in final output of this module.
+     * @return Output execution context to be returned by this module.
+     */
+    protected ExecutionContext createOutputContext(boolean isReplace, Model computedModel) {
         if (isReplace) {
             return ExecutionContextFactory.createContext(computedModel);
         } else {
             if (AuditConfig.isEnabled() || ExecutionConfig.getEnvironment().equals(Environment.development)) {
                 LOG.debug("Saving module's computed output to file {}.", saveModelToTemporaryFile(computedModel));
             }
-            return ExecutionContextFactory.createContext(JenaUtils.createUnion(inputModel, computedModel));
+            return ExecutionContextFactory.createContext(
+                JenaUtils.createUnion(executionContext.getDefaultModel(), computedModel)
+            );
         }
     }
 

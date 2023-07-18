@@ -5,7 +5,6 @@ import cz.cvut.sforms.SFormsVocabularyJena;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
-import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.form.JenaFormUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -70,11 +69,7 @@ public class FetchPossibleValuesModule extends AnnotatedAbstractModule {
             }
         );
 
-        if (isReplace) {
-            return ExecutionContextFactory.createContext(constructedModel);
-        } else {
-            return ExecutionContextFactory.createContext(ModelFactory.createUnion(constructedModel, inpModel));
-        }
+        return createOutputContext(isReplace, constructedModel);
     }
 
     public String getPossibleValuesQuery(Resource question) {
