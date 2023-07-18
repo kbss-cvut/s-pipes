@@ -40,4 +40,9 @@ class Rdf4jUpdateModuleTest {
         moduleRdf4j.setInputContext(inputExecutionContext);
         moduleRdf4j.execute();
     }
+
+    void executeSelfExecutesAllUpdateQueries() {
+        // given(repository.getConnection()).return(connection);
+        // verify ... ~ updateConnection.prepareUpdate(QueryLanguage.SPARQL, updateString);
+    }
 }
