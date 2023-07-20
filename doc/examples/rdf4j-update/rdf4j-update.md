@@ -30,14 +30,15 @@ in case if it is set to be "true", module will not do anything if repository wit
         sml:updateQuery [
             a sp:Update ;
             sp:text """
+    PREFIX ex-people: <http://example.org/people/>
     DELETE {
-        <http://example.org/people/john>  <http://example.org/people/age> ?oldAge .
+        ex-people:john ex-people:age ?oldAge .
     }
     INSERT {
-        <http://example.org/people/john>  <http://example.org/people/age> ?newAge .
+        ex-people:john ex-people:age ?newAge .
     } WHERE {
         OPTIONAL {
-        <http://example.org/people/john>  <http://example.org/people/age> ?oldAge .
+        ex-people:john ex-people:age ?oldAge .
         }
         BIND(COALESCE(?oldAge+1, 1) as ?newAge)
     }
