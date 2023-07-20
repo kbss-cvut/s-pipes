@@ -42,6 +42,16 @@ public class Rdf4jUpdateModule extends AbstractModule {
     private List<Resource> updateQueries;
 
     private Repository updateRepository;
+    private int iterationCount;
+    private boolean onlyIfTripleCountChanges;
+
+    public int getIterationCount() {
+        return iterationCount;
+    }
+
+    public void setIterationCount(int iterationCount) {
+        this.iterationCount = iterationCount;
+    }
 
     public String getRdf4jServerURL() {
         return rdf4jServerURL;
@@ -77,7 +87,12 @@ public class Rdf4jUpdateModule extends AbstractModule {
 
             for (Resource updateQueryResource : updateQueries) {
                 String updateQuery = updateQueryResource.getProperty(SP.text).getLiteral().getString();
-                makeUpdate(updateQuery, updateConnection);
+                for(int i = 0;i < iterationCount;i++) {
+                    long oldTriplesCount = updateConnection.size();
+                    makeUpdate(updateQuery, updateConnection);
+                    long newTriplesCount = updateConnection.size();
+                    if(onlyIfTripleCountChanges && (newTriplesCount == oldTriplesCount) )break;
+                }
             }
         } catch (RepositoryException e) {
             throw new RepositoryAccessException(rdf4jRepositoryName, e);
@@ -117,8 +132,13 @@ public class Rdf4jUpdateModule extends AbstractModule {
 
     @Override
     public void loadConfiguration() {
-        String rdf4jServerURL = getEffectiveValue(P_RDF4J_SERVER_URL).asLiteral().getString();
-        String rdf4jRepositoryName = getEffectiveValue(P_RDF4J_REPOSITORY_NAME).asLiteral().getString();
+        rdf4jServerURL = getEffectiveValue(P_RDF4J_SERVER_URL).asLiteral().getString();
+        rdf4jRepositoryName = getEffectiveValue(P_RDF4J_REPOSITORY_NAME).asLiteral().getString();
+        iterationCount = getPropertyValue(KBSS_MODULE.has_max_iteration_count,1);
+        onlyIfTripleCountChanges = getPropertyValue(KBSS_MODULE.only_if_triple_count_changes,false);
+        LOG.debug("Iteration count={}\nOnlyIf...Changes={}"
+                ,iterationCount
+                ,onlyIfTripleCountChanges);
         updateRepository = new SPARQLRepository(rdf4jServerURL + "repositories/" + rdf4jRepositoryName + "/statements");
         updateQueries = getResourcesByProperty(SML.updateQuery);
     }
