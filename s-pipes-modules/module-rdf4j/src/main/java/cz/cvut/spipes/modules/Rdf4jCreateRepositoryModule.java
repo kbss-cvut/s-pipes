@@ -15,6 +15,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
+/**
+ * Module creates native store rdf4j repository on the given server with the given name
+ */
 public class Rdf4jCreateRepositoryModule extends AbstractModule {
     private static final Logger LOG = LoggerFactory.getLogger(Rdf4jUpdateModule.class.getName());
     private static final String TYPE_URI = KBSS_MODULE.getURI() + "rdf4j-create-repository";
@@ -33,7 +36,7 @@ public class Rdf4jCreateRepositoryModule extends AbstractModule {
     private String rdf4jRepositoryName;
 
     /**
-     * Don't try to create new repository if it already exists
+     * Don't try to create new repository if it already exists (Default value is false)
      */
     static final Property P_RDF4J_IGNORE_IF_EXISTS = getParameter("p-rdf4j-ignore-if-exists");
     private boolean rdf4jIgnoreIfExists;
@@ -106,7 +109,12 @@ public class Rdf4jCreateRepositoryModule extends AbstractModule {
     public void loadConfiguration() {
         rdf4jServerURL = getEffectiveValue(P_RDF4J_SERVER_URL).asLiteral().getString();
         rdf4jRepositoryName = getEffectiveValue(P_RDF4J_REPOSITORY_NAME).asLiteral().getString();
-        rdf4jIgnoreIfExists = (Objects.equals(getEffectiveValue(P_RDF4J_IGNORE_IF_EXISTS).asLiteral().getString(), "true"));
+        try {
+            rdf4jIgnoreIfExists = (Objects.equals(getEffectiveValue(P_RDF4J_IGNORE_IF_EXISTS).asLiteral().getString(), "true"));
+        }
+        catch (NullPointerException e){
+            rdf4jIgnoreIfExists = false;
+        }
         repositoryManager = new RemoteRepositoryManager(rdf4jServerURL);
     }
 }
