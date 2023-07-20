@@ -20,7 +20,7 @@ public class KBSS_MODULE {
     public static final Property is_parse_text = property("is-parse-text");
     public static final Property has_max_iteration_count = property("has-max-iteration-count");
     public static final Property has_resource_uri = property("has-resource-uri");
-    public static final Property only_if_triple_count_changes = property("only-if-triple-count-changes");
+    public static final Property stop_iteration_on_stable_triple_count = property("stop-iteration-on-stable-triple-count");
 
     /**
      returns the URI for this schema

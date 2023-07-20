@@ -84,15 +84,14 @@ public class Rdf4jUpdateModule extends AbstractModule {
     ExecutionContext executeSelf() {
         try (RepositoryConnection updateConnection = updateRepository.getConnection()) {
             LOG.debug("Connected to {}", rdf4jRepositoryName);
-
-            for (Resource updateQueryResource : updateQueries) {
-                String updateQuery = updateQueryResource.getProperty(SP.text).getLiteral().getString();
-                for(int i = 0;i < iterationCount;i++) {
-                    long oldTriplesCount = updateConnection.size();
+            for(int i = 0;i < iterationCount;i++) {
+                long oldTriplesCount = updateConnection.size();
+                for (Resource updateQueryResource : updateQueries) {
+                    String updateQuery = updateQueryResource.getProperty(SP.text).getLiteral().getString();
                     makeUpdate(updateQuery, updateConnection);
-                    long newTriplesCount = updateConnection.size();
-                    if(onlyIfTripleCountChanges && (newTriplesCount == oldTriplesCount) )break;
                 }
+                long newTriplesCount = updateConnection.size();
+                if(onlyIfTripleCountChanges && (newTriplesCount == oldTriplesCount) )break;
             }
         } catch (RepositoryException e) {
             throw new RepositoryAccessException(rdf4jRepositoryName, e);
@@ -135,7 +134,7 @@ public class Rdf4jUpdateModule extends AbstractModule {
         rdf4jServerURL = getEffectiveValue(P_RDF4J_SERVER_URL).asLiteral().getString();
         rdf4jRepositoryName = getEffectiveValue(P_RDF4J_REPOSITORY_NAME).asLiteral().getString();
         iterationCount = getPropertyValue(KBSS_MODULE.has_max_iteration_count,1);
-        onlyIfTripleCountChanges = getPropertyValue(KBSS_MODULE.only_if_triple_count_changes,false);
+        onlyIfTripleCountChanges = getPropertyValue(KBSS_MODULE.stop_iteration_on_stable_triple_count,false);
         LOG.debug("Iteration count={}\nOnlyIf...Changes={}"
                 ,iterationCount
                 ,onlyIfTripleCountChanges);
