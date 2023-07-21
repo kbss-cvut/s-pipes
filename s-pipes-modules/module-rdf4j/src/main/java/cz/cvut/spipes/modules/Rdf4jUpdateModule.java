@@ -42,6 +42,7 @@ public class Rdf4jUpdateModule extends AbstractModule {
     private List<Resource> updateQueries;
 
     private Repository updateRepository;
+    private Update prepareUpdate;
     private int iterationCount;
     private boolean onlyIfTripleCountChanges;
 
@@ -67,6 +68,10 @@ public class Rdf4jUpdateModule extends AbstractModule {
 
     public void setRdf4jRepositoryName(String rdf4jRepositoryName) {
         this.rdf4jRepositoryName = rdf4jRepositoryName;
+    }
+
+    void setUpdateRepository(Repository updateRepository) {
+        this.updateRepository = updateRepository;
     }
 
     public static Resource createUpdateQueryResource(Model model, String updateQuery) {
@@ -101,7 +106,6 @@ public class Rdf4jUpdateModule extends AbstractModule {
     }
 
     void makeUpdate(String updateString, RepositoryConnection updateConnection) {
-        Update prepareUpdate = null;
         try {
             prepareUpdate = updateConnection.prepareUpdate(QueryLanguage.SPARQL, updateString);
         } catch (MalformedQueryException e) {
@@ -138,7 +142,7 @@ public class Rdf4jUpdateModule extends AbstractModule {
         LOG.debug("Iteration count={}\nOnlyIf...Changes={}"
                 ,iterationCount
                 ,onlyIfTripleCountChanges);
-        updateRepository = new SPARQLRepository(rdf4jServerURL + "repositories/" + rdf4jRepositoryName + "/statements");
+        if(updateRepository == null)setUpdateRepository(new SPARQLRepository(rdf4jServerURL + "repositories/" + rdf4jRepositoryName + "/statements"));
         updateQueries = getResourcesByProperty(SML.updateQuery);
     }
 }
