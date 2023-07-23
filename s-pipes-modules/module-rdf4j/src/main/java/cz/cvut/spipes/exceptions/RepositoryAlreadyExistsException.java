@@ -1,6 +1,8 @@
 package cz.cvut.spipes.exceptions;
 
-public class RepositoryAlreadyExistsException extends RuntimeException {
+import cz.cvut.spipes.exception.SPipesException;
+
+public class RepositoryAlreadyExistsException extends SPipesException {
 
     public RepositoryAlreadyExistsException(String repositoryName) {
         super("Repository " + repositoryName + " already exists.");
