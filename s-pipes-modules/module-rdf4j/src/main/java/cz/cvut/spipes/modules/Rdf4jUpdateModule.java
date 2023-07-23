@@ -3,6 +3,7 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
+import cz.cvut.spipes.exception.ModuleConfigurationInconsistentException;
 import cz.cvut.spipes.exceptions.RepositoryAccessException;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
@@ -159,7 +160,13 @@ public class Rdf4jUpdateModule extends AbstractModule {
         LOG.debug("Iteration count={}\nOnlyIf...Changes={}"
                 ,iterationCount
                 ,onlyIfTripleCountChanges);
-        if(updateRepository == null)setUpdateRepository(new SPARQLRepository(rdf4jServerURL + "repositories/" + rdf4jRepositoryName + "/statements"));
+        if (updateRepository == null && rdf4jServerURL != null) {
+            throw new ModuleConfigurationInconsistentException(
+                "Repository is already initialized. Trying to override its configuration from RDF.");
+        }
+        updateRepository = new SPARQLRepository(
+            rdf4jServerURL + "repositories/" + rdf4jRepositoryName + "/statements"
+        );
         updateQueries = loadUpdateQueries();
     }
 
