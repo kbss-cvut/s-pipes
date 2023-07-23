@@ -7,7 +7,6 @@ import org.apache.jena.ontology.OntDocumentManager;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.shared.PrefixMapping;
 import org.apache.jena.util.FileManager;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.OWL;
@@ -52,7 +51,7 @@ class RetrievePrefixesModuleTest {
     }
 
     @Test
-    void testExecuteSelf() {
+    void executeSelfReturnPrefixes() {
         given(ontoDocManager.getRegisteredOntologyUris()).willReturn(uri2ontModel.keySet());
         uri2ontModel.forEach((key, value) -> {
             doReturn(value).when(ontoDocManager).getOntology(key);
