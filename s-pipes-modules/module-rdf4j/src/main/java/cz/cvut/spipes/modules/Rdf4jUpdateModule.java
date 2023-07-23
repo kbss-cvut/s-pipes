@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.topbraid.spin.vocabulary.SP;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Rdf4jUpdateModule extends AbstractModule {
     private static final Logger LOG = LoggerFactory.getLogger(Rdf4jUpdateModule.class.getName());
@@ -39,10 +40,18 @@ public class Rdf4jUpdateModule extends AbstractModule {
      */
     static final Property P_RDF4J_REPOSITORY_NAME = getParameter("p-rdf4j-repository-name");
     private String rdf4jRepositoryName;
-    private List<Resource> updateQueries;
+    private List<String> updateQueries;
 
     private Repository updateRepository;
-    private Update prepareUpdate;
+
+    public void setUpdateQueries(List<String> updateQueries) {
+        this.updateQueries = updateQueries;
+    }
+
+    public List<String> getUpdateQueries() {
+        return updateQueries;
+    }
+
     private int iterationCount;
     private boolean onlyIfTripleCountChanges;
 
@@ -60,6 +69,14 @@ public class Rdf4jUpdateModule extends AbstractModule {
 
     public void setRdf4jServerURL(String rdf4jServerURL) {
         this.rdf4jServerURL = rdf4jServerURL;
+    }
+
+    public boolean isOnlyIfTripleCountChanges() {
+        return onlyIfTripleCountChanges;
+    }
+
+    public void setOnlyIfTripleCountChanges(boolean onlyIfTripleCountChanges) {
+        this.onlyIfTripleCountChanges = onlyIfTripleCountChanges;
     }
 
     public String getRdf4jRepositoryName() {
@@ -91,8 +108,7 @@ public class Rdf4jUpdateModule extends AbstractModule {
             LOG.debug("Connected to {}", rdf4jRepositoryName);
             for(int i = 0;i < iterationCount;i++) {
                 long oldTriplesCount = updateConnection.size();
-                for (Resource updateQueryResource : updateQueries) {
-                    String updateQuery = updateQueryResource.getProperty(SP.text).getLiteral().getString();
+                for (String updateQuery : updateQueries) {
                     makeUpdate(updateQuery, updateConnection);
                 }
                 long newTriplesCount = updateConnection.size();
@@ -106,6 +122,7 @@ public class Rdf4jUpdateModule extends AbstractModule {
     }
 
     void makeUpdate(String updateString, RepositoryConnection updateConnection) {
+        Update prepareUpdate;
         try {
             prepareUpdate = updateConnection.prepareUpdate(QueryLanguage.SPARQL, updateString);
         } catch (MalformedQueryException e) {
@@ -143,6 +160,11 @@ public class Rdf4jUpdateModule extends AbstractModule {
                 ,iterationCount
                 ,onlyIfTripleCountChanges);
         if(updateRepository == null)setUpdateRepository(new SPARQLRepository(rdf4jServerURL + "repositories/" + rdf4jRepositoryName + "/statements"));
-        updateQueries = getResourcesByProperty(SML.updateQuery);
+        updateQueries = loadUpdateQueries();
+    }
+
+    private List<String> loadUpdateQueries() {
+        return getResourcesByProperty(SML.updateQuery).stream().map(
+            r -> r.getProperty(SP.text).getLiteral().getString()).collect(Collectors.toList());
     }
 }
