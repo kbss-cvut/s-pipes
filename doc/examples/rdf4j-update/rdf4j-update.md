@@ -13,6 +13,7 @@ Script performs following steps:
 in case if it is set to be "true", module will not do anything if repository with given ID already exists on the server.  
 
 
+```
     :create-repository
         a kbss:rdf4j-create-repository ;
         rdf4j:p-rdf4j-server-url "http://localhost:8080/rdf4j-server/" ;
@@ -20,10 +21,11 @@ in case if it is set to be "true", module will not do anything if repository wit
         rdf4j:p-rdf4j-ignore-if-exists "true" ;
         sm:next :update ;
     .
+```
 
 2) Perform an update on repository using `kbss:rdf4j-update` module. Repository is defined in the same way as in `:create-repository`. Update query is set by string in `sp:text` section.
 
-
+```
     :update-repository
         a kbss:rdf4j-update ;
         sm:next :update-repository_Return ;
@@ -47,6 +49,7 @@ in case if it is set to be "true", module will not do anything if repository wit
         rdf4j:p-rdf4j-server-url "http://localhost:8080/rdf4j-server/" ;
         rdf4j:p-rdf4j-repository-name "test-update" ;
     .
+```
 
 ## Script execution
 
