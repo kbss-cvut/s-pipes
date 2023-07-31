@@ -29,6 +29,11 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Optional;
 
+/**
+ * Module deploys content of input execution context
+ * into default context of repository (if p-rdf4j-context-iri is not specified)
+ * or concrete context (if p-rdf4j-context-iri is specified).
+ */
 public class Rdf4jDeployModule extends AbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(Rdf4jDeployModule.class);
@@ -64,7 +69,8 @@ public class Rdf4jDeployModule extends AbstractModule {
     static final Property P_RDF4J_REPOSITORY_PASSWORD = getParameter("p-rdf4j-secured-password-variable");
     private String rdf4jSecuredPasswordVariable;
     /**
-     * Whether the context should be replaced (true) or just enriched (false).
+     * Whether data should be replaced (true) / appended (false) into the specified context or repository.
+     * Default is false.
      */
     static final Property P_IS_REPLACE_CONTEXT_IRI = getParameter("p-is-replace");
     private boolean isReplaceContext;
