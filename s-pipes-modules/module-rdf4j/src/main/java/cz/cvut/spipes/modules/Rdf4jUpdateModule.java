@@ -160,7 +160,7 @@ public class Rdf4jUpdateModule extends AbstractModule {
         LOG.debug("Iteration count={}\nOnlyIf...Changes={}"
                 ,iterationCount
                 ,onlyIfTripleCountChanges);
-        if (updateRepository == null && rdf4jServerURL != null) {
+        if (updateRepository != null && rdf4jServerURL != null) {
             throw new ModuleConfigurationInconsistentException(
                 "Repository is already initialized. Trying to override its configuration from RDF.");
         }
