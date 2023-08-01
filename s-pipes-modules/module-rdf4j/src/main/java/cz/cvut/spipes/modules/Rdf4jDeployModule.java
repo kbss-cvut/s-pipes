@@ -65,6 +65,21 @@ public class Rdf4jDeployModule extends AbstractModule {
 
     static final Property P_RDF4J_REPOSITORY_USERNAME = getParameter("p-rdf4j-secured-username-variable");
     private String rdf4jSecuredUsernameVariable;
+    private RepositoryManager repositoryManager;
+    private RepositoryConnection connection;
+    private Repository repository;
+
+    public void setRepositoryManager(RepositoryManager repositoryManager) {
+        this.repositoryManager = repositoryManager;
+    }
+
+    public void setConnection(RepositoryConnection connection) {
+        this.connection = connection;
+    }
+
+    public void setRepository(Repository repository) {
+        this.repository = repository;
+    }
 
     static final Property P_RDF4J_REPOSITORY_PASSWORD = getParameter("p-rdf4j-secured-password-variable");
     private String rdf4jSecuredPasswordVariable;
@@ -109,24 +124,13 @@ public class Rdf4jDeployModule extends AbstractModule {
 
     @Override
     ExecutionContext executeSelf() {
-        RepositoryConnection connection = null;
-        Repository repository = null;
         LOG.debug("Deploying data into {} of rdf4j server repository {}/{}.",
             isRdf4jContextIRIDefined() ? "context " + rdf4jContextIRI : "default context",
             rdf4jServerURL,
             rdf4jRepositoryName);
-        String username = getConfigurationVariable(rdf4jSecuredUsernameVariable);
-        String password = getConfigurationVariable(rdf4jSecuredPasswordVariable);
 
         try {
-            RepositoryManager repositoryManager = RepositoryProvider.getRepositoryManager(rdf4jServerURL);
 
-            if (username != null && password != null) {
-                RemoteRepositoryManager remoteRepositoryManager = (RemoteRepositoryManager) repositoryManager;
-                remoteRepositoryManager.setUsernameAndPassword(username, password);
-            }
-
-            repository = repositoryManager.getRepository(rdf4jRepositoryName);
             if (repository == null) {
                 LOG.info("Creating new repository {} within rdf4j server {} ...",
                     rdf4jServerURL, rdf4jRepositoryName);
@@ -194,6 +198,15 @@ public class Rdf4jDeployModule extends AbstractModule {
         rdf4jSecuredPasswordVariable = Optional.ofNullable(
             getEffectiveValue(P_RDF4J_REPOSITORY_PASSWORD)).map(n -> n.asLiteral().getString()
         ).orElse(null);
+        repositoryManager = RepositoryProvider.getRepositoryManager(rdf4jServerURL);
+        String username = getConfigurationVariable(rdf4jSecuredUsernameVariable);
+        String password = getConfigurationVariable(rdf4jSecuredPasswordVariable);
+        if (username != null && password != null) {
+            RemoteRepositoryManager remoteRepositoryManager = (RemoteRepositoryManager) repositoryManager;
+            remoteRepositoryManager.setUsernameAndPassword(username, password);
+        }
+
+        repository = repositoryManager.getRepository(rdf4jRepositoryName);
     }
     private static @Nullable String getConfigurationVariable(String variableName) {
         if (variableName == null) {
