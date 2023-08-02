@@ -10,23 +10,14 @@ import org.apache.jena.rdf.model.ResourceFactory;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.manager.RepositoryManager;
-import org.eclipse.rdf4j.repository.manager.RepositoryProvider;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
 
-//import info.aduna.webapp.util.HttpServerUtil;
 
 @ExtendWith(MockitoExtension.class)
 public class Rdf4jDeployModuleTest {
@@ -58,7 +49,7 @@ public class Rdf4jDeployModuleTest {
 
     @Test
     @Disabled
-    public void testDeployEmpty() throws Exception {
+    public void testDeployEmpty()  {
         final Rdf4jDeployModule moduleRdf4j = new Rdf4jDeployModule();
 
         final Model deployModel = ModelFactory.createDefaultModel();
