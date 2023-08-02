@@ -5,6 +5,7 @@ import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.exception.ModuleConfigurationInconsistentException;
 import cz.cvut.spipes.exceptions.RepositoryAccessException;
+import cz.cvut.spipes.util.QueryUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
@@ -43,6 +44,12 @@ public class Rdf4jUpdateModule extends AbstractModule {
     private String rdf4jRepositoryName;
     private List<String> updateQueries;
 
+    static final Property P_RDF4J_STOP_ITERATION_ON_STABLE_TRIPLE_COUNT =
+        getParameter("p-stop-iteration-on-stable-triple-count");
+    private boolean onlyIfTripleCountChanges;
+
+    private int iterationCount;
+
     private Repository updateRepository;
 
     public void setUpdateQueries(List<String> updateQueries) {
@@ -52,9 +59,6 @@ public class Rdf4jUpdateModule extends AbstractModule {
     public List<String> getUpdateQueries() {
         return updateQueries;
     }
-
-    private int iterationCount;
-    private boolean onlyIfTripleCountChanges;
 
     public int getIterationCount() {
         return iterationCount;
@@ -107,15 +111,32 @@ public class Rdf4jUpdateModule extends AbstractModule {
     ExecutionContext executeSelf() {
         try (RepositoryConnection updateConnection = updateRepository.getConnection()) {
             LOG.debug("Connected to {}", rdf4jRepositoryName);
-            for(int i = 0;i < iterationCount;i++) {
-                long oldTriplesCount = updateConnection.size();
-                LOG.debug("Number of triples before execution: {}",oldTriplesCount);
-                for (String updateQuery : updateQueries) {
+            long newTriplesCount = updateConnection.size();
+            long oldTriplesCount;
+            LOG.debug("Number of triples before execution of updates: {}", newTriplesCount);
+
+            for(int i = 0;i < iterationCount; i++) {
+                oldTriplesCount = newTriplesCount;
+                for (int j = 0; j < updateQueries.size(); j++) {
+                    String updateQuery = updateQueries.get(j);
+
+                    if (LOG.isTraceEnabled()) {
+                        String queryComment = QueryUtils.getQueryComment(updateQuery);
+                        LOG.trace(
+                            "Executing iteration {}/{} with {}/{} query \"{}\" ...",
+                            i+1, iterationCount, j + 1, updateQueries.size(), queryComment
+                        );
+                    }
                     makeUpdate(updateQuery, updateConnection);
                 }
-                long newTriplesCount = updateConnection.size();
-                LOG.debug("Number of triples after execution: {}",newTriplesCount);
-                if(onlyIfTripleCountChanges && (newTriplesCount == oldTriplesCount) )break;
+                newTriplesCount = updateConnection.size();
+                LOG.debug("Number of triples after finishing iteration {}/{}: {}",
+                    i+1, iterationCount, newTriplesCount
+                );
+                if (onlyIfTripleCountChanges && (newTriplesCount == oldTriplesCount)) {
+                    LOG.debug("Stopping execution of iterations as triples count did not change.");
+                    break;
+                }
             }
         } catch (RepositoryException e) {
             throw new RepositoryAccessException(rdf4jRepositoryName, e);
@@ -158,7 +179,7 @@ public class Rdf4jUpdateModule extends AbstractModule {
         rdf4jServerURL = getEffectiveValue(P_RDF4J_SERVER_URL).asLiteral().getString();
         rdf4jRepositoryName = getEffectiveValue(P_RDF4J_REPOSITORY_NAME).asLiteral().getString();
         iterationCount = getPropertyValue(KBSS_MODULE.has_max_iteration_count,1);
-        onlyIfTripleCountChanges = getPropertyValue(KBSS_MODULE.stop_iteration_on_stable_triple_count,false);
+        onlyIfTripleCountChanges = getPropertyValue(P_RDF4J_STOP_ITERATION_ON_STABLE_TRIPLE_COUNT,false);
         LOG.debug("Iteration count={}\nOnlyIf...Changes={}"
                 ,iterationCount
                 ,onlyIfTripleCountChanges);
