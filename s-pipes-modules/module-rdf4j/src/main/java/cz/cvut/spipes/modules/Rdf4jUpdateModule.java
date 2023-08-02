@@ -167,7 +167,7 @@ public class Rdf4jUpdateModule extends AbstractModule {
                 "Repository is already initialized. Trying to override its configuration from RDF.");
         }
         updateRepository = new SPARQLRepository(
-            rdf4jServerURL + "repositories/" + rdf4jRepositoryName + "/statements"
+            rdf4jServerURL + "/repositories/" + rdf4jRepositoryName + "/statements"
         );
         updateQueries = loadUpdateQueries();
     }
