@@ -109,12 +109,12 @@ public class Rdf4jUpdateModule extends AbstractModule {
             LOG.debug("Connected to {}", rdf4jRepositoryName);
             for(int i = 0;i < iterationCount;i++) {
                 long oldTriplesCount = updateConnection.size();
-                LOG.info("Number of triples before execution: {}",oldTriplesCount);
+                LOG.debug("Number of triples before execution: {}",oldTriplesCount);
                 for (String updateQuery : updateQueries) {
                     makeUpdate(updateQuery, updateConnection);
                 }
                 long newTriplesCount = updateConnection.size();
-                LOG.info("Number of triples after execution: {}",newTriplesCount);
+                LOG.debug("Number of triples after execution: {}",newTriplesCount);
                 if(onlyIfTripleCountChanges && (newTriplesCount == oldTriplesCount) )break;
             }
         } catch (RepositoryException e) {
