@@ -9,6 +9,7 @@ import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.engine.VariablesBinding;
 import cz.cvut.spipes.exception.ValidationConstraintFailedException;
 import cz.cvut.spipes.util.JenaUtils;
+import cz.cvut.spipes.util.QueryUtils;
 import org.apache.jena.atlas.lib.NotImplemented;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.query.*;
@@ -306,9 +307,9 @@ public abstract class AbstractModule implements Module {
         if (query.getComment() != null) {
             return query.getComment();
         }
-        String comment = query.toString().split(System.lineSeparator())[0];
-        if (comment.matches("\\s*#.*")) {
-            return comment.split("\\s*#\\s*", 2)[1];
+        String comment = QueryUtils.getQueryComment(query.toString());
+        if (comment != null) {
+            return comment;
         }
 //        Resource obj = query.getPropertyResourceValue(RDFS.comment);
 //        if (obj == null) {
