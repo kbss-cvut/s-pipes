@@ -1,0 +1,39 @@
+@prefix ja: <http://jena.hpl.hp.com/2005/11/Assembler#> .
+
+<http://onto.fel.cvut.cz/ontologies/test/direct-import-test> ja:prefixMapping [ a ja:SinglePrefixMapping ;
+            ja:namespace "http://onto.fel.cvut.cz/ontologies/test/loading-test#" ;
+            ja:prefix "" ],
+        [ a ja:SinglePrefixMapping ;
+            ja:namespace "http://www.w3.org/2002/07/owl#" ;
+            ja:prefix "owl" ],
+        [ a ja:SinglePrefixMapping ;
+            ja:namespace "http://www.w3.org/1999/02/22-rdf-syntax-ns#" ;
+            ja:prefix "rdf" ],
+        [ a ja:SinglePrefixMapping ;
+            ja:namespace "http://www.w3.org/XML/1998/namespace" ;
+            ja:prefix "xml" ],
+        [ a ja:SinglePrefixMapping ;
+            ja:namespace "http://www.w3.org/2001/XMLSchema#" ;
+            ja:prefix "xsd" ],
+        [ a ja:SinglePrefixMapping ;
+            ja:namespace "http://www.w3.org/2000/01/rdf-schema#" ;
+            ja:prefix "rdfs" ] .
+
+<http://onto.fel.cvut.cz/ontologies/test/indirect-import-test> ja:prefixMapping [ a ja:SinglePrefixMapping ;
+            ja:namespace "http://www.w3.org/XML/1998/namespace" ;
+            ja:prefix "xml" ],
+        [ a ja:SinglePrefixMapping ;
+            ja:namespace "http://www.w3.org/2001/XMLSchema#" ;
+            ja:prefix "xsd" ],
+        [ a ja:SinglePrefixMapping ;
+            ja:namespace "http://www.w3.org/2000/01/rdf-schema#" ;
+            ja:prefix "rdfs" ],
+        [ a ja:SinglePrefixMapping ;
+            ja:namespace "http://onto.fel.cvut.cz/ontologies/test/loading-test#" ;
+            ja:prefix "" ],
+        [ a ja:SinglePrefixMapping ;
+            ja:namespace "http://www.w3.org/2002/07/owl#" ;
+            ja:prefix "owl" ],
+        [ a ja:SinglePrefixMapping ;
+            ja:namespace "http://www.w3.org/1999/02/22-rdf-syntax-ns#" ;
+            ja:prefix "rdf" ] .

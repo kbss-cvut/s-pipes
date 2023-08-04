@@ -3,11 +3,12 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.manager.OntologyDocumentManager;
+import cz.cvut.spipes.util.JenaUtils;
 import org.apache.jena.ontology.OntDocumentManager;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
+import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.shared.PrefixMapping;
 import org.apache.jena.util.FileManager;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.OWL;
@@ -17,11 +18,17 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doReturn;
 
@@ -31,9 +38,11 @@ class RetrievePrefixesModuleTest {
     @Mock
     OntologyDocumentManager ontoDocManager;
 
+    private static final Logger LOG = LoggerFactory.getLogger(RetrievePrefixesModuleTest.class);
+
     private final static String[] ontologyResourcePaths = new String[]{
-        "/manager/import-closure/indirect-import.ttl",
-        "/manager/import-closure/direct-import.ttl"
+            "/manager/import-closure/indirect-import.ttl",
+            "/manager/import-closure/direct-import.ttl"
     };
 
     HashMap<String, OntModel> uri2ontModel;
@@ -45,14 +54,14 @@ class RetrievePrefixesModuleTest {
             OntModel model = loadOntModel(ontologyPath);
             String iri = getOntologyIri(model);
             uri2ontModel.put(
-                iri,
-                model
+                    iri,
+                    model
             );
         }
     }
 
     @Test
-    void testExecuteSelf() {
+    void executeSelfReturnPrefixes() throws URISyntaxException {
         given(ontoDocManager.getRegisteredOntologyUris()).willReturn(uri2ontModel.keySet());
         uri2ontModel.forEach((key, value) -> {
             doReturn(value).when(ontoDocManager).getOntology(key);
@@ -65,7 +74,12 @@ class RetrievePrefixesModuleTest {
         retrievePrefixesModule.setInputContext(inputExecutionContext);
         ExecutionContext outputExecutionContext = retrievePrefixesModule.executeSelf();
 
-        outputExecutionContext.getDefaultModel().write(System.out, FileUtils.langTurtle, null);
+        Model actualModel = outputExecutionContext.getDefaultModel();
+
+        Model expectedModel = ModelFactory.createDefaultModel()
+                .read(getFilePath("module/retrieve-prefixes/expected-output.ttl").toString());
+
+        assertIsomorphic(actualModel, expectedModel);
     }
 
 
@@ -91,5 +105,19 @@ class RetrievePrefixesModuleTest {
         ontModel.read(inputStream, null, FileUtils.langTurtle);
         dm.loadImports(ontModel);
         return ontModel;
+    }
+
+    void assertIsomorphic(Model actualModel, Model expectedModel){
+        if (! actualModel.isIsomorphicWith(expectedModel)) {
+            LOG.debug("Saving actual model ... ");
+            JenaUtils.saveModelToTemporaryFile(actualModel);
+            LOG.debug("Saving expected model ... ");
+            JenaUtils.saveModelToTemporaryFile(expectedModel);
+            fail("Actual model is not isomorphic with expected model (see additional information above).");
+        }
+    }
+
+    public Path getFilePath(String fileName) throws URISyntaxException {
+        return Paths.get(getClass().getResource("/" + fileName).toURI());
     }
 }
