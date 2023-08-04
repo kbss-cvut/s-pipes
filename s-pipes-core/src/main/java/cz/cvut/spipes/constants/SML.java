@@ -21,6 +21,7 @@ public class SML {
     public static final Property constructQuery = property("constructQuery");
     public static final Property value = property("value");
     public static final Property selectQuery = property("selectQuery");
+    public static final Property updateQuery = property("updateQuery");
     public static final Property sourceFilePath = property("sourceFilePath");
     public static final Property url = property("url");
     public static final Property targetFilePath = property("targetFilePath");

@@ -1,24 +1,17 @@
 package cz.cvut.spipes.util;
 
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.stream.Collectors;
-import org.apache.jena.query.ARQ;
-import org.apache.jena.query.ParameterizedSparqlString;
-import org.apache.jena.query.Query;
-import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.query.QuerySolution;
-import org.apache.jena.query.ResultSet;
+import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.sparql.mgt.Explain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.regex.Matcher;
+import java.util.stream.Collectors;
 
 public class QueryUtils {
 
@@ -174,6 +167,14 @@ public class QueryUtils {
 
     private interface QueryExecutor<T> {
         T execQuery(QueryExecution execution);
+    }
+
+    public static String getQueryComment(String query) {
+        String comment = query.split(System.lineSeparator())[0];
+        if (comment.matches("\\s*#.*")) {
+            return comment.split("\\s*#\\s*", 2)[1];
+        }
+        return null;
     }
 
 }

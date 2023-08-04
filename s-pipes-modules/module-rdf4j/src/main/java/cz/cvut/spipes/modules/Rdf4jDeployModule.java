@@ -23,10 +23,17 @@ import org.eclipse.rdf4j.sail.nativerdf.config.NativeStoreConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.Optional;
 
+/**
+ * Module deploys content of input execution context
+ * into default context of repository (if p-rdf4j-context-iri is not specified)
+ * or concrete context (if p-rdf4j-context-iri is specified).
+ */
 public class Rdf4jDeployModule extends AbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(Rdf4jDeployModule.class);
@@ -62,7 +69,8 @@ public class Rdf4jDeployModule extends AbstractModule {
     static final Property P_RDF4J_REPOSITORY_PASSWORD = getParameter("p-rdf4j-secured-password-variable");
     private String rdf4jSecuredPasswordVariable;
     /**
-     * Whether the context should be replaced (true) or just enriched (false).
+     * Whether data should be replaced (true) / appended (false) into the specified context or repository.
+     * Default is false.
      */
     static final Property P_IS_REPLACE_CONTEXT_IRI = getParameter("p-is-replace");
     private boolean isReplaceContext;
@@ -107,9 +115,8 @@ public class Rdf4jDeployModule extends AbstractModule {
             isRdf4jContextIRIDefined() ? "context " + rdf4jContextIRI : "default context",
             rdf4jServerURL,
             rdf4jRepositoryName);
-
-        String username = CoreConfigProperies.getConfigurationVariable(rdf4jSecuredUsernameVariable);
-        String password = CoreConfigProperies.getConfigurationVariable(rdf4jSecuredPasswordVariable);
+        String username = getConfigurationVariable(rdf4jSecuredUsernameVariable);
+        String password = getConfigurationVariable(rdf4jSecuredPasswordVariable);
 
         try {
             RepositoryManager repositoryManager = RepositoryProvider.getRepositoryManager(rdf4jServerURL);
@@ -181,8 +188,18 @@ public class Rdf4jDeployModule extends AbstractModule {
             rdf4jContextIRI = getEffectiveValue(P_RDF4J_CONTEXT_IRI).asLiteral().getString();
         }
         isReplaceContext = this.getPropertyValue(P_IS_REPLACE_CONTEXT_IRI, false);
-        rdf4jSecuredUsernameVariable = getEffectiveValue(P_RDF4J_REPOSITORY_USERNAME).asLiteral().getString();
-        rdf4jSecuredPasswordVariable = getEffectiveValue(P_RDF4J_REPOSITORY_PASSWORD).asLiteral().getString();
+        rdf4jSecuredUsernameVariable = Optional.ofNullable(
+            getEffectiveValue(P_RDF4J_REPOSITORY_USERNAME)).map(n -> n.asLiteral().getString()
+        ).orElse(null);
+        rdf4jSecuredPasswordVariable = Optional.ofNullable(
+            getEffectiveValue(P_RDF4J_REPOSITORY_PASSWORD)).map(n -> n.asLiteral().getString()
+        ).orElse(null);
+    }
+    private static @Nullable String getConfigurationVariable(String variableName) {
+        if (variableName == null) {
+            return null;
+        }
+        return CoreConfigProperies.getConfigurationVariable(variableName);
     }
 
     private boolean isRdf4jContextIRIDefined() {

@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  *
  */
-public class ResourceNotFoundException extends RuntimeException {
+public class ResourceNotFoundException extends SPipesException {
 
     public ResourceNotFoundException(String entityId, Set<String> contextUris) {
         super("Resource identified by \"" + entityId + "\" was not found in contexts " + contextUris + ".");

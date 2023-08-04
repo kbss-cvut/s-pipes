@@ -1,16 +1,13 @@
 package cz.cvut.spipes.modules.exception;
 
+import cz.cvut.spipes.exception.SPipesException;
 import cz.cvut.spipes.modules.Module;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-public class TableSchemaException extends RuntimeException{
-
-    public TableSchemaException() {
-        super();
-    }
+public class TableSchemaException extends SPipesException {
 
     public TableSchemaException(@NonNls String message, @NotNull Module module) {
         super(createModuleInfo(module) + "\n" +  message);

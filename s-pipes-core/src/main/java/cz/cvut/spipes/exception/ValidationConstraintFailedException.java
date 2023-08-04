@@ -1,13 +1,14 @@
 package cz.cvut.spipes.exception;
 
 import cz.cvut.spipes.modules.Module;
-import java.util.Optional;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
-public class ValidationConstraintFailed extends RuntimeException {
+import java.util.Optional;
 
-    public ValidationConstraintFailed(@NonNls String message, @NotNull Module module) {
+public class ValidationConstraintFailedException extends SPipesException {
+
+    public ValidationConstraintFailedException(@NonNls String message, @NotNull Module module) {
         super(createModuleInfo(module) + " " +  message);
     }
 

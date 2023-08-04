@@ -6,7 +6,7 @@ import java.util.Set;
 /**
  * Exception thrown when a resource found is not unique.
  **/
-public class ResourceNotUniqueException extends RuntimeException {
+public class ResourceNotUniqueException extends SPipesException {
 
     public ResourceNotUniqueException(String message) {
         super(message);
