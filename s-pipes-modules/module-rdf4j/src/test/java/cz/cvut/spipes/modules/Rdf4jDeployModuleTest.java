@@ -7,6 +7,7 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.eclipse.rdf4j.query.QueryLanguage;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.manager.RepositoryManager;
@@ -16,7 +17,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -30,7 +39,7 @@ public class Rdf4jDeployModuleTest {
     RepositoryConnection connection;
 
     @Test
-    void executeSelfDeployEmpty() {
+    void executeSelfDeployEmpty() throws IOException {
         given(repository.getConnection()).willReturn(connection);
 
         final ExecutionContext inputExecutionContext = ExecutionContextFactory.createEmptyContext();
@@ -43,8 +52,10 @@ public class Rdf4jDeployModuleTest {
         moduleRdf4j.setRepository(repository);
         moduleRdf4j.setRepositoryManager(repositoryManager);
 
-
         moduleRdf4j.executeSelf();
+
+        verify(repositoryManager,times(0)).getRepository(anyString());
+        verify(connection,times(1)).commit();
     }
 
     @Test
