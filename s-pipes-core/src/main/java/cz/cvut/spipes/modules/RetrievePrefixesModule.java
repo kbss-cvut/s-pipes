@@ -13,6 +13,33 @@ import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Module retrieves metadata of all prefixes from scripts.
+ * Metadata is represented as RDF triple:
+ * ja:PrefixMapping
+ *                 [ a ja:SinglePrefixMapping ;
+ *                   ja:namespace namespaceURI ;
+ *                   ja:prefix prefix
+ *                 ] ;
+ * Example script content:
+ * @prefix : <http://example.org/> .
+ * @prefix owl: <http://www.w3.org/2002/07/owl#> .
+ *
+ *
+ * :my-ontology a owl:Ontology .
+ *
+ * Example output:
+ * @prefix : <http://example.org/> .
+ * @prefix ja: <http://jena.hpl.hp.com/2005/11/Assembler#>
+ *  :my-ontology
+ *      ja:prefixMapping
+ *                 [ a       ja:SinglePrefixMapping ;
+ *                   ja:namespace
+ *                           "http://www.w3.org/2002/07/owl#" ;
+ *                   ja:prefix
+ *                           "owl"
+ *                 ] ;
+ */
 public class RetrievePrefixesModule extends AbstractModule {
     private static final Logger LOG = LoggerFactory.getLogger(RetrievePrefixesModule.class.getName());
 
@@ -38,13 +65,13 @@ public class RetrievePrefixesModule extends AbstractModule {
                 outputModel.add(ontology, JA.prefixMapping, singlePrefixMapping);
 
                 outputModel.add(
-                    singlePrefixMapping, RDF.type, JA.SinglePrefixMapping
+                        singlePrefixMapping, RDF.type, JA.SinglePrefixMapping
                 );
                 outputModel.add(
-                    singlePrefixMapping, JA.prefix, key
+                        singlePrefixMapping, JA.prefix, key
                 );
                 outputModel.add(
-                    singlePrefixMapping, JA.namespace, value
+                        singlePrefixMapping, JA.namespace, value
                 );
             });
         }
