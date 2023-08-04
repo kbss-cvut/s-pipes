@@ -7,7 +7,6 @@ import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.exception.ResourceNotUniqueException;
 import cz.cvut.spipes.modules.exception.TableSchemaException;
 import cz.cvut.spipes.test.JenaTestUtils;
-import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.StreamResourceUtils;
 import org.apache.jena.rdf.model.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,14 +17,16 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static cz.cvut.spipes.test.JenaTestUtils.assertIsomorphic;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
  class TabularModuleTest extends AbstractModuleTestHelper {
@@ -228,15 +229,6 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
         }
      }
 
-    void assertIsomorphic(Model actualModel, Model expectedModel){
-        if (! actualModel.isIsomorphicWith(expectedModel)) {
-            LOG.debug("Saving actual model ... ");
-            JenaUtils.saveModelToTemporaryFile(actualModel);
-            LOG.debug("Saving expected model ... ");
-            JenaUtils.saveModelToTemporaryFile(expectedModel);
-            fail("Actual model is not isomorphic with expected model (see additional information above).");
-        }
-    }
 
     @Override
     public String getModuleName() {

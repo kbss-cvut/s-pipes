@@ -3,7 +3,6 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.manager.OntologyDocumentManager;
-import cz.cvut.spipes.util.JenaUtils;
 import org.apache.jena.ontology.OntDocumentManager;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
@@ -28,7 +27,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import static cz.cvut.spipes.test.JenaTestUtils.assertIsomorphic;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doReturn;
 
@@ -82,7 +81,6 @@ class RetrievePrefixesModuleTest {
         assertIsomorphic(actualModel, expectedModel);
     }
 
-
     private static String getOntologyIri(OntModel model) {
         return model.listResourcesWithProperty(RDF.type, OWL.Ontology).nextResource().toString();
     }
@@ -107,15 +105,6 @@ class RetrievePrefixesModuleTest {
         return ontModel;
     }
 
-    void assertIsomorphic(Model actualModel, Model expectedModel){
-        if (! actualModel.isIsomorphicWith(expectedModel)) {
-            LOG.debug("Saving actual model ... ");
-            JenaUtils.saveModelToTemporaryFile(actualModel);
-            LOG.debug("Saving expected model ... ");
-            JenaUtils.saveModelToTemporaryFile(expectedModel);
-            fail("Actual model is not isomorphic with expected model (see additional information above).");
-        }
-    }
 
     public Path getFilePath(String fileName) throws URISyntaxException {
         return Paths.get(getClass().getResource("/" + fileName).toURI());

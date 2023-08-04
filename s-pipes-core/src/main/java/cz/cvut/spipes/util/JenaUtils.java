@@ -1,14 +1,5 @@
 package cz.cvut.spipes.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Stream;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.jena.graph.compose.MultiUnion;
 import org.apache.jena.rdf.model.Model;
@@ -18,8 +9,18 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Stream;
 
 public class JenaUtils {
 
@@ -105,11 +106,11 @@ public class JenaUtils {
         return outputModel;
     }
 
-    public static void saveModelToTemporaryFile(Model model) {
+    public static void saveModelToTemporaryFile(@NotNull Model model) {
         try {
             Path file = Files.createTempFile("model-output-", ".ttl");
             LOG.debug("Saving model to temporary file " + file.toString() + " ...");
-            model.write(new FileOutputStream(file.toFile()), FileUtils.langTurtle);
+            model.write(Files.newOutputStream(file.toFile().toPath()), FileUtils.langTurtle);
         } catch (IOException e) {
             e.printStackTrace();
         }
