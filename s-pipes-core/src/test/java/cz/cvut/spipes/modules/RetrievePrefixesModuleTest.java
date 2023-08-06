@@ -6,6 +6,7 @@ import cz.cvut.spipes.manager.OntologyDocumentManager;
 import org.apache.jena.ontology.OntDocumentManager;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
+import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.util.FileManager;
 import org.apache.jena.util.FileUtils;
@@ -16,11 +17,17 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import static cz.cvut.spipes.test.JenaTestUtils.assertIsomorphic;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doReturn;
 
@@ -30,9 +37,11 @@ class RetrievePrefixesModuleTest {
     @Mock
     OntologyDocumentManager ontoDocManager;
 
+    private static final Logger LOG = LoggerFactory.getLogger(RetrievePrefixesModuleTest.class);
+
     private final static String[] ontologyResourcePaths = new String[]{
-        "/manager/import-closure/indirect-import.ttl",
-        "/manager/import-closure/direct-import.ttl"
+            "/manager/import-closure/indirect-import.ttl",
+            "/manager/import-closure/direct-import.ttl"
     };
 
     HashMap<String, OntModel> uri2ontModel;
@@ -44,14 +53,14 @@ class RetrievePrefixesModuleTest {
             OntModel model = loadOntModel(ontologyPath);
             String iri = getOntologyIri(model);
             uri2ontModel.put(
-                iri,
-                model
+                    iri,
+                    model
             );
         }
     }
 
     @Test
-    void executeSelfReturnPrefixes() {
+    void executeSelfReturnPrefixes() throws URISyntaxException {
         given(ontoDocManager.getRegisteredOntologyUris()).willReturn(uri2ontModel.keySet());
         uri2ontModel.forEach((key, value) -> {
             doReturn(value).when(ontoDocManager).getOntology(key);
@@ -64,9 +73,13 @@ class RetrievePrefixesModuleTest {
         retrievePrefixesModule.setInputContext(inputExecutionContext);
         ExecutionContext outputExecutionContext = retrievePrefixesModule.executeSelf();
 
-        outputExecutionContext.getDefaultModel().write(System.out, FileUtils.langTurtle, null);
-    }
+        Model actualModel = outputExecutionContext.getDefaultModel();
 
+        Model expectedModel = ModelFactory.createDefaultModel()
+                .read(getFilePath("module/retrieve-prefixes/expected-output.ttl").toString());
+
+        assertIsomorphic(actualModel, expectedModel);
+    }
 
     private static String getOntologyIri(OntModel model) {
         return model.listResourcesWithProperty(RDF.type, OWL.Ontology).nextResource().toString();
@@ -90,5 +103,10 @@ class RetrievePrefixesModuleTest {
         ontModel.read(inputStream, null, FileUtils.langTurtle);
         dm.loadImports(ontModel);
         return ontModel;
+    }
+
+
+    public Path getFilePath(String fileName) throws URISyntaxException {
+        return Paths.get(getClass().getResource("/" + fileName).toURI());
     }
 }
