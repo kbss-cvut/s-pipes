@@ -10,6 +10,7 @@ import org.apache.jena.rdf.model.ResourceFactory;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.manager.RepositoryManager;
+import org.eclipse.rdf4j.rio.RDFFormat;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,7 +18,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
+import java.io.StringReader;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -36,22 +39,19 @@ public class Rdf4jDeployModuleTest {
 
     @Test
     void executeSelfDeployEmpty() throws IOException {
+        given(repositoryManager.getRepository(any())).willReturn(repository);
         given(repository.getConnection()).willReturn(connection);
 
         final ExecutionContext inputExecutionContext = ExecutionContextFactory.createEmptyContext();
         final Rdf4jDeployModule moduleRdf4j = new Rdf4jDeployModule();
         moduleRdf4j.setInputContext(inputExecutionContext);
-        moduleRdf4j.setRdf4jServerURL("http://localhost:18080/rdf4j-server");
-        moduleRdf4j.setRdf4jRepositoryName("test-s-pipes");
-        moduleRdf4j.setRdf4jContextIRI("");
-        moduleRdf4j.setConnection(connection);
-        moduleRdf4j.setRepository(repository);
         moduleRdf4j.setRepositoryManager(repositoryManager);
 
         moduleRdf4j.executeSelf();
 
         verify(repositoryManager,times(0)).getRepository(anyString());
         verify(connection,times(1)).commit();
+//        verify(connection).add(new StringReader(""),"", RDFFormat.N3,connection.getValueFactory().createIRI(null)); //Not correct yet
     }
 
     @Test
@@ -68,7 +68,7 @@ public class Rdf4jDeployModuleTest {
         final Model model = ModelFactory.createDefaultModel();
         final Resource root = model.createResource();
         model.add(root, Rdf4jDeployModule.P_IS_REPLACE_CONTEXT_IRI, model.createTypedLiteral(true));
-        model.add(root, Rdf4jDeployModule.P_RDF4J_SERVER_URL, "http://localhost:18080/rdf4j-server");
+        model.add(root, Rdf4jDeployModule.P_RDF4J_SERVER_URL, "http://localhost:8080/rdf4j-server");
         model.add(root, Rdf4jDeployModule.P_RDF4J_REPOSITORY_NAME, "test-s-pipes");
         model.add(root, Rdf4jDeployModule.P_RDF4J_CONTEXT_IRI, "");
 
