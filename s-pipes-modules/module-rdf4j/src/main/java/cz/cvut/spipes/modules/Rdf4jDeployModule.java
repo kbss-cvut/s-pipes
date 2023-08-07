@@ -3,6 +3,7 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
+import cz.cvut.spipes.exception.ModuleConfigurationInconsistentException;
 import cz.cvut.spipes.util.CoreConfigProperies;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResourceFactory;
@@ -66,19 +67,10 @@ public class Rdf4jDeployModule extends AbstractModule {
     static final Property P_RDF4J_REPOSITORY_USERNAME = getParameter("p-rdf4j-secured-username-variable");
     private String rdf4jSecuredUsernameVariable;
     private RepositoryManager repositoryManager;
-    private RepositoryConnection connection;
     private Repository repository;
 
     public void setRepositoryManager(RepositoryManager repositoryManager) {
         this.repositoryManager = repositoryManager;
-    }
-
-    public void setConnection(RepositoryConnection connection) {
-        this.connection = connection;
-    }
-
-    public void setRepository(Repository repository) {
-        this.repository = repository;
     }
 
     static final Property P_RDF4J_REPOSITORY_PASSWORD = getParameter("p-rdf4j-secured-password-variable");
@@ -128,7 +120,7 @@ public class Rdf4jDeployModule extends AbstractModule {
             isRdf4jContextIRIDefined() ? "context " + rdf4jContextIRI : "default context",
             rdf4jServerURL,
             rdf4jRepositoryName);
-
+        RepositoryConnection connection = null;
         try {
 
             if (repository == null) {
@@ -198,6 +190,10 @@ public class Rdf4jDeployModule extends AbstractModule {
         rdf4jSecuredPasswordVariable = Optional.ofNullable(
             getEffectiveValue(P_RDF4J_REPOSITORY_PASSWORD)).map(n -> n.asLiteral().getString()
         ).orElse(null);
+        if (repositoryManager != null && rdf4jServerURL != null) {
+            throw new ModuleConfigurationInconsistentException(
+                    "Repository manager is already initialized. Trying to override its configuration from RDF.");
+        }
         repositoryManager = RepositoryProvider.getRepositoryManager(rdf4jServerURL);
         String username = getConfigurationVariable(rdf4jSecuredUsernameVariable);
         String password = getConfigurationVariable(rdf4jSecuredPasswordVariable);
@@ -205,7 +201,6 @@ public class Rdf4jDeployModule extends AbstractModule {
             RemoteRepositoryManager remoteRepositoryManager = (RemoteRepositoryManager) repositoryManager;
             remoteRepositoryManager.setUsernameAndPassword(username, password);
         }
-
         repository = repositoryManager.getRepository(rdf4jRepositoryName);
     }
     private static @Nullable String getConfigurationVariable(String variableName) {
