@@ -16,7 +16,7 @@ All terms defined in this section refers to SPipes terminology:
 
 ## SPipes Features
 
-- Custom SPARQL functions
+- Execute custom SPARQL functions within pipeline nodes
 - Web and CLI interface to execute scripts
 - Auditing execution, i.e. logging metadata about execution of modules, their input/output data, etc.
 
@@ -31,9 +31,6 @@ in [Hello world example](doc/examples/hello-world/hello-world.md).
 Script debugging is explained in [skosify example](doc/examples/skosify/skosify.md).
 Working with RDF4J repository is explained in [rdf4j example](doc/examples/rdf4j-update/rdf4j-update.md).
 Constraint validation is described in [constraint validation example](doc/examples/constraint-validation/constraint-validation.md).
-
-
-
 
 ## Structure of Maven Submodules
 
