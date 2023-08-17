@@ -12,6 +12,7 @@ import cz.cvut.spipes.model.SourceDatasetSnapshot;
 import cz.cvut.spipes.model.Thing;
 import cz.cvut.spipes.model.Transformation;
 import cz.cvut.spipes.modules.Module;
+import cz.cvut.spipes.util.DateUtils;
 import cz.cvut.spipes.util.Rdf4jUtils;
 import cz.cvut.spipes.util.TempFileUtils;
 import org.apache.jena.rdf.model.Model;
@@ -182,7 +183,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
                 em.find(Transformation.class, pipelineExecutionIri, pd);
 
             // new
-            Date startDate = (Date) getSingletonPropertyValue(pipelineExecution, SPIPES.has_pipeline_execution_start_date);
+            Date startDate = DateUtils.toDate(getSingletonPropertyValue(pipelineExecution, SPIPES.has_pipeline_execution_start_date));
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_finish_date, finishDate);
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_finish_date_unix, finishDate.getTime());
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_duration, computeDuration(startDate, finishDate));
