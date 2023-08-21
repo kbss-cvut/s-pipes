@@ -13,8 +13,7 @@ import org.topbraid.spin.util.SPINExpressions;
 //import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Map;
-
-import static cz.cvut.spipes.transform.SPipesUtil.SpinQueries;
+import java.util.Optional;
 
 public class AnonNodeTransformer {
 
@@ -28,26 +27,20 @@ public class AnonNodeTransformer {
         if (SPINExpressions.isExpression(r)) {
             return SPINFactory.asExpression(r).toString();
         }
-        for (SpinQueries c : SpinQueries.values())
-            if (r.canAs(c.getClazz()))
-                return getFromQuery(r, c.getClazz());
+        Class commandCls = Optional.ofNullable(SPipesUtil.getSPinCommandType(r))
+                 .map(p -> p.getClazz())
+                 .filter(c -> r.canAs(c)).orElse(null);
+        if(commandCls != null)
+            return getFromQuery(r, commandCls);
+
         return ARQFactory.get().createExpressionString(r);
     }
 
     public static Query parse(Question q, Model m) {
         String t = q.getProperties().get(Vocabulary.s_p_has_answer_value_type).iterator().next();
-        switch (t) {
-            case Vocabulary.s_c_Ask:
-                break;
-            case Vocabulary.s_c_Construct:
-                break;
-            case Vocabulary.s_c_Describe:
-                break;
-            case Vocabulary.s_c_Select:
-                break;
-            default:
-                throw new UnsupportedOperationException();
-        }
+        if(!SPipesUtil.isSpinQueryType(t))
+            throw new UnsupportedOperationException();
+
         StringBuilder b = new StringBuilder();
         Map<String, String> map = m.getNsPrefixMap();
         String s = q.getAnswers().iterator().next().getTextValue();
