@@ -51,24 +51,24 @@
                 </configuration>
             </plugin>
 
-            <plugin>
-                <groupId>cz.cvut.kbss</groupId>
-                <artifactId>s-pipes-module-creator-maven-plugin</artifactId>
-                <version>${project.parent.version}</version>
-                <inherited>false</inherited>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>process-annotations</goal>
-                        </goals>
-                        <configuration>
-                            <mode>RDF_FOR_ALL_CHILDREN</mode>
-                            <modulePackageName>cz.cvut.spipes</modulePackageName>
-                            <ontologyFilename>all-modules.ttl</ontologyFilename>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>cz.cvut.kbss</groupId>-->
+<!--                <artifactId>s-pipes-module-creator-maven-plugin</artifactId>-->
+<!--                <version>${project.parent.version}</version>-->
+<!--                <inherited>false</inherited>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <goals>-->
+<!--                            <goal>process-annotations</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <mode>RDF_FOR_ALL_CHILDREN</mode>-->
+<!--                            <modulePackageName>cz.cvut.spipes</modulePackageName>-->
+<!--                            <ontologyFilename>all-modules.ttl</ontologyFilename>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
 
         </plugins>
     </build>
