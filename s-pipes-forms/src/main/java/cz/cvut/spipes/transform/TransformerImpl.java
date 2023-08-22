@@ -84,10 +84,15 @@ public class TransformerImpl implements Transformer {
             Question subQ = createQuestion(p);
             subQ.setProperties(extractQuestionMetadata(st));
 
-            if (st.getObject().isAnon() && SPipesUtil.getSpinQueryUri(st.getObject().asResource()) != null) {
+            if (st.getObject().isAnon() && SPipesUtil.getSPinCommandType(st.getObject().asResource()) != null) {
                 subQ.setLayoutClass(Collections.singleton("sparql"));
-                subQ.getProperties().put(Vocabulary.s_p_has_answer_value_type, Collections.singleton(SPipesUtil.getSpinQueryUri(st.getObject().asResource())));
-                subQ.setDeclaredPrefix(p.getModel().getNsPrefixMap().entrySet().stream().map(prefix -> new PrefixDefinition(prefix.getKey(), prefix.getValue())).collect(Collectors.toSet()));
+                subQ.getProperties().put(
+                        Vocabulary.s_p_has_answer_value_type,
+                        Collections.singleton(SPipesUtil.getSPinCommandType(st.getObject().asResource()).getResource().getURI())
+                );
+                subQ.setDeclaredPrefix(p.getModel().getNsPrefixMap().entrySet().stream().map(
+                        prefix -> new PrefixDefinition(prefix.getKey(), prefix.getValue())).collect(Collectors.toSet())
+                );
             }
 
             Answer a = getAnswer(st.getObject());
