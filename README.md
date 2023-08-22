@@ -42,14 +42,14 @@ Maven module SPipes Core provides core functionality related to SPipes engine, o
 
 Web user interface for SPipes that allows to execute any *function* defined in *global scripts*. The *function* can be called by HTTP GET request
 
- `$WEB_APP_URL/service?id=$FUNCTION&$PARAM_NAME_1=$PARAM_VALUE_1&$PARAM_NAME_2=$PARAM_VALUE_2...`, where 
+ `$WEB_APP_URL/service?_pId=$FUNCTION&$PARAM_NAME_1=$PARAM_VALUE_1&$PARAM_NAME_2=$PARAM_VALUE_2...`, where 
 * `$WEB_APP_URL` -- url, where SPipes is deployed , e.g. "https://localhost:8080/s-pipes".
 * `$FUNCTION` -- a function defined in a global script identified by URL. In case there is no collision the  `localName` of the URL can be used. E.g. instead of using URL "http://example.org/my-function" one can use  "my-function").
 * `$PARAM_NAME_1`, `$PARAM_NAME_2`, ... -- names of parameters e.g. "repositoryName". 
 * `$PARAM_VALUE_1`, `$PARAM_VALUE_2`, ... -- value of parameters e.g. "myRepository".
 
 Example call:
-    `https://localhost:8080/s-pipes/service?id=my-function&repositoryName=myRepository`
+    `https://localhost:8080/s-pipes/service?_pId=my-function&repositoryName=myRepository`
 
 In addition, there is a [list of reserved parameter names](doc/reserved-parameters.md).
 
