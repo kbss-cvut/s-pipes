@@ -14,22 +14,22 @@ class DurationTest {
     public void execSimple() {
 
         Duration duration = new Duration();
-        Node t1 = getDateTimeNode("2023-08-21T13:00:00.100").asNode();
-        Node t2 = getDateTimeNode("2023-08-21T13:00:00.250").asNode();
+        Node startDateTime = getDateTimeNode("2023-08-21T13:00:00.100").asNode();
+        Node endDateTime = getDateTimeNode("2023-08-21T13:00:00.250").asNode();
 
-        NodeValue durationInMS = duration.exec(t2,t1,null);
+        NodeValue durationInMS = duration.exec(startDateTime, endDateTime, null);
         long expected = 150;
         assertEquals(expected,durationInMS.getInteger().intValue());
     }
 
     @Test
-    public void execT2IsEarlierThenT1() {
+    public void execStartDateTimeIsLaterThenEndDateTime() {
 
         Duration duration = new Duration();
-        Node t1 = getDateTimeNode("2023-08-21T13:20:00").asNode();
-        Node t2 = getDateTimeNode("2023-08-21T13:00:00").asNode();
+        Node startDateTime = getDateTimeNode("2023-08-21T13:20:00").asNode();
+        Node endDateTime = getDateTimeNode("2023-08-21T13:00:00").asNode();
 
-        NodeValue durationInMS = duration.exec(t2,t1,null);
+        NodeValue durationInMS = duration.exec(startDateTime, endDateTime,null);
         long expected = -1200000;
         assertEquals(expected,durationInMS.getInteger().intValue());
     }
@@ -38,10 +38,10 @@ class DurationTest {
     public void execTimeZoneFormat() {
 
         Duration duration = new Duration();
-        Node t1 = getDateTimeNode("2023-08-21T15:30:00.100-05:00").asNode();
-        Node t2 = getDateTimeNode("2023-08-21T14:30:05.600-06:00").asNode();
+        Node startDateTime = getDateTimeNode("2023-08-21T15:30:00.100-05:00").asNode();
+        Node endDateTime = getDateTimeNode("2023-08-21T14:30:05.600-06:00").asNode();
 
-        NodeValue durationInMS = duration.exec(t2,t1,null);
+        NodeValue durationInMS = duration.exec(startDateTime, endDateTime,null);
         long expected = 5500;
         assertEquals(expected,durationInMS.getInteger().intValue());
     }

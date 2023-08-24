@@ -11,11 +11,10 @@ import org.topbraid.spin.arq.AbstractFunction2;
 
 import javax.xml.bind.DatatypeConverter;
 import java.util.Calendar;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
- * Computes difference between two xsd:dateTime values in milliseconds and returns xsd:long datatype
+ * Computes the time difference between two xsd:dateTime values in milliseconds and returns the result as xsd:long.
+ * Returns a negative value if the first parameter represents a later time.
  */
 public class Duration extends AbstractFunction2 implements ValueFunction {
 
@@ -27,26 +26,16 @@ public class Duration extends AbstractFunction2 implements ValueFunction {
     }
 
     @Override
-    protected NodeValue exec(Node t2, Node t1, FunctionEnv functionEnv) {
-        Calendar start = parseNodeToCalendar(t1);
-        Calendar end = parseNodeToCalendar(t2);
+    protected NodeValue exec(Node startDateTime, Node endDateTime, FunctionEnv functionEnv) {
+        Calendar start = parseNodeToCalendar(startDateTime);
+        Calendar end = parseNodeToCalendar(endDateTime);
 
         long duration = end.getTimeInMillis()-start.getTimeInMillis();
         Node node = NodeFactory.createLiteralByValue(duration, XSDDatatype.XSDlong);
         return NodeValue.makeNode(node);
     }
 
-    private Calendar parseNodeToCalendar(Node x){
-        return DatatypeConverter.parseDateTime(extractDateTimePart(x.getLiteral().toString()));
+    private Calendar parseNodeToCalendar(Node dateTime){
+        return DatatypeConverter.parseDateTime(dateTime.getLiteral().getLexicalForm());
     }
-
-    private static String extractDateTimePart(String rdfLiteral) {
-        String dateTimePattern = "^(.*?)(?:\\^\\^.*|$)";
-        Pattern pattern = Pattern.compile(dateTimePattern);
-        Matcher matcher = pattern.matcher(rdfLiteral);
-
-        if (matcher.find())return matcher.group(1);
-        return null;
-    }
-
 }
