@@ -8,6 +8,11 @@ import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.DefaultArtifact;
+import org.apache.maven.artifact.handler.DefaultArtifactHandler;
+import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -171,9 +176,8 @@ public class RdfAnnotationProcessorMojo extends AbstractMojo {
     //region Parsing Java classes
     private Set<Class<?>> readAllModuleClasses(MavenProject project) throws MalformedURLException, ClassNotFoundException {
         //Configure the class searcher
-        final File classesDirectory = new File(project.getBuild().getOutputDirectory());
-        final URL classesUrl = classesDirectory.toURI().toURL();
-        final URLClassLoader classLoader = URLClassLoader.newInstance(new URL[]{classesUrl}, getClass().getClassLoader());
+        final URL[] classesUrls = getDependencyURLs(project);
+        final URLClassLoader classLoader = URLClassLoader.newInstance(classesUrls, getClass().getClassLoader());
         var reflectionConfig = new ConfigurationBuilder()
                 .setUrls(ClasspathHelper.forClassLoader(classLoader))
                 .setScanners(new SubTypesScanner(false), new TypeAnnotationsScanner())
@@ -197,6 +201,37 @@ public class RdfAnnotationProcessorMojo extends AbstractMojo {
             }
         }
         return moduleClasses;
+    }
+
+    private URL[] getDependencyURLs(MavenProject project) throws MalformedURLException {
+        Set<URL> ret = new HashSet<>();
+        ret.add(new File(project.getBuild().getOutputDirectory()).toURI().toURL());
+        for(Dependency d : project.getDependencies()){
+            URL dURL = getURL(getLocalRepository(project), d);
+            ret.add(dURL);
+        }
+        return ret.toArray(new URL[]{});
+    }
+
+    /**
+     * @implNote use of deprecated API to
+     * @param project
+     * @return instance of local repository
+     */
+    private ArtifactRepository getLocalRepository(MavenProject project){
+        return project.getProjectBuildingRequest().getLocalRepository();
+    }
+
+    private URL getURL(ArtifactRepository r, Dependency d) throws MalformedURLException {
+        return new File(r.getBasedir(), r.pathOf(toArtifact(d)))
+                .toURI().toURL();
+    }
+
+    private Artifact toArtifact(Dependency d){
+        DefaultArtifactHandler h = new DefaultArtifactHandler(d.getType());
+        return new DefaultArtifact(
+                d.getGroupId(), d.getArtifactId(), d.getVersion(), d.getScope(), d.getType(),null, h
+        );
     }
 
     private SPipesModule readModuleAnnotationFromClass(Class<?> classObject) {
