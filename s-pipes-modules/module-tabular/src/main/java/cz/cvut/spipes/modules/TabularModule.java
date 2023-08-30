@@ -16,6 +16,7 @@ import cz.cvut.spipes.modules.model.*;
 import cz.cvut.spipes.modules.util.BNodesTransformer;
 import cz.cvut.spipes.modules.util.HTML2TSVConvertor;
 import cz.cvut.spipes.modules.util.JopaPersistenceUtils;
+import cz.cvut.spipes.modules.util.XLS2TSVConvertor;
 import cz.cvut.spipes.registry.StreamResource;
 import cz.cvut.spipes.registry.StreamResourceRegistry;
 import cz.cvut.spipes.util.JenaUtils;
@@ -104,6 +105,12 @@ public class TabularModule extends AbstractModule {
     private final Property P_SOURCE_RESOURCE_URI = getSpecificParameter("source-resource-uri");
     private final Property P_SKIP_HEADER = getSpecificParameter("skip-header");
     private final Property P_PROCESS_HTML_FILE = getSpecificParameter("process-html-file");
+    private final Property P_PROCESS_XLS_FILE = getSpecificParameter("process-xls-file");
+
+    /**
+    Optional parameter that indicates that only specific single sheet should be converted
+     */
+    private final Property P_PROCESS_SPECIFIC_SHEET_IN_XLS_FILE = getSpecificParameter("process-specific-sheet-in-xls-file");
 
     //sml:replace
     private boolean isReplace;
@@ -126,6 +133,12 @@ public class TabularModule extends AbstractModule {
     //:process-html-file
     private boolean processHTMLFile;
 
+    //:process-xls-file
+    private boolean processXLSFile;
+
+    //:process-specific-sheet-in-xls-file
+    private int processSpecificSheetInXLSFile;
+
     //:output-mode
     private Mode outputMode;
 
@@ -146,6 +159,7 @@ public class TabularModule extends AbstractModule {
      * Represents the table schema that was used to describe the table
      */
     private TableSchema tableSchema;
+    private int numberOfSheets;
 
     /**
      * Default charset to process input file.
@@ -158,6 +172,14 @@ public class TabularModule extends AbstractModule {
         if(processHTMLFile) {
             HTML2TSVConvertor htmlConvertor = new HTML2TSVConvertor();
             setSourceResource(htmlConvertor.convertToTSV(sourceResource));
+            setDelimiter('\t');
+        }
+
+        if(processXLSFile) {
+            XLS2TSVConvertor xlsConvertor = new XLS2TSVConvertor();
+            numberOfSheets = xlsConvertor.getNumberOfSheets(sourceResource); // Currently isn't used
+            LOG.debug("Number of sheets:{}",numberOfSheets);
+            setSourceResource(xlsConvertor.convertToTSV(sourceResource));
             setDelimiter('\t');
         }
 
@@ -368,6 +390,8 @@ public class TabularModule extends AbstractModule {
         delimiter = getPropertyValue(P_DELIMITER, getDefaultDelimiterSupplier());
         skipHeader = getPropertyValue(P_SKIP_HEADER, false);
         processHTMLFile = getPropertyValue(P_PROCESS_HTML_FILE, false);
+        processXLSFile = getPropertyValue(P_PROCESS_XLS_FILE, false);
+        processSpecificSheetInXLSFile = getPropertyValue(P_PROCESS_SPECIFIC_SHEET_IN_XLS_FILE, 0);
         acceptInvalidQuoting = getPropertyValue(P_ACCEPT_INVALID_QUOTING, false);
         quoteCharacter = getPropertyValue(P_QUOTE_CHARACTER, getDefaultQuoteCharacterSupplier(delimiter));
         dataPrefix = getEffectiveValue(P_DATE_PREFIX).asLiteral().toString();
@@ -537,6 +561,9 @@ public class TabularModule extends AbstractModule {
 
     public void setProcessHTMLFile(boolean processHTMLFile) {
         this.processHTMLFile = processHTMLFile;
+    }
+    public void setProcessXLSFile(boolean processXLSFile) {
+        this.processXLSFile = processXLSFile;
     }
 
     private String[] getHeaderFromSchema(Model inputModel, String[] header, boolean hasInputSchema) {

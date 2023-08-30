@@ -62,6 +62,20 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
         assertTrue(outputContext.getDefaultModel().size() > 0);
     }
 
+     @Test
+     void executeWithSimpleTransformationXls() throws URISyntaxException, IOException {
+         module.setSourceResource(
+                 StreamResourceUtils.getStreamResource(
+                         "http://test-file",
+                         getFilePath("countries.xls"))
+         );
+         module.setProcessXLSFile(true);
+
+         ExecutionContext outputContext = module.executeSelf();
+
+         assertTrue(outputContext.getDefaultModel().size() > 0);
+     }
+
     @Test
      void executeWithDuplicateColumnsThrowsResourceNotUniqueException()
             throws URISyntaxException, IOException {
