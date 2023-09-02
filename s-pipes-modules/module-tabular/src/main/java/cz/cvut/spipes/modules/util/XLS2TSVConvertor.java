@@ -12,14 +12,14 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 /**
- * Module for converting tabular data from XLS to TSV.
- * Currently, converts only first sheet.
+ * Module for converting tabular data from XLS to TSV. Converts specific sheet of the xls file.
  */
 public class XLS2TSVConvertor {
-    public StringStreamResource convertToTSV(StreamResource streamResource){
+
+    public StringStreamResource convertToTSV(StreamResource streamResource,int sheetNumber){
         try {
             Workbook workbook = new HSSFWorkbook(new ByteArrayInputStream(streamResource.getContent()));
-            Sheet sheet = workbook.getSheetAt(0);
+            Sheet sheet = workbook.getSheetAt(sheetNumber-1);
 
             StringBuilder tsvStringBuilder = new StringBuilder();
             for (Row row : sheet) {

@@ -12,6 +12,7 @@ import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.exception.ResourceNotFoundException;
 import cz.cvut.spipes.exception.ResourceNotUniqueException;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
+import cz.cvut.spipes.modules.exception.SheetDoesntExistsException;
 import cz.cvut.spipes.modules.model.*;
 import cz.cvut.spipes.modules.util.BNodesTransformer;
 import cz.cvut.spipes.modules.util.HTML2TSVConvertor;
@@ -179,7 +180,14 @@ public class TabularModule extends AbstractModule {
             XLS2TSVConvertor xlsConvertor = new XLS2TSVConvertor();
             numberOfSheets = xlsConvertor.getNumberOfSheets(sourceResource); // Currently isn't used
             LOG.debug("Number of sheets:{}",numberOfSheets);
-            setSourceResource(xlsConvertor.convertToTSV(sourceResource));
+            if( (processSpecificSheetInXLSFile > numberOfSheets) || (processSpecificSheetInXLSFile < 1) ){
+                LOG.error("Requested sheet doesn't exist, number of sheets in the doc: {}, requested sheet: {}",
+                        numberOfSheets,
+                        processSpecificSheetInXLSFile
+                );
+                throw new SheetDoesntExistsException("Requested sheet doesn't exists");
+            }
+            setSourceResource(xlsConvertor.convertToTSV(sourceResource,processSpecificSheetInXLSFile));
             setDelimiter('\t');
         }
 
@@ -391,7 +399,7 @@ public class TabularModule extends AbstractModule {
         skipHeader = getPropertyValue(P_SKIP_HEADER, false);
         processHTMLFile = getPropertyValue(P_PROCESS_HTML_FILE, false);
         processXLSFile = getPropertyValue(P_PROCESS_XLS_FILE, false);
-        processSpecificSheetInXLSFile = getPropertyValue(P_PROCESS_SPECIFIC_SHEET_IN_XLS_FILE, 0);
+        processSpecificSheetInXLSFile = getPropertyValue(P_PROCESS_SPECIFIC_SHEET_IN_XLS_FILE,1);
         acceptInvalidQuoting = getPropertyValue(P_ACCEPT_INVALID_QUOTING, false);
         quoteCharacter = getPropertyValue(P_QUOTE_CHARACTER, getDefaultQuoteCharacterSupplier(delimiter));
         dataPrefix = getEffectiveValue(P_DATE_PREFIX).asLiteral().toString();
@@ -564,6 +572,10 @@ public class TabularModule extends AbstractModule {
     }
     public void setProcessXLSFile(boolean processXLSFile) {
         this.processXLSFile = processXLSFile;
+    }
+
+    public void setProcessSpecificSheetInXLSFile(int sheetNumber) {
+        this.processSpecificSheetInXLSFile = sheetNumber;
     }
 
     private String[] getHeaderFromSchema(Model inputModel, String[] header, boolean hasInputSchema) {

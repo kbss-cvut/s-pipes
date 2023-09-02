@@ -70,6 +70,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
                          getFilePath("countries.xls"))
          );
          module.setProcessXLSFile(true);
+         module.setProcessSpecificSheetInXLSFile(2);
 
          ExecutionContext outputContext = module.executeSelf();
 
