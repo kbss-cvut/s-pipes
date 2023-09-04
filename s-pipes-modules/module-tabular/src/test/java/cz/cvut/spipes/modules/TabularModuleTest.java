@@ -69,7 +69,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
                          "http://test-file",
                          getFilePath("countries.xls"))
          );
-         module.setProcessXLSFile(true);
+         module.setSourceResourceFormat(ResourceFormat.EXCEL);
          module.setProcessSpecificSheetInXLSFile(2);
 
          ExecutionContext outputContext = module.executeSelf();
@@ -218,7 +218,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
      @Test
      void executeSelfWithHTMLFileInput() throws URISyntaxException, IOException {
-         module.setProcessHTMLFile(true);
+         module.setSourceResourceFormat(ResourceFormat.HTML);
          module.setSourceResource(
                 StreamResourceUtils.getStreamResource(DATA_PREFIX, getFilePath("examples/htmlFile/input.html"))
         );

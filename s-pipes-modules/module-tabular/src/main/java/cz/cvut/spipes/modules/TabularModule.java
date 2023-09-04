@@ -81,10 +81,12 @@ import java.util.function.Supplier;
  * ]
  * </code></pre>
  * <p>
- * This module can also be used to process HTML tables, see option {@link TabularModule#processHTMLFile}.
+ * This module can also be used to process HTML tables, see option {@link TabularModule#sourceResourceFormat}.
  * First, the HTML table is converted to TSV while replacing "\t" with two spaces
  * and then processed as usual.
- * Take a look at the option {@link TabularModule#processHTMLFile} and class {@link HTML2TSVConvertor} for more details.
+ * Take a look at the option {@link TabularModule#sourceResourceFormat} and class {@link HTML2TSVConvertor} for more details.
+ * Also, in a similar way this module can process XLS tables. Note, that processing multiple sheets isn't supported,
+ * so {@link TabularModule#processSpecificSheetInXLSFile} parameter is required (range 1...number of sheets).
  * <p>
  * <b>Important notes (differences from the recommendation):</b><br/>
  * Does not support custom table group URIs.<br/>
@@ -97,7 +99,6 @@ public class TabularModule extends AbstractModule {
 
     public static final String TYPE_URI = KBSS_MODULE.uri + "tabular";
     private static final Logger LOG = LoggerFactory.getLogger(TabularModule.class);
-
     private final Property P_DELIMITER = getSpecificParameter("delimiter");
     private final Property P_QUOTE_CHARACTER = getSpecificParameter("quote-character");
     private final Property P_ACCEPT_INVALID_QUOTING = getSpecificParameter("accept-invalid-quoting");
@@ -105,11 +106,19 @@ public class TabularModule extends AbstractModule {
     private final Property P_OUTPUT_MODE = getSpecificParameter("output-mode");
     private final Property P_SOURCE_RESOURCE_URI = getSpecificParameter("source-resource-uri");
     private final Property P_SKIP_HEADER = getSpecificParameter("skip-header");
-    private final Property P_PROCESS_HTML_FILE = getSpecificParameter("process-html-file");
-    private final Property P_PROCESS_XLS_FILE = getSpecificParameter("process-xls-file");
 
     /**
-    Optional parameter that indicates that only specific single sheet should be converted
+     Parameter that indicates format of the source file.
+     Supported formats:
+         - "text/csv" -- coma-separated values (csv), default value.
+         - "text/tab-separated-values" -- tab-separated values (tsv).
+         - "text/html" -- HTML file.
+         - "application/vnd.ms-excel" - EXCEL (XLS) file.
+     */
+    private final Property P_SOURCE_RESOURCE_FORMAT = getSpecificParameter("source-resource-format");
+
+    /**
+    Required parameter that indicates that only specific single sheet should be converted
      */
     private final Property P_PROCESS_SPECIFIC_SHEET_IN_XLS_FILE = getSpecificParameter("process-specific-sheet-in-xls-file");
 
@@ -131,17 +140,14 @@ public class TabularModule extends AbstractModule {
     //:skip-header
     private boolean skipHeader;
 
-    //:process-html-file
-    private boolean processHTMLFile;
-
-    //:process-xls-file
-    private boolean processXLSFile;
-
     //:process-specific-sheet-in-xls-file
     private int processSpecificSheetInXLSFile;
 
     //:output-mode
     private Mode outputMode;
+
+    //:source-resource-format
+    private ResourceFormat sourceResourceFormat;
 
     //:accept-invalid-quoting
     private boolean acceptInvalidQuoting;
@@ -160,7 +166,6 @@ public class TabularModule extends AbstractModule {
      * Represents the table schema that was used to describe the table
      */
     private TableSchema tableSchema;
-    private int numberOfSheets;
 
     /**
      * Default charset to process input file.
@@ -170,16 +175,19 @@ public class TabularModule extends AbstractModule {
     @Override
     ExecutionContext executeSelf() {
 
-        if(processHTMLFile) {
+        if(sourceResourceFormat == ResourceFormat.HTML) {
             HTML2TSVConvertor htmlConvertor = new HTML2TSVConvertor();
             setSourceResource(htmlConvertor.convertToTSV(sourceResource));
             setDelimiter('\t');
         }
 
-        if(processXLSFile) {
+        if(sourceResourceFormat == ResourceFormat.EXCEL) {
+            if(processSpecificSheetInXLSFile == 0) {
+                throw new RuntimeException("Source resource format is set to XLS file but no specific sheet is set for processing.");
+            }
             XLS2TSVConvertor xlsConvertor = new XLS2TSVConvertor();
-            numberOfSheets = xlsConvertor.getNumberOfSheets(sourceResource); // Currently isn't used
-            LOG.debug("Number of sheets:{}",numberOfSheets);
+            int numberOfSheets = xlsConvertor.getNumberOfSheets(sourceResource);
+            LOG.debug("Number of sheets:{}", numberOfSheets);
             if( (processSpecificSheetInXLSFile > numberOfSheets) || (processSpecificSheetInXLSFile < 1) ){
                 LOG.error("Requested sheet doesn't exist, number of sheets in the doc: {}, requested sheet: {}",
                         numberOfSheets,
@@ -397,13 +405,14 @@ public class TabularModule extends AbstractModule {
         isReplace = getPropertyValue(SML.replace, false);
         delimiter = getPropertyValue(P_DELIMITER, getDefaultDelimiterSupplier());
         skipHeader = getPropertyValue(P_SKIP_HEADER, false);
-        processHTMLFile = getPropertyValue(P_PROCESS_HTML_FILE, false);
-        processXLSFile = getPropertyValue(P_PROCESS_XLS_FILE, false);
-        processSpecificSheetInXLSFile = getPropertyValue(P_PROCESS_SPECIFIC_SHEET_IN_XLS_FILE,1);
+        processSpecificSheetInXLSFile = getPropertyValue(P_PROCESS_SPECIFIC_SHEET_IN_XLS_FILE,0);
         acceptInvalidQuoting = getPropertyValue(P_ACCEPT_INVALID_QUOTING, false);
         quoteCharacter = getPropertyValue(P_QUOTE_CHARACTER, getDefaultQuoteCharacterSupplier(delimiter));
         dataPrefix = getEffectiveValue(P_DATE_PREFIX).asLiteral().toString();
         sourceResource = getResourceByUri(getEffectiveValue(P_SOURCE_RESOURCE_URI).asLiteral().toString());
+        sourceResourceFormat = ResourceFormat.fromResource(
+                getPropertyValue(P_SOURCE_RESOURCE_FORMAT,ResourceFormat.CSV.getResource())
+        );
         outputMode = Mode.fromResource(
                 getPropertyValue(P_OUTPUT_MODE, Mode.STANDARD.getResource())
         );
@@ -567,11 +576,8 @@ public class TabularModule extends AbstractModule {
         this.skipHeader = skipHeader;
     }
 
-    public void setProcessHTMLFile(boolean processHTMLFile) {
-        this.processHTMLFile = processHTMLFile;
-    }
-    public void setProcessXLSFile(boolean processXLSFile) {
-        this.processXLSFile = processXLSFile;
+    public void setSourceResourceFormat(ResourceFormat sourceResourceFormat) {
+        this.sourceResourceFormat = sourceResourceFormat;
     }
 
     public void setProcessSpecificSheetInXLSFile(int sheetNumber) {
