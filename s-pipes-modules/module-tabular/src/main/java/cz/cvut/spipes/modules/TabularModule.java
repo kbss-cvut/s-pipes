@@ -13,6 +13,8 @@ import cz.cvut.spipes.exception.ResourceNotFoundException;
 import cz.cvut.spipes.exception.ResourceNotUniqueException;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.modules.exception.SheetDoesntExistsException;
+import cz.cvut.spipes.modules.exception.SheetIsNotSpecifiedException;
+import cz.cvut.spipes.modules.exception.SpecificationNonComplianceException;
 import cz.cvut.spipes.modules.model.*;
 import cz.cvut.spipes.modules.util.BNodesTransformer;
 import cz.cvut.spipes.modules.util.HTML2TSVConvertor;
@@ -110,7 +112,8 @@ public class TabularModule extends AbstractModule {
     /**
      Parameter that indicates format of the source file.
      Supported formats:
-         - "text/csv" -- coma-separated values (csv), default value.
+         - "text/plain" -- plain text, default value.
+         - "text/csv" -- coma-separated values (csv).
          - "text/tab-separated-values" -- tab-separated values (tsv).
          - "text/html" -- HTML file.
          - "application/vnd.ms-excel" - EXCEL (XLS) file.
@@ -402,17 +405,20 @@ public class TabularModule extends AbstractModule {
 
     @Override
     public void loadConfiguration() {
+        delimiter = getDefaultDelimiterSupplier().get();
+        sourceResourceFormat = ResourceFormat.fromResource(
+                getPropertyValue(P_SOURCE_RESOURCE_FORMAT,ResourceFormat.PLAIN.getResource())
+        );
+        if(sourceResourceFormat == ResourceFormat.CSV)setDelimiter(',');
+        if(sourceResourceFormat == ResourceFormat.TSV)setDelimiter('\t');
+        setDelimiter(getPropertyValue(P_DELIMITER, ((char) delimiter)));
         isReplace = getPropertyValue(SML.replace, false);
-        delimiter = getPropertyValue(P_DELIMITER, getDefaultDelimiterSupplier());
         skipHeader = getPropertyValue(P_SKIP_HEADER, false);
         processSpecificSheetInXLSFile = getPropertyValue(P_PROCESS_SPECIFIC_SHEET_IN_XLS_FILE,0);
         acceptInvalidQuoting = getPropertyValue(P_ACCEPT_INVALID_QUOTING, false);
         quoteCharacter = getPropertyValue(P_QUOTE_CHARACTER, getDefaultQuoteCharacterSupplier(delimiter));
         dataPrefix = getEffectiveValue(P_DATE_PREFIX).asLiteral().toString();
         sourceResource = getResourceByUri(getEffectiveValue(P_SOURCE_RESOURCE_URI).asLiteral().toString());
-        sourceResourceFormat = ResourceFormat.fromResource(
-                getPropertyValue(P_SOURCE_RESOURCE_FORMAT,ResourceFormat.CSV.getResource())
-        );
         outputMode = Mode.fromResource(
                 getPropertyValue(P_OUTPUT_MODE, Mode.STANDARD.getResource())
         );
@@ -428,7 +434,7 @@ public class TabularModule extends AbstractModule {
     }
     private Supplier<Character> getDefaultDelimiterSupplier() {
         return () -> {
-            LOG.debug("Delimiter not specified, using comma as default value to be compliant with RFC 4180 (CSV).");
+            LOG.debug("Using comma as default value to be compliant with RFC 4180 (CSV).");
             return ',';
         };
     }
@@ -545,6 +551,10 @@ public class TabularModule extends AbstractModule {
     }
 
     public void setDelimiter(int delimiter) {
+        if ((sourceResourceFormat == ResourceFormat.CSV && delimiter != ',') ||
+                (sourceResourceFormat == ResourceFormat.TSV && delimiter != '\t')) {
+            throw new SpecificationNonComplianceException(sourceResourceFormat, delimiter);
+        }
         this.delimiter = delimiter;
     }
 

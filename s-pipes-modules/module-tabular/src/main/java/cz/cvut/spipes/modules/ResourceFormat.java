@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public enum ResourceFormat {
+    PLAIN("text/plain"),
     CSV("text/csv"),
     TSV("text/tab-separated-values"),
     HTML("text/html"),

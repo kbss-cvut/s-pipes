@@ -5,13 +5,12 @@ import cz.cvut.spipes.constants.CSVW;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.exception.ResourceNotUniqueException;
+import cz.cvut.spipes.modules.exception.SpecificationNonComplianceException;
 import cz.cvut.spipes.modules.exception.TableSchemaException;
 import cz.cvut.spipes.test.JenaTestUtils;
 import cz.cvut.spipes.util.StreamResourceUtils;
 import org.apache.jena.rdf.model.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.slf4j.Logger;
@@ -75,6 +74,35 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
          ExecutionContext outputContext = module.executeSelf();
 
          assertTrue(outputContext.getDefaultModel().size() > 0);
+     }
+
+     @Test
+     @Disabled
+     void executeWithSimpleTransformationMergedXls() throws URISyntaxException, IOException {
+         module.setSourceResource(
+                 StreamResourceUtils.getStreamResource(
+                         "http://test-file",
+                         getFilePath("merged.xls"))
+         );
+         module.setSourceResourceFormat(ResourceFormat.EXCEL);
+         module.setProcessSpecificSheetInXLSFile(1);
+
+         ExecutionContext outputContext = module.executeSelf();
+
+         assertTrue(outputContext.getDefaultModel().size() > 0);
+     }
+
+     @Test
+     void executeSelfThrowSpecificationException() throws URISyntaxException, IOException {
+         module.setSourceResource(
+                 StreamResourceUtils.getStreamResource(
+                         "http://test-file",
+                         getFilePath("countries.tsv"))
+         );
+         module.setSourceResourceFormat(ResourceFormat.TSV);
+         module.executeSelf();
+
+         assertThrows(SpecificationNonComplianceException.class, () -> module.setDelimiter(','));
      }
 
     @Test
