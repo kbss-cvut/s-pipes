@@ -183,7 +183,7 @@ public class TabularModule extends AbstractModule {
 
         if(sourceResourceFormat == ResourceFormat.EXCEL) {
             if(processSpecificSheetInXLSFile == 0) {
-                throw new RuntimeException("Source resource format is set to XLS file but no specific sheet is set for processing.");
+                throw new SheetIsNotSpecifiedException("Source resource format is set to XLS file but no specific sheet is set for processing.");
             }
             XLS2TSVConvertor xlsConvertor = new XLS2TSVConvertor();
             int numberOfSheets = xlsConvertor.getNumberOfSheets(sourceResource);
