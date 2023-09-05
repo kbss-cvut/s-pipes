@@ -214,7 +214,7 @@ public class RdfAnnotationProcessorMojo extends AbstractMojo {
     }
 
     /**
-     * @implNote use of deprecated API to
+     * @implNote use of deprecated API to retrieve local repository instance
      * @param project
      * @return instance of local repository
      */
