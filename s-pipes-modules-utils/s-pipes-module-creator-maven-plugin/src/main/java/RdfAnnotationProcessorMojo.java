@@ -139,8 +139,9 @@ public class RdfAnnotationProcessorMojo extends AbstractMojo {
             for (Class<?> moduleClass : moduleClasses) {
                 getLog().info("Creating RDF for module '" + moduleClass.getCanonicalName() + "'");
                 var moduleAnnotation = readModuleAnnotationFromClass(moduleClass);
+                var extendedModuleAnnotation = readExtendedModuleAnnotationFromClass(moduleClass);
                 var constraints = readConstraintsFromClass(moduleClass);
-                writeConstraintsToModel(model, constraints, moduleAnnotation);
+                writeConstraintsToModel(model, constraints, moduleAnnotation, extendedModuleAnnotation);
             }
 
             getLog().info("--------------------------------------");
@@ -154,14 +155,27 @@ public class RdfAnnotationProcessorMojo extends AbstractMojo {
         getLog().info("======================================");
     }
 
+    private SPipesModule readExtendedModuleAnnotationFromClass(Class<?> moduleClass) {
+
+        SPipesModule ret = null;
+        Class cls = moduleClass.getSuperclass();
+        while(ret == null && cls != null) {
+            ret = readModuleAnnotationFromClass(cls);
+            cls = cls.getSuperclass();
+        }
+
+        return ret;
+    }
+
     private void generateRdfForModule() throws MojoExecutionException {
         try {
             Set<Class<?>> moduleClasses = readAllModuleClasses(this.project);
             var model = readModelFromDefaultFile();
             for (Class<?> moduleClass : moduleClasses) {
                 var moduleAnnotation = readModuleAnnotationFromClass(moduleClass);
+                var extendedModuleAnnotation = readExtendedModuleAnnotationFromClass(moduleClass);
                 var constraints = readConstraintsFromClass(moduleClass);
-                writeConstraintsToModel(model, constraints, moduleAnnotation);
+                writeConstraintsToModel(model, constraints, moduleAnnotation, extendedModuleAnnotation);
             }
 
             var ontologyPath = modulePackageName.replaceAll("[.]", "/") + "/" + ontologyFilename;
@@ -269,25 +283,26 @@ public class RdfAnnotationProcessorMojo extends AbstractMojo {
 
     private void writeConstraintsToModel(Model baseRdfModel,
                                          List<cz.cvut.spipes.modules.Parameter> constraintAnnotations,
-                                         SPipesModule moduleAnnotation) {
+                                         SPipesModule moduleAnnotation,
+                                         SPipesModule extendedModuleAnnotation) {
         final var root = ResourceFactory.createResource(KBSS_MODULE.uri + moduleAnnotation.label().replaceAll(" ", "-").toLowerCase()); //todo can be added to the annotation
+        // set extended uri
+        Optional.ofNullable(extendedModuleAnnotation)
+                .map(a -> ResourceFactory.createResource(
+                        KBSS_MODULE.uri + a.label().replaceAll(" ", "-").toLowerCase()) //todo can be added to the annotation
+                ).ifPresent(r -> baseRdfModel.add(root, RDFS.subClassOf, r));
+
         baseRdfModel.add(root, RDF.type, SM.Module);
         baseRdfModel.add(root, RDFS.comment, moduleAnnotation.comment());
         baseRdfModel.add(root, RDFS.label, moduleAnnotation.label());
-        final var statements = baseRdfModel.listStatements(null, RDF.type, SM.Module);
-        while (statements.hasNext()) {
-            final var statement = statements.next();
-            final var subject = statement.getSubject();
-            for (var annotation : constraintAnnotations) {
-                final var modelConstraint = ResourceFactory.createResource();
-                baseRdfModel.add(modelConstraint, RDF.type, SPL.Argument);
-                baseRdfModel.add(modelConstraint, SPL.predicate, annotation.urlPrefix() + annotation.name());
-                baseRdfModel.add(modelConstraint, RDFS.comment, "Automatically generated field: " + annotation.name());
-                baseRdfModel.add(subject, SPIN.constraint, modelConstraint);
+        for (var annotation : constraintAnnotations) {
+            final var modelConstraint = ResourceFactory.createResource();
+            baseRdfModel.add(modelConstraint, RDF.type, SPL.Argument);
+            baseRdfModel.add(modelConstraint, SPL.predicate, annotation.urlPrefix() + annotation.name());
+            baseRdfModel.add(modelConstraint, RDFS.comment, "Automatically generated field: " + annotation.name());
 
-                getLog().debug("Added model constraint based on annotation: " +
-                        "(name = " + annotation.name() + ", urlPrefix = " + annotation.urlPrefix() + ")");
-            }
+            getLog().debug("Added model constraint based on annotation: " +
+                    "(name = " + annotation.name() + ", urlPrefix = " + annotation.urlPrefix() + ")");
         }
     }
 
