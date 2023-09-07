@@ -3,6 +3,7 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
+import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.QueryUtils;
 import org.apache.jena.query.Query;
@@ -20,20 +21,25 @@ import org.topbraid.spin.vocabulary.SP;
 
 import java.util.List;
 
+@SPipesModule(label = "abstract apply construct", comment = "abstract module defining properties for subclasses of apply construct.")
 public abstract class ApplyConstructAbstractModule extends AnnotatedAbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplyConstructAbstractModule.class);
-
+    private static final String TYPE_URI = KBSS_MODULE.uri + "abstract-apply-construct";
+    private static final String PROPERTY_PREFIX_URI = KBSS_MODULE.uri + "";
     //sml:constructQuery
+    @Parameter(urlPrefix = SML.uri, name = "constructQuery")
     protected List<Resource> constructQueries;
 
     //sml:replace
+    @Parameter(urlPrefix = SML.uri, name = "replace")
     protected boolean isReplace;
 
     //kbss:parseText
     /**
      * Whether the query should be taken from sp:text property instead of from SPIN serialization
      */
+    @Parameter(name = "is-parse-text")
     protected boolean parseText;
 
     //kbss:iterationCount
@@ -49,6 +55,7 @@ public abstract class ApplyConstructAbstractModule extends AnnotatedAbstractModu
      * <p>
      * Within each iteration, all queries are evaluated on the same model.
      */
+    @Parameter(name = "has-max-iteration-count")
     protected int iterationCount = -1;
 
 

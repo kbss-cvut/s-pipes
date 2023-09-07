@@ -4,11 +4,13 @@ import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.impl.GraphChunkedDownload;
+import cz.cvut.spipes.modules.annotations.SPipesModule;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@SPipesModule(label = "sparql endpoint retrieve graph", comment = "Load namedGraphId from sparql endpoint at endpointUrl.")
 public class RetrieveGraphModule extends AnnotatedAbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(RetrieveGraphModule.class);

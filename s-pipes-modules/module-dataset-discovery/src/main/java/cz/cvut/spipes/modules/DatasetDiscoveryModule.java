@@ -10,6 +10,8 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
+
+import cz.cvut.spipes.modules.annotations.SPipesModule;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
@@ -24,6 +26,9 @@ import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@SPipesModule(label = "dataset discovery v1", comment =
+        "Discovers dataset based on keyword userInput in repository linked.opendata.cz-federated-descriptor-faceted-search " +
+        "hosted at http://onto.fel.cvut.cz/rdf4j-server.")
 public class DatasetDiscoveryModule extends AbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(DatasetDiscoveryModule.class);
@@ -34,6 +39,7 @@ public class DatasetDiscoveryModule extends AbstractModule {
      * URL of the Sesame server.
      */
     private static final Property P_USER_INPUT = getParameter("prp-user-input");
+    @Parameter(urlPrefix = TYPE_URI + "/", name = "prp-user-inpu")
     private String userInput;
 
     private static Property getParameter(final String name) {

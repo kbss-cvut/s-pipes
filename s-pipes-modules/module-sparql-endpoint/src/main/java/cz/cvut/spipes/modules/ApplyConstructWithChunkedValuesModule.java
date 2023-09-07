@@ -3,6 +3,7 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.VariablesBinding;
+import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.util.QueryUtils;
 import java.util.Objects;
 import org.apache.jena.query.Query;
@@ -22,6 +23,7 @@ import org.topbraid.spin.model.Select;
 /**
  * TODO Order of queries is not enforced.
  */
+@SPipesModule(label = "apply construct with chunked values", comment = "Apply construct with chunked values.")
 public class ApplyConstructWithChunkedValuesModule extends ApplyConstructAbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplyConstructWithChunkedValuesModule.class);
@@ -32,7 +34,10 @@ public class ApplyConstructWithChunkedValuesModule extends ApplyConstructAbstrac
     private static final String VALUES_CLAUSE_MARKER_NAME = "VALUES";
     private static final Property P_CHUNK_SIZE = ResourceFactory.createProperty(TYPE_PREFIX + "chunk-size");
 
+    @Parameter(urlPrefix = TYPE_PREFIX, name = "chunk-size")
     private Integer chunkSize = DEFAULT_CHUNK_SIZE;
+
+    @Parameter(urlPrefix = SML.uri, name = "selectQuery")
     private Select selectQuery;
 
 

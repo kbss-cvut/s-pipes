@@ -15,6 +15,7 @@ import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.exception.ResourceNotFoundException;
+import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.modules.eccairs.EccairsAccessFactory;
 import cz.cvut.spipes.modules.eccairs.JopaPersistenceUtils;
 import cz.cvut.spipes.modules.eccairs.SesameDataDao;
@@ -34,9 +35,14 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Arrays;
 
+@SPipesModule(label = "import-e5x", comment = "Convert e5x xml files to rdf.")
 public class ImportE5XModule extends AbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(ImportE5XModule.class);
+
+    // TODO - this parameter id defined with IRI <http://onto.fel.cvut.cz/ontologies/lib/module-param/has-resource-uri> in  s-pipes-modules\module.sms.ttl
+    @Parameter(name = "has-resource-uri")
+    private String e5xResourceUriStr;
 
     StreamResource e5xResource;
 
@@ -145,7 +151,7 @@ public class ImportE5XModule extends AbstractModule {
 
     @Override
     public void loadConfiguration() {
-        String e5xResourceUriStr = getEffectiveValue(KBSS_MODULE.has_resource_uri).asLiteral().toString();
+        e5xResourceUriStr = getEffectiveValue(KBSS_MODULE.has_resource_uri).asLiteral().toString();
         e5xResource = getResourceByUri(e5xResourceUriStr);
     }
 

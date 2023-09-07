@@ -94,6 +94,7 @@ import java.util.function.Supplier;
 public class TabularModule extends AbstractModule {
 
     public static final String TYPE_URI = KBSS_MODULE.uri + "tabular";
+    public static final String PARAM_URL_PREFIX = TYPE_URI + "/";
     private static final Logger LOG = LoggerFactory.getLogger(TabularModule.class);
 
     private final Property P_DELIMITER = getSpecificParameter("delimiter");
@@ -106,30 +107,39 @@ public class TabularModule extends AbstractModule {
     private final Property P_PROCESS_HTML_FILE = getSpecificParameter("process-html-file");
 
     //sml:replace
+    @Parameter(urlPrefix = SML.uri, name = "replace")
     private boolean isReplace;
 
+    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "source-resource-uri")
     //:source-resource-uri
     private StreamResource sourceResource;
 
     //:delimiter
+    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "delimiter")
     private int delimiter;
 
     //:quote-character
+    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "quote-character")
     private char quoteCharacter;
 
     //:data-prefix
+    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "data-prefix")
     private String dataPrefix;
 
     //:skip-header
+    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "skip-header")
     private boolean skipHeader;
 
     //:process-html-file
+    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "process-html-file")
     private boolean processHTMLFile;
 
     //:output-mode
+    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "output-mode")
     private Mode outputMode;
 
     //:accept-invalid-quoting
+    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "accept-invalid-quoting")
     private boolean acceptInvalidQuoting;
 
     /**

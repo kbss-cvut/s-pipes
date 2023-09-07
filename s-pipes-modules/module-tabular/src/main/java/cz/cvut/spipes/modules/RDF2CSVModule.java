@@ -5,6 +5,7 @@ import cz.cvut.spipes.constants.KBSS_CSVW;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
+import cz.cvut.spipes.modules.annotations.SPipesModule;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFFormat;
@@ -29,6 +30,9 @@ import java.util.stream.Collectors;
  * The table is constructed from column and row resources defined in TableSchema and saves it as a new CSV file.
  * </p>
  */
+@SPipesModule(label = "RDF2CSV", comment = "Module for converting RDF (representing table) to CSV. " +
+        "The module is responsible for converting the input RDF data into a CSV format and saving the output to a file." +
+        "The table is constructed from column and row resources defined in TableSchema and saves it as a new CSV file.")
 public class RDF2CSVModule extends AnnotatedAbstractModule {
 
     public static final String TYPE_URI = KBSS_MODULE.uri + "RDF2CSV";

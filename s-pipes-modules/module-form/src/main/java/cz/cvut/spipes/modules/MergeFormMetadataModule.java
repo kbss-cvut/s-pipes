@@ -6,6 +6,7 @@ import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.form.JenaFormUtils;
+import cz.cvut.spipes.modules.annotations.SPipesModule;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -20,6 +21,11 @@ import java.util.Random;
  * question origin combined with executionId. New question instances are created using questionInstanceTemplate
  * which defaults to "doc:question-{_questionOriginHash}-{_executionId}".
  */
+@SPipesModule(label = "merge form metadata", comment =
+        "Merges form metadata. Inputs are sample form and Q&A model. Questions from both models are remapped to new" +
+        "IRIs based on question origin combined with executionId. New question instances are created using" +
+        "questionInstanceTemplate which defaults to \"doc:question-{_questionOriginHash}-{_executionId}\"."
+)
 public class MergeFormMetadataModule extends AnnotatedAbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(MergeFormMetadataModule.class);

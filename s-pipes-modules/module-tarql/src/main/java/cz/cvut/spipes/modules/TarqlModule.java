@@ -5,6 +5,7 @@ import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
+import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.registry.StreamResource;
 import cz.cvut.spipes.registry.StreamResourceRegistry;
 import org.apache.jena.ext.com.google.common.io.Files;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 // TODO merge with ModuleTarql functionality
+@SPipesModule(label = "tarql", comment = "Apply construct on a csv input.")
 public class TarqlModule extends AbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(TarqlModule.class);
@@ -35,14 +37,18 @@ public class TarqlModule extends AbstractModule {
     private static final String TARQL_PROGRAM = AppConstants.BIN_DIR + "/tarql";
 
     //sml:constructQuery
+    @Parameter(urlPrefix = SML.uri, name = "constructQuery")
     private List<Resource> constructQueries;
 
+    // TODO not used field
     private String tableFilePath;
 
     //sml:replace
+    @Parameter(urlPrefix = SML.uri, name = "replace")
     private boolean isReplace;
 
     //sml:sourceFilePath
+    @Parameter(urlPrefix = SML.uri, name = "sourceFilePath")
     private String sourceFilePath;
 
     public TarqlModule() {

@@ -3,6 +3,7 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
+import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.sutime.AnnforModel;
 import cz.cvut.spipes.sutime.DescriptorModel;
 import cz.cvut.spipes.util.JenaUtils;
@@ -33,6 +34,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 
+@SPipesModule(label = "temporal-v1", comment = "Annotate temporal expressions in literals in input model.")
 public class SUTimeModuleNew extends AbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(SUTimeModuleNew.class);
@@ -43,16 +45,24 @@ public class SUTimeModuleNew extends AbstractModule {
     private static final String LIMIT_OFFSET_CLAUSE_MARKER_NAME = "LIMIT_OFFSET";
     private static final Property P_PAGE_SIZE = ResourceFactory.createProperty(TYPE_PREFIX + "page-size");
     private Integer pageSize = DEFAULT_PAGE_SIZE;
+
+    @Parameter(urlPrefix = SML.uri, name = "constructQuery")
     private List<Resource> constructQueries;
+
     //sml:replace
+    @Parameter(urlPrefix = SML.uri, name = "replace")
     private boolean isReplace;
 
     //kbss:parseText
     /**
      * Whether the query should be taken from sp:text property instead of from SPIN serialization
      */
+    @Parameter(name = "is-parse-text")
     private boolean parseText;
+
+    @Parameter(urlPrefix = DescriptorModel.prefix, name = "has-document-date")
     private List<Path> ruleFilePaths = new LinkedList<>();
+    @Parameter(urlPrefix = DescriptorModel.prefix, name = "has-rule-file")
     private String documentDate; // TODO support other formats ?
     private AnnotationPipeline pipeline;
 

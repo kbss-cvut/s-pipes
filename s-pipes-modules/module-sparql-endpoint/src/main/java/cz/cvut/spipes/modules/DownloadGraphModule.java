@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
+import cz.cvut.spipes.modules.annotations.SPipesModule;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.riot.Lang;
@@ -17,6 +19,7 @@ import org.apache.jena.riot.RDFDataMgr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@SPipesModule(label = "sparql endpoint download graph", comment = "Downloads named graph namedGraphId from sparql endpoint endpointUrl.")
 public class DownloadGraphModule extends AnnotatedAbstractModule {
 
     private static final String TYPE_URI = KBSS_MODULE.uri + "sparql-endpoint-download-graph";
