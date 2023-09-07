@@ -10,7 +10,10 @@ import cz.cvut.spipes.modules.exception.TableSchemaException;
 import cz.cvut.spipes.test.JenaTestUtils;
 import cz.cvut.spipes.util.StreamResourceUtils;
 import org.apache.jena.rdf.model.*;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.slf4j.Logger;
@@ -57,8 +60,9 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
         );
 
         ExecutionContext outputContext = module.executeSelf();
+        Model expectedModel = ModelFactory.createDefaultModel().read(getFilePath("countries_model.ttl").toString());
 
-        assertTrue(outputContext.getDefaultModel().size() > 0);
+        assertIsomorphic(outputContext.getDefaultModel(),expectedModel);
     }
 
      @Test
@@ -69,11 +73,13 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
                          getFilePath("countries.xls"))
          );
          module.setSourceResourceFormat(ResourceFormat.EXCEL);
-         module.setProcessSpecificSheetInXLSFile(2);
+         module.setProcessSpecificSheetInXLSFile(1);
 
          ExecutionContext outputContext = module.executeSelf();
 
-         assertTrue(outputContext.getDefaultModel().size() > 0);
+         Model expectedModel = ModelFactory.createDefaultModel().read(getFilePath("countries_model.ttl").toString());
+
+         assertIsomorphic(outputContext.getDefaultModel(),expectedModel);
      }
 
      @Test
