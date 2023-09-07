@@ -5,6 +5,7 @@ import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.engine.VariablesBinding;
+import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.tdb.TDBTempFactory;
 import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.QueryUtils;
@@ -40,6 +41,7 @@ import org.slf4j.LoggerFactory;
 /**
  * TODO Order of queries is not enforced.
  */
+@SPipesModule(label = "improve spo with marginals", comment = "Improve spo with marginal resources.")
 public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(ImproveSPOWithMarginalsModule.class);
@@ -48,13 +50,14 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
     private static final String TYPE_URI = KBSS_MODULE.uri + MODULE_ID;
     private static final String TYPE_PREFIX = TYPE_URI + "/";
     private static Map<String, Model> marginalDefsModelCache = new HashMap<>();
-    //@Parameter(urlPrefix = TYPE_PREFIX, name = "marginal-constraint")
+
+    @Parameter(urlPrefix = TYPE_PREFIX, name = "marginal-constraint")
     private String marginalConstraint;
-    //@Parameter(urlPrefix = TYPE_PREFIX, name = "marginals-defs-file-url")
+    @Parameter(urlPrefix = TYPE_PREFIX, name = "marginals-defs-file-url")
     private String marginalsDefsFileUrl;
-    //@Parameter(urlPrefix = TYPE_PREFIX, name = "marginals-file-url")
+    @Parameter(urlPrefix = TYPE_PREFIX, name = "marginals-file-url")
     private String marginalsFileUrl;
-    //@Parameter(urlPrefix = TYPE_PREFIX, name = "data-service-url")
+    @Parameter(urlPrefix = TYPE_PREFIX, name = "data-service-url")
     private String dataServiceUrl;
 
     private static final String VAR_EXECUTION_ID = "executionId";

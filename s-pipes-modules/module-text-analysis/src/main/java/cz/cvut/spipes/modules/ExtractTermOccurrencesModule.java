@@ -3,6 +3,7 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
+import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.modules.constants.Termit;
 import cz.cvut.spipes.modules.textAnalysis.Extraction;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -70,6 +71,10 @@ import java.util.Map;
  * .
  * </code></pre>
  */
+@SPipesModule(label = "extract term occurrences", comment =
+        "Module extracts term occurrences from annotated literals of input RDF." +
+        "Annotated literals are RDF string literals that are annotated by RDFa using TermIt terminology to mark " +
+        "occurrences of terms within the text.")
 public class ExtractTermOccurrencesModule extends AnnotatedAbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExtractTermOccurrencesModule.class);

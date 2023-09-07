@@ -9,7 +9,7 @@ public class DescriptorModel {
     /**
      * The namespace of the vocabulary as a string
      */
-    private static final String prefix = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/temporal-v1/";
+    public static final String prefix = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/temporal-v1/";
 
     protected static final Resource resource(String local )
     { return ResourceFactory.createResource( prefix +  local ); }

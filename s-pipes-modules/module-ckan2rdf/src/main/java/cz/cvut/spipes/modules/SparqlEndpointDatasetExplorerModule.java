@@ -5,6 +5,8 @@ import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import java.time.Instant;
 import java.util.Calendar;
+
+import cz.cvut.spipes.modules.annotations.SPipesModule;
 import org.apache.commons.io.IOUtils;
 import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.Query;
@@ -18,6 +20,7 @@ import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@SPipesModule(label = "sparqlEndpointDatasetExplorer-v1", comment = "TODO")
 public class SparqlEndpointDatasetExplorerModule extends AnnotatedAbstractModule {
 
     public static final String TYPE_URI = KBSS_MODULE.uri + "sparqlEndpointDatasetExplorer-v1";

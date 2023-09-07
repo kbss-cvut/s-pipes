@@ -3,6 +3,7 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
+import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.sutime.AnnforModel;
 import cz.cvut.spipes.sutime.DescriptorModel;
 import edu.stanford.nlp.ling.CoreAnnotations;
@@ -27,13 +28,17 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 
+@SPipesModule(label = "temporal v0.1", comment = "Annotate temporal expressions in literals in input model.")
 public class SUTimeModule extends AbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(SUTimeModule.class);
 
     public static final String TYPE_URI = KBSS_MODULE.getURI() + "temporal-v0.1";
 
+    @Parameter(urlPrefix = DescriptorModel.prefix, name = "has-document-date")
     private List<Path> ruleFilePaths = new LinkedList<>();
+
+    @Parameter(urlPrefix = DescriptorModel.prefix, name = "has-rule-file")
     private String documentDate; // TODO support other formats ?
 
 

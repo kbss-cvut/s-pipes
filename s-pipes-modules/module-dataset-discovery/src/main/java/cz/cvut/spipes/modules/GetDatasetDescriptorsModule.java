@@ -4,6 +4,9 @@ import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.engine.ExecutionContext;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Optional;
+
+import cz.cvut.spipes.modules.annotations.SPipesModule;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
@@ -19,21 +22,27 @@ import org.apache.jena.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@SPipesModule(label = "get dataset descriptors v1", comment = "Retrieve dataset descriptor for dataset with dataset-iri in endpoint-url.")
 public class GetDatasetDescriptorsModule extends AbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(GetDatasetDescriptorsModule.class);
 
     private static final String TYPE_URI = KBSS_MODULE.uri + "get-dataset-descriptors-v1";
+    private static final String PARAM_URI = TYPE_URI + "/";
 
     /**
      * URL of the Sesame server.
      */
     private static final Property P_DATASET_IRI = getParameter("p-dataset-iri");
+    private static final Property P_ENDPOINT_URL = getParameter("endpoint-url");
+
+    @Parameter(urlPrefix = PARAM_URI, name = "dataset-iri")
     private String prpDatasetIri;
 
     /**
      * URL of the SPARQL endpoint.
      */
+    @Parameter(urlPrefix = PARAM_URI, name = "endpoint-url")
     private String endpointUrl = "http://onto.fel.cvut.cz/rdf4j-server/repositories/descriptors-metadata";
 
     private static Property getParameter(final String name) {
@@ -95,5 +104,6 @@ public class GetDatasetDescriptorsModule extends AbstractModule {
     @Override
     public void loadConfiguration() {
         prpDatasetIri = this.getStringPropertyValue(P_DATASET_IRI);
+        endpointUrl = Optional.ofNullable(this.getStringPropertyValue(P_ENDPOINT_URL)).orElse(endpointUrl);
     }
 }

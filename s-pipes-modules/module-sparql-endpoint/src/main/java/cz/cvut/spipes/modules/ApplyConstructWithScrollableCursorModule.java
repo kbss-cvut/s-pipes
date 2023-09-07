@@ -1,6 +1,7 @@
 package cz.cvut.spipes.modules;
 
 import cz.cvut.spipes.constants.KBSS_MODULE;
+import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.util.QueryUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 /**
  * TODO Order of queries is not enforced.
  */
+@SPipesModule(label = "apply construct with scrollable cursor", comment = "Apply construct with scrollable cursor.")
 public class ApplyConstructWithScrollableCursorModule extends ApplyConstructAbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplyConstructWithScrollableCursorModule.class);
@@ -21,6 +23,7 @@ public class ApplyConstructWithScrollableCursorModule extends ApplyConstructAbst
     private static final String LIMIT_OFFSET_CLAUSE_MARKER_NAME = "LIMIT_OFFSET";
     private static final Property P_PAGE_SIZE = ResourceFactory.createProperty(TYPE_PREFIX + "page-size");
 
+    @Parameter(urlPrefix = TYPE_PREFIX, name = "page-size")
     private Integer pageSize = DEFAULT_PAGE_SIZE;
 
     @Override
