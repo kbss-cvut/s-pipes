@@ -108,21 +108,7 @@ public class TabularModule extends AbstractModule {
     private final Property P_OUTPUT_MODE = getSpecificParameter("output-mode");
     private final Property P_SOURCE_RESOURCE_URI = getSpecificParameter("source-resource-uri");
     private final Property P_SKIP_HEADER = getSpecificParameter("skip-header");
-
-    /**
-     Parameter that indicates format of the source file.
-     Supported formats:
-         - "text/plain" -- plain text, default value.
-         - "text/csv" -- coma-separated values (csv).
-         - "text/tab-separated-values" -- tab-separated values (tsv).
-         - "text/html" -- HTML file.
-         - "application/vnd.ms-excel" - EXCEL (XLS) file.
-     */
     private final Property P_SOURCE_RESOURCE_FORMAT = getSpecificParameter("source-resource-format");
-
-    /**
-    Required parameter that indicates that only specific single sheet should be converted
-     */
     private final Property P_PROCESS_SPECIFIC_SHEET_IN_XLS_FILE = getSpecificParameter("process-specific-sheet-in-xls-file");
 
     //sml:replace
@@ -144,12 +130,24 @@ public class TabularModule extends AbstractModule {
     private boolean skipHeader;
 
     //:process-specific-sheet-in-xls-file
+    /**
+     Required parameter that indicates that only specific single sheet should be converted
+     */
     private int processSpecificSheetInXLSFile;
 
     //:output-mode
     private Mode outputMode;
 
     //:source-resource-format
+    /**
+     Parameter that indicates format of the source file.
+     Supported formats:
+     - "text/plain" -- plain text, default value.
+     - "text/csv" -- coma-separated values (csv).
+     - "text/tab-separated-values" -- tab-separated values (tsv).
+     - "text/html" -- HTML file.
+     - "application/vnd.ms-excel" - EXCEL (XLS) file.
+     */
     private ResourceFormat sourceResourceFormat;
 
     //:accept-invalid-quoting
