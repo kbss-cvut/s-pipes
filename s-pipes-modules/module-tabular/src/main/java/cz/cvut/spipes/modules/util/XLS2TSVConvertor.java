@@ -49,4 +49,14 @@ public class XLS2TSVConvertor {
             throw new RuntimeException(e);
         }
     }
+
+    public String getSheetName(StreamResource streamResource,int sheetNumber){
+        try {
+            Workbook workbook = new HSSFWorkbook(new ByteArrayInputStream(streamResource.getContent()));
+            Sheet sheet = workbook.getSheetAt(sheetNumber-1);
+            return sheet.getSheetName();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

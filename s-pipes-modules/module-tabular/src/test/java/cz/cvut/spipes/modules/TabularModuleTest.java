@@ -77,7 +77,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
          ExecutionContext outputContext = module.executeSelf();
 
-         Model expectedModel = ModelFactory.createDefaultModel().read(getFilePath("countries-model-output.ttl").toString());
+         Model expectedModel = ModelFactory.createDefaultModel().read(getFilePath("countries-model-output-xls.ttl").toString());
 
          assertIsomorphic(outputContext.getDefaultModel(),expectedModel);
      }

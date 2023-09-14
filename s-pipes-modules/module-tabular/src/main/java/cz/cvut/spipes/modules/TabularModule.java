@@ -176,6 +176,9 @@ public class TabularModule extends AbstractModule {
     @Override
     ExecutionContext executeSelf() {
 
+        tableGroup = onTableGroup(null);
+        table = onTable(null);
+
         if(sourceResourceFormat == ResourceFormat.HTML) {
             HTML2TSVConvertor htmlConvertor = new HTML2TSVConvertor();
             setSourceResource(htmlConvertor.convertToTSV(sourceResource));
@@ -188,6 +191,7 @@ public class TabularModule extends AbstractModule {
             }
             XLS2TSVConvertor xlsConvertor = new XLS2TSVConvertor();
             int numberOfSheets = xlsConvertor.getNumberOfSheets(sourceResource);
+            table.setLabel(xlsConvertor.getSheetName(sourceResource,processSpecificSheetInXLSFile));
             LOG.debug("Number of sheets:{}", numberOfSheets);
             if( (processSpecificSheetInXLSFile > numberOfSheets) || (processSpecificSheetInXLSFile < 1) ){
                 LOG.error("Requested sheet doesn't exist, number of sheets in the doc: {}, requested sheet: {}",
@@ -207,9 +211,6 @@ public class TabularModule extends AbstractModule {
         Model outputModel = ModelFactory.createDefaultModel();
         EntityManager em = JopaPersistenceUtils.getEntityManager("cz.cvut.spipes.modules.model", inputModel);
         em.getTransaction().begin();
-
-        tableGroup = onTableGroup(null);
-        table = onTable(null);
 
         List<Column> outputColumns = new ArrayList<>();
         List<Statement> rowStatements = new ArrayList<>();
