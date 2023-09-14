@@ -13,12 +13,10 @@ public enum ResourceFormat {
     TSV("text/tab-separated-values"),
     HTML("text/html"),
     EXCEL("application/vnd.ms-excel");
-
-    private static String PREFIX = TabularModule.TYPE_URI + "/";
     private final String localName;
 
     public Resource getResource() {
-        return ResourceFactory.createResource(PREFIX + this.localName);
+        return ResourceFactory.createResource(this.localName);
     }
 
     public static ResourceFormat fromResource(Resource resource) {
