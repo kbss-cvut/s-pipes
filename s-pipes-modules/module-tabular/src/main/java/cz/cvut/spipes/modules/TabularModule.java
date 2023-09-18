@@ -405,9 +405,14 @@ public class TabularModule extends AbstractModule {
     @Override
     public void loadConfiguration() {
         delimiter = getDefaultDelimiterSupplier().get();
-        sourceResourceFormat = ResourceFormat.fromString(
-                getEffectiveValue(P_SOURCE_RESOURCE_FORMAT).asLiteral().getString()
-        );
+        try {
+            sourceResourceFormat = ResourceFormat.fromString(
+                    getEffectiveValue(P_SOURCE_RESOURCE_FORMAT).asLiteral().getString()
+            );
+        }
+        catch (NullPointerException e){
+            sourceResourceFormat = ResourceFormat.PLAIN;
+        }
         if(sourceResourceFormat == ResourceFormat.CSV)setDelimiter(',');
         if(sourceResourceFormat == ResourceFormat.TSV)setDelimiter('\t');
         setDelimiter(getPropertyValue(P_DELIMITER, ((char) delimiter)));
