@@ -107,10 +107,10 @@ public class TabularModule extends AbstractModule {
     private final Property P_PROCESS_HTML_FILE = getSpecificParameter("process-html-file");
 
     //sml:replace
-    @Parameter(urlPrefix = SML.uri, name = "replace", comment = "Replace context flag. Default is false.")
+    @Parameter(urlPrefix = SML.uri, name = "replace", comment = "Replace context flag. Default is false.")// TODO - revise comment
     private boolean isReplace;
 
-    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "source-resource-uri", comment = "Resource URI of the source table.")
+    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "source-resource-uri", comment = "Resource URI of the source table.") // TODO - revise comment
     //:source-resource-uri
     private StreamResource sourceResource;
 
@@ -123,7 +123,7 @@ public class TabularModule extends AbstractModule {
     private char quoteCharacter;
 
     //:data-prefix
-    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "data-prefix", comment = "Data prefix")
+    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "data-prefix", comment = "Data prefix")// TODO - improve comment
     private String dataPrefix;
 
     //:skip-header
@@ -131,10 +131,11 @@ public class TabularModule extends AbstractModule {
     private boolean skipHeader;
 
     //:process-html-file
-    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "process-html-file", comment = "Process html file. Default is false.")
+    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "process-html-file", comment = "Process html file. Default is false.") // TODO - improve comment
     private boolean processHTMLFile;
 
     //:output-mode
+    // TODO - revise comment
     @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "output-mode", comment = "Output mode. Default is standard-mode('http://onto.fel.cvut.cz/ontologies/lib/module/tabular/standard-mode)")
     private Mode outputMode;
 

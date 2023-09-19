@@ -36,7 +36,7 @@ public class GetDatasetDescriptorsModule extends AbstractModule {
     private static final Property P_DATASET_IRI = getParameter("p-dataset-iri");
     private static final Property P_ENDPOINT_URL = getParameter("endpoint-url");
 
-    @Parameter(urlPrefix = PARAM_URI, name = "dataset-iri", comment = "IRI of the dataset.")
+    @Parameter(urlPrefix = PARAM_URI, name = "dataset-iri", comment = "IRI of the dataset.")// TODO - revise comment
     private String prpDatasetIri;
 
     @Parameter(urlPrefix = PARAM_URI, name = "endpoint-url", comment = "URL of the SPARQL endpoint. Default value is 'http://onto.fel.cvut.cz/rdf4j-server/repositories/descriptors-metadata'")

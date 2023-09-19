@@ -42,18 +42,18 @@ public class Rdf4jUpdateModule extends AbstractModule {
     @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-rdf4j-repository-name", comment = "Rdf4j repository ID")
     private String rdf4jRepositoryName;
 
-    @Parameter(urlPrefix = SML.uri, name = "updateQuery", comment = "A list of SPARQL Update queries. Queries strings are read from sp:text.")
+    @Parameter(urlPrefix = SML.uri, name = "updateQuery", comment = "A list of SPARQL Update queries. Queries strings are read from sp:text.")// TODO - revise comment
     private List<String> updateQueries;
 
     static final Property P_RDF4J_STOP_ITERATION_ON_STABLE_TRIPLE_COUNT =
         getParameter("p-stop-iteration-on-stable-triple-count");
 
     @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-stop-iteration-on-stable-triple-count",
-            comment = "Stops iteration on if triple count did not change. Default is false.")
+            comment = "Stops iteration on if triple count did not change. Default is false.") // TODO - revise comment
     private boolean onlyIfTripleCountChanges;
 
     @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "has-max-iteration-count",
-            comment = "Limits the number of iterations to the specified value. Default value is 1.")
+            comment = "Limits the number of iterations to the specified value. Default value is 1.") // TODO - revise comment
     private int iterationCount;
 
     private Repository updateRepository;

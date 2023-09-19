@@ -49,7 +49,7 @@ public class SUTimeModuleNew extends AbstractModule {
     private Integer pageSize = DEFAULT_PAGE_SIZE;
 
     @Parameter(urlPrefix = SML.uri, name = "constructQuery",
-            comment = "List of construct queries. The module annotates the lexical form of objects of the output statements of these queries.")
+            comment = "List of construct queries. The module annotates the lexical form of objects of the output statements of these queries.")// TODO - revise comment
     private List<Resource> constructQueries;
 
     //sml:replace
@@ -60,10 +60,10 @@ public class SUTimeModuleNew extends AbstractModule {
     @Parameter(name = "is-parse-text", comment = "Whether the query should be taken from sp:text property instead of from SPIN serialization")
     private boolean parseText;
 
-    @Parameter(urlPrefix = DescriptorModel.prefix, name = "has-rule-file", comment = "Rule file, multivalued.")
+    @Parameter(urlPrefix = DescriptorModel.prefix, name = "has-rule-file", comment = "Rule file, multivalued.")// TODO - review comment
     private List<Path> ruleFilePaths = new LinkedList<>();
 
-    @Parameter(urlPrefix = DescriptorModel.prefix, name = "has-document-date", comment = "Document date format.")
+    @Parameter(urlPrefix = DescriptorModel.prefix, name = "has-document-date", comment = "Document date format.")// TODO - review comment
     private String documentDate; // TODO support other formats ?
     private AnnotationPipeline pipeline;
 

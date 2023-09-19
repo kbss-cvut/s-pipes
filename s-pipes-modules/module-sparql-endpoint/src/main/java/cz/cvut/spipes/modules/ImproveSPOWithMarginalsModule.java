@@ -61,7 +61,7 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
     private String marginalConstraint;
     @Parameter(urlPrefix = TYPE_PREFIX, name = "marginals-defs-file-url", comment = "Marginal definitions file url")
     private String marginalsDefsFileUrl;
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "marginals-file-url", comment = "Marginals file url")
+    @Parameter(urlPrefix = TYPE_PREFIX, name = "marginals-file-url", comment = "Marginals file url") // TODO - review comment
     private String marginalsFileUrl;
     @Parameter(urlPrefix = TYPE_PREFIX, name = "data-service-url", comment = "Data service url")
     private String dataServiceUrl;

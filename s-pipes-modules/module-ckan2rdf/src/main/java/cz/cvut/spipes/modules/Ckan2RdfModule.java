@@ -40,7 +40,7 @@ public class Ckan2RdfModule extends AnnotatedAbstractModule {
     @Parameter(urlPrefix = TYPE_URI + "/", name = "p-rdf4j-repository-url", comment = "URL of the RDF4J repository.")
     private String propRdf4jRepositoryUrl;
 
-
+    // TODO - revise comment
     @Parameter(urlPrefix = TYPE_URI + "/", name = "p-max-datasets", comment = "Limits the number of processed datasets.")
     private Integer maxDatasets = Integer.MAX_VALUE;
 

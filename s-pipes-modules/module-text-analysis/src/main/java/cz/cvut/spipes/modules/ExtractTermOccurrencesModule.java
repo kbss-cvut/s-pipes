@@ -77,7 +77,7 @@ public class ExtractTermOccurrencesModule extends AnnotatedAbstractModule {
     private static final String TYPE_URI = KBSS_MODULE.uri + "extract-term-occurrences";
     private static final String TYPE_PREFIX = TYPE_URI + "/";
 
-    @Parameter(urlPrefix = SML.uri, name = "replace", comment = "Indicates whether the existing RDF should be overwritten. Default false.")
+    @Parameter(urlPrefix = SML.uri, name = "replace", comment = "Indicates whether the existing RDF should be overwritten. Default false.") // TODO - revise comment
     private boolean isReplace;
 
     Extraction extraction = new Extraction();

@@ -29,7 +29,7 @@ public class FetchPossibleValuesModule extends AnnotatedAbstractModule {
     private static final Logger LOG = LoggerFactory.getLogger(FetchPossibleValuesModule.class);
     private static final String TYPE_URI = KBSS_MODULE.uri + "fetch-possible-values";
 
-    @Parameter(urlPrefix = SML.uri, name = "replace", comment = "Replace context flag, default is false.")
+    @Parameter(urlPrefix = SML.uri, name = "replace", comment = "Replace context flag, default is false.") //TODO - revise comment
     private boolean isReplace = false;
 
 

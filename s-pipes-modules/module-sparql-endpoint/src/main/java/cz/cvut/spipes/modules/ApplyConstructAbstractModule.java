@@ -28,7 +28,7 @@ public abstract class ApplyConstructAbstractModule extends AnnotatedAbstractModu
     private static final String PROPERTY_PREFIX_URI = KBSS_MODULE.uri + "";
     //sml:constructQuery
     // TODO - this parameter is reused in ApplyConstructWithChunkedValuesAndScrollableCursorModule. There the comment should be extended by a note, i.e. "The construct queries with markers #${VALUES} and #${LIMIT_OFFSET}."
-    @Parameter(urlPrefix = SML.uri, name = "constructQuery", comment = "List of construct queries the output of which is returned by the module.")
+    @Parameter(urlPrefix = SML.uri, name = "constructQuery", comment = "List of construct queries the output of which is returned by the module.") //TODO - revise comment
     protected List<Resource> constructQueries;
 
     //sml:replace

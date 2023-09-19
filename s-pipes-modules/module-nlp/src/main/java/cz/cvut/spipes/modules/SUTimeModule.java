@@ -35,10 +35,10 @@ public class SUTimeModule extends AbstractModule {
 
     public static final String TYPE_URI = KBSS_MODULE.getURI() + "temporal-v0.1";
 
-    @Parameter(urlPrefix = DescriptorModel.prefix, name = "has-rule-file", comment = "Rule file, multivalued.")
+    @Parameter(urlPrefix = DescriptorModel.prefix, name = "has-rule-file", comment = "Rule file, multivalued.") // TODO - revise comment
     private List<Path> ruleFilePaths = new LinkedList<>();
 
-    @Parameter(urlPrefix = DescriptorModel.prefix, name = "has-document-date", comment = "Document date format.")
+    @Parameter(urlPrefix = DescriptorModel.prefix, name = "has-document-date", comment = "Document date format.") // TODO - revise comment
     private String documentDate; // TODO support other formats ?
 
 
