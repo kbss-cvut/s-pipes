@@ -36,13 +36,15 @@ public class MergeFormMetadataModule extends AnnotatedAbstractModule {
     private static final String QUESTION_ORIGIN_HASH_VAR = "{_questionOriginHash}";
     private static final String EXECUTION_ID_VAR = "{_executionId}";
 
-    @Parameter(urlPrefix = SML.uri, name = "replace")
+    @Parameter(urlPrefix = SML.uri, name = "replace", comment = "Replace context flag. Default value is false.")
     private boolean isReplace = false;
 
-    @Parameter(name = "execution-id")
+    @Parameter(name = "execution-id", comment = "Execution id that will be used to construct question IRIs")
     private String executionId = DigestUtils.md5Hex(Long.toString(RANDOM.nextLong()));
 
-    @Parameter(name = "question-instance-template")
+
+    @Parameter(name = "question-instance-template", comment = "URL Template to create URL for question instances. " +
+            "Default is 'http://onto.fel.cvut.cz/ontologies/documentation/question-{_questionOriginHash}-{_executionId}'")
     private String questionInstanceTemplate =
         SFormsVocabularyJena.s_c_question.toString()
             + "-"

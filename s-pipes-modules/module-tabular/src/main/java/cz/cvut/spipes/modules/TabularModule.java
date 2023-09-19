@@ -107,39 +107,39 @@ public class TabularModule extends AbstractModule {
     private final Property P_PROCESS_HTML_FILE = getSpecificParameter("process-html-file");
 
     //sml:replace
-    @Parameter(urlPrefix = SML.uri, name = "replace")
+    @Parameter(urlPrefix = SML.uri, name = "replace", comment = "Replace context flag. Default is false.")
     private boolean isReplace;
 
-    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "source-resource-uri")
+    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "source-resource-uri", comment = "Resource URI of the source table.")
     //:source-resource-uri
     private StreamResource sourceResource;
 
     //:delimiter
-    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "delimiter")
+    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "delimiter", comment = "Column delimiter. Default value is comma ','.")
     private int delimiter;
 
     //:quote-character
-    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "quote-character")
+    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "quote-character", comment = "Quote character. Default is '\"' if delimiter is ',', '\\0' otherwize.")
     private char quoteCharacter;
 
     //:data-prefix
-    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "data-prefix")
+    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "data-prefix", comment = "Data prefix")
     private String dataPrefix;
 
     //:skip-header
-    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "skip-header")
+    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "skip-header", comment = "Skip header. Default is false.")
     private boolean skipHeader;
 
     //:process-html-file
-    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "process-html-file")
+    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "process-html-file", comment = "Process html file. Default is false.")
     private boolean processHTMLFile;
 
     //:output-mode
-    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "output-mode")
+    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "output-mode", comment = "Output mode. Default is standard-mode('http://onto.fel.cvut.cz/ontologies/lib/module/tabular/standard-mode)")
     private Mode outputMode;
 
     //:accept-invalid-quoting
-    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "accept-invalid-quoting")
+    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "accept-invalid-quoting", comment = "Accept invalid quoting. Default is false.")
     private boolean acceptInvalidQuoting;
 
     /**

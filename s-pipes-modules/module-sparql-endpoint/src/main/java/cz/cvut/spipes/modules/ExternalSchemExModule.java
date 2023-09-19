@@ -14,7 +14,7 @@ import java.nio.file.Paths;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.util.FileUtils;
 
-@SPipesModule(label = "external schemex", comment = "external schemex")
+@SPipesModule(label = "external schemex", comment = "Compute schemex using external script for a specified sourceFilePath.")
 public class ExternalSchemExModule extends AbstractModule {
 
     private static final String MODULE_ID = "external-schemex";
@@ -22,7 +22,7 @@ public class ExternalSchemExModule extends AbstractModule {
     private static final String TYPE_PREFIX = TYPE_URI + "/";
     private static final String SCHEMEX_PROGRAM = "schemex";
     //sml:sourceFilePath
-    @Parameter(urlPrefix = SML.uri, name = "sourceFilePath")
+    @Parameter(urlPrefix = SML.uri, name = "sourceFilePath", comment = "Source file in nt format.")
     private Path sourceFilePath;
 
     @Override

@@ -35,11 +35,8 @@ public class DatasetDiscoveryModule extends AbstractModule {
 
     private static final String TYPE_URI = KBSS_MODULE.uri + "dataset-discovery-v1";
 
-    /**
-     * URL of the Sesame server.
-     */
     private static final Property P_USER_INPUT = getParameter("prp-user-input");
-    @Parameter(urlPrefix = TYPE_URI + "/", name = "prp-user-inpu")
+    @Parameter(urlPrefix = TYPE_URI + "/", name = "prp-user-inpu", comment = "Keywords query. Keywords are separated by space.")
     private String userInput;
 
     private static Property getParameter(final String name) {

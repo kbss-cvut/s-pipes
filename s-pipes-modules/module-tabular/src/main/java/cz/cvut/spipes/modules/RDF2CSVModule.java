@@ -40,8 +40,8 @@ public class RDF2CSVModule extends AnnotatedAbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(RDF2CSVModule.class);
 
-    /** The parameter representing where the output file will be stored */
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "file-output-path")
+    @Parameter(urlPrefix = TYPE_PREFIX, name = "file-output-path",
+            comment = "The parameter representing where the output file will be stored.")
     private String fileOutputPath;
 
     @Override

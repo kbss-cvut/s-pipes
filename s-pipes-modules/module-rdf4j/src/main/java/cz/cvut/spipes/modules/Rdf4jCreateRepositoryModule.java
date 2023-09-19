@@ -16,36 +16,25 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
-/**
- * Module creates native store rdf4j repository on the given server with the given name
- */
-@SPipesModule(label = "rdf4j create repository", comment = "Module creates native store rdf4j repository on the given server with the given name")
+@SPipesModule(label = "rdf4j create repository", comment = "Module creates native store rdf4j repository on the given server with the given name.")
 public class Rdf4jCreateRepositoryModule extends AbstractModule {
     private static final Logger LOG = LoggerFactory.getLogger(Rdf4jCreateRepositoryModule.class.getName());
     private static final String TYPE_URI = KBSS_MODULE.uri + "rdf4j-create-repository";
     private static final String PROPERTY_PREFIX_URI = KBSS_MODULE.uri + "rdf4j";
 
-    /**
-     * URL of the Rdf4j server
-     */
     static final Property P_RDF4J_SERVER_URL = getParameter("p-rdf4j-server-url");
 
-    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-rdf4j-server-url")
+    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-rdf4j-server-url", comment = "URL of the Rdf4j server")
     private String rdf4jServerURL;
 
-    /**
-     * Rdf4j repository ID
-     */
     static final Property P_RDF4J_REPOSITORY_NAME = getParameter("p-rdf4j-repository-name");
-    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-rdf4j-repository-name")
+    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-rdf4j-repository-name", comment = "Rdf4j repository ID")
     private String rdf4jRepositoryName;
 
-    /**
-     * Don't try to create new repository if it already exists (Default value is false)
-     */
     static final Property P_RDF4J_IGNORE_IF_EXISTS = getParameter("p-rdf4j-ignore-if-exists");
 
-    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-rdf4j-ignore-if-exists")
+    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-rdf4j-ignore-if-exists",
+            comment = "Don't try to create new repository if it already exists (Default value is false)")
     private boolean rdf4jIgnoreIfExists;
 
     private RepositoryManager repositoryManager;

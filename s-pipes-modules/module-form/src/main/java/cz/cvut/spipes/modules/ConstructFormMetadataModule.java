@@ -31,7 +31,7 @@ public class ConstructFormMetadataModule extends AnnotatedAbstractModule {
     private static final String PATH_SEPARATOR = ",";
     private static final String INSTANCE_TYPE_SEPARATOR = "|";
 
-    @Parameter(urlPrefix = SML.uri, name = "replace")
+    @Parameter(urlPrefix = SML.uri, name = "replace", comment = "Replace context flag. Default value is false.")
     private boolean isReplace = false;
 
     private enum Origin {

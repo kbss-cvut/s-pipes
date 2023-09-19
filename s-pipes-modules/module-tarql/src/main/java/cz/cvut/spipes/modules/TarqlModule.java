@@ -28,7 +28,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 // TODO merge with ModuleTarql functionality
-@SPipesModule(label = "tarql", comment = "Apply construct on a csv input.")
+@SPipesModule(label = "tarql", comment = "\"Runs one or more TARQL Construct queries on the input triples. The output RDF " +
+        "will consist of the constructed triples and (unless sml:replace is true) the input triples.\"")
 public class TarqlModule extends AbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(TarqlModule.class);
@@ -37,18 +38,20 @@ public class TarqlModule extends AbstractModule {
     private static final String TARQL_PROGRAM = AppConstants.BIN_DIR + "/tarql";
 
     //sml:constructQuery
-    @Parameter(urlPrefix = SML.uri, name = "constructQuery")
+    @Parameter(urlPrefix = SML.uri, name = "constructQuery", comment = "The TARQL Construct queries that deliver the triples that shall be added.")
     private List<Resource> constructQueries;
 
     // TODO not used field
     private String tableFilePath;
 
     //sml:replace
-    @Parameter(urlPrefix = SML.uri, name = "replace")
+    @Parameter(urlPrefix = SML.uri, name = "replace", comment = "If set to true, the output triples will only contain the " +
+            "constructed triples. If no values or false are specified, the output will be the union of the input triples " +
+            "and the constructed triples.")
     private boolean isReplace;
 
     //sml:sourceFilePath
-    @Parameter(urlPrefix = SML.uri, name = "sourceFilePath")
+    @Parameter(urlPrefix = SML.uri, name = "sourceFilePath", comment = "Source CSV file.")
     private String sourceFilePath;
 
     public TarqlModule() {

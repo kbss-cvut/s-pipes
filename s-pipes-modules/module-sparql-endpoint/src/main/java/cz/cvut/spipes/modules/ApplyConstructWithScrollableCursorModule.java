@@ -12,7 +12,12 @@ import org.slf4j.LoggerFactory;
 /**
  * TODO Order of queries is not enforced.
  */
-@SPipesModule(label = "apply construct with scrollable cursor", comment = "Apply construct with scrollable cursor.")
+@SPipesModule(label = "apply construct with scrollable cursor",
+        comment = "Runs one or more construct queries (bound to sml:constructQuery) on the input triples. Queries are " +
+                "executed multiple times with scrollable cursor that is injected through query marker #${LIMIT_OFFSET}. " +
+                "The marker is replaced each time with appropriatei by sparql constructs 'LIMIT ?limit' and 'OFFSET ?offset'. " +
+                "Within each construct query The output RDF will consist of the constructed triples and (unless sml:replace is true) " +
+                "the input triples.")
 public class ApplyConstructWithScrollableCursorModule extends ApplyConstructAbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplyConstructWithScrollableCursorModule.class);
@@ -23,7 +28,7 @@ public class ApplyConstructWithScrollableCursorModule extends ApplyConstructAbst
     private static final String LIMIT_OFFSET_CLAUSE_MARKER_NAME = "LIMIT_OFFSET";
     private static final Property P_PAGE_SIZE = ResourceFactory.createProperty(TYPE_PREFIX + "page-size");
 
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "page-size")
+    @Parameter(urlPrefix = TYPE_PREFIX, name = "page-size", comment = "Page size. Default value is 10000.")
     private Integer pageSize = DEFAULT_PAGE_SIZE;
 
     @Override

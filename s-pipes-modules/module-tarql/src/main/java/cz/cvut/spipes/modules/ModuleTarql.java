@@ -17,7 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 @Deprecated //TODO merge with TarqlModule functionality
-@SPipesModule(label = "tarql-XXX-2", comment = "")
+@SPipesModule(label = "tarql-XXX-2", comment = "Module to convert CSV file to RDF and query it using SPRQL query. The module wraps org.deri.tarql.tarql. This module is depracated.")
 public class ModuleTarql extends AbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(ModuleTarql.class);
@@ -28,25 +28,16 @@ public class ModuleTarql extends AbstractModule {
         return ResourceFactory.createProperty(TYPE_URI + "/" + name);
     }
 
-    /**
-     * File with the TARQL script
-     */
     static final Property P_TARQL_STRING = getParameter("p-tarql-string");
-    @Parameter(urlPrefix = TYPE_URI + "/", name = "p-tarql-string")
+    @Parameter(urlPrefix = TYPE_URI + "/", name = "p-tarql-string", comment = "File with the TARQL script." )
     private String tarqlString;
 
-    /**
-     * Ontology IRI
-     */
     static final Property P_ONTOLOGY_IRI = getParameter("p-ontology-iri");
-    @Parameter(urlPrefix = TYPE_URI + "/", name = "p-ontology-iri")
+    @Parameter(urlPrefix = TYPE_URI + "/", name = "p-ontology-iri", comment = "Ontology IRI")
     private String ontologyIRI;
 
-    /**
-     * Input File
-     */
     static final Property P_INPUT_FILE = getParameter("p-input-file");
-    @Parameter(urlPrefix = TYPE_URI + "/", name = "p-input-file")
+    @Parameter(urlPrefix = TYPE_URI + "/", name = "p-input-file", comment = "Input File")
     private String inputFile;
 
 //    /**

@@ -33,22 +33,15 @@ public class Ckan2RdfModule extends AnnotatedAbstractModule {
     public static final String TYPE_URI = KBSS_MODULE.uri + "ckan2rdf-v1";
     public static final String NS_DDO = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/";
     private static final Logger LOG = LoggerFactory.getLogger(Ckan2RdfModule.class);
-    /**
-     * URL of the CKAN server.
-     */
-    @Parameter(urlPrefix = TYPE_URI + "/", name = "p-ckan-url")
+
+    @Parameter(urlPrefix = TYPE_URI + "/", name = "p-ckan-url", comment = "URL of the CKAN server.")
     private String propCkanApiUrl;
 
-    /**
-     * URL of the RDF4J repository.
-     */
-    @Parameter(urlPrefix = TYPE_URI + "/", name = "p-rdf4j-repository-url")
+    @Parameter(urlPrefix = TYPE_URI + "/", name = "p-rdf4j-repository-url", comment = "URL of the RDF4J repository.")
     private String propRdf4jRepositoryUrl;
 
-    /**
-     * URL of the RDF4J repository.
-     */
-    @Parameter(urlPrefix = TYPE_URI + "/", name = "p-max-datasets")
+
+    @Parameter(urlPrefix = TYPE_URI + "/", name = "p-max-datasets", comment = "Limits the number of processed datasets.")
     private Integer maxDatasets = Integer.MAX_VALUE;
 
     private Resource createInstance(final String classIri, final Model m) {

@@ -28,16 +28,17 @@ public class ApplyConstructWithChunkedValuesModule extends ApplyConstructAbstrac
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplyConstructWithChunkedValuesModule.class);
 
-    private static final String TYPE_URI = KBSS_MODULE.uri + "apply-construct-with-chunked-values";
+    private static final String TYPE_URI = KBSS_MODULE.uri + "";
     private static final String TYPE_PREFIX = TYPE_URI + "/";
     private static final int DEFAULT_CHUNK_SIZE = 10;
     private static final String VALUES_CLAUSE_MARKER_NAME = "VALUES";
     private static final Property P_CHUNK_SIZE = ResourceFactory.createProperty(TYPE_PREFIX + "chunk-size");
 
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "chunk-size")
+    @Parameter(urlPrefix = TYPE_PREFIX, name = "chunk-size", comment = "Chunk size. Default is 10.")
     private Integer chunkSize = DEFAULT_CHUNK_SIZE;
 
-    @Parameter(urlPrefix = SML.uri, name = "selectQuery")
+    @Parameter(urlPrefix = SML.uri, name = "selectQuery"
+            , comment = "The select query that will be used to iterate over construct query templates.")
     private Select selectQuery;
 
 

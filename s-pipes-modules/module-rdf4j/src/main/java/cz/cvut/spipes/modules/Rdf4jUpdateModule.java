@@ -33,29 +33,27 @@ public class Rdf4jUpdateModule extends AbstractModule {
     private static final String TYPE_URI = KBSS_MODULE.uri + "rdf4j-update";
     private static final String PROPERTY_PREFIX_URI = KBSS_MODULE.uri + "rdf4j";
 
-    /**
-     * URL of the Rdf4j server
-     */
     static final Property P_RDF4J_SERVER_URL = getParameter("p-rdf4j-server-url");
-    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-rdf4j-server-url")
+    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-rdf4j-server-url", comment = "URL of the Rdf4j server")
     private String rdf4jServerURL;
 
-    /**
-     * Rdf4j repository ID
-     */
     static final Property P_RDF4J_REPOSITORY_NAME = getParameter("p-rdf4j-repository-name");
 
-    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-rdf4j-repository-name")
+    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-rdf4j-repository-name", comment = "Rdf4j repository ID")
     private String rdf4jRepositoryName;
+
+    @Parameter(urlPrefix = SML.uri, name = "updateQuery", comment = "A list of SPARQL Update queries. Queries strings are read from sp:text.")
     private List<String> updateQueries;
 
     static final Property P_RDF4J_STOP_ITERATION_ON_STABLE_TRIPLE_COUNT =
         getParameter("p-stop-iteration-on-stable-triple-count");
 
-    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-stop-iteration-on-stable-triple-count")
+    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-stop-iteration-on-stable-triple-count",
+            comment = "Stops iteration on if triple count did not change. Default is false.")
     private boolean onlyIfTripleCountChanges;
 
-    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "has-max-iteration-count")
+    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "has-max-iteration-count",
+            comment = "Limits the number of iterations to the specified value. Default value is 1.")
     private int iterationCount;
 
     private Repository updateRepository;

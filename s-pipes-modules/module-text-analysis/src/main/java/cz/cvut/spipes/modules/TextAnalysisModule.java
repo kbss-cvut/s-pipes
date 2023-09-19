@@ -33,56 +33,52 @@ import java.util.List;
 import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
 import static org.apache.commons.lang.StringEscapeUtils.unescapeHtml;
 
-/**
- * Module for text analysis.
- * <p>
- * This class provides a module for text analysis.
- * It uses an external web service to analyze text data and retrieve annotated text.
- * It analyse the text using a SKOS vocabulary that is stored in RDF4J repository.
- * </p>
- */
-@SPipesModule(label = "Text analysis module", comment = "test comment")
+@SPipesModule(label = "Text analysis module", comment =
+"Module for text analysis.\n" +
+"<p>\n" +
+"This class provides a module for text analysis.\n" +
+"It uses an external web service to analyze text data and retrieve annotated text.\n" +
+"It analyse the text using a SKOS vocabulary that is stored in RDF4J repository.\n" +
+"</p>"
+)
 public class TextAnalysisModule extends AnnotatedAbstractModule{
 
     private static final Logger LOG = LoggerFactory.getLogger(TextAnalysisModule.class);
     private static final String TYPE_URI = KBSS_MODULE.uri + "text-analysis";
     private static final String TYPE_PREFIX = TYPE_URI + "/";
 
-    /** The URL of the text analysis service to be used. */
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "service-url")
+    @Parameter(urlPrefix = TYPE_PREFIX, name = "service-url", comment = "The URL of the text analysis service to be used.")
     private String serviceUrl;
 
-    /** The IRI of the vocabulary to be used for entity recognition. */
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "vocabulary-iri")
+    @Parameter(urlPrefix = TYPE_PREFIX, name = "vocabulary-iri", comment = "The IRI of the vocabulary to be used for entity recognition.")
     private String vocabularyIri;
 
-    /** The IRI of the repository where the vocabulary is stored. */
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "vocabulary-repository")
+    @Parameter(urlPrefix = TYPE_PREFIX, name = "vocabulary-repository", comment = "The IRI of the repository where the vocabulary is stored.")
     private String vocabularyRepository;
 
-    /** The language of the text to be analyzed. */
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "language")
+    @Parameter(urlPrefix = TYPE_PREFIX, name = "language", comment = "The language of the text to be analyzed.")
     private String language;
 
     //sml:replace
-    @Parameter(urlPrefix = SML.uri, name = "replace")
+    @Parameter(urlPrefix = SML.uri, name = "replace", comment = "Replace context flag, default is false.")
     private boolean isReplace = false;
 
-    /** The number of literals to be processed per request to the web service. */
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "literals-per-request")
+    @Parameter(urlPrefix = TYPE_PREFIX, name = "literals-per-request", comment = "The number of literals to be processed per request to the web service.")
     private Integer literalsPerRequest;
 
-    /** The SPARQL query to be used for selecting literals from the repository.
-     * <p>
-     * Example:
-     * <pre>{@code
-     * SELECT ?literal
-     * WHERE {
-     *    ?s ?p ?literal .
-     *    FILTER(isLiteral(?literal) && datatype(?literal) = xsd:string)
-     * }
-     * }</pre>
-     */
+    @Parameter(urlPrefix = SML.uri, name = "selectQuery",
+            comment =
+                "The SPARQL query to be used for selecting literals from the repository.\n" +
+                "<p>\n" +
+                "Example:\n" +
+                "<pre>{@code\n" +
+                "SELECT ?literal\n" +
+                "WHERE {\n" +
+                "    ?s ?p ?literal .\n" +
+                "    FILTER(isLiteral(?literal) && datatype(?literal) = xsd:string)\n" +
+                "}\n" +
+                "}</pre>"
+            )
     private Select selectQuery;
 
     @Override

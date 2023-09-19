@@ -41,7 +41,13 @@ import org.slf4j.LoggerFactory;
 /**
  * TODO Order of queries is not enforced.
  */
-@SPipesModule(label = "improve spo with marginals", comment = "Improve spo with marginal resources.")
+@SPipesModule(label = "improve spo with marginals", comment = "Constructs improved spo-summary descriptor with knowledge " +
+        "of provided marginals of weakly described resources. This module expects as an input graph computed spo-summary " +
+        "patterns (or possibly whole spo-summary descriptor) compliant with data provided in ?data-service-url. Within the " +
+        "input graph it identifies 'breakable patterns', i.e. spo-summary patterns that can be improved with knowledge of " +
+        "marginals computed in ?marginals-defs-file-url. The output of the module is a spo-summary descriptor that  contains " +
+        "original spo-summary patterns whenever possible and new spo-summary patterns that were created with additional " +
+        "knowledge of marginals.")
 public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(ImproveSPOWithMarginalsModule.class);
@@ -51,13 +57,13 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
     private static final String TYPE_PREFIX = TYPE_URI + "/";
     private static Map<String, Model> marginalDefsModelCache = new HashMap<>();
 
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "marginal-constraint")
+    @Parameter(urlPrefix = TYPE_PREFIX, name = "marginal-constraint", comment = "Marginal constraint")
     private String marginalConstraint;
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "marginals-defs-file-url")
+    @Parameter(urlPrefix = TYPE_PREFIX, name = "marginals-defs-file-url", comment = "Marginal definitions file url")
     private String marginalsDefsFileUrl;
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "marginals-file-url")
+    @Parameter(urlPrefix = TYPE_PREFIX, name = "marginals-file-url", comment = "Marginals file url")
     private String marginalsFileUrl;
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "data-service-url")
+    @Parameter(urlPrefix = TYPE_PREFIX, name = "data-service-url", comment = "Data service url")
     private String dataServiceUrl;
 
     private static final String VAR_EXECUTION_ID = "executionId";

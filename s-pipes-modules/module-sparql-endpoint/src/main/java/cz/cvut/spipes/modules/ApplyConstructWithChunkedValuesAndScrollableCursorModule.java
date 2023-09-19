@@ -39,13 +39,14 @@ public class ApplyConstructWithChunkedValuesAndScrollableCursorModule extends Ap
     private static final Property P_CHUNK_SIZE = ResourceFactory.createProperty(TYPE_PREFIX + "chunk-size");
     private static final Property P_PAGE_SIZE = ResourceFactory.createProperty(TYPE_PREFIX + "page-size");
 
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "chunk-size")
+    @Parameter(urlPrefix = TYPE_PREFIX, name = "chunk-size", comment = "Chunk size. Default is 10.")
     private Integer chunkSize = DEFAULT_CHUNK_SIZE;
 
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "page-size")
+    @Parameter(urlPrefix = TYPE_PREFIX, name = "page-size", comment = "Page size for the scrollable cursor. Default is 10000.")
     private Integer pageSize = DEFAULT_PAGE_SIZE;
 
-    @Parameter(urlPrefix = SML.uri, name = "selectQuery")
+    @Parameter(urlPrefix = SML.uri, name = "selectQuery",
+            comment = "The select query that will be used to iterate over construct query templates.")
     private Select selectQuery;
 
 

@@ -22,59 +22,54 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Module extracts term occurrences from annotated literals of input RDF.
- * <p>
- * Annotated literals are RDF string literals that are annotated by RDFa
- * using TermIt terminology to mark occurrences of terms within the text.
- * </p>
- *
- * Example of usage:
- * <p>
- * Input:
- * <pre><code>
- *  :x  a csvw:row
- *      :csat-wo-tc "4339272" ;
- *      :tc-reference "52-610-00-04" ;
- *      :wo-text "in the &lt;span about=\"_:a877-16\" property=\"ddo:je-výskytem-termu\" resource=\"http://onto.fel.cvut.cz/ontologies/slovnik/slovnik-komponent-a-zavad---novy/pojem/cvr-ulb\" typeof=\"ddo:výskyt-termu\" score=\"0.25\"&gt;cockpit&lt;/span&gt;" ;
- * </code></pre>
- * </p>
- * The expected output:
- * <pre><code>
- *      &lt;http://onto.fel.cvut.cz/ontologies/application/termit/pojem/výskyt-termu/instance2fc6112ce9a960c21918569bef6a4151&gt; a       termit-pojem:výskyt-termu ;
- *         termit-pojem:je-přiřazením-termu &lt;http://onto.fel.cvut.cz/ontologies/slovnik/slovnik-komponent-a-zavad---novy/pojem/cvr-ulb&gt; ;
- *         termit-pojem:má-cíl
- *               [ a       termit-pojem:cíl-výskytu ;
- *                 termit-pojem:má-selektor
- *                         [ a       termit-pojem:selektor-pozici-v-textu ;
- *                           termit-pojem:má-koncovou-pozici
- *                                   "14"^^&lt;http://www.w3.org/2001/XMLSchema#int&gt; ;
- *                           termit-pojem:má-startovní-pozici
- *                                    "7"^^&lt;http://www.w3.org/2001/XMLSchema#int&gt;
- *                         ] ;
- *                 termit-pojem:má-selektor
- *                         [ a       termit-pojem:selektor-text-quote> ;
- *                           termit-pojem:má-prefix-text-quote
- *                                    "in the " ;
- *                           termit-pojem:má-přesný-text-quote
- *                                    "cockpit" ;
- *                           termit-pojem:má-suffix-text-quote
- *                                     ""
- *                         ]
- *               ];
- *         termit-pojem:má-skóre
- *                 "0.25"^^&lt;http://www.w3.org/2001/XMLSchema#float&gt; ;
- *         termit-pojem:odkazuje-na-anotovaný-text
- *                 "in the &lt;span about=\"_:a877-16\" property=\"ddo:je-výskytem-termu\" resource=\"http://onto.fel.cvut.cz/ontologies/slovnik/slovnik-komponent-a-zavad---novy/pojem/cvr-ulb\" typeof=\"ddo:výskyt-termu\" score=\"0.25\"&gt;cockpit&lt;/span&gt;" ;
- *         termit-pojem:odkazuje-na-anotaci
- *                 "&lt;span about=\"_:a877-16\" property=\"ddo:je-výskytem-termu\" resource=\"http://onto.fel.cvut.cz/ontologies/slovnik/slovnik-komponent-a-zavad---novy/pojem/cvr-ulb\" typeof=\"ddo:výskyt-termu\" score=\"0.25\"&gt;cockpit&lt;/span&gt;" .
- * .
- * </code></pre>
- */
 @SPipesModule(label = "extract term occurrences", comment =
-        "Module extracts term occurrences from annotated literals of input RDF." +
-        "Annotated literals are RDF string literals that are annotated by RDFa using TermIt terminology to mark " +
-        "occurrences of terms within the text.")
+        "Module extracts term occurrences from annotated literals of input RDF.\n" +
+        "<p>\n" +
+        "Annotated literals are RDF string literals that are annotated by RDFa\n" +
+        "using TermIt terminology to mark occurrences of terms within the text.\n" +
+        "</p>\n" +
+        "Example of usage:\n" +
+        "<p>\n" +
+        "Input:\n" +
+        "<pre><code>\n" +
+        " :x  a csvw:row\n" +
+        "     :csat-wo-tc \"4339272\" ;\n" +
+        "     :tc-reference \"52-610-00-04\" ;\n" +
+        "     :wo-text \"in the &lt;span about=\\\"_:a877-16\\\" property=\\\"ddo:je-výskytem-termu\\\" resource=\\\"http://onto.fel.cvut.cz/ontologies/slovnik/slovnik-komponent-a-zavad---novy/pojem/cvr-ulb\\\" typeof=\\\"ddo:výskyt-termu\\\" score=\\\"0.25\\\"&gt;cockpit&lt;/span&gt;\" ;\n" +
+        "</code></pre>\n" +
+        "</p>\n" +
+        "The expected output:\n" +
+        "<pre><code>\n" +
+        "     &lt;http://onto.fel.cvut.cz/ontologies/application/termit/pojem/výskyt-termu/instance2fc6112ce9a960c21918569bef6a4151&gt; a       termit-pojem:výskyt-termu ;\n" +
+        "        termit-pojem:je-přiřazením-termu &lt;http://onto.fel.cvut.cz/ontologies/slovnik/slovnik-komponent-a-zavad---novy/pojem/cvr-ulb&gt; ;\n" +
+        "        termit-pojem:má-cíl\n" +
+        "              [ a       termit-pojem:cíl-výskytu ;\n" +
+        "                termit-pojem:má-selektor\n" +
+        "                        [ a       termit-pojem:selektor-pozici-v-textu ;\n" +
+        "                          termit-pojem:má-koncovou-pozici\n" +
+        "                                  \"14\"^^&lt;http://www.w3.org/2001/XMLSchema#int&gt; ;\n" +
+        "                          termit-pojem:má-startovní-pozici\n" +
+        "                                   \"7\"^^&lt;http://www.w3.org/2001/XMLSchema#int&gt;\n" +
+        "                        ] ;\n" +
+        "                termit-pojem:má-selektor\n" +
+        "                        [ a       termit-pojem:selektor-text-quote> ;\n" +
+        "                          termit-pojem:má-prefix-text-quote\n" +
+        "                                   \"in the \" ;\n" +
+        "                          termit-pojem:má-přesný-text-quote\n" +
+        "                                   \"cockpit\" ;\n" +
+        "                          termit-pojem:má-suffix-text-quote\n" +
+        "                                    \"\"\n" +
+        "                        ]\n" +
+        "              ];\n" +
+        "        termit-pojem:má-skóre\n" +
+        "                \"0.25\"^^&lt;http://www.w3.org/2001/XMLSchema#float&gt; ;\n" +
+        "        termit-pojem:odkazuje-na-anotovaný-text\n" +
+        "                \"in the &lt;span about=\\\"_:a877-16\\\" property=\\\"ddo:je-výskytem-termu\\\" resource=\\\"http://onto.fel.cvut.cz/ontologies/slovnik/slovnik-komponent-a-zavad---novy/pojem/cvr-ulb\\\" typeof=\\\"ddo:výskyt-termu\\\" score=\\\"0.25\\\"&gt;cockpit&lt;/span&gt;\" ;\n" +
+        "        termit-pojem:odkazuje-na-anotaci\n" +
+        "                \"&lt;span about=\\\"_:a877-16\\\" property=\\\"ddo:je-výskytem-termu\\\" resource=\\\"http://onto.fel.cvut.cz/ontologies/slovnik/slovnik-komponent-a-zavad---novy/pojem/cvr-ulb\\\" typeof=\\\"ddo:výskyt-termu\\\" score=\\\"0.25\\\"&gt;cockpit&lt;/span&gt;\" .\n" +
+        ".\n" +
+        "</code></pre>"
+)
 public class ExtractTermOccurrencesModule extends AnnotatedAbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExtractTermOccurrencesModule.class);
@@ -82,8 +77,7 @@ public class ExtractTermOccurrencesModule extends AnnotatedAbstractModule {
     private static final String TYPE_URI = KBSS_MODULE.uri + "extract-term-occurrences";
     private static final String TYPE_PREFIX = TYPE_URI + "/";
 
-    /** Indicates whether the existing RDF should be overwritten. */
-    @Parameter(urlPrefix = SML.uri, name = "replace")
+    @Parameter(urlPrefix = SML.uri, name = "replace", comment = "Indicates whether the existing RDF should be overwritten. Default false.")
     private boolean isReplace;
 
     Extraction extraction = new Extraction();

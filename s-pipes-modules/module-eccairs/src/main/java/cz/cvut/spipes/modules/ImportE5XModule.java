@@ -35,13 +35,13 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Arrays;
 
-@SPipesModule(label = "import-e5x", comment = "Convert e5x xml files to rdf.")
+@SPipesModule(label = "import e5x", comment = "Convert e5x xml files to rdf.")
 public class ImportE5XModule extends AbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(ImportE5XModule.class);
 
     // TODO - this parameter id defined with IRI <http://onto.fel.cvut.cz/ontologies/lib/module-param/has-resource-uri> in  s-pipes-modules\module.sms.ttl
-    @Parameter(name = "has-resource-uri")
+    @Parameter(name = "has-resource-uri", comment = "Uri of a resource referencing content of an e5x file.")
     private String e5xResourceUriStr;
 
     StreamResource e5xResource;

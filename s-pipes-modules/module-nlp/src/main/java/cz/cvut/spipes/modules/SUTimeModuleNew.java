@@ -34,35 +34,36 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 
-@SPipesModule(label = "temporal-v1", comment = "Annotate temporal expressions in literals in input model.")
+@SPipesModule(label = "temporal-v1", comment = "Module annotates input triples using NLP analysis of time using library SUTime.")
 public class SUTimeModuleNew extends AbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(SUTimeModuleNew.class);
 
-    private static final String TYPE_URI = KBSS_MODULE.getURI() + "temporal-v1";
+    private static final String TYPE_URI = KBSS_MODULE.uri + "temporal-v1";
     private static final String TYPE_PREFIX = TYPE_URI + "/";
     private static final int DEFAULT_PAGE_SIZE = 10000;
     private static final String LIMIT_OFFSET_CLAUSE_MARKER_NAME = "LIMIT_OFFSET";
     private static final Property P_PAGE_SIZE = ResourceFactory.createProperty(TYPE_PREFIX + "page-size");
+
+    @Parameter(urlPrefix = TYPE_PREFIX, name = "page-size", comment = "Page size. Default value is 10000.")
     private Integer pageSize = DEFAULT_PAGE_SIZE;
 
-    @Parameter(urlPrefix = SML.uri, name = "constructQuery")
+    @Parameter(urlPrefix = SML.uri, name = "constructQuery",
+            comment = "List of construct queries. The module annotates the lexical form of objects of the output statements of these queries.")
     private List<Resource> constructQueries;
 
     //sml:replace
-    @Parameter(urlPrefix = SML.uri, name = "replace")
+    @Parameter(urlPrefix = SML.uri, name = "replace", comment = "Replace context flag. Default value is false." )
     private boolean isReplace;
 
     //kbss:parseText
-    /**
-     * Whether the query should be taken from sp:text property instead of from SPIN serialization
-     */
-    @Parameter(name = "is-parse-text")
+    @Parameter(name = "is-parse-text", comment = "Whether the query should be taken from sp:text property instead of from SPIN serialization")
     private boolean parseText;
 
-    @Parameter(urlPrefix = DescriptorModel.prefix, name = "has-document-date")
+    @Parameter(urlPrefix = DescriptorModel.prefix, name = "has-rule-file", comment = "Rule file, multivalued.")
     private List<Path> ruleFilePaths = new LinkedList<>();
-    @Parameter(urlPrefix = DescriptorModel.prefix, name = "has-rule-file")
+
+    @Parameter(urlPrefix = DescriptorModel.prefix, name = "has-document-date", comment = "Document date format.")
     private String documentDate; // TODO support other formats ?
     private AnnotationPipeline pipeline;
 
