@@ -253,10 +253,21 @@ public class RdfAnnotationProcessorMojo extends AbstractMojo {
     }
 
     private List<cz.cvut.spipes.modules.Parameter> readConstraintsFromClass(Class<?> classObject) {
-        return Arrays.stream(classObject.getDeclaredFields())
-                .filter(field -> field.isAnnotationPresent(PARAM_ANNOTATION))
-                .map(field -> field.getAnnotation(PARAM_ANNOTATION))
-                .collect(Collectors.toUnmodifiableList());
+        List<cz.cvut.spipes.modules.Parameter> parameterConstraints = new ArrayList<>();
+
+        Class cls = classObject;
+        while(cls != null){
+            if(cls != classObject && cls.isAnnotationPresent(MODULE_ANNOTATION)) {
+                cls = cls.getSuperclass();
+                continue;
+            }
+            Arrays.stream(cls.getDeclaredFields())
+                    .filter(field -> field.isAnnotationPresent(PARAM_ANNOTATION))
+                    .map(field -> field.getAnnotation(PARAM_ANNOTATION))
+                    .forEach(parameterConstraints::add);
+            cls = cls.getSuperclass();
+        }
+        return parameterConstraints;
     }
     //endregion
 
