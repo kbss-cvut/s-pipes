@@ -313,7 +313,8 @@ public class RdfAnnotationProcessorMojo extends AbstractMojo {
             final var modelConstraint = ResourceFactory.createResource();
             baseRdfModel.add(modelConstraint, RDF.type, SPL.Argument);
             baseRdfModel.add(modelConstraint, SPL.predicate, ResourceFactory.createResource(annotation.urlPrefix() + annotation.name()));
-            baseRdfModel.add(modelConstraint, RDFS.comment, "Automatically generated field: " + annotation.name());
+            baseRdfModel.add(modelConstraint, RDFS.label, annotation.name());
+            baseRdfModel.add(modelConstraint, RDFS.comment, annotation.comment());
             baseRdfModel.add(root, SPIN.constraint, modelConstraint);
 
             getLog().debug("Added model constraint based on annotation: " +
