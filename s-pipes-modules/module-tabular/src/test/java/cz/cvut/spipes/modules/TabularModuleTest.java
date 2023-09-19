@@ -10,8 +10,6 @@ import cz.cvut.spipes.modules.exception.TableSchemaException;
 import cz.cvut.spipes.test.JenaTestUtils;
 import cz.cvut.spipes.util.StreamResourceUtils;
 import org.apache.jena.rdf.model.*;
-import org.apache.jena.riot.RDFDataMgr;
-import org.apache.jena.riot.RDFFormat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -52,33 +50,6 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
         module.setInputContext(ExecutionContextFactory.createEmptyContext());
     }
-
-     @Test
-     @Disabled
-     void executeWithConfiguration() throws URISyntaxException, IOException {
-
-         ExecutionContext inputContext = ExecutionContextFactory.createContext(ModelFactory.createDefaultModel());
-
-         Model model = ModelFactory.createDefaultModel();
-         Resource root = model.createResource();
-         Property P_SOURCE_RESOURCE_FORMAT = ResourceFactory.createProperty("http://onto.fel.cvut.cz/ontologies/lib/module/tabular/source-resource-format");
-         Property P_DATE_PREFIX = ResourceFactory.createProperty("http://onto.fel.cvut.cz/ontologies/lib/module/tabular/data-prefix");
-         model.add(root, P_SOURCE_RESOURCE_FORMAT,"text/tab-separated-values");
-         model.add(root, P_DATE_PREFIX,DATA_PREFIX);
-
-         module.setConfigurationResource(root);
-
-         module.setInputContext(inputContext);
-
-         module.setSourceResource(
-                 StreamResourceUtils.getStreamResource(
-                         "http://test-file",
-                         getFilePath("countries.tsv"))
-         );
-
-         ExecutionContext outputContext = module.execute();
-         RDFDataMgr.write(System.err,outputContext.getDefaultModel(), RDFFormat.TURTLE);
-     }
 
     @Test
      void executeWithSimpleTransformation() throws URISyntaxException, IOException {
