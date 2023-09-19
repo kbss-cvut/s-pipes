@@ -220,7 +220,10 @@ public class RdfAnnotationProcessorMojo extends AbstractMojo {
     private URL[] getDependencyURLs(MavenProject project) throws MalformedURLException {
         Set<URL> ret = new HashSet<>();
         ret.add(new File(project.getBuild().getOutputDirectory()).toURI().toURL());
-        for(Dependency d : project.getDependencies()){
+
+        for(Dependency d : project.getDependencies().stream()
+                .filter(d -> !Artifact.SCOPE_TEST.equals(d.getScope()))
+                .collect(Collectors.toList())){
             URL dURL = getURL(getLocalRepository(project), d);
             ret.add(dURL);
         }
