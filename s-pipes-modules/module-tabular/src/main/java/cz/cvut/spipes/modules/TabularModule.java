@@ -413,7 +413,7 @@ public class TabularModule extends AbstractModule {
                 setDelimiter(',');
                 break;
             case TSV:
-                setDelimiter('\t')
+                setDelimiter('\t');
                 break;
         }
         setDelimiter(getPropertyValue(P_DELIMITER, ((char) delimiter)));
