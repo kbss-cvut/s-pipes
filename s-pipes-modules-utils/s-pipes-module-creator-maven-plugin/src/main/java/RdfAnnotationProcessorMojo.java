@@ -3,6 +3,7 @@ import cz.cvut.spipes.constants.SM;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.OWL;
@@ -28,10 +29,7 @@ import org.reflections.util.FilterBuilder;
 import org.topbraid.spin.vocabulary.SPIN;
 import org.topbraid.spin.vocabulary.SPL;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.lang.annotation.Annotation;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -143,6 +141,8 @@ public class RdfAnnotationProcessorMojo extends AbstractMojo {
                 var constraints = readConstraintsFromClass(moduleClass);
                 writeConstraintsToModel(model, constraints, moduleAnnotation, extendedModuleAnnotation);
             }
+            Optional.ofNullable(readManuallyManagedModuleDescriptionOntology(submodule))
+                    .ifPresent(model::add);
 
             getLog().info("--------------------------------------");
         }
@@ -215,6 +215,38 @@ public class RdfAnnotationProcessorMojo extends AbstractMojo {
             }
         }
         return moduleClasses;
+    }
+
+    /**
+     * Reads manually managed modules ontology from maven sub-project.
+     * The ontology is loaded from the resource folder of the sub-project and it is expected to start with the artifact
+     * id of the sub-project followed by the postfix ".sms.tll". For example, assume the input parameter project
+     * artifact id "s-pipes-modules-text-analysis". This method will look for the ontology located at:
+     * <pre>   $resource-dir$/s-pipes-modules-text-analysis.sms.ttl</pre>
+     *
+     * Any ontology resources and their triples are removed from the model before returning.
+     * @param project
+     * @return
+     */
+    private Model readManuallyManagedModuleDescriptionOntology(MavenProject project){
+        String ontoName = project.getArtifactId() + ".sms.ttl";
+        Optional<String> ontoUri = Optional.ofNullable(project).map(p ->
+                p.getResources().stream()
+                        .map(r -> new File(r.getDirectory(), ontoName))
+                        .filter(File::exists)
+                        .map(f -> f.getAbsoluteFile().toURI().toString())
+                        .findFirst().orElse(null)
+        );
+
+        if (!ontoUri.isPresent())
+            return null;
+
+        Model m = ModelFactory.createDefaultModel();
+        m.read(ontoUri.get(), "TTL");
+        m.listSubjectsWithProperty(RDF.type, OWL.Ontology).toList()
+                .forEach(o -> m.removeAll(o, null, null));
+
+        return m;
     }
 
     private URL[] getDependencyURLs(MavenProject project) throws MalformedURLException {
