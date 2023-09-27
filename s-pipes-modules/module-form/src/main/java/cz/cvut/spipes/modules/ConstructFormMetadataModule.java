@@ -19,9 +19,6 @@ import java.util.List;
 import static cz.cvut.spipes.form.JenaFormUtils.getAnswerOrigin;
 import static cz.cvut.spipes.form.JenaFormUtils.getQuestionOrigin;
 
-/**
- * Compute form:has-origin-path and form:has-origin-path-id properties.
- */
 @SPipesModule(label = "construct form metadata", comment = "Compute form:has-origin-path and form:has-origin-path-id properties.")
 public class ConstructFormMetadataModule extends AnnotatedAbstractModule {
 

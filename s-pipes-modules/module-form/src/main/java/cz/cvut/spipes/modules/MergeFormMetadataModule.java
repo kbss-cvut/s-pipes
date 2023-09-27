@@ -16,11 +16,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Random;
 
-/**
- * Inputs are sample form and Q&A model. Questions from both models are remapped to new IRIs based on
- * question origin combined with executionId. New question instances are created using questionInstanceTemplate
- * which defaults to "doc:question-{_questionOriginHash}-{_executionId}".
- */
 @SPipesModule(label = "merge form metadata", comment =
         "Merges form metadata. Inputs are sample form and Q&A model. Questions from both models are remapped to new" +
         "IRIs based on question origin combined with executionId. New question instances are created using" +

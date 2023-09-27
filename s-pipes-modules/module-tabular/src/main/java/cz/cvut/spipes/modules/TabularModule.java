@@ -37,60 +37,57 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Supplier;
 
-/**
- * Module for converting tabular data (e.g. CSV or TSV) to RDF
- * <p>
- * It supports two major processing standards that can be set by separator:
- * <ul><li> separator ',' -- defaults to
- * <a href="https://www.rfc-editor.org/rfc/rfc4180">CSV standard</a>, i.e. it uses by default the double-quote
- * as a quote character, and UTF-8 as the encoding</li>
- * <li> separator '\t' -- defaults to
- * <a href="https://www.iana.org/assignments/media-types/text/tab-separated-values">TSV standard</a>, with no quoting
- * (In the TSV standard, fields that contain '\t' are not allowed and there is no mention of quotes,
- * but in this implementation, we process the TSV quotes the same way as the CSV quotes.)</li>
- * <li> other separator -- defaults to no standard, with no quoting</li>
- * </ul>
- * </p>
- * In addition, it supports bad quoting according to CSV standard, see option
- * {@link TabularModule#acceptInvalidQuoting}
- * and class {@link InvalidQuotingTokenizer}
- * <p>The implementation loosely follows the W3C Recommendation described here:
- * <a href="https://www.w3.org/TR/csv2rdf/">Generating RDF from Tabular Data on the Web</a></p>
- * <p>
- * Within the recommendation, it is possible to define schema
- * defining the shape of the output RDF data
- * (i.e. the input metadata values used for the conversion)
- * using csvw:tableSchema.<br/>
- * By default, we use the following schema:
- * <pre><code>
- * [   a   csvw:Table ;
- *     csvw:tableSchema
- *         [   a   csvw:TableSchema ;
- *             csvw:aboutUrl
- *                 "http://csv-resource-uri#row-{_row}"^^csvw:uriTemplate ;
- *             csvw:column
- *                 _:b0 , _:b1 , _:b2 ;
- *             csvw:columns
- *                 ( _:b0
- *                   _:b1
- *                   _:b2
- *                 )
- *         ]
- * ]
- * </code></pre>
- * <p>
- * This module can also be used to process HTML tables, see option {@link TabularModule#processHTMLFile}.
- * First, the HTML table is converted to TSV while replacing "\t" with two spaces
- * and then processed as usual.
- * Take a look at the option {@link TabularModule#processHTMLFile} and class {@link HTML2TSVConvertor} for more details.
- * <p>
- * <b>Important notes (differences from the recommendation):</b><br/>
- * Does not support custom table group URIs.<br/>
- * Does not support custom table URIs. <br/>
- * Does not support processing of multiple files.<br/>
- * Does not support the <i>suppress output</i> annotation.
- */
-@SPipesModule(label = "Tabular module", comment = "Module for converting tabular data (e.g. CSV or TSV) to RDF")
+@SPipesModule(label = "Tabular module", comment = "Module for converting tabular data (e.g. CSV or TSV) to RDF\n" +
+        "<p>\n" +
+        "It supports two major processing standards that can be set by se\n" +
+        "<ul><li> separator ',' -- defaults to\n" +
+        "<a href=\"https://www.rfc-editor.org/rfc/rfc4180\">CSV standard</a\n" +
+        "as a quote character, and UTF-8 as the encoding</li>\n" +
+        "<li> separator '\\t' -- defaults to\n" +
+        "<a href=\"https://www.iana.org/assignments/media-types/text/tab-s\n" +
+        "(In the TSV standard, fields that contain '\\t' are not allowed a\n" +
+        "but in this implementation, we process the TSV quotes the same w\n" +
+        "<li> other separator -- defaults to no standard, with no quoting\n" +
+        "</ul>\n" +
+        "</p>\n" +
+        "In addition, it supports bad quoting according to CSV standard, \n" +
+        "{@link TabularModule#acceptInvalidQuoting}\n" +
+        "and class {@link InvalidQuotingTokenizer}\n" +
+        "<p>The implementation loosely follows the W3C Recommendation des\n" +
+        "<a href=\"https://www.w3.org/TR/csv2rdf/\">Generating RDF from Tab\n" +
+        "<p>\n" +
+        "Within the recommendation, it is possible to define schema\n" +
+        "defining the shape of the output RDF data\n" +
+        "(i.e. the input metadata values used for the conversion)\n" +
+        "using csvw:tableSchema.<br/>\n" +
+        "By default, we use the following schema:\n" +
+        "<pre><code>\n" +
+        "[   a   csvw:Table ;\n" +
+        "    csvw:tableSchema\n" +
+        "        [   a   csvw:TableSchema ;\n" +
+        "            csvw:aboutUrl\n" +
+        "                \"http://csv-resource-uri#row-{_row}\"^^csvw:uriTe\n" +
+        "            csvw:column\n" +
+        "                _:b0 , _:b1 , _:b2 ;\n" +
+        "            csvw:columns\n" +
+        "                ( _:b0\n" +
+        "                  _:b1\n" +
+        "                  _:b2\n" +
+        "                )\n" +
+        "        ]\n" +
+        "]\n" +
+        "</code></pre>\n" +
+        "<p>\n" +
+        "This module can also be used to process HTML tables, see option \n" +
+        "First, the HTML table is converted to TSV while replacing \"\\t\" w\n" +
+        "and then processed as usual.\n" +
+        "Take a look at the option {@link TabularModule#processHTMLFile} \n" +
+        "<p>\n" +
+        "<b>Important notes (differences from the recommendation):</b><br\n" +
+        "Does not support custom table group URIs.<br/>\n" +
+        "Does not support custom table URIs. <br/>\n" +
+        "Does not support processing of multiple files.<br/>\n" +
+        "Does not support the <i>suppress output</i> annotation.")
 public class TabularModule extends AbstractModule {
 
     public static final String TYPE_URI = KBSS_MODULE.uri + "tabular";

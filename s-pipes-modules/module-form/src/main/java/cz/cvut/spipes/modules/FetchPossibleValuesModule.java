@@ -16,10 +16,6 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Inputs are forms using Q&A model. Possible values of questions are added to questions that does not have
- * any value attached and contains possible value query.
- */
 @SPipesModule(label = "fetch possible values", comment =
         "Fetches possible values for answers of questions. Inputs are forms using Q&A model. Possible values of " +
         "questions are added to questions that does not have any value attached and contains possible value query."

@@ -22,10 +22,6 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.function.Predicate;
 
-/**
- * For input Q&A models constructs textual view of specified questions. Each textual view represent the question
- * and its sub-questions recursively.
- */
 @SPipesModule(label = "construct textual view", comment =
         "For input Q&A models constructs textual view of specified questions. Each textual" +
         " view represent the question and its sub-questions recursively."

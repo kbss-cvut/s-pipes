@@ -23,16 +23,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-/**
- * Module for converting RDF (representing table) to CSV
- * <p>
- * The module is responsible for converting the input RDF data into a CSV format and saving the output to a file.
- * The table is constructed from column and row resources defined in TableSchema and saves it as a new CSV file.
- * </p>
- */
-@SPipesModule(label = "RDF2CSV", comment = "Module for converting RDF (representing table) to CSV. " +
-        "The module is responsible for converting the input RDF data into a CSV format and saving the output to a file." +
-        "The table is constructed from column and row resources defined in TableSchema and saves it as a new CSV file.")
+@SPipesModule(label = "RDF2CSV", comment = "Module for converting RDF (representing table) to CSV\n" +
+        "<p>\n" +
+        "The module is responsible for converting the input RDF data into a CSV format and saving the output to a file.\n" +
+        "The table is constructed from column and row resources defined in TableSchema and saves it as a new CSV file.\n" +
+        "</p>")
 public class RDF2CSVModule extends AnnotatedAbstractModule {
 
     public static final String TYPE_URI = KBSS_MODULE.uri + "RDF2CSV";
