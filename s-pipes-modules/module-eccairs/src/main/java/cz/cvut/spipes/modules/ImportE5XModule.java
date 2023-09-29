@@ -41,6 +41,7 @@ public class ImportE5XModule extends AbstractModule {
     private static final Logger LOG = LoggerFactory.getLogger(ImportE5XModule.class);
 
     // TODO - this parameter id defined with IRI <http://onto.fel.cvut.cz/ontologies/lib/module-param/has-resource-uri> in  s-pipes-modules\module.sms.ttl
+    // TODO - we should be able to annotate directly "StreamResource e5xResource" instead
     @Parameter(name = "has-resource-uri", comment = "Uri of a resource referencing content of an e5x file.")
     private String e5xResourceUriStr;
 

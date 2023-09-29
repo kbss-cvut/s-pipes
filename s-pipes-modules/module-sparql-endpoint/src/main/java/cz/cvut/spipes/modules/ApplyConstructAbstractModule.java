@@ -3,7 +3,6 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
-import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.QueryUtils;
 import org.apache.jena.query.Query;
@@ -36,8 +35,9 @@ public abstract class ApplyConstructAbstractModule extends AnnotatedAbstractModu
     protected boolean isReplace;
 
     //kbss:parseText
-    @Parameter(name = "is-parse-text",
-            comment = "Whether the query should be taken from sp:text property instead of from SPIN serialization"
+    @Parameter(urlPrefix = KBSS_MODULE.uri, name = "is-parse-text",
+            comment = "Whether the query should be taken from sp:text property instead of from SPIN serialization," +
+                " default is true."
     )
     protected boolean parseText;
 
@@ -182,7 +182,7 @@ public abstract class ApplyConstructAbstractModule extends AnnotatedAbstractModu
         //TODO default value must be taken from template definition
         isReplace = this.getPropertyValue(SML.replace, false);
 
-        parseText = this.getPropertyValue(KBSS_MODULE.is_parse_text, false);
+        parseText = this.getPropertyValue(KBSS_MODULE.is_parse_text, true);
         iterationCount = this.getPropertyValue(KBSS_MODULE.has_max_iteration_count, -1);
     }
 

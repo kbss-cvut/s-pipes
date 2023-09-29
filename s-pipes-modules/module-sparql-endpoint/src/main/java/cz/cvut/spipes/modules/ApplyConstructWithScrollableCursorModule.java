@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 @SPipesModule(label = "apply construct with scrollable cursor",
         comment = "Runs one or more construct queries (bound to sml:constructQuery) on the input triples. Queries are " +
                 "executed multiple times with scrollable cursor that is injected through query marker #${LIMIT_OFFSET}. " +
-                "The marker is replaced each time with appropriatei by sparql constructs 'LIMIT ?limit' and 'OFFSET ?offset'. " +
+                "The marker is replaced each time with appropriate by sparql constructs 'LIMIT ?limit' and 'OFFSET ?offset'. " +
                 "Within each construct query The output RDF will consist of the constructed triples and (unless sml:replace is true) " +
                 "the input triples.")
 public class ApplyConstructWithScrollableCursorModule extends ApplyConstructAbstractModule {

@@ -57,7 +57,9 @@ public class SUTimeModuleNew extends AbstractModule {
     private boolean isReplace;
 
     //kbss:parseText
-    @Parameter(name = "is-parse-text", comment = "Whether the query should be taken from sp:text property instead of from SPIN serialization")
+    @Parameter(urlPrefix = KBSS_MODULE.uri, name = "is-parse-text",
+        comment = "Whether the query should be taken from sp:text property instead of from SPIN serialization," +
+            " default is true.")
     private boolean parseText;
 
     @Parameter(urlPrefix = DescriptorModel.prefix, name = "has-rule-file", comment = "Rule file, multivalued.")// TODO - review comment
