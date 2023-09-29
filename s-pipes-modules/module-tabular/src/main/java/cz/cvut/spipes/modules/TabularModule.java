@@ -148,7 +148,7 @@ public class TabularModule extends AbstractModule {
      - "text/html" -- HTML file.
      - "application/vnd.ms-excel" - EXCEL (XLS) file.
      */
-    private ResourceFormat sourceResourceFormat;
+    private ResourceFormat sourceResourceFormat = ResourceFormat.PLAIN;
 
     //:accept-invalid-quoting
     private boolean acceptInvalidQuoting;
@@ -179,29 +179,30 @@ public class TabularModule extends AbstractModule {
         tableGroup = onTableGroup(null);
         table = onTable(null);
 
-        if(sourceResourceFormat == ResourceFormat.HTML) {
-            HTML2TSVConvertor htmlConvertor = new HTML2TSVConvertor();
-            setSourceResource(htmlConvertor.convertToTSV(sourceResource));
-            setDelimiter('\t');
-        }
-
-        if(sourceResourceFormat == ResourceFormat.EXCEL) {
-            if(processSpecificSheetInXLSFile == 0) {
-                throw new SheetIsNotSpecifiedException("Source resource format is set to XLS file but no specific sheet is set for processing.");
-            }
-            XLS2TSVConvertor xlsConvertor = new XLS2TSVConvertor();
-            int numberOfSheets = xlsConvertor.getNumberOfSheets(sourceResource);
-            table.setLabel(xlsConvertor.getSheetName(sourceResource,processSpecificSheetInXLSFile));
-            LOG.debug("Number of sheets:{}", numberOfSheets);
-            if( (processSpecificSheetInXLSFile > numberOfSheets) || (processSpecificSheetInXLSFile < 1) ){
-                LOG.error("Requested sheet doesn't exist, number of sheets in the doc: {}, requested sheet: {}",
+        switch (sourceResourceFormat) {
+            case HTML:
+                HTML2TSVConvertor htmlConvertor = new HTML2TSVConvertor();
+                setSourceResource(htmlConvertor.convertToTSV(sourceResource));
+                setDelimiter('\t');
+                break;
+            case EXCEL:
+                if(processSpecificSheetInXLSFile == 0) {
+                    throw new SheetIsNotSpecifiedException("Source resource format is set to XLS file but no specific sheet is set for processing.");
+                }
+                XLS2TSVConvertor xlsConvertor = new XLS2TSVConvertor();
+                int numberOfSheets = xlsConvertor.getNumberOfSheets(sourceResource);
+                table.setLabel(xlsConvertor.getSheetName(sourceResource,processSpecificSheetInXLSFile));
+                LOG.debug("Number of sheets:{}", numberOfSheets);
+                if( (processSpecificSheetInXLSFile > numberOfSheets) || (processSpecificSheetInXLSFile < 1) ){
+                    LOG.error("Requested sheet doesn't exist, number of sheets in the doc: {}, requested sheet: {}",
                         numberOfSheets,
                         processSpecificSheetInXLSFile
-                );
-                throw new SheetDoesntExistsException("Requested sheet doesn't exists");
-            }
-            setSourceResource(xlsConvertor.convertToTSV(sourceResource,processSpecificSheetInXLSFile));
-            setDelimiter('\t');
+                    );
+                    throw new SheetDoesntExistsException("Requested sheet doesn't exists");
+                }
+                setSourceResource(xlsConvertor.convertToTSV(sourceResource,processSpecificSheetInXLSFile));
+                setDelimiter('\t');
+                break;
         }
 
         BNodesTransformer bNodesTransformer = new BNodesTransformer();
