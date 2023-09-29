@@ -81,7 +81,7 @@ CONSTRUCT {
   ] ;
   spin:constraint [
     rdf:type spl:Argument ;
-    spl:predicate sp:arg2;
+    spl:predicate :lastName ;
     spl:optional "false"^^xsd:boolean ;
     rdfs:label "last name" ;
     rdfs:comment "The last name of the greeted person" ;
