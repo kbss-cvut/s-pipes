@@ -74,7 +74,7 @@ CONSTRUCT {
   rdfs:comment "This function constructs a hello world message for a person given their first and last name."
   spin:constraint [
     rdf:type spl:Argument ;
-    spl:predicate sp:arg1;
+    spl:predicate :firstName ;
     spl:optional "false"^^xsd:boolean ;
     rdfs:label "first name" ;
     rdfs:comment "The first name of the greeted person" ;
