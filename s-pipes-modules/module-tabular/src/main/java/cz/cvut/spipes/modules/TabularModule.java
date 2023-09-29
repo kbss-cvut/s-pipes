@@ -187,21 +187,21 @@ public class TabularModule extends AbstractModule {
                 setDelimiter('\t');
                 break;
             case EXCEL:
-                if(processSpecificSheetInXLSFile == 0) {
+                if (processSpecificSheetInXLSFile == 0) {
                     throw new SheetIsNotSpecifiedException("Source resource format is set to XLS file but no specific sheet is set for processing.");
                 }
                 XLS2TSVConvertor xlsConvertor = new XLS2TSVConvertor();
                 int numberOfSheets = xlsConvertor.getNumberOfSheets(sourceResource);
-                table.setLabel(xlsConvertor.getSheetName(sourceResource,processSpecificSheetInXLSFile));
+                table.setLabel(xlsConvertor.getSheetName(sourceResource, processSpecificSheetInXLSFile));
                 LOG.debug("Number of sheets:{}", numberOfSheets);
-                if( (processSpecificSheetInXLSFile > numberOfSheets) || (processSpecificSheetInXLSFile < 1) ){
+                if ((processSpecificSheetInXLSFile > numberOfSheets) || (processSpecificSheetInXLSFile < 1)) {
                     LOG.error("Requested sheet doesn't exist, number of sheets in the doc: {}, requested sheet: {}",
                         numberOfSheets,
                         processSpecificSheetInXLSFile
                     );
                     throw new SheetDoesntExistsException("Requested sheet doesn't exists");
                 }
-                setSourceResource(xlsConvertor.convertToTSV(sourceResource,processSpecificSheetInXLSFile));
+                setSourceResource(xlsConvertor.convertToTSV(sourceResource, processSpecificSheetInXLSFile));
                 setDelimiter('\t');
                 break;
         }
@@ -218,11 +218,11 @@ public class TabularModule extends AbstractModule {
         List<Statement> rowStatements = new ArrayList<>();
 
         CsvPreference csvPreference = new CsvPreference.Builder(
-                quoteCharacter,
-                delimiter,
-                System.lineSeparator()).build();
+            quoteCharacter,
+            delimiter,
+            System.lineSeparator()).build();
 
-        try{
+        try {
             ICsvListReader listReader = getCsvListReader(csvPreference);
 
             if (listReader == null) {
@@ -241,10 +241,10 @@ public class TabularModule extends AbstractModule {
             TableSchema inputTableSchema = getTableSchema(em);
             hasInputSchema = hasInputSchema(inputTableSchema);
 
-            if(skipHeader){
+            if (skipHeader) {
                 header = getHeaderFromSchema(inputModel, header, hasInputSchema);
                 listReader = new CsvListReader(getReader(), csvPreference);
-            }else if (hasInputSchema) {
+            } else if (hasInputSchema) {
                 header = getHeaderFromSchema(inputModel, header, true);
             }
             em.getTransaction().commit();
@@ -262,17 +262,17 @@ public class TabularModule extends AbstractModule {
 
                 tableSchema.setAboutUrl(schemaColumn, sourceResource.getUri());
                 schemaColumn.setProperty(
-                        dataPrefix,
-                        sourceResource.getUri(),
-                        hasInputSchema ? tableSchema.getColumn(columnName) : null);
+                    dataPrefix,
+                    sourceResource.getUri(),
+                    hasInputSchema ? tableSchema.getColumn(columnName) : null);
                 schemaColumn.setTitle(columnTitle);
-                if(isDuplicate) throwNotUniqueException(schemaColumn,columnTitle, columnName);
+                if (isDuplicate) throwNotUniqueException(schemaColumn, columnTitle, columnName);
             }
 
             List<String> row;
             int rowNumber = 0;
             //for each row
-            while( (row = listReader.read()) != null ) {
+            while ((row = listReader.read()) != null) {
                 rowNumber++;
                 // 4.6.1 and 4.6.3
                 Row r = new Row();
@@ -337,7 +337,7 @@ public class TabularModule extends AbstractModule {
         if (acceptInvalidQuoting) {
             if (getQuote() == '\0') {
                 return null;
-            }else
+            } else
                 return new CsvListReader(new InvalidQuotingTokenizer(getReader(), csvPreference), csvPreference);
         }
         return new CsvListReader(getReader(), csvPreference);
@@ -347,13 +347,13 @@ public class TabularModule extends AbstractModule {
         Resource rowResource = ResourceFactory.createResource(tableSchema.createAboutUrl(rowNumber));
 
         return ResourceFactory.createStatement(
-                rowResource,
-                ResourceFactory.createProperty(column.getPropertyUrl()),
-                ResourceFactory.createPlainLiteral(cellValue));
+            rowResource,
+            ResourceFactory.createProperty(column.getPropertyUrl()),
+            ResourceFactory.createPlainLiteral(cellValue));
     }
 
     private boolean hasInputSchema(TableSchema inputTableSchema) {
-        if (inputTableSchema != null){
+        if (inputTableSchema != null) {
             tableSchema = inputTableSchema;
             table.setTableSchema(tableSchema);
             return true;
@@ -363,20 +363,20 @@ public class TabularModule extends AbstractModule {
 
     private TableSchema getTableSchema(EntityManager em) {
         TypedQuery<TableSchema> query = em.createNativeQuery(
-                "PREFIX csvw: <http://www.w3.org/ns/csvw#>\n" +
-                        "SELECT ?t WHERE { \n" +
-                        "?t a csvw:TableSchema. \n" +
-                        "}",
-                TableSchema.class
+            "PREFIX csvw: <http://www.w3.org/ns/csvw#>\n" +
+                "SELECT ?t WHERE { \n" +
+                "?t a csvw:TableSchema. \n" +
+                "}",
+            TableSchema.class
         );
 
         int tableSchemaCount = query.getResultList().size();
 
-        if(tableSchemaCount > 1) {
+        if (tableSchemaCount > 1) {
             LOG.warn("More than one table schema found. Ignoring schemas {}. ", query.getResultList());
             return null;
         }
-        if(tableSchemaCount == 0) {
+        if (tableSchemaCount == 0) {
             LOG.debug("No custom table schema found.");
             return null;
         }
@@ -386,14 +386,14 @@ public class TabularModule extends AbstractModule {
 
     private void throwNotUniqueException(Column column, String columnTitle, String columnName) {
         throw new ResourceNotUniqueException(
-                String.format("Unable to create value of property %s due to collision. " +
-                                "Both column titles '%s' and '%s' are normalized to '%s' " +
-                                "and thus would refer to the same property url <%s>.",
-                        CSVW.propertyUrl,
-                        columnTitle,
-                        column.getTitle(),
-                        columnName,
-                        column.getPropertyUrl()));
+            String.format("Unable to create value of property %s due to collision. " +
+                    "Both column titles '%s' and '%s' are normalized to '%s' " +
+                    "and thus would refer to the same property url <%s>.",
+                CSVW.propertyUrl,
+                columnTitle,
+                column.getTitle(),
+                columnName,
+                column.getPropertyUrl()));
     }
 
     private ExecutionContext getExecutionContext(Model inputModel, Model outputModel) {
@@ -418,7 +418,7 @@ public class TabularModule extends AbstractModule {
         dataPrefix = getEffectiveValue(P_DATE_PREFIX).asLiteral().toString();
         sourceResource = getResourceByUri(getEffectiveValue(P_SOURCE_RESOURCE_URI).asLiteral().toString());
         outputMode = Mode.fromResource(
-                getPropertyValue(P_OUTPUT_MODE, Mode.STANDARD.getResource())
+            getPropertyValue(P_OUTPUT_MODE, Mode.STANDARD.getResource())
         );
         setInputCharset(delimiter);
     }
@@ -462,7 +462,7 @@ public class TabularModule extends AbstractModule {
     }
 
     private char getPropertyValue(Property property,
-                          Supplier<Character> defaultValueSupplier) {
+                                  Supplier<Character> defaultValueSupplier) {
         return Optional.ofNullable(getPropertyValue(property))
             .map(n -> n.asLiteral().getChar())
             .orElseGet(defaultValueSupplier);
@@ -479,10 +479,10 @@ public class TabularModule extends AbstractModule {
 
     private TableGroup onTableGroup(String tableGroupUri) {
         // 1
-        if (outputMode == Mode.STANDARD ) {
+        if (outputMode == Mode.STANDARD) {
             // 2
             tableGroup = new TableGroup();
-            if (tableGroupUri != null && !tableGroupUri.isEmpty()){
+            if (tableGroupUri != null && !tableGroupUri.isEmpty()) {
                 tableGroup.setUri(URI.create(tableGroupUri));
             }
             // 3
@@ -564,7 +564,7 @@ public class TabularModule extends AbstractModule {
 
     public void setDelimiter(int delimiter) {
         if ((sourceResourceFormat == ResourceFormat.CSV && delimiter != ',') ||
-                (sourceResourceFormat == ResourceFormat.TSV && delimiter != '\t')) {
+            (sourceResourceFormat == ResourceFormat.TSV && delimiter != '\t')) {
             throw new SpecificationNonComplianceException(sourceResourceFormat, delimiter);
         }
         this.delimiter = delimiter;
@@ -630,10 +630,10 @@ public class TabularModule extends AbstractModule {
     private String[] createHeaders(int size, List<Column> columns) {
         String[] headers = new String[size];
 
-        for(int i = 0; i < size; i++){
-            if(!columns.isEmpty()){
+        for (int i = 0; i < size; i++) {
+            if (!columns.isEmpty()) {
                 headers[i] = columns.get(i).getName();
-            }else headers[i] = "column_" + (i + 1);
+            } else headers[i] = "column_" + (i + 1);
         }
         return headers;
     }
@@ -642,6 +642,6 @@ public class TabularModule extends AbstractModule {
         String message = "Quote character must be specified when using custom tokenizer.";
         if (ExecutionConfig.isExitOnError()) {
             throw new MissingArgumentException(message);
-        }else LOG.error(message);
+        } else LOG.error(message);
     }
 }
