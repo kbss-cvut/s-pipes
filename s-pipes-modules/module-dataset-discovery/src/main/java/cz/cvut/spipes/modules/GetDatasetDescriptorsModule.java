@@ -2,16 +2,8 @@ package cz.cvut.spipes.modules;
 
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.engine.ExecutionContext;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Optional;
-
 import cz.cvut.spipes.modules.annotations.SPipesModule;
-import org.apache.jena.query.Query;
-import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.query.QueryFactory;
-import org.apache.jena.query.Syntax;
+import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResourceFactory;
@@ -21,6 +13,10 @@ import org.apache.jena.sparql.engine.binding.BindingMap;
 import org.apache.jena.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Optional;
 
 @SPipesModule(label = "get dataset descriptors v1", comment = "Retrieve dataset descriptor for dataset with dataset-iri in endpoint-url.")
 public class GetDatasetDescriptorsModule extends AbstractModule {
@@ -36,7 +32,7 @@ public class GetDatasetDescriptorsModule extends AbstractModule {
     private static final Property P_DATASET_IRI = getParameter("p-dataset-iri");
     private static final Property P_ENDPOINT_URL = getParameter("endpoint-url");
 
-    @Parameter(urlPrefix = PARAM_URI, name = "dataset-iri", comment = "IRI of the dataset.")// TODO - revise comment
+    @Parameter(urlPrefix = PARAM_URI, name = "p-dataset-iri", comment = "IRI of the dataset.")// TODO - revise comment
     private String prpDatasetIri;
 
     @Parameter(urlPrefix = PARAM_URI, name = "endpoint-url", comment = "URL of the SPARQL endpoint. Default value is 'http://onto.fel.cvut.cz/rdf4j-server/repositories/descriptors-metadata'")
