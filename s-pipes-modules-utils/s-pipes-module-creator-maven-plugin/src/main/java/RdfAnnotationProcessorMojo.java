@@ -3,7 +3,6 @@ import cz.cvut.spipes.constants.SM;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.OWL;
@@ -29,7 +28,10 @@ import org.reflections.util.FilterBuilder;
 import org.topbraid.spin.vocabulary.SPIN;
 import org.topbraid.spin.vocabulary.SPL;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -220,16 +222,16 @@ public class RdfAnnotationProcessorMojo extends AbstractMojo {
     /**
      * Reads manually managed modules ontology from maven sub-project.
      * The ontology is loaded from the resource folder of the sub-project and it is expected to start with the artifact
-     * id of the sub-project followed by the postfix ".sms.tll". For example, assume the input parameter project
+     * id of the sub-project followed by the postfix ".tll". For example, assume the input parameter project
      * artifact id "s-pipes-modules-text-analysis". This method will look for the ontology located at:
-     * <pre>   $resource-dir$/s-pipes-modules-text-analysis.sms.ttl</pre>
+     * <pre>   $resource-dir$/s-pipes-modules-text-analysis.ttl</pre>
      *
      * Any ontology resources and their triples are removed from the model before returning.
      * @param project
      * @return
      */
     private Model readManuallyManagedModuleDescriptionOntology(MavenProject project){
-        String ontoName = project.getArtifactId() + ".sms.ttl";
+        String ontoName = project.getArtifactId() + ".ttl";
         Optional<String> ontoUri = Optional.ofNullable(project).map(p ->
                 p.getResources().stream()
                         .map(r -> new File(r.getDirectory(), ontoName))
