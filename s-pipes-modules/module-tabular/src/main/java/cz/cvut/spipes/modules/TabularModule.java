@@ -12,10 +12,14 @@ import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.exception.ResourceNotFoundException;
 import cz.cvut.spipes.exception.ResourceNotUniqueException;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
+import cz.cvut.spipes.modules.exception.SheetDoesntExistsException;
+import cz.cvut.spipes.modules.exception.SheetIsNotSpecifiedException;
+import cz.cvut.spipes.modules.exception.SpecificationNonComplianceException;
 import cz.cvut.spipes.modules.model.*;
 import cz.cvut.spipes.modules.util.BNodesTransformer;
 import cz.cvut.spipes.modules.util.HTML2TSVConvertor;
 import cz.cvut.spipes.modules.util.JopaPersistenceUtils;
+import cz.cvut.spipes.modules.util.XLS2TSVConvertor;
 import cz.cvut.spipes.registry.StreamResource;
 import cz.cvut.spipes.registry.StreamResourceRegistry;
 import cz.cvut.spipes.util.JenaUtils;
@@ -37,63 +41,68 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Supplier;
 
-@SPipesModule(label = "Tabular module", comment = "Module for converting tabular data (e.g. CSV or TSV) to RDF\n" +
-        "<p>\n" +
-        "It supports two major processing standards that can be set by se\n" +
-        "<ul><li> separator ',' -- defaults to\n" +
-        "<a href=\"https://www.rfc-editor.org/rfc/rfc4180\">CSV standard</a\n" +
-        "as a quote character, and UTF-8 as the encoding</li>\n" +
-        "<li> separator '\\t' -- defaults to\n" +
-        "<a href=\"https://www.iana.org/assignments/media-types/text/tab-s\n" +
-        "(In the TSV standard, fields that contain '\\t' are not allowed a\n" +
-        "but in this implementation, we process the TSV quotes the same w\n" +
-        "<li> other separator -- defaults to no standard, with no quoting\n" +
-        "</ul>\n" +
-        "</p>\n" +
-        "In addition, it supports bad quoting according to CSV standard, \n" +
-        "{@link TabularModule#acceptInvalidQuoting}\n" +
-        "and class {@link InvalidQuotingTokenizer}\n" +
-        "<p>The implementation loosely follows the W3C Recommendation des\n" +
-        "<a href=\"https://www.w3.org/TR/csv2rdf/\">Generating RDF from Tab\n" +
-        "<p>\n" +
-        "Within the recommendation, it is possible to define schema\n" +
-        "defining the shape of the output RDF data\n" +
-        "(i.e. the input metadata values used for the conversion)\n" +
-        "using csvw:tableSchema.<br/>\n" +
-        "By default, we use the following schema:\n" +
-        "<pre><code>\n" +
-        "[   a   csvw:Table ;\n" +
-        "    csvw:tableSchema\n" +
-        "        [   a   csvw:TableSchema ;\n" +
-        "            csvw:aboutUrl\n" +
-        "                \"http://csv-resource-uri#row-{_row}\"^^csvw:uriTe\n" +
-        "            csvw:column\n" +
-        "                _:b0 , _:b1 , _:b2 ;\n" +
-        "            csvw:columns\n" +
-        "                ( _:b0\n" +
-        "                  _:b1\n" +
-        "                  _:b2\n" +
-        "                )\n" +
-        "        ]\n" +
-        "]\n" +
-        "</code></pre>\n" +
-        "<p>\n" +
-        "This module can also be used to process HTML tables, see option \n" +
-        "First, the HTML table is converted to TSV while replacing \"\\t\" w\n" +
-        "and then processed as usual.\n" +
-        "Take a look at the option {@link TabularModule#processHTMLFile} \n" +
-        "<p>\n" +
-        "<b>Important notes (differences from the recommendation):</b><br\n" +
-        "Does not support custom table group URIs.<br/>\n" +
-        "Does not support custom table URIs. <br/>\n" +
-        "Does not support processing of multiple files.<br/>\n" +
-        "Does not support the <i>suppress output</i> annotation.")
+/**
+ * Module for converting input that contains tabular data (e.g. CSV, TSV, XLS, HTML) to RDF
+ * <p>
+ * It supports major processing standards that can be set by "resource format", with values :
+ * <ul>
+ * <li> "text/csv" -- <a href="https://www.rfc-editor.org/rfc/rfc4180">CSV standard</a>
+ * with ',' as default separator,  the double-quote as a quote character, and UTF-8 as the encoding</li>
+ * <li> "text/tab-separated-values" --
+ * <a href="https://www.iana.org/assignments/media-types/text/tab-separated-values">TSV standard</a>
+ * with ',' as default separator and no quoting (In the TSV standard, fields that contain '\t' are not allowed
+ * and there is no mention of quotes, but in this implementation, we process the TSV quotes
+ * the same way as the CSV quotes.)</li>
+ * <li> other resource formats -- defaults to no standard, with no quoting</li>
+ * </ul>
+ * </p>
+ * In addition, it supports bad quoting according to CSV standard, see option
+ * {@link TabularModule#acceptInvalidQuoting}
+ * and class {@link InvalidQuotingTokenizer}
+ * <p>The implementation loosely follows the W3C Recommendation described here:
+ * <a href="https://www.w3.org/TR/csv2rdf/">Generating RDF from Tabular Data on the Web</a></p>
+ * <p>
+ * Within the recommendation, it is possible to define schema
+ * defining the shape of the output RDF data
+ * (i.e. the input metadata values used for the conversion)
+ * using csvw:tableSchema.<br/>
+ * By default, we use the following schema:
+ * <pre><code>
+ * [   a   csvw:Table ;
+ *     csvw:tableSchema
+ *         [   a   csvw:TableSchema ;
+ *             csvw:aboutUrl
+ *                 "http://csv-resource-uri#row-{_row}"^^csvw:uriTemplate ;
+ *             csvw:column
+ *                 _:b0 , _:b1 , _:b2 ;
+ *             csvw:columns
+ *                 ( _:b0
+ *                   _:b1
+ *                   _:b2
+ *                 )
+ *         ]
+ * ]
+ * </code></pre>
+ * <p>
+ * This module can also be used to process HTML tables, see option {@link TabularModule#sourceResourceFormat}.
+ * First, the HTML table is converted to TSV while replacing "\t" with two spaces
+ * and then processed as usual.
+ * Take a look at the option {@link TabularModule#sourceResourceFormat} and class {@link HTML2TSVConvertor} for more details.
+ * Also, in a similar way this module can process XLS tables. Note, that processing multiple sheets isn't supported,
+ * so {@link TabularModule#processSpecificSheetInXLSFile} parameter is required (range 1...number of sheets).
+ * <p>
+ * <b>Important notes (differences from the recommendation):</b><br/>
+ * Does not support custom table group URIs.<br/>
+ * Does not support custom table URIs. <br/>
+ * Does not support processing of multiple files.<br/>
+ * Does not support the <i>suppress output</i> annotation.
+ */
+@SPipesModule(label = "Tabular module", comment = "Module for converting tabular data (e.g. CSV or TSV) to RDF")
 public class TabularModule extends AbstractModule {
 
     public static final String TYPE_URI = KBSS_MODULE.uri + "tabular";
     public static final String PARAM_URL_PREFIX = TYPE_URI + "/";
     private static final Logger LOG = LoggerFactory.getLogger(TabularModule.class);
-
     private final Property P_DELIMITER = getSpecificParameter("delimiter");
     private final Property P_QUOTE_CHARACTER = getSpecificParameter("quote-character");
     private final Property P_ACCEPT_INVALID_QUOTING = getSpecificParameter("accept-invalid-quoting");
@@ -101,7 +110,8 @@ public class TabularModule extends AbstractModule {
     private final Property P_OUTPUT_MODE = getSpecificParameter("output-mode");
     private final Property P_SOURCE_RESOURCE_URI = getSpecificParameter("source-resource-uri");
     private final Property P_SKIP_HEADER = getSpecificParameter("skip-header");
-    private final Property P_PROCESS_HTML_FILE = getSpecificParameter("process-html-file");
+    private final Property P_SOURCE_RESOURCE_FORMAT = getSpecificParameter("source-resource-format");
+    private final Property P_PROCESS_SPECIFIC_SHEET_IN_XLS_FILE = getSpecificParameter("process-specific-sheet-in-xls-file");
 
     //sml:replace
     @Parameter(urlPrefix = SML.uri, name = "replace", comment = "Replace context flag. Default is false.")// TODO - revise comment
@@ -127,14 +137,28 @@ public class TabularModule extends AbstractModule {
     @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "skip-header", comment = "Skip header. Default is false.")
     private boolean skipHeader;
 
-    //:process-html-file
-    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "process-html-file", comment = "Process html file. Default is false.") // TODO - improve comment
-    private boolean processHTMLFile;
+    //:process-specific-sheet-in-xls-file
+    /**
+     * Required parameter that indicates that only specific single sheet should be converted
+     */
+    private int processSpecificSheetInXLSFile;
 
     //:output-mode
     // TODO - revise comment
     @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "output-mode", comment = "Output mode. Default is standard-mode('http://onto.fel.cvut.cz/ontologies/lib/module/tabular/standard-mode)")
     private Mode outputMode;
+
+    //:source-resource-format
+    /**
+     * Parameter that indicates format of the source file.
+     * Supported formats:
+     * - "text/plain" -- plain text, default value.
+     * - "text/csv" -- coma-separated values (csv).
+     * - "text/tab-separated-values" -- tab-separated values (tsv).
+     * - "text/html" -- HTML file.
+     * - "application/vnd.ms-excel" - EXCEL (XLS) file.
+     */
+    private ResourceFormat sourceResourceFormat = ResourceFormat.PLAIN;
 
     //:accept-invalid-quoting
     @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "accept-invalid-quoting", comment = "Accept invalid quoting. Default is false.")
@@ -163,10 +187,33 @@ public class TabularModule extends AbstractModule {
     @Override
     ExecutionContext executeSelf() {
 
-        if(processHTMLFile) {
-            HTML2TSVConvertor htmlConvertor = new HTML2TSVConvertor();
-            setSourceResource(htmlConvertor.convertToTSV(sourceResource));
-            setDelimiter('\t');
+        tableGroup = onTableGroup(null);
+        table = onTable(null);
+
+        switch (sourceResourceFormat) {
+            case HTML:
+                HTML2TSVConvertor htmlConvertor = new HTML2TSVConvertor();
+                setSourceResource(htmlConvertor.convertToTSV(sourceResource));
+                setDelimiter('\t');
+                break;
+            case EXCEL:
+                if (processSpecificSheetInXLSFile == 0) {
+                    throw new SheetIsNotSpecifiedException("Source resource format is set to XLS file but no specific sheet is set for processing.");
+                }
+                XLS2TSVConvertor xlsConvertor = new XLS2TSVConvertor();
+                int numberOfSheets = xlsConvertor.getNumberOfSheets(sourceResource);
+                table.setLabel(xlsConvertor.getSheetName(sourceResource, processSpecificSheetInXLSFile));
+                LOG.debug("Number of sheets:{}", numberOfSheets);
+                if ((processSpecificSheetInXLSFile > numberOfSheets) || (processSpecificSheetInXLSFile < 1)) {
+                    LOG.error("Requested sheet doesn't exist, number of sheets in the doc: {}, requested sheet: {}",
+                        numberOfSheets,
+                        processSpecificSheetInXLSFile
+                    );
+                    throw new SheetDoesntExistsException("Requested sheet doesn't exists");
+                }
+                setSourceResource(xlsConvertor.convertToTSV(sourceResource, processSpecificSheetInXLSFile));
+                setDelimiter('\t');
+                break;
         }
 
         BNodesTransformer bNodesTransformer = new BNodesTransformer();
@@ -177,18 +224,15 @@ public class TabularModule extends AbstractModule {
         EntityManager em = JopaPersistenceUtils.getEntityManager("cz.cvut.spipes.modules.model", inputModel);
         em.getTransaction().begin();
 
-        tableGroup = onTableGroup(null);
-        table = onTable(null);
-
         List<Column> outputColumns = new ArrayList<>();
         List<Statement> rowStatements = new ArrayList<>();
 
         CsvPreference csvPreference = new CsvPreference.Builder(
-                quoteCharacter,
-                delimiter,
-                System.lineSeparator()).build();
+            quoteCharacter,
+            delimiter,
+            System.lineSeparator()).build();
 
-        try{
+        try {
             ICsvListReader listReader = getCsvListReader(csvPreference);
 
             if (listReader == null) {
@@ -207,10 +251,10 @@ public class TabularModule extends AbstractModule {
             TableSchema inputTableSchema = getTableSchema(em);
             hasInputSchema = hasInputSchema(inputTableSchema);
 
-            if(skipHeader){
+            if (skipHeader) {
                 header = getHeaderFromSchema(inputModel, header, hasInputSchema);
                 listReader = new CsvListReader(getReader(), csvPreference);
-            }else if (hasInputSchema) {
+            } else if (hasInputSchema) {
                 header = getHeaderFromSchema(inputModel, header, true);
             }
             em.getTransaction().commit();
@@ -228,17 +272,17 @@ public class TabularModule extends AbstractModule {
 
                 tableSchema.setAboutUrl(schemaColumn, sourceResource.getUri());
                 schemaColumn.setProperty(
-                        dataPrefix,
-                        sourceResource.getUri(),
-                        hasInputSchema ? tableSchema.getColumn(columnName) : null);
+                    dataPrefix,
+                    sourceResource.getUri(),
+                    hasInputSchema ? tableSchema.getColumn(columnName) : null);
                 schemaColumn.setTitle(columnTitle);
-                if(isDuplicate) throwNotUniqueException(schemaColumn,columnTitle, columnName);
+                if (isDuplicate) throwNotUniqueException(schemaColumn, columnTitle, columnName);
             }
 
             List<String> row;
             int rowNumber = 0;
             //for each row
-            while( (row = listReader.read()) != null ) {
+            while ((row = listReader.read()) != null) {
                 rowNumber++;
                 // 4.6.1 and 4.6.3
                 Row r = new Row();
@@ -303,7 +347,7 @@ public class TabularModule extends AbstractModule {
         if (acceptInvalidQuoting) {
             if (getQuote() == '\0') {
                 return null;
-            }else
+            } else
                 return new CsvListReader(new InvalidQuotingTokenizer(getReader(), csvPreference), csvPreference);
         }
         return new CsvListReader(getReader(), csvPreference);
@@ -313,13 +357,13 @@ public class TabularModule extends AbstractModule {
         Resource rowResource = ResourceFactory.createResource(tableSchema.createAboutUrl(rowNumber));
 
         return ResourceFactory.createStatement(
-                rowResource,
-                ResourceFactory.createProperty(column.getPropertyUrl()),
-                ResourceFactory.createPlainLiteral(cellValue));
+            rowResource,
+            ResourceFactory.createProperty(column.getPropertyUrl()),
+            ResourceFactory.createPlainLiteral(cellValue));
     }
 
     private boolean hasInputSchema(TableSchema inputTableSchema) {
-        if (inputTableSchema != null){
+        if (inputTableSchema != null) {
             tableSchema = inputTableSchema;
             table.setTableSchema(tableSchema);
             return true;
@@ -329,20 +373,20 @@ public class TabularModule extends AbstractModule {
 
     private TableSchema getTableSchema(EntityManager em) {
         TypedQuery<TableSchema> query = em.createNativeQuery(
-                "PREFIX csvw: <http://www.w3.org/ns/csvw#>\n" +
-                        "SELECT ?t WHERE { \n" +
-                        "?t a csvw:TableSchema. \n" +
-                        "}",
-                TableSchema.class
+            "PREFIX csvw: <http://www.w3.org/ns/csvw#>\n" +
+                "SELECT ?t WHERE { \n" +
+                "?t a csvw:TableSchema. \n" +
+                "}",
+            TableSchema.class
         );
 
         int tableSchemaCount = query.getResultList().size();
 
-        if(tableSchemaCount > 1) {
+        if (tableSchemaCount > 1) {
             LOG.warn("More than one table schema found. Ignoring schemas {}. ", query.getResultList());
             return null;
         }
-        if(tableSchemaCount == 0) {
+        if (tableSchemaCount == 0) {
             LOG.debug("No custom table schema found.");
             return null;
         }
@@ -352,14 +396,14 @@ public class TabularModule extends AbstractModule {
 
     private void throwNotUniqueException(Column column, String columnTitle, String columnName) {
         throw new ResourceNotUniqueException(
-                String.format("Unable to create value of property %s due to collision. " +
-                                "Both column titles '%s' and '%s' are normalized to '%s' " +
-                                "and thus would refer to the same property url <%s>.",
-                        CSVW.propertyUrl,
-                        columnTitle,
-                        column.getTitle(),
-                        columnName,
-                        column.getPropertyUrl()));
+            String.format("Unable to create value of property %s due to collision. " +
+                    "Both column titles '%s' and '%s' are normalized to '%s' " +
+                    "and thus would refer to the same property url <%s>.",
+                CSVW.propertyUrl,
+                columnTitle,
+                column.getTitle(),
+                columnName,
+                column.getPropertyUrl()));
     }
 
     private ExecutionContext getExecutionContext(Model inputModel, Model outputModel) {
@@ -372,16 +416,19 @@ public class TabularModule extends AbstractModule {
 
     @Override
     public void loadConfiguration() {
+        sourceResourceFormat = ResourceFormat.fromString(
+            getPropertyValue(P_SOURCE_RESOURCE_FORMAT, ResourceFormat.PLAIN.getValue())
+        );
+        delimiter = getPropertyValue(P_DELIMITER, getDefaultDelimiterSupplier(sourceResourceFormat));
         isReplace = getPropertyValue(SML.replace, false);
-        delimiter = getPropertyValue(P_DELIMITER, getDefaultDelimiterSupplier());
         skipHeader = getPropertyValue(P_SKIP_HEADER, false);
-        processHTMLFile = getPropertyValue(P_PROCESS_HTML_FILE, false);
+        processSpecificSheetInXLSFile = getPropertyValue(P_PROCESS_SPECIFIC_SHEET_IN_XLS_FILE, 0);
         acceptInvalidQuoting = getPropertyValue(P_ACCEPT_INVALID_QUOTING, false);
-        quoteCharacter = getPropertyValue(P_QUOTE_CHARACTER, getDefaultQuoteCharacterSupplier(delimiter));
+        quoteCharacter = getPropertyValue(P_QUOTE_CHARACTER, getDefaultQuoteCharacterSupplier(sourceResourceFormat));
         dataPrefix = getEffectiveValue(P_DATE_PREFIX).asLiteral().toString();
         sourceResource = getResourceByUri(getEffectiveValue(P_SOURCE_RESOURCE_URI).asLiteral().toString());
         outputMode = Mode.fromResource(
-                getPropertyValue(P_OUTPUT_MODE, Mode.STANDARD.getResource())
+            getPropertyValue(P_OUTPUT_MODE, Mode.STANDARD.getResource())
         );
         setInputCharset(delimiter);
     }
@@ -393,25 +440,39 @@ public class TabularModule extends AbstractModule {
             LOG.debug("Using UTF-8 as the encoding to be compliant with RFC 4180 (CSV)");
         }
     }
-    private Supplier<Character> getDefaultDelimiterSupplier() {
+
+    private Supplier<Character> getDefaultDelimiterSupplier(ResourceFormat sourceResourceFormat) {
+        if (sourceResourceFormat == ResourceFormat.CSV) {
+            return () -> {
+                LOG.debug("Using comma as default value of delimiter to be compliant with RFC 4180 (CSV).");
+                return ',';
+            };
+        }
+        if (sourceResourceFormat == ResourceFormat.TSV) {
+            return () -> {
+                LOG.debug("Using \\t as default value of delimiter to be compliant TSV standard.");
+                return '\t';
+            };
+        }
         return () -> {
-            LOG.debug("Delimiter not specified, using comma as default value to be compliant with RFC 4180 (CSV).");
+            LOG.debug("Using coma as default value of delimiter.");
             return ',';
         };
     }
 
-    private Supplier<Character> getDefaultQuoteCharacterSupplier(int delimiter) {
-        if (delimiter != ',') {
-            return () -> '\0';
+    private Supplier<Character> getDefaultQuoteCharacterSupplier(ResourceFormat sourceResourceFormat) {
+        if (sourceResourceFormat == ResourceFormat.CSV) {
+            return () -> {
+                LOG.debug("Quote character not specified, using double-quote as default value" +
+                    " to be compliant with RFC 4180 (CSV)");
+                return '"';
+            };
         }
-        return () ->  {
-            LOG.debug("Quote character not specified, using double-quote as default value to be compliant with RFC 4180 (CSV)");
-            return '"';
-        };
+        return () -> '\0';
     }
 
     private char getPropertyValue(Property property,
-                          Supplier<Character> defaultValueSupplier) {
+                                  Supplier<Character> defaultValueSupplier) {
         return Optional.ofNullable(getPropertyValue(property))
             .map(n -> n.asLiteral().getChar())
             .orElseGet(defaultValueSupplier);
@@ -428,10 +489,10 @@ public class TabularModule extends AbstractModule {
 
     private TableGroup onTableGroup(String tableGroupUri) {
         // 1
-        if (outputMode == Mode.STANDARD ) {
+        if (outputMode == Mode.STANDARD) {
             // 2
             tableGroup = new TableGroup();
-            if (tableGroupUri != null && !tableGroupUri.isEmpty()){
+            if (tableGroupUri != null && !tableGroupUri.isEmpty()) {
                 tableGroup.setUri(URI.create(tableGroupUri));
             }
             // 3
@@ -512,6 +573,10 @@ public class TabularModule extends AbstractModule {
     }
 
     public void setDelimiter(int delimiter) {
+        if ((sourceResourceFormat == ResourceFormat.CSV && delimiter != ',') ||
+            (sourceResourceFormat == ResourceFormat.TSV && delimiter != '\t')) {
+            throw new SpecificationNonComplianceException(sourceResourceFormat, delimiter);
+        }
         this.delimiter = delimiter;
     }
 
@@ -543,8 +608,12 @@ public class TabularModule extends AbstractModule {
         this.skipHeader = skipHeader;
     }
 
-    public void setProcessHTMLFile(boolean processHTMLFile) {
-        this.processHTMLFile = processHTMLFile;
+    public void setSourceResourceFormat(ResourceFormat sourceResourceFormat) {
+        this.sourceResourceFormat = sourceResourceFormat;
+    }
+
+    public void setProcessSpecificSheetInXLSFile(int sheetNumber) {
+        this.processSpecificSheetInXLSFile = sheetNumber;
     }
 
     private String[] getHeaderFromSchema(Model inputModel, String[] header, boolean hasInputSchema) {
@@ -571,10 +640,10 @@ public class TabularModule extends AbstractModule {
     private String[] createHeaders(int size, List<Column> columns) {
         String[] headers = new String[size];
 
-        for(int i = 0; i < size; i++){
-            if(!columns.isEmpty()){
+        for (int i = 0; i < size; i++) {
+            if (!columns.isEmpty()) {
                 headers[i] = columns.get(i).getName();
-            }else headers[i] = "column_" + (i + 1);
+            } else headers[i] = "column_" + (i + 1);
         }
         return headers;
     }
@@ -583,6 +652,6 @@ public class TabularModule extends AbstractModule {
         String message = "Quote character must be specified when using custom tokenizer.";
         if (ExecutionConfig.isExitOnError()) {
             throw new MissingArgumentException(message);
-        }else LOG.error(message);
+        } else LOG.error(message);
     }
 }

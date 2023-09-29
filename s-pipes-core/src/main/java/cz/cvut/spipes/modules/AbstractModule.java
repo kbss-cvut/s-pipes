@@ -371,6 +371,17 @@ public abstract class AbstractModule implements Module {
         return defaultValue;
     }
 
+    String getPropertyValue(@NotNull Property property, String defaultValue) {
+
+        Statement s = resource.getProperty(property);
+
+        if (s != null && s.getObject().isLiteral()) {
+            //TODO check if it is string first
+            return s.getString();
+        }
+        return defaultValue;
+    }
+
     char getPropertyValue(@NotNull Property property, char defaultValue) {
 
         Statement s = resource.getProperty(property);

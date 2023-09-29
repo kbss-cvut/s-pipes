@@ -1,6 +1,7 @@
 package cz.cvut.spipes.modules.util;
 
 import cz.cvut.spipes.constants.HTML;
+import cz.cvut.spipes.modules.ResourceFormat;
 import cz.cvut.spipes.registry.StreamResource;
 import cz.cvut.spipes.registry.StringStreamResource;
 import org.jsoup.Jsoup;
@@ -44,7 +45,7 @@ public class HTML2TSVConvertor {
         return new StringStreamResource(
                 streamResource.getUri(),
                 tsvStringBuilder.toString().getBytes(),
-                "text/tsv"
+                ResourceFormat.TSV.toString()
         );
     }
 
