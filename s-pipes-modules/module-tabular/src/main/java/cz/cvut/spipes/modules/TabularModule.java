@@ -42,17 +42,18 @@ import java.util.*;
 import java.util.function.Supplier;
 
 /**
- * Module for converting tabular data (e.g. CSV or TSV) to RDF
+ * Module for converting input that contains tabular data (e.g. CSV, TSV, XLS, HTML) to RDF
  * <p>
- * It supports two major processing standards that can be set by separator:
- * <ul><li> separator ',' -- defaults to
- * <a href="https://www.rfc-editor.org/rfc/rfc4180">CSV standard</a>, i.e. it uses by default the double-quote
- * as a quote character, and UTF-8 as the encoding</li>
- * <li> separator '\t' -- defaults to
- * <a href="https://www.iana.org/assignments/media-types/text/tab-separated-values">TSV standard</a>, with no quoting
- * (In the TSV standard, fields that contain '\t' are not allowed and there is no mention of quotes,
- * but in this implementation, we process the TSV quotes the same way as the CSV quotes.)</li>
- * <li> other separator -- defaults to no standard, with no quoting</li>
+ * It supports major processing standards that can be set by "resource format", with values :
+ * <ul>
+ * <li> "text/csv" -- <a href="https://www.rfc-editor.org/rfc/rfc4180">CSV standard</a>
+ * with ',' as default separator,  the double-quote as a quote character, and UTF-8 as the encoding</li>
+ * <li> "text/tab-separated-values" --
+ * <a href="https://www.iana.org/assignments/media-types/text/tab-separated-values">TSV standard</a>
+ * with ',' as default separator and no quoting (In the TSV standard, fields that contain '\t' are not allowed
+ * and there is no mention of quotes, but in this implementation, we process the TSV quotes
+ * the same way as the CSV quotes.)</li>
+ * <li> other resource formats -- defaults to no standard, with no quoting</li>
  * </ul>
  * </p>
  * In addition, it supports bad quoting according to CSV standard, see option
@@ -131,7 +132,7 @@ public class TabularModule extends AbstractModule {
 
     //:process-specific-sheet-in-xls-file
     /**
-     Required parameter that indicates that only specific single sheet should be converted
+     * Required parameter that indicates that only specific single sheet should be converted
      */
     private int processSpecificSheetInXLSFile;
 
@@ -140,13 +141,13 @@ public class TabularModule extends AbstractModule {
 
     //:source-resource-format
     /**
-     Parameter that indicates format of the source file.
-     Supported formats:
-     - "text/plain" -- plain text, default value.
-     - "text/csv" -- coma-separated values (csv).
-     - "text/tab-separated-values" -- tab-separated values (tsv).
-     - "text/html" -- HTML file.
-     - "application/vnd.ms-excel" - EXCEL (XLS) file.
+     * Parameter that indicates format of the source file.
+     * Supported formats:
+     * - "text/plain" -- plain text, default value.
+     * - "text/csv" -- coma-separated values (csv).
+     * - "text/tab-separated-values" -- tab-separated values (tsv).
+     * - "text/html" -- HTML file.
+     * - "application/vnd.ms-excel" - EXCEL (XLS) file.
      */
     private ResourceFormat sourceResourceFormat = ResourceFormat.PLAIN;
 
@@ -406,23 +407,14 @@ public class TabularModule extends AbstractModule {
     @Override
     public void loadConfiguration() {
         sourceResourceFormat = ResourceFormat.fromString(
-                getPropertyValue(P_SOURCE_RESOURCE_FORMAT, ResourceFormat.PLAIN.getValue())
-            );
-        delimiter = getDefaultDelimiterSupplier().get();
-        switch (sourceResourceFormat) {
-            case CSV:
-                setDelimiter(',');
-                break;
-            case TSV:
-                setDelimiter('\t');
-                break;
-        }
-        setDelimiter(getPropertyValue(P_DELIMITER, ((char) delimiter)));
+            getPropertyValue(P_SOURCE_RESOURCE_FORMAT, ResourceFormat.PLAIN.getValue())
+        );
+        delimiter = getPropertyValue(P_DELIMITER, getDefaultDelimiterSupplier(sourceResourceFormat));
         isReplace = getPropertyValue(SML.replace, false);
         skipHeader = getPropertyValue(P_SKIP_HEADER, false);
-        processSpecificSheetInXLSFile = getPropertyValue(P_PROCESS_SPECIFIC_SHEET_IN_XLS_FILE,0);
+        processSpecificSheetInXLSFile = getPropertyValue(P_PROCESS_SPECIFIC_SHEET_IN_XLS_FILE, 0);
         acceptInvalidQuoting = getPropertyValue(P_ACCEPT_INVALID_QUOTING, false);
-        quoteCharacter = getPropertyValue(P_QUOTE_CHARACTER, getDefaultQuoteCharacterSupplier(delimiter));
+        quoteCharacter = getPropertyValue(P_QUOTE_CHARACTER, getDefaultQuoteCharacterSupplier(sourceResourceFormat));
         dataPrefix = getEffectiveValue(P_DATE_PREFIX).asLiteral().toString();
         sourceResource = getResourceByUri(getEffectiveValue(P_SOURCE_RESOURCE_URI).asLiteral().toString());
         outputMode = Mode.fromResource(
@@ -438,21 +430,35 @@ public class TabularModule extends AbstractModule {
             LOG.debug("Using UTF-8 as the encoding to be compliant with RFC 4180 (CSV)");
         }
     }
-    private Supplier<Character> getDefaultDelimiterSupplier() {
+
+    private Supplier<Character> getDefaultDelimiterSupplier(ResourceFormat sourceResourceFormat) {
+        if (sourceResourceFormat == ResourceFormat.CSV) {
+            return () -> {
+                LOG.debug("Using comma as default value of delimiter to be compliant with RFC 4180 (CSV).");
+                return ',';
+            };
+        }
+        if (sourceResourceFormat == ResourceFormat.TSV) {
+            return () -> {
+                LOG.debug("Using \\t as default value of delimiter to be compliant TSV standard.");
+                return '\t';
+            };
+        }
         return () -> {
-            LOG.debug("Using comma as default value to be compliant with RFC 4180 (CSV).");
+            LOG.debug("Using coma as default value of delimiter.");
             return ',';
         };
     }
 
-    private Supplier<Character> getDefaultQuoteCharacterSupplier(int delimiter) {
-        if (delimiter != ',') {
-            return () -> '\0';
+    private Supplier<Character> getDefaultQuoteCharacterSupplier(ResourceFormat sourceResourceFormat) {
+        if (sourceResourceFormat == ResourceFormat.CSV) {
+            return () -> {
+                LOG.debug("Quote character not specified, using double-quote as default value" +
+                    " to be compliant with RFC 4180 (CSV)");
+                return '"';
+            };
         }
-        return () ->  {
-            LOG.debug("Quote character not specified, using double-quote as default value to be compliant with RFC 4180 (CSV)");
-            return '"';
-        };
+        return () -> '\0';
     }
 
     private char getPropertyValue(Property property,
