@@ -6,6 +6,7 @@ import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.form.JenaFormUtils;
+import cz.cvut.spipes.modules.annotations.SPipesModule;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
@@ -15,16 +16,16 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Inputs are forms using Q&A model. Possible values of questions are added to questions that does not have
- * any value attached and contains possible value query.
- */
+@SPipesModule(label = "fetch possible values", comment =
+        "Fetches possible values for answers of questions. Inputs are forms using Q&A model. Possible values of " +
+        "questions are added to questions that does not have any value attached and contains possible value query."
+)
 public class FetchPossibleValuesModule extends AnnotatedAbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(FetchPossibleValuesModule.class);
     private static final String TYPE_URI = KBSS_MODULE.uri + "fetch-possible-values";
 
-    @Parameter(urlPrefix = SML.uri, name = "replace")
+    @Parameter(urlPrefix = SML.uri, name = "replace", comment = "Replace context flag, default is false.") //TODO - revise comment
     private boolean isReplace = false;
 
 

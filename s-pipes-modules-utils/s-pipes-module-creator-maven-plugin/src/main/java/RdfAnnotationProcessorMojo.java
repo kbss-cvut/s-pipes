@@ -139,9 +139,12 @@ public class RdfAnnotationProcessorMojo extends AbstractMojo {
             for (Class<?> moduleClass : moduleClasses) {
                 getLog().info("Creating RDF for module '" + moduleClass.getCanonicalName() + "'");
                 var moduleAnnotation = readModuleAnnotationFromClass(moduleClass);
+                var extendedModuleAnnotation = readExtendedModuleAnnotationFromClass(moduleClass);
                 var constraints = readConstraintsFromClass(moduleClass);
-                writeConstraintsToModel(model, constraints, moduleAnnotation);
+                writeConstraintsToModel(model, constraints, moduleAnnotation, extendedModuleAnnotation);
             }
+            Optional.ofNullable(readManuallyManagedModuleDescriptionOntology(submodule))
+                    .ifPresent(model::add);
 
             getLog().info("--------------------------------------");
         }
@@ -154,14 +157,27 @@ public class RdfAnnotationProcessorMojo extends AbstractMojo {
         getLog().info("======================================");
     }
 
+    private SPipesModule readExtendedModuleAnnotationFromClass(Class<?> moduleClass) {
+
+        SPipesModule ret = null;
+        Class cls = moduleClass.getSuperclass();
+        while(ret == null && cls != null) {
+            ret = readModuleAnnotationFromClass(cls);
+            cls = cls.getSuperclass();
+        }
+
+        return ret;
+    }
+
     private void generateRdfForModule() throws MojoExecutionException {
         try {
             Set<Class<?>> moduleClasses = readAllModuleClasses(this.project);
             var model = readModelFromDefaultFile();
             for (Class<?> moduleClass : moduleClasses) {
                 var moduleAnnotation = readModuleAnnotationFromClass(moduleClass);
+                var extendedModuleAnnotation = readExtendedModuleAnnotationFromClass(moduleClass);
                 var constraints = readConstraintsFromClass(moduleClass);
-                writeConstraintsToModel(model, constraints, moduleAnnotation);
+                writeConstraintsToModel(model, constraints, moduleAnnotation, extendedModuleAnnotation);
             }
 
             var ontologyPath = modulePackageName.replaceAll("[.]", "/") + "/" + ontologyFilename;
@@ -203,10 +219,45 @@ public class RdfAnnotationProcessorMojo extends AbstractMojo {
         return moduleClasses;
     }
 
+    /**
+     * Reads manually managed modules ontology from maven sub-project.
+     * The ontology is loaded from the resource folder of the sub-project and it is expected to start with the artifact
+     * id of the sub-project followed by the postfix ".tll". For example, assume the input parameter project
+     * artifact id "s-pipes-modules-text-analysis". This method will look for the ontology located at:
+     * <pre>   $resource-dir$/s-pipes-modules-text-analysis.ttl</pre>
+     *
+     * Any ontology resources and their triples are removed from the model before returning.
+     * @param project
+     * @return
+     */
+    private Model readManuallyManagedModuleDescriptionOntology(MavenProject project){
+        String ontoName = project.getArtifactId() + ".ttl";
+        Optional<String> ontoUri = Optional.ofNullable(project).map(p ->
+                p.getResources().stream()
+                        .map(r -> new File(r.getDirectory(), ontoName))
+                        .filter(File::exists)
+                        .map(f -> f.getAbsoluteFile().toURI().toString())
+                        .findFirst().orElse(null)
+        );
+
+        if (!ontoUri.isPresent())
+            return null;
+
+        Model m = ModelFactory.createDefaultModel();
+        m.read(ontoUri.get(), "TTL");
+        m.listSubjectsWithProperty(RDF.type, OWL.Ontology).toList()
+                .forEach(o -> m.removeAll(o, null, null));
+
+        return m;
+    }
+
     private URL[] getDependencyURLs(MavenProject project) throws MalformedURLException {
         Set<URL> ret = new HashSet<>();
         ret.add(new File(project.getBuild().getOutputDirectory()).toURI().toURL());
-        for(Dependency d : project.getDependencies()){
+
+        for(Dependency d : project.getDependencies().stream()
+                .filter(d -> !Artifact.SCOPE_TEST.equals(d.getScope()))
+                .collect(Collectors.toList())){
             URL dURL = getURL(getLocalRepository(project), d);
             ret.add(dURL);
         }
@@ -239,10 +290,21 @@ public class RdfAnnotationProcessorMojo extends AbstractMojo {
     }
 
     private List<cz.cvut.spipes.modules.Parameter> readConstraintsFromClass(Class<?> classObject) {
-        return Arrays.stream(classObject.getDeclaredFields())
-                .filter(field -> field.isAnnotationPresent(PARAM_ANNOTATION))
-                .map(field -> field.getAnnotation(PARAM_ANNOTATION))
-                .collect(Collectors.toUnmodifiableList());
+        List<cz.cvut.spipes.modules.Parameter> parameterConstraints = new ArrayList<>();
+
+        Class cls = classObject;
+        while(cls != null){
+            if(cls != classObject && cls.isAnnotationPresent(MODULE_ANNOTATION)) {
+                cls = cls.getSuperclass();
+                continue;
+            }
+            Arrays.stream(cls.getDeclaredFields())
+                    .filter(field -> field.isAnnotationPresent(PARAM_ANNOTATION))
+                    .map(field -> field.getAnnotation(PARAM_ANNOTATION))
+                    .forEach(parameterConstraints::add);
+            cls = cls.getSuperclass();
+        }
+        return parameterConstraints;
     }
     //endregion
 
@@ -269,25 +331,28 @@ public class RdfAnnotationProcessorMojo extends AbstractMojo {
 
     private void writeConstraintsToModel(Model baseRdfModel,
                                          List<cz.cvut.spipes.modules.Parameter> constraintAnnotations,
-                                         SPipesModule moduleAnnotation) {
+                                         SPipesModule moduleAnnotation,
+                                         SPipesModule extendedModuleAnnotation) {
         final var root = ResourceFactory.createResource(KBSS_MODULE.uri + moduleAnnotation.label().replaceAll(" ", "-").toLowerCase()); //todo can be added to the annotation
+        // set extended uri
+        Optional.ofNullable(extendedModuleAnnotation)
+                .map(a -> ResourceFactory.createResource(
+                        KBSS_MODULE.uri + a.label().replaceAll(" ", "-").toLowerCase()) //todo can be added to the annotation
+                ).ifPresent(r -> baseRdfModel.add(root, RDFS.subClassOf, r));
+
         baseRdfModel.add(root, RDF.type, SM.Module);
         baseRdfModel.add(root, RDFS.comment, moduleAnnotation.comment());
         baseRdfModel.add(root, RDFS.label, moduleAnnotation.label());
-        final var statements = baseRdfModel.listStatements(null, RDF.type, SM.Module);
-        while (statements.hasNext()) {
-            final var statement = statements.next();
-            final var subject = statement.getSubject();
-            for (var annotation : constraintAnnotations) {
-                final var modelConstraint = ResourceFactory.createResource();
-                baseRdfModel.add(modelConstraint, RDF.type, SPL.Argument);
-                baseRdfModel.add(modelConstraint, SPL.predicate, annotation.urlPrefix() + annotation.name());
-                baseRdfModel.add(modelConstraint, RDFS.comment, "Automatically generated field: " + annotation.name());
-                baseRdfModel.add(subject, SPIN.constraint, modelConstraint);
+        for (var annotation : constraintAnnotations) {
+            final var modelConstraint = ResourceFactory.createResource();
+            baseRdfModel.add(modelConstraint, RDF.type, SPL.Argument);
+            baseRdfModel.add(modelConstraint, SPL.predicate, ResourceFactory.createResource(annotation.urlPrefix() + annotation.name()));
+            baseRdfModel.add(modelConstraint, RDFS.label, annotation.name());
+            baseRdfModel.add(modelConstraint, RDFS.comment, annotation.comment());
+            baseRdfModel.add(root, SPIN.constraint, modelConstraint);
 
-                getLog().debug("Added model constraint based on annotation: " +
-                        "(name = " + annotation.name() + ", urlPrefix = " + annotation.urlPrefix() + ")");
-            }
+            getLog().debug("Added model constraint based on annotation: " +
+                    "(name = " + annotation.name() + ", urlPrefix = " + annotation.urlPrefix() + ")");
         }
     }
 

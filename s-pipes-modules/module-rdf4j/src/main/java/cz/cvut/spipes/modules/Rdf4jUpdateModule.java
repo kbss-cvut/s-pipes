@@ -5,6 +5,7 @@ import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.exception.ModuleConfigurationInconsistentException;
 import cz.cvut.spipes.exceptions.RepositoryAccessException;
+import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.util.QueryUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
@@ -26,28 +27,33 @@ import org.topbraid.spin.vocabulary.SP;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@SPipesModule(label = "rdf4j update", comment = "Updates sparql endpoint configured in rdf4jServerURL using specified updateQueries.")
 public class Rdf4jUpdateModule extends AbstractModule {
     private static final Logger LOG = LoggerFactory.getLogger(Rdf4jUpdateModule.class.getName());
-    private static final String TYPE_URI = KBSS_MODULE.getURI() + "rdf4j-update";
-    private static final String PROPERTY_PREFIX_URI = KBSS_MODULE.getURI() + "rdf4j";
+    private static final String TYPE_URI = KBSS_MODULE.uri + "rdf4j-update";
+    private static final String PROPERTY_PREFIX_URI = KBSS_MODULE.uri + "rdf4j";
 
-    /**
-     * URL of the Rdf4j server
-     */
     static final Property P_RDF4J_SERVER_URL = getParameter("p-rdf4j-server-url");
+    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-rdf4j-server-url", comment = "URL of the Rdf4j server")
     private String rdf4jServerURL;
 
-    /**
-     * Rdf4j repository ID
-     */
     static final Property P_RDF4J_REPOSITORY_NAME = getParameter("p-rdf4j-repository-name");
+
+    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-rdf4j-repository-name", comment = "Rdf4j repository ID")
     private String rdf4jRepositoryName;
+
+    @Parameter(urlPrefix = SML.uri, name = "updateQuery", comment = "A list of SPARQL Update queries. Queries strings are read from sp:text.")// TODO - revise comment
     private List<String> updateQueries;
 
     static final Property P_RDF4J_STOP_ITERATION_ON_STABLE_TRIPLE_COUNT =
         getParameter("p-stop-iteration-on-stable-triple-count");
+
+    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-stop-iteration-on-stable-triple-count",
+            comment = "Stops iteration on if triple count did not change. Default is false.") // TODO - revise comment
     private boolean onlyIfTripleCountChanges;
 
+    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "has-max-iteration-count",
+            comment = "Limits the number of iterations to the specified value. Default value is 1.") // TODO - revise comment
     private int iterationCount;
 
     private Repository updateRepository;

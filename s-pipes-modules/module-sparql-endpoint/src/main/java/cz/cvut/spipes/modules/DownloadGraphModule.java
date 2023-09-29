@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
+import cz.cvut.spipes.modules.annotations.SPipesModule;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.riot.Lang;
@@ -17,6 +19,7 @@ import org.apache.jena.riot.RDFDataMgr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@SPipesModule(label = "sparql endpoint download graph", comment = "Downloads named graph namedGraphId from sparql endpoint endpointUrl.")
 public class DownloadGraphModule extends AnnotatedAbstractModule {
 
     private static final String TYPE_URI = KBSS_MODULE.uri + "sparql-endpoint-download-graph";
@@ -24,16 +27,16 @@ public class DownloadGraphModule extends AnnotatedAbstractModule {
     private static final int DEFAULT_PAGE_SIZE = 10000;
     private static final Logger LOG = LoggerFactory.getLogger(DownloadGraphModule.class);
 
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "named-graph-id")
+    @Parameter(urlPrefix = TYPE_PREFIX, name = "named-graph-id", comment = "Named graph id")
     private String namedGraphId;
 
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "endpoint-url")
+    @Parameter(urlPrefix = TYPE_PREFIX, name = "endpoint-url", comment = "Endpoint url")
     private String endpointUrl;
 
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "output-resource-variable")
+    @Parameter(urlPrefix = TYPE_PREFIX, name = "output-resource-variable", comment = "Output resource variable")
     private String outputResourceVariable;
 
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "page-size")
+    @Parameter(urlPrefix = TYPE_PREFIX, name = "page-size", comment = "Page size. Default value is 10000.")
     private Integer pageSize = DEFAULT_PAGE_SIZE;
 
     protected long numberOfDownloadedTriples;

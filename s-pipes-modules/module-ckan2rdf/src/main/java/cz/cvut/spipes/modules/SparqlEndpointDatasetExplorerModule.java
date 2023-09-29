@@ -5,6 +5,8 @@ import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import java.time.Instant;
 import java.util.Calendar;
+
+import cz.cvut.spipes.modules.annotations.SPipesModule;
 import org.apache.commons.io.IOUtils;
 import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.Query;
@@ -18,6 +20,7 @@ import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@SPipesModule(label = "sparqlEndpointDatasetExplorer-v1", comment = "TODO")
 public class SparqlEndpointDatasetExplorerModule extends AnnotatedAbstractModule {
 
     public static final String TYPE_URI = KBSS_MODULE.uri + "sparqlEndpointDatasetExplorer-v1";
@@ -25,22 +28,13 @@ public class SparqlEndpointDatasetExplorerModule extends AnnotatedAbstractModule
         LoggerFactory.getLogger(SparqlEndpointDatasetExplorerModule.class);
     private final String nsHttp = "http://onto.fel.cvut.cz/ontologies/http/";
 
-    /**
-     * URL of the SPARQL endpoint.
-     */
-    @Parameter(urlPrefix = TYPE_URI + "/", name = "p-sparql-endpoint-url")
+    @Parameter(urlPrefix = TYPE_URI + "/", name = "p-sparql-endpoint-url", comment = "URL of the SPARQL endpoint.")
     private String propSparqlEndpointUrl;
 
-    /**
-     * Connection Timeout.
-     */
-    @Parameter(urlPrefix = TYPE_URI + "/", name = "p-connection-timeout")
+    @Parameter(urlPrefix = TYPE_URI + "/", name = "p-connection-timeout", comment = "Connection Timeout in ms. Default 3000.")
     private long propConnectionTimeout = 3000;
 
-    /**
-     * Query Timeout.
-     */
-    @Parameter(urlPrefix = TYPE_URI + "/", name = "p-query-timeout")
+    @Parameter(urlPrefix = TYPE_URI + "/", name = "p-query-timeout", comment = "Query Timeout. Default 60000")
     private long propQueryTimeout = 60000;
 
     @Override

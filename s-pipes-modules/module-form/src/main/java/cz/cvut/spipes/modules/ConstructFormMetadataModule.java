@@ -4,6 +4,7 @@ import cz.cvut.sforms.SFormsVocabularyJena;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
+import cz.cvut.spipes.modules.annotations.SPipesModule;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.RDF;
@@ -18,9 +19,7 @@ import java.util.List;
 import static cz.cvut.spipes.form.JenaFormUtils.getAnswerOrigin;
 import static cz.cvut.spipes.form.JenaFormUtils.getQuestionOrigin;
 
-/**
- * Compute form:has-origin-path and form:has-origin-path-id properties.
- */
+@SPipesModule(label = "construct form metadata", comment = "Compute form:has-origin-path and form:has-origin-path-id properties.")
 public class ConstructFormMetadataModule extends AnnotatedAbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(ConstructFormMetadataModule.class);
@@ -29,7 +28,7 @@ public class ConstructFormMetadataModule extends AnnotatedAbstractModule {
     private static final String PATH_SEPARATOR = ",";
     private static final String INSTANCE_TYPE_SEPARATOR = "|";
 
-    @Parameter(urlPrefix = SML.uri, name = "replace")
+    @Parameter(urlPrefix = SML.uri, name = "replace", comment = "Replace context flag. Default value is false.")
     private boolean isReplace = false;
 
     private enum Origin {

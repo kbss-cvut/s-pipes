@@ -11,4 +11,5 @@ import java.lang.annotation.Target;
 public @interface Parameter {
     String urlPrefix() default KBSS_MODULE.uri;
     String name();
+    String comment();
 }

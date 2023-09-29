@@ -4,6 +4,7 @@ import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.exception.ModuleConfigurationInconsistentException;
+import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.util.CoreConfigProperies;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResourceFactory;
@@ -30,41 +31,35 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Optional;
 
-/**
- * Module deploys content of input execution context
- * into default context of repository (if p-rdf4j-context-iri is not specified)
- * or concrete context (if p-rdf4j-context-iri is specified).
- */
+@SPipesModule(label = "deploy", comment =
+        "Module deploys content of input execution context into default context of repository (if p-rdf4j-context-iri " +
+        "is not specified) or concrete context (if p-rdf4j-context-iri is specified)."
+)
 public class Rdf4jDeployModule extends AbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(Rdf4jDeployModule.class);
 
-    private static String TYPE_URI = KBSS_MODULE.getURI()+"deploy";
-    private static String PROPERTY_PREFIX_URI = KBSS_MODULE.getURI()+"rdf4j";
+    private final static String TYPE_URI = KBSS_MODULE.uri + "deploy";
+    private final static String PROPERTY_PREFIX_URI = KBSS_MODULE.uri + "rdf4j";
 
     private static Property getParameter(final String name) {
         return ResourceFactory.createProperty(PROPERTY_PREFIX_URI + "/" + name);
     }
 
-    /**
-     * URL of the Rdf4j server
-     */
     static final Property P_RDF4J_SERVER_URL = getParameter("p-rdf4j-server-url");
+    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-rdf4j-server-url", comment = "URL of the Rdf4j server")
     private String rdf4jServerURL;
 
-    /**
-     * Rdf4j repository ID
-     */
     static final Property P_RDF4J_REPOSITORY_NAME = getParameter("p-rdf4j-repository-name");
+    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-rdf4j-repository-name", comment = "Rdf4j repository ID")
     private String rdf4jRepositoryName;
 
-    /**
-     * IRI of the context that should be used for deployment
-     */
     static final Property P_RDF4J_CONTEXT_IRI = getParameter("p-rdf4j-context-iri");
+    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-rdf4j-context-iri", comment = "IRI of the context that should be used for deployment.")
     private String rdf4jContextIRI;
 
     static final Property P_RDF4J_REPOSITORY_USERNAME = getParameter("p-rdf4j-secured-username-variable");
+    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-rdf4j-secured-username-variable", comment = "User name if the repository requires authentication.")
     private String rdf4jSecuredUsernameVariable;
     private RepositoryManager repositoryManager;
     private Repository repository;
@@ -74,12 +69,13 @@ public class Rdf4jDeployModule extends AbstractModule {
     }
 
     static final Property P_RDF4J_REPOSITORY_PASSWORD = getParameter("p-rdf4j-secured-password-variable");
+    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-rdf4j-secured-password-variable", comment = "Password if the repository requires authentication.")
     private String rdf4jSecuredPasswordVariable;
-    /**
-     * Whether data should be replaced (true) / appended (false) into the specified context or repository.
-     * Default is false.
-     */
+
     static final Property P_IS_REPLACE_CONTEXT_IRI = getParameter("p-is-replace");
+    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-is-replace", comment =
+            "Whether data should be replaced (true) / appended (false) into the specified context or repository.\n" +
+            "Default is false.")
     private boolean isReplaceContext;
 
     public String getRdf4jServerURL() {

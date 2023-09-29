@@ -101,6 +101,7 @@ import java.util.function.Supplier;
 public class TabularModule extends AbstractModule {
 
     public static final String TYPE_URI = KBSS_MODULE.uri + "tabular";
+    public static final String PARAM_URL_PREFIX = TYPE_URI + "/";
     private static final Logger LOG = LoggerFactory.getLogger(TabularModule.class);
     private final Property P_DELIMITER = getSpecificParameter("delimiter");
     private final Property P_QUOTE_CHARACTER = getSpecificParameter("quote-character");
@@ -113,21 +114,27 @@ public class TabularModule extends AbstractModule {
     private final Property P_PROCESS_SPECIFIC_SHEET_IN_XLS_FILE = getSpecificParameter("process-specific-sheet-in-xls-file");
 
     //sml:replace
+    @Parameter(urlPrefix = SML.uri, name = "replace", comment = "Replace context flag. Default is false.")// TODO - revise comment
     private boolean isReplace;
 
+    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "source-resource-uri", comment = "Resource URI of the source table.") // TODO - revise comment
     //:source-resource-uri
     private StreamResource sourceResource;
 
     //:delimiter
+    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "delimiter", comment = "Column delimiter. Default value is comma ','.")
     private int delimiter;
 
     //:quote-character
+    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "quote-character", comment = "Quote character. Default is '\"' if delimiter is ',', '\\0' otherwize.")
     private char quoteCharacter;
 
     //:data-prefix
+    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "data-prefix", comment = "Data prefix")// TODO - improve comment
     private String dataPrefix;
 
     //:skip-header
+    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "skip-header", comment = "Skip header. Default is false.")
     private boolean skipHeader;
 
     //:process-specific-sheet-in-xls-file
@@ -137,6 +144,8 @@ public class TabularModule extends AbstractModule {
     private int processSpecificSheetInXLSFile;
 
     //:output-mode
+    // TODO - revise comment
+    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "output-mode", comment = "Output mode. Default is standard-mode('http://onto.fel.cvut.cz/ontologies/lib/module/tabular/standard-mode)")
     private Mode outputMode;
 
     //:source-resource-format
@@ -152,6 +161,7 @@ public class TabularModule extends AbstractModule {
     private ResourceFormat sourceResourceFormat = ResourceFormat.PLAIN;
 
     //:accept-invalid-quoting
+    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "accept-invalid-quoting", comment = "Accept invalid quoting. Default is false.")
     private boolean acceptInvalidQuoting;
 
     /**

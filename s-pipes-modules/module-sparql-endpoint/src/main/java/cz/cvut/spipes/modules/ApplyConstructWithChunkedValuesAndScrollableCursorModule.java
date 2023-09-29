@@ -3,6 +3,7 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.VariablesBinding;
+import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.recursion.ChunkedValuesProvider;
 import cz.cvut.spipes.recursion.CombinedQueryTemplateRecursionProvider;
 import cz.cvut.spipes.recursion.QueryTemplateRecursionProvider;
@@ -26,6 +27,7 @@ import org.topbraid.spin.model.Select;
  * TODO issue with redundant call {@link ScrollableCursorProvider}
  * TODO supports only one CONSTRUCT query
  */
+@SPipesModule(label = "apply construct with chunked values and scrollable cursor", comment = "Apply construct with chunked values and scrollable cursor")
 public class ApplyConstructWithChunkedValuesAndScrollableCursorModule extends ApplyConstructAbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplyConstructWithChunkedValuesAndScrollableCursorModule.class);
@@ -37,9 +39,14 @@ public class ApplyConstructWithChunkedValuesAndScrollableCursorModule extends Ap
     private static final Property P_CHUNK_SIZE = ResourceFactory.createProperty(TYPE_PREFIX + "chunk-size");
     private static final Property P_PAGE_SIZE = ResourceFactory.createProperty(TYPE_PREFIX + "page-size");
 
+    @Parameter(urlPrefix = TYPE_PREFIX, name = "chunk-size", comment = "Chunk size. Default is 10.")
     private Integer chunkSize = DEFAULT_CHUNK_SIZE;
 
+    @Parameter(urlPrefix = TYPE_PREFIX, name = "page-size", comment = "Page size for the scrollable cursor. Default is 10000.")
     private Integer pageSize = DEFAULT_PAGE_SIZE;
+
+    @Parameter(urlPrefix = SML.uri, name = "selectQuery",
+            comment = "The select query that will be used to iterate over construct query templates.")
     private Select selectQuery;
 
 

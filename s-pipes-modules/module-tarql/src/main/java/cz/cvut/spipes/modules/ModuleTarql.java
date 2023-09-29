@@ -3,6 +3,7 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
+import cz.cvut.spipes.modules.annotations.SPipesModule;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
@@ -16,32 +17,27 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 @Deprecated //TODO merge with TarqlModule functionality
+@SPipesModule(label = "tarql-XXX-2", comment = "Module to convert CSV file to RDF and query it using SPRQL query. The module wraps org.deri.tarql.tarql. This module is depracated.")
 public class ModuleTarql extends AbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(ModuleTarql.class);
 
-    private static final String TYPE_URI = KBSS_MODULE.getURI() + "tarql" + "-XXX-2";
+    private static final String TYPE_URI = KBSS_MODULE.uri + "tarql" + "-XXX-2";
 
     private static Property getParameter(final String name) {
-        return ResourceFactory.createProperty(TYPE_URI + name);
+        return ResourceFactory.createProperty(TYPE_URI + "/" + name);
     }
 
-    /**
-     * File with the TARQL script
-     */
     static final Property P_TARQL_STRING = getParameter("p-tarql-string");
+    @Parameter(urlPrefix = TYPE_URI + "/", name = "p-tarql-string", comment = "File with the TARQL script." )
     private String tarqlString;
 
-    /**
-     * Ontology IRI
-     */
     static final Property P_ONTOLOGY_IRI = getParameter("p-ontology-iri");
+    @Parameter(urlPrefix = TYPE_URI + "/", name = "p-ontology-iri", comment = "Ontology IRI")
     private String ontologyIRI;
 
-    /**
-     * Input File
-     */
     static final Property P_INPUT_FILE = getParameter("p-input-file");
+    @Parameter(urlPrefix = TYPE_URI + "/", name = "p-input-file", comment = "Input File")
     private String inputFile;
 
 //    /**

@@ -2,13 +2,8 @@ package cz.cvut.spipes.modules;
 
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.engine.ExecutionContext;
-import java.io.IOException;
-import java.util.Collections;
-import org.apache.jena.query.Query;
-import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.query.QueryFactory;
-import org.apache.jena.query.Syntax;
+import cz.cvut.spipes.modules.annotations.SPipesModule;
+import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResourceFactory;
@@ -19,21 +14,28 @@ import org.apache.jena.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Optional;
+
+@SPipesModule(label = "get dataset descriptors v1", comment = "Retrieve dataset descriptor for dataset with dataset-iri in endpoint-url.")
 public class GetDatasetDescriptorsModule extends AbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(GetDatasetDescriptorsModule.class);
 
     private static final String TYPE_URI = KBSS_MODULE.uri + "get-dataset-descriptors-v1";
+    private static final String PARAM_URI = TYPE_URI + "/";
 
     /**
      * URL of the Sesame server.
      */
     private static final Property P_DATASET_IRI = getParameter("p-dataset-iri");
+    private static final Property P_ENDPOINT_URL = getParameter("endpoint-url");
+
+    @Parameter(urlPrefix = PARAM_URI, name = "p-dataset-iri", comment = "IRI of the dataset.")// TODO - revise comment
     private String prpDatasetIri;
 
-    /**
-     * URL of the SPARQL endpoint.
-     */
+    @Parameter(urlPrefix = PARAM_URI, name = "endpoint-url", comment = "URL of the SPARQL endpoint. Default value is 'http://onto.fel.cvut.cz/rdf4j-server/repositories/descriptors-metadata'")
     private String endpointUrl = "http://onto.fel.cvut.cz/rdf4j-server/repositories/descriptors-metadata";
 
     private static Property getParameter(final String name) {
@@ -95,5 +97,6 @@ public class GetDatasetDescriptorsModule extends AbstractModule {
     @Override
     public void loadConfiguration() {
         prpDatasetIri = this.getStringPropertyValue(P_DATASET_IRI);
+        endpointUrl = Optional.ofNullable(this.getStringPropertyValue(P_ENDPOINT_URL)).orElse(endpointUrl);
     }
 }

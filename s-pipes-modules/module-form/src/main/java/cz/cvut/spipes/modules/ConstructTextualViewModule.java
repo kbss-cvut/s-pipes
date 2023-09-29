@@ -12,6 +12,7 @@ import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.form.JenaFormUtils;
 import cz.cvut.spipes.form.JopaPersistenceUtils;
+import cz.cvut.spipes.modules.annotations.SPipesModule;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
@@ -21,32 +22,37 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.function.Predicate;
 
-/**
- * For input Q&A models constructs textual view of specified questions. Each textual view represent the question
- * and its sub-questions recursively.
- */
+@SPipesModule(label = "construct textual view", comment =
+        "For input Q&A models constructs textual view of specified questions. Each textual" +
+        " view represent the question and its sub-questions recursively."
+)
 public class ConstructTextualViewModule extends AnnotatedAbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(ConstructTextualViewModule.class);
 
     private static final String TYPE_URI = KBSS_MODULE.uri + "construct-textual-view";
 
-    @Parameter(urlPrefix = SML.uri, name = "replace")
+    @Parameter(urlPrefix = SML.uri, name = "replace", comment = "Replace context flag. Default value is false.")
     private boolean isReplace = false;
 
-    @Parameter(urlPrefix = FORM_MODULE.uri, name = "serialize-unanswered-questions")
+    @Parameter(urlPrefix = FORM_MODULE.uri, name = "serialize-unanswered-questions",
+            comment = "If true (default), outputs questions not having answers")
     private boolean isSerializeUnansweredQuestions = true;
 
-    @Parameter(urlPrefix = FORM_MODULE.uri, name = "serialize-answers")
+    @Parameter(urlPrefix = FORM_MODULE.uri, name = "serialize-answers",
+            comment = "If true (default), outputs answers not only questions")
     private boolean isSerializeAnswers = true;
 
-    @Parameter(urlPrefix = FORM_MODULE.uri, name = "process-non-root-questions")
+    @Parameter(urlPrefix = FORM_MODULE.uri, name = "process-non-root-questions",
+            comment = "If true (default), process all questions, otherwise process only root questions")
     private boolean isProcessNonRootQuestions = true;
 
-    @Parameter(urlPrefix = FORM_MODULE.uri, name = "indentation-string")
+    @Parameter(urlPrefix = FORM_MODULE.uri, name = "indentation-string",
+            comment = "Indentation string indents subquestion from questions. By default '  ' is used.")
     private String indentationString = "  ";
 
-    @Parameter(urlPrefix = FORM_MODULE.uri, name = "language")
+    @Parameter(urlPrefix = FORM_MODULE.uri, name = "language",
+            comment = "Language to be used to retrieve labels of questions. By default 'en' is used.")
     private String language = "en";
 
     @Override

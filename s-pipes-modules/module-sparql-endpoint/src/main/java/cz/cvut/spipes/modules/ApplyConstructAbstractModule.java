@@ -23,32 +23,39 @@ import java.util.List;
 public abstract class ApplyConstructAbstractModule extends AnnotatedAbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplyConstructAbstractModule.class);
-
+    private static final String TYPE_URI = KBSS_MODULE.uri + "abstract-apply-construct";
+    private static final String PROPERTY_PREFIX_URI = KBSS_MODULE.uri + "";
     //sml:constructQuery
+    // TODO - this parameter is reused in ApplyConstructWithChunkedValuesAndScrollableCursorModule. There the comment should be extended by a note, i.e. "The construct queries with markers #${VALUES} and #${LIMIT_OFFSET}."
+    @Parameter(urlPrefix = SML.uri, name = "constructQuery", comment = "List of construct queries the output of which is returned by the module.") //TODO - revise comment
     protected List<Resource> constructQueries;
 
     //sml:replace
+    @Parameter(urlPrefix = SML.uri, name = "replace", comment = "Replace context flag, default is false.")
     protected boolean isReplace;
 
     //kbss:parseText
-    /**
-     * Whether the query should be taken from sp:text property instead of from SPIN serialization
-     */
+    @Parameter(urlPrefix = KBSS_MODULE.uri, name = "is-parse-text",
+            comment = "Whether the query should be taken from sp:text property instead of from SPIN serialization," +
+                " default is true."
+    )
     protected boolean parseText;
 
     //kbss:iterationCount
-    /**
-     * Maximal number of iterations of the whole rule set. 0 means 0 iterations. The actual number of iterations can be smaller,
-     * if no new inferences are generated any more.
-     * <p>
-     * iterationCount = 1:
-     * - the whole rule set is executed only once.
-     * iterationCount > 1:
-     * - the whole rule set is executed at most "iterationCount" times.
-     * - in each iteration, queries are evaluated on the model merged from the default model and the result of previous iteration
-     * <p>
-     * Within each iteration, all queries are evaluated on the same model.
-     */
+    @Parameter(name = "has-max-iteration-count",
+            comment =
+                    "Maximal number of iterations of the whole rule set. 0 means 0 iterations. The actual number of iterations can be smaller,\n" +
+                    "if no new inferences are generated any more.\n" +
+                    "<p>\n" +
+                    "iterationCount = 1:\n" +
+                    "- the whole rule set is executed only once.\n" +
+                    "iterationCount > 1:\n" +
+                    "- the whole rule set is executed at most \"iterationCount\" times.\n" +
+                    "- in each iteration, queries are evaluated on the model merged from the default model and the result of previous iteration\n" +
+                    "<p>\n" +
+                    "Within each iteration, all queries are evaluated on the same model."
+
+    )
     protected int iterationCount = -1;
 
 
@@ -175,7 +182,7 @@ public abstract class ApplyConstructAbstractModule extends AnnotatedAbstractModu
         //TODO default value must be taken from template definition
         isReplace = this.getPropertyValue(SML.replace, false);
 
-        parseText = this.getPropertyValue(KBSS_MODULE.is_parse_text, false);
+        parseText = this.getPropertyValue(KBSS_MODULE.is_parse_text, true);
         iterationCount = this.getPropertyValue(KBSS_MODULE.has_max_iteration_count, -1);
     }
 

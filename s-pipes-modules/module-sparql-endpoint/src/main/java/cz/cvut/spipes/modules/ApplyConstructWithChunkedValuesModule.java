@@ -3,6 +3,7 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.VariablesBinding;
+import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.util.QueryUtils;
 import java.util.Objects;
 import org.apache.jena.query.Query;
@@ -22,17 +23,22 @@ import org.topbraid.spin.model.Select;
 /**
  * TODO Order of queries is not enforced.
  */
+@SPipesModule(label = "apply construct with chunked values", comment = "Apply construct with chunked values.")
 public class ApplyConstructWithChunkedValuesModule extends ApplyConstructAbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplyConstructWithChunkedValuesModule.class);
 
-    private static final String TYPE_URI = KBSS_MODULE.uri + "apply-construct-with-chunked-values";
+    private static final String TYPE_URI = KBSS_MODULE.uri + "";
     private static final String TYPE_PREFIX = TYPE_URI + "/";
     private static final int DEFAULT_CHUNK_SIZE = 10;
     private static final String VALUES_CLAUSE_MARKER_NAME = "VALUES";
     private static final Property P_CHUNK_SIZE = ResourceFactory.createProperty(TYPE_PREFIX + "chunk-size");
 
+    @Parameter(urlPrefix = TYPE_PREFIX, name = "chunk-size", comment = "Chunk size. Default is 10.")
     private Integer chunkSize = DEFAULT_CHUNK_SIZE;
+
+    @Parameter(urlPrefix = SML.uri, name = "selectQuery"
+            , comment = "The select query that will be used to iterate over construct query templates.")
     private Select selectQuery;
 
 
