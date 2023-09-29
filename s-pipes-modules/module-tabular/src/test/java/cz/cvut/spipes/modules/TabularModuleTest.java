@@ -5,11 +5,13 @@ import cz.cvut.spipes.constants.CSVW;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.exception.ResourceNotUniqueException;
+import cz.cvut.spipes.modules.exception.SpecificationNonComplianceException;
 import cz.cvut.spipes.modules.exception.TableSchemaException;
 import cz.cvut.spipes.test.JenaTestUtils;
 import cz.cvut.spipes.util.StreamResourceUtils;
 import org.apache.jena.rdf.model.*;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -58,9 +60,56 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
         );
 
         ExecutionContext outputContext = module.executeSelf();
+        Model expectedModel = ModelFactory.createDefaultModel().read(getFilePath("countries-model-output.ttl").toString());
 
-        assertTrue(outputContext.getDefaultModel().size() > 0);
+        assertIsomorphic(outputContext.getDefaultModel(),expectedModel);
     }
+
+     @Test
+     void executeWithSimpleTransformationXls() throws URISyntaxException, IOException {
+         module.setSourceResource(
+                 StreamResourceUtils.getStreamResource(
+                         "http://test-file",
+                         getFilePath("countries.xls"))
+         );
+         module.setSourceResourceFormat(ResourceFormat.EXCEL);
+         module.setProcessSpecificSheetInXLSFile(1);
+
+         ExecutionContext outputContext = module.executeSelf();
+
+         Model expectedModel = ModelFactory.createDefaultModel().read(getFilePath("countries-model-output-xls.ttl").toString());
+
+         assertIsomorphic(outputContext.getDefaultModel(),expectedModel);
+     }
+
+     @Test
+     @Disabled
+     void executeWithSimpleTransformationMergedXls() throws URISyntaxException, IOException {
+         module.setSourceResource(
+                 StreamResourceUtils.getStreamResource(
+                         "http://test-file",
+                         getFilePath("merged.xls"))
+         );
+         module.setSourceResourceFormat(ResourceFormat.EXCEL);
+         module.setProcessSpecificSheetInXLSFile(1);
+
+         ExecutionContext outputContext = module.executeSelf();
+
+         assertTrue(outputContext.getDefaultModel().size() > 0);
+     }
+
+     @Test
+     void executeSelfThrowSpecificationException() throws URISyntaxException, IOException {
+         module.setSourceResource(
+                 StreamResourceUtils.getStreamResource(
+                         "http://test-file",
+                         getFilePath("countries.tsv"))
+         );
+         module.setSourceResourceFormat(ResourceFormat.TSV);
+         module.executeSelf();
+
+         assertThrows(SpecificationNonComplianceException.class, () -> module.setDelimiter(','));
+     }
 
     @Test
      void executeWithDuplicateColumnsThrowsResourceNotUniqueException()
@@ -203,7 +252,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
      @Test
      void executeSelfWithHTMLFileInput() throws URISyntaxException, IOException {
-         module.setProcessHTMLFile(true);
+         module.setSourceResourceFormat(ResourceFormat.HTML);
          module.setSourceResource(
                 StreamResourceUtils.getStreamResource(DATA_PREFIX, getFilePath("examples/htmlFile/input.html"))
         );

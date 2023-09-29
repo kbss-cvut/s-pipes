@@ -19,6 +19,9 @@ public class Table extends AbstractEntity{
     @OWLObjectProperty(iri = CSVW.rowUri, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Row> rows = new HashSet<>();
 
+    @OWLAnnotationProperty(iri = "http://www.w3.org/2000/01/rdf-schema#label")
+    private String label;
+
     public TableSchema getTableSchema() {
         return tableSchema;
     }
@@ -41,5 +44,13 @@ public class Table extends AbstractEntity{
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 }
