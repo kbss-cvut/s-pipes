@@ -18,7 +18,8 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Optional;
 
-@SPipesModule(label = "get dataset descriptors v1", comment = "Retrieve dataset descriptor for dataset with dataset-iri in endpoint-url.")
+@SPipesModule(label = "get dataset descriptors v1", comment = "Retrieve dataset descriptor for dataset" +
+    " with dataset-iri in endpoint-url.")
 public class GetDatasetDescriptorsModule extends AbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(GetDatasetDescriptorsModule.class);
@@ -35,7 +36,8 @@ public class GetDatasetDescriptorsModule extends AbstractModule {
     @Parameter(urlPrefix = PARAM_URI, name = "p-dataset-iri", comment = "IRI of the dataset.")// TODO - revise comment
     private String prpDatasetIri;
 
-    @Parameter(urlPrefix = PARAM_URI, name = "endpoint-url", comment = "URL of the SPARQL endpoint. Default value is 'http://onto.fel.cvut.cz/rdf4j-server/repositories/descriptors-metadata'")
+    @Parameter(urlPrefix = PARAM_URI, name = "endpoint-url", comment = "URL of the SPARQL endpoint. Default value" +
+        " is 'http://onto.fel.cvut.cz/rdf4j-server/repositories/descriptors-metadata'")
     private String endpointUrl = "http://onto.fel.cvut.cz/rdf4j-server/repositories/descriptors-metadata";
 
     private static Property getParameter(final String name) {
