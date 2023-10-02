@@ -27,11 +27,15 @@ public abstract class ApplyConstructAbstractModule extends AnnotatedAbstractModu
     private static final String PROPERTY_PREFIX_URI = KBSS_MODULE.uri + "";
     //sml:constructQuery
     // TODO - this parameter is reused in ApplyConstructWithChunkedValuesAndScrollableCursorModule. There the comment should be extended by a note, i.e. "The construct queries with markers #${VALUES} and #${LIMIT_OFFSET}."
-    @Parameter(urlPrefix = SML.uri, name = "constructQuery", comment = "List of construct queries the output of which is returned by the module.") //TODO - revise comment
+    @Parameter(urlPrefix = SML.uri, name = "constructQuery", comment = "SPARQL Construct query (sp:Construct)" +
+        " that should be executed by this module. The query is read from sp:text property." +
+        " The output of query execution is returned by the module.")
     protected List<Resource> constructQueries;
 
     //sml:replace
-    @Parameter(urlPrefix = SML.uri, name = "replace", comment = "Replace context flag, default is false.")
+    @Parameter(urlPrefix = SML.uri, name = "replace", comment = "Specifies whether a module should overwrite triples" +
+        " from its predecessors. When set to true (default is false), it prevents" +
+        " passing through triples from the predecessors.")
     protected boolean isReplace;
 
     //kbss:parseText

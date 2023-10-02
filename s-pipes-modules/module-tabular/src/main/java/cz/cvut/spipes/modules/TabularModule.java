@@ -114,10 +114,13 @@ public class TabularModule extends AbstractModule {
     private final Property P_PROCESS_SPECIFIC_SHEET_IN_XLS_FILE = getSpecificParameter("process-specific-sheet-in-xls-file");
 
     //sml:replace
-    @Parameter(urlPrefix = SML.uri, name = "replace", comment = "Replace context flag. Default is false.")// TODO - revise comment
+    @Parameter(urlPrefix = SML.uri, name = "replace", comment = "Specifies whether a module should overwrite triples" +
+        " from its predecessors. When set to true (default is false), it prevents" +
+        " passing through triples from the predecessors.")
     private boolean isReplace;
 
-    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "source-resource-uri", comment = "Resource URI of the source table.") // TODO - revise comment
+    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "source-resource-uri", comment = "URI of resource" +
+        " that represent tabular data (e.g. resource representing CSV file).")
     //:source-resource-uri
     private StreamResource sourceResource;
 

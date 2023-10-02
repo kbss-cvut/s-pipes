@@ -18,8 +18,8 @@ import java.util.Random;
 
 @SPipesModule(label = "merge form metadata", comment =
         "Merges form metadata. Inputs are sample form and Q&A model. Questions from both models are remapped to new" +
-        "IRIs based on question origin combined with executionId. New question instances are created using" +
-        "questionInstanceTemplate which defaults to \"doc:question-{_questionOriginHash}-{_executionId}\"."
+        " IRIs based on question origin combined with executionId. New question instances are created using" +
+        " question-instance-template property which defaults to \"doc:question-{_questionOriginHash}-{_executionId}\"."
 )
 public class MergeFormMetadataModule extends AnnotatedAbstractModule {
 
@@ -31,13 +31,14 @@ public class MergeFormMetadataModule extends AnnotatedAbstractModule {
     private static final String QUESTION_ORIGIN_HASH_VAR = "{_questionOriginHash}";
     private static final String EXECUTION_ID_VAR = "{_executionId}";
 
-    @Parameter(urlPrefix = SML.uri, name = "replace", comment = "Replace context flag. Default value is false.") // TODO - revise comment
+    @Parameter(urlPrefix = SML.uri, name = "replace", comment = "Specifies whether a module should overwrite triples" +
+        " from its predecessors. When set to true (default is false), it prevents" +
+        " passing through triples from the predecessors.")
     private boolean isReplace = false;
 
     @Parameter(name = "execution-id", comment = "Execution id that will be used to construct question IRIs")
     private String executionId = DigestUtils.md5Hex(Long.toString(RANDOM.nextLong()));
 
-    // TODO - revise comment
     @Parameter(name = "question-instance-template", comment = "URL Template to create URL for question instances. " +
             "Default is 'http://onto.fel.cvut.cz/ontologies/documentation/question-{_questionOriginHash}-{_executionId}'")
     private String questionInstanceTemplate =
