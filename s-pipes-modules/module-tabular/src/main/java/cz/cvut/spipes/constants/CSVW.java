@@ -54,6 +54,7 @@ public class CSVW {
     public static final String tableUri = uri + "table";
     public static final String rowUri = uri + "row";
     public static final String RowUri = uri + "Row";
+    public static final String CellUri = uri + "Cell";
     public static final String URL = uri + "url";
     public static final String rowNumUri = uri + "rownum";
     public static final String describesUri = uri + "describes";

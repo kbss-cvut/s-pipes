@@ -83,7 +83,6 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
      }
 
      @Test
-     @Disabled
      void executeWithSimpleTransformationMergedXls() throws URISyntaxException, IOException {
          module.setSourceResource(
                  StreamResourceUtils.getStreamResource(
@@ -95,7 +94,9 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
          ExecutionContext outputContext = module.executeSelf();
 
-         assertTrue(outputContext.getDefaultModel().size() > 0);
+         Model expectedModel = ModelFactory.createDefaultModel().read(getFilePath("merged-xls-model-output.ttl").toString());
+
+         assertIsomorphic(outputContext.getDefaultModel(),expectedModel);
      }
 
      @Test

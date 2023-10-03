@@ -190,6 +190,8 @@ public class TabularModule extends AbstractModule {
         tableGroup = onTableGroup(null);
         table = onTable(null);
 
+        StreamResource originalSourceResource = sourceResource;
+
         switch (sourceResourceFormat) {
             case HTML:
                 HTML2TSVConvertor htmlConvertor = new HTML2TSVConvertor();
@@ -332,6 +334,27 @@ public class TabularModule extends AbstractModule {
         em.getTransaction().begin();
         em.persist(tableGroup);
         em.merge(tableSchema);
+
+        if(sourceResourceFormat == ResourceFormat.EXCEL) {
+            XLS2TSVConvertor xls2TSVConvertor = new XLS2TSVConvertor();
+            List<Region> regions = xls2TSVConvertor.getMergedRegions(originalSourceResource, processSpecificSheetInXLSFile);
+            int cellsNum = 1;
+            for (Region region : regions) {
+                int firstCellInRegionNum = cellsNum;
+                for(int i = region.getFirstRow();i <= region.getLastRow();i++){
+                    for(int j = region.getFirstColumn();j <= region.getLastColumn();j++) {
+                        Cell cell = new Cell("http://example.org/cell"+(cellsNum));
+                        cell.setRowName(tableSchema.createAboutUrl(i));
+                        cell.setColumnName(outputColumns.get(j).getUri().toString());
+                        if(cellsNum != firstCellInRegionNum)
+                            cell.setSameValueAsCell("http://example.org/cell"+(firstCellInRegionNum));
+                        em.merge(cell);
+                        cellsNum++;
+                    }
+                }
+            }
+        }
+
         em.getTransaction().commit();
         Model persistedModel = JopaPersistenceUtils.getDataset(em).getDefaultModel();
         em.getEntityManagerFactory().close();
