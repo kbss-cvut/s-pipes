@@ -22,6 +22,8 @@ public class KBSS_CSVW {
 
     public static final String propertyUri = uri + "property";
 
+    public static final String sameValueAsUri = uri + "same-value-as";
+
     public static final Property property = ResourceFactory.createProperty(propertyUri);
 
     /**
