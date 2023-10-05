@@ -71,7 +71,7 @@ CONSTRUCT {
 :execute-greeting
   a sm:Function ;
   sm:returnModule :express-greeting_Return ;
-  rdfs:comment "This function constructs a hello world message for a person given their first and last name."
+  rdfs:comment "This function constructs a hello world message for a person given their first and last name." ;
   spin:constraint [
     rdf:type spl:Argument ;
     spl:predicate :firstName ;
