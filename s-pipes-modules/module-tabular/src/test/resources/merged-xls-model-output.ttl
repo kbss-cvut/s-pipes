@@ -1,8 +1,8 @@
 <http://test-file#cell3>
         a       <http://www.w3.org/ns/csvw#Cell> ;
-        <http://www.w3.org/ns/csvw#Column>
+        <http://www.w3.org/ns/csvw#column>
                 _:b0 ;
-        <http://www.w3.org/ns/csvw#Row>
+        <http://www.w3.org/ns/csvw#row>
                 <http://test-file#row-2> ;
         <https://onto.fel.cvut.cz/ontologies/extension/csvw/same-value-as>
                 <http://test-file#cell1> .
@@ -35,9 +35,9 @@ _:b2    a       <http://www.w3.org/ns/csvw#Column> ;
 
 <http://test-file#cell2>
         a       <http://www.w3.org/ns/csvw#Cell> ;
-        <http://www.w3.org/ns/csvw#Column>
+        <http://www.w3.org/ns/csvw#column>
                 _:b1 ;
-        <http://www.w3.org/ns/csvw#Row>
+        <http://www.w3.org/ns/csvw#row>
                 <http://test-file#row-2> ;
         <https://onto.fel.cvut.cz/ontologies/extension/csvw/same-value-as>
                 <http://test-file#cell1> .
@@ -52,9 +52,9 @@ _:b2    a       <http://www.w3.org/ns/csvw#Column> ;
 
 <http://test-file#cell1>
         a       <http://www.w3.org/ns/csvw#Cell> ;
-        <http://www.w3.org/ns/csvw#Column>
+        <http://www.w3.org/ns/csvw#column>
                 _:b2 ;
-        <http://www.w3.org/ns/csvw#Row>
+        <http://www.w3.org/ns/csvw#row>
                 <http://test-file#row-2> .
 
 _:b0    a       <http://www.w3.org/ns/csvw#Column> ;
@@ -122,16 +122,16 @@ _:b0    a       <http://www.w3.org/ns/csvw#Column> ;
 
 <http://test-file#cell5>
         a       <http://www.w3.org/ns/csvw#Cell> ;
-        <http://www.w3.org/ns/csvw#Column>
+        <http://www.w3.org/ns/csvw#column>
                 _:b2 ;
-        <http://www.w3.org/ns/csvw#Row>
+        <http://www.w3.org/ns/csvw#row>
                 <http://test-file#row-4> ;
         <https://onto.fel.cvut.cz/ontologies/extension/csvw/same-value-as>
                 <http://test-file#cell4> .
 
 <http://test-file#cell4>
         a       <http://www.w3.org/ns/csvw#Cell> ;
-        <http://www.w3.org/ns/csvw#Column>
+        <http://www.w3.org/ns/csvw#column>
                 _:b2 ;
-        <http://www.w3.org/ns/csvw#Row>
+        <http://www.w3.org/ns/csvw#row>
                 <http://test-file#row-3> .

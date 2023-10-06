@@ -344,8 +344,8 @@ public class TabularModule extends AbstractModule {
                 for(int i = region.getFirstRow();i <= region.getLastRow();i++){
                     for(int j = region.getFirstColumn();j <= region.getLastColumn();j++) {
                         Cell cell = new Cell(sourceResource.getUri()+"#cell"+(cellsNum));
-                        cell.setRowName(tableSchema.createAboutUrl(i));
-                        cell.setColumnName(outputColumns.get(j).getUri().toString());
+                        cell.setRow(tableSchema.createAboutUrl(i));
+                        cell.setColumn(outputColumns.get(j).getUri().toString());
                         if(cellsNum != firstCellInRegionNum)
                             cell.setSameValueAsCell(sourceResource.getUri()+"#cell"+(firstCellInRegionNum));
                         em.merge(cell);
