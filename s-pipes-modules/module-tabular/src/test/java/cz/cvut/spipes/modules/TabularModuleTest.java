@@ -11,7 +11,6 @@ import cz.cvut.spipes.test.JenaTestUtils;
 import cz.cvut.spipes.util.StreamResourceUtils;
 import org.apache.jena.rdf.model.*;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -77,7 +76,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
          ExecutionContext outputContext = module.executeSelf();
 
-         Model expectedModel = ModelFactory.createDefaultModel().read(getFilePath("countries-model-output-xls.ttl").toString());
+         Model expectedModel = ModelFactory.createDefaultModel().read(getFilePath("countries-xls-model-output.ttl").toString());
 
          assertIsomorphic(outputContext.getDefaultModel(),expectedModel);
      }
@@ -87,14 +86,14 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
          module.setSourceResource(
                  StreamResourceUtils.getStreamResource(
                          "http://test-file",
-                         getFilePath("merged.xls"))
+                         getFilePath("merged-cells.xls"))
          );
          module.setSourceResourceFormat(ResourceFormat.EXCEL);
          module.setProcessSpecificSheetInXLSFile(1);
 
          ExecutionContext outputContext = module.executeSelf();
 
-         Model expectedModel = ModelFactory.createDefaultModel().read(getFilePath("merged-xls-model-output.ttl").toString());
+         Model expectedModel = ModelFactory.createDefaultModel().read(getFilePath("merged-cells-model-output.ttl").toString());
 
          assertIsomorphic(outputContext.getDefaultModel(),expectedModel);
      }
@@ -117,7 +116,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
             throws URISyntaxException, IOException {
         module.setSourceResource(StreamResourceUtils.getStreamResource(
                 "http://test-file-2",
-                getFilePath("duplicate_column_countries.tsv"))
+                getFilePath("duplicate-column-countries.tsv"))
         );
 
         ResourceNotUniqueException exception = assertThrows(
