@@ -24,11 +24,11 @@ public class Cell extends AbstractEntity{
     @OWLAnnotationProperty(iri = CSVW.nameUri)
     private String name;
 
-    @OWLAnnotationProperty(iri = CSVW.RowUri)
-    private String rowName;
+    @OWLAnnotationProperty(iri = CSVW.rowUri)
+    private String row;
 
-    @OWLAnnotationProperty(iri = CSVW.ColumnUri)
-    private String columnName;
+    @OWLAnnotationProperty(iri = CSVW.columnUri)
+    private String column;
 
     @OWLAnnotationProperty(iri = KBSS_CSVW.sameValueAsUri)
     private String sameValueAsCell;
@@ -51,20 +51,20 @@ public class Cell extends AbstractEntity{
         this.sameValueAsCell = sameValueAsCell;
     }
 
-    public void setRowName(String rowName) {
-        tabularModuleUtils.setVariable(this.rowName, rowName, value -> this.rowName = value, "rowName");
+    public void setRow(String row) {
+        tabularModuleUtils.setVariable(this.row, row, value -> this.row = value, "rowName");
     }
 
-    public String getRowName() {
-        return rowName;
+    public String getRow() {
+        return row;
     }
 
-    public void setColumnName(String columnName) {
-        tabularModuleUtils.setVariable(this.columnName, columnName, value -> this.columnName = value, "columnName");
+    public void setColumn(String column) {
+        tabularModuleUtils.setVariable(this.column, column, value -> this.column = value, "columnName");
     }
 
-    public String getColumnName() {
-        return columnName;
+    public String getColumn() {
+        return column;
     }
 
 }
