@@ -21,8 +21,9 @@ public class KBSS_CSVW {
     { return ResourceFactory.createProperty( uri, local ); }
 
     public static final String propertyUri = uri + "property";
-
     public static final String sameValueAsUri = uri + "same-value-as";
+    public static final String isPartOfColumn = uri + "is-part-of-column";
+    public static final String isPartOfRow = uri + "is-part-of-row";
 
     public static final Property property = ResourceFactory.createProperty(propertyUri);
 

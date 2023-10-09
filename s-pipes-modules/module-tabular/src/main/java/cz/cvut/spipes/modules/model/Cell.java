@@ -24,10 +24,10 @@ public class Cell extends AbstractEntity{
     @OWLAnnotationProperty(iri = CSVW.nameUri)
     private String name;
 
-    @OWLAnnotationProperty(iri = CSVW.rowUri)
+    @OWLAnnotationProperty(iri = KBSS_CSVW.isPartOfRow)
     private String row;
 
-    @OWLAnnotationProperty(iri = CSVW.columnUri)
+    @OWLAnnotationProperty(iri = KBSS_CSVW.isPartOfColumn)
     private String column;
 
     @OWLAnnotationProperty(iri = KBSS_CSVW.sameValueAsUri)
