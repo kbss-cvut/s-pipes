@@ -314,6 +314,7 @@ public class TabularModule extends AbstractModule {
 
                 for (int i = 0; i < header.length; i++) {
                     // 4.6.8.1
+                    if(i >= row.size())continue; //Temporary fix
                     Column column = outputColumns.get(i);
                     String cellValue = getValueFromRow(row, i, header.length, rowNumber);
                     if (cellValue != null) rowStatements.add(createRowResource(cellValue, rowNumber, column));
@@ -339,9 +340,18 @@ public class TabularModule extends AbstractModule {
         em.persist(tableGroup);
         em.merge(tableSchema);
 
-        if(sourceResourceFormat == ResourceFormat.EXCEL) {
-            XLS2TSVConvertor xls2TSVConvertor = new XLS2TSVConvertor();
-            List<Region> regions = xls2TSVConvertor.getMergedRegions(originalSourceResource, processSpecificSheetInXLSFile);
+        if(sourceResourceFormat == ResourceFormat.EXCEL || sourceResourceFormat == ResourceFormat.HTML) {
+            List<Region> regions = new ArrayList<>();
+            switch (sourceResourceFormat) {
+                case EXCEL:
+                    XLS2TSVConvertor xls2TSVConvertor = new XLS2TSVConvertor();
+                    regions = xls2TSVConvertor.getMergedRegions(originalSourceResource, processSpecificSheetInXLSFile);
+                    break;
+                case HTML:
+                    HTML2TSVConvertor html2TSVConvertor = new HTML2TSVConvertor();
+                    regions = html2TSVConvertor.getMergedRegions(originalSourceResource);
+                    break;
+            }
             int cellsNum = 1;
             for (Region region : regions) {
                 int firstCellInRegionNum = cellsNum;
