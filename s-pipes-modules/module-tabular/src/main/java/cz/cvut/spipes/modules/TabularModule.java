@@ -11,6 +11,7 @@ import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.exception.ResourceNotFoundException;
 import cz.cvut.spipes.exception.ResourceNotUniqueException;
+import cz.cvut.spipes.exception.SPipesException;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.modules.exception.SheetDoesntExistsException;
 import cz.cvut.spipes.modules.exception.SheetIsNotSpecifiedException;
@@ -312,7 +313,7 @@ public class TabularModule extends AbstractModule {
                 for (int i = 0; i < header.length; i++) {
                     // 4.6.8.1
                     Column column = outputColumns.get(i);
-                    String cellValue = row.get(i);
+                    String cellValue = getValueFromRow(row, i, header.length, rowNumber);
                     if (cellValue != null) rowStatements.add(createRowResource(cellValue, rowNumber, column));
                     // 4.6.8.2
                     r.setDescribes(tableSchema.createAboutUrl(rowNumber));
@@ -344,6 +345,32 @@ public class TabularModule extends AbstractModule {
         outputModel.add(bNodesTransformer.transferJOPAEntitiesToBNodes(persistedModel));
 
         return getExecutionContext(inputModel, outputModel);
+    }
+
+    private String getValueFromRow(List<String> row, int index, int expectedRowLength, int currentRecordNumber) {
+        try {
+            return row.get(index);
+        } catch (IndexOutOfBoundsException e) {
+            String recordDelimiter = "\n----------\n";
+            StringBuilder record = new StringBuilder(recordDelimiter);
+            for (int i = 0; i < row.size(); i++) {
+                record
+                    .append(i)
+                    .append(":")
+                    .append(row.get(i))
+                    .append(recordDelimiter);
+            }
+            LOG.error("Reading input file failed when reading record #{} (may not reflect the line #).\n" +
+                    " It was expected that the current record contains {} values" +
+                    ", but {}. element was not retrieved before whole record was processed.\n" +
+                    "The problematic record: {}",
+                currentRecordNumber,
+                expectedRowLength,
+                index+1,
+                record
+            );
+            throw new SPipesException("Reading input file failed.", e);
+        }
     }
 
     private ICsvListReader getCsvListReader(CsvPreference csvPreference) {
