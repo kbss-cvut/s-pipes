@@ -10,6 +10,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,9 +26,11 @@ public class XLS2TSVConvertor {
 
     private static final Logger LOG = LoggerFactory.getLogger(XLS2TSVConvertor.class);
 
-    public StringStreamResource convertToTSV(StreamResource streamResource,int sheetNumber){
+    public StringStreamResource convertToTSV(StreamResource streamResource,int sheetNumber, ResourceFormat format){
         try {
-            Workbook workbook = new HSSFWorkbook(new ByteArrayInputStream(streamResource.getContent()));
+            Workbook workbook;
+            if(format == ResourceFormat.XLS)workbook = new HSSFWorkbook(new ByteArrayInputStream(streamResource.getContent()));
+            else workbook = new XSSFWorkbook(new ByteArrayInputStream(streamResource.getContent()));
             Sheet sheet = workbook.getSheetAt(sheetNumber-1);
 
             StringBuilder tsvStringBuilder = new StringBuilder();
@@ -50,11 +53,12 @@ public class XLS2TSVConvertor {
         }
     }
 
-    public List<Region> getMergedRegions(StreamResource streamResource, int sheetNumber){
+    public List<Region> getMergedRegions(StreamResource streamResource, int sheetNumber, ResourceFormat format){
         Workbook workbook;
         List<Region> list = new ArrayList<>();
         try {
-            workbook = new HSSFWorkbook(new ByteArrayInputStream(streamResource.getContent()));
+            if(format == ResourceFormat.XLS)workbook = new HSSFWorkbook(new ByteArrayInputStream(streamResource.getContent()));
+            else workbook = new XSSFWorkbook(new ByteArrayInputStream(streamResource.getContent()));
             Sheet sheet = workbook.getSheetAt(sheetNumber-1);
 
             for(int i = 0;i < sheet.getNumMergedRegions();i++){
@@ -72,17 +76,20 @@ public class XLS2TSVConvertor {
         return list;
     }
 
-    public int getNumberOfSheets(StreamResource streamResource){
+    public int getNumberOfSheets(StreamResource streamResource, ResourceFormat format){
         try {
-            return new HSSFWorkbook(new ByteArrayInputStream(streamResource.getContent())).getNumberOfSheets();
+            if(format == ResourceFormat.XLS)return new HSSFWorkbook(new ByteArrayInputStream(streamResource.getContent())).getNumberOfSheets();
+            else return new XSSFWorkbook(new ByteArrayInputStream(streamResource.getContent())).getNumberOfSheets();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public String getSheetName(StreamResource streamResource,int sheetNumber){
+    public String getSheetName(StreamResource streamResource,int sheetNumber, ResourceFormat format){
         try {
-            Workbook workbook = new HSSFWorkbook(new ByteArrayInputStream(streamResource.getContent()));
+            Workbook workbook;
+            if(format == ResourceFormat.XLS)workbook = new HSSFWorkbook(new ByteArrayInputStream(streamResource.getContent()));
+            else workbook = new XSSFWorkbook(new ByteArrayInputStream(streamResource.getContent()));
             Sheet sheet = workbook.getSheetAt(sheetNumber-1);
             return sheet.getSheetName();
         } catch (IOException e) {

@@ -74,7 +74,24 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
                          "http://test-file",
                          getFilePath("countries.xls"))
          );
-         module.setSourceResourceFormat(ResourceFormat.EXCEL);
+         module.setSourceResourceFormat(ResourceFormat.XLS);
+         module.setProcessSpecificSheetInXLSFile(1);
+
+         ExecutionContext outputContext = module.executeSelf();
+
+         Model expectedModel = ModelFactory.createDefaultModel().read(getFilePath("countries-xls-model-output.ttl").toString());
+
+         assertIsomorphic(outputContext.getDefaultModel(),expectedModel);
+     }
+
+     @Test
+     void executeWithSimpleTransformationXlsm() throws URISyntaxException, IOException {
+         module.setSourceResource(
+                 StreamResourceUtils.getStreamResource(
+                         "http://test-file",
+                         getFilePath("countries.xlsm"))
+         );
+         module.setSourceResourceFormat(ResourceFormat.XLSM);
          module.setProcessSpecificSheetInXLSFile(1);
 
          ExecutionContext outputContext = module.executeSelf();
@@ -91,7 +108,24 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
                          "http://test-file",
                          getFilePath("merged-cells.xls"))
          );
-         module.setSourceResourceFormat(ResourceFormat.EXCEL);
+         module.setSourceResourceFormat(ResourceFormat.XLS);
+         module.setProcessSpecificSheetInXLSFile(1);
+
+         ExecutionContext outputContext = module.executeSelf();
+
+         Model expectedModel = ModelFactory.createDefaultModel().read(getFilePath("merged-cells-model-output.ttl").toString());
+
+         assertIsomorphic(outputContext.getDefaultModel(),expectedModel);
+     }
+
+     @Test
+     void executeWithSimpleTransformationMergedXlsx() throws URISyntaxException, IOException {
+         module.setSourceResource(
+                 StreamResourceUtils.getStreamResource(
+                         "http://test-file",
+                         getFilePath("merged-cells.xlsx"))
+         );
+         module.setSourceResourceFormat(ResourceFormat.XLSX);
          module.setProcessSpecificSheetInXLSFile(1);
 
          ExecutionContext outputContext = module.executeSelf();
