@@ -161,6 +161,8 @@ public class TabularModule extends AbstractModule {
      * - "text/tab-separated-values" -- tab-separated values (tsv).
      * - "text/html" -- HTML file.
      * - "application/vnd.ms-excel" - EXCEL (XLS) file.
+     * - "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" - EXCEL (XLSX) file.
+     * - "application/vnd.ms-excel.sheet.macroEnabled.12" - EXCEL (XLSM) file.
      */
     private ResourceFormat sourceResourceFormat = ResourceFormat.PLAIN;
 
@@ -202,13 +204,15 @@ public class TabularModule extends AbstractModule {
                 setSourceResource(htmlConvertor.convertToTSV(sourceResource));
                 setDelimiter('\t');
                 break;
-            case EXCEL:
+            case XLS:
+            case XLSM:
+            case XLSX:
                 if (processSpecificSheetInXLSFile == 0) {
                     throw new SheetIsNotSpecifiedException("Source resource format is set to XLS file but no specific sheet is set for processing.");
                 }
                 XLS2TSVConvertor xlsConvertor = new XLS2TSVConvertor();
-                int numberOfSheets = xlsConvertor.getNumberOfSheets(sourceResource);
-                table.setLabel(xlsConvertor.getSheetName(sourceResource, processSpecificSheetInXLSFile));
+                int numberOfSheets = xlsConvertor.getNumberOfSheets(sourceResource, sourceResourceFormat);
+                table.setLabel(xlsConvertor.getSheetName(sourceResource, processSpecificSheetInXLSFile, sourceResourceFormat));
                 LOG.debug("Number of sheets:{}", numberOfSheets);
                 if ((processSpecificSheetInXLSFile > numberOfSheets) || (processSpecificSheetInXLSFile < 1)) {
                     LOG.error("Requested sheet doesn't exist, number of sheets in the doc: {}, requested sheet: {}",
@@ -217,7 +221,7 @@ public class TabularModule extends AbstractModule {
                     );
                     throw new SheetDoesntExistsException("Requested sheet doesn't exists");
                 }
-                setSourceResource(xlsConvertor.convertToTSV(sourceResource, processSpecificSheetInXLSFile));
+                setSourceResource(xlsConvertor.convertToTSV(sourceResource, processSpecificSheetInXLSFile, sourceResourceFormat));
                 setDelimiter('\t');
                 break;
         }
@@ -340,16 +344,16 @@ public class TabularModule extends AbstractModule {
         em.persist(tableGroup);
         em.merge(tableSchema);
 
-        if(sourceResourceFormat == ResourceFormat.EXCEL || sourceResourceFormat == ResourceFormat.HTML) {
+        if(sourceResourceFormat == ResourceFormat.XLS || sourceResourceFormat == ResourceFormat.XLSM || sourceResourceFormat == ResourceFormat.XLSX || sourceResourceFormat == ResourceFormat.HTML) {
             List<Region> regions = new ArrayList<>();
             switch (sourceResourceFormat) {
-                case EXCEL:
-                    XLS2TSVConvertor xls2TSVConvertor = new XLS2TSVConvertor();
-                    regions = xls2TSVConvertor.getMergedRegions(originalSourceResource, processSpecificSheetInXLSFile);
-                    break;
                 case HTML:
                     HTML2TSVConvertor html2TSVConvertor = new HTML2TSVConvertor();
                     regions = html2TSVConvertor.getMergedRegions(originalSourceResource);
+                    break;
+                default:
+                    XLS2TSVConvertor xls2TSVConvertor = new XLS2TSVConvertor();
+                    regions = xls2TSVConvertor.getMergedRegions(originalSourceResource, processSpecificSheetInXLSFile, sourceResourceFormat);
                     break;
             }
             int cellsNum = 1;

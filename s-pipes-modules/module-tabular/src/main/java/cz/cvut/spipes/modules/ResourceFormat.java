@@ -10,7 +10,9 @@ public enum ResourceFormat {
     CSV("text/csv"),
     TSV("text/tab-separated-values"),
     HTML("text/html"),
-    EXCEL("application/vnd.ms-excel");
+    XLS("application/vnd.ms-excel"),
+    XLSM("application/vnd.ms-excel.sheet.macroEnabled.12"),
+    XLSX("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
     private final String value;
 
     public String getValue() {
