@@ -318,7 +318,6 @@ public class TabularModule extends AbstractModule {
 
                 for (int i = 0; i < header.length; i++) {
                     // 4.6.8.1
-                    if(i >= row.size())continue; //Temporary fix
                     Column column = outputColumns.get(i);
                     String cellValue = getValueFromRow(row, i, header.length, rowNumber);
                     if (cellValue != null) rowStatements.add(createRowResource(cellValue, rowNumber, column));
