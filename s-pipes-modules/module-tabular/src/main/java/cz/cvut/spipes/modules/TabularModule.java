@@ -17,10 +17,7 @@ import cz.cvut.spipes.modules.exception.SheetDoesntExistsException;
 import cz.cvut.spipes.modules.exception.SheetIsNotSpecifiedException;
 import cz.cvut.spipes.modules.exception.SpecificationNonComplianceException;
 import cz.cvut.spipes.modules.model.*;
-import cz.cvut.spipes.modules.util.BNodesTransformer;
-import cz.cvut.spipes.modules.util.HTML2TSVConvertor;
-import cz.cvut.spipes.modules.util.JopaPersistenceUtils;
-import cz.cvut.spipes.modules.util.XLS2TSVConvertor;
+import cz.cvut.spipes.modules.util.*;
 import cz.cvut.spipes.registry.StreamResource;
 import cz.cvut.spipes.registry.StreamResourceRegistry;
 import cz.cvut.spipes.util.JenaUtils;
@@ -197,11 +194,12 @@ public class TabularModule extends AbstractModule {
         table = onTable(null);
 
         StreamResource originalSourceResource = sourceResource;
+        TSVConvertor tsvConvertor = null;
 
         switch (sourceResourceFormat) {
             case HTML:
-                HTML2TSVConvertor htmlConvertor = new HTML2TSVConvertor();
-                setSourceResource(htmlConvertor.convertToTSV(sourceResource));
+                tsvConvertor = new HTML2TSVConvertor();
+                setSourceResource(tsvConvertor.convertToTSV(sourceResource));
                 setDelimiter('\t');
                 break;
             case XLS:
@@ -210,18 +208,18 @@ public class TabularModule extends AbstractModule {
                 if (processSpecificSheetInXLSFile == 0) {
                     throw new SheetIsNotSpecifiedException("Source resource format is set to XLS file but no specific sheet is set for processing.");
                 }
-                XLS2TSVConvertor xlsConvertor = new XLS2TSVConvertor();
-                int numberOfSheets = xlsConvertor.getNumberOfSheets(sourceResource, sourceResourceFormat);
-                table.setLabel(xlsConvertor.getSheetName(sourceResource, processSpecificSheetInXLSFile, sourceResourceFormat));
-                LOG.debug("Number of sheets:{}", numberOfSheets);
+                tsvConvertor = new XLS2TSVConvertor(processSpecificSheetInXLSFile, sourceResourceFormat);
+                int numberOfSheets = tsvConvertor.getNumberTables(sourceResource);
+                table.setLabel(tsvConvertor.getTableName(sourceResource));
+                LOG.debug("Number of sheets: {}", numberOfSheets);
                 if ((processSpecificSheetInXLSFile > numberOfSheets) || (processSpecificSheetInXLSFile < 1)) {
                     LOG.error("Requested sheet doesn't exist, number of sheets in the doc: {}, requested sheet: {}",
                         numberOfSheets,
                         processSpecificSheetInXLSFile
                     );
-                    throw new SheetDoesntExistsException("Requested sheet doesn't exists");
+                    throw new SheetDoesntExistsException("Requested sheet doesn't exists.");
                 }
-                setSourceResource(xlsConvertor.convertToTSV(sourceResource, processSpecificSheetInXLSFile, sourceResourceFormat));
+                setSourceResource(tsvConvertor.convertToTSV(sourceResource));
                 setDelimiter('\t');
                 break;
         }
@@ -343,18 +341,9 @@ public class TabularModule extends AbstractModule {
         em.persist(tableGroup);
         em.merge(tableSchema);
 
-        if(sourceResourceFormat == ResourceFormat.XLS || sourceResourceFormat == ResourceFormat.XLSM || sourceResourceFormat == ResourceFormat.XLSX || sourceResourceFormat == ResourceFormat.HTML) {
-            List<Region> regions = new ArrayList<>();
-            switch (sourceResourceFormat) {
-                case HTML:
-                    HTML2TSVConvertor html2TSVConvertor = new HTML2TSVConvertor();
-                    regions = html2TSVConvertor.getMergedRegions(originalSourceResource);
-                    break;
-                default:
-                    XLS2TSVConvertor xls2TSVConvertor = new XLS2TSVConvertor();
-                    regions = xls2TSVConvertor.getMergedRegions(originalSourceResource, processSpecificSheetInXLSFile, sourceResourceFormat);
-                    break;
-            }
+        if (tsvConvertor != null) {
+            List<Region> regions =  tsvConvertor.getMergedRegions(originalSourceResource);
+
             int cellsNum = 1;
             for (Region region : regions) {
                 int firstCellInRegionNum = cellsNum;

@@ -22,11 +22,19 @@ import java.util.List;
 /**
  * Module for converting tabular data from XLS to TSV. Converts specific sheet of the xls file.
  */
-public class XLS2TSVConvertor {
+public class XLS2TSVConvertor implements TSVConvertor {
 
     private static final Logger LOG = LoggerFactory.getLogger(XLS2TSVConvertor.class);
+    private int sheetNumber;
+    private ResourceFormat format;
 
-    public StringStreamResource convertToTSV(StreamResource streamResource,int sheetNumber, ResourceFormat format){
+    public XLS2TSVConvertor(int sheetNumber, ResourceFormat format) {
+        this.sheetNumber = sheetNumber;
+        this.format = format;
+    }
+
+    @Override
+    public StringStreamResource convertToTSV(StreamResource streamResource){
         try {
             Workbook workbook;
             if(format == ResourceFormat.XLS)workbook = new HSSFWorkbook(new ByteArrayInputStream(streamResource.getContent()));
@@ -53,7 +61,8 @@ public class XLS2TSVConvertor {
         }
     }
 
-    public List<Region> getMergedRegions(StreamResource streamResource, int sheetNumber, ResourceFormat format){
+    @Override
+    public List<Region> getMergedRegions(StreamResource streamResource){
         Workbook workbook;
         List<Region> list = new ArrayList<>();
         try {
@@ -76,7 +85,8 @@ public class XLS2TSVConvertor {
         return list;
     }
 
-    public int getNumberOfSheets(StreamResource streamResource, ResourceFormat format){
+    @Override
+    public int getNumberTables(StreamResource streamResource){
         try {
             if(format == ResourceFormat.XLS)return new HSSFWorkbook(new ByteArrayInputStream(streamResource.getContent())).getNumberOfSheets();
             else return new XSSFWorkbook(new ByteArrayInputStream(streamResource.getContent())).getNumberOfSheets();
@@ -85,7 +95,8 @@ public class XLS2TSVConvertor {
         }
     }
 
-    public String getSheetName(StreamResource streamResource,int sheetNumber, ResourceFormat format){
+    @Override
+    public String getTableName(StreamResource streamResource){
         try {
             Workbook workbook;
             if(format == ResourceFormat.XLS)workbook = new HSSFWorkbook(new ByteArrayInputStream(streamResource.getContent()));

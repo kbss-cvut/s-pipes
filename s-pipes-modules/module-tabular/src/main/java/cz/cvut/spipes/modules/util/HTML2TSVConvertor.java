@@ -31,8 +31,9 @@ import java.util.List;
  *     </tr>
  * </table
  */
-public class HTML2TSVConvertor {
+public class HTML2TSVConvertor implements TSVConvertor {
 
+    @Override
     public StringStreamResource convertToTSV(StreamResource streamResource) {
         StringBuilder tsvStringBuilder = new StringBuilder();
 
@@ -61,6 +62,7 @@ public class HTML2TSVConvertor {
         }
     }
 
+    @Override
     public List<Region> getMergedRegions(StreamResource streamResource){
         List<Region> list = new ArrayList<>();
         Document doc = Jsoup.parseBodyFragment(new String(streamResource.getContent()));
@@ -89,6 +91,16 @@ public class HTML2TSVConvertor {
             }
         }
         return list;
+    }
+
+    @Override
+    public int getNumberTables(StreamResource streamResource) {
+        throw new UnsupportedOperationException("Not implemented yet.");
+    }
+
+    @Override
+    public String getTableName(StreamResource streamResource) {
+        throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     int parseInt(String s,int defaultValue){
