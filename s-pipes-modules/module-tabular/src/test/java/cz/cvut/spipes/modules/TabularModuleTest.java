@@ -103,14 +103,14 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
          module.setSourceResource(
                  StreamResourceUtils.getStreamResource(
                          "http://test-file",
-                         getFilePath("examples/merged-cells/input.xls"))
+                         getFilePath("examples/mergedCells/input.xls"))
          );
          module.setSourceResourceFormat(ResourceFormat.XLS);
          module.setProcessSpecificSheetInXLSFile(1);
 
          ExecutionContext outputContext = module.executeSelf();
 
-         Model expectedModel = ModelFactory.createDefaultModel().read(getFilePath("examples/merged-cells/excel-expected-output.ttl").toString());
+         Model expectedModel = ModelFactory.createDefaultModel().read(getFilePath("examples/mergedCells/excel-expected-output.ttl").toString());
 
          assertIsomorphic(outputContext.getDefaultModel(),expectedModel);
      }
@@ -120,14 +120,14 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
          module.setSourceResource(
                  StreamResourceUtils.getStreamResource(
                          "http://test-file",
-                         getFilePath("examples/merged-cells/input.xlsx"))
+                         getFilePath("examples/mergedCells/input.xlsx"))
          );
          module.setSourceResourceFormat(ResourceFormat.XLSX);
          module.setProcessSpecificSheetInXLSFile(1);
 
          ExecutionContext outputContext = module.executeSelf();
 
-         Model expectedModel = ModelFactory.createDefaultModel().read(getFilePath("examples/merged-cells/excel-expected-output.ttl").toString());
+         Model expectedModel = ModelFactory.createDefaultModel().read(getFilePath("examples/mergedCells/excel-expected-output.ttl").toString());
 
          assertIsomorphic(outputContext.getDefaultModel(),expectedModel);
      }
@@ -137,13 +137,13 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
          module.setSourceResource(
                  StreamResourceUtils.getStreamResource(
                          "http://test-file",
-                         getFilePath("examples/merged-cells/input.html"))
+                         getFilePath("examples/mergedCells/input.html"))
          );
          module.setSourceResourceFormat(ResourceFormat.HTML);
 
          ExecutionContext outputContext = module.executeSelf();
 
-         Model expectedModel = ModelFactory.createDefaultModel().read(getFilePath("examples/merged-cells/html-expected-output.ttl").toString());
+         Model expectedModel = ModelFactory.createDefaultModel().read(getFilePath("examples/mergedCells/html-expected-output.ttl").toString());
 
          assertIsomorphic(outputContext.getDefaultModel(),expectedModel);
      }
