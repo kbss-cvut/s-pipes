@@ -73,7 +73,7 @@ public class HTML2TSVConvertor implements TSVConvertor {
             Elements cells = row.getElementsByTag(HTML.TABLE_HEADER_TAG);
             cells.addAll(row.getElementsByTag(HTML.TABLE_CELL_TAG));
             int rowNum = row.elementSiblingIndex();
-            int colNum = 1;
+            int colNum = 0;
 //            System.err.println(rowNum);
             for(Element cell : cells) {
                 int colspan = parseInt(cell.attr("colspan"), 1);
