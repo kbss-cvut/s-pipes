@@ -5,6 +5,7 @@ import cz.cvut.spipes.modules.ResourceFormat;
 import cz.cvut.spipes.modules.model.Region;
 import cz.cvut.spipes.registry.StreamResource;
 import cz.cvut.spipes.registry.StringStreamResource;
+import org.apache.jena.atlas.lib.Pair;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -33,6 +34,8 @@ import java.util.List;
  */
 public class HTML2TSVConvertor implements TSVConvertor {
 
+    private final List<Pair<Integer, Integer> > cellColSpan = new ArrayList<>();
+
     @Override
     public StringStreamResource convertToTSV(StreamResource streamResource) {
         StringBuilder tsvStringBuilder = new StringBuilder();
@@ -56,9 +59,45 @@ public class HTML2TSVConvertor implements TSVConvertor {
 
     private void processTag(Element row, StringBuilder sb, String tag) {
         Elements cells = row.getElementsByTag(tag);
+        if(cells.isEmpty())return;
+        if(cellColSpan.isEmpty()) {
+            for (int i = 0; i < cells.size(); i++) cellColSpan.add(new Pair<>(0, 1));
+        }
+        int curColIndex = 0;
+        Boolean isFirst = true;
         for (Element cell : cells) {
-                if (cell != cells.get(0)) sb.append('\t');
-                sb.append(cell.html().replace("\t","  "));
+            if(cellColSpan.get(curColIndex).getLeft() != 0){
+                for(int i = 0; i < cellColSpan.get(curColIndex).getRight(); i++){
+                    if(!isFirst)sb.append('\t');
+                    isFirst = false;
+                    sb.append("");
+                }
+                cellColSpan.set(curColIndex,new Pair<>(
+                        cellColSpan.get(curColIndex).getLeft()-1,
+                        cellColSpan.get(curColIndex).getRight()));
+                curColIndex += cellColSpan.get(curColIndex).getRight();
+            }
+            if (!isFirst) sb.append('\t');
+            isFirst = false;
+            sb.append(cell.html().replace("\t","  "));
+            int colspan = parseInt(cell.attr("colspan"), 1);
+            if(colspan > 1)
+                for(int k = 1;k < colspan;k++)sb.append("\t");
+            int rowspan = parseInt(cell.attr("rowspan"), 1);
+            cellColSpan.set(curColIndex, new Pair<>(rowspan-1,colspan));
+            curColIndex += colspan;
+        }
+        // Process merged cells in the end of the row
+        while(curColIndex < cellColSpan.size()) {
+            if (cellColSpan.get(curColIndex).getLeft() != 0) {
+                for (int i = 0; i < cellColSpan.get(curColIndex).getRight(); i++) {
+                    sb.append("\t");
+                }
+                cellColSpan.set(curColIndex, new Pair<>(
+                        cellColSpan.get(curColIndex).getLeft() - 1,
+                        cellColSpan.get(curColIndex).getRight()));
+                curColIndex += cellColSpan.get(curColIndex).getRight();
+            }
         }
     }
 
@@ -74,11 +113,9 @@ public class HTML2TSVConvertor implements TSVConvertor {
             cells.addAll(row.getElementsByTag(HTML.TABLE_CELL_TAG));
             int rowNum = row.elementSiblingIndex();
             int colNum = 0;
-//            System.err.println(rowNum);
             for(Element cell : cells) {
                 int colspan = parseInt(cell.attr("colspan"), 1);
                 int rowspan = parseInt(cell.attr("rowspan"), 1);
-//                System.out.println("index: [" + rowNum + "," + colNum + "]");
                 if (colspan > 1 || rowspan > 1) {
                     list.add(new Region(
                             rowNum,
