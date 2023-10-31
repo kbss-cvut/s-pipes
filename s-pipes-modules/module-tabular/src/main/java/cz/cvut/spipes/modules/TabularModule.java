@@ -199,6 +199,7 @@ public class TabularModule extends AbstractModule {
         switch (sourceResourceFormat) {
             case HTML:
                 tsvConvertor = new HTML2TSVConvertor();
+                table.setLabel(tsvConvertor.getTableName(sourceResource));
                 setSourceResource(tsvConvertor.convertToTSV(sourceResource));
                 setDelimiter('\t');
                 break;

@@ -132,12 +132,18 @@ public class HTML2TSVConvertor implements TSVConvertor {
 
     @Override
     public int getNumberTables(StreamResource streamResource) {
-        throw new UnsupportedOperationException("Not implemented yet.");
+        Document doc = Jsoup.parseBodyFragment(new String(streamResource.getContent()));
+        doc.outputSettings(new Document.OutputSettings().prettyPrint(false));
+        Elements tables = doc.getElementsByTag(HTML.TABLE);
+        return tables.size();
     }
 
     @Override
     public String getTableName(StreamResource streamResource) {
-        throw new UnsupportedOperationException("Not implemented yet.");
+        Document doc = Jsoup.parseBodyFragment(new String(streamResource.getContent()));
+        doc.outputSettings(new Document.OutputSettings().prettyPrint(false));
+        Elements tables = doc.getElementsByTag(HTML.TABLE);
+        return tables.get(0).attr("data-name");
     }
 
     int parseInt(String s,int defaultValue){
