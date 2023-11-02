@@ -12,7 +12,7 @@ public interface TSVConvertor {
 
     List<Region> getMergedRegions(StreamResource streamResource);
 
-    int getNumberTables(StreamResource streamResource);
+    int getTablesCount(StreamResource streamResource);
 
     String getTableName(StreamResource streamResource);
 }

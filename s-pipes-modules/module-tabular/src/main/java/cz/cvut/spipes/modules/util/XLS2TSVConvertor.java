@@ -23,8 +23,6 @@ import java.util.List;
  * Module for converting tabular data from XLS to TSV. Converts specific sheet of the xls file.
  */
 public class XLS2TSVConvertor implements TSVConvertor {
-
-    private static final Logger LOG = LoggerFactory.getLogger(XLS2TSVConvertor.class);
     private int sheetNumber;
     private ResourceFormat format;
 
@@ -86,7 +84,7 @@ public class XLS2TSVConvertor implements TSVConvertor {
     }
 
     @Override
-    public int getNumberTables(StreamResource streamResource){
+    public int getTablesCount(StreamResource streamResource){
         try {
             if(format == ResourceFormat.XLS)return new HSSFWorkbook(new ByteArrayInputStream(streamResource.getContent())).getNumberOfSheets();
             else return new XSSFWorkbook(new ByteArrayInputStream(streamResource.getContent())).getNumberOfSheets();

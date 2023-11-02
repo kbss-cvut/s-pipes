@@ -72,7 +72,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
                          getFilePath("examples/countries/input.xls"))
          );
          module.setSourceResourceFormat(ResourceFormat.XLS);
-         module.setProcessSpecificSheetInXLSFile(1);
+         module.processTableAtIndex(1);
 
          ExecutionContext outputContext = module.executeSelf();
 
@@ -89,7 +89,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
                          getFilePath("examples/countries/input.xlsm"))
          );
          module.setSourceResourceFormat(ResourceFormat.XLSM);
-         module.setProcessSpecificSheetInXLSFile(1);
+         module.processTableAtIndex(1);
 
          ExecutionContext outputContext = module.executeSelf();
 
@@ -106,7 +106,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
                          getFilePath("examples/mergedCells/input.xls"))
          );
          module.setSourceResourceFormat(ResourceFormat.XLS);
-         module.setProcessSpecificSheetInXLSFile(1);
+         module.processTableAtIndex(1);
 
          ExecutionContext outputContext = module.executeSelf();
 
@@ -123,7 +123,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
                          getFilePath("examples/mergedCells/input.xlsx"))
          );
          module.setSourceResourceFormat(ResourceFormat.XLSX);
-         module.setProcessSpecificSheetInXLSFile(1);
+         module.processTableAtIndex(1);
 
          ExecutionContext outputContext = module.executeSelf();
 
@@ -140,6 +140,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
                          getFilePath("examples/mergedCells/input.html"))
          );
          module.setSourceResourceFormat(ResourceFormat.HTML);
+         module.processTableAtIndex(1);
 
          ExecutionContext outputContext = module.executeSelf();
 
@@ -303,10 +304,10 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
      @Test
      void executeSelfWithHTMLFileInput() throws URISyntaxException, IOException {
          module.setSourceResourceFormat(ResourceFormat.HTML);
+         module.processTableAtIndex(1);
          module.setSourceResource(
                 StreamResourceUtils.getStreamResource(DATA_PREFIX, getFilePath("examples/htmlFile/input.html"))
         );
-
         ExecutionContext outputContext = module.executeSelf();
         Model actualModel = outputContext.getDefaultModel();
 

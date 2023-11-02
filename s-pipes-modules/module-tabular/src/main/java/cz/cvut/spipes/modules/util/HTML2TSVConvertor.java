@@ -33,8 +33,12 @@ import java.util.List;
  * </table
  */
 public class HTML2TSVConvertor implements TSVConvertor {
-
+    private int tableNumber;
     private final List<Pair<Integer, Integer> > cellColSpan = new ArrayList<>();
+
+    public HTML2TSVConvertor(int sheetNumber) {
+        this.tableNumber = sheetNumber;
+    }
 
     @Override
     public StringStreamResource convertToTSV(StreamResource streamResource) {
@@ -131,7 +135,7 @@ public class HTML2TSVConvertor implements TSVConvertor {
     }
 
     @Override
-    public int getNumberTables(StreamResource streamResource) {
+    public int getTablesCount(StreamResource streamResource) {
         Document doc = Jsoup.parseBodyFragment(new String(streamResource.getContent()));
         doc.outputSettings(new Document.OutputSettings().prettyPrint(false));
         Elements tables = doc.getElementsByTag(HTML.TABLE);

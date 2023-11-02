@@ -87,7 +87,7 @@ import java.util.function.Supplier;
  * and then processed as usual.
  * Take a look at the option {@link TabularModule#sourceResourceFormat} and class {@link HTML2TSVConvertor} for more details.
  * Also, in a similar way this module can process XLS tables. Note, that processing multiple sheets isn't supported,
- * so {@link TabularModule#processSpecificSheetInXLSFile} parameter is required (range 1...number of sheets).
+ * so {@link TabularModule#processTableAtIndex} parameter is required (range 1...number of sheets).
  * <p>
  * <b>Important notes (differences from the recommendation):</b><br/>
  * Does not support custom table group URIs.<br/>
@@ -109,7 +109,7 @@ public class TabularModule extends AbstractModule {
     private final Property P_SOURCE_RESOURCE_URI = getSpecificParameter("source-resource-uri");
     private final Property P_SKIP_HEADER = getSpecificParameter("skip-header");
     private final Property P_SOURCE_RESOURCE_FORMAT = getSpecificParameter("source-resource-format");
-    private final Property P_PROCESS_SPECIFIC_SHEET_IN_XLS_FILE = getSpecificParameter("process-specific-sheet-in-xls-file");
+    private final Property P_PROCESS_TABLE_AT_INDEX = getSpecificParameter("process-table-at-index");
 
     //sml:replace
     @Parameter(urlPrefix = SML.uri, name = "replace", comment = "Specifies whether a module should overwrite triples" +
@@ -138,11 +138,11 @@ public class TabularModule extends AbstractModule {
     @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "skip-header", comment = "Skip header. Default is false.")
     private boolean skipHeader;
 
-    //:process-specific-sheet-in-xls-file
+    //:process-table-at-index
     /**
-     * Required parameter that indicates that only specific single sheet should be converted
+     * Required parameter for HTML and EXCEL files that indicates that only specific single table should be processed
      */
-    private int processSpecificSheetInXLSFile;
+    private int processTableAtIndex;
 
     //:output-mode
     // TODO - revise comment
@@ -198,7 +198,13 @@ public class TabularModule extends AbstractModule {
 
         switch (sourceResourceFormat) {
             case HTML:
-                tsvConvertor = new HTML2TSVConvertor();
+                if (processTableAtIndex == 0) {
+                    throw new SheetIsNotSpecifiedException("Source resource format is set to HTML file but no specific table is set for processing.");
+                }
+                if (processTableAtIndex != 1) {
+                    throw new UnsupportedOperationException("Not implemented yet.");
+                }
+                tsvConvertor = new HTML2TSVConvertor(processTableAtIndex);
                 table.setLabel(tsvConvertor.getTableName(sourceResource));
                 setSourceResource(tsvConvertor.convertToTSV(sourceResource));
                 setDelimiter('\t');
@@ -206,17 +212,17 @@ public class TabularModule extends AbstractModule {
             case XLS:
             case XLSM:
             case XLSX:
-                if (processSpecificSheetInXLSFile == 0) {
-                    throw new SheetIsNotSpecifiedException("Source resource format is set to XLS file but no specific sheet is set for processing.");
+                if (processTableAtIndex == 0) {
+                    throw new SheetIsNotSpecifiedException("Source resource format is set to XLS(X,M) file but no specific table is set for processing.");
                 }
-                tsvConvertor = new XLS2TSVConvertor(processSpecificSheetInXLSFile, sourceResourceFormat);
-                int numberOfSheets = tsvConvertor.getNumberTables(sourceResource);
+                tsvConvertor = new XLS2TSVConvertor(processTableAtIndex, sourceResourceFormat);
+                int numberOfSheets = tsvConvertor.getTablesCount(sourceResource);
                 table.setLabel(tsvConvertor.getTableName(sourceResource));
                 LOG.debug("Number of sheets: {}", numberOfSheets);
-                if ((processSpecificSheetInXLSFile > numberOfSheets) || (processSpecificSheetInXLSFile < 1)) {
+                if ((processTableAtIndex > numberOfSheets) || (processTableAtIndex < 1)) {
                     LOG.error("Requested sheet doesn't exist, number of sheets in the doc: {}, requested sheet: {}",
                         numberOfSheets,
-                        processSpecificSheetInXLSFile
+                            processTableAtIndex
                     );
                     throw new SheetDoesntExistsException("Requested sheet doesn't exists.");
                 }
@@ -478,7 +484,7 @@ public class TabularModule extends AbstractModule {
         delimiter = getPropertyValue(P_DELIMITER, getDefaultDelimiterSupplier(sourceResourceFormat));
         isReplace = getPropertyValue(SML.replace, false);
         skipHeader = getPropertyValue(P_SKIP_HEADER, false);
-        processSpecificSheetInXLSFile = getPropertyValue(P_PROCESS_SPECIFIC_SHEET_IN_XLS_FILE, 0);
+        processTableAtIndex = getPropertyValue(P_PROCESS_TABLE_AT_INDEX, 0);
         acceptInvalidQuoting = getPropertyValue(P_ACCEPT_INVALID_QUOTING, false);
         quoteCharacter = getPropertyValue(P_QUOTE_CHARACTER, getDefaultQuoteCharacterSupplier(sourceResourceFormat));
         dataPrefix = getEffectiveValue(P_DATE_PREFIX).asLiteral().toString();
@@ -668,8 +674,8 @@ public class TabularModule extends AbstractModule {
         this.sourceResourceFormat = sourceResourceFormat;
     }
 
-    public void setProcessSpecificSheetInXLSFile(int sheetNumber) {
-        this.processSpecificSheetInXLSFile = sheetNumber;
+    public void processTableAtIndex(int sheetNumber) {
+        this.processTableAtIndex = sheetNumber;
     }
 
     private String[] getHeaderFromSchema(Model inputModel, String[] header, boolean hasInputSchema) {
