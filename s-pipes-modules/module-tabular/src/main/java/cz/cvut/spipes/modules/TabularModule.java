@@ -202,7 +202,7 @@ public class TabularModule extends AbstractModule {
                     throw new SheetIsNotSpecifiedException("Source resource format is set to HTML file but no specific table is set for processing.");
                 }
                 if (processTableAtIndex != 1) {
-                    throw new UnsupportedOperationException("Not implemented yet.");
+                    throw new UnsupportedOperationException("Support for 'process-table-at-index' different from 1 is not implemented for HTML files yet.");
                 }
                 tsvConvertor = new HTML2TSVConvertor(processTableAtIndex);
                 table.setLabel(tsvConvertor.getTableName(sourceResource));
