@@ -13,6 +13,10 @@
     <name>SPipes Modules - Tabular</name>
     <packaging>jar</packaging>
 
+    <properties>
+        <org.apache.poi.version>4.1.0</org.apache.poi.version>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
@@ -100,8 +104,13 @@
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
-            <version>3.11</version>
+            <version>${org.apache.poi.version}</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${org.apache.poi.version}</version>
         </dependency>
     </dependencies>
 </project>

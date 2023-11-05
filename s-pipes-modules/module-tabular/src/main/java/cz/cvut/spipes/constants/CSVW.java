@@ -42,7 +42,6 @@ public class CSVW {
     public static final String uriTemplate = uri + "uriTemplate";
     public static final String TableSchemaUri = uri + "TableSchema";
     public static final String aboutUrlUri = uri + "aboutUrl";
-    public static final String columnsUri = uri + "columns";
     public static final String propertyUrlUri = uri + "propertyUrl";
     public static final String valueUrlUri = uri + "valueUrl";
     public static final String ColumnUri = uri + "Column";
@@ -54,6 +53,7 @@ public class CSVW {
     public static final String tableUri = uri + "table";
     public static final String rowUri = uri + "row";
     public static final String RowUri = uri + "Row";
+    public static final String CellUri = uri + "Cell";
     public static final String URL = uri + "url";
     public static final String rowNumUri = uri + "rownum";
     public static final String describesUri = uri + "describes";

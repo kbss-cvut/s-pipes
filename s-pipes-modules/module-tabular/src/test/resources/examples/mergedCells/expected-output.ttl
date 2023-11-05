@@ -1,0 +1,137 @@
+<http://test-file#cell3>
+        a       <http://www.w3.org/ns/csvw#Cell> ;
+        <https://onto.fel.cvut.cz/ontologies/extension/csvw/is-part-of-column>
+                _:b0 ;
+        <https://onto.fel.cvut.cz/ontologies/extension/csvw/is-part-of-row>
+                <http://test-file#row-2> ;
+        <https://onto.fel.cvut.cz/ontologies/extension/csvw/same-value-as>
+                <http://test-file#cell1> .
+
+_:b1    a       <http://www.w3.org/ns/csvw#Column> ;
+        <http://www.w3.org/ns/csvw#name>
+                "bb" ;
+        <http://www.w3.org/ns/csvw#propertyUrl>
+                "http://onto.fel.cvut.cz/data/bb" ;
+        <http://www.w3.org/ns/csvw#title>
+                "bb" ;
+        <https://onto.fel.cvut.cz/ontologies/extension/csvw/property>
+                <http://onto.fel.cvut.cz/data/bb> .
+
+_:b2    a       <http://www.w3.org/ns/csvw#Column> ;
+        <http://www.w3.org/ns/csvw#name>
+                "aa" ;
+        <http://www.w3.org/ns/csvw#propertyUrl>
+                "http://onto.fel.cvut.cz/data/aa" ;
+        <http://www.w3.org/ns/csvw#title>
+                "aa" ;
+        <https://onto.fel.cvut.cz/ontologies/extension/csvw/property>
+                <http://onto.fel.cvut.cz/data/aa> .
+
+<http://test-file#row-4>
+        <http://onto.fel.cvut.cz/data/bb>
+                "ff" ;
+        <http://onto.fel.cvut.cz/data/cc>
+                "gg" .
+
+<http://test-file#cell2>
+        a       <http://www.w3.org/ns/csvw#Cell> ;
+        <https://onto.fel.cvut.cz/ontologies/extension/csvw/is-part-of-column>
+                _:b1 ;
+        <https://onto.fel.cvut.cz/ontologies/extension/csvw/is-part-of-row>
+                <http://test-file#row-2> ;
+        <https://onto.fel.cvut.cz/ontologies/extension/csvw/same-value-as>
+                <http://test-file#cell1> .
+
+<http://test-file#row-3>
+        <http://onto.fel.cvut.cz/data/aa>
+                "merged rows" ;
+        <http://onto.fel.cvut.cz/data/bb>
+                "dd" ;
+        <http://onto.fel.cvut.cz/data/cc>
+                "ee" .
+
+<http://test-file#cell1>
+        a       <http://www.w3.org/ns/csvw#Cell> ;
+        <https://onto.fel.cvut.cz/ontologies/extension/csvw/is-part-of-column>
+                _:b2 ;
+        <https://onto.fel.cvut.cz/ontologies/extension/csvw/is-part-of-row>
+                <http://test-file#row-2> .
+
+_:b0    a       <http://www.w3.org/ns/csvw#Column> ;
+        <http://www.w3.org/ns/csvw#name>
+                "cc" ;
+        <http://www.w3.org/ns/csvw#propertyUrl>
+                "http://onto.fel.cvut.cz/data/cc" ;
+        <http://www.w3.org/ns/csvw#title>
+                "cc" ;
+        <https://onto.fel.cvut.cz/ontologies/extension/csvw/property>
+                <http://onto.fel.cvut.cz/data/cc> .
+
+[ a       <http://www.w3.org/ns/csvw#TableGroup> ;
+  <http://www.w3.org/ns/csvw#table>
+          [ a       <http://www.w3.org/ns/csvw#Table> ;
+            <http://www.w3.org/2000/01/rdf-schema#label>
+                    "Sheet1" ;
+            <http://www.w3.org/ns/csvw#row>
+                    [ a       <http://www.w3.org/ns/csvw#Row> ;
+                      <http://www.w3.org/ns/csvw#describes>
+                              <http://test-file#row-4> ;
+                      <http://www.w3.org/ns/csvw#rownum>
+                              "3"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                      <http://www.w3.org/ns/csvw#url>
+                              <http://test-file#row=4>
+                    ] ;
+            <http://www.w3.org/ns/csvw#row>
+                    [ a       <http://www.w3.org/ns/csvw#Row> ;
+                      <http://www.w3.org/ns/csvw#describes>
+                              <http://test-file#row-3> ;
+                      <http://www.w3.org/ns/csvw#rownum>
+                              "2"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                      <http://www.w3.org/ns/csvw#url>
+                              <http://test-file#row=3>
+                    ] ;
+            <http://www.w3.org/ns/csvw#row>
+                    [ a       <http://www.w3.org/ns/csvw#Row> ;
+                      <http://www.w3.org/ns/csvw#describes>
+                              <http://test-file#row-2> ;
+                      <http://www.w3.org/ns/csvw#rownum>
+                              "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                      <http://www.w3.org/ns/csvw#url>
+                              <http://test-file#row=2>
+                    ] ;
+            <http://www.w3.org/ns/csvw#tableSchema>
+                    [ a       <http://www.w3.org/ns/csvw#TableSchema> ;
+                      <http://www.w3.org/ns/csvw#aboutUrl>
+                              "http://test-file#row-{_row}"^^<http://www.w3.org/ns/csvw#uriTemplate> ;
+                      <http://www.w3.org/ns/csvw#column>
+                              _:b2 , _:b0 , _:b1 ;
+                      <http://www.w3.org/ns/csvw#columns>
+                              ( _:b2
+                                _:b1
+                                _:b0
+                              )
+                    ] ;
+            <http://www.w3.org/ns/csvw#url>
+                    <http://test-file>
+          ]
+] .
+
+<http://test-file#row-2>
+        <http://onto.fel.cvut.cz/data/aa>
+                "merged columns" .
+
+<http://test-file#cell5>
+        a       <http://www.w3.org/ns/csvw#Cell> ;
+        <https://onto.fel.cvut.cz/ontologies/extension/csvw/is-part-of-column>
+                _:b2 ;
+        <https://onto.fel.cvut.cz/ontologies/extension/csvw/is-part-of-row>
+                <http://test-file#row-4> ;
+        <https://onto.fel.cvut.cz/ontologies/extension/csvw/same-value-as>
+                <http://test-file#cell4> .
+
+<http://test-file#cell4>
+        a       <http://www.w3.org/ns/csvw#Cell> ;
+        <https://onto.fel.cvut.cz/ontologies/extension/csvw/is-part-of-column>
+                _:b2 ;
+        <https://onto.fel.cvut.cz/ontologies/extension/csvw/is-part-of-row>
+                <http://test-file#row-3> .

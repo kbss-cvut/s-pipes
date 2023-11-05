@@ -11,7 +11,6 @@ import cz.cvut.spipes.test.JenaTestUtils;
 import cz.cvut.spipes.util.StreamResourceUtils;
 import org.apache.jena.rdf.model.*;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -56,11 +55,11 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
         module.setSourceResource(
             StreamResourceUtils.getStreamResource(
                 "http://test-file",
-                getFilePath("countries.tsv"))
+                getFilePath("examples/countries/input.tsv"))
         );
 
         ExecutionContext outputContext = module.executeSelf();
-        Model expectedModel = ModelFactory.createDefaultModel().read(getFilePath("countries-model-output.ttl").toString());
+        Model expectedModel = ModelFactory.createDefaultModel().read(getFilePath("examples/countries/plaintext-expected-output.ttl").toString());
 
         assertIsomorphic(outputContext.getDefaultModel(),expectedModel);
     }
@@ -70,32 +69,84 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
          module.setSourceResource(
                  StreamResourceUtils.getStreamResource(
                          "http://test-file",
-                         getFilePath("countries.xls"))
+                         getFilePath("examples/countries/input.xls"))
          );
-         module.setSourceResourceFormat(ResourceFormat.EXCEL);
-         module.setProcessSpecificSheetInXLSFile(1);
+         module.setSourceResourceFormat(ResourceFormat.XLS);
+         module.processTableAtIndex(1);
 
          ExecutionContext outputContext = module.executeSelf();
 
-         Model expectedModel = ModelFactory.createDefaultModel().read(getFilePath("countries-model-output-xls.ttl").toString());
+         Model expectedModel = ModelFactory.createDefaultModel().read(getFilePath("examples/countries/excel-expected-output.ttl").toString());
 
          assertIsomorphic(outputContext.getDefaultModel(),expectedModel);
      }
 
      @Test
-     @Disabled
+     void executeWithSimpleTransformationXlsm() throws URISyntaxException, IOException {
+         module.setSourceResource(
+                 StreamResourceUtils.getStreamResource(
+                         "http://test-file",
+                         getFilePath("examples/countries/input.xlsm"))
+         );
+         module.setSourceResourceFormat(ResourceFormat.XLSM);
+         module.processTableAtIndex(1);
+
+         ExecutionContext outputContext = module.executeSelf();
+
+         Model expectedModel = ModelFactory.createDefaultModel().read(getFilePath("examples/countries/excel-expected-output.ttl").toString());
+
+         assertIsomorphic(outputContext.getDefaultModel(),expectedModel);
+     }
+
+     @Test
      void executeWithSimpleTransformationMergedXls() throws URISyntaxException, IOException {
          module.setSourceResource(
                  StreamResourceUtils.getStreamResource(
                          "http://test-file",
-                         getFilePath("merged.xls"))
+                         getFilePath("examples/mergedCells/input.xls"))
          );
-         module.setSourceResourceFormat(ResourceFormat.EXCEL);
-         module.setProcessSpecificSheetInXLSFile(1);
+         module.setSourceResourceFormat(ResourceFormat.XLS);
+         module.processTableAtIndex(1);
 
          ExecutionContext outputContext = module.executeSelf();
 
-         assertTrue(outputContext.getDefaultModel().size() > 0);
+         Model expectedModel = ModelFactory.createDefaultModel().read(getFilePath("examples/mergedCells/expected-output.ttl").toString());
+
+         assertIsomorphic(outputContext.getDefaultModel(),expectedModel);
+     }
+
+     @Test
+     void executeWithSimpleTransformationMergedXlsx() throws URISyntaxException, IOException {
+         module.setSourceResource(
+                 StreamResourceUtils.getStreamResource(
+                         "http://test-file",
+                         getFilePath("examples/mergedCells/input.xlsx"))
+         );
+         module.setSourceResourceFormat(ResourceFormat.XLSX);
+         module.processTableAtIndex(1);
+
+         ExecutionContext outputContext = module.executeSelf();
+
+         Model expectedModel = ModelFactory.createDefaultModel().read(getFilePath("examples/mergedCells/expected-output.ttl").toString());
+
+         assertIsomorphic(outputContext.getDefaultModel(),expectedModel);
+     }
+
+     @Test
+     void executeWithSimpleTransformationMergedHTML() throws URISyntaxException, IOException {
+         module.setSourceResource(
+                 StreamResourceUtils.getStreamResource(
+                         "http://test-file",
+                         getFilePath("examples/mergedCells/input.html"))
+         );
+         module.setSourceResourceFormat(ResourceFormat.HTML);
+         module.processTableAtIndex(1);
+
+         ExecutionContext outputContext = module.executeSelf();
+
+         Model expectedModel = ModelFactory.createDefaultModel().read(getFilePath("examples/mergedCells/expected-output.ttl").toString());
+
+         assertIsomorphic(outputContext.getDefaultModel(),expectedModel);
      }
 
      @Test
@@ -103,7 +154,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
          module.setSourceResource(
                  StreamResourceUtils.getStreamResource(
                          "http://test-file",
-                         getFilePath("countries.tsv"))
+                         getFilePath("examples/countries/input.tsv"))
          );
          module.setSourceResourceFormat(ResourceFormat.TSV);
          module.executeSelf();
@@ -116,7 +167,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
             throws URISyntaxException, IOException {
         module.setSourceResource(StreamResourceUtils.getStreamResource(
                 "http://test-file-2",
-                getFilePath("duplicate_column_countries.tsv"))
+                getFilePath("examples/countries/duplicate-column-input.tsv"))
         );
 
         ResourceNotUniqueException exception = assertThrows(
@@ -135,13 +186,13 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
         module.setSourceResource(
                 StreamResourceUtils.getStreamResource(
                         "http://test-file",
-                        getFilePath("countries.tsv"))
+                        getFilePath("examples/countries/input.tsv"))
         );
 
         ExecutionContext outputContext = module.executeSelf();
         Model actualModel = outputContext.getDefaultModel();
         Model expectedModel = ModelFactory.createDefaultModel()
-                .read(getFilePath("countries-model-output.ttl").toString());
+                .read(getFilePath("examples/countries/plaintext-expected-output.ttl").toString());
 
         assertTrue(actualModel.isIsomorphicWith(expectedModel));
     }
@@ -253,10 +304,10 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
      @Test
      void executeSelfWithHTMLFileInput() throws URISyntaxException, IOException {
          module.setSourceResourceFormat(ResourceFormat.HTML);
+         module.processTableAtIndex(1);
          module.setSourceResource(
                 StreamResourceUtils.getStreamResource(DATA_PREFIX, getFilePath("examples/htmlFile/input.html"))
         );
-
         ExecutionContext outputContext = module.executeSelf();
         Model actualModel = outputContext.getDefaultModel();
 
