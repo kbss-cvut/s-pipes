@@ -17,6 +17,8 @@ import cz.cvut.spipes.modules.exception.SheetDoesntExistsException;
 import cz.cvut.spipes.modules.exception.SheetIsNotSpecifiedException;
 import cz.cvut.spipes.modules.exception.SpecificationNonComplianceException;
 import cz.cvut.spipes.modules.model.*;
+import cz.cvut.spipes.modules.tabular.CSVReader;
+import cz.cvut.spipes.modules.tabular.TabularReader;
 import cz.cvut.spipes.modules.util.*;
 import cz.cvut.spipes.registry.StreamResource;
 import cz.cvut.spipes.registry.StreamResourceRegistry;
@@ -243,12 +245,14 @@ public class TabularModule extends AnnotatedAbstractModule {
         try {
             ICsvListReader listReader = getCsvListReader(csvPreference);
 
-            if (listReader == null) {
+            if (listReader == null) { // TODO we need to detect this situation without need to create list reader
                 logMissingQuoteError();
                 return getExecutionContext(inputModel, outputModel);
             }
 
-            String[] header = listReader.getHeader(true); // skip the header (can't be used with CsvListReader)
+            TabularReader tabularReader = new CSVReader(listReader);
+
+            List<String> header = tabularReader.getHeader();
 
             if (header == null) {
                 LOG.warn("Input stream resource {} to provide tabular data is empty.", this.sourceResource.getUri());
@@ -269,7 +273,7 @@ public class TabularModule extends AnnotatedAbstractModule {
             em.close();
             em.getEntityManagerFactory().close();
 
-            outputColumns = new ArrayList<>(header.length);
+            outputColumns = new ArrayList<>(header.size());
 
             for (String columnTitle : header) {
                 String columnName = normalize(columnTitle);
@@ -314,10 +318,10 @@ public class TabularModule extends AnnotatedAbstractModule {
                 // an initial subject, the non-core annotation as property, and the
                 // value of the non-core annotation as value.
 
-                for (int i = 0; i < header.length; i++) {
+                for (int i = 0; i < header.size(); i++) {
                     // 4.6.8.1
                     Column column = outputColumns.get(i);
-                    String cellValue = getValueFromRow(row, i, header.length, rowNumber);
+                    String cellValue = getValueFromRow(row, i, header.size(), rowNumber);
                     if (cellValue != null) rowStatements.add(createRowResource(cellValue, rowNumber, column));
                     // 4.6.8.2
                     r.setDescribes(tableSchema.createAboutUrl(rowNumber));
@@ -665,7 +669,8 @@ public class TabularModule extends AnnotatedAbstractModule {
         this.processTableAtIndex = sheetNumber;
     }
 
-    private String[] getHeaderFromSchema(Model inputModel, String[] header, boolean hasInputSchema) {
+    private List<String> getHeaderFromSchema(Model inputModel, final List<String> header, boolean hasInputSchema) {
+        List<String> headerToReturn = null;
         if (hasInputSchema) {
             List<String> orderList = new ArrayList<>();
             Resource tableSchemaResource = inputModel.getResource(tableSchema.getUri().toString());
@@ -677,22 +682,22 @@ public class TabularModule extends AnnotatedAbstractModule {
 
                 rdfList.iterator().forEach(rdfNode -> orderList.add(String.valueOf(rdfNode)));
                 tableSchema.setOrderList(orderList);
-                header = createHeaders(header.length, tableSchema.sortColumns(orderList));
+                headerToReturn = createHeader(header.size(), tableSchema.sortColumns(orderList));
 
             } else LOG.info("Order of columns was not provided in the schema.");
         } else {
-            header = createHeaders(header.length, new ArrayList<>());
+            headerToReturn = createHeader(header.size(), new ArrayList<>());
         }
-        return header;
+        return headerToReturn;
     }
 
-    private String[] createHeaders(int size, List<Column> columns) {
-        String[] headers = new String[size];
+    private List<String> createHeader(int size, List<Column> columns) {
+        List<String> headers = new ArrayList<>(size);
 
         for (int i = 0; i < size; i++) {
             if (!columns.isEmpty()) {
-                headers[i] = columns.get(i).getName();
-            } else headers[i] = "column_" + (i + 1);
+                headers.set(i, columns.get(i).getName());
+            } else headers.set(i, "column_" + (i + 1));
         }
         return headers;
     }
