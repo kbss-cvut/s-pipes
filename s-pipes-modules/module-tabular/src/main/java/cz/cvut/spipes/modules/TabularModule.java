@@ -683,7 +683,7 @@ public class TabularModule extends AbstractModule {
     }
 
     private List<String> getHeaderFromSchema(Model inputModel, final List<String> header, boolean hasInputSchema) {
-        List<String> headerToReturn = null;
+        List<String> headerToReturn = header;
         if (hasInputSchema) {
             List<String> orderList = new ArrayList<>();
             Resource tableSchemaResource = inputModel.getResource(tableSchema.getUri().toString());
@@ -709,8 +709,8 @@ public class TabularModule extends AbstractModule {
 
         for (int i = 0; i < size; i++) {
             if (!columns.isEmpty()) {
-                headers.set(i, columns.get(i).getName());
-            } else headers.set(i, "column_" + (i + 1));
+                headers.add(columns.get(i).getName());
+            } else headers.add("column_" + (i + 1));
         }
         return headers;
     }
