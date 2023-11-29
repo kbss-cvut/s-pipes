@@ -10,7 +10,6 @@ import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.exception.ResourceNotFoundException;
-import cz.cvut.spipes.exception.ResourceNotUniqueException;
 import cz.cvut.spipes.exception.SPipesException;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.modules.exception.SheetDoesntExistsException;
@@ -258,7 +257,6 @@ public class TabularModule extends AnnotatedAbstractModule {
                 LOG.warn("Input stream resource {} to provide tabular data is empty.", this.sourceResource.getUri());
                 return getExecutionContext(inputModel, outputModel);
             }
-            Set<String> columnNames = new HashSet<>();
 
             TableSchema inputTableSchema = getTableSchema(em);
             hasInputSchema = hasInputSchema(inputTableSchema);
@@ -266,6 +264,7 @@ public class TabularModule extends AnnotatedAbstractModule {
             if (skipHeader) {
                 header = getHeaderFromSchema(inputModel, header, hasInputSchema);
                 listReader = new CsvListReader(getReader(), csvPreference);
+                tabularReader = new CSVReader(listReader);
             } else if (hasInputSchema) {
                 header = getHeaderFromSchema(inputModel, header, true);
             }
@@ -273,22 +272,16 @@ public class TabularModule extends AnnotatedAbstractModule {
             em.close();
             em.getEntityManagerFactory().close();
 
-            outputColumns = new ArrayList<>(header.size());
+            outputColumns = tabularReader.getOutputColumns(header);
 
-            for (String columnTitle : header) {
-                String columnName = normalize(columnTitle);
-                boolean isDuplicate = !columnNames.add(columnName);
-
-                Column schemaColumn = new Column(columnName, columnTitle);
-                outputColumns.add(schemaColumn);
+            for(Column schemaColumn : outputColumns){
+                String columnName = schemaColumn.getName();
 
                 tableSchema.setAboutUrl(schemaColumn, sourceResource.getUri());
                 schemaColumn.setProperty(
-                    dataPrefix,
-                    sourceResource.getUri(),
-                    hasInputSchema ? tableSchema.getColumn(columnName) : null);
-                schemaColumn.setTitle(columnTitle);
-                if (isDuplicate) throwNotUniqueException(schemaColumn, columnTitle, columnName);
+                        dataPrefix,
+                        sourceResource.getUri(),
+                        hasInputSchema ? tableSchema.getColumn(columnName) : null);
             }
 
             List<String> row;
@@ -453,18 +446,6 @@ public class TabularModule extends AnnotatedAbstractModule {
         return query.getSingleResult();
     }
 
-    private void throwNotUniqueException(Column column, String columnTitle, String columnName) {
-        throw new ResourceNotUniqueException(
-            String.format("Unable to create value of property %s due to collision. " +
-                    "Both column titles '%s' and '%s' are normalized to '%s' " +
-                    "and thus would refer to the same property url <%s>.",
-                CSVW.propertyUrl,
-                columnTitle,
-                column.getTitle(),
-                columnName,
-                column.getPropertyUrl()));
-    }
-
     private ExecutionContext getExecutionContext(Model inputModel, Model outputModel) {
         if (isReplace) {
             return ExecutionContextFactory.createContext(outputModel);
@@ -584,10 +565,6 @@ public class TabularModule extends AnnotatedAbstractModule {
         }
 
         return table;
-    }
-
-    private String normalize(String label) {
-        return label.trim().replaceAll("[^\\w]", "_");
     }
 
     private Reader getReader() {
