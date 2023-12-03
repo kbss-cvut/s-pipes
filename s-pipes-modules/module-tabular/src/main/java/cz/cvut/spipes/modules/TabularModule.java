@@ -10,7 +10,6 @@ import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.exception.ResourceNotFoundException;
-import cz.cvut.spipes.exception.SPipesException;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.modules.exception.SheetDoesntExistsException;
 import cz.cvut.spipes.modules.exception.SheetIsNotSpecifiedException;
@@ -284,30 +283,10 @@ public class TabularModule extends AnnotatedAbstractModule {
                         hasInputSchema ? tableSchema.getColumn(columnName) : null);
             }
 
+            rowStatements = tabularReader.getRowStatements(header,outputColumns,tableSchema);
             Set<Row> Rows = tabularReader.getRows(tableSchema,sourceResource.getUri(),outputMode);
             table.setRows(Rows);
 
-            List<String> row;
-            int rowNumber = 0;
-            //for each row
-            listReader = getCsvListReader(csvPreference);
-            if(!skipHeader)row = listReader.read(); //Line to skip 1. row
-            while ((row = listReader.read()) != null) {
-                rowNumber++;
-
-                for (int i = 0; i < header.size(); i++) {
-                    // 4.6.8.1
-                    Column column = outputColumns.get(i);
-                    String cellValue = getValueFromRow(row, i, header.size(), rowNumber);
-                    if (cellValue != null) rowStatements.add(createRowResource(cellValue, rowNumber, column));
-                    //TODO: URITemplate
-
-                    // 4.6.8.5 - else, if value is list and cellOrdering == true
-                    // 4.6.8.6 - else, if value is list
-                    // 4.6.8.7 - else, if cellValue is not null
-                }
-            }
-            listReader.close();
         } catch (IOException | MissingArgumentException e) {
             LOG.error("Error while reading file from resource uri {}", sourceResource, e);
         }
@@ -351,32 +330,6 @@ public class TabularModule extends AnnotatedAbstractModule {
         return getExecutionContext(inputModel, outputModel);
     }
 
-    private String getValueFromRow(List<String> row, int index, int expectedRowLength, int currentRecordNumber) {
-        try {
-            return row.get(index);
-        } catch (IndexOutOfBoundsException e) {
-            String recordDelimiter = "\n----------\n";
-            StringBuilder record = new StringBuilder(recordDelimiter);
-            for (int i = 0; i < row.size(); i++) {
-                record
-                    .append(i)
-                    .append(":")
-                    .append(row.get(i))
-                    .append(recordDelimiter);
-            }
-            LOG.error("Reading input file failed when reading record #{} (may not reflect the line #).\n" +
-                    " It was expected that the current record contains {} values" +
-                    ", but {}. element was not retrieved before whole record was processed.\n" +
-                    "The problematic record: {}",
-                currentRecordNumber,
-                expectedRowLength,
-                index+1,
-                record
-            );
-            throw new SPipesException("Reading input file failed.", e);
-        }
-    }
-
     private ICsvListReader getCsvListReader(CsvPreference csvPreference) {
         if (acceptInvalidQuoting) {
             if (getQuote() == '\0') {
@@ -385,15 +338,6 @@ public class TabularModule extends AnnotatedAbstractModule {
                 return new CsvListReader(new InvalidQuotingTokenizer(getReader(), csvPreference), csvPreference);
         }
         return new CsvListReader(getReader(), csvPreference);
-    }
-
-    private Statement createRowResource(String cellValue, int rowNumber, Column column) {
-        Resource rowResource = ResourceFactory.createResource(tableSchema.createAboutUrl(rowNumber));
-
-        return ResourceFactory.createStatement(
-            rowResource,
-            ResourceFactory.createProperty(column.getPropertyUrl()),
-            ResourceFactory.createPlainLiteral(cellValue));
     }
 
     private boolean hasInputSchema(TableSchema inputTableSchema) {
