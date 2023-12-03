@@ -2,10 +2,16 @@ package cz.cvut.spipes.modules.tabular;
 
 import cz.cvut.spipes.constants.CSVW;
 import cz.cvut.spipes.exception.ResourceNotUniqueException;
+import cz.cvut.spipes.exception.SPipesException;
 import cz.cvut.spipes.modules.Mode;
 import cz.cvut.spipes.modules.model.Column;
 import cz.cvut.spipes.modules.model.Row;
 import cz.cvut.spipes.modules.model.TableSchema;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.Statement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.supercsv.io.ICsvListReader;
 
 import java.io.IOException;
@@ -14,6 +20,9 @@ import java.util.*;
 public class CSVReader implements TabularReader {
 
     ICsvListReader listReader;
+    private int numberOfRows = 0;
+
+    private static final Logger LOG = LoggerFactory.getLogger(CSVReader.class);
 
     public CSVReader(ICsvListReader listReader) {
         this.listReader = listReader;
@@ -25,7 +34,7 @@ public class CSVReader implements TabularReader {
     }
 
     @Override
-    public ArrayList<Column> getOutputColumns(List<String>header) {
+    public List<Column> getOutputColumns(List<String>header) {
         Set<String> columnNames = new HashSet<>();
         ArrayList<Column> columns = new ArrayList<>(header.size());
 
@@ -43,13 +52,15 @@ public class CSVReader implements TabularReader {
     }
 
     @Override
-    public Set<Row> getRows(TableSchema tableSchema,String sourceResourceUri, Mode outputMode) throws IOException {
+    public Set<Row> getRows(TableSchema tableSchema,String sourceResourceUri, Mode outputMode){
+        /*
+        This method depends on getRowStatements and should be called only after getRowStatements because numberOfRows is
+        counted there.
+        TODO : Find a way to compute numberOfRows without reading the whole file once again.
+        */
         Set<Row> rows = new HashSet<>();
-        List<String> row;
-        int rowNumber = 0;
         //for each row
-        while ((row = listReader.read()) != null) {
-            rowNumber++;
+        for(int rowNumber = 1;rowNumber <= numberOfRows;rowNumber++){
             // 4.6.1 and 4.6.3
             Row r = new Row();
             r.setDescribes(tableSchema.createAboutUrl(rowNumber));
@@ -70,8 +81,33 @@ public class CSVReader implements TabularReader {
             // an initial subject, the non-core annotation as property, and the
             // value of the non-core annotation as value.
         }
-        listReader.close();
         return rows;
+    }
+
+    @Override
+    public List<Statement> getRowStatements(List<String>header, List<Column>outputColumns, TableSchema tableSchema) throws IOException {
+        List<Statement>statements = new ArrayList<>();
+        List<String> row;
+        int rowNumber = 0;
+        //for each row
+        while ((row = listReader.read()) != null) {
+            rowNumber++;
+
+            for (int i = 0; i < header.size(); i++) {
+                // 4.6.8.1
+                Column column = outputColumns.get(i);
+                String cellValue = getValueFromRow(row, i, header.size(), rowNumber);
+                if (cellValue != null) statements.add(createRowResource(cellValue, rowNumber, column,tableSchema));
+                //TODO: URITemplate
+
+                // 4.6.8.5 - else, if value is list and cellOrdering == true
+                // 4.6.8.6 - else, if value is list
+                // 4.6.8.7 - else, if cellValue is not null
+            }
+        }
+        numberOfRows = rowNumber;
+        listReader.close();
+        return statements;
     }
 
     private String normalize(String label) {
@@ -89,4 +125,40 @@ public class CSVReader implements TabularReader {
                         columnName,
                         column.getPropertyUrl()));
     }
+
+    private Statement createRowResource(String cellValue, int rowNumber, Column column, TableSchema tableSchema) {
+        Resource rowResource = ResourceFactory.createResource(tableSchema.createAboutUrl(rowNumber));
+
+        return ResourceFactory.createStatement(
+                rowResource,
+                ResourceFactory.createProperty(column.getPropertyUrl()),
+                ResourceFactory.createPlainLiteral(cellValue));
+    }
+
+    private String getValueFromRow(List<String> row, int index, int expectedRowLength, int currentRecordNumber) {
+        try {
+            return row.get(index);
+        } catch (IndexOutOfBoundsException e) {
+            String recordDelimiter = "\n----------\n";
+            StringBuilder record = new StringBuilder(recordDelimiter);
+            for (int i = 0; i < row.size(); i++) {
+                record
+                        .append(i)
+                        .append(":")
+                        .append(row.get(i))
+                        .append(recordDelimiter);
+            }
+            LOG.error("Reading input file failed when reading record #{} (may not reflect the line #).\n" +
+                            " It was expected that the current record contains {} values" +
+                            ", but {}. element was not retrieved before whole record was processed.\n" +
+                            "The problematic record: {}",
+                    currentRecordNumber,
+                    expectedRowLength,
+                    index+1,
+                    record
+            );
+            throw new SPipesException("Reading input file failed.", e);
+        }
+    }
+
 }
