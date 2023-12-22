@@ -9,6 +9,7 @@ import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.topbraid.spin.arq.ARQFactory;
@@ -18,6 +19,9 @@ public class BindBySelectModule extends AbstractModule  {
 
     private static final Logger LOG = LoggerFactory.getLogger(BindBySelectModule.class);
     private Select selectQuery;
+
+    //sml:replace
+    private boolean isReplace;
 
     @Override
     public ExecutionContext executeSelf() {
@@ -44,7 +48,10 @@ public class BindBySelectModule extends AbstractModule  {
             }
         }
 
-        return ExecutionContextFactory.createContext(executionContext.getDefaultModel(), variablesBinding);
+        return ExecutionContextFactory.createContext(
+            this.createOutputModel(isReplace, ModelFactory.createDefaultModel()),
+            variablesBinding
+        );
     }
 
     @Override
@@ -55,6 +62,7 @@ public class BindBySelectModule extends AbstractModule  {
     @Override
     public void loadConfiguration() {
         selectQuery = getPropertyValue(SML.selectQuery).asResource().as(Select.class);
+        isReplace = this.getPropertyValue(SML.replace, false);
     }
 
     public Select getSelectQuery() {

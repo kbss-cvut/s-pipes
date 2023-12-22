@@ -435,17 +435,30 @@ public abstract class AbstractModule implements Module {
      * @return Output execution context to be returned by this module.
      */
     protected ExecutionContext createOutputContext(boolean isReplace, Model computedModel) {
+        return ExecutionContextFactory.createContext(
+            createOutputModel(isReplace, computedModel)
+        );
+    }
+
+    /**
+     * Helper method to creates output model considering isReplace flag
+     * indicating if newly computed model should replace input model of the module
+     * or be appended to it.
+     * @param isReplace if true replace input model otherwise append to it.
+     * @param computedModel model to be reflected in final output of this module.
+     * @return Output model to be returned by this module.
+     */
+    protected Model createOutputModel(boolean isReplace, Model computedModel) {
         if (isReplace) {
-            return ExecutionContextFactory.createContext(computedModel);
+            return computedModel;
         } else {
             if (AuditConfig.isEnabled() || ExecutionConfig.getEnvironment().equals(Environment.development)) {
                 LOG.debug("Saving module's computed output to file {}.", saveModelToTemporaryFile(computedModel));
             }
-            return ExecutionContextFactory.createContext(
-                JenaUtils.createUnion(executionContext.getDefaultModel(), computedModel)
-            );
+            return JenaUtils.createUnion(executionContext.getDefaultModel(), computedModel);
         }
     }
+
 
     private List<Resource> sortConstraintQueries(List<Resource> constraintQueries) {
         return constraintQueries.stream().sorted((resource1, resource2) -> {
