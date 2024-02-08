@@ -13,6 +13,5 @@ import java.util.Set;
 public interface TabularReader {
     List<String> getHeader() throws IOException;
     List<Column> getOutputColumns(List<String>header);
-    Set<Row> getRows(TableSchema tableSchema, String sourceResourceUri, Mode outputMode);
     List<Statement> getRowStatements(List<String>header, List<Column>outputColumns, TableSchema tableSchema) throws IOException;
 }
