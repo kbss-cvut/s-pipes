@@ -34,24 +34,6 @@ public class CSVReader implements TabularReader {
     }
 
     @Override
-    public List<Column> getOutputColumns(List<String>header) {
-        Set<String> columnNames = new HashSet<>();
-        ArrayList<Column> columns = new ArrayList<>(header.size());
-
-        for (String columnTitle : header) {
-            String columnName = normalize(columnTitle);
-            boolean isDuplicate = !columnNames.add(columnName);
-
-            Column schemaColumn = new Column(columnName, columnTitle);
-
-            columns.add(schemaColumn);
-            schemaColumn.setTitle(columnTitle);
-            if (isDuplicate) throwNotUniqueException(schemaColumn, columnTitle, columnName);
-        }
-        return columns;
-    }
-
-    @Override
     public List<Statement> getRowStatements(List<String>header, List<Column>outputColumns, TableSchema tableSchema) throws IOException {
         List<Statement>statements = new ArrayList<>();
         List<String> row;
@@ -75,22 +57,6 @@ public class CSVReader implements TabularReader {
         numberOfRows = rowNumber;
         listReader.close();
         return statements;
-    }
-
-    private String normalize(String label) {
-        return label.trim().replaceAll("[^\\w]", "_");
-    }
-
-    private void throwNotUniqueException(Column column, String columnTitle, String columnName) {
-        throw new ResourceNotUniqueException(
-                String.format("Unable to create value of property %s due to collision. " +
-                                "Both column titles '%s' and '%s' are normalized to '%s' " +
-                                "and thus would refer to the same property url <%s>.",
-                        CSVW.propertyUrl,
-                        columnTitle,
-                        column.getTitle(),
-                        columnName,
-                        column.getPropertyUrl()));
     }
 
     private Statement createRowResource(String cellValue, int rowNumber, Column column, TableSchema tableSchema) {
