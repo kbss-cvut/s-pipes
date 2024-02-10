@@ -29,8 +29,12 @@ public class CSVReader implements TabularReader {
     }
 
     @Override
-    public List<String> getHeader() throws IOException {
-        return Arrays.asList((listReader.getHeader(true))); // skip the header (can't be used with CsvListReader);
+    public List<String> getHeader() throws IOException{
+        try {
+            return Arrays.asList((listReader.getHeader(true))); // skip the header (can't be used with CsvListReader);
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 
     @Override
