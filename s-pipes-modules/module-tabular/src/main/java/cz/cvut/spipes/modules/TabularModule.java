@@ -10,6 +10,7 @@ import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.exception.ResourceNotFoundException;
+import cz.cvut.spipes.exception.ResourceNotUniqueException;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.modules.exception.SheetDoesntExistsException;
 import cz.cvut.spipes.modules.exception.SheetIsNotSpecifiedException;
@@ -278,7 +279,18 @@ public class TabularModule extends AbstractModule {
             em.close();
             em.getEntityManagerFactory().close();
 
-            outputColumns = tabularReader.getOutputColumns(header);
+            Set<String> columnNames = new HashSet<>();
+
+            for (String columnTitle : header) {
+                String columnName = normalize(columnTitle);
+                boolean isDuplicate = !columnNames.add(columnName);
+
+                Column schemaColumn = new Column(columnName, columnTitle);
+
+                outputColumns.add(schemaColumn);
+                schemaColumn.setTitle(columnTitle);
+                if (isDuplicate) throwNotUniqueException(schemaColumn, columnTitle, columnName);
+            }
 
             for(Column schemaColumn : outputColumns){
                 String columnName = schemaColumn.getName();
@@ -382,6 +394,18 @@ public class TabularModule extends AbstractModule {
         return false;
     }
 
+    private void throwNotUniqueException(Column column, String columnTitle, String columnName) {
+        throw new ResourceNotUniqueException(
+                String.format("Unable to create value of property %s due to collision. " +
+                                "Both column titles '%s' and '%s' are normalized to '%s' " +
+                                "and thus would refer to the same property url <%s>.",
+                        CSVW.propertyUrl,
+                        columnTitle,
+                        column.getTitle(),
+                        columnName,
+                        column.getPropertyUrl()));
+    }
+
     private TableSchema getTableSchema(EntityManager em) {
         TypedQuery<TableSchema> query = em.createNativeQuery(
             "PREFIX csvw: <http://www.w3.org/ns/csvw#>\n" +
@@ -411,6 +435,10 @@ public class TabularModule extends AbstractModule {
         } else {
             return ExecutionContextFactory.createContext(JenaUtils.createUnion(inputModel, outputModel));
         }
+    }
+
+    private String normalize(String label) {
+        return label.trim().replaceAll("[^\\w]", "_");
     }
 
     @Override
