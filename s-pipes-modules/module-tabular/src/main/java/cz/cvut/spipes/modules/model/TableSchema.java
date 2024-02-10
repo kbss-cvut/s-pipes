@@ -3,6 +3,7 @@ package cz.cvut.spipes.modules.model;
 import cz.cvut.kbss.jopa.model.annotations.*;
 import cz.cvut.spipes.config.ExecutionConfig;
 import cz.cvut.spipes.constants.CSVW;
+import cz.cvut.spipes.exception.ResourceNotUniqueException;
 import cz.cvut.spipes.modules.exception.TableSchemaException;
 import cz.cvut.spipes.modules.util.TabularModuleUtils;
 import org.apache.jena.rdf.model.Model;
@@ -13,6 +14,7 @@ import org.apache.jena.util.ResourceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -71,6 +73,54 @@ public class TableSchema extends AbstractEntity {
 
     public void setValueUrl(String valueUrl) {
         tabularModuleUtils.setVariable(this.valueUrl, valueUrl, value -> this.valueUrl = value, "valueUrl");
+    }
+
+    private transient List<Column> outputColumns;
+
+    public void setOutputColumns(List<String> header,String sourceResourceUri,String dataPrefix,boolean hasInputSchema) throws UnsupportedEncodingException {
+        outputColumns = new ArrayList<>(header.size());
+        Set<String> columnNames = new HashSet<>();
+
+        for (String columnTitle : header) {
+            String columnName = normalize(columnTitle);
+            boolean isDuplicate = !columnNames.add(columnName);
+
+            Column schemaColumn = new Column(columnName, columnTitle);
+
+            outputColumns.add(schemaColumn);
+            schemaColumn.setTitle(columnTitle);
+            if (isDuplicate) throwNotUniqueException(schemaColumn, columnTitle, columnName);
+        }
+
+        for(Column schemaColumn : outputColumns){
+            String columnName = schemaColumn.getName();
+
+            this.setAboutUrl(schemaColumn, sourceResourceUri);
+            schemaColumn.setProperty(
+                    dataPrefix,
+                    sourceResourceUri,
+                    hasInputSchema ? this.getColumn(columnName) : null);
+        }
+    }
+
+    public List<Column> getOutputColumns() {
+        return outputColumns;
+    }
+
+    private String normalize(String label) {
+        return label.trim().replaceAll("[^\\w]", "_");
+    }
+
+    private void throwNotUniqueException(Column column, String columnTitle, String columnName) {
+        throw new ResourceNotUniqueException(
+                String.format("Unable to create value of property %s due to collision. " +
+                                "Both column titles '%s' and '%s' are normalized to '%s' " +
+                                "and thus would refer to the same property url <%s>.",
+                        CSVW.propertyUrl,
+                        columnTitle,
+                        column.getTitle(),
+                        columnName,
+                        column.getPropertyUrl()));
     }
 
     public Set<Column> getColumnsSet() {

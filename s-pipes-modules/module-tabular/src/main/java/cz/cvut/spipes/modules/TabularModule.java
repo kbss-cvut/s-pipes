@@ -272,28 +272,11 @@ public class TabularModule extends AnnotatedAbstractModule {
             em.close();
             em.getEntityManagerFactory().close();
 
-            Set<String> columnNames = new HashSet<>();
+            tableSchema.setOutputColumns(header,sourceResource.getUri(),dataPrefix,hasInputSchema);
+            outputColumns = tableSchema.getOutputColumns();
 
-            for (String columnTitle : header) {
-                String columnName = normalize(columnTitle);
-                boolean isDuplicate = !columnNames.add(columnName);
-
-                Column schemaColumn = new Column(columnName, columnTitle);
-
-                outputColumns.add(schemaColumn);
-                schemaColumn.setTitle(columnTitle);
-                if (isDuplicate) throwNotUniqueException(schemaColumn, columnTitle, columnName);
-            }
-
-            for(Column schemaColumn : outputColumns){
-                String columnName = schemaColumn.getName();
-
-                tableSchema.setAboutUrl(schemaColumn, sourceResource.getUri());
-                schemaColumn.setProperty(
-                        dataPrefix,
-                        sourceResource.getUri(),
-                        hasInputSchema ? tableSchema.getColumn(columnName) : null);
-            }
+            tableSchema.adjustProperties(hasInputSchema, outputColumns, sourceResource.getUri());
+            tableSchema.setColumnsSet(new HashSet<>(outputColumns));
 
             rowStatements = tabularReader.getRowStatements(header,outputColumns,tableSchema);
 
@@ -328,9 +311,6 @@ public class TabularModule extends AnnotatedAbstractModule {
         } catch (IOException | MissingArgumentException e) {
             LOG.error("Error while reading file from resource uri {}", sourceResource, e);
         }
-
-        tableSchema.adjustProperties(hasInputSchema, outputColumns, sourceResource.getUri());
-        tableSchema.setColumnsSet(new HashSet<>(outputColumns));
 
         em = JopaPersistenceUtils.getEntityManager("cz.cvut.spipes.modules.model", outputModel);
         em.getTransaction().begin();
