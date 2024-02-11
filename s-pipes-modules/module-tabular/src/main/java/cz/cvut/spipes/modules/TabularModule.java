@@ -17,6 +17,7 @@ import cz.cvut.spipes.modules.exception.SheetIsNotSpecifiedException;
 import cz.cvut.spipes.modules.exception.SpecificationNonComplianceException;
 import cz.cvut.spipes.modules.model.*;
 import cz.cvut.spipes.modules.tabular.CSVReader;
+import cz.cvut.spipes.modules.tabular.ExcelReader;
 import cz.cvut.spipes.modules.tabular.TabularReader;
 import cz.cvut.spipes.modules.util.*;
 import cz.cvut.spipes.registry.StreamResource;
@@ -180,6 +181,7 @@ public class TabularModule extends AnnotatedAbstractModule {
      * Default charset to process input file.
      */
     private Charset inputCharset = Charset.defaultCharset();
+    private TabularReader tabularReader;
 
     @Override
     ExecutionContext executeSelf() {
@@ -220,8 +222,8 @@ public class TabularModule extends AnnotatedAbstractModule {
                     );
                     throw new SheetDoesntExistsException("Requested sheet doesn't exists.");
                 }
-                setSourceResource(tsvConvertor.convertToTSV(sourceResource));
-                setDelimiter('\t');
+//                setSourceResource(tsvConvertor.convertToTSV(sourceResource));
+//                setDelimiter('\t');
                 break;
         }
 
@@ -241,6 +243,9 @@ public class TabularModule extends AnnotatedAbstractModule {
             delimiter,
             System.lineSeparator()).build();
 
+        boolean IS_EXCEL_TEMP = sourceResourceFormat == ResourceFormat.XLS || sourceResourceFormat == ResourceFormat.XLSM || sourceResourceFormat == ResourceFormat.XLSX;
+//        IS_EXCEL_TEMP = false;
+        LOG.debug("IS EXCEL? "+IS_EXCEL_TEMP);
         try {
             ICsvListReader listReader = getCsvListReader(csvPreference);
 
@@ -249,7 +254,8 @@ public class TabularModule extends AnnotatedAbstractModule {
                 return getExecutionContext(inputModel, outputModel);
             }
 
-            TabularReader tabularReader = new CSVReader(listReader);
+            if(!IS_EXCEL_TEMP)tabularReader = new CSVReader(listReader);
+            else tabularReader = new ExcelReader(processTableAtIndex,sourceResourceFormat,sourceResource);
 
             List<String> header = tabularReader.getHeader();
 
@@ -264,7 +270,8 @@ public class TabularModule extends AnnotatedAbstractModule {
             if (skipHeader) {
                 header = getHeaderFromSchema(inputModel, header, hasInputSchema);
                 listReader = new CsvListReader(getReader(), csvPreference);
-                tabularReader = new CSVReader(listReader);
+                if(!IS_EXCEL_TEMP)tabularReader = new CSVReader(listReader);
+                else tabularReader = new ExcelReader(processTableAtIndex,sourceResourceFormat,sourceResource);
             } else if (hasInputSchema) {
                 header = getHeaderFromSchema(inputModel, header, true);
             }
@@ -280,8 +287,7 @@ public class TabularModule extends AnnotatedAbstractModule {
 
             rowStatements = tabularReader.getRowStatements(header,outputColumns,tableSchema);
 
-
-            int numberOfRows = listReader.getRowNumber() - 1;
+            int numberOfRows = tabularReader.getNumberOfRows();
 //            LOG.error("Number of rows: {}",numberOfRows);
             Set<Row> Rows = new HashSet<>();
             //for each row

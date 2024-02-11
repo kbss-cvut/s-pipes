@@ -63,6 +63,11 @@ public class CSVReader implements TabularReader {
         return statements;
     }
 
+    @Override
+    public int getNumberOfRows(){
+        return listReader.getRowNumber() - 1;
+    }
+
     private Statement createRowResource(String cellValue, int rowNumber, Column column, TableSchema tableSchema) {
         Resource rowResource = ResourceFactory.createResource(tableSchema.createAboutUrl(rowNumber));
 
