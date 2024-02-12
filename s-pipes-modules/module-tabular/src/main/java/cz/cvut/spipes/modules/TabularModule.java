@@ -18,6 +18,7 @@ import cz.cvut.spipes.modules.exception.SpecificationNonComplianceException;
 import cz.cvut.spipes.modules.model.*;
 import cz.cvut.spipes.modules.tabular.CSVReader;
 import cz.cvut.spipes.modules.tabular.ExcelReader;
+import cz.cvut.spipes.modules.tabular.HtmlReader;
 import cz.cvut.spipes.modules.tabular.TabularReader;
 import cz.cvut.spipes.modules.util.*;
 import cz.cvut.spipes.registry.StreamResource;
@@ -209,8 +210,8 @@ public class TabularModule extends AbstractModule {
                 }
                 tsvConvertor = new HTML2TSVConvertor(processTableAtIndex);
                 table.setLabel(tsvConvertor.getTableName(sourceResource));
-                setSourceResource(tsvConvertor.convertToTSV(sourceResource));
-                setDelimiter('\t');
+//                setSourceResource(tsvConvertor.convertToTSV(sourceResource));
+//                setDelimiter('\t');
                 break;
             case XLS:
             case XLSM:
@@ -251,8 +252,11 @@ public class TabularModule extends AbstractModule {
             System.lineSeparator()).build();
 
         boolean IS_EXCEL_TEMP = sourceResourceFormat == ResourceFormat.XLS || sourceResourceFormat == ResourceFormat.XLSM || sourceResourceFormat == ResourceFormat.XLSX;
+        boolean IS_HTML_TEMP = sourceResourceFormat == ResourceFormat.HTML;
 //        IS_EXCEL_TEMP = false;
+//        IS_HTML_TEMP = false;
         LOG.debug("IS EXCEL? "+IS_EXCEL_TEMP);
+        LOG.debug("IS HTML? "+IS_HTML_TEMP);
         try {
             ICsvListReader listReader = getCsvListReader(csvPreference);
 
@@ -261,7 +265,8 @@ public class TabularModule extends AbstractModule {
                 return getExecutionContext(inputModel, outputModel);
             }
 
-            if(!IS_EXCEL_TEMP)tabularReader = new CSVReader(listReader);
+            if(!IS_EXCEL_TEMP && !IS_HTML_TEMP)tabularReader = new CSVReader(listReader);
+            else if(IS_HTML_TEMP) tabularReader = new HtmlReader(sourceResource);
             else tabularReader = new ExcelReader(processTableAtIndex,sourceResourceFormat,sourceResource);
 
             List<String> header = tabularReader.getHeader();
@@ -277,7 +282,8 @@ public class TabularModule extends AbstractModule {
             if (skipHeader) {
                 header = getHeaderFromSchema(inputModel, header, hasInputSchema);
                 listReader = new CsvListReader(getReader(), csvPreference);
-                if(!IS_EXCEL_TEMP)tabularReader = new CSVReader(listReader);
+                if(!IS_EXCEL_TEMP && !IS_HTML_TEMP)tabularReader = new CSVReader(listReader);
+                else if(IS_HTML_TEMP) tabularReader = new HtmlReader(sourceResource);
                 else tabularReader = new ExcelReader(processTableAtIndex,sourceResourceFormat,sourceResource);
             } else if (hasInputSchema) {
                 header = getHeaderFromSchema(inputModel, header, true);
