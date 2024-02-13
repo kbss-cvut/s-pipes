@@ -190,44 +190,6 @@ public class TabularModule extends AnnotatedAbstractModule {
         tableGroup = onTableGroup(null);
         table = onTable(null);
 
-        StreamResource originalSourceResource = sourceResource;
-        TSVConvertor tsvConvertor = null;
-
-        switch (sourceResourceFormat) {
-            case HTML:
-                if (processTableAtIndex == 0) {
-                    throw new SheetIsNotSpecifiedException("Source resource format is set to HTML file but no specific table is set for processing.");
-                }
-                if (processTableAtIndex != 1) {
-                    throw new UnsupportedOperationException("Support for 'process-table-at-index' different from 1 is not implemented for HTML files yet.");
-                }
-                tsvConvertor = new HTML2TSVConvertor(processTableAtIndex);
-                table.setLabel(tsvConvertor.getTableName(sourceResource));
-//                setSourceResource(tsvConvertor.convertToTSV(sourceResource));
-//                setDelimiter('\t');
-                break;
-            case XLS:
-            case XLSM:
-            case XLSX:
-                if (processTableAtIndex == 0) {
-                    throw new SheetIsNotSpecifiedException("Source resource format is set to XLS(X,M) file but no specific table is set for processing.");
-                }
-                tsvConvertor = new XLS2TSVConvertor(processTableAtIndex, sourceResourceFormat);
-                int numberOfSheets = tsvConvertor.getTablesCount(sourceResource);
-                table.setLabel(tsvConvertor.getTableName(sourceResource));
-                LOG.debug("Number of sheets: {}", numberOfSheets);
-                if ((processTableAtIndex > numberOfSheets) || (processTableAtIndex < 1)) {
-                    LOG.error("Requested sheet doesn't exist, number of sheets in the doc: {}, requested sheet: {}",
-                        numberOfSheets,
-                            processTableAtIndex
-                    );
-                    throw new SheetDoesntExistsException("Requested sheet doesn't exists.");
-                }
-//                setSourceResource(tsvConvertor.convertToTSV(sourceResource));
-//                setDelimiter('\t');
-                break;
-        }
-
         BNodesTransformer bNodesTransformer = new BNodesTransformer();
         Model inputModel = bNodesTransformer.convertBNodesToNonBNodes(executionContext.getDefaultModel());
         boolean hasInputSchema = false;
@@ -240,14 +202,45 @@ public class TabularModule extends AnnotatedAbstractModule {
         List<Statement> rowStatements = new ArrayList<>();
 
         CsvPreference csvPreference = new CsvPreference.Builder(
-            quoteCharacter,
-            delimiter,
-            System.lineSeparator()).build();
+                quoteCharacter,
+                delimiter,
+                System.lineSeparator()).build();
+
+        switch (sourceResourceFormat) {
+            case HTML:
+                if (processTableAtIndex == 0) {
+                    throw new SheetIsNotSpecifiedException("Source resource format is set to HTML file but no specific table is set for processing.");
+                }
+                if (processTableAtIndex != 1) {
+                    throw new UnsupportedOperationException("Support for 'process-table-at-index' different from 1 is not implemented for HTML files yet.");
+                }
+                tabularReader = new HtmlReader(sourceResource);
+                table.setLabel(tabularReader.getTableName());
+                break;
+            case XLS:
+            case XLSM:
+            case XLSX:
+                if (processTableAtIndex == 0) {
+                    throw new SheetIsNotSpecifiedException("Source resource format is set to XLS(X,M) file but no specific table is set for processing.");
+                }
+
+                tabularReader = new ExcelReader(processTableAtIndex,sourceResourceFormat,sourceResource);
+                table.setLabel(tabularReader.getTableName());
+                int numberOfSheets = tabularReader.getTablesCount();
+
+                LOG.debug("Number of sheets: {}", numberOfSheets);
+                if ((processTableAtIndex > numberOfSheets) || (processTableAtIndex < 1)) {
+                    LOG.error("Requested sheet doesn't exist, number of sheets in the doc: {}, requested sheet: {}",
+                        numberOfSheets,
+                            processTableAtIndex
+                    );
+                    throw new SheetDoesntExistsException("Requested sheet doesn't exists.");
+                }
+                break;
+        }
 
         boolean IS_EXCEL_TEMP = sourceResourceFormat == ResourceFormat.XLS || sourceResourceFormat == ResourceFormat.XLSM || sourceResourceFormat == ResourceFormat.XLSX;
         boolean IS_HTML_TEMP = sourceResourceFormat == ResourceFormat.HTML;
-//        IS_EXCEL_TEMP = false;
-//        IS_HTML_TEMP = false;
         LOG.debug("IS EXCEL? "+IS_EXCEL_TEMP);
         LOG.debug("IS HTML? "+IS_HTML_TEMP);
         try {
@@ -329,22 +322,20 @@ public class TabularModule extends AnnotatedAbstractModule {
         em.persist(tableGroup);
         em.merge(tableSchema);
 
-        if (tsvConvertor != null) {
-            List<Region> regions =  tsvConvertor.getMergedRegions(originalSourceResource);
+        List<Region> regions =  tabularReader.getMergedRegions();
 
-            int cellsNum = 1;
-            for (Region region : regions) {
-                int firstCellInRegionNum = cellsNum;
-                for(int i = region.getFirstRow();i <= region.getLastRow();i++){
-                    for(int j = region.getFirstColumn();j <= region.getLastColumn();j++) {
-                        Cell cell = new Cell(sourceResource.getUri()+"#cell"+(cellsNum));
-                        cell.setRow(tableSchema.createAboutUrl(i));
-                        cell.setColumn(outputColumns.get(j).getUri().toString());
-                        if(cellsNum != firstCellInRegionNum)
-                            cell.setSameValueAsCell(sourceResource.getUri()+"#cell"+(firstCellInRegionNum));
-                        em.merge(cell);
-                        cellsNum++;
-                    }
+        int cellsNum = 1;
+        for (Region region : regions) {
+            int firstCellInRegionNum = cellsNum;
+            for(int i = region.getFirstRow();i <= region.getLastRow();i++){
+                for(int j = region.getFirstColumn();j <= region.getLastColumn();j++) {
+                    Cell cell = new Cell(sourceResource.getUri()+"#cell"+(cellsNum));
+                    cell.setRow(tableSchema.createAboutUrl(i));
+                    cell.setColumn(outputColumns.get(j).getUri().toString());
+                    if(cellsNum != firstCellInRegionNum)
+                        cell.setSameValueAsCell(sourceResource.getUri()+"#cell"+(firstCellInRegionNum));
+                    em.merge(cell);
+                    cellsNum++;
                 }
             }
         }

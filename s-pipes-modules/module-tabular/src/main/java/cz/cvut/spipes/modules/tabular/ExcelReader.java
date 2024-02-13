@@ -2,6 +2,7 @@ package cz.cvut.spipes.modules.tabular;
 
 import cz.cvut.spipes.modules.ResourceFormat;
 import cz.cvut.spipes.modules.model.Column;
+import cz.cvut.spipes.modules.model.Region;
 import cz.cvut.spipes.modules.model.TableSchema;
 import cz.cvut.spipes.registry.StreamResource;
 import org.apache.jena.rdf.model.Resource;
@@ -12,6 +13,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.ByteArrayInputStream;
@@ -82,6 +84,53 @@ public class ExcelReader implements TabularReader{
         Sheet sheet = workbook.getSheetAt(sheetNumber-1);
 
         return sheet.getPhysicalNumberOfRows() - 1;
+    }
+
+    @Override
+    public String getTableName() {
+        try {
+            Workbook workbook;
+            if(format == ResourceFormat.XLS)workbook = new HSSFWorkbook(new ByteArrayInputStream(streamResource.getContent()));
+            else workbook = new XSSFWorkbook(new ByteArrayInputStream(streamResource.getContent()));
+            Sheet sheet = workbook.getSheetAt(sheetNumber-1);
+            return sheet.getSheetName();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public int getTablesCount(){
+        try {
+            if(format == ResourceFormat.XLS)return new HSSFWorkbook(new ByteArrayInputStream(streamResource.getContent())).getNumberOfSheets();
+            else return new XSSFWorkbook(new ByteArrayInputStream(streamResource.getContent())).getNumberOfSheets();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<Region> getMergedRegions(){
+        Workbook workbook;
+        List<Region> list = new ArrayList<>();
+        try {
+            if(format == ResourceFormat.XLS)workbook = new HSSFWorkbook(new ByteArrayInputStream(streamResource.getContent()));
+            else workbook = new XSSFWorkbook(new ByteArrayInputStream(streamResource.getContent()));
+            Sheet sheet = workbook.getSheetAt(sheetNumber-1);
+
+            for(int i = 0;i < sheet.getNumMergedRegions();i++){
+                CellRangeAddress region = sheet.getMergedRegion(i);
+                list.add(new Region(
+                        region.getFirstRow(),
+                        region.getFirstColumn(),
+                        region.getLastRow(),
+                        region.getLastColumn())
+                );
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return list;
     }
 
     private Statement createRowResource(String cellValue, int rowNumber, Column column, TableSchema tableSchema) {
