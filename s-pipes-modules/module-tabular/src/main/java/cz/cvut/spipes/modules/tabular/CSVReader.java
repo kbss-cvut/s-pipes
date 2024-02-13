@@ -1,11 +1,8 @@
 package cz.cvut.spipes.modules.tabular;
 
-import cz.cvut.spipes.constants.CSVW;
-import cz.cvut.spipes.exception.ResourceNotUniqueException;
 import cz.cvut.spipes.exception.SPipesException;
-import cz.cvut.spipes.modules.Mode;
 import cz.cvut.spipes.modules.model.Column;
-import cz.cvut.spipes.modules.model.Row;
+import cz.cvut.spipes.modules.model.Region;
 import cz.cvut.spipes.modules.model.TableSchema;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
@@ -66,6 +63,22 @@ public class CSVReader implements TabularReader {
     @Override
     public int getNumberOfRows(){
         return listReader.getRowNumber() - 1;
+    }
+
+    @Override
+    public String getTableName() {
+        return null;
+    }
+
+    @Override
+    public int getTablesCount() {
+        return 1;
+    }
+
+    @Override
+    public List<Region> getMergedRegions(){
+        List<Region> list = new ArrayList<>();
+        return list;
     }
 
     private Statement createRowResource(String cellValue, int rowNumber, Column column, TableSchema tableSchema) {
