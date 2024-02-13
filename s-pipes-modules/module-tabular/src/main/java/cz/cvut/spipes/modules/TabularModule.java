@@ -10,7 +10,6 @@ import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.exception.ResourceNotFoundException;
-import cz.cvut.spipes.exception.ResourceNotUniqueException;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.modules.exception.SheetDoesntExistsException;
 import cz.cvut.spipes.modules.exception.SheetIsNotSpecifiedException;
@@ -201,10 +200,9 @@ public class TabularModule extends AnnotatedAbstractModule {
         List<Column> outputColumns = new ArrayList<>();
         List<Statement> rowStatements = new ArrayList<>();
 
-        CsvPreference csvPreference = new CsvPreference.Builder(
-                quoteCharacter,
-                delimiter,
-                System.lineSeparator()).build();
+        initTabularReader();
+        if(tabularReader == null)
+            return getExecutionContext(inputModel, outputModel);
 
         switch (sourceResourceFormat) {
             case HTML:
@@ -214,7 +212,6 @@ public class TabularModule extends AnnotatedAbstractModule {
                 if (processTableAtIndex != 1) {
                     throw new UnsupportedOperationException("Support for 'process-table-at-index' different from 1 is not implemented for HTML files yet.");
                 }
-                tabularReader = new HtmlReader(sourceResource);
                 table.setLabel(tabularReader.getTableName());
                 break;
             case XLS:
@@ -224,7 +221,6 @@ public class TabularModule extends AnnotatedAbstractModule {
                     throw new SheetIsNotSpecifiedException("Source resource format is set to XLS(X,M) file but no specific table is set for processing.");
                 }
 
-                tabularReader = new ExcelReader(processTableAtIndex,sourceResourceFormat,sourceResource);
                 table.setLabel(tabularReader.getTableName());
                 int numberOfSheets = tabularReader.getTablesCount();
 
@@ -239,22 +235,7 @@ public class TabularModule extends AnnotatedAbstractModule {
                 break;
         }
 
-        boolean IS_EXCEL_TEMP = sourceResourceFormat == ResourceFormat.XLS || sourceResourceFormat == ResourceFormat.XLSM || sourceResourceFormat == ResourceFormat.XLSX;
-        boolean IS_HTML_TEMP = sourceResourceFormat == ResourceFormat.HTML;
-        LOG.debug("IS EXCEL? "+IS_EXCEL_TEMP);
-        LOG.debug("IS HTML? "+IS_HTML_TEMP);
         try {
-            ICsvListReader listReader = getCsvListReader(csvPreference);
-
-            if (listReader == null) { // TODO we need to detect this situation without need to create list reader
-                logMissingQuoteError();
-                return getExecutionContext(inputModel, outputModel);
-            }
-
-            if(!IS_EXCEL_TEMP && !IS_HTML_TEMP)tabularReader = new CSVReader(listReader);
-            else if(IS_HTML_TEMP) tabularReader = new HtmlReader(sourceResource);
-            else tabularReader = new ExcelReader(processTableAtIndex,sourceResourceFormat,sourceResource);
-
             List<String> header = tabularReader.getHeader();
 
             if (header == null) {
@@ -267,10 +248,7 @@ public class TabularModule extends AnnotatedAbstractModule {
 
             if (skipHeader) {
                 header = getHeaderFromSchema(inputModel, header, hasInputSchema);
-                listReader = new CsvListReader(getReader(), csvPreference);
-                if(!IS_EXCEL_TEMP && !IS_HTML_TEMP)tabularReader = new CSVReader(listReader);
-                else if(IS_HTML_TEMP) tabularReader = new HtmlReader(sourceResource);
-                else tabularReader = new ExcelReader(processTableAtIndex,sourceResourceFormat,sourceResource);
+                initTabularReader();
             } else if (hasInputSchema) {
                 header = getHeaderFromSchema(inputModel, header, true);
             }
@@ -287,7 +265,6 @@ public class TabularModule extends AnnotatedAbstractModule {
             rowStatements = tabularReader.getRowStatements(header,outputColumns,tableSchema);
 
             int numberOfRows = tabularReader.getNumberOfRows();
-//            LOG.error("Number of rows: {}",numberOfRows);
             Set<Row> Rows = new HashSet<>();
             //for each row
             for(int rowNumber = 1;rowNumber <= numberOfRows;rowNumber++){
@@ -313,7 +290,7 @@ public class TabularModule extends AnnotatedAbstractModule {
             }
             table.setRows(Rows);
 
-        } catch (IOException | MissingArgumentException e) {
+        } catch (IOException e) {
             LOG.error("Error while reading file from resource uri {}", sourceResource, e);
         }
 
@@ -351,6 +328,37 @@ public class TabularModule extends AnnotatedAbstractModule {
         return getExecutionContext(inputModel, outputModel);
     }
 
+    private void initTabularReader(){
+        switch (sourceResourceFormat) {
+            case HTML:
+                tabularReader = new HtmlReader(sourceResource);
+                break;
+            case XLS:
+            case XLSM:
+            case XLSX:
+                tabularReader = new ExcelReader(processTableAtIndex,sourceResourceFormat,sourceResource);
+                break;
+            default:
+                CsvPreference csvPreference = new CsvPreference.Builder(
+                        quoteCharacter,
+                        delimiter,
+                        System.lineSeparator()).build();
+//                ICsvListReader listReader = new CsvListReader(getReader(), csvPreference);
+                ICsvListReader listReader = getCsvListReader(csvPreference);
+
+                if (listReader == null) { // TODO we need to detect this situation without need to create list reader
+                    try {
+                        logMissingQuoteError();
+                    } catch (MissingArgumentException e) {
+                        throw new RuntimeException(e);
+                    }
+                    return;
+                }
+                tabularReader = new CSVReader(listReader);
+                break;
+        }
+    }
+
     private ICsvListReader getCsvListReader(CsvPreference csvPreference) {
         if (acceptInvalidQuoting) {
             if (getQuote() == '\0') {
@@ -368,18 +376,6 @@ public class TabularModule extends AnnotatedAbstractModule {
             return true;
         }
         return false;
-    }
-
-    private void throwNotUniqueException(Column column, String columnTitle, String columnName) {
-        throw new ResourceNotUniqueException(
-                String.format("Unable to create value of property %s due to collision. " +
-                                "Both column titles '%s' and '%s' are normalized to '%s' " +
-                                "and thus would refer to the same property url <%s>.",
-                        CSVW.propertyUrl,
-                        columnTitle,
-                        column.getTitle(),
-                        columnName,
-                        column.getPropertyUrl()));
     }
 
     private TableSchema getTableSchema(EntityManager em) {
@@ -411,10 +407,6 @@ public class TabularModule extends AnnotatedAbstractModule {
         } else {
             return ExecutionContextFactory.createContext(JenaUtils.createUnion(inputModel, outputModel));
         }
-    }
-
-    private String normalize(String label) {
-        return label.trim().replaceAll("[^\\w]", "_");
     }
 
     @Override
