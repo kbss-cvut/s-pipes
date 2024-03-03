@@ -9,10 +9,7 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -65,7 +62,7 @@ public class ExcelReader implements TabularReader{
                 int colNumber = cell.getColumnIndex();
                 Column column = outputColumns.get(colNumber);
                 String cellValue = cell.toString();
-                if (cellValue != null) statements.add(createRowResource(cellValue, rowNumber, column,tableSchema));
+                if (cellValue != null && (cell.getCellType() != CellType.BLANK) ) statements.add(createRowResource(cellValue, rowNumber, column,tableSchema));
             }
         }
 
