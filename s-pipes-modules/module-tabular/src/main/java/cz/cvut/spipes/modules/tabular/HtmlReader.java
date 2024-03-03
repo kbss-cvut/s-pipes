@@ -168,7 +168,7 @@ public class HtmlReader implements TabularReader{
                         cellColSpan.get(colNumber).getRight()));
                 colNumber += cellColSpan.get(colNumber).getRight();
             }
-            statements.add(createRowResource(cell.html(),rowNumber,outputColumns.get(colNumber),tableSchema));
+            if(cell.hasText())statements.add(createRowResource(cell.html(),rowNumber,outputColumns.get(colNumber),tableSchema));
             int colspan = parseInt(cell.attr("colspan"), 1);
             int rowspan = parseInt(cell.attr("rowspan"), 1);
             cellColSpan.set(colNumber, new Pair<>(rowspan-1,colspan));
