@@ -84,8 +84,6 @@ _:b2    a       <http://www.w3.org/ns/csvw#Column> ;
 <http://test-file#row-3>
         <http://onto.fel.cvut.cz/data/aa>
                 "merged rows" ;
-        <http://onto.fel.cvut.cz/data/bb>
-                "dd" ;
         <http://onto.fel.cvut.cz/data/cc>
                 "ee" .
 
