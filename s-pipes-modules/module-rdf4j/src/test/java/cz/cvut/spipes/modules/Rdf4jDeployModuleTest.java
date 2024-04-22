@@ -4,16 +4,13 @@ import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.vocabulary.RDFS;
 import org.eclipse.rdf4j.model.ValueFactory;
-import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.manager.RepositoryManager;
 import org.eclipse.rdf4j.rio.RDFFormat;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -43,7 +40,7 @@ public class Rdf4jDeployModuleTest {
         given(repositoryManager.getRepository(any())).willReturn(repository);
         given(repository.getConnection()).willReturn(connection);
 
-        final ExecutionContext inputExecutionContext = ExecutionContextFactory.createEmptyContext();
+        final ExecutionContext inputExecutionContext = ExecutionContextFactory.createContext(getNonEmptyModel());
         final Rdf4jDeployModule moduleRdf4j = new Rdf4jDeployModule();
         moduleRdf4j.setInputContext(inputExecutionContext);
         moduleRdf4j.setRepositoryManager(repositoryManager);
@@ -53,7 +50,11 @@ public class Rdf4jDeployModuleTest {
         verify(repositoryManager,times(0)).getRepository(anyString());
         verify(connection,times(1)).begin();
         verify(connection,times(1)).commit();
-        verify(connection).add(any(StringReader.class),eq(""),eq(RDFFormat.N3),eq(null));
+        verify(connection).add(
+            any(StringReader.class),
+            eq(""),
+            eq(RDFFormat.NQUADS)
+        );
     }
 
     @Mock
@@ -64,13 +65,11 @@ public class Rdf4jDeployModuleTest {
         given(repositoryManager.getRepository(any())).willReturn(repository);
         given(repository.getConnection()).willReturn(connection);
 
-        final ExecutionContext inputExecutionContext = ExecutionContextFactory.createEmptyContext();
+        final ExecutionContext inputExecutionContext = ExecutionContextFactory.createContext(getNonEmptyModel());
         final Rdf4jDeployModule moduleRdf4j = new Rdf4jDeployModule();
         moduleRdf4j.setInputContext(inputExecutionContext);
         moduleRdf4j.setRepositoryManager(repositoryManager);
         String rdf4jContext = "http://example.org";
-        given(connection.getValueFactory()).willReturn(valueFactory);
-        given(connection.getValueFactory().createIRI(rdf4jContext)).willReturn(SimpleValueFactory.getInstance().createIRI(rdf4jContext));
         moduleRdf4j.setRdf4jContextIRI(rdf4jContext);
 
         moduleRdf4j.executeSelf();
@@ -81,8 +80,15 @@ public class Rdf4jDeployModuleTest {
         verify(connection).add(
                 any(StringReader.class),
                 eq(""),
-                eq(RDFFormat.N3),
-                eq(SimpleValueFactory.getInstance().createIRI(rdf4jContext))
+                eq(RDFFormat.NQUADS)
+        );
+    }
+
+    private Model getNonEmptyModel() {
+        return ModelFactory.createDefaultModel().add(
+            ResourceFactory.createResource("http://example.org/robert-plant"),
+            RDFS.label,
+            "Robert Plant"
         );
     }
 }
