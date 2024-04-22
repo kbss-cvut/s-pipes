@@ -6,8 +6,12 @@ import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.exception.ModuleConfigurationInconsistentException;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.util.CoreConfigProperies;
+import org.apache.jena.query.Dataset;
+import org.apache.jena.query.DatasetFactory;
+import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFLanguages;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.repository.Repository;
@@ -22,6 +26,7 @@ import org.eclipse.rdf4j.repository.sail.config.SailRepositoryConfig;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFParseException;
 import org.eclipse.rdf4j.sail.nativerdf.config.NativeStoreConfig;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +34,7 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @SPipesModule(label = "deploy", comment =
@@ -58,10 +64,20 @@ public class Rdf4jDeployModule extends AbstractModule {
     @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-rdf4j-context-iri", comment = "IRI of the context that should be used for deployment.")
     private String rdf4jContextIRI;
 
+    static final Property P_RDF4J_INFER_CONTEXT_IRIS = getParameter("p-rdf4j-infer-context-iris");
+
+    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-rdf4j-infer-context-iris",
+        comment = "IRI of contexts is inferred from annotated input triples. Only reified triples that contain triple " +
+            "?reifiedStatement kbss-module:is-part-of-graph ?graph are processed." +
+            " Actual triples related to reified statement are not processed/needed.")
+    private boolean inferContextIRIs;
+
     static final Property P_RDF4J_REPOSITORY_USERNAME = getParameter("p-rdf4j-secured-username-variable");
     @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-rdf4j-secured-username-variable", comment = "User name if the repository requires authentication.")
     private String rdf4jSecuredUsernameVariable;
+
     private RepositoryManager repositoryManager;
+
     private Repository repository;
 
     public void setRepositoryManager(RepositoryManager repositoryManager) {
@@ -128,21 +144,31 @@ public class Rdf4jDeployModule extends AbstractModule {
                 repositoryManager.addRepositoryConfig(repConfig);
                 repository = repositoryManager.getRepository(rdf4jRepositoryName);
             }
+
+            Dataset dataset = createDataset(executionContext.getDefaultModel(), rdf4jContextIRI, inferContextIRIs);
+
+            if (dataset.isEmpty()) {
+                LOG.info("No triples found to deploy.");
+                return ExecutionContextFactory.createContext(executionContext.getDefaultModel());
+            }
+
             repository.initialize();
             connection = repository.getConnection();
 
-            final Resource rdf4jContextIRIResource =
-                isRdf4jContextIRIDefined() ? connection.getValueFactory().createIRI(rdf4jContextIRI) : null;
-
             connection.begin();
             if (isReplaceContext) {
-                connection.clear( rdf4jContextIRIResource );
+                ArrayList<Resource> contextList = new ArrayList<>();
+                RepositoryConnection finalConnection = connection;
+                dataset.listNames().forEachRemaining(
+                    c -> contextList.add(finalConnection.getValueFactory().createIRI(c))
+                );
+                connection.clear(contextList.toArray(new Resource[0]));
             }
 
             StringWriter w = new StringWriter();
-            executionContext.getDefaultModel().write(w, RDFLanguages.NTRIPLES.getName());
+            RDFDataMgr.write(w, dataset, RDFLanguages.NQUADS);
 
-            connection.add(new StringReader(w.getBuffer().toString()), "", RDFFormat.N3, rdf4jContextIRIResource);
+            connection.add(new StringReader(w.getBuffer().toString()), "", RDFFormat.NQUADS);
             connection.commit();
         } catch (final RepositoryException | RDFParseException | RepositoryConfigException | IOException e) {
             LOG.error(e.getMessage(),e);
@@ -165,6 +191,38 @@ public class Rdf4jDeployModule extends AbstractModule {
         }
 
         return ExecutionContextFactory.createContext(executionContext.getDefaultModel());
+    }
+
+    static Dataset createDataset(@NotNull Model model, String outputGraphId, boolean inferGraphsFromAnnotatedModel) {
+        boolean isOutputGraphSpecified = (outputGraphId != null) && (!outputGraphId.isEmpty());
+        if (isOutputGraphSpecified && inferGraphsFromAnnotatedModel) {
+            LOG.error("Module is set to deploy in one context as well as infer contexts from annotated model. " +
+                "Thus, ignoring deploy of triples.");
+            return DatasetFactory.create();
+        }
+        if (isOutputGraphSpecified) {
+            return DatasetFactory.create().addNamedModel(outputGraphId, model);
+        }
+        if (inferGraphsFromAnnotatedModel) {
+            return createDatasetFromAnnotatedModel(model);
+        }
+        return DatasetFactory.create(model);
+    }
+
+    static Dataset createDatasetFromAnnotatedModel(@NotNull Model model) {
+        Dataset dataset = DatasetFactory.create();
+        model.listReifiedStatements().forEachRemaining(
+            rs -> {
+                rs.listProperties(KBSS_MODULE.is_part_of_graph)
+                    .mapWith( gs -> gs.getObject().toString())
+                        .forEachRemaining(
+                            u ->  {
+                                dataset.getNamedModel(u).add(rs.getStatement());
+                            }
+                        );
+            }
+        );
+        return dataset;
     }
 
     @Override
@@ -198,6 +256,8 @@ public class Rdf4jDeployModule extends AbstractModule {
             remoteRepositoryManager.setUsernameAndPassword(username, password);
         }
         repository = repositoryManager.getRepository(rdf4jRepositoryName);
+        inferContextIRIs = getPropertyValue(P_RDF4J_INFER_CONTEXT_IRIS,false);
+        LOG.debug("Inferring contexts from annotated input triples.");
     }
     private static @Nullable String getConfigurationVariable(String variableName) {
         if (variableName == null) {

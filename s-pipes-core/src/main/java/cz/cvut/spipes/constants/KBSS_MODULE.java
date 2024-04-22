@@ -21,6 +21,9 @@ public class KBSS_MODULE {
     public static final Property has_max_iteration_count = property("has-max-iteration-count");
     public static final Property has_resource_uri = property("has-resource-uri");
 
+    // states that reified statement belongs to specific named graph identified by uri
+    public static final Property is_part_of_graph = property("is-part-of-graph");
+
     /**
      returns the URI for this schema
      @return the URI for this schema
