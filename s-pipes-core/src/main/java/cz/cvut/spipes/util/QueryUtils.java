@@ -170,7 +170,7 @@ public class QueryUtils {
     }
 
     public static String getQueryComment(String query) {
-        String comment = query.split(System.lineSeparator())[0];
+        String comment = query.split("[\r\n]")[0];
         if (comment.matches("\\s*#.*")) {
             return comment.split("\\s*#\\s*", 2)[1];
         }
