@@ -129,7 +129,7 @@ public class Rdf4jDeployModule extends AbstractModule {
     @Override
     ExecutionContext executeSelf() {
         LOG.debug("Deploying data into {} of rdf4j server repository {}/{}.",
-            isRdf4jContextIRIDefined() ? "context " + rdf4jContextIRI : "default context",
+            getContextsInfo(),
             rdf4jServerURL,
             rdf4jRepositoryName);
         RepositoryConnection connection = null;
@@ -191,6 +191,16 @@ public class Rdf4jDeployModule extends AbstractModule {
         }
 
         return ExecutionContextFactory.createContext(executionContext.getDefaultModel());
+    }
+
+    private @NotNull String getContextsInfo() {
+        if (isRdf4jContextIRIDefined()) {
+            return "context " + rdf4jContextIRI;
+        } else if (inferContextIRIs) {
+            return "inferred contexts";
+        } else {
+            return "default context";
+        }
     }
 
     static Dataset createDataset(@NotNull Model model, String outputGraphId, boolean inferGraphsFromAnnotatedModel) {
