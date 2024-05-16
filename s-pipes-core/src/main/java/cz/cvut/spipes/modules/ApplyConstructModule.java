@@ -104,7 +104,7 @@ public class ApplyConstructModule extends AbstractModule {
 
         QuerySolution bindings = executionContext.getVariablesBinding().asQuerySolution();
 
-        long nNew = 1;
+        long inferredTriplesCount = 1;
 
         int count = 0;
 
@@ -115,7 +115,7 @@ public class ApplyConstructModule extends AbstractModule {
             .sorted(Comparator.comparing(this::getQueryComment))
             .collect(Collectors.toList());
 
-        while (nNew > 0 && count++ < iterationCount) {
+        while (inferredTriplesCount > 0 && count++ < iterationCount) {
             //      set up variable bindings
 
             Model inferredInSingleIterationModel = ModelFactory.createDefaultModel();
@@ -152,9 +152,12 @@ public class ApplyConstructModule extends AbstractModule {
                 inferredInSingleIterationModel = ModelFactory.createUnion(inferredInSingleIterationModel, constructedModel);
             }
 
-            inferredModel = JenaUtils.createUnion(inferredModel, inferredInSingleIterationModel);
+            Model newModel = JenaUtils.createUnion(inferredModel, inferredInSingleIterationModel);
 
-            nNew = inferredInSingleIterationModel.size();
+            inferredTriplesCount = newModel.size() - inferredModel.size();
+            LOG.trace("Iteration {}/{} inferred {} new triples.", count, iterationCount, inferredTriplesCount);
+
+            inferredModel = newModel;
         }
 
         return this.createOutputContext(isReplace, inferredModel);
