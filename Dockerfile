@@ -10,7 +10,7 @@ RUN mvn clean package -T 2C -DskipTests -q
 FROM alpine/git:v2.32.0 AS MODULES_CHECKOUT
 
 WORKDIR /
-RUN git clone --depth 1 https://kbss.felk.cvut.cz/gitblit/r/s-pipes-modules.git
+RUN git clone --depth 1 https://github.com/blcham/s-pipes-modules
 
 
 # FINAL STAGE
