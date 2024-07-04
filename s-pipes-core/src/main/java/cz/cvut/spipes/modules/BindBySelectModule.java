@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.topbraid.spin.arq.ARQFactory;
 import org.topbraid.spin.model.Select;
 
-public class BindBySelectModule extends AbstractModule  {
+public class BindBySelectModule extends AbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(BindBySelectModule.class);
     private Select selectQuery;
@@ -36,7 +36,7 @@ public class BindBySelectModule extends AbstractModule  {
 
         VariablesBinding variablesBinding = new VariablesBinding();
 
-        if (! resultSet.hasNext()) {
+        if (!resultSet.hasNext()) {
             LOG.debug("\"{}\" query did not return any values.", getLabel());
         } else {
             QuerySolution qs = resultSet.next();

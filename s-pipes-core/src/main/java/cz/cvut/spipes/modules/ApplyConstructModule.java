@@ -26,8 +26,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * TODO Order of queries is not enforced.   
- *
+ * TODO Order of queries is not enforced.
  **/
 public class ApplyConstructModule extends AbstractModule {
 
@@ -49,15 +48,14 @@ public class ApplyConstructModule extends AbstractModule {
     /**
      * Maximal number of iterations of the whole rule set. 0 means 0 iterations. The actual number of iterations can be smaller,
      * if no new inferences are generated any more.
-     *
+     * <p>
      * iterationCount = 1:
-     *    - the whole rule set is executed only once.
+     * - the whole rule set is executed only once.
      * iterationCount > 1:
-     *    - the whole rule set is executed at most "iterationCount" times.
-     *    - in each iteration, queries are evaluated on the model merged from the default model and the result of previous iteration
-     *
+     * - the whole rule set is executed at most "iterationCount" times.
+     * - in each iteration, queries are evaluated on the model merged from the default model and the result of previous iteration
+     * <p>
      * Within each iteration, all queries are evaluated on the same model.
-     *
      */
     private int iterationCount;
 
