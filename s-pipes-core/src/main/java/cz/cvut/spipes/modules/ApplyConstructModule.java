@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * TODO Order of queries is not enforced.   
+ * TODO Order of queries is not enforced.
  *
  **/
 public class ApplyConstructModule extends AbstractModule {
@@ -111,9 +111,9 @@ public class ApplyConstructModule extends AbstractModule {
         Model inferredModel = ModelFactory.createDefaultModel();
 
         List<Construct> constructQueriesSorted = constructQueries
-            .stream().map(r -> r.as(Construct.class))
-            .sorted(Comparator.comparing(this::getQueryComment))
-            .collect(Collectors.toList());
+                .stream().map(r -> r.as(Construct.class))
+                .sorted(Comparator.comparing(this::getQueryComment))
+                .collect(Collectors.toList());
 
         while (inferredTriplesCount > 0 && count++ < iterationCount) {
             //      set up variable bindings
@@ -127,29 +127,38 @@ public class ApplyConstructModule extends AbstractModule {
                 if (LOG.isTraceEnabled()) {
                     String queryComment = getQueryComment(spinConstructRes);
                     LOG.trace(
-                        "Executing iteration {}/{} with {}/{} query \"{}\" ...",
-                        count, iterationCount, i + 1, constructQueriesSorted.size(), queryComment
+                            "Executing iteration {}/{} with {}/{} query \"{}\" ...",
+                            count, iterationCount, i + 1, constructQueriesSorted.size(), queryComment
                     );
                 }
 
-                Query query;
-                if (parseText) {
-                    query = QueryFactory.create(spinConstructRes.getProperty(SP.text).getLiteral().getString());
-                } else {
-                    query = ARQFactory.get().createQuery(spinConstructRes);
+                try {
+                    Query query;
+                    if (parseText) {
+                        query = QueryFactory.create(spinConstructRes.getProperty(SP.text).getLiteral().getString());
+                    } else {
+                        query = ARQFactory.get().createQuery(spinConstructRes);
+                    }
+
+                    Model constructedModel = QueryUtils.execConstruct(query, extendedInferredModel, bindings);
+
+                    if (LOG.isTraceEnabled()) {
+                        LOG.trace("... the query returned {} triples.", constructedModel.size());
+                    }
+
+                    if (AuditConfig.isEnabled() || ExecutionConfig.getEnvironment().equals(Environment.development)) {
+                        LOG.debug("... saving module's partially computed output to file {}.", saveModelToTemporaryFile(constructedModel));
+                    }
+
+                    inferredInSingleIterationModel = ModelFactory.createUnion(inferredInSingleIterationModel, constructedModel);
                 }
-
-                Model constructedModel = QueryUtils.execConstruct(query, extendedInferredModel, bindings);
-
-                if (LOG.isTraceEnabled()) {
-                    LOG.trace("... the query returned {} triples.", constructedModel.size());
+                catch (Exception e) {
+                    e.printStackTrace();
+                    if (LOG.isTraceEnabled()) {
+                        LOG.trace("Query caused exception with query {}", spinConstructRes.getProperty(SP.text).getLiteral().getString());
+                    }
+                    throw e;
                 }
-
-                if (AuditConfig.isEnabled() || ExecutionConfig.getEnvironment().equals(Environment.development)) {
-                    LOG.debug("... saving module's partially computed output to file {}.", saveModelToTemporaryFile(constructedModel));
-                }
-
-                inferredInSingleIterationModel = ModelFactory.createUnion(inferredInSingleIterationModel, constructedModel);
             }
 
             Model newModel = JenaUtils.createUnion(inferredModel, inferredInSingleIterationModel);

@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.topbraid.spin.arq.ARQFactory;
 import org.topbraid.spin.model.Select;
+import org.topbraid.spin.vocabulary.SP;
 
 public class BindBySelectModule extends AbstractModule  {
 
@@ -25,33 +26,42 @@ public class BindBySelectModule extends AbstractModule  {
 
     @Override
     public ExecutionContext executeSelf() {
+        try {
 
-        Query query = ARQFactory.get().createQuery(selectQuery);
+            Query query = ARQFactory.get().createQuery(selectQuery);
 
-        QuerySolution inputBindings = executionContext.getVariablesBinding().asQuerySolution();
+            QuerySolution inputBindings = executionContext.getVariablesBinding().asQuerySolution();
 
-        QueryExecution execution = QueryExecutionFactory.create(query, executionContext.getDefaultModel(), inputBindings);
+            QueryExecution execution = QueryExecutionFactory.create(query, executionContext.getDefaultModel(), inputBindings);
 
-        ResultSet resultSet = execution.execSelect();
+            ResultSet resultSet = execution.execSelect();
 
-        VariablesBinding variablesBinding = new VariablesBinding();
+            VariablesBinding variablesBinding = new VariablesBinding();
 
-        if (! resultSet.hasNext()) {
-            LOG.debug("\"{}\" query did not return any values.", getLabel());
-        } else {
-            QuerySolution qs = resultSet.next();
+            if (!resultSet.hasNext()) {
+                LOG.debug("\"{}\" query did not return any values.", getLabel());
+            } else {
+                QuerySolution qs = resultSet.next();
 
-            variablesBinding = new VariablesBinding(qs);
+                variablesBinding = new VariablesBinding(qs);
 
-            if (resultSet.hasNext()) {
-                LOG.warn("\"{}\" query did not return unique value.  If it is correct, the query should be restricted by additional statement (e.g. \"LIMIT 1\"). Returning binding {}, ignoring binding {}", getLabel(), variablesBinding.asQuerySolution(), resultSet.next());
+                if (resultSet.hasNext()) {
+                    LOG.warn("\"{}\" query did not return unique value.  If it is correct, the query should be restricted by additional statement (e.g. \"LIMIT 1\"). Returning binding {}, ignoring binding {}", getLabel(), variablesBinding.asQuerySolution(), resultSet.next());
+                }
             }
-        }
 
-        return ExecutionContextFactory.createContext(
-            this.createOutputModel(isReplace, ModelFactory.createDefaultModel()),
-            variablesBinding
-        );
+            return ExecutionContextFactory.createContext(
+                    this.createOutputModel(isReplace, ModelFactory.createDefaultModel()),
+                    variablesBinding
+            );
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("Query caused exception with query {}", selectQuery.getProperty(SP.text).getLiteral().getString());
+            }
+            throw e;
+        }
     }
 
     @Override
