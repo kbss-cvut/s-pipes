@@ -16,7 +16,6 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.topbraid.spin.arq.ARQFactory;
 import org.topbraid.spin.model.Construct;
 import org.topbraid.spin.system.SPINModuleRegistry;
 import org.topbraid.spin.vocabulary.SP;
@@ -26,8 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * TODO Order of queries is not enforced.   
- *
+ * TODO Order of queries is not enforced.
  **/
 public class ApplyConstructModule extends AbstractModule {
 
@@ -49,15 +47,14 @@ public class ApplyConstructModule extends AbstractModule {
     /**
      * Maximal number of iterations of the whole rule set. 0 means 0 iterations. The actual number of iterations can be smaller,
      * if no new inferences are generated any more.
-     *
+     * <p>
      * iterationCount = 1:
-     *    - the whole rule set is executed only once.
+     * - the whole rule set is executed only once.
      * iterationCount > 1:
-     *    - the whole rule set is executed at most "iterationCount" times.
-     *    - in each iteration, queries are evaluated on the model merged from the default model and the result of previous iteration
-     *
+     * - the whole rule set is executed at most "iterationCount" times.
+     * - in each iteration, queries are evaluated on the model merged from the default model and the result of previous iteration
+     * <p>
      * Within each iteration, all queries are evaluated on the same model.
-     *
      */
     private int iterationCount;
 
@@ -136,7 +133,7 @@ public class ApplyConstructModule extends AbstractModule {
                 if (parseText) {
                     query = QueryFactory.create(spinConstructRes.getProperty(SP.text).getLiteral().getString());
                 } else {
-                    query = ARQFactory.get().createQuery(spinConstructRes);
+                    query = QueryUtils.createQuery(spinConstructRes);
                 }
 
                 Model constructedModel = QueryUtils.execConstruct(query, extendedInferredModel, bindings);
