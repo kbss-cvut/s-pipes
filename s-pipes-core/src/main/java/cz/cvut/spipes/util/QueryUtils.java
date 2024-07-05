@@ -7,6 +7,7 @@ import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.sparql.mgt.Explain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.topbraid.spin.arq.ARQFactory;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -177,4 +178,13 @@ public class QueryUtils {
         return null;
     }
 
+    public static Query createQuery(org.topbraid.spin.model.Query spinQuery) {
+        try {
+            return ARQFactory.get().createQuery(spinQuery);
+        } catch (QueryParseException e) {
+            String query = ARQFactory.get().createCommandString(spinQuery);
+            LOG.error("Parse error [1] occurred in query [2].\n[1] ERROR:\n{}\n[2] QUERY:\n{}", e.getMessage(), query);
+            throw e;
+        }
+    }
 }

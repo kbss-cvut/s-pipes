@@ -16,7 +16,6 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.topbraid.spin.arq.ARQFactory;
 import org.topbraid.spin.model.Construct;
 import org.topbraid.spin.system.SPINModuleRegistry;
 import org.topbraid.spin.vocabulary.SP;
@@ -134,7 +133,7 @@ public class ApplyConstructModule extends AbstractModule {
                 if (parseText) {
                     query = QueryFactory.create(spinConstructRes.getProperty(SP.text).getLiteral().getString());
                 } else {
-                    query = ARQFactory.get().createQuery(spinConstructRes);
+                    query = QueryUtils.createQuery(spinConstructRes);
                 }
 
                 Model constructedModel = QueryUtils.execConstruct(query, extendedInferredModel, bindings);
