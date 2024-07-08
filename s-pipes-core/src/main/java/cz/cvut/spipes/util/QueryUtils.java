@@ -1,6 +1,7 @@
 package cz.cvut.spipes.util;
 
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
@@ -12,6 +13,7 @@ import org.topbraid.spin.arq.ARQFactory;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class QueryUtils {
@@ -184,7 +186,18 @@ public class QueryUtils {
             return ARQFactory.get().createQuery(spinQuery);
         } catch (QueryParseException e) {
             String query = ARQFactory.get().createCommandString(spinQuery);
-            log.error("Parse error [1] occurred in query [2].\n[1] ERROR:\n{}\n[2] QUERY:\n{}", e.getMessage(), query);
+            String msg = e.getMessage();
+            Pattern pattern = Pattern.compile("line\\s+(\\d+)");
+            Matcher matcher = pattern.matcher(msg);
+            matcher.find();
+            String numberAfterLine = matcher.group(1);
+            int wrongLineNumber = Integer.valueOf(numberAfterLine); //e.g
+            // etLine() returns wrong number for some reason
+            int beginningOfTheWrongLine = StringUtils.ordinalIndexOf(query, "\n", wrongLineNumber - 1);
+            int endOfTheWrongLine = StringUtils.ordinalIndexOf(query, "\n", wrongLineNumber);
+            String wrongLine = query.substring(beginningOfTheWrongLine, endOfTheWrongLine);
+            log.error("Parse error [1] occurred in lines [2].\n[1] ERROR:\n{}\n[2] LINE:\n{}",
+                    msg, wrongLine);
             throw e;
         }
     }
