@@ -131,7 +131,7 @@ public class SUTimeModuleNew extends AbstractModule {
                     String queryStr = spinConstructRes.getProperty(SP.text).getLiteral().getString();
                     query = QueryFactory.create(substituteQueryMarkers(count, queryStr));
                 } else {
-                    query = ARQFactory.get().createQuery(spinConstructRes);
+                    query = QueryUtils.createQuery(spinConstructRes);
                 }
 
                 Model queriedModel = QueryUtils.execConstruct(

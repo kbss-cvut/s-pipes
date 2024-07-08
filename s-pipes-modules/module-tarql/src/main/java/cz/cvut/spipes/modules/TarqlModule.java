@@ -8,6 +8,7 @@ import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.registry.StreamResource;
 import cz.cvut.spipes.registry.StreamResourceRegistry;
+import cz.cvut.spipes.util.QueryUtils;
 import org.apache.jena.ext.com.google.common.io.Files;
 import org.apache.jena.query.Query;
 import org.apache.jena.rdf.model.Model;
@@ -102,7 +103,7 @@ public class TarqlModule extends AbstractModule {
         for (Resource constructQueryRes : constructQueries) {
             Construct spinConstructRes = constructQueryRes.as(Construct.class);
 
-            Query query = ARQFactory.get().createQuery(spinConstructRes);
+            Query query = QueryUtils.createQuery(spinConstructRes);
 
             try {
                 // save string query to temporary file

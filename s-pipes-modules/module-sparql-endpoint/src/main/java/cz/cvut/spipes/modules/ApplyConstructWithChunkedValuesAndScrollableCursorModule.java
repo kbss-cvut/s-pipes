@@ -8,6 +8,7 @@ import cz.cvut.spipes.recursion.ChunkedValuesProvider;
 import cz.cvut.spipes.recursion.CombinedQueryTemplateRecursionProvider;
 import cz.cvut.spipes.recursion.QueryTemplateRecursionProvider;
 import cz.cvut.spipes.recursion.ScrollableCursorProvider;
+import cz.cvut.spipes.util.QueryUtils;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
@@ -74,7 +75,7 @@ public class ApplyConstructWithChunkedValuesAndScrollableCursorModule extends Ap
     }
 
     private ResultSet getSelectQueryResultSet() {
-        Query query = ARQFactory.get().createQuery(selectQuery);
+        Query query = QueryUtils.createQuery(selectQuery);
 
         QuerySolution inputBindings = executionContext.getVariablesBinding().asQuerySolution();
 

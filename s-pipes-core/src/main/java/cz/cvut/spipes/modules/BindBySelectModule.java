@@ -4,6 +4,7 @@ import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.engine.VariablesBinding;
+import cz.cvut.spipes.util.QueryUtils;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
@@ -26,7 +27,7 @@ public class BindBySelectModule extends AbstractModule {
     @Override
     public ExecutionContext executeSelf() {
 
-        Query query = ARQFactory.get().createQuery(selectQuery);
+        Query query = QueryUtils.createQuery(selectQuery);
 
         QuerySolution inputBindings = executionContext.getVariablesBinding().asQuerySolution();
 

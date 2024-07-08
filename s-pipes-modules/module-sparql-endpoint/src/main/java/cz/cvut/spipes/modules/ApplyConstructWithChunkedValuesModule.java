@@ -66,7 +66,7 @@ public class ApplyConstructWithChunkedValuesModule extends ApplyConstructAbstrac
     }
 
     public void initializeQuery() {
-        Query query = ARQFactory.get().createQuery(selectQuery);
+        Query query = QueryUtils.createQuery(selectQuery);
 
         QuerySolution inputBindings = executionContext.getVariablesBinding().asQuerySolution();
 

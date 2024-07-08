@@ -5,6 +5,7 @@ import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.modules.constants.Termit;
+import cz.cvut.spipes.util.QueryUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -91,7 +92,7 @@ public class TextAnalysisModule extends AnnotatedAbstractModule{
             return executionContext;
         }
 
-        Query query = ARQFactory.get().createQuery(selectQuery);
+        Query query = QueryUtils.createQuery(selectQuery);
         try (QueryExecution queryExecution = QueryExecutionFactory.create(query, inputModel)) {
             ResultSet resultSet = queryExecution.execSelect();
             List<RDFNode> listOfObjects = new ArrayList<>();

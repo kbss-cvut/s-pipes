@@ -148,7 +148,7 @@ public abstract class ApplyConstructAbstractModule extends AnnotatedAbstractModu
                         String queryStr = spinConstructRes.getProperty(SP.text).getLiteral().getString();
                         query = QueryFactory.create(substituteQueryMarkers(count, queryStr));
                     } else {
-                        query = ARQFactory.get().createQuery(spinConstructRes);
+                        query = QueryUtils.createQuery(spinConstructRes);
                     }
 
                     Model constructedModel = QueryUtils.execConstruct(

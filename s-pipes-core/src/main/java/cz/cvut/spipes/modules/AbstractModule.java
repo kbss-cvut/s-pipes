@@ -257,7 +257,7 @@ public abstract class AbstractModule implements Module {
 //                TemplateCall templateCall = SPINFactory.asTemplateCall(queryRes);
 //            }
 
-            Query query = ARQFactory.get().createQuery(spinQuery);
+            Query query = QueryUtils.createQuery(spinQuery);
 
             QueryExecution execution = QueryExecutionFactory.create(query, model, bindings);
 

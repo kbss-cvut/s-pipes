@@ -2,6 +2,7 @@ package cz.cvut.spipes.transform;
 
 import cz.cvut.sforms.Vocabulary;
 import cz.cvut.sforms.model.Question;
+import cz.cvut.spipes.util.QueryUtils;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.*;
@@ -53,7 +54,7 @@ public class AnonNodeTransformer {
     }
 
     private static <T extends org.topbraid.spin.model.Query> String getFromQuery(Resource r, Class<T> resClass) {
-        Query q = ARQFactory.get().createQuery(r.as(resClass));
+        Query q = QueryUtils.createQuery(r.as(resClass));
         Model m = r.getModel();
         PrefixMapping mapping = new PrefixMappingImpl();
         mapping.setNsPrefixes(m.getNsPrefixMap());
