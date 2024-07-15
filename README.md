@@ -81,8 +81,8 @@ Defines Java model that is used for serialization of metadata about execution of
 
 The following software needs to be installed on the system for development:
 
-- JDK 11
-- Maven
+- JDK 17, or newer
+- Maven 3
 - Apache Tomcat 9.0
 
 ## Dockerization
