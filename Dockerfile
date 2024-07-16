@@ -1,5 +1,5 @@
 # STAGE MAVEN_BUILD
-FROM maven:3.8.6-openjdk-11 AS MAVEN_BUILD
+FROM maven:3-eclipse-temurin-17 AS MAVEN_BUILD
 
 COPY ./ ./
 
@@ -14,7 +14,7 @@ RUN git clone --depth 1 https://github.com/blcham/s-pipes-modules
 
 
 # FINAL STAGE
-FROM tomcat:9.0-jdk11-corretto
+FROM tomcat:9-jdk17-temurin
 
 EXPOSE 8080
 
