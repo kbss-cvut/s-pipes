@@ -90,23 +90,40 @@ The following software needs to be installed on the system for development:
 ### Building the Docker Image
   The Docker image of SPipes backend can be built using the following command:
 
-*Linux / Windows:*
   `docker build -t s-pipes-engine .`
 
 ### Running the Docker Container
 
   SPipes web can be run and exposed at port 8080 with the following command:
 
-*Linux / Windows:*
-
   `docker run -p 8080:8080 s-pipes-engine:latest` 
 
 The endpoint will be available at: http://localhost:8080/s-pipes
 
+#### Configuration of SPipes scripts
 
-To share files between Docker services and your host system, you need to set up mounting. This allows a folder to be accessible from both Docker services and the host filesystem, ensuring that file paths remain consistent. Consequently, you can copy an absolute path to a file from a Docker service and open it on the host filesystem, and vice versa.
+By default, scripts are loaded from directory `/scripts` within the filesystem of the s-pipes-engine image. 
+The directory already contains the necessary definitions of reusable modules, so to extend the scripts,
+new scripts must be added to this directory. All subdirectories of `/scripts` are searched recursively.
+Good practice is to mount local scripts to e.g. `/scripts/root` directory of the image, e.g.:
+`docker run -v ./my-scripts:/scripts/root -p 8080:8080 s-pipes-engine:latest`
 
-For Linux, the typical path would be /home, and for Windows, it would typically be /host_mnt/c. When running Docker on Windows, Docker replaces C: with /host_mnt/c.
+Another option to configure scripts is to redefine where SPipes engine searches the scripts using `CONTEXTS_SCRIPTPATHS`:
+`docker run -e CONTEXTS_SCRIPTPATHS=/my/special/path -p 8080:8080 s-pipes-engine:latest`
+
+This is particularly useful when one would like to share same path between host filesystem and the docker image as 
+explained in the following section.
+
+#### Aligning file paths between docker service and host system
+
+For your SPipes script files you can align file paths between Docker services and your host system using mounting.
+This allows a directory to be accessible from both Docker services and the host filesystem, 
+ensuring that file paths remain same. Consequently, you can copy an absolute path to a file from
+a Docker service and open it on the host filesystem, and vice versa.
+
+For Linux, the typical path is `/home`, while for Windows, it is `/host_mnt/c`. 
+When running Docker on Windows, Docker replaces `C:` with `/host_mnt/c`. When running Docker on Windows from within 
+WSL distribution `C:` is accessible through `/mnt/c`.
 
 To mount a directory from your host machine to the Docker container, use the following command:
 
@@ -118,12 +135,12 @@ To mount a directory from your host machine to the Docker container, use the fol
 
 `docker run -v /host_mnt/c:/host_mnt/c -p 8080:8080 s-pipes-engine:latest` 
 
+*Windows, but running inside WSL:*
 
-
-Configuration properties could be overloaded by system environment such as CONTEXTS_SCRIPTPATHS=/my/special/path. The full build command could look like: docker run -e CONTEXTS_SCRIPTPATHS=/my/special/path -v /home:/home -p 8080:8080 s-pipes-engine:latest
-
+`docker run -v /mnt/c:/mnt/c -p 8080:8080 s-pipes-engine:latest`
 
 ## Swagger
+
 Rest API is documented by Swagger. We can open Swagger UI with: `SPIPES_URL/swagger-ui.html`.
 
 ## Licences of Reused software components
