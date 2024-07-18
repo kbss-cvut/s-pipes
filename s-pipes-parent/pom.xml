@@ -18,7 +18,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jdk.version>21</jdk.version>
+        <jdk.version>17</jdk.version>
         <org.apache.jena>3.17.0</org.apache.jena>
         <org.springframework.version>5.0.7.RELEASE</org.springframework.version>
         <org.springframework.security.version>5.0.6.RELEASE</org.springframework.security.version>
