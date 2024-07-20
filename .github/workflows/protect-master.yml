@@ -19,9 +19,12 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
 
-    # Runs a set of commands using the runners shell
-    - name: Test
-      run: mvn test
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Test using proper JDK and MVN
+      - name: Test
+        uses: docker://maven:3-eclipse-temurin-21
+        with:
+          args: mvn test
