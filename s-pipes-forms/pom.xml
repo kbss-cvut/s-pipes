@@ -83,6 +83,7 @@
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
+            <version>1.18.30</version>
             <artifactId>lombok</artifactId>
             <scope>test</scope>
         </dependency>
@@ -122,6 +123,13 @@
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok-maven-plugin</artifactId>
                 <version>1.18.20.0</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.projectlombok</groupId>
+                        <artifactId>lombok</artifactId>
+                        <version>1.18.30</version>
+                    </dependency>
+                </dependencies>
                 <executions>
                     <execution>
                         <phase>generate-test-sources</phase>
