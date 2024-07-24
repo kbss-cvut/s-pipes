@@ -2,6 +2,7 @@ package cz.cvut.spipes.modules;
 
 import cz.cvut.spipes.config.AuditConfig;
 import cz.cvut.spipes.config.Environment;
+import cz.cvut.spipes.config.EvidenceConfig;
 import cz.cvut.spipes.config.ExecutionConfig;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.engine.ExecutionContext;
@@ -20,7 +21,6 @@ import org.apache.jena.vocabulary.RDFS;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.topbraid.spin.arq.ARQFactory;
 import org.topbraid.spin.model.Ask;
 import org.topbraid.spin.model.Construct;
 import org.topbraid.spin.model.SPINFactory;
@@ -262,19 +262,23 @@ public abstract class AbstractModule implements Module {
             QueryExecution execution = QueryExecutionFactory.create(query, model, bindings);
 
             boolean constraintViolated;
-            StringBuilder evidence = new StringBuilder();
-
+            List<Map<String,String>> evidences = new ArrayList<>();
             if (spinQuery instanceof Ask) {
                 constraintViolated = execution.execAsk();
             } else if (spinQuery instanceof Select) { //TODO implement
                 ResultSet rs = execution.execSelect();
                 constraintViolated = rs.hasNext();
-
                 if(constraintViolated){
-                    evidence.append("Evidence of the violation: \n");
-                    for(int i = 0; i < 3 && rs.hasNext(); i++){
+
+                    for(int i = 0; i < EvidenceConfig.getEvidenceNumber() && rs.hasNext(); i++){
                         QuerySolution solution = rs.next() ;
-                        evidence.append(solution.toString());
+                        Map<String, String> evidenceMap = new HashMap<>();
+                        for (Iterator<String> it = solution.varNames(); it.hasNext(); ) {
+                            String varName = it.next();
+                            RDFNode value = solution.get(varName);
+                            evidenceMap.put(varName, value.toString());
+                        }
+                        evidences.add(evidenceMap);
                     }
                 }
             } else if (spinQuery instanceof Construct) {
@@ -282,19 +286,13 @@ public abstract class AbstractModule implements Module {
             } else {
                 throw new NotImplemented("Constraints for objects " + query + " not implemented.");
             }
-
             if (constraintViolated) {
-
                 String mainErrorMsg = String.format("Validation of constraint failed for the constraint \"%s\".", getQueryComment(spinQuery));
                 String failedQueryMsg = String.format("Failed validation constraint : \n %s", spinQuery.toString());
-                String mergedMsg = new StringBuffer()
-                        .append(mainErrorMsg).append("\n")
-                        .append(failedQueryMsg).append("\n")
-                        .append(evidence).append("\n")
-                        .toString();
-                LOG.error(mergedMsg);
+                var exception = new ValidationConstraintFailedException(this, mainErrorMsg, failedQueryMsg, evidences);
+                LOG.error(exception.toString());
                 if (ExecutionConfig.isExitOnError()) {
-                    throw new ValidationConstraintFailedException(mergedMsg, this);
+                    throw exception;
                 }
             } else {
                 LOG.debug("Constraint validated for exception \"{}\".", getQueryComment(spinQuery));
