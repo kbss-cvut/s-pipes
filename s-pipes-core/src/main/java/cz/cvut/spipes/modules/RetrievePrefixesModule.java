@@ -48,8 +48,8 @@ import org.slf4j.LoggerFactory;
 * .
  */
 public class RetrievePrefixesModule extends AbstractModule {
-    private static final Logger LOG = LoggerFactory.getLogger(RetrievePrefixesModule.class.getName());
 
+    private static final Logger log = LoggerFactory.getLogger(RetrievePrefixesModule.class);
     private static String TYPE_URI = KBSS_MODULE.uri + "retrieve-prefixes";
 
     //sml:replace

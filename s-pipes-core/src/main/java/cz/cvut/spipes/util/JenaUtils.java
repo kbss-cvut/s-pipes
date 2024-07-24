@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 
 public class JenaUtils {
 
-    private static Logger LOG = LoggerFactory.getLogger(JenaUtils.class);
+    private static Logger log = LoggerFactory.getLogger(JenaUtils.class);
 
     public static Model readModelFromString(String modelText, String lang) {
         Model model = ModelFactory.createDefaultModel();
@@ -109,7 +109,7 @@ public class JenaUtils {
     public static void saveModelToTemporaryFile(@NotNull Model model) {
         try {
             Path file = Files.createTempFile("model-output-", ".ttl");
-            LOG.debug("Saving model to temporary file " + file.toString() + " ...");
+            log.debug("Saving model to temporary file " + file.toString() + " ...");
             model.write(Files.newOutputStream(file.toFile().toPath()), FileUtils.langTurtle);
         } catch (IOException e) {
             e.printStackTrace();

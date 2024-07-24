@@ -18,7 +18,7 @@ public class VariablesBinding {
 
     // TODO stream variables etc.
 
-    private static Logger LOG = LoggerFactory.getLogger(VariablesBinding.class);
+    private static Logger log = LoggerFactory.getLogger(VariablesBinding.class);
     private static final int MAX_TRUNCATED_VALUE_SIZE = 300;
     QuerySolutionMap binding = new QuerySolutionMap();
 
@@ -31,7 +31,7 @@ public class VariablesBinding {
                 key -> {
                     RDFNode value = querySolution.get(key);
                     if (value == null) {
-                        LOG.error("Ignoring variable binding with null value for the variable name \"{}\".", key);
+                        log.error("Ignoring variable binding with null value for the variable name \"{}\".", key);
                     } else {
                         binding.add(key, value);
                     }
@@ -79,7 +79,7 @@ public class VariablesBinding {
 
                     if ((oldNode != null) && (!oldNode.equals(newNode))) {
                         conflictingBinding.add(v, newNode);
-                        LOG.warn("Variable \"{}\" have been bind to value \"{}\", ignoring assignment to value \"{}\".", v, oldNode, newNode);
+                        log.warn("Variable \"{}\" have been bind to value \"{}\", ignoring assignment to value \"{}\".", v, oldNode, newNode);
                     } else {
                         this.add(v, newNode);
                     }

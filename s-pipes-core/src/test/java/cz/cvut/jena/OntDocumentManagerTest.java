@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 public class OntDocumentManagerTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OntDocumentManagerTest.class);
+    private static final Logger log = LoggerFactory.getLogger(OntDocumentManagerTest.class);
 
     @Test
     public void getOntologyTriggersReadFailureHandler() {
@@ -21,8 +21,8 @@ public class OntDocumentManagerTest {
         OntDocumentManager.ReadFailureHandler handler = new OntDocumentManager.ReadFailureHandler() {
             @Override
             public void handleFailedRead(String url, Model model, Exception e) {
-                LOG.info("- url: " + url);
-                LOG.info("- model: " + model);
+                log.info("- url: " + url);
+                log.info("- model: " + model);
                 readFailureHandlerIsTriggered[0] = true;
                 return;
             }

@@ -17,7 +17,7 @@ import java.util.Optional;
 
 public class ImportRDFFromWorkspaceModule extends AbstractModule {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ImportRDFFromWorkspaceModule.class);
+    private static final Logger log = LoggerFactory.getLogger(ImportRDFFromWorkspaceModule.class);
 
     //TODO refactor -> should be part of execution context
     OntologyDocumentManager ontologyDocumentManager = OntoDocManager.getInstance();

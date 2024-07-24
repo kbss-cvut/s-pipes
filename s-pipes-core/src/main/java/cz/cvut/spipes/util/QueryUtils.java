@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 public class QueryUtils {
 
-    private static final Logger LOG = LoggerFactory.getLogger(QueryUtils.class);
+    private static final Logger log = LoggerFactory.getLogger(QueryUtils.class);
 
     /**
      * Returns new query by substituting marker within given query with given value.
@@ -138,14 +138,14 @@ public class QueryUtils {
                 QueryExecutionFactory.create(query, model, bindings),
                 false);
         } catch (RuntimeException ex) {
-            LOG.error("Failed execution of query [1] for binding [2], due to exception [3]. " +
+            log.error("Failed execution of query [1] for binding [2], due to exception [3]. " +
                     "The query [1] will be executed again with detailed logging turned on. " +
                     "\n\t - query [1]: \"\n{}\n\"" +
                     "\n\t - binding [2]: \"\n{}\n\"" +
                     "\n\t - exception [3]: \"\n{}\n\""
                 , query, bindings, getStackTrace(ex));
         }
-        LOG.error("Executing query [1] again to diagnose the cause ...");
+        log.error("Executing query [1] again to diagnose the cause ...");
         return execQuery(
             queryExecutor,
             QueryExecutionFactory.create(query, model, bindings),
@@ -183,7 +183,7 @@ public class QueryUtils {
             return ARQFactory.get().createQuery(spinQuery);
         } catch (QueryParseException e) {
             String query = ARQFactory.get().createCommandString(spinQuery);
-            LOG.error("Parse error [1] occurred in query [2].\n[1] ERROR:\n{}\n[2] QUERY:\n{}", e.getMessage(), query);
+            log.error("Parse error [1] occurred in query [2].\n[1] ERROR:\n{}\n[2] QUERY:\n{}", e.getMessage(), query);
             throw e;
         }
     }

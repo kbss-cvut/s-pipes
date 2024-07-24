@@ -37,7 +37,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class SemanticLoggingProgressListener implements ProgressListener {
-    private static final Logger LOG =
+    private static final Logger log =
         LoggerFactory.getLogger(SemanticLoggingProgressListener.class);
 
     /**
@@ -185,14 +185,14 @@ public class SemanticLoggingProgressListener implements ProgressListener {
             file =
                 Files.createFile(dir.resolve(TempFileUtils.createTimestampFileName(fileName))).toFile();
         } catch (IOException e) {
-            LOG.error("Error during file creation.", e);
+            log.error("Error during file creation.", e);
             return null;
         }
         try (OutputStream fileIs = new FileOutputStream(file)) {
             model.write(fileIs, FileUtils.langTurtle);
             return file.toURI().toURL().toString();
         } catch (IOException e) {
-            LOG.error("Error during dataset snapshot saving.", e);
+            log.error("Error during dataset snapshot saving.", e);
             return null;
         }
     }

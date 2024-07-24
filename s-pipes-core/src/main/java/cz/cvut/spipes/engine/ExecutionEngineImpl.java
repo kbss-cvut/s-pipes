@@ -16,14 +16,14 @@ import java.util.stream.Collectors;
 
 class ExecutionEngineImpl implements ExecutionEngine {
 
-    private static Logger LOG = LoggerFactory.getLogger(ExecutionEngineImpl.class);
+    private static Logger log = LoggerFactory.getLogger(ExecutionEngineImpl.class);
 
     private Set<ProgressListener> listeners = new HashSet<>();
 
     private static int i = 0 ;
 
     public ExecutionContext executePipeline(final Module module, final ExecutionContext inputContext) {
-        LOG.info("Executing script {} with context {}.", module.getResource(), inputContext.toSimpleString());
+        log.info("Executing script {} with context {}.", module.getResource(), inputContext.toSimpleString());
         final long pipelineExecutionId = Instant.now().toEpochMilli()*1000+(i++);
 
         fire((l) -> {l.pipelineExecutionStarted(pipelineExecutionId); return null;});
@@ -37,7 +37,7 @@ class ExecutionEngineImpl implements ExecutionEngine {
             try {
                 function.apply(listener);
             } catch(final Exception e) {
-                LOG.warn("Listener {} failed.", listener, e);
+                log.warn("Listener {} failed.", listener, e);
             }
         });
     }
@@ -58,17 +58,17 @@ class ExecutionEngineImpl implements ExecutionEngine {
             fire((l) -> {l.moduleExecutionStarted(pipelineExecutionId, moduleExecutionId, module, context, predecessorId); return null;});
 
             if (module.getExecutionContext() != null) {
-                LOG.debug("Execution context for module {} already set.", module);
+                log.debug("Execution context for module {} already set.", module);
             } else {
                 module.setInputContext(context);
 
-                LOG.info(" ##### " + module.getLabel());
-                if (LOG.isTraceEnabled()) {
-                    LOG.trace("Using input context {}", context.toTruncatedSimpleString()); //TODO redundant code -> merge
+                log.info(" ##### " + module.getLabel());
+                if (log.isTraceEnabled()) {
+                    log.trace("Using input context {}", context.toTruncatedSimpleString()); //TODO redundant code -> merge
                 }
                 ExecutionContext outputContext = module.execute();
-                if (LOG.isTraceEnabled()) {
-                    LOG.trace("Returning output context {}", outputContext.toSimpleString());
+                if (log.isTraceEnabled()) {
+                    log.trace("Returning output context {}", outputContext.toSimpleString());
                 }
                 module.addOutputBindings(context.getVariablesBinding());
             }
@@ -80,18 +80,18 @@ class ExecutionEngineImpl implements ExecutionEngine {
                 .collect(Collectors.toMap(Module::getResource, mod -> this._executePipeline(pipelineExecutionId, mod, context, moduleExecutionId)));
 
 
-        LOG.info(" ##### " + module.getLabel());
+        log.info(" ##### " + module.getLabel());
         ExecutionContext mergedContext = mergeContexts(resource2ContextMap);
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("Using input merged context {}", mergedContext.toTruncatedSimpleString());
+        if (log.isTraceEnabled()) {
+            log.trace("Using input merged context {}", mergedContext.toTruncatedSimpleString());
         }
         fire((l) -> {l.moduleExecutionStarted(pipelineExecutionId, moduleExecutionId, module, mergedContext, predecessorId); return null;});
 
         module.setInputContext(mergedContext);
 
         ExecutionContext outputContext = module.execute();
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("Returning output context {}", outputContext.toSimpleString());
+        if (log.isTraceEnabled()) {
+            log.trace("Returning output context {}", outputContext.toSimpleString());
         }
         module.addOutputBindings(mergedContext.getVariablesBinding());
         fire((l) -> {l.moduleExecutionFinished(pipelineExecutionId, moduleExecutionId, module); return null;});
@@ -128,7 +128,7 @@ class ExecutionEngineImpl implements ExecutionEngine {
             VariablesBinding conflictingBinding = variablesBinding.extendConsistently(b);
 
             if (! conflictingBinding.isEmpty()) {
-                LOG.warn("Module {} has conflicting variables binding {} with sibling modules ocurring in pipeline. ", modRes, context);
+                log.warn("Module {} has conflicting variables binding {} with sibling modules ocurring in pipeline. ", modRes, context);
             }
         });
 

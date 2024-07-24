@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 public class BindRDFContentHashModule extends AbstractModule {
 
-    private static final Logger LOG = LoggerFactory.getLogger(BindRDFContentHashModule.class);
+    private static final Logger log = LoggerFactory.getLogger(BindRDFContentHashModule.class);
     String outputVariable;
 
     @Override

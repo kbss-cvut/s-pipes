@@ -8,7 +8,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class StreamResourceRegistry {
-    private static final Logger LOG = LoggerFactory.getLogger(StreamResourceRegistry.class);
+    private static final Logger log = LoggerFactory.getLogger(StreamResourceRegistry.class);
 
     private static StreamResourceRegistry instance;
     private Set<String> resourcePrefixMap = new HashSet<>();
@@ -40,15 +40,15 @@ public class StreamResourceRegistry {
     }
 
     public StreamResource getResourceByUrl(String url) {
-        LOG.debug("Trying to find resource with url {}", url);
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("Resource map content: {}", id2resourcesMap);
+        log.debug("Trying to find resource with url {}", url);
+        if (log.isTraceEnabled()) {
+            log.trace("Resource map content: {}", id2resourcesMap);
         }
         String id = resourcePrefixMap.stream()
                 .filter(url::startsWith)
                 .findAny().map(p -> url.substring(p.length()))
                 .orElse(null);
-        LOG.debug("- found {}", id);
+        log.debug("- found {}", id);
         StreamResource res = id2resourcesMap.get(id).get();
         if (res == null) {
             return null;
@@ -57,11 +57,11 @@ public class StreamResourceRegistry {
     }
 
     public StreamResource registerResource(String id, byte[] content, String contentType) {
-        LOG.debug("Registering resource with id {}", id);
+        log.debug("Registering resource with id {}", id);
         StreamResource res = new StringStreamResource(id, content, contentType);
         id2resourcesMap.put(id, new WeakReference<>(res));
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("Resource map after the registration has {} entries: {}", id2resourcesMap.size(), id2resourcesMap);
+        if (log.isTraceEnabled()) {
+            log.trace("Resource map after the registration has {} entries: {}", id2resourcesMap.size(), id2resourcesMap);
         }
         cleanUpUnusedResources();
         return res;
@@ -72,8 +72,8 @@ public class StreamResourceRegistry {
             .filter(e -> e.getValue().get() == null)
             .map(Map.Entry::getKey)
             .collect(Collectors.toList());
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("Clearing {} resources from resource map: {}", keys.size(), keys);
+        if (log.isTraceEnabled()) {
+            log.trace("Clearing {} resources from resource map: {}", keys.size(), keys);
         }
         keys.forEach(
             k -> id2resourcesMap.remove(k)
