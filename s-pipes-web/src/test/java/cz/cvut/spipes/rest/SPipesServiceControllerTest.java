@@ -4,6 +4,7 @@ import cz.cvut.spipes.config.WebAppConfig;
 import cz.cvut.spipes.engine.VariablesBinding;
 import cz.cvut.spipes.rest.util.ReservedParams;
 import cz.cvut.spipes.util.RDFMimeType;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.ResourceFactory;
@@ -38,12 +39,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Slf4j
 @ExtendWith(SpringExtension.class)
 @WebAppConfiguration
 @ContextConfiguration(classes = WebAppConfig.class)
 public class SPipesServiceControllerTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SPipesServiceControllerTest.class);
 
     public static final String SAMPLE_IDENTITY_MODULE = "http://onto.fel.cvut.cz/ontologies/s-pipes/identity#SampleIdentity";
     public static final String CREATE_SAMPLE_TRIPLES = "http://onto.fel.cvut.cz/ontologies/test/apply-construct#CreateSampleTriples";
@@ -95,7 +96,7 @@ public class SPipesServiceControllerTest {
         MvcResult result = mockMvc.perform(createDefaultIdentityModuleBuilder().
                 accept(RDFMimeType.LD_JSON_STRING)
         ).andExpect(status().isOk()).andReturn();
-        LOGGER.info("Resulting JSON: " + result.getResponse().getContentAsString());
+        log.info("Resulting JSON: " + result.getResponse().getContentAsString());
     }
 
     @Test
@@ -110,7 +111,7 @@ public class SPipesServiceControllerTest {
         MvcResult result = mockMvc.perform(createDefaultIdentityModuleBuilder().
                 accept(mimeType)
         ).andExpect(pass ? status().isOk() : status().is4xxClientError()).andReturn();
-        LOGGER.info("Result: {}", result.getResponse().getContentAsString());
+        log.info("Result: {}", result.getResponse().getContentAsString());
         final Model m = ModelFactory.createDefaultModel();
         try {
             m.read(new ByteArrayInputStream(result.getResponse().getContentAsByteArray()), "", RDFLanguages.contentTypeToLang(mimeType).getName());
@@ -138,7 +139,7 @@ public class SPipesServiceControllerTest {
             int expectedNumberOfStatements
 
     ) throws Exception {
-        LOGGER.info("Testing module with parameters:\n - id={},\n - cfg={},\n - inputBinding={}", id, resourceConfig,inputVariablesBinding);
+        log.info("Testing module with parameters:\n - id={},\n - cfg={},\n - inputBinding={}", id, resourceConfig,inputVariablesBinding);
         if ( inputVariablesBinding == null ) {
             inputVariablesBinding = new VariablesBinding();
         }
@@ -167,7 +168,7 @@ public class SPipesServiceControllerTest {
         outputBinding.load(new FileInputStream(outputBindingFile), "TURTLE");
 //        Assert.assertEquals(Lists.newArrayList(outputBinding.getVarNames()), Lists.newArrayList(expectedOutputVariablesBinding.getVarNames())); TODO uncomment !!!
 
-        LOGGER.info(" - content returned: {}", result.getResponse().getContentAsString());
+        log.info(" - content returned: {}", result.getResponse().getContentAsString());
 
         final StringReader res = new StringReader(result.getResponse().getContentAsString());
         final Model mOutput = ModelFactory.createDefaultModel();

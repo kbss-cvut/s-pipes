@@ -3,6 +3,7 @@ package cz.cvut.spipes.rest.util;
 import cz.cvut.spipes.registry.StreamResource;
 import cz.cvut.spipes.registry.StreamResourceRegistry;
 import cz.cvut.spipes.rest.StreamResourceDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,10 +14,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
+@Slf4j
 @Component
 public class ResourceRegisterHelper {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ResourceRegisterHelper.class);
 
     public StreamResourceDTO registerStreamResource(String contentType, InputStream body) {
         StreamResourceDTO res = new StreamResourceDTO(
@@ -25,7 +25,7 @@ public class ResourceRegisterHelper {
             getRegisteredResourceLocation()
         );
 
-        LOG.info("Registering new stream resource with id {} and url {} ", res.getId(), res.getPersistentUri());
+        log.info("Registering new stream resource with id {} and url {} ", res.getId(), res.getPersistentUri());
 
         final byte[] data;
         try {
@@ -33,9 +33,9 @@ public class ResourceRegisterHelper {
             StreamResource streamResource = StreamResourceRegistry.getInstance()
                 .registerResource(res.getId(), data, contentType);
             res.attachStreamResource(streamResource);
-            LOG.info("Resource content size: {}", data.length);
+            log.info("Resource content size: {}", data.length);
         } catch (IOException e) {
-            LOG.error("Unable to read payload: ", e);
+            log.error("Unable to read payload: ", e);
         }
 
         return res;
