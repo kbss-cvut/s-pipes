@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 public class SPipesUtil {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SPipesUtil.class);
+    private static final Logger log = LoggerFactory.getLogger(SPipesUtil.class);
 
     static Set<Class> superClasses;
 
@@ -83,7 +83,7 @@ public class SPipesUtil {
             if(!matchingResources.isEmpty()) {
                 Resource r = matchingResources.get(0);
                 if(matchingResources.size() > 1)
-                    LOG.warn("Ambiguous mapping spin command classes to SP resources, using <%s> from ", r.getURI(), matchingResources);
+                    log.warn("Ambiguous mapping spin command classes to SP resources, using <%s> from ", r.getURI(), matchingResources);
                 map.put(c, type(r,c));
             }
         });
@@ -138,7 +138,7 @@ public class SPipesUtil {
         List<SpinCommandType> mostSpecificClasses = getMostSpecificTypes(classes);
 
         if(mostSpecificClasses.isEmpty()) {
-            LOG.warn("Spin command has no specific spin command type , command is assigned following types {}." +
+            log.warn("Spin command has no specific spin command type , command is assigned following types {}." +
                     "This issue could be caused by a cycle of rdfs:subClassOf axioms. ",
                     classes.stream()
                             .map(p -> p.getResource())
@@ -154,7 +154,7 @@ public class SPipesUtil {
         List<SpinCommandType> mostSpecificLeafClasses = mostSpecificClasses.stream()
                 .filter(p -> !superClasses.contains(p.getClazz())).collect(Collectors.toList());
         if(mostSpecificLeafClasses.isEmpty()){
-            LOG.warn("Spin command has no leaf spin command type, command is assigned following types {}." +
+            log.warn("Spin command has no leaf spin command type, command is assigned following types {}." +
                             "This issue could resolved by specifying a leaf spin command type to the command.",
                     mostSpecificClasses.stream()
                             .map(p -> p.getResource())
@@ -167,7 +167,7 @@ public class SPipesUtil {
 
         SpinCommandType type = mostSpecificClasses.get(0);
         if(mostSpecificLeafClasses.size() > 1) {
-            LOG.warn("Ambiguous spin command is assigned multiple spin command types {}. Using sping command type <{}>",
+            log.warn("Ambiguous spin command is assigned multiple spin command types {}. Using sping command type <{}>",
                     mostSpecificLeafClasses.stream()
                             .map(p -> p.getResource())
                             .map(r -> String.format("<%s>", r.getURI()))
