@@ -4,23 +4,21 @@ import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.deri.tarql.tarql;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+@Slf4j
 @Deprecated //TODO merge with TarqlModule functionality
 @SPipesModule(label = "tarql-XXX-2", comment = "Module to convert CSV file to RDF and query it using SPRQL query. The module wraps org.deri.tarql.tarql. This module is depracated.")
 public class ModuleTarql extends AbstractModule {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ModuleTarql.class);
 
     private static final String TYPE_URI = KBSS_MODULE.uri + "tarql" + "-XXX-2";
 
@@ -48,7 +46,7 @@ public class ModuleTarql extends AbstractModule {
 
     @Override
     public ExecutionContext executeSelf() {
-        LOG.info("Running TARQL on " + inputFile);
+        log.info("Running TARQL on " + inputFile);
         Model model = ModelFactory.createDefaultModel();
 
         try {
