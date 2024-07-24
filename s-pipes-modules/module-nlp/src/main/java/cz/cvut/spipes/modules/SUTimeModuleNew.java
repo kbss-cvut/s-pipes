@@ -15,14 +15,12 @@ import edu.stanford.nlp.time.TimeAnnotations;
 import edu.stanford.nlp.time.TimeAnnotator;
 import edu.stanford.nlp.time.TimeExpression;
 import edu.stanford.nlp.util.CoreMap;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.RDF;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.topbraid.spin.arq.ARQFactory;
 import org.topbraid.spin.model.Construct;
 import org.topbraid.spin.vocabulary.SP;
 
@@ -33,11 +31,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-
+@Slf4j
 @SPipesModule(label = "temporal-v1", comment = "Module annotates input triples using NLP analysis of time using library SUTime.")
 public class SUTimeModuleNew extends AbstractModule {
-
-    private static final Logger LOG = LoggerFactory.getLogger(SUTimeModuleNew.class);
 
     private static final String TYPE_URI = KBSS_MODULE.uri + "temporal-v1";
     private static final String TYPE_PREFIX = TYPE_URI + "/";
@@ -158,7 +154,7 @@ public class SUTimeModuleNew extends AbstractModule {
 
     private Model analyzeModel(Model m) {
 
-        LOG.debug("Extracting temporal information from model of size {}", m.size());
+        log.debug("Extracting temporal information from model of size {}", m.size());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         List<ReifiedStatement> temporalAnnotationStmts = new LinkedList<>();
         m.listStatements()
@@ -260,10 +256,10 @@ public class SUTimeModuleNew extends AbstractModule {
                         afm = new AnnforModel(beginDateforModel, endDateforModel, typeDateforModel, extractionDateforModel);
 
                     } catch (NullPointerException e) {
-                        LOG.info("catched in temporalAnalyze " + e.getMessage());
+                        log.info("catched in temporalAnalyze " + e.getMessage());
 
                     } catch (ParseException e) {
-                        LOG.info("catched in parse exception " + e.getMessage());
+                        log.info("catched in parse exception " + e.getMessage());
                     }
                     afmArr = new ArrayList<>();
                     afmArr.add(afm);
@@ -290,7 +286,7 @@ public class SUTimeModuleNew extends AbstractModule {
     private String substituteQueryMarkers(int currentIteration, String queryStr) {
         int offset = pageSize * (currentIteration - 1);
 
-        LOG.debug("Creating query with LIMIT {} for OFFSET {}.", pageSize, offset);
+        log.debug("Creating query with LIMIT {} for OFFSET {}.", pageSize, offset);
         String markerValue = "\n" + "OFFSET " + offset
             + "\n" + "LIMIT " + pageSize + "\n";
 
