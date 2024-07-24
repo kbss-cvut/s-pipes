@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
@@ -27,11 +28,9 @@ import org.slf4j.LoggerFactory;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-
+@Slf4j
 @SPipesModule(label = "temporal v0.1", comment = "Annotate temporal expressions in literals in input model.")
 public class SUTimeModule extends AbstractModule {
-
-    private static final Logger LOG = LoggerFactory.getLogger(SUTimeModule.class);
 
     public static final String TYPE_URI = KBSS_MODULE.getURI() + "temporal-v0.1";
 
@@ -173,10 +172,10 @@ public class SUTimeModule extends AbstractModule {
                         afm = new AnnforModel(beginDateforModel, endDateforModel, typeDateforModel, extractionDateforModel);
 
                     } catch (NullPointerException e) {
-                        LOG.info("catched in temporalAnalyze " + e.getMessage());
+                        log.info("catched in temporalAnalyze " + e.getMessage());
 
                     } catch (ParseException e) {
-                        LOG.info("catched in parse exception " + e.getMessage());
+                        log.info("catched in parse exception " + e.getMessage());
                     }
                     afmArr = new ArrayList<>();
                     afmArr.add(afm);
