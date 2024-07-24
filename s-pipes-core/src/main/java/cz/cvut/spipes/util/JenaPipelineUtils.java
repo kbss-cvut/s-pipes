@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.query.Query;
@@ -19,10 +21,8 @@ import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Slf4j
 public class JenaPipelineUtils {
-
-    private static final Logger LOG = LoggerFactory.getLogger(JenaPipelineUtils.class);
-
 
     public static boolean isModule(Resource res) {
 
@@ -51,7 +51,7 @@ public class JenaPipelineUtils {
                     Resource moduleType = qs.get("moduleType").asResource();
                     Resource previous = module2moduleTypeMap.put(module, moduleType);
                     if (previous != null) {
-                        LOG.error("Module {} has colliding module types -- {}, {}. Ignoring type {}.", module, previous, moduleType, previous);
+                        log.error("Module {} has colliding module types -- {}, {}. Ignoring type {}.", module, previous, moduleType, previous);
                     }
                 }
                     );
@@ -72,10 +72,10 @@ public class JenaPipelineUtils {
                         return;
                     }
                     Resource moduleType = qs.get("returnModule").asResource();
-                    LOG.debug("Registering function {} to return module {}.", module, moduleType);
+                    log.debug("Registering function {} to return module {}.", module, moduleType);
                     Resource previous = function2retModuleMap.put(module, moduleType);
                     if (previous != null) {
-                        LOG.error("Function {} has colliding return modules -- {}, {}. Ignoring type {}.", module, previous, moduleType, previous);
+                        log.error("Function {} has colliding return modules -- {}, {}. Ignoring type {}.", module, previous, moduleType, previous);
                     }
                 }
         );

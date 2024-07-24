@@ -5,14 +5,15 @@ import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.engine.VariablesBinding;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Slf4j
 public class BindWithConstantModule extends AbstractModule  {
 
-    private static final Logger LOG = LoggerFactory.getLogger(BindWithConstantModule.class);
     String outputVariable;
     RDFNode value;
 
@@ -24,7 +25,7 @@ public class BindWithConstantModule extends AbstractModule  {
 
         VariablesBinding bindings = new VariablesBinding(outputVariable, value);
 
-        LOG.debug("\tBinding {} --> {}", outputVariable, value);
+        log.debug("\tBinding {} --> {}", outputVariable, value);
 
 
         return ExecutionContextFactory.createContext(

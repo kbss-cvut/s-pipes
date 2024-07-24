@@ -2,6 +2,7 @@ package cz.cvut.spipes.repository;
 
 import cz.cvut.spipes.manager.OntologyDocumentManager;
 import cz.cvut.spipes.util.JenaPipelineUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.Resource;
 import org.jetbrains.annotations.NotNull;
@@ -20,9 +21,8 @@ import java.util.stream.Collectors;
  * Know nothing about alternative entity ids -- e.g. prefixed-names, local-names.
  * <p>
  */
+@Slf4j
 public class SMScriptCollectionRepository implements ScriptCollectionRepository {
-    private static final Logger LOG = LoggerFactory.getLogger(SMScriptCollectionRepository.class);
-
 
     private final OntologyDocumentManager ontoDocManager;
     //private final Set<String> contexts;
@@ -82,7 +82,7 @@ public class SMScriptCollectionRepository implements ScriptCollectionRepository 
 
         model.getNsPrefixMap().forEach((name, url) -> {
             if (!isValidURL(url)){
-                LOG.warn("Invalid URI prefix: <{}> within <{}> ontology.", url, context);
+                log.warn("Invalid URI prefix: <{}> within <{}> ontology.", url, context);
             }
         });
 

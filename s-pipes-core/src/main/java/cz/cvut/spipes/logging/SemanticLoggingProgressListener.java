@@ -11,6 +11,7 @@ import cz.cvut.spipes.model.Thing;
 import cz.cvut.spipes.model.Transformation;
 import cz.cvut.spipes.modules.Module;
 import cz.cvut.spipes.util.TempFileUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.util.FileUtils;
@@ -36,10 +37,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+@Slf4j
 public class SemanticLoggingProgressListener implements ProgressListener {
-    private static final Logger LOG =
-        LoggerFactory.getLogger(SemanticLoggingProgressListener.class);
-
     /**
      * Maps pipeline executions and module executions to the transformation object.
      */
@@ -185,14 +184,14 @@ public class SemanticLoggingProgressListener implements ProgressListener {
             file =
                 Files.createFile(dir.resolve(TempFileUtils.createTimestampFileName(fileName))).toFile();
         } catch (IOException e) {
-            LOG.error("Error during file creation.", e);
+            log.error("Error during file creation.", e);
             return null;
         }
         try (OutputStream fileIs = new FileOutputStream(file)) {
             model.write(fileIs, FileUtils.langTurtle);
             return file.toURI().toURL().toString();
         } catch (IOException e) {
-            LOG.error("Error during dataset snapshot saving.", e);
+            log.error("Error during dataset snapshot saving.", e);
             return null;
         }
     }

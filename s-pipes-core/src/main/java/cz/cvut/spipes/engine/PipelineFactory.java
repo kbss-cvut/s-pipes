@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
@@ -28,9 +30,8 @@ import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Slf4j
 public class PipelineFactory {
-
-    private static final Logger LOG = LoggerFactory.getLogger(PipelineFactory.class);
 
     // TODO inheritence not involved, not static context
     static Map<Resource, Class<? extends Module>> moduleTypes = new HashMap<>();
@@ -54,12 +55,12 @@ public class PipelineFactory {
     }
 
     private static void _registerModuleType(Resource moduleType, Class<? extends Module> moduleClass) {
-        LOG.info(" module: {} -> {}", moduleType, moduleClass);
+        log.info(" module: {} -> {}", moduleType, moduleClass);
         moduleTypes.put(moduleType, moduleClass);
     }
 
     private static void _registerFunctionType(Resource functionType, Class<? extends ARQFunction> functionClass) {
-        LOG.info(" function: {} -> {}", functionType, functionClass);
+        log.info(" function: {} -> {}", functionType, functionClass);
         FunctionRegistry.get().put(functionType.getURI(), functionClass);
     }
 
@@ -114,7 +115,7 @@ public class PipelineFactory {
         // TODO multiple module types per resource
         Resource moduleTypeRes = moduleRes.getPropertyResourceValue(RDF.type);
         if (moduleTypeRes == null) {
-            LOG.error("Cannot load module {} as its {} property value is missing.", moduleRes, RDF.type);
+            log.error("Cannot load module {} as its {} property value is missing.", moduleRes, RDF.type);
             return null;
         }
         return loadModule(moduleRes, moduleTypeRes);
@@ -173,7 +174,7 @@ public class PipelineFactory {
                             .map(st -> {
                                 Module m = res2ModuleMap.get(st.getObject().asResource());
                                 if (m == null) {
-                                    LOG.error("Ignoring statement {}. The object of the triple must have rdf:type {}.", st, SM.Module);
+                                    log.error("Ignoring statement {}. The object of the triple must have rdf:type {}.", st, SM.Module);
                                 }
                                 return m;
                             }).filter(m -> (m != null)).forEach(
@@ -193,7 +194,7 @@ public class PipelineFactory {
         Class<? extends Module> moduleClass = moduleTypes.get(moduleTypeRes);
 
         if (moduleClass == null) {
-            LOG.error("Ignoring module {}. Its type {} is not registered.", moduleRes, moduleTypeRes);
+            log.error("Ignoring module {}. Its type {} is not registered.", moduleRes, moduleTypeRes);
             return null;
         }
 

@@ -10,6 +10,7 @@ import cz.cvut.spipes.engine.VariablesBinding;
 import cz.cvut.spipes.exception.ValidationConstraintFailedException;
 import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.QueryUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.atlas.lib.NotImplemented;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.query.*;
@@ -37,9 +38,10 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.joining;
 
+@Slf4j
 public abstract class AbstractModule implements Module {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AbstractModule.class);
+
     Resource resource;
     List<Module> inputModules = new LinkedList<>();
     ExecutionContext executionContext;
@@ -65,14 +67,14 @@ public abstract class AbstractModule implements Module {
         String inputModelFilePath = null;
         if (AuditConfig.isEnabled() || isInDebugMode) {
             inputModelFilePath = saveModelToTemporaryFile(executionContext.getDefaultModel());
-            LOG.debug("Saving module's execution input to file {}.", inputModelFilePath);
+            log.debug("Saving module's execution input to file {}.", inputModelFilePath);
         }
         if (ExecutionConfig.isCheckValidationConstrains()) {
             checkInputConstraints();
         }
         outputContext = executeSelf();
         if (AuditConfig.isEnabled() || isInDebugMode) {
-            LOG.debug("Saving module's execution output to file {}.", saveModelToTemporaryFile(outputContext.getDefaultModel()));
+            log.debug("Saving module's execution output to file {}.", saveModelToTemporaryFile(outputContext.getDefaultModel()));
         }
 
         if (ExecutionConfig.isCheckValidationConstrains()) {
@@ -116,7 +118,7 @@ public abstract class AbstractModule implements Module {
             .collect(joining("&", SPIPES_SERVICE_URL + "/module?", ""));
 
 
-        LOG.debug("To rerun the execution visit {}", encodedURL);
+        log.debug("To rerun the execution visit {}", encodedURL);
     }
 
     @Override
@@ -226,7 +228,7 @@ public abstract class AbstractModule implements Module {
         mergedVarsBinding.extendConsistently(outputContext.getVariablesBinding());
 
         if (!outputConstraintQueries.isEmpty()) {
-            LOG.debug("Validating module's output constraints ...");
+            log.debug("Validating module's output constraints ...");
             checkConstraints(defaultModel, mergedVarsBinding.asQuerySolution(), outputConstraintQueries);
         }
     }
@@ -237,7 +239,7 @@ public abstract class AbstractModule implements Module {
         QuerySolution bindings = executionContext.getVariablesBinding().asQuerySolution();
 
         if (!inputConstraintQueries.isEmpty()) {
-            LOG.debug("Validating module's input constraints ...");
+            log.debug("Validating module's input constraints ...");
             checkConstraints(defaultModel, bindings, inputConstraintQueries);
         }
     }
@@ -292,12 +294,12 @@ public abstract class AbstractModule implements Module {
                         .append(failedQueryMsg).append("\n")
                         .append(evidence).append("\n")
                         .toString();
-                LOG.error(mergedMsg);
+                log.error(mergedMsg);
                 if (ExecutionConfig.isExitOnError()) {
                     throw new ValidationConstraintFailedException(mergedMsg, this);
                 }
             } else {
-                LOG.debug("Constraint validated for exception \"{}\".", getQueryComment(spinQuery));
+                log.debug("Constraint validated for exception \"{}\".", getQueryComment(spinQuery));
             }
         }
 
@@ -418,7 +420,7 @@ public abstract class AbstractModule implements Module {
             QuerySolution bindings = executionContext.getVariablesBinding().asQuerySolution();
             RDFNode node = SPINExpressions.evaluate(expr, resource.getModel(), bindings); //TODO resource.getModel() should be part o context
             if (node == null) {
-                LOG.error("SPIN expression {} for bindings {} evaluated to null.", expr, bindings);
+                log.error("SPIN expression {} for bindings {} evaluated to null.", expr, bindings);
             }
             return node;
         } else {
@@ -453,7 +455,7 @@ public abstract class AbstractModule implements Module {
             return computedModel;
         } else {
             if (AuditConfig.isEnabled() || ExecutionConfig.getEnvironment().equals(Environment.development)) {
-                LOG.debug("Saving module's computed output to file {}.", saveModelToTemporaryFile(computedModel));
+                log.debug("Saving module's computed output to file {}.", saveModelToTemporaryFile(computedModel));
             }
             return JenaUtils.createUnion(executionContext.getDefaultModel(), computedModel);
         }

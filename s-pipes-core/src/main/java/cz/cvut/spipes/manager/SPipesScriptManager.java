@@ -9,6 +9,7 @@ import cz.cvut.spipes.registry.ResourceRegistry;
 import cz.cvut.spipes.repository.SMScriptCollectionRepository;
 import cz.cvut.spipes.repository.ScriptCollectionRepository;
 import cz.cvut.spipes.util.JenaPipelineUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,9 +28,8 @@ import java.util.Set;
  * TODO resource registry
  *
  */
+@Slf4j
 public class SPipesScriptManager {
-
-    private static final Logger LOG = LoggerFactory.getLogger(SPipesScriptManager.class);
 
     // TODO instead of ontoDocManager should point to ScriptCollectionRepository
     private Set<String> globalScripts;
