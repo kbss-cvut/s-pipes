@@ -7,6 +7,7 @@ import cz.cvut.spipes.manager.OntoDocManager;
 import cz.cvut.spipes.manager.OntologyDocumentManager;
 import cz.cvut.spipes.manager.SPipesScriptManager;
 import cz.cvut.spipes.modules.Module;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.rdf.model.Model;
@@ -29,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-
+@Slf4j
 public class ExecuteModuleCLI {
 
     // cat input-data.rdf | s-pipes execute --instance "<http://url>"
@@ -39,7 +40,7 @@ public class ExecuteModuleCLI {
     // > output.data.rdf
 
 
-    private static final Logger LOG = LoggerFactory.getLogger(ExecuteModuleCLI.class);
+
     private static final String DEFAULT_DELIMITER = ";";
     //@Option(name = "-d", aliases = "--delimiter", metaVar = "DELIMITER", usage = "Input variables data delimiter ('" + DEFAULT_DELIMITER + "' by default)")
     //private String delimiter = DEFAULT_DELIMITER;
@@ -98,24 +99,24 @@ public class ExecuteModuleCLI {
         CmdLineUtils.parseCommandLine(args, argParser);
 
         String output = String.join(" ", args);
-        LOG.info("Executing external module/function ... " + output);
+        log.info("Executing external module/function ... " + output);
 
         // ----- load input model
         Model inputDataModel = ModelFactory.createDefaultModel();
 
         if (asArgs.inputDataFiles != null) {
             for (File idFile : asArgs.inputDataFiles) {
-                LOG.debug("Loading input data from file {} ...", idFile);
+                log.debug("Loading input data from file {} ...", idFile);
                 inputDataModel.read(new FileInputStream(idFile), null, FileUtils.langTurtle);
             }
         }
         if (asArgs.isInputDataFromStdIn) {
-            LOG.info("Loading input data from std-in ...");
+            log.info("Loading input data from std-in ...");
             inputDataModel.read(System.in, null, FileUtils.langTurtle);
         }
 
         // ----- load modules and functions
-        LOG.debug("Loading  scripts ...");
+        log.debug("Loading  scripts ...");
         SPipesScriptManager scriptManager = scriptManager = createSPipesScriptManager();
         OntoDocManager.registerAllSPINModules();
 
@@ -123,7 +124,7 @@ public class ExecuteModuleCLI {
         VariablesBinding inputVariablesBinding = new VariablesBinding();
         if (asArgs.inputBindingParametersMap != null) {
             inputVariablesBinding = new VariablesBinding(transform(asArgs.inputBindingParametersMap));
-            LOG.info("Loaded input variable binding ={}", inputVariablesBinding);
+            log.info("Loaded input variable binding ={}", inputVariablesBinding);
         }
 
         // ----- create execution context
@@ -139,7 +140,7 @@ public class ExecuteModuleCLI {
         }
         ExecutionContext outputExecutionContext = engine.executePipeline(module, inputExecutionContext);
 
-        LOG.info("Processing successfully finished.");
+        log.info("Processing successfully finished.");
        // outputExecutionContext.getDefaultModel().write(System.out);
 
 //        Model inputBindingModel = null;
@@ -265,7 +266,7 @@ public class ExecuteModuleCLI {
 
         // load from environment variables
         String spipesOntologiesPathsStr = System.getenv(AppConstants.SYSVAR_SPIPES_ONTOLOGIES_PATH);
-        LOG.debug("Loading scripts from system variable {} = {}", AppConstants.SYSVAR_SPIPES_ONTOLOGIES_PATH, spipesOntologiesPathsStr);
+        log.debug("Loading scripts from system variable {} = {}", AppConstants.SYSVAR_SPIPES_ONTOLOGIES_PATH, spipesOntologiesPathsStr);
         if (spipesOntologiesPathsStr != null) {
             scriptPaths.addAll(
                     Arrays.stream(spipesOntologiesPathsStr.split(";"))
@@ -303,7 +304,7 @@ public class ExecuteModuleCLI {
                 ontoUri -> {
                     String loc = locMapper.getAltEntry(ontoUri);
                     if (loc.endsWith(".sms.ttl")) {
-                        LOG.info("Registering script from file " + loc + ".");
+                        log.info("Registering script from file " + loc + ".");
                         _globalScripts.add(ontoUri);
                     }
                 }
