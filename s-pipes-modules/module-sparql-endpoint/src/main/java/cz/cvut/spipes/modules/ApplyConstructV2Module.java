@@ -11,8 +11,6 @@ import org.slf4j.LoggerFactory;
 @SPipesModule(label = "apply construct v2", comment = "Generates triples from input model using specified constructQueries.")
 public class ApplyConstructV2Module extends ApplyConstructAbstractModule {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ApplyConstructV2Module.class);
-
     private static final String TYPE_URI = KBSS_MODULE.uri + "apply-construct-v2";
 
     @Override

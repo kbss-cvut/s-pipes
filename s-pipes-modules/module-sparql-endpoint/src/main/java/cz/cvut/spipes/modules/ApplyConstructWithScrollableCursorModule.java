@@ -3,15 +3,15 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.util.QueryUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResourceFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * TODO Order of queries is not enforced.
  */
+@Slf4j
 @SPipesModule(label = "apply construct with scrollable cursor",
         comment = "Runs one or more construct queries (bound to sml:constructQuery) on the input triples. Queries are " +
                 "executed multiple times with scrollable cursor that is injected through query marker #${LIMIT_OFFSET}. " +
@@ -19,8 +19,6 @@ import org.slf4j.LoggerFactory;
                 "Within each construct query The output RDF will consist of the constructed triples and (unless sml:replace is true) " +
                 "the input triples.")
 public class ApplyConstructWithScrollableCursorModule extends ApplyConstructAbstractModule {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ApplyConstructWithScrollableCursorModule.class);
 
     private static final String TYPE_URI = KBSS_MODULE.uri + "apply-construct-with-scrollable-cursor";
     private static final String TYPE_PREFIX = TYPE_URI + "/";
@@ -68,7 +66,7 @@ public class ApplyConstructWithScrollableCursorModule extends ApplyConstructAbst
     protected String substituteQueryMarkers(int currentIteration, String queryStr) {
         int offset = pageSize * (currentIteration - 1);
 
-        LOG.debug("Creating query with LIMIT {} for OFFSET {}.", pageSize, offset );
+        log.debug("Creating query with LIMIT {} for OFFSET {}.", pageSize, offset );
         String markerValue = "\n" + "OFFSET " + offset
             + "\n" + "LIMIT " + pageSize + "\n";
 

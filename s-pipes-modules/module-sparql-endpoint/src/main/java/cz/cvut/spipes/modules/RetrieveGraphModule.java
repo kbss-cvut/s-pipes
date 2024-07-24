@@ -5,18 +5,17 @@ import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.impl.GraphChunkedDownload;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 // TODO - lable = SpEP retrieve graph
+@Slf4j
 @SPipesModule(label = "sparql endpoint retrieve graph", comment = "Retrieves graph from sparql endpoint specified by " +
         "?endpointUrl and optionaly ?namedGraphId. If ?namedGraphId is not specified it retreaves the default graph.")
 public class RetrieveGraphModule extends AnnotatedAbstractModule {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RetrieveGraphModule.class);
     protected static final String TYPE_URI = KBSS_MODULE.uri + "sparql-endpoint-retrieve-graph";
     private static final String TYPE_PREFIX = TYPE_URI + "/";
     private static final int DEFAULT_PAGE_SIZE = 10000;
@@ -65,7 +64,7 @@ public class RetrieveGraphModule extends AnnotatedAbstractModule {
         GraphChunkedDownload downloader = new GraphChunkedDownload(endpointUrl, namedGraphId, pageSize) {
             @Override
             protected void processPartialModel(Model partialModel) {
-                LOG.trace("persisting partial download, {} triples from (<{}>,<{}>)",
+                log.trace("persisting partial download, {} triples from (<{}>,<{}>)",
                         partialModel.size(), endpointUrl, namedGraphId);
                 outputModel.add(partialModel);
             }

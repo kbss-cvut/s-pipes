@@ -3,14 +3,15 @@ package cz.cvut.spipes.recursion;
 import cz.cvut.spipes.util.QueryUtils;
 import java.util.Objects;
 import java.util.Optional;
+
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+@Slf4j
 public class ChunkedValuesProvider implements QueryTemplateRecursionProvider {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ChunkedValuesProvider.class);
+
     private static final String VALUES_CLAUSE_MARKER_NAME = "VALUES";
     private final int iterationCount;
     private ResultSet inputResultSet;
@@ -29,7 +30,7 @@ public class ChunkedValuesProvider implements QueryTemplateRecursionProvider {
     public String substituteQueryMarkers(int currentIteration, String queryStr) {
         String markerValue = QueryUtils.nextResultsToValuesClause(inputResultSet, outputChunkSize);
 
-        LOG.debug("Creating query with values clause: \n{}.", markerValue);
+        log.debug("Creating query with values clause: \n{}.", markerValue);
 
         return QueryUtils
             .substituteMarkers(VALUES_CLAUSE_MARKER_NAME,

@@ -3,13 +3,13 @@ package cz.cvut.spipes.recursion;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.Model;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+@Slf4j
 public class CombinedQueryTemplateRecursionProvider implements QueryTemplateRecursionProvider {
-
-    private static final Logger LOG = LoggerFactory.getLogger(CombinedQueryTemplateRecursionProvider.class);
+;
     private final QueryTemplateRecursionProvider parentProvider;
     private final QueryTemplateRecursionProvider childProvder;
     private final int iterationCount;
@@ -37,7 +37,7 @@ public class CombinedQueryTemplateRecursionProvider implements QueryTemplateRecu
             }
         }
         childIteration++;
-        LOG.debug("Executing iteration {} --> ({}, {}).", currentIteration, parentIteration, childIteration);
+        log.debug("Executing iteration {} --> ({}, {}).", currentIteration, parentIteration, childIteration);
 
         if (currentIteration == iterationCount) {
             return true;
