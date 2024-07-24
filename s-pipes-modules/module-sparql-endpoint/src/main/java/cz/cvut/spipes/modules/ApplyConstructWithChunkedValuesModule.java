@@ -6,6 +6,8 @@ import cz.cvut.spipes.engine.VariablesBinding;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.util.QueryUtils;
 import java.util.Objects;
+
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
@@ -15,18 +17,15 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.topbraid.spin.arq.ARQFactory;
 import org.topbraid.spin.model.Select;
 
 /**
  * TODO Order of queries is not enforced.
  */
+@Slf4j
 @SPipesModule(label = "apply construct with chunked values", comment = "Apply construct with chunked values.")
 public class ApplyConstructWithChunkedValuesModule extends ApplyConstructAbstractModule {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ApplyConstructWithChunkedValuesModule.class);
 
     private static final String TYPE_URI = KBSS_MODULE.uri + "";
     private static final String TYPE_PREFIX = TYPE_URI + "/";
@@ -72,14 +71,14 @@ public class ApplyConstructWithChunkedValuesModule extends ApplyConstructAbstrac
 
         QueryExecution execution = QueryExecutionFactory.create(query, executionContext.getDefaultModel(), inputBindings);
 
-        LOG.debug("Executing query of chunk provider ...");
+        log.debug("Executing query of chunk provider ...");
 
         selectResultSet = execution.execSelect();
 
         VariablesBinding variablesBinding = new VariablesBinding();
 
         if (! selectResultSet.hasNext()) {
-            LOG.debug("\"{}\" query did not return any values.", getLabel());
+            log.debug("\"{}\" query did not return any values.", getLabel());
         }
     }
 
@@ -109,7 +108,7 @@ public class ApplyConstructWithChunkedValuesModule extends ApplyConstructAbstrac
 
         String markerValue = QueryUtils.nextResultsToValuesClause(getCurrentResultSetInstance(), chunkSize);
 
-        LOG.debug("Creating query with values clause: \n{}.", markerValue );
+        log.debug("Creating query with values clause: \n{}.", markerValue );
 
         return QueryUtils
             .substituteMarkers(VALUES_CLAUSE_MARKER_NAME,
