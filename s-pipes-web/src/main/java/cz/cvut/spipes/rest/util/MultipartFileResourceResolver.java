@@ -1,6 +1,7 @@
 package cz.cvut.spipes.rest.util;
 
 import cz.cvut.spipes.rest.StreamResourceDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +19,9 @@ import java.util.Optional;
 /**
  * Resolver of multipart files references within query parameters.
  */
+@Slf4j
 @Component
 public class MultipartFileResourceResolver {
-
-    private static final Logger LOG = LoggerFactory.getLogger(MultipartFileResourceResolver.class);
 
     private final ResourceRegisterHelper resourceRegisterHelper;
 
@@ -66,7 +66,7 @@ public class MultipartFileResourceResolver {
                     .findFirst().get(); // must be at least one present due to previous logic
 
                 if (e.getValue().size() > 1) {
-                    LOG.warn("Multiple values for url parameter: {}, using only first value: {}", e.getKey(), paramFilename);
+                    log.warn("Multiple values for url parameter: {}, using only first value: {}", e.getKey(), paramFilename);
                 }
 
                 String filename = paramFilename.replaceFirst("@", "");
@@ -81,10 +81,10 @@ public class MultipartFileResourceResolver {
                         newStreamResources.add(res);
                         newParameters.replace(e.getKey(), Collections.singletonList(res.getPersistentUri()));
                     } catch (IOException ex) {
-                        LOG.error(ex.getMessage(), ex);
+                        log.error(ex.getMessage(), ex);
                     }
                 } else {
-                    LOG.error("Missing multipart file for url parameter: {} with value: {}", e.getKey(), paramFilename);
+                    log.error("Missing multipart file for url parameter: {} with value: {}", e.getKey(), paramFilename);
                 }
             });
 
