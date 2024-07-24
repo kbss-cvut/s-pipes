@@ -6,6 +6,7 @@ import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.exception.ModuleConfigurationInconsistentException;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.util.CoreConfigProperies;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.DatasetFactory;
 import org.apache.jena.rdf.model.Model;
@@ -27,9 +28,6 @@ import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFParseException;
 import org.eclipse.rdf4j.sail.nativerdf.config.NativeStoreConfig;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.StringReader;
@@ -37,13 +35,12 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Optional;
 
+@Slf4j
 @SPipesModule(label = "deploy", comment =
         "Module deploys content of input execution context into default context of repository (if p-rdf4j-context-iri " +
         "is not specified) or concrete context (if p-rdf4j-context-iri is specified)."
 )
 public class Rdf4jDeployModule extends AbstractModule {
-
-    private static final Logger LOG = LoggerFactory.getLogger(Rdf4jDeployModule.class);
 
     private final static String TYPE_URI = KBSS_MODULE.uri + "deploy";
     private final static String PROPERTY_PREFIX_URI = KBSS_MODULE.uri + "rdf4j";
@@ -128,7 +125,7 @@ public class Rdf4jDeployModule extends AbstractModule {
 
     @Override
     ExecutionContext executeSelf() {
-        LOG.debug("Deploying data into {} of rdf4j server repository {}/{}.",
+        log.debug("Deploying data into {} of rdf4j server repository {}/{}.",
             getContextsInfo(),
             rdf4jServerURL,
             rdf4jRepositoryName);
@@ -136,7 +133,7 @@ public class Rdf4jDeployModule extends AbstractModule {
         try {
 
             if (repository == null) {
-                LOG.info("Creating new repository {} within rdf4j server {} ...",
+                log.info("Creating new repository {} within rdf4j server {} ...",
                     rdf4jServerURL, rdf4jRepositoryName);
                 RepositoryConfig repConfig = new RepositoryConfig(rdf4jRepositoryName);
                 SailRepositoryConfig config = new SailRepositoryConfig(new NativeStoreConfig());
@@ -148,7 +145,7 @@ public class Rdf4jDeployModule extends AbstractModule {
             Dataset dataset = createDataset(executionContext.getDefaultModel(), rdf4jContextIRI, inferContextIRIs);
 
             if (dataset.isEmpty()) {
-                LOG.info("No triples found to deploy.");
+                log.info("No triples found to deploy.");
                 return ExecutionContextFactory.createContext(executionContext.getDefaultModel());
             }
 
@@ -171,20 +168,20 @@ public class Rdf4jDeployModule extends AbstractModule {
             connection.add(new StringReader(w.getBuffer().toString()), "", RDFFormat.NQUADS);
             connection.commit();
         } catch (final RepositoryException | RDFParseException | RepositoryConfigException | IOException e) {
-            LOG.error(e.getMessage(),e);
+            log.error(e.getMessage(),e);
         } finally {
             try {
                 if (connection != null && connection.isOpen()) {
                     connection.close();
                 }
             } catch (RepositoryException e) {
-                LOG.error(e.getMessage(), e);
+                log.error(e.getMessage(), e);
             } finally {
                 if ((repository != null) && (repository.isInitialized())) {
                     try {
                         repository.shutDown();
                     } catch (RepositoryException e) {
-                        LOG.error("During finally: ", e);
+                        log.error("During finally: ", e);
                     }
                 }
             }
@@ -206,7 +203,7 @@ public class Rdf4jDeployModule extends AbstractModule {
     static Dataset createDataset(@NotNull Model model, String outputGraphId, boolean inferGraphsFromAnnotatedModel) {
         boolean isOutputGraphSpecified = (outputGraphId != null) && (!outputGraphId.isEmpty());
         if (isOutputGraphSpecified && inferGraphsFromAnnotatedModel) {
-            LOG.error("Module is set to deploy in one context as well as infer contexts from annotated model. " +
+            log.error("Module is set to deploy in one context as well as infer contexts from annotated model. " +
                 "Thus, ignoring deploy of triples.");
             return DatasetFactory.create();
         }
@@ -267,7 +264,7 @@ public class Rdf4jDeployModule extends AbstractModule {
         }
         repository = repositoryManager.getRepository(rdf4jRepositoryName);
         inferContextIRIs = getPropertyValue(P_RDF4J_INFER_CONTEXT_IRIS,false);
-        LOG.debug("Inferring contexts from annotated input triples.");
+        log.debug("Inferring contexts from annotated input triples.");
     }
     private static @Nullable String getConfigurationVariable(String variableName) {
         if (variableName == null) {

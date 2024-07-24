@@ -7,6 +7,7 @@ import cz.cvut.spipes.exception.ModuleConfigurationInconsistentException;
 import cz.cvut.spipes.exceptions.RepositoryAccessException;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.util.QueryUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
@@ -20,18 +21,16 @@ import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.topbraid.spin.vocabulary.SP;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @SPipesModule(label = "rdf4j update", comment = "Updates sparql endpoint configured in rdf4jServerURL" +
     " using specified list updateQueries. The list of queries can be executed multiple times specified by " +
     " `has-max-iteration-count` property.")
 public class Rdf4jUpdateModule extends AbstractModule {
-    private static final Logger LOG = LoggerFactory.getLogger(Rdf4jUpdateModule.class.getName());
     private static final String TYPE_URI = KBSS_MODULE.uri + "rdf4j-update";
     private static final String PROPERTY_PREFIX_URI = KBSS_MODULE.uri + "rdf4j";
 
@@ -125,19 +124,19 @@ public class Rdf4jUpdateModule extends AbstractModule {
     @Override
     ExecutionContext executeSelf() {
         try (RepositoryConnection updateConnection = updateRepository.getConnection()) {
-            LOG.debug("Connected to {}", rdf4jRepositoryName);
+            log.debug("Connected to {}", rdf4jRepositoryName);
             long newTriplesCount = updateConnection.size();
             long oldTriplesCount;
-            LOG.debug("Number of triples before execution of updates: {}", newTriplesCount);
+            log.debug("Number of triples before execution of updates: {}", newTriplesCount);
 
             for(int i = 0;i < iterationCount; i++) {
                 oldTriplesCount = newTriplesCount;
                 for (int j = 0; j < updateQueries.size(); j++) {
                     String updateQuery = updateQueries.get(j);
 
-                    if (LOG.isTraceEnabled()) {
+                    if (log.isTraceEnabled()) {
                         String queryComment = QueryUtils.getQueryComment(updateQuery);
-                        LOG.trace(
+                        log.trace(
                             "Executing iteration {}/{} with {}/{} query \"{}\" ...",
                             i+1, iterationCount, j + 1, updateQueries.size(), queryComment
                         );
@@ -145,11 +144,11 @@ public class Rdf4jUpdateModule extends AbstractModule {
                     makeUpdate(updateQuery, updateConnection);
                 }
                 newTriplesCount = updateConnection.size();
-                LOG.debug("Number of triples after finishing iteration {}/{}: {}",
+                log.debug("Number of triples after finishing iteration {}/{}: {}",
                     i+1, iterationCount, newTriplesCount
                 );
                 if (onlyIfTripleCountChanges && (newTriplesCount == oldTriplesCount)) {
-                    LOG.debug("Stopping execution of iterations as triples count did not change.");
+                    log.debug("Stopping execution of iterations as triples count did not change.");
                     break;
                 }
             }
@@ -165,20 +164,20 @@ public class Rdf4jUpdateModule extends AbstractModule {
         try {
             prepareUpdate = updateConnection.prepareUpdate(QueryLanguage.SPARQL, updateString);
         } catch (MalformedQueryException e) {
-            LOG.error("Malformed Query, query text:\n{}",
+            log.error("Malformed Query, query text:\n{}",
                     updateString);
             return;
         } catch (RepositoryException e) {
-            LOG.error("Repository exception\n{}",
+            log.error("Repository exception\n{}",
                     e.getMessage());
             return;
         }
         try {
             assert prepareUpdate != null;
             prepareUpdate.execute();
-            LOG.debug("Update successful");
+            log.debug("Update successful");
         } catch (UpdateExecutionException e) {
-            LOG.error("Update execution exception, query text:\n{}\n{}",
+            log.error("Update execution exception, query text:\n{}\n{}",
                     updateString,
                     e.getMessage());
         }
@@ -195,7 +194,7 @@ public class Rdf4jUpdateModule extends AbstractModule {
         rdf4jRepositoryName = getEffectiveValue(P_RDF4J_REPOSITORY_NAME).asLiteral().getString();
         iterationCount = getPropertyValue(KBSS_MODULE.has_max_iteration_count,1);
         onlyIfTripleCountChanges = getPropertyValue(P_RDF4J_STOP_ITERATION_ON_STABLE_TRIPLE_COUNT,false);
-        LOG.debug("Iteration count={}\nOnlyIf...Changes={}"
+        log.debug("Iteration count={}\nOnlyIf...Changes={}"
                 ,iterationCount
                 ,onlyIfTripleCountChanges);
         if (updateRepository != null && rdf4jServerURL != null) {
