@@ -1,7 +1,5 @@
 package cz.cvut.jena;
 
-
-import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.ontology.OntDocumentManager;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
@@ -11,8 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Slf4j
 public class OntDocumentManagerTest {
+
+    private static final Logger LOG = LoggerFactory.getLogger(OntDocumentManagerTest.class);
 
     @Test
     public void getOntologyTriggersReadFailureHandler() {
@@ -21,8 +20,8 @@ public class OntDocumentManagerTest {
         OntDocumentManager.ReadFailureHandler handler = new OntDocumentManager.ReadFailureHandler() {
             @Override
             public void handleFailedRead(String url, Model model, Exception e) {
-                log.info("- url: " + url);
-                log.info("- model: " + model);
+                LOG.info("- url: " + url);
+                LOG.info("- model: " + model);
                 readFailureHandlerIsTriggered[0] = true;
                 return;
             }
