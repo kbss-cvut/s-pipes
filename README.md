@@ -1,6 +1,6 @@
 # SPipes
 
-SPipes is tool to manage semantic pipelines defined in RDF inspired by [SPARQLMotion](https://sparqlmotion.org/) language. Each node in a pipeline represents some stateless transformation of data. 
+SPipes is tool to manage semantic pipelines defined in RDF inspired by [SPARQLMotion](https://sparqlmotion.org/) language. Each node in a pipeline represents some stateless transformation of data. [SPipes Editor](https://github.com/kbss-cvut/s-pipes-editor) is tool to viewing/editing/executing/debugging SPipes scripts.
 
 ## Basic concepts
 
