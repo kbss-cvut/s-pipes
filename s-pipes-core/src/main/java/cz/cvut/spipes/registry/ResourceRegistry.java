@@ -21,4 +21,6 @@ public interface ResourceRegistry {
 
 
     @NotNull String getResourceUri(@NotNull String entityId) throws ResourceNotFoundException, ResourceNotUniqueException;
+
+    @NotNull boolean doesContextContainsEntity(@NotNull String entityId);
 }

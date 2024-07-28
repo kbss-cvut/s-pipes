@@ -221,10 +221,10 @@ public class SPipesServiceController {
         ExecutionEngine engine = createExecutionEngine(configModel);
         ContextLoaderHelper.updateContextsIfNecessary(scriptManager);
         Module module = null;
-        try {
+        if (scriptManager.doesRegistryContainsEntity(id)) {
             module = scriptManager.loadModule(id, null, null);
         }
-        catch (Exception e) {
+        else {
             module = PipelineFactory.loadModule(configModel.createResource(id));
         }
         if (module == null) {

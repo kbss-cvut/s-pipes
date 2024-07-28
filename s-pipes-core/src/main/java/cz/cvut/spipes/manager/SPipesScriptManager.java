@@ -116,6 +116,10 @@ public class SPipesScriptManager {
         return globalScripts;
     }
 
+    public boolean doesRegistryContainsEntity(String entityId) {
+        return moduleRegistry.doesContextContainsEntity(entityId);
+    }
+
 
     // id -> contexts
     // function id-s
