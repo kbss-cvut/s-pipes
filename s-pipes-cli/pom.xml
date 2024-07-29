@@ -53,6 +53,11 @@
             <artifactId>logback-core</artifactId>
             <version>${ch.qos.logback.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
         <!-- IO utils -->
         <dependency>
             <groupId>commons-io</groupId>
@@ -70,14 +75,6 @@
             <artifactId>junit-jupiter-api</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.24</version>
-            <scope>provided</scope>
-        </dependency>
-
     </dependencies>
 
 
