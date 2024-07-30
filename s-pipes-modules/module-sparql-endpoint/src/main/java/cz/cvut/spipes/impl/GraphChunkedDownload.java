@@ -1,13 +1,12 @@
 package cz.cvut.spipes.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.rdf.model.Model;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+
+@Slf4j
 public abstract class GraphChunkedDownload {
-    
-    private static final Logger LOG = LoggerFactory.getLogger(GraphChunkedDownload.class);
 
     private static final int DEFAULT_PAGE_SIZE = 10000;
 
@@ -34,7 +33,7 @@ public abstract class GraphChunkedDownload {
     public void execute() {
         long offset = 0;
         while (true) {
-            LOG.debug("Executing query for offset: {}", offset);
+            log.debug("Executing query for offset: {}", offset);
             String query = prepareQuery(offset);
             Model model = executeQuery(query);
             if (model.isEmpty()) {

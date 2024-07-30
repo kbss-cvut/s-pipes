@@ -1,6 +1,5 @@
 package cz.cvut.jena;
 
-
 import org.apache.jena.ontology.OntDocumentManager;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;

@@ -2,13 +2,14 @@ package cz.cvut.spipes.util;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-
+@Slf4j
 public class EncodingUtils {
-    private static final Logger LOG = LoggerFactory.getLogger(EncodingUtils.class);
 
     public static final String UTF8 = "UTF-8";
     
@@ -16,7 +17,7 @@ public class EncodingUtils {
         try{
             return URLEncoder.encode(str, UTF8);
         } catch (UnsupportedEncodingException ex) {
-            LOG.error(String.format("Encoding {} is not supported.", UTF8),ex);
+            log.error(String.format("Encoding {} is not supported.", UTF8),ex);
             throw new RuntimeException(ex);
         }
     }

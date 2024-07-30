@@ -25,6 +25,6 @@ jobs:
 
       # Test using proper JDK and MVN
       - name: Test
-        uses: docker://maven:3-eclipse-temurin-21
+        uses: docker://maven:3-eclipse-temurin-17
         with:
           args: mvn test

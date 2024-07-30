@@ -15,6 +15,7 @@ import cz.cvut.spipes.modules.Module;
 import cz.cvut.spipes.util.DateUtils;
 import cz.cvut.spipes.util.Rdf4jUtils;
 import cz.cvut.spipes.util.TempFileUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
@@ -45,9 +46,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
+@Slf4j
 public class AdvancedLoggingProgressListener implements ProgressListener {
-    private static final Logger LOG =
-        LoggerFactory.getLogger(AdvancedLoggingProgressListener.class);
     /**
      * Maps pipeline executions and module executions to the transformation object.
      */
@@ -173,7 +173,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
 
     private void persistPipelineExecutionFinished(final EntityManager em, final long pipelineExecutionId) {
         if (em.isOpen()) {
-            LOG.debug("Saving metadata about finished pipeline execution {}.", pipelineExecutionId);
+            log.debug("Saving metadata about finished pipeline execution {}.", pipelineExecutionId);
             Date finishDate = new Date();
             em.getTransaction().begin();
 
@@ -359,7 +359,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
                 connection.getValueFactory().createIRI(contextUri.toString()));
             connection.commit();
         } catch (final RepositoryException | RDFParseException | RepositoryConfigException | IOException e) {
-            LOG.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         } finally {
             if (connection != null && connection.isOpen()) {
                 connection.close();
@@ -386,7 +386,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
         try (OutputStream fileIs = new FileOutputStream(file)) {
             model.write(fileIs, FileUtils.langTurtle);
         } catch (IOException e) {
-            LOG.error("Error during dataset snapshot saving.", e);
+            log.error("Error during dataset snapshot saving.", e);
         }
     }
 

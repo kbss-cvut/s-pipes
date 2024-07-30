@@ -12,20 +12,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import cz.cvut.spipes.modules.annotations.SPipesModule;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+@Slf4j
 @SPipesModule(label = "sparql endpoint download graph", comment = "Downloads named graph namedGraphId from sparql endpoint endpointUrl.")
 public class DownloadGraphModule extends AnnotatedAbstractModule {
 
     private static final String TYPE_URI = KBSS_MODULE.uri + "sparql-endpoint-download-graph";
     private static final String TYPE_PREFIX = TYPE_URI + "/";
     private static final int DEFAULT_PAGE_SIZE = 10000;
-    private static final Logger LOG = LoggerFactory.getLogger(DownloadGraphModule.class);
 
     @Parameter(urlPrefix = TYPE_PREFIX, name = "named-graph-id", comment = "Named graph id")
     private String namedGraphId;
@@ -96,7 +94,7 @@ public class DownloadGraphModule extends AnnotatedAbstractModule {
                 @Override
                 protected void processPartialModel(Model partialModel) {
                     numberOfDownloadedTriples += partialModel.size();
-                    LOG.trace("persisting partial download, {} triples from (<{}>,<{}>)",
+                    log.trace("persisting partial download, {} triples from (<{}>,<{}>)",
                             partialModel.size(), endpointUrl, namedGraphId);
                     RDFDataMgr.write(os, partialModel, Lang.NTRIPLES);
                 }
@@ -120,7 +118,7 @@ public class DownloadGraphModule extends AnnotatedAbstractModule {
         Path file;
         try {
             file = Files.createTempFile("downloaded-graph-", ".nt");
-            LOG.trace("persisting downloaded graph (<{}>,<{}>), to file \"{}\"", endpointUrl, namedGraphId, file.toString());
+            log.trace("persisting downloaded graph (<{}>,<{}>), to file \"{}\"", endpointUrl, namedGraphId, file.toString());
         } catch (IOException e) {
             throw new RuntimeException("Could not create temporary file.", e);
         }

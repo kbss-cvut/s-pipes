@@ -7,6 +7,7 @@ import cz.cvut.spipes.manager.SPipesScriptManager;
 import cz.cvut.spipes.rest.util.ContextLoaderHelper;
 import cz.cvut.spipes.rest.util.ScriptManagerFactory;
 import cz.cvut.spipes.util.RDFMimeType;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
@@ -19,12 +20,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestController
 @EnableWebMvc
 public class SPipesContextController {
 
-
-    private static final Logger LOG = LoggerFactory.getLogger(SPipesServiceController.class);
     private SPipesScriptManager scriptManager;
     private List<String> globalScripts;
     private OntologyDocumentManager ontoDocManager;

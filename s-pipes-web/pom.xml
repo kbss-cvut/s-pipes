@@ -24,6 +24,15 @@
     </repositories>
 
     <dependencies>
+
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+
         <!-- SPipes modules -->
         <dependency>
             <groupId>cz.cvut.kbss</groupId>

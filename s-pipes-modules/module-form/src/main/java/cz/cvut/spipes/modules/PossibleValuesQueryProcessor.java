@@ -1,11 +1,10 @@
 package cz.cvut.spipes.modules;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.util.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -19,9 +18,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+@Slf4j
 class PossibleValuesQueryProcessor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PossibleValuesQueryProcessor.class);
     String possibleValuesQuery;
     String retrievedPossibleValues;
     Model possibleValuesModel;
@@ -49,7 +48,7 @@ class PossibleValuesQueryProcessor {
                 String.class);
             return result.getBody();
         } catch (Exception e) {
-            LOG.error("Error when requesting remote data, url: {}.", urlWithQuery, e);
+            log.error("Error when requesting remote data, url: {}.", urlWithQuery, e);
         }
         return null;
     }

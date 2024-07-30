@@ -8,6 +8,7 @@ import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.QueryUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.QuerySolution;
@@ -27,9 +28,8 @@ import java.util.stream.Collectors;
 /**
  * TODO Order of queries is not enforced.
  **/
+@Slf4j
 public class ApplyConstructModule extends AbstractModule {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ApplyConstructModule.class);
 
     //sml:constructQuery
     private List<Resource> constructQueries;
@@ -121,9 +121,9 @@ public class ApplyConstructModule extends AbstractModule {
             for (int i = 0; i < constructQueriesSorted.size(); i++) {
                 Construct spinConstructRes = constructQueriesSorted.get(i);
 
-                if (LOG.isTraceEnabled()) {
+                if (log.isTraceEnabled()) {
                     String queryComment = getQueryComment(spinConstructRes);
-                    LOG.trace(
+                    log.trace(
                         "Executing iteration {}/{} with {}/{} query \"{}\" ...",
                         count, iterationCount, i + 1, constructQueriesSorted.size(), queryComment
                     );
@@ -138,12 +138,12 @@ public class ApplyConstructModule extends AbstractModule {
 
                 Model constructedModel = QueryUtils.execConstruct(query, extendedInferredModel, bindings);
 
-                if (LOG.isTraceEnabled()) {
-                    LOG.trace("... the query returned {} triples.", constructedModel.size());
+                if (log.isTraceEnabled()) {
+                    log.trace("... the query returned {} triples.", constructedModel.size());
                 }
 
                 if (AuditConfig.isEnabled() || ExecutionConfig.getEnvironment().equals(Environment.development)) {
-                    LOG.debug("... saving module's partially computed output to file {}.", saveModelToTemporaryFile(constructedModel));
+                    log.debug("... saving module's partially computed output to file {}.", saveModelToTemporaryFile(constructedModel));
                 }
 
                 inferredInSingleIterationModel = ModelFactory.createUnion(inferredInSingleIterationModel, constructedModel);
@@ -152,7 +152,7 @@ public class ApplyConstructModule extends AbstractModule {
             Model newModel = JenaUtils.createUnion(inferredModel, inferredInSingleIterationModel);
 
             inferredTriplesCount = newModel.size() - inferredModel.size();
-            LOG.trace("Iteration {}/{} inferred {} new triples.", count, iterationCount, inferredTriplesCount);
+            log.trace("Iteration {}/{} inferred {} new triples.", count, iterationCount, inferredTriplesCount);
 
             inferredModel = newModel;
         }
@@ -174,7 +174,7 @@ public class ApplyConstructModule extends AbstractModule {
         // TODO does not work with string query as object is not RDF resource ???
         constructQueries = getResourcesByProperty(SML.constructQuery);
 
-        LOG.debug("Loaded {} spin construct queries.", constructQueries.size());
+        log.debug("Loaded {} spin construct queries.", constructQueries.size());
 
         //TODO default value must be taken from template definition
         isReplace = this.getPropertyValue(SML.replace, false);

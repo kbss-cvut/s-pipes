@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.QueryParseException;
@@ -35,12 +37,11 @@ import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.util.FileUtils;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * TODO Order of queries is not enforced.
  */
+@Slf4j
 @SPipesModule(label = "improve spo with marginals", comment = "Constructs improved spo-summary descriptor with knowledge " +
         "of provided marginals of weakly described resources. This module expects as an input graph computed spo-summary " +
         "patterns (or possibly whole spo-summary descriptor) compliant with data provided in ?data-service-url. Within the " +
@@ -49,8 +50,6 @@ import org.slf4j.LoggerFactory;
         "original spo-summary patterns whenever possible and new spo-summary patterns that were created with additional " +
         "knowledge of marginals.")
 public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ImproveSPOWithMarginalsModule.class);
 
     private static final String MODULE_ID = "improve-spo-with-marginals";
     private static final String TYPE_URI = KBSS_MODULE.uri + MODULE_ID;
@@ -89,21 +88,21 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
 
     @Override
     ExecutionContext executeSelf() {
-        final ModelLogger mLOG = new ModelLogger(MODULE_ID, LOG);
+        final ModelLogger mLOG = new ModelLogger(MODULE_ID, log);
 
         final Model inputModel = executionContext.getDefaultModel();
         final VariablesBinding inputVB = executionContext.getVariablesBinding();
 
-        LOG.debug("Retrieving relevant snapshots ...");
+        log.debug("Retrieving relevant snapshots ...");
         // TODO it should be taken from parameter somehow
         Model relevantSnapshotsModel = retrieveRelevantSnapshots(executionContext.getVariablesBinding());
         mLOG.trace("relevant-snapshots", relevantSnapshotsModel);
 
-        LOG.debug("Loading marginals ...");
+        log.debug("Loading marginals ...");
         Model marginalsModel = loadModelFromFile(marginalsFileUrl);
         mLOG.trace("marginals", marginalsModel);
 
-        LOG.debug("Loading marginal definitions ...");
+        log.debug("Loading marginal definitions ...");
         Model marginalDefsModel = loadModelFromFile(marginalsDefsFileUrl);
         mLOG.trace("marginal-defs", marginalDefsModel);
 
@@ -211,13 +210,13 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
 
         // substitute values
         String valuesStr = QueryUtils.nextResultsToValuesClause(breakablePatternsRS, 1);
-        LOG.debug("Executing query to download patterns data with values: \n{}", valuesStr);
+        log.debug("Executing query to download patterns data with values: \n{}", valuesStr);
         String patternDataQueryStr = QueryUtils.substituteMarkers("VALUES", valuesStr, spoPatternDataQueryTemplate);
 
         Query patternDataQuery = parseQuery(patternDataQueryStr);
         VariablesBinding variablesBinding = new VariablesBinding("dataServiceUrl", ResourceFactory.createResource(dataServiceUrl));
-        LOG.trace("Pattern data query:\n" + patternDataQueryStr);
-        LOG.trace("Variables bindings:" + variablesBinding);
+        log.trace("Pattern data query:\n" + patternDataQueryStr);
+        log.trace("Variables bindings:" + variablesBinding);
         Model patternDataModel = TDBTempFactory.createTDBModel();
         patternDataModel = QueryUtils.execConstruct(// TODO !? implement scrollable cursor
             patternDataQuery,
@@ -229,7 +228,7 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
 
 
     private Model computeSPOWithWeight(Model spoPatternDataWithMarginalsModel, VariablesBinding variablesBinding) {
-        LOG.debug("Computing SPO with weight for pattern data with marginals ...");
+        log.debug("Computing SPO with weight for pattern data with marginals ...");
         Model spoModel = QueryUtils.execConstruct(
             loadQueryFromFile("/compute-spo-with-weight.rq"),
             spoPatternDataWithMarginalsModel,
@@ -239,7 +238,7 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
     }
 
     private Model computeSPOWithSnapshots(Model spoPatternDataWithMarginalsModel, VariablesBinding variablesBinding) {
-        LOG.debug("Computing SPO with snapshots for pattern data with marginals ...");
+        log.debug("Computing SPO with snapshots for pattern data with marginals ...");
         Model spoModel = QueryUtils.execConstruct(
             loadQueryFromFile("/compute-spo-with-snapshots.rq"),
             spoPatternDataWithMarginalsModel,
@@ -249,7 +248,7 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
     }
 
     private Model computeMarginalTypesModel(Model patternDataModel, Model marginalWithDefsModel) {
-        LOG.debug("Executing query to get typed marginals ...");
+        log.debug("Executing query to get typed marginals ...");
         Model marginalTypesModel = QueryUtils.execConstruct(
             loadQueryFromFile("/get-marginal-types.rq"),
             ModelFactory.createUnion(patternDataModel, marginalWithDefsModel),
@@ -312,7 +311,7 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
             cachedModel.read(marginalsFilePath);
             marginalDefsModelCache.put(key, cachedModel);
         } else {
-            LOG.debug("Using cached model of file {}", marginalsFilePath);
+            log.debug("Using cached model of file {}", marginalsFilePath);
         }
         return cachedModel;
     }
@@ -321,7 +320,7 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
         try {
             return filePath + " -- " + Files.getLastModifiedTime(Paths.get(URI.create(filePath))).toMillis();
         } catch (IOException e) {
-            LOG.warn("Could not access file from path " + filePath + ": " + e);
+            log.warn("Could not access file from path " + filePath + ": " + e);
             throw new IllegalArgumentException("Could not access modification time of file from path " + filePath, e);
         }
     }
@@ -367,7 +366,7 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
     private void saveModelToTemporaryFile(Model model, String fileName) {
         String filePath = getFilePrefix() + fileName;
         try {
-            LOG.debug("Saving model to temporary file " + filePath + " ...");
+            log.debug("Saving model to temporary file " + filePath + " ...");
             model.write(new FileOutputStream(filePath), FileUtils.langTurtle);
         } catch (IOException e) {
             e.printStackTrace();

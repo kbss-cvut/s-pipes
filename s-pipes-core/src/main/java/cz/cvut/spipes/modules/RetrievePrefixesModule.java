@@ -5,6 +5,7 @@ import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.manager.OntoDocManager;
 import cz.cvut.spipes.manager.OntologyDocumentManager;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.assembler.JA;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -47,8 +48,8 @@ import org.slf4j.LoggerFactory;
  *          ja:prefix "owl" ] 
 * .
  */
+@Slf4j
 public class RetrievePrefixesModule extends AbstractModule {
-    private static final Logger LOG = LoggerFactory.getLogger(RetrievePrefixesModule.class.getName());
 
     private static String TYPE_URI = KBSS_MODULE.getURI() + "retrieve-prefixes";
 

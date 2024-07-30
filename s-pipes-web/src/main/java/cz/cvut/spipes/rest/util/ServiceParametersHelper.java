@@ -7,14 +7,15 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.MultiValueMap;
 
+@Slf4j
 public class ServiceParametersHelper {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ServiceParametersHelper.class);
 
     @NotNull
     final MultiValueMap<String, String> parameters;
@@ -38,7 +39,7 @@ public class ServiceParametersHelper {
         List<String> values = parameters.get(parameterKey);
         String lastValue = values.get(values.size() - 1);
         if (parameters.get(parameterKey).size() > 1) {
-            LOG.warn("Parameter {} has multiple values: {}. Last assignment of the parameter, i.e. {}, will be used.",
+            log.warn("Parameter {} has multiple values: {}. Last assignment of the parameter, i.e. {}, will be used.",
                 parameterKey,
                 values,
                 lastValue);

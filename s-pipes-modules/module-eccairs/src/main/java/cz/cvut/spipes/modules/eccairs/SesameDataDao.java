@@ -1,5 +1,6 @@
 package cz.cvut.spipes.modules.eccairs;
 
+import lombok.extern.slf4j.Slf4j;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
@@ -14,14 +15,8 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
 
-
+@Slf4j
 public class SesameDataDao {
-
-    private static final Logger LOG = LoggerFactory.getLogger(SesameDataDao.class);
-
-
-
-
 
     /**
      * Gets raw content of the repository. Use null for contextUri to get whole content of the repository.
@@ -57,7 +52,7 @@ public class SesameDataDao {
                 connection.close();
             }
         } catch (RepositoryException | RDFHandlerException e) {
-            LOG.error("Unable to read data from repository.", e);
+            log.error("Unable to read data from repository.", e);
         }
     }
 }

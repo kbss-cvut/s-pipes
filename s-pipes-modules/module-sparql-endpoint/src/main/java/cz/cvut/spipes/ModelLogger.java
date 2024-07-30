@@ -3,14 +3,15 @@ package cz.cvut.spipes;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.util.FileUtils;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+@Slf4j
 public class ModelLogger {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ModelLogger.class);
     private Logger classLogger;
     private String logDirectoryPrefix = "";
     private Path logDirectory;
@@ -28,7 +29,7 @@ public class ModelLogger {
                 classLogger.trace("Saving model with id " + modelId + " to " + filePath);
                 model.write(Files.newOutputStream(filePath), FileUtils.langTurtle);
             } catch (IOException e) {
-                LOG.warn("Unnable to save model to " + filePath);
+                log.warn("Unnable to save model to " + filePath);
             }
         }
     }
@@ -39,7 +40,7 @@ public class ModelLogger {
                 logDirectory = Files.createTempDirectory(logDirectoryPrefix);
             }
         } catch (IOException e) {
-            LOG.warn("Unnable to create temporary directory with prefix " + logDirectoryPrefix);
+            log.warn("Unnable to create temporary directory with prefix " + logDirectoryPrefix);
         }
         return logDirectory;
     }

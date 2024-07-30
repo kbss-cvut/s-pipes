@@ -6,6 +6,7 @@ import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.modules.constants.Termit;
 import cz.cvut.spipes.util.QueryUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -21,8 +22,7 @@ import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.topbraid.spin.arq.ARQFactory;
 import org.topbraid.spin.model.Select;
 
@@ -34,6 +34,7 @@ import java.util.List;
 import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
 import static org.apache.commons.lang.StringEscapeUtils.unescapeHtml;
 
+@Slf4j
 @SPipesModule(label = "Text analysis module", comment =
 "Module for text analysis.\n" +
 "<p>\n" +
@@ -44,7 +45,6 @@ import static org.apache.commons.lang.StringEscapeUtils.unescapeHtml;
 )
 public class TextAnalysisModule extends AnnotatedAbstractModule{
 
-    private static final Logger LOG = LoggerFactory.getLogger(TextAnalysisModule.class);
     private static final String TYPE_URI = KBSS_MODULE.uri + "text-analysis";
     private static final String TYPE_PREFIX = TYPE_URI + "/";
 
@@ -88,7 +88,7 @@ public class TextAnalysisModule extends AnnotatedAbstractModule{
         Model outputModel = ModelFactory.createDefaultModel();
 
         if (selectQuery == null) {
-            LOG.warn("Select query is empty therefore returning input model.");
+            log.warn("Select query is empty therefore returning input model.");
             return executionContext;
         }
 
@@ -107,14 +107,14 @@ public class TextAnalysisModule extends AnnotatedAbstractModule{
                     RDFNode object = solution.get(variableBindings.next());
 
                     if (!object.isLiteral() || !(object.asLiteral().getDatatype() instanceof XSDBaseStringType)) {
-                        LOG.warn("Object {} is not a literal. Skipping.", object);
+                        log.warn("Object {} is not a literal. Skipping.", object);
                         continue;
                     }
 
                     Literal literal = object.asLiteral();
                     String textElement = escapeHtml(literal.getString());
                     if (counter >= literalsPerRequest) {
-                        LOG.debug("Annotating {} literals. Progress {}%.", literalsPerRequest, totalCounter * 100L / inputModel.size());
+                        log.debug("Annotating {} literals. Progress {}%.", literalsPerRequest, totalCounter * 100L / inputModel.size());
                         String annotatedText = annotateObjectLiteral(sb.toString());
                         String[] elements = splitAnnotatedText(annotatedText);
 
@@ -136,7 +136,7 @@ public class TextAnalysisModule extends AnnotatedAbstractModule{
             }
 
             if (counter > 0) {
-                LOG.debug("Annotating {} literals. Progress {}%.", literalsPerRequest, totalCounter * 100L / inputModel.size());
+                log.debug("Annotating {} literals. Progress {}%.", literalsPerRequest, totalCounter * 100L / inputModel.size());
                 String annotatedText = annotateObjectLiteral(sb.toString());
                 String[] elements = splitAnnotatedText(annotatedText);
 

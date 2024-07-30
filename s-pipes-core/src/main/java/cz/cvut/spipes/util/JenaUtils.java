@@ -1,5 +1,6 @@
 package cz.cvut.spipes.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.jena.graph.compose.MultiUnion;
 import org.apache.jena.rdf.model.Model;
@@ -22,9 +23,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 
+@Slf4j
 public class JenaUtils {
-
-    private static Logger LOG = LoggerFactory.getLogger(JenaUtils.class);
 
     public static Model readModelFromString(String modelText, String lang) {
         Model model = ModelFactory.createDefaultModel();
@@ -109,7 +109,7 @@ public class JenaUtils {
     public static void saveModelToTemporaryFile(@NotNull Model model) {
         try {
             Path file = Files.createTempFile("model-output-", ".ttl");
-            LOG.debug("Saving model to temporary file " + file.toString() + " ...");
+            log.debug("Saving model to temporary file " + file.toString() + " ...");
             model.write(Files.newOutputStream(file.toFile().toPath()), FileUtils.langTurtle);
         } catch (IOException e) {
             e.printStackTrace();

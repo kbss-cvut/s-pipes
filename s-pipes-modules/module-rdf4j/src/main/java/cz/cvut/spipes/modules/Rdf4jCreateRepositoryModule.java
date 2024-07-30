@@ -4,6 +4,7 @@ import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.exceptions.RepositoryAlreadyExistsException;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.eclipse.rdf4j.repository.config.RepositoryConfig;
@@ -11,14 +12,12 @@ import org.eclipse.rdf4j.repository.manager.RemoteRepositoryManager;
 import org.eclipse.rdf4j.repository.manager.RepositoryManager;
 import org.eclipse.rdf4j.repository.sail.config.SailRepositoryConfig;
 import org.eclipse.rdf4j.sail.nativerdf.config.NativeStoreConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
+@Slf4j
 @SPipesModule(label = "rdf4j create repository", comment = "Module creates native store rdf4j repository on the given server with the given name.")
 public class Rdf4jCreateRepositoryModule extends AbstractModule {
-    private static final Logger LOG = LoggerFactory.getLogger(Rdf4jCreateRepositoryModule.class.getName());
     private static final String TYPE_URI = KBSS_MODULE.uri + "rdf4j-create-repository";
     private static final String PROPERTY_PREFIX_URI = KBSS_MODULE.uri + "rdf4j";
 
@@ -77,14 +76,14 @@ public class Rdf4jCreateRepositoryModule extends AbstractModule {
         SailRepositoryConfig sailRepositoryConfig = new SailRepositoryConfig(nativeStoreConfig);
 
         repositoryManager.init();
-        LOG.info("Server url:{}, Repsitory name:{}, Ignore if repository exist:{}.",
+        log.info("Server url:{}, Repsitory name:{}, Ignore if repository exist:{}.",
                 rdf4jServerURL,
                 rdf4jRepositoryName,
                 rdf4jIgnoreIfExists);
 
         if((!rdf4jIgnoreIfExists) && repositoryManager.hasRepositoryConfig(rdf4jRepositoryName)){
 
-            LOG.info("Repository \"{}\" already exists",
+            log.info("Repository \"{}\" already exists",
                     rdf4jRepositoryName);
             throw new RepositoryAlreadyExistsException(rdf4jRepositoryName);
         }

@@ -72,8 +72,6 @@ import java.util.Map;
 )
 public class ExtractTermOccurrencesModule extends AnnotatedAbstractModule {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ExtractTermOccurrencesModule.class);
-
     private static final String TYPE_URI = KBSS_MODULE.uri + "extract-term-occurrences";
     private static final String TYPE_PREFIX = TYPE_URI + "/";
 

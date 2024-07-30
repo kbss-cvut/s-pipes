@@ -3,6 +3,7 @@ package cz.cvut.spipes.manager;
 import cz.cvut.spipes.config.CompatibilityConfig;
 import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.SparqlMotionUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.atlas.web.HttpException;
 import org.apache.jena.ontology.OntDocumentManager;
 import org.apache.jena.ontology.OntModel;
@@ -55,9 +56,9 @@ import java.util.stream.Stream;
  * caches the files
  * manages prefixes
  **/
+@Slf4j
 public class OntoDocManager implements OntologyDocumentManager {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OntoDocManager.class);
     private static Instant lastTime = Instant.now();
     private static boolean reloadFiles = false;
 
@@ -103,7 +104,7 @@ public class OntoDocManager implements OntologyDocumentManager {
     public void registerDocuments(Path directoryOrFilePath) {
 
         if (Files.isDirectory(directoryOrFilePath) && Files.isSymbolicLink(directoryOrFilePath)) {
-            LOG.warn("Ignoring to register documents from directory {}. Directories that are symbolic links " +
+            log.warn("Ignoring to register documents from directory {}. Directories that are symbolic links " +
                      "are not supported.", directoryOrFilePath );
         }
 
@@ -181,7 +182,7 @@ public class OntoDocManager implements OntologyDocumentManager {
                         }
                         String lang = FileUtils.guessLang(file.getFileName().toString());
 
-                        LOG.debug("Loading model from {} ...", file.toUri().toString());
+                        log.debug("Loading model from {} ...", file.toUri().toString());
                         Model model = loadModel(file, lang);
 
                         if (model != null) {
@@ -194,7 +195,7 @@ public class OntoDocManager implements OntologyDocumentManager {
         } catch (IOException | DirectoryIteratorException e) {
             // IOException can never be thrown by the iteration.
             // In this snippet, it can only be thrown by newDirectoryStream.
-            LOG.error("Could not load ontologies from directory {} -- {} .", directoryOrFilePath, e);
+            log.error("Could not load ontologies from directory {} -- {} .", directoryOrFilePath, e);
         }
         return file2Model;
     }
@@ -234,7 +235,7 @@ public class OntoDocManager implements OntologyDocumentManager {
             String baseURI = JenaUtils.getBaseUri(model);
 
             if (baseURI == null) {
-                LOG.info("Ignoring file \"" + file + "\" as it does not contain baseURI.");
+                log.info("Ignoring file \"" + file + "\" as it does not contain baseURI.");
                 return;
             }
             baseUri2file.put(baseURI, file);
@@ -365,7 +366,7 @@ public class OntoDocManager implements OntologyDocumentManager {
     }
 
     public static void registerAllSPINModules() {
-        LOG.warn("WORKAROUND -- Applying a workaround to register all SPIN modules ..."); // TODO remove this workaround
+        log.warn("WORKAROUND -- Applying a workaround to register all SPIN modules ..."); // TODO remove this workaround
         Model model = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
         model.add(OntoDocManager.allLoadedFilesModel);
         SPINModuleRegistry.get().reset();
@@ -387,11 +388,11 @@ public class OntoDocManager implements OntologyDocumentManager {
             if (e instanceof HttpException) {
                 int responseCode = ((HttpException) e).getResponseCode();
                 if (responseCode == 404) {
-                    LOG.warn("Attempt to read ontology from {} returned HTTP code '404 - Not Found'.", url);
+                    log.warn("Attempt to read ontology from {} returned HTTP code '404 - Not Found'.", url);
                     return;
                 }
             }
-            LOG.warn("Attempt to read ontology from {} failed. Msg was {}. {}", url, e.getMessage(), e);
+            log.warn("Attempt to read ontology from {} failed. Msg was {}. {}", url, e.getMessage(), e);
         }
     }
 

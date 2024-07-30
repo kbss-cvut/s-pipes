@@ -29,6 +29,7 @@
         <org.junit.jupiter.version>5.2.0</org.junit.jupiter.version>
         <org.mockito.version>2.21.0</org.mockito.version>
         <commons.io.version>2.7</commons.io.version>
+        <lombok.version>1.18.24</lombok.version>
     </properties>
 
     <dependencyManagement>
@@ -228,7 +229,8 @@
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
-                <version>1.18.2</version>
+                <version>${lombok.version}</version>
+                <scope>provided</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -1,16 +1,14 @@
 package cz.cvut.spipes.recursion;
 
 import cz.cvut.spipes.util.QueryUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.Model;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * TODO !!! scrolling detects one iteration later than it supposed to. If there is a knowledge about how many results a subquery with LIMIT+OFFSET returned, it would be more clear ...
  */
+@Slf4j
 public class ScrollableCursorProvider implements QueryTemplateRecursionProvider {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ScrollableCursorProvider.class);
     private static final String LIMIT_OFFSET_CLAUSE_MARKER_NAME = "LIMIT_OFFSET";
     private final int pageSize;
     private final int iterationCount;
@@ -43,7 +41,7 @@ public class ScrollableCursorProvider implements QueryTemplateRecursionProvider 
     public String substituteQueryMarkers(int currentIteration, String queryStr) {
         int offset = pageSize * (currentIteration - 1);
 
-        LOG.debug("Creating query with LIMIT {} for OFFSET {}.", pageSize, offset );
+        log.debug("Creating query with LIMIT {} for OFFSET {}.", pageSize, offset );
         String markerValue = "\n" + "OFFSET " + offset
             + "\n" + "LIMIT " + pageSize + "\n";
 

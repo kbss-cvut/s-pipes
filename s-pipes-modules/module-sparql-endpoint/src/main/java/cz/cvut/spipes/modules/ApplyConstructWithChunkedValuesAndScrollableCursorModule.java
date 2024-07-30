@@ -9,6 +9,7 @@ import cz.cvut.spipes.recursion.CombinedQueryTemplateRecursionProvider;
 import cz.cvut.spipes.recursion.QueryTemplateRecursionProvider;
 import cz.cvut.spipes.recursion.ScrollableCursorProvider;
 import cz.cvut.spipes.util.QueryUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
@@ -18,8 +19,6 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.topbraid.spin.arq.ARQFactory;
 import org.topbraid.spin.model.Select;
 
@@ -28,10 +27,9 @@ import org.topbraid.spin.model.Select;
  * TODO issue with redundant call {@link ScrollableCursorProvider}
  * TODO supports only one CONSTRUCT query
  */
+@Slf4j
 @SPipesModule(label = "apply construct with chunked values and scrollable cursor", comment = "Apply construct with chunked values and scrollable cursor")
 public class ApplyConstructWithChunkedValuesAndScrollableCursorModule extends ApplyConstructAbstractModule {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ApplyConstructWithChunkedValuesAndScrollableCursorModule.class);
 
     private static final String TYPE_URI = KBSS_MODULE.uri + "apply-construct-with-chunked-values-and-scrollable-cursor";
     private static final String TYPE_PREFIX = TYPE_URI + "/";
@@ -81,14 +79,14 @@ public class ApplyConstructWithChunkedValuesAndScrollableCursorModule extends Ap
 
         QueryExecution execution = QueryExecutionFactory.create(query, executionContext.getDefaultModel(), inputBindings);
 
-        LOG.debug("Executing query of chunk provider ...");
+        log.debug("Executing query of chunk provider ...");
 
         ResultSet selectResultSet = execution.execSelect();
 
         VariablesBinding variablesBinding = new VariablesBinding();
 
         if (!selectResultSet.hasNext()) {
-            LOG.debug("\"{}\" query did not return any values.", getLabel());
+            log.debug("\"{}\" query did not return any values.", getLabel());
         }
         return selectResultSet;
     }

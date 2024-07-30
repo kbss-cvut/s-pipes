@@ -1,6 +1,7 @@
 package cz.cvut.spipes.config;
 
 import cz.cvut.spipes.util.RDFMimeType;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.RDFLanguages;
@@ -17,10 +18,9 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.List;
 
+@Slf4j
 @Component
 public class RDFMediaTypeConverter extends AbstractHttpMessageConverter {
-
-    private static final Logger LOG = org.slf4j.LoggerFactory.getLogger(RDFMediaTypeConverter.class);
 
     public RDFMediaTypeConverter() {
         super(
@@ -33,7 +33,7 @@ public class RDFMediaTypeConverter extends AbstractHttpMessageConverter {
     }
 
     private String getRDFLanguageForContentType( final HttpMessage m, final String defaultValue) {
-        LOG.debug("Getting RDF Language for content type " + m + ", message: " + defaultValue);
+        log.debug("Getting RDF Language for content type " + m + ", message: " + defaultValue);
         MediaType contentType = m.getHeaders().getContentType();
         if ( contentType == null ) { contentType = MediaType.parseMediaType(defaultValue); }
         return RDFLanguages.contentTypeToLang(contentType.toString().split(";")[0]).getLabel();
@@ -41,7 +41,7 @@ public class RDFMediaTypeConverter extends AbstractHttpMessageConverter {
 
     @Override
     protected Object readInternal(Class aClass, HttpInputMessage httpInputMessage) throws IOException, HttpMessageNotReadableException {
-        LOG.debug("Reading " + aClass + ", message: " + httpInputMessage.getHeaders());
+        log.debug("Reading " + aClass + ", message: " + httpInputMessage.getHeaders());
         if (  ! aClass.isAssignableFrom( Model.class ) ) {
             throw new UnsupportedOperationException();
         }
@@ -52,11 +52,11 @@ public class RDFMediaTypeConverter extends AbstractHttpMessageConverter {
 
     @Override
     protected void writeInternal(Object o, HttpOutputMessage httpOutputMessage) throws IOException, HttpMessageNotWritableException {
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("Writing object " + o + ", message: " + httpOutputMessage.getHeaders());
+        if (log.isTraceEnabled()) {
+            log.trace("Writing object " + o + ", message: " + httpOutputMessage.getHeaders());
         }
         if (o instanceof Model) {
-            LOG.debug("Writing model of size " + ((Model)o).size() + ", message: " + httpOutputMessage.getHeaders());
+            log.debug("Writing model of size " + ((Model)o).size() + ", message: " + httpOutputMessage.getHeaders());
         } else {
             throw new UnsupportedOperationException();
         }
@@ -65,7 +65,7 @@ public class RDFMediaTypeConverter extends AbstractHttpMessageConverter {
 
     @Override
     protected boolean supports(Class aClass) {
-        LOG.debug("Supports {} ? ", aClass);
+        log.debug("Supports {} ? ", aClass);
         return Model.class.isAssignableFrom(aClass);
     }
 }

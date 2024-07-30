@@ -9,19 +9,20 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.stream.Collectors;
+
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
+@Slf4j
 public class ExecUtils {
-    private static final Logger LOG = LoggerFactory.getLogger(ExecUtils.class);
 
     public static File stream2file(InputStream in) throws IOException {
         File tempFile = Files.createTempFile("execution-", ".txt").toFile();
 
         //tempFile.deleteOnExit();
-        LOG.trace("Using temporary file for input stream " + tempFile.getAbsolutePath());
+        log.trace("Using temporary file for input stream " + tempFile.getAbsolutePath());
         try (FileOutputStream out = new FileOutputStream(tempFile)) {
             IOUtils.copy(in, out);
         }
@@ -36,7 +37,7 @@ public class ExecUtils {
             e.printStackTrace();
         }
 
-        LOG.trace("Using temporary file for output stream " + tempFile.getAbsolutePath());
+        log.trace("Using temporary file for output stream " + tempFile.getAbsolutePath());
         return tempFile;
     }
 
@@ -71,7 +72,7 @@ public class ExecUtils {
     //TODO remove
     public static InputStream execProgramWithoutExeption(String[] programCall, InputStream inputStream) {
         String programCallStr = "\"" + Arrays.asList(programCall).stream().collect(Collectors.joining(" ")) + "\"" ;
-        LOG.debug("Executing -- " + programCallStr);
+        log.debug("Executing -- " + programCallStr);
         try {
             return execProgram(programCall, inputStream);
         } catch (IOException e) {

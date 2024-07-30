@@ -55,6 +55,12 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- TODO needed -->
         <!--<dependency>-->
             <!--<groupId>org.eclipse.rdf4j</groupId>-->

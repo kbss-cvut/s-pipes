@@ -13,14 +13,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Optional;
+
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Slf4j
 public class ImportFileFromURLModule extends AbstractModule {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ImportFileFromURLModule.class);
 
     //sml:targetFilePath, required
     Path targetFilePath; //TODO $_executionDir ?
@@ -36,7 +37,7 @@ public class ImportFileFromURLModule extends AbstractModule {
 
         Path computedTargetFilePath = null;
 
-        LOG.debug("Importing file from url {}.", url);
+        log.debug("Importing file from url {}.", url);
         try (InputStream inputStream = url.openStream()) {
 
             computedTargetFilePath =
@@ -46,7 +47,7 @@ public class ImportFileFromURLModule extends AbstractModule {
             Files.copy(inputStream, computedTargetFilePath, StandardCopyOption.REPLACE_EXISTING);
 
         } catch (IOException e) {
-            LOG.error("Could not download data from url {}.", url);
+            log.error("Could not download data from url {}.", url);
             throw new RuntimeException(e);
         }
 
@@ -72,7 +73,7 @@ public class ImportFileFromURLModule extends AbstractModule {
         try {
             url = new URL(urlNode.asLiteral().toString());
         } catch (MalformedURLException e) {
-            LOG.error("Malformed url -- {}.", getEffectiveValue(SML.url));
+            log.error("Malformed url -- {}.", getEffectiveValue(SML.url));
             throw new RuntimeException(e);
         }
 

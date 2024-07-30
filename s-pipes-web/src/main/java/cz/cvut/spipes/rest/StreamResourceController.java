@@ -3,6 +3,7 @@ package cz.cvut.spipes.rest;
 import cz.cvut.spipes.registry.StreamResourceRegistry;
 import cz.cvut.spipes.rest.util.ResourceRegisterHelper;
 import cz.cvut.spipes.util.RestUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,11 +20,11 @@ import javax.annotation.PostConstruct;
 import java.io.*;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @EnableWebMvc
 public class StreamResourceController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(StreamResourceController.class);
     private final ResourceRegisterHelper resourceRegisterHelper;
 
     public StreamResourceController() {
@@ -76,7 +77,7 @@ public class StreamResourceController {
                 resourceRegisterHelper.getRegisteredResourceLocation()
         );
 
-        LOG.info("Registering new stream resource with url {} " + res.getPersistentUri());
+        log.info("Registering new stream resource with url {} " + res.getPersistentUri());
         StreamResourceRegistry.getInstance().registerResource(res.getId(), IOUtils.toByteArray(fis), contentType);
         //LOG.debug("Resource content : {}", body);
 

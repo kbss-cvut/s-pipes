@@ -6,6 +6,7 @@ import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.exception.ContextNotFoundException;
 import cz.cvut.spipes.manager.OntoDocManager;
 import cz.cvut.spipes.manager.OntologyDocumentManager;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
 import org.slf4j.Logger;
@@ -15,9 +16,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 
+@Slf4j
 public class ImportRDFFromWorkspaceModule extends AbstractModule {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ImportRDFFromWorkspaceModule.class);
 
     //TODO refactor -> should be part of execution context
     OntologyDocumentManager ontologyDocumentManager = OntoDocManager.getInstance();
