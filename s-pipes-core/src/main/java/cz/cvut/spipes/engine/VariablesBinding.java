@@ -179,12 +179,29 @@ public class VariablesBinding {
 
     @Override
     public String toString() {
-        return binding.asMap().toString();
+        return binding.asMap()
+                .entrySet()
+                .stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        e -> toString(e.getValue())
+                ))
+                .toString();
+    }
+
+    private static String toString(RDFNode node) {
+        if (node.isLiteral()) {
+            return "\"" + node.asLiteral().getLexicalForm() + "\"";
+        } else if (node.isURIResource() || node.isResource()) {
+            return "<" + node.asResource().getURI() + ">";
+        } else {
+            return node.toString();
+        }
     }
 
     public String toTruncatedString() {
         return binding.asMap().entrySet().stream()
-            .map(e -> new AbstractMap.SimpleEntry<>(e.getKey(), getTruncatedValue(e.getValue().toString()))).
+            .map(e -> new AbstractMap.SimpleEntry<>(e.getKey(), getTruncatedValue(toString(e.getValue())))).
             collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)).toString();
     }
 
