@@ -18,8 +18,12 @@ public class ExecutionConfig {
 
     public static boolean isCheckValidationConstrains() {
         return Boolean.parseBoolean(CoreConfigProperies.get(
-                "execution.checkValidationConstraints",
+                "execution.validation.checkConstraints",
                 "true"));
+    }
+
+    public static int getEvidenceNumber() {
+        return Integer.parseInt(CoreConfigProperies.get("execution.validation.maxNumberOfConstraintFailureEvidences", "3"));
     }
 
     public static String getConfigUrl() {

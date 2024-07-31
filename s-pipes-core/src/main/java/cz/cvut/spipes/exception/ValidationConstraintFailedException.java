@@ -52,8 +52,8 @@ public class ValidationConstraintFailedException extends SPipesException {
     @Override
     public String toString() {
         return "ValidationConstraintFailedException{\n" +
-                  errorMessage + '\n' +
-                  failedQuery + '\n' +
+                  "Validation of constraint failed for the constraint: "+ errorMessage + '\n' +
+                 "\"Failed validation constraint :" + '\n' + failedQuery + '\n' +
                 "Evidences:\n" + getTableString()+
                 '}';
     }

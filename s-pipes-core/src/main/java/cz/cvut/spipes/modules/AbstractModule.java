@@ -2,7 +2,6 @@ package cz.cvut.spipes.modules;
 
 import cz.cvut.spipes.config.AuditConfig;
 import cz.cvut.spipes.config.Environment;
-import cz.cvut.spipes.config.EvidenceConfig;
 import cz.cvut.spipes.config.ExecutionConfig;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.engine.ExecutionContext;
@@ -270,7 +269,7 @@ public abstract class AbstractModule implements Module {
                 constraintViolated = rs.hasNext();
                 if(constraintViolated){
 
-                    for(int i = 0; i < EvidenceConfig.getEvidenceNumber() && rs.hasNext(); i++){
+                    for(int i = 0; i < ExecutionConfig.getEvidenceNumber() && rs.hasNext(); i++){
                         QuerySolution solution = rs.next() ;
                         Map<String, String> evidenceMap = new HashMap<>();
                         for (Iterator<String> it = solution.varNames(); it.hasNext(); ) {
@@ -287,8 +286,8 @@ public abstract class AbstractModule implements Module {
                 throw new NotImplemented("Constraints for objects " + query + " not implemented.");
             }
             if (constraintViolated) {
-                String mainErrorMsg = String.format("Validation of constraint failed for the constraint \"%s\".", getQueryComment(spinQuery));
-                String failedQueryMsg = String.format("Failed validation constraint : \n %s", spinQuery.toString());
+                String mainErrorMsg =  getQueryComment(spinQuery);
+                String failedQueryMsg = spinQuery.toString();
                 var exception = new ValidationConstraintFailedException(this, mainErrorMsg, failedQueryMsg, evidences);
                 LOG.error(exception.toString());
                 if (ExecutionConfig.isExitOnError()) {
