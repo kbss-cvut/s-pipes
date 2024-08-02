@@ -1,4 +1,4 @@
-package cz.cvut.spin;
+ package cz.cvut.spin;
 
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.query.QuerySolutionMap;
@@ -35,6 +35,7 @@ public class SpinIntegrationTest {
         //SPINModuleRegistry.get().init();
         SPINModuleRegistry.get().registerAll(funcDefModel, null);
 
+
         // load custom function call
         Model funcCallModel = ModelFactory.createDefaultModel();
 
@@ -58,5 +59,23 @@ public class SpinIntegrationTest {
 
 
         assertEquals(node.toString(), repositoryUrl + "?default-graph-uri=" + URLEncoder.encode(reportGraphId, StandardCharsets.UTF_8) );
+    }
+
+    @Test
+    public void executeQueryWithCustomJavaFunction() {
+        SPINModuleRegistry.get().init(); //TODO is it needed ?
+
+        // make a query with AddDays function
+        String query = """
+            @prefix kbss-timef: <http://onto.fel.cvut.cz/ontologies/lib/function/time/> .
+            SELECT ?nextDay 
+            WHERE {
+              BIND(kbss-timef:add-days("2022-01-01"^^xsd:date, 1) as ?nextDay)
+            }
+            """;
+
+        // execute the query
+
+        // check the result
     }
 }
