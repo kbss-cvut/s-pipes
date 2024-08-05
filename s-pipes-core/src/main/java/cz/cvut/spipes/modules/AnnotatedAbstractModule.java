@@ -8,12 +8,6 @@ import java.util.Map;
 import cz.cvut.spipes.modules.handlers.FieldSetter;
 import cz.cvut.spipes.modules.handlers.Handler;
 import cz.cvut.spipes.modules.handlers.HandlerRegistry;
-import cz.cvut.spipes.modules.handlers.Setter;
-import org.apache.jena.rdf.model.AnonId;
-import org.apache.jena.rdf.model.Literal;
-import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.RDFVisitor;
-import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,11 +31,10 @@ public abstract class AnnotatedAbstractModule extends AbstractModule {
 
             log.trace("Processing parameter {} ", f.getName());
 
-            HandlerRegistry handlerRegistry = HandlerRegistry.getInstance();
 
+            HandlerRegistry handlerRegistry = HandlerRegistry.getInstance();
             FieldSetter setter = new FieldSetter(f, this);
             Handler<?> handler = handlerRegistry.getHandler(f.getType(), resource, executionContext, setter);
-
             handler.setValueByProperty(ResourceFactory.createProperty(p.urlPrefix()+p.name()));
 
         }

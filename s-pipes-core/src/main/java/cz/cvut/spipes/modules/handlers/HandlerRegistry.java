@@ -11,8 +11,6 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.*;
 
-
-
 public class HandlerRegistry {
 
     private static HandlerRegistry instance;
