@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 public class BindRDFContentHashModule extends AbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(BindRDFContentHashModule.class);
+    @Parameter(urlPrefix =  SM.uri, name="outputVariable", comment = "")
     String outputVariable;
 
     @Override

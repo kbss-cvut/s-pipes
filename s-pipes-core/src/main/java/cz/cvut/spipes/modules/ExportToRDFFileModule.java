@@ -3,7 +3,7 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 
-public class ExportToRDFFileModule extends AbstractModule {
+public class ExportToRDFFileModule extends AnnotatedAbstractModule {
 
     //sml:baseURI
     //sml:targetFilePath
@@ -16,11 +16,6 @@ public class ExportToRDFFileModule extends AbstractModule {
     @Override
     public String getTypeURI() {
         return SML.ExportToRDFFile.getURI();
-    }
-
-    @Override
-    public void loadConfiguration() {
-
     }
 
 }
