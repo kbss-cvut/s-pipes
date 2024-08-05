@@ -4,9 +4,10 @@ import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import org.apache.jena.rdf.model.Resource;
 
-public class ReturnRDFModule extends AbstractModule {
-
+public class ReturnRDFModule extends AnnotatedAbstractModule {
+    @Parameter(urlPrefix = SML.uri, name = "serialization", comment = "")
     private Resource serialization;
+    @Parameter(urlPrefix = SML.uri, name = "baseURI", comment = "")
     private String baseURI;
 
     @Override
