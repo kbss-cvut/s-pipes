@@ -12,6 +12,9 @@
 @prefix sml: <http://topbraid.org/sparqlmotionlib#> .
 @prefix sp: <http://spinrdf.org/sp#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix spin: <http://spinrdf.org/spin#> .
+@prefix spl: <http://spinrdf.org/spl#> .
+
 
 <http://onto.fel.cvut.cz/ontologies/s-pipes/constraint-validation>
   rdf:type owl:Ontology ;
@@ -110,9 +113,24 @@
 :retrieve-person_Return
   a sml:ReturnRDF ;
   sml:serialization sml:JSONLD ;
-  rdfs:label "Return data".
+  rdfs:label "Return data";
+.
 
 :retrieve-person
    a sm:Function ;
+   spin:constraint [
+     rdf:type spl:Argument ;
+     spl:predicate :firstName ;
+     spl:optional "false"^^xsd:boolean ;
+     rdfs:label "first name" ;
+     rdfs:comment "The first name of the validated person" ;
+   ] ;
+   spin:constraint [
+     rdf:type spl:Argument ;
+     spl:predicate :lastName ;
+     spl:optional "false"^^xsd:boolean ;
+     rdfs:label "last name" ;
+     rdfs:comment "The last name of the validated person" ;
+   ] ;
    sm:returnModule :retrieve-person_Return ;
    rdfs:subClassOf sm:Functions .
