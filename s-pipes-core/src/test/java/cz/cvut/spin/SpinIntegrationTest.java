@@ -1,7 +1,8 @@
  package cz.cvut.spin;
 
+import cz.cvut.spipes.engine.PipelineFactory;
 import org.apache.jena.ontology.OntModelSpec;
-import org.apache.jena.query.QuerySolutionMap;
+import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.util.FileUtils;
 import org.junit.jupiter.api.Test;
@@ -61,20 +62,28 @@ public class SpinIntegrationTest {
     }
 
     @Test
-    public void executeQueryWithCustomJavaFunction() {
-        SPINModuleRegistry.get().init(); //TODO is it needed ?
+    public void executeSPINQueryWithCustomJavaFunction() {
+        PipelineFactory pipelineFactory = new PipelineFactory();
 
-        // make a query with AddDays function
-        String query = """
-            @prefix kbss-timef: <http://onto.fel.cvut.cz/ontologies/lib/function/time/> .
-            SELECT ?nextDay 
-            WHERE {
-              BIND(kbss-timef:add-days("2022-01-01"^^xsd:date, 1) as ?nextDay)
-            }
-            """;
+        String queryString = """
+                PREFIX kbss-timef: <http://onto.fel.cvut.cz/ontologies/lib/function/time/>
+                PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+                SELECT ?nextDay 
+                WHERE {
+                  BIND(kbss-timef:add-days("2022-01-01"^^xsd:date, 1) AS ?nextDay)
+                }
+                """;
+        Model model = ModelFactory.createDefaultModel();
 
-        // execute the query
+        Query query = QueryFactory.create(queryString);
 
-        // check the result
+
+        QueryExecution qexec = QueryExecutionFactory.create(query, model);
+        ResultSet results = qexec.execSelect();
+
+        if (results.hasNext()) {
+            QuerySolution soln = results.nextSolution();
+            assertEquals(soln.getLiteral("nextDay").getString(), "2022-01-02");
+        }
     }
 }
