@@ -4,6 +4,11 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import cz.cvut.spipes.modules.handlers.FieldSetter;
+import cz.cvut.spipes.modules.handlers.Handler;
+import cz.cvut.spipes.modules.handlers.HandlerRegistry;
+import cz.cvut.spipes.modules.handlers.Setter;
 import org.apache.jena.rdf.model.AnonId;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.RDFNode;
@@ -32,37 +37,13 @@ public abstract class AnnotatedAbstractModule extends AbstractModule {
 
             log.trace("Processing parameter {} ", f.getName());
 
-            RDFNode node = this.getEffectiveValue(ResourceFactory.createProperty(p.urlPrefix()+p.name()));
+            HandlerRegistry handlerRegistry = HandlerRegistry.getInstance();
 
-            if ( node != null ) {
-                Object result;
-                if(f.getType() == RDFNode.class) {
-                    result = node;
-                }else {
-                    result = node.visitWith(new RDFVisitor() {
-                        @Override
-                        public Object visitBlank(Resource r, AnonId id) {
-                            return null;
-                        }
+            FieldSetter setter = new FieldSetter(f, this);
+            Handler<?> handler = handlerRegistry.getHandler(f.getType(), resource, executionContext, setter);
 
-                        @Override
-                        public Object visitURI(Resource r, String uri) {
-                            return r;
-                        }
+            handler.setValueByProperty(ResourceFactory.createProperty(p.urlPrefix()+p.name()));
 
-                        @Override
-                        public Object visitLiteral(Literal l) {
-                            return l.getValue();
-                        }
-                    });
-                }
-                try {
-                    f.setAccessible(true);
-                    f.set(this, result);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 }
