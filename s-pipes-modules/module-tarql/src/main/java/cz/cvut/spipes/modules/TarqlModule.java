@@ -18,7 +18,6 @@ import org.apache.jena.util.FileUtils;
 import org.deri.tarql.tarql;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.topbraid.spin.arq.ARQFactory;
 import org.topbraid.spin.model.Construct;
 
 import java.io.*;
@@ -144,7 +143,7 @@ public class TarqlModule extends AbstractModule {
 
     @Override
     public String getTypeURI() {
-        return KBSS_MODULE.getURI()+"tarql";
+        return KBSS_MODULE.uri + "tarql";
     }
 
     @Override

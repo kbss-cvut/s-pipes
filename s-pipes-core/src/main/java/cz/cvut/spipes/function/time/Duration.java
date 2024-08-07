@@ -18,7 +18,7 @@ import java.util.Calendar;
  */
 public class Duration extends AbstractFunction2 implements ValueFunction {
 
-    private static final String TYPE_IRI = KBSS_TIMEF.getURI() + "duration-in-ms";
+    private static final String TYPE_IRI = KBSS_TIMEF.uri + "duration-in-ms";
 
     @Override
     public String getTypeURI() {

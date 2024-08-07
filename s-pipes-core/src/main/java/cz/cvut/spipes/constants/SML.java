@@ -39,12 +39,4 @@ public class SML {
     public static final Resource ReturnRDF = resource("ReturnRDF");
 
     public static final Resource JSONLD = resource("JSONLD");
-
-    /**
-     returns the URI for this schema
-     @return the URI for this schema
-     */
-    public static String getURI() {
-        return uri;
-    }
 }

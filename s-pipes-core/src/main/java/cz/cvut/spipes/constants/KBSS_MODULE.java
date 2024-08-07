@@ -23,12 +23,4 @@ public class KBSS_MODULE {
 
     // states that reified statement belongs to specific named graph identified by uri
     public static final Property is_part_of_graph = property("is-part-of-graph");
-
-    /**
-     returns the URI for this schema
-     @return the URI for this schema
-     */
-    public static String getURI() {
-        return uri;
-    }
 }

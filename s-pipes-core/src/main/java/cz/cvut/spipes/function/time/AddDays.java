@@ -22,7 +22,7 @@ import java.util.Optional;
 public class AddDays extends AbstractFunction2 implements ValueFunction {
 
 
-    private static final String TYPE_IRI = KBSS_TIMEF.getURI() + "add-days";
+    private static final String TYPE_IRI = KBSS_TIMEF.uri + "add-days";
 
     @Override
     public String getTypeURI() {

@@ -9,7 +9,7 @@ public class SM {
     /**
      * The namespace of the vocabulary as a string
      */
-    private static final String uri = "http://topbraid.org/sparqlmotion#";
+    public static final String uri = "http://topbraid.org/sparqlmotion#";
 
     protected static final Resource resource(String local )
     { return ResourceFactory.createResource( uri + local ); }
@@ -25,12 +25,4 @@ public class SM {
     public static final Resource Function = resource("Function");
     public static final Resource Module = resource("Module");
     public static final Resource Modules = resource("Modules");
-
-    /**
-     returns the URI for this schema
-     @return the URI for this schema
-     */
-    public static String getURI() {
-        return uri;
-    }
 }

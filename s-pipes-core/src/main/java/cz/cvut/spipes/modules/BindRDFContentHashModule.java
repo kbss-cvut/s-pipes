@@ -33,7 +33,7 @@ public class BindRDFContentHashModule extends AbstractModule {
 
     @Override
     public String getTypeURI() {
-        return KBSS_MODULE.getURI() + "bind-rdf-content-hash";
+        return KBSS_MODULE.uri + "bind-rdf-content-hash";
     }
 
     @Override

@@ -18,12 +18,4 @@ public class SPL {
     { return ResourceFactory.createProperty( uri, local ); }
 
     public static final Resource tarql = resource("Argument");
-
-    /**
-     returns the URI for this schema
-     @return the URI for this schema
-     */
-    public static String getURI() {
-        return uri;
-    }
 }

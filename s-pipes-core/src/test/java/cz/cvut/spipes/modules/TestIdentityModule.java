@@ -11,7 +11,7 @@ public class TestIdentityModule extends AnnotatedAbstractModule {
 
     @Override
     public String getTypeURI() {
-        return KBSS_MODULE.getURI() + "test-identity";
+        return KBSS_MODULE.uri + "test-identity";
     }
 
     @Override

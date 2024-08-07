@@ -38,13 +38,4 @@ public class SPIPES {
     public static final Property has_module_id = property("has-module-id");
     public static final Property has_pipeline_input_binding = property("has-pipeline-input-binding");
     public static final Property has_pipeline_name = property("has-pipeline-name");
-
-
-    /**
-     returns the URI for this schema
-     @return the URI for this schema
-     */
-    public static String getURI() {
-        return uri;
-    }
 }

@@ -62,7 +62,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
     private static final String P_HAS_INPUT_BINDDING =
         Vocabulary.ONTOLOGY_IRI_dataset_descriptor + "/has-input-binding";
     private static String LOCAL_NAME = "advanced-logging-progress-listener";
-    private static String PREFIX_IRI = SPIPES.getURI() + LOCAL_NAME + "/";
+    private static String PREFIX_IRI = SPIPES.uri + LOCAL_NAME + "/";
     static final Property P_RDF4J_SERVER_URL = getParameter("p-rdf4j-server-url");
     static final Property P_METADATA_REPOSITORY_NAME = getParameter("p-metadata-repository-name");
     static final Property P_DATA_REPOSITORY_NAME = getParameter("p-data-repository-name");

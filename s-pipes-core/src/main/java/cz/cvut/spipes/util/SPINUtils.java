@@ -21,8 +21,8 @@ public class SPINUtils {
         add("http://spinrdf.org/spin#");
         add(SPL.NS);
         add(SPR.NS);
-        add(SM.getURI());
-        add(SMF.getURI());
+        add(SM.uri);
+        add(SMF.uri);
         add("http://www.w3.org/2005/xpath-functions#");
     }};
 

@@ -33,7 +33,7 @@ public class SUTimeModule extends AbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(SUTimeModule.class);
 
-    public static final String TYPE_URI = KBSS_MODULE.getURI() + "temporal-v0.1";
+    public static final String TYPE_URI = KBSS_MODULE.uri + "temporal-v0.1";
 
     @Parameter(urlPrefix = DescriptorModel.prefix, name = "has-rule-file", comment = "Rule file, multivalued.") // TODO - revise comment
     private List<Path> ruleFilePaths = new LinkedList<>();

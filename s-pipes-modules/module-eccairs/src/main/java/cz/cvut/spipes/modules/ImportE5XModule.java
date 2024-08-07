@@ -147,7 +147,7 @@ public class ImportE5XModule extends AbstractModule {
 
     @Override
     public String getTypeURI() {
-        return KBSS_MODULE.getURI() + "import-e5x";
+        return KBSS_MODULE.uri + "import-e5x";
     }
 
     @Override

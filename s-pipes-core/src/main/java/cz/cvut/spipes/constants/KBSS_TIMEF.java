@@ -12,12 +12,4 @@ public class KBSS_TIMEF {
 
     protected static final Property property(String local )
     { return ResourceFactory.createProperty( uri, local ); }
-
-    /**
-     returns the URI for this schema
-     @return the URI for this schema
-     */
-    public static String getURI() {
-        return uri;
-    }
 }

@@ -24,7 +24,7 @@ public class $className extends AnnotatedAbstractModule {
 
     @Override
     public String getTypeURI() {
-        return KBSS_MODULE.getURI() + "$className";
+        return KBSS_MODULE.uri + "$className";
     }
 
     @Override

@@ -24,7 +24,7 @@ import java.util.*;
  */
 public class ParseDate extends AbstractFunction3 implements ValueFunction {
 
-    private static final String TYPE_IRI = SPIF.getURI() + "parseDate";
+    private static final String TYPE_IRI = SPIF.uri + "parseDate";
 
     @Override
     public String getTypeURI() {
