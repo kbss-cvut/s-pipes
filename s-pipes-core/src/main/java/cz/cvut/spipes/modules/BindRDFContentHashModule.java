@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 public class BindRDFContentHashModule extends AnnotatedAbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(BindRDFContentHashModule.class);
-    @Parameter(urlPrefix =  SM.uri, name="outputVariable", comment = "")
+    @Parameter(urlPrefix =  SM.uri, name="outputVariable")
     String outputVariable;
 
     @Override
@@ -37,8 +37,4 @@ public class BindRDFContentHashModule extends AnnotatedAbstractModule {
         return KBSS_MODULE.uri + "bind-rdf-content-hash";
     }
 
-//    @Override
-//    public void loadConfiguration() {
-//        outputVariable = getStringPropertyValue(SM.outputVariable);
-//    }
 }

@@ -23,16 +23,16 @@ public class ImportRDFFromWorkspaceModule extends AnnotatedAbstractModule {
     OntologyDocumentManager ontologyDocumentManager = OntoDocManager.getInstance();
 
     // sml:baseURI : xsd:string
-    @Parameter(urlPrefix = SML.uri, name = "baseURI", comment = "")
+    @Parameter(urlPrefix = SML.uri, name = "baseURI")
     String baseUri;
 
     // sml:ignoreImports : xsd:boolean
-    @Parameter(urlPrefix = SML.uri, name = "ignoreImports", comment = "")
+    @Parameter(urlPrefix = SML.uri, name = "ignoreImports")
     boolean isIgnoreImports;
 
     // TODO reconsider support for this property (might change identification of module type)
     // sml:sourceFilePath : xsd:string
-    @Parameter(urlPrefix = SML.uri, name = "sourceFilePath", comment = "")
+    @Parameter(urlPrefix = SML.uri, name = "sourceFilePath")
     Path sourceFilePath;
 
 
@@ -64,19 +64,6 @@ public class ImportRDFFromWorkspaceModule extends AnnotatedAbstractModule {
     public String getTypeURI() {
         return SML.ImportRDFFromWorkspace.toString();
     }
-
-//    @Override
-//    public void loadConfiguration() {
-//        baseUri = getEffectiveValue(SML.baseURI).asLiteral().getString();
-//        isIgnoreImports = getPropertyValue(SML.ignoreImports, false);
-//        sourceFilePath = Optional.ofNullable(getEffectiveValue(SML.sourceFilePath))
-//                        .filter(RDFNode::isLiteral)
-//                        .map(RDFNode::asLiteral)
-//                        .map(Object::toString)
-//                        .map(s -> Paths.get(s))
-//                        .orElse(null);
-//
-//    }
 
     @Override
     ExecutionContext executeSelf() {

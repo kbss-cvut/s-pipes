@@ -24,14 +24,14 @@ public class ImportFileFromURLModule extends AnnotatedAbstractModule {
 
     //sml:targetFilePath, required
 
-    @Parameter(urlPrefix = SML.uri, name = "targetFilePath", comment = "")
+    @Parameter(urlPrefix = SML.uri, name = "targetFilePath")
     Path targetFilePath; //TODO $_executionDir ?
 
     //kbss:targetResourceVariable
     String targetResourceVariable;
 
     //sml:url, required
-    @Parameter(urlPrefix = SML.uri, name = "url", comment = "")
+    @Parameter(urlPrefix = SML.uri, name = "url")
     URL url;
 
     @Override
@@ -67,20 +67,6 @@ public class ImportFileFromURLModule extends AnnotatedAbstractModule {
     public String getTypeURI() {
         return SML.ImportFileFromURL.getURI();
     }
-
-//    @Override
-//    public void loadConfiguration() {
-//
-//        RDFNode urlNode = getEffectiveValue(SML.url);
-//        try {
-//            url = new URL(urlNode.asLiteral().toString());
-//        } catch (MalformedURLException e) {
-//            LOG.error("Malformed url -- {}.", getEffectiveValue(SML.url));
-//            throw new RuntimeException(e);
-//        }
-//
-//        targetFilePath = Paths.get(getEffectiveValue(SML.targetFilePath).asLiteral().toString());
-//    }
 
     public Path getTargetFilePath() {
         return targetFilePath;
