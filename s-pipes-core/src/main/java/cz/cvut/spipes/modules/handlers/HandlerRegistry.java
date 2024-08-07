@@ -8,6 +8,7 @@ import org.topbraid.spin.model.Select;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.*;
 
 
@@ -35,7 +36,7 @@ public class HandlerRegistry {
         registerHandler(RDFNode.class, RDFNodeHandler.class);
         registerHandler(Select.class, SelectHandler.class);
         registerHandler(URL.class, URLHandler.class);
-        registerHandler(PathHandler.class, PathHandler.class);
+        registerHandler(Path.class, PathHandler.class);
     }
 
     public synchronized Handler<?> getHandler(Class clazz, Resource resource, ExecutionContext context, Setter setter) {
