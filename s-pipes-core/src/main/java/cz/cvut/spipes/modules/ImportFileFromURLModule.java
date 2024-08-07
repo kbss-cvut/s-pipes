@@ -24,14 +24,14 @@ public class ImportFileFromURLModule extends AnnotatedAbstractModule {
 
     //sml:targetFilePath, required
 
-    @Parameter(urlPrefix = SML.uri, name = "targetFilePath", comment = "")
+    @Parameter(urlPrefix = SML.uri, name = "targetFilePath")
     Path targetFilePath; //TODO $_executionDir ?
 
     //kbss:targetResourceVariable
     String targetResourceVariable;
 
     //sml:url, required
-    @Parameter(urlPrefix = SML.uri, name = "url", comment = "")
+    @Parameter(urlPrefix = SML.uri, name = "url")
     URL url;
 
     @Override
@@ -67,7 +67,6 @@ public class ImportFileFromURLModule extends AnnotatedAbstractModule {
     public String getTypeURI() {
         return SML.ImportFileFromURL.getURI();
     }
-
 
     public Path getTargetFilePath() {
         return targetFilePath;

@@ -20,11 +20,11 @@ public class BindBySelectModule extends AnnotatedAbstractModule {
 
     private static final Logger log = LoggerFactory.getLogger(BindBySelectModule.class);
 
-    @Parameter(urlPrefix = SML.uri, name = "selectQuery", comment = "")
+    @Parameter(urlPrefix = SML.uri, name = "selectQuery")
     private Select selectQuery;
 
     //sml:replace
-    @Parameter(urlPrefix = SML.uri, name = "replace", comment = "")
+    @Parameter(urlPrefix = SML.uri, name = "replace")
     private boolean isReplace = false;
 
     @Override
@@ -62,12 +62,6 @@ public class BindBySelectModule extends AnnotatedAbstractModule {
     public String getTypeURI() {
         return SML.BindBySelect.getURI();
     }
-
-//    @Override
-//    public void loadConfiguration() {
-//        selectQuery = getPropertyValue(SML.selectQuery).asResource().as(Select.class);
-//        isReplace = this.getPropertyValue(SML.replace, false);
-//    }
 
     public Select getSelectQuery() {
         return selectQuery;

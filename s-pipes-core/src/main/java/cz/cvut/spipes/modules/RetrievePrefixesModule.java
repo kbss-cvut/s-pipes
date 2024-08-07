@@ -53,7 +53,7 @@ public class RetrievePrefixesModule extends AnnotatedAbstractModule {
     private static final String TYPE_URI = KBSS_MODULE.uri + "retrieve-prefixes";
 
     //sml:replace
-    @Parameter(urlPrefix = SML.uri, name = "replace", comment = "")
+    @Parameter(urlPrefix = SML.uri, name = "replace")
     private boolean isReplace = false;
 
     //TODO refactor -> should be part of execution context
@@ -91,11 +91,6 @@ public class RetrievePrefixesModule extends AnnotatedAbstractModule {
     public String getTypeURI() {
         return TYPE_URI;
     }
-
-//    @Override
-//    public void loadConfiguration() {
-//        isReplace = this.getPropertyValue(SML.replace, false);
-//    }
 
     void setOntologyDocumentManager(OntologyDocumentManager ontologyDocumentManager) {
         this.ontologyDocumentManager = ontologyDocumentManager;
