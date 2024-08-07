@@ -92,10 +92,10 @@ public class RetrievePrefixesModule extends AnnotatedAbstractModule {
         return TYPE_URI;
     }
 
-    @Override
-    public void loadConfiguration() {
-        isReplace = this.getPropertyValue(SML.replace, false);
-    }
+//    @Override
+//    public void loadConfiguration() {
+//        isReplace = this.getPropertyValue(SML.replace, false);
+//    }
 
     void setOntologyDocumentManager(OntologyDocumentManager ontologyDocumentManager) {
         this.ontologyDocumentManager = ontologyDocumentManager;
