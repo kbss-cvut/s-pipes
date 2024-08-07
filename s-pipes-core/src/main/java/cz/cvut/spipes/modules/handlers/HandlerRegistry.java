@@ -3,10 +3,14 @@ package cz.cvut.spipes.modules.handlers;
 import cz.cvut.spipes.engine.ExecutionContext;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
+import org.topbraid.spin.model.Select;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.util.*;
+
+
 
 public class HandlerRegistry {
 
@@ -29,6 +33,9 @@ public class HandlerRegistry {
         registerHandler(Integer.class, IntegerHandler.class);
         registerHandler(String.class, StringHandler.class);
         registerHandler(RDFNode.class, RDFNodeHandler.class);
+        registerHandler(Select.class, SelectHandler.class);
+        registerHandler(URL.class, URLHandler.class);
+        registerHandler(PathHandler.class, PathHandler.class);
     }
 
     public synchronized Handler<?> getHandler(Class clazz, Resource resource, ExecutionContext context, Setter setter) {

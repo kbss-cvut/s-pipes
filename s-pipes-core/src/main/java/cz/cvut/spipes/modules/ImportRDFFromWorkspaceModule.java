@@ -15,7 +15,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 
-public class ImportRDFFromWorkspaceModule extends AbstractModule {
+public class ImportRDFFromWorkspaceModule extends AnnotatedAbstractModule {
 
     private static final Logger log = LoggerFactory.getLogger(ImportRDFFromWorkspaceModule.class);
 
@@ -23,13 +23,16 @@ public class ImportRDFFromWorkspaceModule extends AbstractModule {
     OntologyDocumentManager ontologyDocumentManager = OntoDocManager.getInstance();
 
     // sml:baseURI : xsd:string
+    @Parameter(urlPrefix = SML.uri, name = "baseURI", comment = "")
     String baseUri;
 
     // sml:ignoreImports : xsd:boolean
+    @Parameter(urlPrefix = SML.uri, name = "ignoreImports", comment = "")
     boolean isIgnoreImports;
 
     // TODO reconsider support for this property (might change identification of module type)
     // sml:sourceFilePath : xsd:string
+    @Parameter(urlPrefix = SML.uri, name = "sourceFilePath", comment = "")
     Path sourceFilePath;
 
 
@@ -62,18 +65,18 @@ public class ImportRDFFromWorkspaceModule extends AbstractModule {
         return SML.ImportRDFFromWorkspace.toString();
     }
 
-    @Override
-    public void loadConfiguration() {
-        baseUri = getEffectiveValue(SML.baseURI).asLiteral().getString();
-        isIgnoreImports = getPropertyValue(SML.ignoreImports, false);
-        sourceFilePath = Optional.ofNullable(getEffectiveValue(SML.sourceFilePath))
-                        .filter(RDFNode::isLiteral)
-                        .map(RDFNode::asLiteral)
-                        .map(Object::toString)
-                        .map(s -> Paths.get(s))
-                        .orElse(null);
-
-    }
+//    @Override
+//    public void loadConfiguration() {
+//        baseUri = getEffectiveValue(SML.baseURI).asLiteral().getString();
+//        isIgnoreImports = getPropertyValue(SML.ignoreImports, false);
+//        sourceFilePath = Optional.ofNullable(getEffectiveValue(SML.sourceFilePath))
+//                        .filter(RDFNode::isLiteral)
+//                        .map(RDFNode::asLiteral)
+//                        .map(Object::toString)
+//                        .map(s -> Paths.get(s))
+//                        .orElse(null);
+//
+//    }
 
     @Override
     ExecutionContext executeSelf() {

@@ -16,13 +16,16 @@ import org.slf4j.LoggerFactory;
 import org.topbraid.spin.arq.ARQFactory;
 import org.topbraid.spin.model.Select;
 
-public class BindBySelectModule extends AbstractModule {
+public class BindBySelectModule extends AnnotatedAbstractModule {
 
     private static final Logger log = LoggerFactory.getLogger(BindBySelectModule.class);
+
+    @Parameter(urlPrefix = SML.uri, name = "selectQuery", comment = "")
     private Select selectQuery;
 
     //sml:replace
-    private boolean isReplace;
+    @Parameter(urlPrefix = SML.uri, name = "replace", comment = "")
+    private boolean isReplace = false;
 
     @Override
     public ExecutionContext executeSelf() {
@@ -60,11 +63,11 @@ public class BindBySelectModule extends AbstractModule {
         return SML.BindBySelect.getURI();
     }
 
-    @Override
-    public void loadConfiguration() {
-        selectQuery = getPropertyValue(SML.selectQuery).asResource().as(Select.class);
-        isReplace = this.getPropertyValue(SML.replace, false);
-    }
+//    @Override
+//    public void loadConfiguration() {
+//        selectQuery = getPropertyValue(SML.selectQuery).asResource().as(Select.class);
+//        isReplace = this.getPropertyValue(SML.replace, false);
+//    }
 
     public Select getSelectQuery() {
         return selectQuery;

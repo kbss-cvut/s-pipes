@@ -20,11 +20,11 @@ public class ReturnRDFModule extends AnnotatedAbstractModule {
         return SML.ReturnRDF.getURI();
     }
 
-    @Override
-    public void loadConfiguration() {
-        serialization = getPropertyValue(SML.serialization).asResource();
-        baseURI = getStringPropertyValue(SML.baseURI);
-    }
+//    @Override
+//    public void loadConfiguration() {
+//        serialization = getPropertyValue(SML.serialization).asResource();
+//        baseURI = getStringPropertyValue(SML.baseURI);
+//    }
 
     public Resource getSerialization() {
         return serialization;
