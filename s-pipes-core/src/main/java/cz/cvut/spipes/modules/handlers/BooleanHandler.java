@@ -2,8 +2,9 @@ package cz.cvut.spipes.modules.handlers;
 
 import cz.cvut.spipes.engine.ExecutionContext;
 import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.Statement;
+
 
 public class BooleanHandler extends Handler<Boolean>{
     public BooleanHandler(Resource resource, ExecutionContext executionContext, Setter<? super Boolean> setter) {
@@ -12,9 +13,9 @@ public class BooleanHandler extends Handler<Boolean>{
 
     @Override
     public void setValueByProperty(Property property) {
-        Statement s = resource.getProperty(property);
-        if (s != null && s.getObject().isLiteral()) {
-            setter.addValue(s.getBoolean());
+        RDFNode node = getEffectiveValue(property);
+        if (node != null && node.isLiteral()) {
+            setter.addValue(node.asLiteral().getBoolean());
         }
     }
 }

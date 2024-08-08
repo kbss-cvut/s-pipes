@@ -25,7 +25,7 @@ abstract public class Handler<T> {
 
     abstract public void setValueByProperty(Property property);
 
-    protected RDFNode getRDFNodeByProperty(Property property){
+    protected RDFNode getEffectiveValue(Property property){
         RDFNode valueNode = Optional.of(resource)
                 .map(r -> r.getProperty(property))
                 .map(Statement::getObject)
