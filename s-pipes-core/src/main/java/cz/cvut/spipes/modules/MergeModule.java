@@ -4,7 +4,7 @@ import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 
-public class MergeModule extends AbstractModule  {
+public class MergeModule extends AnnotatedAbstractModule  {
 
     @Override
     public ExecutionContext executeSelf() {
@@ -16,7 +16,4 @@ public class MergeModule extends AbstractModule  {
         return SML.Merge.getURI();
     }
 
-    @Override
-    public void loadConfiguration() {
-    }
 }

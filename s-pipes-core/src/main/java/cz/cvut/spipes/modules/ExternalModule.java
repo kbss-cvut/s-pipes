@@ -2,7 +2,7 @@ package cz.cvut.spipes.modules;
 
 import cz.cvut.spipes.engine.ExecutionContext;
 
-public class ExternalModule extends AbstractModule {
+public class ExternalModule extends AnnotatedAbstractModule {
 
     // path
     String externalModulePath;
@@ -19,11 +19,6 @@ public class ExternalModule extends AbstractModule {
         return "http://external-module.com";
     }
 
-    @Override
-    public void loadConfiguration() {
-        // load external module path
-        // load config
-    }
 
 //    public OutputStream executeExternalProgram(InputStream inputStream ) {
 //
