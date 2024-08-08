@@ -2,6 +2,7 @@ package cz.cvut.spipes.modules.handlers;
 
 import cz.cvut.spipes.engine.ExecutionContext;
 import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 
@@ -13,9 +14,9 @@ public class IntegerHandler extends Handler<Integer>{
 
     @Override
     public void setValueByProperty(Property property) {
-        Statement s = resource.getProperty(property);
-        if (s != null && s.getObject().isLiteral()) {
-            setter.addValue(s.getInt());
+        RDFNode node = getEffectiveValue(property);
+        if (node != null && node.isLiteral()) {
+            setter.addValue(node.asLiteral().getInt());
         }
     }
 }
