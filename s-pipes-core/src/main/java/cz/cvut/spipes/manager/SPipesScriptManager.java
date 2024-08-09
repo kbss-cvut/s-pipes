@@ -88,7 +88,7 @@ public class SPipesScriptManager {
 
         // TODO check moduleTypeUri
 
-        return PipelineFactory.loadPipeline(scriptsRepository.getResource(resourceUri, resourceContextUri));
+        return PipelineFactory.loadModule(scriptsRepository.getResource(resourceUri, resourceContextUri));
     }
 
     public Module loadFunction(String functionId) {
@@ -114,6 +114,10 @@ public class SPipesScriptManager {
 
     public Set<String> getGlobalScripts() {
         return globalScripts;
+    }
+
+    public boolean doesRegistryContainsEntity(String entityId) {
+        return moduleRegistry.doesContextContainsEntity(entityId);
     }
 
 
