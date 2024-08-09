@@ -179,29 +179,23 @@ public class VariablesBinding {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("{");
-        for (Map.Entry<String, RDFNode> entry : binding.asMap().entrySet()) {
-            String key = entry.getKey();
-            RDFNode value = entry.getValue();
-            sb.append(key).append("=");
-            if (value.isLiteral()) {
-                Literal literal = value.asLiteral();
-                String literalValue = literal.getLexicalForm();
-                sb.append("\"").append(literalValue).append("\"");
-            } else if (value.isURIResource() || value.isResource()) {
-                sb.append("<").append(value.asResource().getURI()).append(">");
-            } else {
-                sb.append(value);
-            }
-            sb.append(", ");
-        }
-        if (sb.length() > 1) {
-            sb.setLength(sb.length() - 2);
-        }
-        sb.append("}");
-        return sb.toString();
+        return binding.asMap()
+                .entrySet()
+                .stream()
+                .map(entry -> entry.getKey() + "=" + toString(entry.getValue()))
+                .collect(Collectors.joining(", ", "{", "}"));
     }
+
+    private static String toString(RDFNode node) {
+        if (node.isLiteral()) {
+            return "\"" + node.asLiteral().getLexicalForm() + "\"";
+        } else if (node.isURIResource() || node.isResource()) {
+            return "<" + node.asResource().getURI() + ">";
+        } else {
+            return node.toString();
+        }
+    }
+
 
     public String toTruncatedString() {
         return binding.asMap().entrySet().stream()
