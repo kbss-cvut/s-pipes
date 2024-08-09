@@ -179,8 +179,23 @@ public class VariablesBinding {
 
     @Override
     public String toString() {
-        return binding.asMap().toString();
+        return binding.asMap()
+                .entrySet()
+                .stream()
+                .map(entry -> entry.getKey() + "=" + toString(entry.getValue()))
+                .collect(Collectors.joining(", ", "{", "}"));
     }
+
+    private static String toString(RDFNode node) {
+        if (node.isLiteral()) {
+            return "\"" + node.asLiteral().getLexicalForm() + "\"";
+        } else if (node.isURIResource() || node.isResource()) {
+            return "<" + node.asResource().getURI() + ">";
+        } else {
+            return node.toString();
+        }
+    }
+
 
     public String toTruncatedString() {
         return binding.asMap().entrySet().stream()
