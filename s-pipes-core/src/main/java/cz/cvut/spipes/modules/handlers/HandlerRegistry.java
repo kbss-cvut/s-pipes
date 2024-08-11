@@ -35,6 +35,7 @@ public class HandlerRegistry {
         registerHandler(Select.class, SelectHandler.class);
         registerHandler(URL.class, URLHandler.class);
         registerHandler(Path.class, PathHandler.class);
+        registerHandler(Resource.class, ResourceHandler.class);
     }
 
     public synchronized Handler<?> getHandler(Class clazz, Resource resource, ExecutionContext context, Setter setter) {

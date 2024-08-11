@@ -16,7 +16,7 @@ public class URLHandler extends Handler<URL>{
         URL url;
         RDFNode urlNode = getEffectiveValue(property);
 
-        if (urlNode != null && urlNode.isLiteral()) {
+        if (urlNode != null) {
             try {
                 url = new URL(urlNode.toString());
                 setter.addValue(url);

@@ -26,5 +26,15 @@ public class FieldSetter implements Setter {
         }
     }
 
+    @Override
+    public Field getField() {
+        return f;
+    }
+
+    @Override
+    public Object getBean() {
+        return bean;
+    }
+
 
 }
