@@ -19,6 +19,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
@@ -27,12 +29,12 @@ import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Slf4j
 @SPipesModule(label = "ckan2rdf-v1", comment = "Convert ckan to rdf.")
 public class Ckan2RdfModule extends AnnotatedAbstractModule {
 
     public static final String TYPE_URI = KBSS_MODULE.uri + "ckan2rdf-v1";
     public static final String NS_DDO = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/";
-    private static final Logger LOG = LoggerFactory.getLogger(Ckan2RdfModule.class);
 
     @Parameter(urlPrefix = TYPE_URI + "/", name = "p-ckan-url", comment = "URL of the CKAN server.")
     private String propCkanApiUrl;
@@ -83,7 +85,7 @@ public class Ckan2RdfModule extends AnnotatedAbstractModule {
         } catch (CkanException e) {
             executionContext.getDefaultModel().add(iDescriptionSub, ResourceFactory.createProperty(
                 NS_DDO + "has-error-result"), e.getMessage());
-            LOG.warn("{}: Problem during dataset fetch {}", dataset, e.getMessage(), e);
+            log.warn("{}: Problem during dataset fetch {}", dataset, e.getMessage(), e);
         }
         return null;
     }
@@ -146,19 +148,19 @@ public class Ckan2RdfModule extends AnnotatedAbstractModule {
             try {
                 datasets = cc.getDatasetList();
             } catch (CkanException e) {
-                LOG.warn("Problem during datasets fetch {}", e.getMessage(), e);
+                log.warn("Problem during datasets fetch {}", e.getMessage(), e);
                 executionContext.getDefaultModel().add(iDescription, ResourceFactory.createProperty(
                     NS_DDO + "has-error-result"), e.getMessage());
             }
             int max = datasets.size();
             for (final String dataset : datasets) {
-                LOG.info("Processing Dataset {} / {} - {}", i.incrementAndGet(), max, dataset);
+                log.info("Processing Dataset {} / {} - {}", i.incrementAndGet(), max, dataset);
                 CkanDataset ckanDataset = processDataset(em, dataset,
                     cc, iDescription, iDatasetSnapshot);
                 if (ckanDataset != null) {
                     catalog.getDatasets().add(ckanDataset);
                     if (i.get() > maxDatasets) {
-                        LOG.info("Breaking execution {} / {} ", i.get(), maxDatasets);
+                        log.info("Breaking execution {} / {} ", i.get(), maxDatasets);
                         break;
                     }
                 }
@@ -172,11 +174,11 @@ public class Ckan2RdfModule extends AnnotatedAbstractModule {
             } catch (CkanException e) {
                 executionContext.getDefaultModel().add(iDescription, ResourceFactory.createProperty(
                     NS_DDO + "has-error-result"), e.getMessage());
-                LOG.warn("Problem during userlist fetch {}", e.getMessage(), e);
+                log.warn("Problem during userlist fetch {}", e.getMessage(), e);
             }
             max = userList.size();
             for (final CkanUser user : userList) {
-                LOG.info("Processing User {} / {} - {}", i.incrementAndGet(), max, user.getId());
+                log.info("Processing User {} / {} - {}", i.incrementAndGet(), max, user.getId());
                 processUser(em, user, cc, iDescription, iDatasetSnapshot);
             }
 

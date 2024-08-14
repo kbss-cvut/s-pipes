@@ -11,12 +11,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+@Slf4j
 public class UserQuery {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserQuery.class);
 
     private static final Map<String, String> DATE_FORMAT_REGEXPS;
 
@@ -58,7 +58,7 @@ public class UserQuery {
                     isDate = true;
                     break;
                 } catch (ParseException e) {
-                    LOGGER.warn(MessageFormat.format(
+                    log.warn(MessageFormat.format(
                         "Date/time format {} matched {}, yet parsing into a Date object failed.",
                         format, keyword),e);
                 }

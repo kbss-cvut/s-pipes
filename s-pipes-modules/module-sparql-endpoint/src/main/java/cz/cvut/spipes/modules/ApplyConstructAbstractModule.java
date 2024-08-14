@@ -5,14 +5,13 @@ import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.QueryUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.topbraid.spin.arq.ARQFactory;
 import org.topbraid.spin.model.Construct;
 import org.topbraid.spin.system.SPINModuleRegistry;
@@ -20,9 +19,9 @@ import org.topbraid.spin.vocabulary.SP;
 
 import java.util.List;
 
+@Slf4j
 public abstract class ApplyConstructAbstractModule extends AnnotatedAbstractModule {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ApplyConstructAbstractModule.class);
     private static final String TYPE_URI = KBSS_MODULE.uri + "abstract-apply-construct";
     private static final String PROPERTY_PREFIX_URI = KBSS_MODULE.uri + "";
     //sml:constructQuery
@@ -181,7 +180,7 @@ public abstract class ApplyConstructAbstractModule extends AnnotatedAbstractModu
         // TODO does not work with string query as object is not RDF resource ???
         constructQueries = getResourcesByProperty(SML.constructQuery);
 
-        LOG.debug("Loaded {} spin construct queries.", constructQueries.size());
+        log.debug("Loaded {} spin construct queries.", constructQueries.size());
 
         //TODO default value must be taken from template definition
         isReplace = this.getPropertyValue(SML.replace, false);

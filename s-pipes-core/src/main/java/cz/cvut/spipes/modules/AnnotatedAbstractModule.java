@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 public abstract class AnnotatedAbstractModule extends AbstractModule {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AnnotatedAbstractModule.class);
+    private static final Logger log = LoggerFactory.getLogger(AnnotatedAbstractModule.class);
 
     @Override
     public void loadConfiguration() {
@@ -29,7 +29,7 @@ public abstract class AnnotatedAbstractModule extends AbstractModule {
                 vars.put(p.name(), f);
             }
 
-            LOG.trace("Processing parameter {} ", f.getName());
+            log.trace("Processing parameter {} ", f.getName());
 
             RDFNode node = this.getEffectiveValue(ResourceFactory.createProperty(p.urlPrefix()+p.name()));
             if ( node != null ) {

@@ -9,6 +9,7 @@ import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.registry.StreamResource;
 import cz.cvut.spipes.registry.StreamResourceRegistry;
 import cz.cvut.spipes.util.QueryUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.ext.com.google.common.io.Files;
 import org.apache.jena.query.Query;
 import org.apache.jena.rdf.model.Model;
@@ -16,8 +17,6 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.util.FileUtils;
 import org.deri.tarql.tarql;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.topbraid.spin.model.Construct;
 
 import java.io.*;
@@ -28,11 +27,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 // TODO merge with ModuleTarql functionality
+@Slf4j
 @SPipesModule(label = "tarql", comment = "\"Runs one or more TARQL Construct queries on the input triples. The output RDF " +
         "will consist of the constructed triples and (unless sml:replace is true) the input triples.\"")
 public class TarqlModule extends AbstractModule {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TarqlModule.class);
     //tarql [options] query.sparql [table.csv [...]]
 
     private static final String TARQL_PROGRAM = AppConstants.BIN_DIR + "/tarql";
@@ -96,7 +95,7 @@ public class TarqlModule extends AbstractModule {
             tabularDataFilePath = sourceFilePath;
         }
 
-        LOG.debug("Processing tabular data from file path {}.", tabularDataFilePath);
+        log.debug("Processing tabular data from file path {}.", tabularDataFilePath);
 
         //      set up variable bindings
         for (Resource constructQueryRes : constructQueries) {
@@ -157,7 +156,7 @@ public class TarqlModule extends AbstractModule {
                 .map(st -> st.getObject().asResource())
                 .collect(Collectors.toList());
 
-        LOG.debug("Loaded {} spin construct queries.", constructQueries.size());
+        log.debug("Loaded {} spin construct queries.", constructQueries.size());
 
         //TODO default value must be taken from template definition
         isReplace = this.getPropertyValue(SML.replace, false);

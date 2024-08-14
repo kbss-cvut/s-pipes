@@ -7,15 +7,14 @@ import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.form.JenaFormUtils;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.util.ResourceUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Random;
 
+@Slf4j
 @SPipesModule(label = "merge form metadata", comment =
         "Merges form metadata. Inputs are sample form and Q&A model. Questions from both models are remapped to new" +
         " IRIs based on question origin combined with executionId. New question instances are created using" +
@@ -23,7 +22,6 @@ import java.util.Random;
 )
 public class MergeFormMetadataModule extends AnnotatedAbstractModule {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MergeFormMetadataModule.class);
     private static final Random RANDOM = new Random();
 
     private static final String TYPE_URI = KBSS_MODULE.uri + "merge-form-metadata";
@@ -64,8 +62,8 @@ public class MergeFormMetadataModule extends AnnotatedAbstractModule {
                     .replace(QUESTION_ORIGIN_HASH_VAR, originHash)
                     .replace(EXECUTION_ID_VAR, executionId);
                 if (!q.getURI().equals(newQuestionUrl)) {
-                    if (LOG.isTraceEnabled()) {
-                        LOG.trace("Renaming questions {} -> {}", q, newQuestionUrl);
+                    if (log.isTraceEnabled()) {
+                        log.trace("Renaming questions {} -> {}", q, newQuestionUrl);
                     }
                     ResourceUtils.renameResource(q, newQuestionUrl);
                 }

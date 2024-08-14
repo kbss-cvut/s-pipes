@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 public class BindWithConstantModule extends AbstractModule  {
 
-    private static final Logger LOG = LoggerFactory.getLogger(BindWithConstantModule.class);
+    private static final Logger log = LoggerFactory.getLogger(BindWithConstantModule.class);
     String outputVariable;
     RDFNode value;
 
@@ -24,7 +24,7 @@ public class BindWithConstantModule extends AbstractModule  {
 
         VariablesBinding bindings = new VariablesBinding(outputVariable, value);
 
-        LOG.debug("\tBinding {} --> {}", outputVariable, value);
+        log.debug("\tBinding {} --> {}", outputVariable, value);
 
 
         return ExecutionContextFactory.createContext(

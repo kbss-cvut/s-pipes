@@ -10,6 +10,7 @@ import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.RDFMimeType;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.rdf.model.Model;
@@ -34,11 +35,11 @@ import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestController
 @EnableWebMvc
 public class SPipesServiceController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SPipesServiceController.class);
     private final ResourceRegisterHelper resourceRegisterHelper;
     private final SPipesScriptManager scriptManager;
 
@@ -59,7 +60,7 @@ public class SPipesServiceController {
         }
     )
     public Model processGetRequest(@RequestParam MultiValueMap<String, String> parameters) {
-        LOG.info("Processing GET request.");
+        log.info("Processing GET request.");
         return runModule(ModelFactory.createDefaultModel(), parameters);
     }
 
@@ -105,7 +106,7 @@ public class SPipesServiceController {
             String pOutputBindingURL,
         @RequestParam MultiValueMap<String, String> parameters
     ) {
-        LOG.info("Processing POST request.");
+        log.info("Processing POST request.");
         // TODO process internal params passed arguments not parameters map
         return runModule(inputModel, parameters);
     }
@@ -120,7 +121,7 @@ public class SPipesServiceController {
         }
     )
     public Model processServiceGetRequest(@RequestParam MultiValueMap<String, String> parameters) {
-        LOG.info("Processing service GET request.");
+        log.info("Processing service GET request.");
         return runService(ModelFactory.createDefaultModel(), parameters);
     }
 
@@ -152,10 +153,10 @@ public class SPipesServiceController {
                 newStreamResources
             );
 
-        LOG.info("Processing service POST request, with {} multipart file(s).", files.length);
+        log.info("Processing service POST request, with {} multipart file(s).", files.length);
         Model model =  runService(ModelFactory.createDefaultModel(), newParameters);
         if (! newStreamResources.isEmpty()) {
-            LOG.info(
+            log.info(
                 "Loosing reference to stream resources: " +
                 newStreamResources.stream().map(StreamResourceDTO::getId).collect(Collectors.toList())
             );
@@ -184,7 +185,7 @@ public class SPipesServiceController {
 
     // TODO merge it with implementation in /module
     private Model runService(final Model inputDataModel, final MultiValueMap<String, String> parameters) {
-        LOG.info("- parameters={}", parameters);
+        log.info("- parameters={}", parameters);
 
         String id = extractId(parameters);
 
@@ -207,12 +208,12 @@ public class SPipesServiceController {
             saveOutputBinding(outputBindingPath, outputExecutionContext.getVariablesBinding());
         }
 
-        LOG.info("Processing successfully finished.");
+        log.info("Processing successfully finished.");
         return outputExecutionContext.getDefaultModel();
     }
 
     private Model runModule(final Model inputDataModel, final MultiValueMap<String, String> parameters) {
-        LOG.info("- parameters={}", parameters);
+        log.info("- parameters={}", parameters);
 
         String id = extractId(parameters);
 
@@ -232,7 +233,7 @@ public class SPipesServiceController {
             saveOutputBinding(outputBindingPath, outputExecutionContext.getVariablesBinding());
         }
 
-        LOG.info("Processing successfully finished.");
+        log.info("Processing successfully finished.");
         return outputExecutionContext.getDefaultModel();
     }
 
@@ -260,7 +261,7 @@ public class SPipesServiceController {
         if (inputBindingURL != null) {
             extendBindingFromURL(inputVariablesBinding, inputBindingURL);
         }
-        LOG.info("- input variable binding ={}", inputVariablesBinding);
+        log.info("- input variable binding ={}", inputVariablesBinding);
 
         Model unionModel = Optional.ofNullable(inputGraphURL)
             .map(url -> JenaUtils.createUnion(inputDataModel, loadModelFromUrl(url.toString())))
@@ -333,7 +334,7 @@ public class SPipesServiceController {
     }
 
     private void logParam(String parameterKey, String parameterValue) {
-        LOG.info("- {}={}", parameterKey, parameterValue);
+        log.info("- {}={}", parameterKey, parameterValue);
     }
 
     private @NotNull
@@ -362,16 +363,16 @@ public class SPipesServiceController {
             vb2.load(inputBindingURL.openStream(), FileUtils.langTurtle);
             VariablesBinding vb3 = inputVariablesBinding.extendConsistently(vb2);
             if (vb3.isEmpty()) {
-                LOG.debug("- no conflict between bindings loaded from '{}' and those provided in query string.",
+                log.debug("- no conflict between bindings loaded from '{}' and those provided in query string.",
                     ReservedParams.P_INPUT_BINDING_URL
                 );
             } else {
-                LOG.info("- conflicts found between bindings loaded from '{}' and those provided in query string: {}",
+                log.info("- conflicts found between bindings loaded from '{}' and those provided in query string: {}",
                     ReservedParams.P_INPUT_BINDING_URL, vb3
                 );
             }
         } catch (IOException e) {
-            LOG.warn("Could not read data from parameter {}={}, caused by: {}", ReservedParams.P_INPUT_BINDING_URL, inputBindingURL, e);
+            log.warn("Could not read data from parameter {}={}, caused by: {}", ReservedParams.P_INPUT_BINDING_URL, inputBindingURL, e);
         }
 
     }

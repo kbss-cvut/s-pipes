@@ -18,7 +18,7 @@ import org.topbraid.spin.model.Select;
 
 public class BindBySelectModule extends AbstractModule {
 
-    private static final Logger LOG = LoggerFactory.getLogger(BindBySelectModule.class);
+    private static final Logger log = LoggerFactory.getLogger(BindBySelectModule.class);
     private Select selectQuery;
 
     //sml:replace
@@ -38,14 +38,14 @@ public class BindBySelectModule extends AbstractModule {
         VariablesBinding variablesBinding = new VariablesBinding();
 
         if (!resultSet.hasNext()) {
-            LOG.debug("\"{}\" query did not return any values.", getLabel());
+            log.debug("\"{}\" query did not return any values.", getLabel());
         } else {
             QuerySolution qs = resultSet.next();
 
             variablesBinding = new VariablesBinding(qs);
 
             if (resultSet.hasNext()) {
-                LOG.warn("\"{}\" query did not return unique value.  If it is correct, the query should be restricted by additional statement (e.g. \"LIMIT 1\"). Returning binding {}, ignoring binding {}", getLabel(), variablesBinding.asQuerySolution(), resultSet.next());
+                log.warn("\"{}\" query did not return unique value.  If it is correct, the query should be restricted by additional statement (e.g. \"LIMIT 1\"). Returning binding {}, ignoring binding {}", getLabel(), variablesBinding.asQuerySolution(), resultSet.next());
             }
         }
 

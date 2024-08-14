@@ -8,18 +8,19 @@ import cz.cvut.spipes.util.CoreConfigProperies;
 import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.util.LocationMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Slf4j
 public class ContextLoaderHelper {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ContextLoaderHelper.class);
 
     // TODO should not point to scriptManager
     public static void updateContextsIfNecessary(SPipesScriptManager scriptManager) {
         if (isKeepUpdated()) {
-            LOG.warn("Updating contexts which is not thread safe -- don't use in in production environment.");
+            log.warn("Updating contexts which is not thread safe -- don't use in in production environment.");
             OntologyDocumentManager ontoDocManager = OntoDocManager.getInstance();
             OntoDocManager.setReloadFiles(true);
             List<String> globalScripts = ContextLoaderHelper.registerGlobalScripts(ontoDocManager);
@@ -41,7 +42,7 @@ public class ContextLoaderHelper {
                 ontoUri -> {
                     String loc = locMapper.getAltEntry(ontoUri);
                     if (loc.endsWith(".sms.ttl")) {
-                        LOG.info("Registering script from file " + loc + ".");
+                        log.info("Registering script from file " + loc + ".");
                         _globalScripts.add(ontoUri);
                     }
                 }

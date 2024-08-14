@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 import cz.cvut.spipes.modules.annotations.SPipesModule;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
@@ -26,12 +27,11 @@ import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Slf4j
 @SPipesModule(label = "dataset discovery v1", comment =
         "Discovers dataset based on keyword userInput in repository linked.opendata.cz-federated-descriptor-faceted-search " +
         "hosted at http://onto.fel.cvut.cz/rdf4j-server.")
 public class DatasetDiscoveryModule extends AbstractModule {
-
-    private static final Logger LOG = LoggerFactory.getLogger(DatasetDiscoveryModule.class);
 
     private static final String TYPE_URI = KBSS_MODULE.uri + "dataset-discovery-v1";
 
@@ -65,10 +65,10 @@ public class DatasetDiscoveryModule extends AbstractModule {
         userInput = executionContext.getVariablesBinding().getNode("prp-user-input").toString();
 
         if (userInput == null) {
-            LOG.error("No userInput supplied, terminating");
+            log.error("No userInput supplied, terminating");
             return executionContext;
         } else {
-            LOG.info("[USER-QUERY] " + userInput);
+            log.info("[USER-QUERY] " + userInput);
         }
 
         final UserQuery q2 = UserQuery.parse(userInput);

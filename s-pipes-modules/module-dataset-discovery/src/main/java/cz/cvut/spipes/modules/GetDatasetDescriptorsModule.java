@@ -3,6 +3,7 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
@@ -18,11 +19,10 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Optional;
 
+@Slf4j
 @SPipesModule(label = "get dataset descriptors v1", comment = "Retrieve dataset descriptor for dataset" +
     " with dataset-iri in endpoint-url.")
 public class GetDatasetDescriptorsModule extends AbstractModule {
-
-    private static final Logger LOG = LoggerFactory.getLogger(GetDatasetDescriptorsModule.class);
 
     private static final String TYPE_URI = KBSS_MODULE.uri + "get-dataset-descriptors-v1";
     private static final String PARAM_URI = TYPE_URI + "/";
@@ -57,10 +57,10 @@ public class GetDatasetDescriptorsModule extends AbstractModule {
         prpDatasetIri = executionContext.getVariablesBinding().getNode("p-dataset-iri").toString();
 
         if (prpDatasetIri == null) {
-            LOG.error("No dataset IRI supplied, terminating");
+            log.error("No dataset IRI supplied, terminating");
             return executionContext;
         } else {
-            LOG.info("[DATASET] " + prpDatasetIri);
+            log.info("[DATASET] " + prpDatasetIri);
         }
 
         final String queryString;

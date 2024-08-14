@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 public class JenaTestUtils {
 
-    private static Logger LOG = LoggerFactory.getLogger(JenaTestUtils.class);
+    private static Logger log = LoggerFactory.getLogger(JenaTestUtils.class);
 
     public static void mapLocalSPipesDefinitionFiles() {
         OntDocumentManager dm = OntDocumentManager.getInstance();
@@ -64,9 +64,9 @@ public class JenaTestUtils {
 
     public static void assertIsomorphic(Model actualModel, Model expectedModel) {
         if (!actualModel.isIsomorphicWith(expectedModel)) {
-            LOG.debug("Saving actual model ... ");
+            log.debug("Saving actual model ... ");
             saveModelToTemporaryFile(actualModel);
-            LOG.debug("Saving expected model ... ");
+            log.debug("Saving expected model ... ");
             saveModelToTemporaryFile(expectedModel);
             fail("Actual model is not isomorphic with expected model (see additional information above).");
         }
@@ -75,7 +75,7 @@ public class JenaTestUtils {
     private static void saveModelToTemporaryFile(Model model) {
         try {
             Path file = Files.createTempFile("model-output-", ".ttl");
-            LOG.debug("Saving model to temporary file " + file.toString() + " ...");
+            log.debug("Saving model to temporary file " + file.toString() + " ...");
             model.write(Files.newOutputStream(file.toFile().toPath()), FileUtils.langTurtle);
         } catch (IOException e) {
             e.printStackTrace();

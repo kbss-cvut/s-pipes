@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * <p>
  */
 public class SMScriptCollectionRepository implements ScriptCollectionRepository {
-    private static final Logger LOG = LoggerFactory.getLogger(SMScriptCollectionRepository.class);
+    private static final Logger log = LoggerFactory.getLogger(SMScriptCollectionRepository.class);
 
 
     private final OntologyDocumentManager ontoDocManager;
@@ -82,7 +82,7 @@ public class SMScriptCollectionRepository implements ScriptCollectionRepository 
 
         model.getNsPrefixMap().forEach((name, url) -> {
             if (!isValidURL(url)){
-                LOG.warn("Invalid URI prefix: <{}> within <{}> ontology.", url, context);
+                log.warn("Invalid URI prefix: <{}> within <{}> ontology.", url, context);
             }
         });
 
