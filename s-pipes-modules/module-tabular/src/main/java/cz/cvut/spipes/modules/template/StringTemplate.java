@@ -3,6 +3,7 @@ package cz.cvut.spipes.modules.template;
 import cz.cvut.spipes.modules.exception.InvalidTemplateException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -192,11 +193,7 @@ public class StringTemplate {
     }
 
     private static String encodeString(String part) {
-        try {
-            return URLEncoder.encode(part, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("Unsupported encoding", e);
-        }
+        return URLEncoder.encode(part, StandardCharsets.UTF_8);
     }
 
     /**

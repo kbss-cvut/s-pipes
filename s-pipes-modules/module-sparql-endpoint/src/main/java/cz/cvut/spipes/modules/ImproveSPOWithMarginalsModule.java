@@ -54,7 +54,7 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
     private static final String MODULE_ID = "improve-spo-with-marginals";
     private static final String TYPE_URI = KBSS_MODULE.uri + MODULE_ID;
     private static final String TYPE_PREFIX = TYPE_URI + "/";
-    private static Map<String, Model> marginalDefsModelCache = new HashMap<>();
+    private static final Map<String, Model> marginalDefsModelCache = new HashMap<>();
 
     @Parameter(urlPrefix = TYPE_PREFIX, name = "marginal-constraint", comment = "Marginal constraint")
     private String marginalConstraint;

@@ -21,9 +21,9 @@ import org.junit.jupiter.api.Test;
 
 public class Form2ScriptTest {
 
-    private Transformer t = new TransformerImpl();
-    private InputStream sampleScriptIS = getClass().getResourceAsStream("/hello-world-script.ttl");
-    private Model sampleScript = ModelFactory.createOntologyModel().read(sampleScriptIS, null, FileUtils.langTurtle);
+    private final Transformer t = new TransformerImpl();
+    private final InputStream sampleScriptIS = getClass().getResourceAsStream("/hello-world-script.ttl");
+    private final Model sampleScript = ModelFactory.createOntologyModel().read(sampleScriptIS, null, FileUtils.langTurtle);
     private Question form;
 
     @BeforeEach

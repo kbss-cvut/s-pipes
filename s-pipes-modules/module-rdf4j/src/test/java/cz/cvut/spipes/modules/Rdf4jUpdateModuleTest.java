@@ -32,7 +32,7 @@ class Rdf4jUpdateModuleTest {
     @Mock
     Update prepareUpdate;
 
-    private static String query = "DELETE {\n" +
+    private static final String query = "DELETE {\n" +
         "\t<http://example.org/people/john>  <http://example.org/people/age> ?oldAge .\n" +
         "}\n" +
         "INSERT {\n" +

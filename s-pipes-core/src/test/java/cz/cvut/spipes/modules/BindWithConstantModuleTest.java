@@ -63,4 +63,4 @@ public class BindWithConstantModuleTest extends AbstractModuleTestHelper {
     }
 
 
-};
+}

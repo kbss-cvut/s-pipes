@@ -3,6 +3,8 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
+
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Calendar;
 
@@ -49,7 +51,7 @@ public class SparqlEndpointDatasetExplorerModule extends AnnotatedAbstractModule
             final Resource iAccess = ResourceFactory.createResource(
                 clsHttpAccessIri + Instant.now().toString());
             final String queryString = IOUtils.toString(
-                getClass().getResourceAsStream("/find-datasets.rq"), "UTF-8");
+                getClass().getResourceAsStream("/find-datasets.rq"), StandardCharsets.UTF_8);
             final ParameterizedSparqlString strSparql = new ParameterizedSparqlString(queryString);
             strSparql.setIri("event", iAccess.getURI());
             final Resource cAccess = ResourceFactory.createResource(clsHttpAccessIri);

@@ -18,6 +18,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 @Slf4j
@@ -68,7 +69,7 @@ public class StreamResourceController {
     )
     public ResponseEntity<StreamResourceDTO> registerStreamResource2(@RequestHeader(value = "Content-type") String contentType, @RequestParam("file") MultipartFile file) throws IOException {
         InputStream fis = file.getInputStream();
-        String body = IOUtils.toString(fis, "UTF-8");
+        String body = IOUtils.toString(fis, StandardCharsets.UTF_8);
         IOUtils.closeQuietly(fis);
 
         StreamResourceDTO res = new StreamResourceDTO(

@@ -3,6 +3,8 @@ package cz.cvut.spipes.util;
 import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.annotation.JsonValue;
 
+import java.util.Objects;
+
 public class RawJson {
 
     private String value;

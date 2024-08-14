@@ -14,8 +14,8 @@ public class ChunkedValuesProvider implements QueryTemplateRecursionProvider {
 
     private static final String VALUES_CLAUSE_MARKER_NAME = "VALUES";
     private final int iterationCount;
-    private ResultSet inputResultSet;
-    private Integer outputChunkSize;
+    private final ResultSet inputResultSet;
+    private final Integer outputChunkSize;
 
 
     public ChunkedValuesProvider(ResultSet inputResultSet, Integer outputChunkSize, Integer iterationCount) {

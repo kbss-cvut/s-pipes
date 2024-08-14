@@ -38,13 +38,11 @@ public class SForms2TextTransformer {
 
         String qStr = cfg.getQuestionProcessor().apply(question);
 
-        StringBuilder sb = new StringBuilder();
-        sb
-            .append(qStr)
-            .append("\n")
-            .append(subQStr);
+        String sb = qStr +
+            "\n" +
+            subQStr;
 
-        return sb.toString();
+        return sb;
     }
 
 

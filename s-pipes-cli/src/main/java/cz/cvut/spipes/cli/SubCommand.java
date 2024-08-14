@@ -7,7 +7,7 @@ public enum SubCommand {
     String name;
     Class klass;
     
-    private SubCommand(String name, Class klass) {
+    SubCommand(String name, Class klass) {
         this.name = name;
         this.klass = klass;
     }

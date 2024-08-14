@@ -35,14 +35,13 @@ class ExecutionContextImpl implements ExecutionContext {
     }
 
     private String getSimpleString(boolean truncate) {
-        StringBuilder sb = new StringBuilder();
 
-        sb.append("Context ").append(this.hashCode()).append("[ \n")
-            .append("\t varBindings = ").append(getVariablesBindingString(truncate)).append("\n")
-            .append("\t modelSize = ").append(defaultModel.size())
-            .append("]");
+        String sb = "Context " + this.hashCode() + "[ \n" +
+            "\t varBindings = " + getVariablesBindingString(truncate) + "\n" +
+            "\t modelSize = " + defaultModel.size() +
+            "]";
 
-        return sb.toString();
+        return sb;
     }
 
     private String getVariablesBindingString(boolean truncate) {

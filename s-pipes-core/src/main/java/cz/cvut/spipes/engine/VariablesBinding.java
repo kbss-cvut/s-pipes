@@ -18,7 +18,7 @@ public class VariablesBinding {
 
     // TODO stream variables etc.
 
-    private static Logger log = LoggerFactory.getLogger(VariablesBinding.class);
+    private static final Logger log = LoggerFactory.getLogger(VariablesBinding.class);
     private static final int MAX_TRUNCATED_VALUE_SIZE = 300;
     QuerySolutionMap binding = new QuerySolutionMap();
 

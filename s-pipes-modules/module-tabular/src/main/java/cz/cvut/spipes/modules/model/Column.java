@@ -7,6 +7,7 @@ import cz.cvut.spipes.modules.util.TabularModuleUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 /**
  * A column represents a vertical arrangement of cells within a table.
@@ -159,8 +160,8 @@ public class Column extends AbstractEntity {
             }
         }
         if (dataPrefix != null && !dataPrefix.isEmpty()) {
-            return dataPrefix + URLEncoder.encode(name, "UTF-8");
+            return dataPrefix + URLEncoder.encode(name, StandardCharsets.UTF_8);
         }
-        return sourceResourceUri + "#" + URLEncoder.encode(name, "UTF-8");
+        return sourceResourceUri + "#" + URLEncoder.encode(name, StandardCharsets.UTF_8);
     }
 }

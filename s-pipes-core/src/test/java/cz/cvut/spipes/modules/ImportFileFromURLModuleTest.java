@@ -7,6 +7,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -105,7 +106,7 @@ public class ImportFileFromURLModuleTest {
     }
 
     private String getFileContent(Path file) throws IOException {
-        return new String (Files.readAllBytes(file), Charset.forName("UTF-8"));
+        return new String (Files.readAllBytes(file), StandardCharsets.UTF_8);
     }
 
 }

@@ -9,7 +9,7 @@ import java.util.*;
 
 public class BNodesTransformer {
 
-    private Map<Resource, Resource> convertedNodes =  new HashMap<>();
+    private final Map<Resource, Resource> convertedNodes =  new HashMap<>();
 
     public Model convertBNodesToNonBNodes(Model model) {
         Set<Resource> resourcesToConvert =  new HashSet<>();

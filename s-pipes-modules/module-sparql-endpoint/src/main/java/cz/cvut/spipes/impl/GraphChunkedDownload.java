@@ -111,7 +111,7 @@ public abstract class GraphChunkedDownload {
             getOuterConstruct() + "\n } WHERE { {" +
             getInnerSelect() +
             "\n} }" +
-            "\nLIMIT " + Integer.toString(this.getPageSize()) +
-            "\nOFFSET " + Long.toString(offset);
+            "\nLIMIT " + this.getPageSize() +
+            "\nOFFSET " + offset;
     }
 }

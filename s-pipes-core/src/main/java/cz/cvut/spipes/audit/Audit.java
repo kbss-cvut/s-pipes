@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 public class Audit {
 
-    private static Logger LOG = LoggerFactory.getLogger(Audit.class);
+    private static final Logger log = LoggerFactory.getLogger(Audit.class);
 
     public void recordExecutionContext(ExecutionContext executionContext) {
 

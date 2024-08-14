@@ -124,10 +124,7 @@ public class PipelineFactory {
     public static Module loadPipeline(@NotNull Resource resource) {
         return loadPipelines(resource.getModel()).stream().filter(m -> {
             //TODO does not work on annonymous node
-            if (resource.getURI().equals(m.getResource().getURI())) {
-                return true;
-            }
-            return false;
+            return resource.getURI().equals(m.getResource().getURI());
         }).findAny().orElse(null);
     }
 

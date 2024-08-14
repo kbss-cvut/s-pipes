@@ -25,9 +25,9 @@ import java.util.stream.Collectors;
 @EnableWebMvc
 public class SPipesContextController {
 
-    private SPipesScriptManager scriptManager;
-    private List<String> globalScripts;
-    private OntologyDocumentManager ontoDocManager;
+    private final SPipesScriptManager scriptManager;
+    private final List<String> globalScripts;
+    private final OntologyDocumentManager ontoDocManager;
 
     public SPipesContextController() {
         scriptManager = ScriptManagerFactory.getSingletonSPipesScriptManager();

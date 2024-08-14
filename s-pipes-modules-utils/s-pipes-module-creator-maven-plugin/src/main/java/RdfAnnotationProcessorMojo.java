@@ -126,7 +126,7 @@ public class RdfAnnotationProcessorMojo extends AbstractMojo {
         //read all submodules
         getLog().info("Generating an RDF for all sub-modules");
         var model = initDefaultModel();
-        for (MavenProject submodule : (List<MavenProject>) project.getCollectedProjects()) {
+        for (MavenProject submodule : project.getCollectedProjects()) {
 
             //find module's main class
             var moduleClasses = readAllModuleClasses(submodule);

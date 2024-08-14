@@ -18,6 +18,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Configuration
@@ -70,7 +71,7 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         converter.setObjectMapper(objectMapper);
         converters.add(converter);
-        final StringHttpMessageConverter stringConverter = new StringHttpMessageConverter(Charset.forName("UTF-8"));
+        final StringHttpMessageConverter stringConverter = new StringHttpMessageConverter(StandardCharsets.UTF_8);
         converters.add(stringConverter);
 
         super.configureMessageConverters(converters);

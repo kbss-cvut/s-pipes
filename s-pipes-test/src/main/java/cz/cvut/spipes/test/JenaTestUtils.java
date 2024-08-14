@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 public class JenaTestUtils {
 
-    private static Logger log = LoggerFactory.getLogger(JenaTestUtils.class);
+    private static final Logger log = LoggerFactory.getLogger(JenaTestUtils.class);
 
     public static void mapLocalSPipesDefinitionFiles() {
         OntDocumentManager dm = OntDocumentManager.getInstance();

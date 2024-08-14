@@ -9,7 +9,6 @@ import org.apache.jena.rdf.model.Model;
 
 @Slf4j
 public class CombinedQueryTemplateRecursionProvider implements QueryTemplateRecursionProvider {
-;
     private final QueryTemplateRecursionProvider parentProvider;
     private final QueryTemplateRecursionProvider childProvder;
     private final int iterationCount;

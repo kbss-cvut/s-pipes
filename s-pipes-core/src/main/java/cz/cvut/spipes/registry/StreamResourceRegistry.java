@@ -11,9 +11,9 @@ public class StreamResourceRegistry {
     private static final Logger log = LoggerFactory.getLogger(StreamResourceRegistry.class);
 
     private static StreamResourceRegistry instance;
-    private Set<String> resourcePrefixMap = new HashSet<>();
+    private final Set<String> resourcePrefixMap = new HashSet<>();
     private static final String PERSISTENT_CONTEXT_PREFIX = "http://onto.fel.cvut.cz/resources/";
-    private Map<String, WeakReference<StreamResource>> id2resourcesMap = new HashMap<>();
+    private final Map<String, WeakReference<StreamResource>> id2resourcesMap = new HashMap<>();
 
     private StreamResourceRegistry() {
     }

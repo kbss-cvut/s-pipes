@@ -29,7 +29,7 @@ public class ValidationConstraintFailedException extends SPipesException {
 
     private static String createModuleInfo(@NotNull  Module module) {
         return Optional.ofNullable(module.getResource())
-                .map(r -> String.format("Execution of module %s failed. ", r.toString()))
+                .map(r -> String.format("Execution of module %s failed. ", r))
                 .orElse("Execution of a module with type %s failed." + module.getTypeURI());
     }
 

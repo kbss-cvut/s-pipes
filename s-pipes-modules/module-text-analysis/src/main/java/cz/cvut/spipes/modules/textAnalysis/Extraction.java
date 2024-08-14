@@ -9,7 +9,7 @@ import java.util.*;
 
 public class Extraction {
 
-    private Map<String, String> prefixes = new HashMap<>();
+    private final Map<String, String> prefixes = new HashMap<>();
 
     public Map<String, List<Element>> getTermOccurrences(Element rootElement) {
         Map<String, List<Element>> annotatedElements = new HashMap<>();

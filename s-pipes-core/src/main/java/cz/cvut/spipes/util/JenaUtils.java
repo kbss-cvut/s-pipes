@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 
 public class JenaUtils {
 
-    private static Logger log = LoggerFactory.getLogger(JenaUtils.class);
+    private static final Logger log = LoggerFactory.getLogger(JenaUtils.class);
 
     public static Model readModelFromString(String modelText, String lang) {
         Model model = ModelFactory.createDefaultModel();
@@ -90,8 +90,8 @@ public class JenaUtils {
 
         modelMetadataBuff
             .append("No. of statements: ").append(statementsSize).append("\n")
-            .append("Subjects: ").append(subjectResources.toString()).append("\n")
-            .append("Objects: ").append(objectResources.toString()).append("\n");
+            .append("Subjects: ").append(subjectResources).append("\n")
+            .append("Objects: ").append(objectResources).append("\n");
 
 
         return DigestUtils.md5Hex(modelMetadataBuff.toString());

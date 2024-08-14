@@ -23,7 +23,7 @@ import java.util.List;
 public abstract class ApplyConstructAbstractModule extends AnnotatedAbstractModule {
 
     private static final String TYPE_URI = KBSS_MODULE.uri + "abstract-apply-construct";
-    private static final String PROPERTY_PREFIX_URI = KBSS_MODULE.uri + "";
+    private static final String PROPERTY_PREFIX_URI = KBSS_MODULE.uri;
     //sml:constructQuery
     // TODO - this parameter is reused in ApplyConstructWithChunkedValuesAndScrollableCursorModule. There the comment should be extended by a note, i.e. "The construct queries with markers #${VALUES} and #${LIMIT_OFFSET}."
     @Parameter(urlPrefix = SML.uri, name = "constructQuery", comment = "SPARQL Construct query (sp:Construct)" +

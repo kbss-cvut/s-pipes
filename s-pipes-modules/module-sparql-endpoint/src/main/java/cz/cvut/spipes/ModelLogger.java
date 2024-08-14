@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 @Slf4j
 public class ModelLogger {
 
-    private Logger classLogger;
+    private final Logger classLogger;
     private String logDirectoryPrefix = "";
     private Path logDirectory;
 

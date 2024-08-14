@@ -50,7 +50,7 @@ import org.slf4j.LoggerFactory;
 public class RetrievePrefixesModule extends AbstractModule {
 
     private static final Logger log = LoggerFactory.getLogger(RetrievePrefixesModule.class);
-    private static String TYPE_URI = KBSS_MODULE.uri + "retrieve-prefixes";
+    private static final String TYPE_URI = KBSS_MODULE.uri + "retrieve-prefixes";
 
     //sml:replace
     private boolean isReplace;

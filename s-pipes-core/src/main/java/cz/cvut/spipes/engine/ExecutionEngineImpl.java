@@ -16,9 +16,9 @@ import java.util.stream.Collectors;
 
 class ExecutionEngineImpl implements ExecutionEngine {
 
-    private static Logger log = LoggerFactory.getLogger(ExecutionEngineImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(ExecutionEngineImpl.class);
 
-    private Set<ProgressListener> listeners = new HashSet<>();
+    private final Set<ProgressListener> listeners = new HashSet<>();
 
     private static int i = 0 ;
 
@@ -138,15 +138,11 @@ class ExecutionEngineImpl implements ExecutionEngine {
 
     @Override
     public void addProgressListener(final ProgressListener listener) {
-        if (!listeners.contains(listener)) {
-            listeners.add(listener);
-        }
+        listeners.add(listener);
     }
 
     @Override
     public void removeProgressListener(final ProgressListener listener) {
-        if (listeners.contains(listener)) {
-            listeners.remove(listener);
-        }
+        listeners.remove(listener);
     }
 }

@@ -29,7 +29,7 @@ public class SesameDataDao {
         final ByteArrayOutputStream bos = new ByteArrayOutputStream();
         final RDFHandler rdfHandler = new RDFXMLPrettyWriter(bos);
         getRepositoryData(sesameRepository, contextUri, rdfHandler);
-        return new String(bos.toByteArray());
+        return bos.toString();
     }
 
     /**

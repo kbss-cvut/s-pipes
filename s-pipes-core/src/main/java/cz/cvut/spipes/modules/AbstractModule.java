@@ -87,12 +87,7 @@ public abstract class AbstractModule implements Module {
 
 
     private String encodeValue(String value) {
-        try {
-            return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return "";
+        return URLEncoder.encode(value, StandardCharsets.UTF_8);
     }
 
     private void generateLinkToRerunExecution(String inputModelFilePath) {

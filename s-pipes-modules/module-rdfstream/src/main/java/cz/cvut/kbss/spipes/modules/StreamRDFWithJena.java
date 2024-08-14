@@ -97,10 +97,10 @@ public class StreamRDFWithJena {
          */
         @Override
         public void flush() {
-            System.out.println(String.format("the number of resouces in the file is - %d.", numberOfResources));
+            System.out.printf("the number of resouces in the file is - %d.%n", numberOfResources);
         }
-    };
-    
+    }
+
     public static class CountDistinctNamespacesSink extends SinkNull<Triple>{
 
         protected Pattern nsPattern = Pattern.compile("^([^()]+[#/])[^#/]+$");
@@ -114,7 +114,7 @@ public class StreamRDFWithJena {
         public void send(Triple t) {
             Stream.of(t.getSubject(), t.getPredicate(), t.getObject()).
                     filter(n -> n.isURI()).
-                    map(r -> getNamespace(r.getURI().toString())).
+                    map(r -> getNamespace(r.getURI())).
                     filter(ns -> ns != null).
                     forEach(ns -> namespaces.add(ns));
         }
@@ -134,11 +134,11 @@ public class StreamRDFWithJena {
          */
         @Override
         public void flush() {
-            System.out.println(String.format("There are %d distinct namespaces :", namespaces.size()));
+            System.out.printf("There are %d distinct namespaces :%n", namespaces.size());
             namespaces.forEach(System.out::println);
         }
 
-    };
+    }
 
     protected static long numberOfResources = 0;
 
@@ -163,6 +163,6 @@ public class StreamRDFWithJena {
         });
         InputStream is = new FileInputStream(inputFile);
         m.read(is, null, lang.getLabel());
-        System.out.println(String.format("the number of resouces in the file is - %d.", numberOfResources));
+        System.out.printf("the number of resouces in the file is - %d.%n", numberOfResources);
     }
 }

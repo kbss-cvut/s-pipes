@@ -13,6 +13,7 @@ import org.topbraid.spin.vocabulary.SP;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -56,6 +57,6 @@ public class SpinIntegrationTest {
         RDFNode node = SPINExpressions.evaluate(callExpr, callExpr.getModel(), bindings); //TODO resource.getModel() should be part o context
 
 
-        assertEquals(node.toString(), repositoryUrl + "?default-graph-uri=" + URLEncoder.encode(reportGraphId, "UTF-8") );
+        assertEquals(node.toString(), repositoryUrl + "?default-graph-uri=" + URLEncoder.encode(reportGraphId, StandardCharsets.UTF_8) );
     }
 }

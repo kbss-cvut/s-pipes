@@ -35,10 +35,10 @@ public class SPipesScriptManager {
     private Set<String> globalScripts;
     ///private final Map<String, OntModel> globalScriptsMap = new LinkedHashMap<>();
     //private final OntologyDocumentManager ontoDocManager;
-    private ScriptCollectionRepository scriptsRepository;
+    private final ScriptCollectionRepository scriptsRepository;
     private ResourceRegistry functionRegistry;
     private ResourceRegistry moduleRegistry;
-    private OntologyDocumentManager ontoDocManager;
+    private final OntologyDocumentManager ontoDocManager;
 
     private void registerAll(OntologyDocumentManager ontoDocManager, Collection<String> globalScripts) {
         List<Resource> functions = scriptsRepository.getFunctions(globalScripts);

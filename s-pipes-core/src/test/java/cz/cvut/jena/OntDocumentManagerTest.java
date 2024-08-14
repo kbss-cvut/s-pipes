@@ -24,7 +24,6 @@ public class OntDocumentManagerTest {
                 log.info("- url: " + url);
                 log.info("- model: " + model);
                 readFailureHandlerIsTriggered[0] = true;
-                return;
             }
         };
         docManager.setReadFailureHandler(handler);

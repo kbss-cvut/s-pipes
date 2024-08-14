@@ -61,8 +61,8 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
         Vocabulary.ONTOLOGY_IRI_dataset_descriptor + "/has-next";
     private static final String P_HAS_INPUT_BINDDING =
         Vocabulary.ONTOLOGY_IRI_dataset_descriptor + "/has-input-binding";
-    private static String LOCAL_NAME = "advanced-logging-progress-listener";
-    private static String PREFIX_IRI = SPIPES.uri + LOCAL_NAME + "/";
+    private static final String LOCAL_NAME = "advanced-logging-progress-listener";
+    private static final String PREFIX_IRI = SPIPES.uri + LOCAL_NAME + "/";
     static final Property P_RDF4J_SERVER_URL = getParameter("p-rdf4j-server-url");
     static final Property P_METADATA_REPOSITORY_NAME = getParameter("p-metadata-repository-name");
     static final Property P_DATA_REPOSITORY_NAME = getParameter("p-data-repository-name");
@@ -76,10 +76,10 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
         PersistenceFactory.init(props);
     }
 
-    private String rdf4jServerUrl;
-    private String metadataRepositoryName;
-    private String dataRepositoryName;
-    private String pipelineExecutionGroupId;
+    private final String rdf4jServerUrl;
+    private final String metadataRepositoryName;
+    private final String dataRepositoryName;
+    private final String pipelineExecutionGroupId;
     private EntityManagerFactory metadataEmf = null;
     private EntityManagerFactory dataEmf = null;
 
@@ -478,7 +478,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
 
         private final String name;
 
-        private SnapshotRole(String name) {
+        SnapshotRole(String name) {
             this.name = name;
         }
 

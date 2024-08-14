@@ -11,7 +11,7 @@ public enum Mode {
     MINIMAL("minimal-mode"),
     STANDARD("standard-mode");
 
-    private static String PREFIX = TabularModule.TYPE_URI + "/";
+    private static final String PREFIX = TabularModule.TYPE_URI + "/";
     private final String localName;
 
     public Resource getResource() {

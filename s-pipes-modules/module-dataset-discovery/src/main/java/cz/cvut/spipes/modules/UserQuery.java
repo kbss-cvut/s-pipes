@@ -30,9 +30,9 @@ public class UserQuery {
         };
     }
 
-    private List<Date> dates = new ArrayList<>();
+    private final List<Date> dates = new ArrayList<>();
 
-    private List<String> keywords = new ArrayList<>();
+    private final List<String> keywords = new ArrayList<>();
 
     /**
      * Parses a free text input into a UserQuery object.

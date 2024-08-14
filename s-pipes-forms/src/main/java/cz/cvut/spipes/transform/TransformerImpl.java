@@ -156,7 +156,7 @@ public class TransformerImpl implements Transformer {
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         ModelFactory.createDefaultModel().add(module.listProperties()).write(os, "TTL");
-        String ttlStr = new String(os.toByteArray());
+        String ttlStr = os.toString();
         ttlA.setTextValue(ttlStr);
         ttlA.setHash(DigestUtils.sha1Hex(ttlStr));
 
@@ -409,7 +409,7 @@ public class TransformerImpl implements Transformer {
     }
 
     private void initializeQuestionUri(Question q) {
-        q.setUri(URI.create(SFormsVocabularyJena.s_c_question + "-" + UUID.randomUUID().toString()));
+        q.setUri(URI.create(SFormsVocabularyJena.s_c_question + "-" + UUID.randomUUID()));
     }
 
     private Question createQuestion(Resource resource) {
@@ -460,9 +460,8 @@ public class TransformerImpl implements Transformer {
 
         @Override
         public boolean equals(Object o) {
-            if (!(o instanceof OriginPair))
+            if (!(o instanceof OriginPair p))
                 return false;
-            OriginPair p = (OriginPair) o;
             return Objects.equals(q, p.q) && Objects.equals(a, p.a);
         }
 

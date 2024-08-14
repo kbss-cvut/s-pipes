@@ -33,7 +33,7 @@ import java.util.List;
  * </table
  */
 public class HTML2TSVConvertor implements TSVConvertor {
-    private int tableNumber;
+    private final int tableNumber;
     private final List<Pair<Integer, Integer> > cellColSpan = new ArrayList<>();
 
     public HTML2TSVConvertor(int sheetNumber) {
@@ -74,7 +74,6 @@ public class HTML2TSVConvertor implements TSVConvertor {
                 for(int i = 0; i < cellColSpan.get(curColIndex).getRight(); i++){
                     if(!isFirst)sb.append('\t');
                     isFirst = false;
-                    sb.append("");
                 }
                 cellColSpan.set(curColIndex,new Pair<>(
                         cellColSpan.get(curColIndex).getLeft()-1,

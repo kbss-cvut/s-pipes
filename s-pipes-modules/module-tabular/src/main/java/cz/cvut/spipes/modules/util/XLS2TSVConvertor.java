@@ -23,8 +23,8 @@ import java.util.List;
  * Module for converting tabular data from XLS to TSV. Converts specific sheet of the xls file.
  */
 public class XLS2TSVConvertor implements TSVConvertor {
-    private int sheetNumber;
-    private ResourceFormat format;
+    private final int sheetNumber;
+    private final ResourceFormat format;
 
     public XLS2TSVConvertor(int sheetNumber, ResourceFormat format) {
         this.sheetNumber = sheetNumber;

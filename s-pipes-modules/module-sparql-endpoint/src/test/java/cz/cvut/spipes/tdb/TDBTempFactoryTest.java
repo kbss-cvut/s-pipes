@@ -21,7 +21,7 @@ public class TDBTempFactoryTest {
     @Disabled//doesn't work on windows
     @Test
     public void createTDBModelRemovesDirectoryForPreviousModelsWithoutReferences() throws InterruptedException {
-        String inputModelPath = TDBTempFactoryTest.class.getResource("/small-model.ttl").getFile().toString();
+        String inputModelPath = TDBTempFactoryTest.class.getResource("/small-model.ttl").getFile();
 
         List<Path> locations = new LinkedList<>();
 

@@ -27,7 +27,7 @@ import org.topbraid.spin.model.Select;
 @SPipesModule(label = "apply construct with chunked values", comment = "Apply construct with chunked values.")
 public class ApplyConstructWithChunkedValuesModule extends ApplyConstructAbstractModule {
 
-    private static final String TYPE_URI = KBSS_MODULE.uri + "";
+    private static final String TYPE_URI = KBSS_MODULE.uri;
     private static final String TYPE_PREFIX = TYPE_URI + "/";
     private static final int DEFAULT_CHUNK_SIZE = 10;
     private static final String VALUES_CLAUSE_MARKER_NAME = "VALUES";

@@ -183,7 +183,6 @@ public class ExecuteModuleCLI {
             outputExecutionContext.getDefaultModel().write(System.out, FileUtils.langTurtle);
         }
 
-        return;
     }
 
 
