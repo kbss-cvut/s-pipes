@@ -1,30 +1,29 @@
 package cz.cvut.spipes.rest.handler;
 
 import com.github.jsonldjava.core.JsonLdError;
-import com.github.jsonldjava.core.JsonLdOptions;
-import com.github.jsonldjava.core.JsonLdProcessor;
-import com.github.jsonldjava.utils.JsonUtils;
 import cz.cvut.spipes.exception.ValidationConstraintFailedException;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.riot.*;
+import cz.cvut.spipes.util.RDFMimeType;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.io.IOException;
-import java.io.StringWriter;
-import java.util.Map;
 
 @RestControllerAdvice
 public class RestExceptionHandler {
     @ExceptionHandler(ValidationConstraintFailedException.class)
+    @ResponseBody
     public ResponseEntity<Object> validationConstraintFailedException(ValidationConstraintFailedException e) throws IOException, JsonLdError {
-        return new ResponseEntity<>(new ErrorValidationResponse(
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+            .contentType(MediaType.parseMediaType(RDFMimeType.LD_JSON_STRING))
+            .body(new ErrorValidationResponse(
                 e.getModule(),
                 e.getErrorMessage(),
                 e.getFailedQuery(),
                 e.getEvidences()
-        ).getFramedAndCompactedJsonLd(), HttpStatus.CONFLICT);
+            ).getFramedAndCompactedJsonLd());
     }
 }
