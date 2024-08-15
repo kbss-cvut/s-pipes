@@ -7,20 +7,22 @@ import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.form.JenaFormUtils;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.Map;
 
-@Slf4j
 @SPipesModule(label = "fetch possible values", comment =
         "Fetches possible values for answers of questions. Inputs are forms using Q&A model. Possible values of " +
         "questions are added to questions that does not have any value attached and contains possible value query."
 )
 public class FetchPossibleValuesModule extends AnnotatedAbstractModule {
 
+    private static final Logger log = LoggerFactory.getLogger(FetchPossibleValuesModule.class);
     private static final String TYPE_URI = KBSS_MODULE.uri + "fetch-possible-values";
 
     @Parameter(urlPrefix = SML.uri, name = "replace", comment = "Specifies whether a module should overwrite triples" +

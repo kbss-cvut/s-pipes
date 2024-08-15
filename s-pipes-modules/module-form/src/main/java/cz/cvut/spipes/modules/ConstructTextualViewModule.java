@@ -13,7 +13,6 @@ import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.form.JenaFormUtils;
 import cz.cvut.spipes.form.JopaPersistenceUtils;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
@@ -23,12 +22,13 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.function.Predicate;
 
-@Slf4j
 @SPipesModule(label = "construct textual view", comment =
         "For input Q&A models constructs textual view of specified questions. Each textual" +
         " view represent the question and its sub-questions recursively."
 )
 public class ConstructTextualViewModule extends AnnotatedAbstractModule {
+
+    private static final Logger log = LoggerFactory.getLogger(ConstructTextualViewModule.class);
 
     private static final String TYPE_URI = KBSS_MODULE.uri + "construct-textual-view";
 
