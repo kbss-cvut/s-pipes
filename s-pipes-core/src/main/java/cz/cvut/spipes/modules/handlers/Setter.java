@@ -2,10 +2,22 @@ package cz.cvut.spipes.modules.handlers;
 
 import java.lang.reflect.Field;
 
-public interface Setter<T>{
+public abstract class Setter<T>{
 
-    void addValue(T value);
+    protected final Field f;
+    protected final Object bean;
 
-    Field getField();
-    Object getBean();
+    protected Setter(Field f, Object bean) {
+        this.f = f;
+        this.bean = bean;
+    }
+
+    abstract void addValue(T value);
+
+    Field getField(){
+        return f;
+    }
+    Object getBean(){
+        return bean;
+    }
 }

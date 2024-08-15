@@ -5,9 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cz.cvut.spipes.modules.handlers.FieldSetter;
-import cz.cvut.spipes.modules.handlers.Handler;
-import cz.cvut.spipes.modules.handlers.HandlerRegistry;
+import cz.cvut.spipes.modules.handlers.*;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,12 +29,15 @@ public abstract class AnnotatedAbstractModule extends AbstractModule {
 
             log.trace("Processing parameter {} ", f.getName());
 
-
+            Setter setter;
+            if(f.getType() == List.class){
+                setter = new ListSetter(f, this);
+            }else{
+                setter = new FieldSetter(f, this);
+            }
             HandlerRegistry handlerRegistry = HandlerRegistry.getInstance();
-            FieldSetter setter = new FieldSetter(f, this);
             Handler<?> handler = handlerRegistry.getHandler(f.getType(), resource, executionContext, setter);
             handler.setValueByProperty(ResourceFactory.createProperty(p.urlPrefix()+p.name()));
-
         }
     }
 }

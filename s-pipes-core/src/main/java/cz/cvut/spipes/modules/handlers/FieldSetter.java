@@ -2,21 +2,17 @@ package cz.cvut.spipes.modules.handlers;
 
 import java.lang.reflect.Field;
 
-public class FieldSetter implements Setter {
+public class FieldSetter extends Setter {
 
-    private final Field f;
-    private final Object bean;
 
     public FieldSetter(Field f, Object bean) {
-        this.f = f;
-        this.bean = bean;
+        super(f, bean);
     }
 
     public void addValue(Object value) {
         try {
             f.set(bean,value);
         } catch (IllegalAccessException ex) {
-            // try again
             f.setAccessible(true);
             try {
                 f.set(bean,value);
@@ -25,16 +21,5 @@ public class FieldSetter implements Setter {
             }
         }
     }
-
-    @Override
-    public Field getField() {
-        return f;
-    }
-
-    @Override
-    public Object getBean() {
-        return bean;
-    }
-
 
 }

@@ -28,14 +28,17 @@ public class HandlerRegistry {
     }
 
     private void initHandlers() {
+        registerHandler(Boolean.class, BooleanHandler.class);
         registerHandler(boolean.class, BooleanHandler.class);
         registerHandler(Integer.class, IntegerHandler.class);
+        registerHandler(int.class, IntegerHandler.class);
         registerHandler(String.class, StringHandler.class);
         registerHandler(RDFNode.class, RDFNodeHandler.class);
         registerHandler(Select.class, SelectHandler.class);
         registerHandler(URL.class, URLHandler.class);
         registerHandler(Path.class, PathHandler.class);
         registerHandler(Resource.class, ResourceHandler.class);
+        registerHandler(List.class, ListHandler.class);
     }
 
     public synchronized Handler<?> getHandler(Class clazz, Resource resource, ExecutionContext context, Setter setter) {
