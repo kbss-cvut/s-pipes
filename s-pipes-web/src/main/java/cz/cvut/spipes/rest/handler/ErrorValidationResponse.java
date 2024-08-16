@@ -97,6 +97,7 @@ public class ErrorValidationResponse {
             {
               "@context": {
                 "module": "http://onto.fel.cvut.cz/ontologies/s-pipes/module",
+                "message": "http://onto.fel.cvut.cz/ontologies/s-pipes/message",
                 "constraintFailureEvidences": {
                   "@id": "http://onto.fel.cvut.cz/ontologies/s-pipes/constraintFailureEvidences",
                   "@container": "@list"
@@ -118,6 +119,7 @@ public class ErrorValidationResponse {
         Resource validationError = model.createResource();
 
         model.setNsPrefix("s-pipes", S_PIPES);
+        model.add(validationError, getP("message"), message);
         model.add(validationError, RDF.type, getR("ValidationConstraintError"));
         model.add(validationError, getP("constraintQuery"), failedQuery);
 
