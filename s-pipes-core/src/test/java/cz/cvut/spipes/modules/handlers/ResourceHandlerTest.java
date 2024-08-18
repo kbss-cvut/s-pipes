@@ -9,29 +9,29 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class StringHandlerTest {
+public class ResourceHandlerTest {
 
     private Resource mockResource;
     private ExecutionContext mockExecutionContext;
-    private Setter<String> mockSetter;
-    private StringHandler stringHandler;
+    private Setter<Resource> mockSetter;
+    private ResourceHandler resourceHandler;
 
     @BeforeEach
     public void setUp() {
         mockResource = ModelFactory.createDefaultModel().createResource();
         mockExecutionContext = mock(ExecutionContext.class);
         mockSetter = mock(Setter.class);
-        stringHandler = new StringHandler(mockResource, mockExecutionContext, mockSetter);
+        resourceHandler = new ResourceHandler(mockResource, mockExecutionContext, mockSetter);
     }
 
     @Test
     public void testGetRDFNodeValue() {
         RDFNode mockNode = mock(RDFNode.class);
-        String expectedString = "testString";
-        when(mockNode.toString()).thenReturn(expectedString);
+        Resource mockResource = ModelFactory.createDefaultModel().createResource("http://example.org/resource");
+        when(mockNode.asResource()).thenReturn(mockResource);
 
-        String result = stringHandler.getRDFNodeValue(mockNode);
-        assertEquals(expectedString, result);
+        Resource result = resourceHandler.getRDFNodeValue(mockNode);
+        assertEquals(mockResource, result);
     }
 
 }

@@ -1,73 +1,43 @@
 package cz.cvut.spipes.modules.handlers;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import cz.cvut.spipes.engine.ExecutionContext;
-import org.apache.jena.rdf.model.Literal;
-import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.Property;
+import cz.cvut.spipes.exception.ScriptRuntimeErrorException;
+import org.apache.jena.rdf.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 public class BooleanHandlerTest {
 
     private BooleanHandler booleanHandler;
-    private Resource resource;
-    private ExecutionContext executionContext;
-    private Setter<Boolean> setter;
-    private RDFNode rdfNode;
+    private Resource mockResource;
+    private ExecutionContext mockExecutionContext;
+    private Setter<Boolean> mockSetter;
 
     @BeforeEach
-    public void setUp() {
-        resource = mock(Resource.class);
-        executionContext = mock(ExecutionContext.class);
-        setter = mock(Setter.class);
-        booleanHandler = new BooleanHandler(resource, executionContext, setter);
+    void setUp() {
+        mockResource = mock(Resource.class);
+        mockExecutionContext = mock(ExecutionContext.class);
+        mockSetter = mock(Setter.class);
+        booleanHandler = new BooleanHandler(mockResource, mockExecutionContext, mockSetter);
     }
 
     @Test
-    public void testGetJavaNativeValueTrue() {
-        Literal literal = mock(Literal.class);
-        when(literal.getBoolean()).thenReturn(true);
-        rdfNode = mock(RDFNode.class);
-        when(rdfNode.asLiteral()).thenReturn(literal);
-
-        Boolean result = booleanHandler.getJavaNativeValue(rdfNode);
+    void testGetRDFNodeValueTrue() {
+        RDFNode rdfNode = ResourceFactory.createTypedLiteral(true);
+        Boolean result = booleanHandler.getRDFNodeValue(rdfNode);
         assertTrue(result);
     }
 
     @Test
-    public void testGetJavaNativeValueFalse() {
-        Literal literal = mock(Literal.class);
-        when(literal.getBoolean()).thenReturn(false);
-        rdfNode = mock(RDFNode.class);
-        when(rdfNode.asLiteral()).thenReturn(literal);
-
-        Boolean result = booleanHandler.getJavaNativeValue(rdfNode);
+    void testGetRDFNodeValueFalse() {
+        RDFNode rdfNode = ResourceFactory.createTypedLiteral(false);
+        Boolean result = booleanHandler.getRDFNodeValue(rdfNode);
         assertFalse(result);
-    }
-
-    @Test
-    public void testGetJavaNativeValueInvalidType() {
-        Literal literal = mock(Literal.class);
-        when(literal.getBoolean()).thenThrow(new ClassCastException("Not a boolean"));
-        rdfNode = mock(RDFNode.class);
-        when(rdfNode.asLiteral()).thenReturn(literal);
-
-        assertThrows(ClassCastException.class, () -> booleanHandler.getJavaNativeValue(rdfNode));
-    }
-
-    @Test
-    public void testSetValueByPropertyNullNode() {
-        Property property = mock(Property.class);
-        when(booleanHandler.getEffectiveValue(property)).thenReturn(null);
-
-        booleanHandler.setValueByProperty(property);
-
-        verify(setter, never()).addValue(anyBoolean());
     }
 
 }

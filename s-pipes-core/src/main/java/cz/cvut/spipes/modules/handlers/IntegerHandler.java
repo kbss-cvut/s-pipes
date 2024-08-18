@@ -6,17 +6,15 @@ import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 
-public class IntegerHandler extends Handler<Integer>{
+public class IntegerHandler extends BaseRDFNodeHandler<Integer>{
 
     public IntegerHandler(Resource resource, ExecutionContext executionContext, Setter<? super Integer> setter) {
         super(resource, executionContext, setter);
     }
 
     @Override
-    public void setValueByProperty(Property property) {
-        RDFNode node = getEffectiveValue(property);
-        if (node != null && node.isLiteral()) {
-            setter.addValue(node.asLiteral().getInt());
-        }
+    Integer getRDFNodeValue(RDFNode node) {
+        return node.asLiteral().getInt();
     }
+
 }

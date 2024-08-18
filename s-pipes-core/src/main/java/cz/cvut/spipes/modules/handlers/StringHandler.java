@@ -5,7 +5,7 @@ import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 
-public class StringHandler extends Handler<String> {
+public class StringHandler extends BaseRDFNodeHandler<String> {
 
 
     public StringHandler(Resource resource, ExecutionContext executionContext, Setter<? super String> setter) {
@@ -13,10 +13,8 @@ public class StringHandler extends Handler<String> {
     }
 
     @Override
-    public void setValueByProperty(Property property) {
-        RDFNode node = getEffectiveValue(property);
-        if (node != null) {
-            setter.addValue(node.toString());
-        }
+    String getRDFNodeValue(RDFNode node) {
+        return node.toString();
     }
+
 }

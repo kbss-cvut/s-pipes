@@ -8,17 +8,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 
-public class PathHandler extends Handler<Path> {
+public class PathHandler extends BaseRDFNodeHandler<Path> {
     public PathHandler(Resource resource, ExecutionContext executionContext, Setter<? super Path> setter) {
         super(resource, executionContext, setter);
     }
 
     @Override
-    public void setValueByProperty(Property property) {
-        RDFNode pathNode = getEffectiveValue(property);
-        if(pathNode != null) {
-            Path path = Paths.get(pathNode.toString());
-            setter.addValue(path);
-        }
+    Path getRDFNodeValue(RDFNode node) {
+        return Paths.get(node.toString());
     }
+
 }

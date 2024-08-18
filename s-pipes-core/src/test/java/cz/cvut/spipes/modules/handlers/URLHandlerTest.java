@@ -4,67 +4,54 @@ import cz.cvut.spipes.engine.ExecutionContext;
 import org.apache.jena.rdf.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class URLHandlerTest {
-
+class URLHandlerTest {
     private URLHandler urlHandler;
     private Resource mockResource;
     private ExecutionContext mockExecutionContext;
     private Setter<URL> mockSetter;
-    private Property mockProperty;
-    private Model model;
 
     @BeforeEach
-    public void setUp() {
-        mockResource = mock(Resource.class);
-        mockExecutionContext = mock(ExecutionContext.class);
-        mockSetter = mock(Setter.class);
-        mockProperty = mock(Property.class);
-        model = ModelFactory.createDefaultModel();
-
+    void setUp() {
+        mockResource = Mockito.mock(Resource.class);
+        mockExecutionContext = Mockito.mock(ExecutionContext.class);
+        mockSetter = Mockito.mock(Setter.class);
         urlHandler = new URLHandler(mockResource, mockExecutionContext, mockSetter);
     }
 
     @Test
-    public void testSetValueByPropertyWithValidURL() throws MalformedURLException {
-        RDFNode urlNode = model.createLiteral("http://example.com");
-        Statement mockStatement = mock(Statement.class);
+    void testGetRDFNodeValue_ValidURL() throws MalformedURLException {
 
-        when(mockResource.getProperty(mockProperty)).thenReturn(mockStatement);
-        when(mockStatement.getObject()).thenReturn(urlNode);
+        RDFNode node = ResourceFactory.createPlainLiteral("http://example.com");
 
-        urlHandler.setValueByProperty(mockProperty);
-        verify(mockSetter).addValue(new URL("http://example.com"));
+        URL result = urlHandler.getRDFNodeValue(node);
+
+        assertEquals(new URL("http://example.com"), result);
     }
 
     @Test
-    public void testSetValueByPropertyWithResource() {
-        RDFNode urlNode = model.createResource("http://example.com");
-        Statement mockStatement = mock(Statement.class);
+    void testGetRDFNodeValue_InvalidURL() {
 
-        when(mockResource.getProperty(mockProperty)).thenReturn(mockStatement);
-        when(mockStatement.getObject()).thenReturn(urlNode);
+        RDFNode node = ResourceFactory.createPlainLiteral("invalid-url");
 
-        try {
-            urlHandler.setValueByProperty(mockProperty);
-        } catch (RuntimeException e) {
-            assertTrue(e.getCause() instanceof MalformedURLException);
-        }
+        assertThrows(MalformedURLException.class, () -> {
+            urlHandler.getRDFNodeValue(node);
+        });
     }
 
     @Test
-    public void testSetValueByPropertyWithNullNode() {
-        Statement mockStatement = mock(Statement.class);
-        when(mockResource.getProperty(mockProperty)).thenReturn(mockStatement);
-        when(mockStatement.getObject()).thenReturn(null);
+    void testGetRDFNodeValue_NullNode() {
 
-        urlHandler.setValueByProperty(mockProperty);
+        RDFNode node = null;
 
-        verify(mockSetter, never()).addValue(any(URL.class));
+        assertThrows(NullPointerException.class, () -> {
+            urlHandler.getRDFNodeValue(node);
+        });
     }
 }

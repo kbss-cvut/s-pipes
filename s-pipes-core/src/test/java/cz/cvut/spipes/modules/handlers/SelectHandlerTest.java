@@ -6,32 +6,38 @@ import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.topbraid.spin.model.Select;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class StringHandlerTest {
+public class SelectHandlerTest {
 
     private Resource mockResource;
     private ExecutionContext mockExecutionContext;
-    private Setter<String> mockSetter;
-    private StringHandler stringHandler;
+    private Setter<Select> mockSetter;
+    private SelectHandler selectHandler;
 
     @BeforeEach
     public void setUp() {
         mockResource = ModelFactory.createDefaultModel().createResource();
         mockExecutionContext = mock(ExecutionContext.class);
         mockSetter = mock(Setter.class);
-        stringHandler = new StringHandler(mockResource, mockExecutionContext, mockSetter);
+        selectHandler = new SelectHandler(mockResource, mockExecutionContext, mockSetter);
     }
 
     @Test
     public void testGetRDFNodeValue() {
         RDFNode mockNode = mock(RDFNode.class);
-        String expectedString = "testString";
-        when(mockNode.toString()).thenReturn(expectedString);
+        Resource mockResource = mock(Resource.class);
+        Select mockSelect = mock(Select.class);
 
-        String result = stringHandler.getRDFNodeValue(mockNode);
-        assertEquals(expectedString, result);
+        when(mockNode.asResource()).thenReturn(mockResource);
+        when(mockResource.as(Select.class)).thenReturn(mockSelect);
+
+        Select result = selectHandler.getRDFNodeValue(mockNode);
+        assertEquals(mockSelect, result);
     }
 
 }

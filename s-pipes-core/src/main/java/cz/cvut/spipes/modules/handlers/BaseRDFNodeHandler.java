@@ -8,30 +8,42 @@ import org.apache.jena.rdf.model.Resource;
 
 
 /**
- * Abstract Handler for cases when native Java value can be extracted directly from a single RDFNode.
+ * An abstract base class for handling RDF nodes and converting them to a specific type.
+ * This class provides a common implementation for handling RDF nodes and setting their values
+ * to fields of a specified type.
+ *
+ * @param <T> The type of the value that this handler converts RDF nodes to.
  */
-abstract public class BaseRdfNodeHandler<T>  extends Handler<T> {
+abstract public class BaseRDFNodeHandler<T>  extends Handler<T> {
 
-    public BaseRdfNodeHandler(Resource resource, ExecutionContext executionContext, Setter<? super T> setter) {
+    public BaseRDFNodeHandler(Resource resource, ExecutionContext executionContext, Setter<? super T> setter) {
         super(resource, executionContext, setter);
     }
 
     /**
-     * Constructs the native Java value from a given RDFNode.
+     * Converts an RDF node to a value of type {@code T}.
+     * This method must be implemented by subclasses to provide the specific conversion logic.
      *
-     * @param  node  the RDFNode to extract the native Java value from
-     * @return      the native Java value of the RDFNode
+     * @param node The RDF node to convert.
+     * @return The converted value of type {@code T}.
      */
-    abstract T getJavaNativeValue(RDFNode node);
+    abstract T getRDFNodeValue(RDFNode node) throws Exception;
 
+    /**
+     * Sets a value to the field associated with this handler by converting an RDF node
+     * retrieved from the specified RDF property.
+     *
+     * @param property The RDF property whose value is used to retrieve the RDF node.
+     * @throws ScriptRuntimeErrorException If an error occurs during the conversion or setting process.
+     */
     @Override
     public void setValueByProperty(Property property) {
         RDFNode node = getEffectiveValue(property);
 
         if (node != null) {
             try {
-                setter.addValue(getJavaNativeValue(node));
-            } catch (RuntimeException ex) {
+                setter.addValue(getRDFNodeValue(node));
+            } catch (Exception ex) {
                 throw new ScriptRuntimeErrorException(
                     String.format("""
                             Failed to set value of the field `%s` of type `%s` within class `%s`.
