@@ -28,7 +28,7 @@ public class ImportRDFFromWorkspaceModule extends AnnotatedAbstractModule {
 
     // sml:ignoreImports : xsd:boolean
     @Parameter(urlPrefix = SML.uri, name = "ignoreImports")
-    boolean isIgnoreImports;
+    boolean isIgnoreImports = false;
 
     // TODO reconsider support for this property (might change identification of module type)
     // sml:sourceFilePath : xsd:string

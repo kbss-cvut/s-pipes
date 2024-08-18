@@ -11,6 +11,26 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.*;
 
+
+/**
+ * The `HandlerRegistry` class is a singleton responsible for managing and providing
+ * handlers that can process different data types within the context of module configuration.
+ * The registry allows for dynamic retrieval of the appropriate handler based on the class type.
+ *
+ * <p>Handlers are used to set values for fields in a module based on RDF resources.
+ * The `HandlerRegistry` initializes and registers handlers for common data types,
+ * and it provides a mechanism to register custom handlers as needed.
+ *
+ * <p>The registry is thread-safe, ensuring consistent behavior in multi-threaded environments.
+ *
+ * <p>Usage example:
+ * <pre>
+ * {@code
+ * HandlerRegistry registry = HandlerRegistry.getInstance();
+ * Handler<?> handler = registry.getHandler(String.class, resource, executionContext, setter);
+ * }
+ * </pre>
+ */
 public class HandlerRegistry {
 
     private static HandlerRegistry instance;
@@ -63,10 +83,17 @@ public class HandlerRegistry {
     }
 
 
+    /**
+     * The `HandlerFactory` interface defines a factory for creating handler instances.
+     */
     public interface HandlerFactory{
         Handler<?> getHandler(Resource resource, ExecutionContext executionContext, Setter setter);
     }
 
+    /**
+     * The `DefaultConstructorHandlerFactory` is a factory class that uses a constructor
+     * to create handler instances. It implements the `HandlerFactory` interface.
+     */
     private class DefaultConstructorHandlerFactory implements HandlerFactory {
 
         private final Constructor<? extends Handler> constructor;

@@ -36,6 +36,17 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.joining;
 
+/**
+ * The `AbstractModule` class serves as a foundational abstract class for defining
+ * execution modules in a processing pipeline. Each module is responsible for
+ * executing specific tasks within a given execution context, managing input and
+ * output constraints, and handling module-specific configurations.
+ *
+ * <p>Subclasses are required to implement the {@link #executeSelf()} method, which
+ * encapsulates the core logic of the module's execution. This class also provides
+ * various utility methods to assist with constraint validation, model management,
+ * and logging during execution.
+ */
 public abstract class AbstractModule implements Module {
 
     private static final Logger log = LoggerFactory.getLogger(AbstractModule.class);
