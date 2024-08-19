@@ -61,7 +61,7 @@ public class HandlerRegistry {
         registerHandler(List.class, ListHandler.class);
     }
 
-    public synchronized Handler<?> getHandler(Class clazz, Resource resource, ExecutionContext context, Setter setter) {
+    public synchronized Handler getHandler(Class clazz, Resource resource, ExecutionContext context, Setter setter) {
         HandlerFactory handlerFactory = handlers.get(clazz);
         if (handlerFactory == null) {
             throw new RuntimeException("No handler for " + clazz);

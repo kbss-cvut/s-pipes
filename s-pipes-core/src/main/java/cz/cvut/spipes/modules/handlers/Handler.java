@@ -42,17 +42,4 @@ abstract public class Handler<T> {
      */
     abstract public void setValueByProperty(Property property);
 
-    protected RDFNode getEffectiveValue(Property property){
-        RDFNode valueNode = Optional.of(resource)
-                .map(r -> r.getProperty(property))
-                .map(Statement::getObject)
-                .orElse(null);
-        if (SPINExpressions.isExpression(valueNode)) {
-            Resource expr = (Resource) SPINFactory.asExpression(valueNode);
-            QuerySolution bindings = executionContext.getVariablesBinding().asQuerySolution();
-            return SPINExpressions.evaluate(expr, resource.getModel(), bindings);
-        } else {
-            return valueNode;
-        }
-    }
 }
