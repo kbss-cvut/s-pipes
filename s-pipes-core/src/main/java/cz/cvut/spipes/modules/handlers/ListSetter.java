@@ -17,12 +17,13 @@ public class ListSetter extends Setter{
             if (list == null) {
                 list = new java.util.ArrayList<>();
                 f.set(bean, list);
+            }else if(!list.isEmpty()){
+                list.clear();
             }
 
             if (value instanceof List) {
                 list.addAll((List<?>) value);
             } else {
-
                 list.add(value);
             }
 
@@ -34,6 +35,8 @@ public class ListSetter extends Setter{
                 if (list == null) {
                     list = new java.util.ArrayList<>();
                     f.set(bean, list);
+                }else if(!list.isEmpty()){
+                    list.clear();
                 }
 
                 if (value instanceof List) {
@@ -47,6 +50,4 @@ public class ListSetter extends Setter{
             }
         }
     }
-
-
 }

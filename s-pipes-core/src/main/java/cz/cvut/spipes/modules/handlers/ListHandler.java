@@ -18,8 +18,6 @@ import java.util.stream.Collectors;
 
 public class ListHandler extends Handler<List<?>> {
 
-    private final Map<Class<?>, Function<Object, ?>> handlerMap = new HashMap<>();
-
     public ListHandler(Resource resource, ExecutionContext executionContext, Setter<? super List<?>> setter) {
         super(resource, executionContext, setter);
     }

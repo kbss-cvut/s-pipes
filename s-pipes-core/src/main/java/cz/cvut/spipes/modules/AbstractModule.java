@@ -38,8 +38,8 @@ import static java.util.stream.Collectors.joining;
 
 /**
  * The `AbstractModule` class serves as a foundational abstract class for defining
- * execution modules in a processing pipeline. Each module is responsible for
- * executing specific tasks within a given execution context, managing input and
+ * modules executed in a processing pipeline. Each module is responsible for
+ * executing specific tasks within a given execution context, validating input and
  * output constraints, and handling module-specific configurations.
  *
  * <p>Subclasses are required to implement the {@link #executeSelf()} method, which

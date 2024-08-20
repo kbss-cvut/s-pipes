@@ -78,9 +78,8 @@ class ListSetterTest {
 
         listSetter.addValue("newValue");
 
-        assertEquals(2, testBean.values.size());
-        assertEquals("initialValue", testBean.values.get(0));
-        assertEquals("newValue", testBean.values.get(1));
+        assertEquals(1, testBean.values.size());
+        assertEquals("newValue", testBean.values.get(0));
     }
 
     @Test
@@ -91,9 +90,8 @@ class ListSetterTest {
         List<Object> valuesToAdd = Arrays.asList("newValue1", "newValue2");
         listSetter.addValue(valuesToAdd);
 
-        assertEquals(3, testBean.values.size());
-        assertEquals("initialValue", testBean.values.get(0));
-        assertEquals("newValue1", testBean.values.get(1));
-        assertEquals("newValue2", testBean.values.get(2));
+        assertEquals(2, testBean.values.size());
+        assertEquals("newValue1", testBean.values.get(0));
+        assertEquals("newValue2", testBean.values.get(1));
     }
 }

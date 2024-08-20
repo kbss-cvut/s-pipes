@@ -1,6 +1,7 @@
 package cz.cvut.spipes.modules.handlers;
 
 import cz.cvut.spipes.engine.ExecutionContext;
+import cz.cvut.spipes.exception.ScriptRuntimeErrorException;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
@@ -34,11 +35,11 @@ abstract public class Handler<T> {
     }
 
     /**
-     * Sets the value of the native Java object based on the provided RDF property.
-     * If the value is an RDF expression which evaluates to undefined/null,
-     * the setter should not be triggered or set null as well.
+     * Sets a value to the field associated with this handler by converting an RDF node
+     * retrieved from the specified RDF property.
      *
-     * @param property the RDF property to extract the value from
+     * @param property The RDF property whose value is used to retrieve the RDF node.
+     * @throws ScriptRuntimeErrorException If an error occurs during the conversion or setting process.
      */
     abstract public void setValueByProperty(Property property);
 
