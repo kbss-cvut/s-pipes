@@ -26,10 +26,10 @@ public class ErrorValidationResponse {
     private final String module;
     private final String message;
     private final String failedQuery;
-    private final List<Map<String, String>> evidences;
+    private final List<Map<String, RDFNode>> evidences;
     private final Model model = ModelFactory.createDefaultModel();
 
-    public ErrorValidationResponse(String module, String message, String failedQuery, List<Map<String, String>> evidences) {
+    public ErrorValidationResponse(String module, String message, String failedQuery, List<Map<String, RDFNode>> evidences) {
         this.module = module;
         this.message = message;
         this.failedQuery = failedQuery;
@@ -44,7 +44,7 @@ public class ErrorValidationResponse {
         return failedQuery;
     }
 
-    public List<Map<String, String>> getEvidences() {
+    public List<Map<String, RDFNode>> getEvidences() {
         return evidences;
     }
 
@@ -129,11 +129,10 @@ public class ErrorValidationResponse {
                 e.forEach((key, value) -> model.add(
                     r,
                     getP(key),
-                    ResourceFactory.createPlainLiteral(value)
+                    value
                 ));
                 evidenceResources.add(r);
             });
-
         model.add(validationError, getP("module"), module);
         Resource listOfEvidences = model.createList(evidenceResources.toArray(RDFNode[]::new));
         model.add(getP("constraintFailureEvidences"), RDFS.range, RDF.List);

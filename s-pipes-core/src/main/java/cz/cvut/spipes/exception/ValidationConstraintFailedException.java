@@ -1,6 +1,7 @@
 package cz.cvut.spipes.exception;
 
 import cz.cvut.spipes.modules.Module;
+import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -12,12 +13,12 @@ public class ValidationConstraintFailedException extends SPipesException {
     private final String module;
     private final String errorMessage;
     private final String failedQuery;
-    private final List<Map<String, String>> evidences;
+    private final List<Map<String, RDFNode>> evidences;
 
     public ValidationConstraintFailedException(@NotNull Module module,
                                                String errorMessage,
                                                String failedQuery,
-                                               List<Map<String, String>> evidences) {
+                                               List<Map<String, RDFNode>> evidences) {
 
         super(createModuleInfo(module));
         this.module = Optional.ofNullable(module.getResource()).map(Resource::toString).orElse("Unknown");
@@ -45,7 +46,7 @@ public class ValidationConstraintFailedException extends SPipesException {
         return failedQuery;
     }
 
-    public List<Map<String, String>> getEvidences() {
+    public List<Map<String, RDFNode>> getEvidences() {
         return evidences;
     }
 
@@ -76,10 +77,10 @@ public class ValidationConstraintFailedException extends SPipesException {
         for (String key : evidences.get(0).keySet()) {
             columnWidths.put(key, key.length());
         }
-        for (Map<String, String> row : evidences) {
-            for (Map.Entry<String, String> entry : row.entrySet()) {
+        for (Map<String, RDFNode> row : evidences) {
+            for (Map.Entry<String, RDFNode> entry : row.entrySet()) {
                 int currentWidth = columnWidths.get(entry.getKey());
-                int dataWidth = entry.getValue().length();
+                int dataWidth = entry.getValue().toString().length();
                 columnWidths.put(entry.getKey(), Math.max(currentWidth, dataWidth));
             }
         }
@@ -103,10 +104,10 @@ public class ValidationConstraintFailedException extends SPipesException {
     }
 
     private void buildRows(StringBuilder tableBuilder, String format) {
-        for (Map<String, String> row : evidences) {
+        for (Map<String, RDFNode> row : evidences) {
             List<String> values = new ArrayList<>();
             for (String key : row.keySet()) {
-                values.add(row.get(key));
+                values.add(row.get(key).toString());
             }
             tableBuilder.append(String.format(format, values.toArray()));
         }
