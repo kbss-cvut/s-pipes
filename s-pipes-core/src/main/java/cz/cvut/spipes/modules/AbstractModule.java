@@ -256,7 +256,7 @@ public abstract class AbstractModule implements Module {
             QueryExecution execution = QueryExecutionFactory.create(query, model, bindings);
 
             boolean constraintViolated;
-            List<Map<String,String>> evidences = new ArrayList<>();
+            List<Map<String,RDFNode>> evidences = new ArrayList<>();
             if (spinQuery instanceof Ask) {
                 constraintViolated = execution.execAsk();
             } else if (spinQuery instanceof Select) { //TODO implement
@@ -266,11 +266,11 @@ public abstract class AbstractModule implements Module {
 
                     for(int i = 0; i < ExecutionConfig.getEvidenceNumber() && rs.hasNext(); i++){
                         QuerySolution solution = rs.next() ;
-                        Map<String, String> evidenceMap = new LinkedHashMap<>();
+                        Map<String, RDFNode> evidenceMap = new LinkedHashMap<>();
                         for (Iterator<String> it = solution.varNames(); it.hasNext(); ) {
                             String varName = it.next();
                             RDFNode value = solution.get(varName);
-                            evidenceMap.put(varName, value.toString());
+                            evidenceMap.put(varName, value);
                         }
                         evidences.add(evidenceMap);
                     }
