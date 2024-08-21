@@ -1,5 +1,6 @@
 package cz.cvut.spipes.engine;
 
+import cz.cvut.spipes.util.RDFNodeUtils;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.rdf.model.*;
@@ -184,24 +185,15 @@ public class VariablesBinding {
                 .stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
-                        e -> toString(e.getValue())
+                        e -> RDFNodeUtils.toString(e.getValue())
                 ))
                 .toString();
     }
 
-    private static String toString(RDFNode node) {
-        if (node.isLiteral()) {
-            return "\"" + node.asLiteral().getLexicalForm() + "\"";
-        } else if (node.isURIResource() || node.isResource()) {
-            return "<" + node.asResource().getURI() + ">";
-        } else {
-            return node.toString();
-        }
-    }
 
     public String toTruncatedString() {
         return binding.asMap().entrySet().stream()
-            .map(e -> new AbstractMap.SimpleEntry<>(e.getKey(), getTruncatedValue(toString(e.getValue())))).
+            .map(e -> new AbstractMap.SimpleEntry<>(e.getKey(), getTruncatedValue(RDFNodeUtils.toString(e.getValue())))).
             collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)).toString();
     }
 
