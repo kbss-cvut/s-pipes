@@ -10,7 +10,6 @@ import cz.cvut.spipes.engine.VariablesBinding;
 import cz.cvut.spipes.exception.ValidationConstraintFailedException;
 import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.QueryUtils;
-import cz.cvut.spipes.util.RDFNodeUtils;
 import org.apache.jena.atlas.lib.NotImplemented;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.query.*;
@@ -271,7 +270,7 @@ public abstract class AbstractModule implements Module {
                         for (Iterator<String> it = solution.varNames(); it.hasNext(); ) {
                             String varName = it.next();
                             RDFNode value = solution.get(varName);
-                            evidenceMap.put(varName, RDFNodeUtils.toString(value));
+                            evidenceMap.put(varName, value.toString());
                         }
                         evidences.add(evidenceMap);
                     }
