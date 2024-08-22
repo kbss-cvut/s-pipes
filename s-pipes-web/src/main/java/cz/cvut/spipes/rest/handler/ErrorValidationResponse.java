@@ -9,7 +9,6 @@ import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFFormat;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
-
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Collection;
@@ -87,8 +86,9 @@ public class ErrorValidationResponse {
             .flatMap(Collection::stream)
             .toList();
 
-        String columnPropertyTerms = columnNames.stream().map(n -> String.format("\"%s\": \"%s%s\"", n, S_PIPES, n))
-            .collect(Collectors.joining(",\n    ")) + ",";
+        String columnPropertyTerms = columnNames.stream()
+                .map(n -> String.format("\"%s\": { \"@id\": \"%s%s\", \"@type\": \"%s\" }", n, S_PIPES, n, getTypeForColumn(n)))
+                .collect(Collectors.joining(",\n    ")) + ",";
 
         String evidenceStructure = columnNames.stream().map(n -> String.format("\"%s\": {}", n))
             .collect(Collectors.joining(",\n    ")) + "\n";
@@ -133,6 +133,17 @@ public class ErrorValidationResponse {
                 ));
                 evidenceResources.add(r);
             });
+
+        evidences.stream()
+                .findAny()
+                        .ifPresent(m -> m.forEach(
+                            (key, value) -> model.add(
+                                getR(key),
+                                RDFS.range,
+                                getType(value)
+                            )
+                        ));
+
         model.add(validationError, getP("module"), module);
         Resource listOfEvidences = model.createList(evidenceResources.toArray(RDFNode[]::new));
         model.add(getP("constraintFailureEvidences"), RDFS.range, RDF.List);
@@ -144,6 +155,25 @@ public class ErrorValidationResponse {
 
         return model;
     }
+
+    private String getType(RDFNode node){
+        if(node.isLiteral()){
+            return node.asLiteral().getDatatypeURI();
+        } else if(node.isURIResource() || node.isResource()){
+            return node.asResource().getURI();
+        } else {
+            return node.toString();
+        }
+    }
+
+    private String getTypeForColumn(String column) {
+        return evidences.stream()
+                .findAny()
+                .map(e -> getType(e.get(column)))
+                .orElse("http://www.w3.org/2001/XMLSchema#string");
+    }
+
+
 
     private Resource getR(String localName) {
         return model.createResource(S_PIPES + localName);
