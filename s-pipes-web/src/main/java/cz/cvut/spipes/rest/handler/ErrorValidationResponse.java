@@ -82,8 +82,15 @@ public class ErrorValidationResponse {
             .toList();
 
         String columnPropertyTerms = columnNames.stream()
-                .map(n -> String.format("\"%s\": { \"@id\": \"%s%s\", \"@type\": \"%s\" }", n, S_PIPES, n, getTypeForColumn(n)))
-                .collect(Collectors.joining(",\n    ")) + ",";
+            .map(n -> {
+                String type = getTypeForColumn(n);
+                if (type != null) {
+                    return String.format("\"%s\": { \"@id\": \"%s%s\", \"@type\": \"%s\" }", n, S_PIPES, n, type);
+                } else {
+                    return String.format("\"%s\": { \"@id\": \"%s%s\" }", n, S_PIPES, n);
+                }
+            })
+            .collect(Collectors.joining(",\n    ")) + ",";
 
         String evidenceStructure = columnNames.stream().map(n -> String.format("\"%s\": {}", n))
             .collect(Collectors.joining(",\n    ")) + "\n";
@@ -163,9 +170,11 @@ public class ErrorValidationResponse {
 
     private String getTypeForColumn(String column) {
         return evidences.stream()
-                .findAny()
-                .map(e -> getType(e.get(column)))
-                .orElse("http://www.w3.org/2001/XMLSchema#string");
+            .findAny()
+            .map(e -> getType(e.get(column)))
+            /* filter xsd:string values as it breaks JSON-LD framing algorithm */
+            .filter(type -> !type.equals("http://www.w3.org/2001/XMLSchema#string"))
+            .orElse(null);
     }
 
 
