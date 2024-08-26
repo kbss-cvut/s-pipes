@@ -55,23 +55,18 @@ public class ErrorValidationResponse {
     }
 
     public Object getFramedAndCompactedJsonLd() throws JsonLdError, IOException {
-        // Convert the model to JSON-LD (compact, pretty)
+
+        // Convert the model to expanded JSON-LD (otherwise framing does not work)
         StringWriter compactWriter = new StringWriter();
         RDFDataMgr.write(compactWriter, getModel(), RDFFormat.JSONLD_EXPAND_FLAT);
-        String compactJsonLD = compactWriter.toString();
+        String expandedJsonLD = compactWriter.toString();
+        Object expandedJsonObject = JsonUtils.fromString(expandedJsonLD);
 
-        // Parse the compact JSON-LD
-        Object compactJsonObject = JsonUtils.fromString(compactJsonLD);
-
-        // Define the frame
+        // Apply frame the expanded JSON-LD
         String frameJson = generateFrame();
-
-        // Parse the frame
         Map<String, Object> frame = (Map<String, Object>) JsonUtils.fromString(frameJson);
-
-        // Frame the compact JSON-LD
         JsonLdOptions frameOptions = new JsonLdOptions();
-        Object framedJsonObject = JsonLdProcessor.frame(compactJsonObject, frame, frameOptions);
+        Object framedJsonObject = JsonLdProcessor.frame(expandedJsonObject, frame, frameOptions);
 
         // Compact the framed JSON-LD with the original context
         Object compactedJsonObject = JsonLdProcessor.compact(framedJsonObject, frame, frameOptions);
