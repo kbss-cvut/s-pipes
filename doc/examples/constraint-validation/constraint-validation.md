@@ -193,34 +193,81 @@ http://localhost:8080/s-pipes/service?_pId=retrieve-person&firstName=Pavel
 http://localhost:8080/s-pipes/service?_pId=retrieve-person&lastName=Hnizdo
 ```
 Pipeline execution validation constraint fails with message 'More than one person matches input parameters.' because 'Hnizdo' is in our database twice, once as Peter and once as Pavel.
+
+We see following messages in logs:
 ```
-Failed validation constraint : 
- # More than one person matches input parameters
-      PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+Validation of constraint failed for the constraint: More than one person matches input parameters
+"Failed validation constraint :
+# More than one person matches input parameters
+        PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 
-      SELECT ?person ?lastName ?firstName 
-      WHERE {
-        {
-          SELECT (count(distinct ?p) as ?pCount) 
-          WHERE {
-             ?p a foaf:Person;
-                foaf:firstName ?firstName;
-                foaf:lastName ?lastName;
-            .
+        SELECT ?person ?lastName ?firstName
+        WHERE {
+          {
+            SELECT (count(distinct ?p) as ?pCount)
+            WHERE {
+               ?p a foaf:Person;
+                  foaf:firstName ?firstName;
+                  foaf:lastName ?lastName;
+              .
+            }
           }
-        }
-           
-        FILTER(?pCount > 1)  
-           
-        ?person a foaf:Person;
-           foaf:lastName ?lastName;
-           foaf:firstName ?firstName;
-        .       
-    }
-Evidence of the violation: 
-( ?person = <http://onto.fel.cvut.cz/ontologies/s-pipes/examples/constraint-validation/people/person-2> ) ( ?firstName = "Peter" )
-( ?person = <http://onto.fel.cvut.cz/ontologies/s-pipes/examples/constraint-validation/people/person-1> ) ( ?firstName = "Pavel" )
 
+          FILTER(?pCount > 1)
+
+          ?person a foaf:Person;
+             foaf:lastName ?lastName;
+             foaf:firstName ?firstName;
+          .
+      }
+Evidences:
+| person                                                                                    | firstName |
++-------------------------------------------------------------------------------------------+-----------+
+| http://onto.fel.cvut.cz/ontologies/s-pipes/examples/constraint-validation/people/person-2 | Peter     |
+| http://onto.fel.cvut.cz/ontologies/s-pipes/examples/constraint-validation/people/person-1 | Pavel     |
+```
+
+If `execution.exitOnError` is set to `true` in `config-core.properties` , the pipeline will not proceed with execution, and an Error Validation Response in JSON-LD will be retrieved:
+```
+{
+    "@id": "_:b1",
+    "@type": "s-pipes:ValidationConstraintError",
+    "constraintFailureEvidences": [
+        {
+            "@id": "_:b0",
+            "firstName": "Peter",
+            "person": {
+                "@id": "s-pipes:examples/constraint-validation/people/person-2"
+            }
+        },
+        {
+            "@id": "_:b2",
+            "firstName": "Pavel",
+            "person": {
+                "@id": "s-pipes:examples/constraint-validation/people/person-1"
+            }
+        }
+    ],
+    "constraintQuery": "# More than one person matches input parameters\n        PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n\n        SELECT ?person ?lastName ?firstName\n        WHERE {\n          {\n            SELECT (count(distinct ?p) as ?pCount)\n            WHERE {\n               ?p a foaf:Person;\n                  foaf:firstName ?firstName;\n                  foaf:lastName ?lastName;\n              .\n            }\n          }\n\n          FILTER(?pCount > 1)\n\n          ?person a foaf:Person;\n             foaf:lastName ?lastName;\n             foaf:firstName ?firstName;\n          .\n      }",
+    "message": "More than one person matches input parameters",
+    "module": "http://onto.fel.cvut.cz/ontologies/s-pipes/constraint-validation/construct-matched-person",
+    "@context": {
+        "module": "http://onto.fel.cvut.cz/ontologies/s-pipes/module",
+        "message": "http://onto.fel.cvut.cz/ontologies/s-pipes/message",
+        "constraintFailureEvidences": {
+            "@id": "http://onto.fel.cvut.cz/ontologies/s-pipes/constraintFailureEvidences",
+            "@container": "@list"
+        },
+        "constraintQuery": "http://onto.fel.cvut.cz/ontologies/s-pipes/constraintQuery",
+        "person": {
+            "@id": "http://onto.fel.cvut.cz/ontologies/s-pipes/person"
+        },
+        "firstName": {
+            "@id": "http://onto.fel.cvut.cz/ontologies/s-pipes/firstName"
+        },
+        "s-pipes": "http://onto.fel.cvut.cz/ontologies/s-pipes/"
+    }
+}
 ```
 
 
