@@ -17,19 +17,26 @@ public class ErrorValidationResponseTest {
     public void testGetFramedAndCompactedJsonLdReturnsFramedOrderedEvidences() throws JsonLdError, IOException {
         String module = "http://onto.fel.cvut.cz/ontologies/ava/tabular-data-0.1/rdfize-input-data";
         String message = "?row within ?column has empty value";
-        String failedQuery = "# ?row within ?column has empty value\n" +
-                "SELECT ?row ?column\n" +
-                "WHERE {\n\n" +
-                "  ?r csvw:describes ?rd .\n" +
-                "  ?r csvw:rownum ?row .\n\n" +
-                "  ?c a csvw:Column .\n" +
-                "  ?c kbss-csvw:property ?columnProperty .\n" +
-                "  ?c csvw:title ?column .\n\n" +
-                "  FILTER NOT EXISTS {\n" +
-                "    ?rd ?columnProperty ?valueNE .\n" +
-                "  }\n\n" +
-                "  FILTER(?columnProperty in ( :Failure_condition_label__CS_, :Failure_condition_group_id, :SNS_code ))\n" +
-                "}";
+        String failedQuery = """
+                # ?row within ?column has empty value
+                SELECT ?row ?column
+                WHERE {
+
+                  ?r csvw:describes ?rd .
+                  ?r csvw:rownum ?row .
+
+                  ?c a csvw:Column .
+                  ?c kbss-csvw:property ?columnProperty .
+                  ?c csvw:title ?column .
+
+                  FILTER NOT EXISTS {
+                    ?rd ?columnProperty ?valueNE .
+                  }
+
+                  FILTER(?columnProperty in ( :Failure_condition_label__CS_, :Failure_condition_group_id, :SNS_code ))
+                }
+                """;
+
 
         // Example evidence data
         Map<String, RDFNode> evidence1 = new HashMap<>();
@@ -65,7 +72,7 @@ public class ErrorValidationResponseTest {
                         .filter(entry -> !Objects.equals(entry.getKey(), "@id"))
                         .collect(Collectors.toMap(
                                 Map.Entry::getKey,
-                                entry -> (RDFNode)ResourceFactory.createPlainLiteral(String.valueOf(entry.getValue()))))
+                                entry -> (RDFNode) ResourceFactory.createPlainLiteral(String.valueOf(entry.getValue()))))
                 )
                 .toList();
         assertEquals(evidences, filteredEvidences);
