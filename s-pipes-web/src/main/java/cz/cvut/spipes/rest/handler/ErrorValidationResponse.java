@@ -74,46 +74,46 @@ public class ErrorValidationResponse {
         return compactedJsonObject;
     }
 
-    private String generateFrame(){
+    private String generateFrame() {
 
         List<String> columnNames = evidences.stream().findAny()
-            .map(Map::keySet).stream()
-            .flatMap(Collection::stream)
-            .toList();
+                .map(Map::keySet).stream()
+                .flatMap(Collection::stream)
+                .toList();
 
         String columnPropertyTerms = columnNames.stream()
-            .map(n -> {
-                String type = getTypeForColumn(n);
-                if (type != null) {
-                    return String.format("\"%s\": { \"@id\": \"%s%s\", \"@type\": \"%s\" }", n, S_PIPES, n, type);
-                } else {
-                    return String.format("\"%s\": { \"@id\": \"%s%s\" }", n, S_PIPES, n);
-                }
-            })
-            .collect(Collectors.joining(",\n    ")) + ",";
+                .map(n -> {
+                    String type = getPrimitiveTypeForColumn(n);
+                    if (type != null) {
+                        return String.format("\"%s\": { \"@id\": \"%s%s\", \"@type\": \"%s\" }", n, S_PIPES, n, type);
+                    } else {
+                        return String.format("\"%s\": { \"@id\": \"%s%s\" }", n, S_PIPES, n);
+                    }
+                })
+                .collect(Collectors.joining(",\n    ")) + ",";
 
         String evidenceStructure = columnNames.stream().map(n -> String.format("\"%s\": {}", n))
-            .collect(Collectors.joining(",\n    ")) + "\n";
+                .collect(Collectors.joining(",\n    ")) + "\n";
 
         String frameJson = """
-            {
-              "@context": {
-                "module": "http://onto.fel.cvut.cz/ontologies/s-pipes/module",
-                "message": "http://onto.fel.cvut.cz/ontologies/s-pipes/message",
-                "constraintFailureEvidences": {
-                  "@id": "http://onto.fel.cvut.cz/ontologies/s-pipes/constraintFailureEvidences",
-                  "@container": "@list"
-                },
-                "constraintQuery": "http://onto.fel.cvut.cz/ontologies/s-pipes/constraintQuery",
-                %s
-                "s-pipes": "http://onto.fel.cvut.cz/ontologies/s-pipes/"
-              },
-              "@type": "http://onto.fel.cvut.cz/ontologies/s-pipes/ValidationConstraintError",
-              "constraintFailureEvidences": {
-                %s
-              }
-            }
-            """;
+                {
+                  "@context": {
+                    "module": "http://onto.fel.cvut.cz/ontologies/s-pipes/module",
+                    "message": "http://onto.fel.cvut.cz/ontologies/s-pipes/message",
+                    "constraintFailureEvidences": {
+                      "@id": "http://onto.fel.cvut.cz/ontologies/s-pipes/constraintFailureEvidences",
+                      "@container": "@list"
+                    },
+                    "constraintQuery": "http://onto.fel.cvut.cz/ontologies/s-pipes/constraintQuery",
+                    %s
+                    "s-pipes": "http://onto.fel.cvut.cz/ontologies/s-pipes/"
+                  },
+                  "@type": "http://onto.fel.cvut.cz/ontologies/s-pipes/ValidationConstraintError",
+                  "constraintFailureEvidences": {
+                    %s
+                  }
+                }
+                """;
         return String.format(frameJson, columnPropertyTerms, evidenceStructure);
     }
 
@@ -127,56 +127,56 @@ public class ErrorValidationResponse {
 
         List<RDFNode> evidenceResources = new LinkedList<>();
         evidences.forEach(e -> {
-                Resource r = model.createResource();
-                e.forEach((key, value) -> model.add(
+            Resource r = model.createResource();
+            e.forEach((key, value) -> model.add(
                     r,
                     getP(key),
                     value
-                ));
-                evidenceResources.add(r);
-            });
+            ));
+            evidenceResources.add(r);
+        });
 
         evidences.stream()
                 .findAny()
-                        .ifPresent(m -> m.forEach(
-                            (key, value) -> model.add(
+                .ifPresent(m -> m.forEach(
+                        (key, value) -> model.add(
                                 getR(key),
                                 RDFS.range,
                                 getType(value)
-                            )
-                        ));
+                        )
+                ));
 
         model.add(validationError, getP("module"), module);
         Resource listOfEvidences = model.createList(evidenceResources.toArray(RDFNode[]::new));
         model.add(getP("constraintFailureEvidences"), RDFS.range, RDF.List);
         model.add(
-            validationError,
-            getP("constraintFailureEvidences"),
-            listOfEvidences
+                validationError,
+                getP("constraintFailureEvidences"),
+                listOfEvidences
         );
 
         return model;
     }
 
-    private String getType(RDFNode node){
-        if(node.isLiteral()){
+    private String getType(RDFNode node) {
+        if (node.isLiteral()) {
             return node.asLiteral().getDatatypeURI();
-        } else if(node.isURIResource() || node.isResource()){
+        } else if (node.isURIResource() || node.isResource()) {
             return node.asResource().getURI();
         } else {
             return node.toString();
         }
     }
 
-    private String getTypeForColumn(String column) {
+    private String getPrimitiveTypeForColumn(String column) {
         return evidences.stream()
-            .findAny()
-            .map(e -> getType(e.get(column)))
-            /* filter xsd:string values as it breaks JSON-LD framing algorithm */
-            .filter(type -> !type.equals("http://www.w3.org/2001/XMLSchema#string"))
-            .orElse(null);
+                .findAny()
+                .filter(e -> !e.get(column).isResource())
+                .map(e -> getType(e.get(column)))
+                /* filter xsd:string values as it breaks JSON-LD framing algorithm */
+                .filter(type -> !type.equals("http://www.w3.org/2001/XMLSchema#string"))
+                .orElse(null);
     }
-
 
 
     private Resource getR(String localName) {
