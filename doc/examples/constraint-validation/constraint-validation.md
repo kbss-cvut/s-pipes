@@ -221,10 +221,10 @@ Validation of constraint failed for the constraint: More than one person matches
           .
       }
 Evidences:
-| person                                                                                    | firstName | lastName |
-+-------------------------------------------------------------------------------------------+-----------+----------+
-| http://onto.fel.cvut.cz/ontologies/s-pipes/examples/constraint-validation/people/person-2 | Peter     | Hnizdo   |
-| http://onto.fel.cvut.cz/ontologies/s-pipes/examples/constraint-validation/people/person-1 | Pavel     | Hnizdo   |
+| person                                                                                      | firstName | lastName |
++---------------------------------------------------------------------------------------------+-----------+----------+
+| <http://onto.fel.cvut.cz/ontologies/s-pipes/examples/constraint-validation/people/person-2> | "Peter"   | "Hnizdo" |
+| <http://onto.fel.cvut.cz/ontologies/s-pipes/examples/constraint-validation/people/person-1> | "Pavel"   | "Hnizdo" |
 ```
 
 If `execution.exitOnError` is set to `true` in `config-core.properties` , the pipeline will not proceed with execution, and an error validation response in JSON-LD will be retrieved:
