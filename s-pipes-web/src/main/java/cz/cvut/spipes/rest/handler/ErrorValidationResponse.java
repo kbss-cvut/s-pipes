@@ -83,12 +83,10 @@ public class ErrorValidationResponse {
 
         String columnPropertyTerms = columnNames.stream()
                 .map(n -> {
-                    String type = getPrimitiveTypeForColumn(n);
-                    if (type != null) {
-                        return String.format("\"%s\": { \"@id\": \"%s%s\", \"@type\": \"%s\" }", n, S_PIPES, n, type);
-                    } else {
-                        return String.format("\"%s\": { \"@id\": \"%s%s\" }", n, S_PIPES, n);
+                    if (isResourceByColumn(n)) {
+                        return String.format("\"%s\": { \"@id\": \"%s%s\", \"@type\": \"@id\" }", n, S_PIPES, n);
                     }
+                    return String.format("\"%s\": { \"@id\": \"%s%s\" }", n, S_PIPES, n);
                 })
                 .collect(Collectors.joining(",\n    ")) + ",";
 
@@ -98,15 +96,15 @@ public class ErrorValidationResponse {
         String frameJson = """
                 {
                   "@context": {
+                  "ValidationConstraintError": "http://onto.fel.cvut.cz/ontologies/s-pipes/ValidationConstraintError",
                     "module": "http://onto.fel.cvut.cz/ontologies/s-pipes/module",
                     "message": "http://onto.fel.cvut.cz/ontologies/s-pipes/message",
                     "constraintFailureEvidences": {
                       "@id": "http://onto.fel.cvut.cz/ontologies/s-pipes/constraintFailureEvidences",
                       "@container": "@list"
                     },
-                    "constraintQuery": "http://onto.fel.cvut.cz/ontologies/s-pipes/constraintQuery",
                     %s
-                    "s-pipes": "http://onto.fel.cvut.cz/ontologies/s-pipes/"
+                    "constraintQuery": "http://onto.fel.cvut.cz/ontologies/s-pipes/constraintQuery" 
                   },
                   "@type": "http://onto.fel.cvut.cz/ontologies/s-pipes/ValidationConstraintError",
                   "constraintFailureEvidences": {
@@ -176,6 +174,13 @@ public class ErrorValidationResponse {
                 /* filter xsd:string values as it breaks JSON-LD framing algorithm */
                 .filter(type -> !type.equals("http://www.w3.org/2001/XMLSchema#string"))
                 .orElse(null);
+    }
+
+
+    private boolean isResourceByColumn(String column) {
+        return evidences.stream()
+                .findAny()
+                .map(e -> e.get(column).isResource()).orElse(false);
     }
 
 
