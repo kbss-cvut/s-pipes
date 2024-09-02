@@ -86,7 +86,7 @@
       sp:text """# More than one person matches input parameters
         PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 
-        SELECT ?person ?lastName ?firstName
+        SELECT ?person (?lastNameOuter as ?lastName) ?firstName
         WHERE {
           {
             SELECT (count(distinct ?p) as ?pCount)
@@ -101,7 +101,7 @@
           FILTER(?pCount > 1)
 
           ?person a foaf:Person;
-             foaf:lastName ?lastName;
+             foaf:lastName ?lastNameOuter;
              foaf:firstName ?firstName;
           .
       }""" ;
