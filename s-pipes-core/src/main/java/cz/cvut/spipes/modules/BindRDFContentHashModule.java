@@ -11,9 +11,10 @@ import org.apache.jena.rdf.model.ResourceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class BindRDFContentHashModule extends AbstractModule {
+public class BindRDFContentHashModule extends AnnotatedAbstractModule {
 
     private static final Logger log = LoggerFactory.getLogger(BindRDFContentHashModule.class);
+    @Parameter(urlPrefix =  SM.uri, name="outputVariable")
     String outputVariable;
 
     @Override
@@ -36,8 +37,4 @@ public class BindRDFContentHashModule extends AbstractModule {
         return KBSS_MODULE.uri + "bind-rdf-content-hash";
     }
 
-    @Override
-    public void loadConfiguration() {
-        outputVariable = getStringPropertyValue(SM.outputVariable);
-    }
 }

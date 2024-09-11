@@ -2,16 +2,28 @@ package cz.cvut.spipes.modules;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import org.apache.jena.rdf.model.AnonId;
-import org.apache.jena.rdf.model.Literal;
-import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.RDFVisitor;
-import org.apache.jena.rdf.model.Resource;
+
+import cz.cvut.spipes.modules.handlers.*;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The `AnnotatedAbstractModule` class extends the `AbstractModule` class and provides
+ * an implementation for loading the module's configuration using {@link Parameter} annotation.
+ *
+ * <p>Fields in subclasses of `AnnotatedAbstractModule` should be annotated with the
+ * {@link Parameter} annotation to indicate that they are configurable parameters.
+ * The class will automatically detect these parameters, validate them, and populate
+ * them with the appropriate values during the module's initialization.
+ *
+ * <p>The {@link #loadConfiguration()} method is overridden to handle this process.
+ * It identifies all fields annotated with {@link Parameter}, checks for duplicate
+ * parameter names, and uses the appropriate `Setter` and `Handler` implementations
+ * to assign values to the fields.
+ */
 public abstract class AnnotatedAbstractModule extends AbstractModule {
 
     private static final Logger log = LoggerFactory.getLogger(AnnotatedAbstractModule.class);
@@ -31,27 +43,15 @@ public abstract class AnnotatedAbstractModule extends AbstractModule {
 
             log.trace("Processing parameter {} ", f.getName());
 
-            RDFNode node = this.getEffectiveValue(ResourceFactory.createProperty(p.urlPrefix()+p.name()));
-            if ( node != null ) {
-                final Object result = node.visitWith(new RDFVisitor() {
-                    @Override
-                    public Object visitBlank(Resource r, AnonId id) {
-                        return null;
-                    }
-
-                    @Override
-                    public Object visitURI(Resource r, String uri) { return r; }
-
-                    @Override
-                    public Object visitLiteral(Literal l) { return l.getValue(); }
-                });
-                try {
-                    f.setAccessible(true);
-                    f.set(this, result);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
+            Setter setter;
+            if(f.getType() == List.class){
+                setter = new ListSetter(f, this);
+            }else{
+                setter = new FieldSetter(f, this);
             }
+            HandlerRegistry handlerRegistry = HandlerRegistry.getInstance();
+            Handler<?> handler = handlerRegistry.getHandler(f.getType(), resource, executionContext, setter);
+            handler.setValueByProperty(ResourceFactory.createProperty(p.urlPrefix()+p.name()));
         }
     }
 }

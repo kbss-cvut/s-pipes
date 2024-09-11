@@ -18,17 +18,20 @@ import org.apache.jena.rdf.model.ResourceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ImportFileFromURLModule extends AbstractModule {
+public class ImportFileFromURLModule extends AnnotatedAbstractModule {
 
     private static final Logger log = LoggerFactory.getLogger(ImportFileFromURLModule.class);
 
     //sml:targetFilePath, required
+
+    @Parameter(urlPrefix = SML.uri, name = "targetFilePath")
     Path targetFilePath; //TODO $_executionDir ?
 
     //kbss:targetResourceVariable
     String targetResourceVariable;
 
     //sml:url, required
+    @Parameter(urlPrefix = SML.uri, name = "url")
     URL url;
 
     @Override
@@ -63,20 +66,6 @@ public class ImportFileFromURLModule extends AbstractModule {
     @Override
     public String getTypeURI() {
         return SML.ImportFileFromURL.getURI();
-    }
-
-    @Override
-    public void loadConfiguration() {
-
-        RDFNode urlNode = getEffectiveValue(SML.url);
-        try {
-            url = new URL(urlNode.asLiteral().toString());
-        } catch (MalformedURLException e) {
-            log.error("Malformed url -- {}.", getEffectiveValue(SML.url));
-            throw new RuntimeException(e);
-        }
-
-        targetFilePath = Paths.get(getEffectiveValue(SML.targetFilePath).asLiteral().toString());
     }
 
     public Path getTargetFilePath() {

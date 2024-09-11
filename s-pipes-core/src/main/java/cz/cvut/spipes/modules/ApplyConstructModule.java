@@ -27,21 +27,24 @@ import java.util.stream.Collectors;
 /**
  * TODO Order of queries is not enforced.
  **/
-public class ApplyConstructModule extends AbstractModule {
+public class ApplyConstructModule extends AnnotatedAbstractModule {
 
     private static final Logger log = LoggerFactory.getLogger(ApplyConstructModule.class);
 
     //sml:constructQuery
+    @Parameter(urlPrefix = SML.uri, name = "constructQuery")
     private List<Resource> constructQueries;
 
     //sml:replace
-    private boolean isReplace;
+    @Parameter(urlPrefix = SML.uri, name = "replace")
+    private boolean isReplace = false;
 
     //kbss:parseText
     /**
      * Whether the query should be taken from sp:text property instead of from SPIN serialization
      */
-    private boolean parseText;
+    @Parameter(urlPrefix = KBSS_MODULE.uri, name = "is-parse-text")
+    private boolean parseText = false;
 
     //kbss:iterationCount
     /**
@@ -56,7 +59,8 @@ public class ApplyConstructModule extends AbstractModule {
      * <p>
      * Within each iteration, all queries are evaluated on the same model.
      */
-    private int iterationCount;
+    @Parameter(urlPrefix = KBSS_MODULE.uri, name = "has-max-iteration-count")
+    private int iterationCount = 1;
 
     public ApplyConstructModule() {
         // TODO move elsewhere
@@ -165,21 +169,4 @@ public class ApplyConstructModule extends AbstractModule {
         return SML.ApplyConstruct.getURI();
     }
 
-    @Override
-    public void loadConfiguration() {
-
-        // TODO sparql expressions
-        // TODO load default values from configuration
-
-        // TODO does not work with string query as object is not RDF resource ???
-        constructQueries = getResourcesByProperty(SML.constructQuery);
-
-        log.debug("Loaded {} spin construct queries.", constructQueries.size());
-
-        //TODO default value must be taken from template definition
-        isReplace = this.getPropertyValue(SML.replace, false);
-
-        parseText = this.getPropertyValue(KBSS_MODULE.is_parse_text, false);
-        iterationCount = this.getPropertyValue(KBSS_MODULE.has_max_iteration_count, 1);
-    }
 }

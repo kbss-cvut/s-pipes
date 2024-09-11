@@ -47,13 +47,14 @@ import org.slf4j.LoggerFactory;
  *          ja:prefix "owl" ] 
 * .
  */
-public class RetrievePrefixesModule extends AbstractModule {
+public class RetrievePrefixesModule extends AnnotatedAbstractModule {
 
     private static final Logger log = LoggerFactory.getLogger(RetrievePrefixesModule.class);
     private static final String TYPE_URI = KBSS_MODULE.uri + "retrieve-prefixes";
 
     //sml:replace
-    private boolean isReplace;
+    @Parameter(urlPrefix = SML.uri, name = "replace")
+    private boolean isReplace = false;
 
     //TODO refactor -> should be part of execution context
     OntologyDocumentManager ontologyDocumentManager = OntoDocManager.getInstance();
@@ -89,11 +90,6 @@ public class RetrievePrefixesModule extends AbstractModule {
     @Override
     public String getTypeURI() {
         return TYPE_URI;
-    }
-
-    @Override
-    public void loadConfiguration() {
-        isReplace = this.getPropertyValue(SML.replace, false);
     }
 
     void setOntologyDocumentManager(OntologyDocumentManager ontologyDocumentManager) {
