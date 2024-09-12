@@ -278,8 +278,7 @@ public abstract class AbstractModule implements Module {
                     for(int i = 0; i < ExecutionConfig.getEvidenceNumber() && rs.hasNext(); i++){
                         QuerySolution solution = rs.next() ;
                         Map<String, RDFNode> evidenceMap = new LinkedHashMap<>();
-                        for (Iterator<String> it = solution.varNames(); it.hasNext(); ) {
-                            String varName = it.next();
+                        for (String varName : rs.getResultVars()) {
                             RDFNode value = solution.get(varName);
                             evidenceMap.put(varName, value);
                         }

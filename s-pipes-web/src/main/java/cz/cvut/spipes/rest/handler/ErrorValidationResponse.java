@@ -4,6 +4,7 @@ import com.github.jsonldjava.core.JsonLdError;
 import com.github.jsonldjava.core.JsonLdOptions;
 import com.github.jsonldjava.core.JsonLdProcessor;
 import com.github.jsonldjava.utils.JsonUtils;
+import lombok.Getter;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFFormat;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-
+@Getter
 public class ErrorValidationResponse {
 
     private static final String S_PIPES = "http://onto.fel.cvut.cz/ontologies/s-pipes/";
@@ -33,18 +34,6 @@ public class ErrorValidationResponse {
         this.message = message;
         this.failedQuery = failedQuery;
         this.evidences = evidences;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public String getFailedQuery() {
-        return failedQuery;
-    }
-
-    public List<Map<String, RDFNode>> getEvidences() {
-        return evidences;
     }
 
     public Model getModel() {
@@ -69,9 +58,7 @@ public class ErrorValidationResponse {
         Object framedJsonObject = JsonLdProcessor.frame(expandedJsonObject, frame, frameOptions);
 
         // Compact the framed JSON-LD with the original context
-        Object compactedJsonObject = JsonLdProcessor.compact(framedJsonObject, frame, frameOptions);
-
-        return compactedJsonObject;
+        return JsonLdProcessor.compact(framedJsonObject, frame, frameOptions);
     }
 
     private String generateFrame() {
@@ -126,23 +113,16 @@ public class ErrorValidationResponse {
         List<RDFNode> evidenceResources = new LinkedList<>();
         evidences.forEach(e -> {
             Resource r = model.createResource();
-            e.forEach((key, value) -> model.add(
-                    r,
-                    getP(key),
-                    value
-            ));
+            e.forEach((key, value) -> {
+                    if(value != null){
+                        model.add(
+                                r,
+                                getP(key),
+                                value);
+                    }
+             });
             evidenceResources.add(r);
         });
-
-        evidences.stream()
-                .findAny()
-                .ifPresent(m -> m.forEach(
-                        (key, value) -> model.add(
-                                getR(key),
-                                RDFS.range,
-                                getType(value)
-                        )
-                ));
 
         model.add(validationError, getP("module"), module);
         Resource listOfEvidences = model.createList(evidenceResources.toArray(RDFNode[]::new));
@@ -157,6 +137,9 @@ public class ErrorValidationResponse {
     }
 
     private String getType(RDFNode node) {
+        if(node == null){
+            return null;
+        }
         if (node.isLiteral()) {
             return node.asLiteral().getDatatypeURI();
         } else if (node.isURIResource() || node.isResource()) {
@@ -176,10 +159,10 @@ public class ErrorValidationResponse {
                 .orElse(null);
     }
 
-
     private boolean isResourceByColumn(String column) {
         return evidences.stream()
                 .findAny()
+                .filter(e -> e.get(column) != null)
                 .map(e -> e.get(column).isResource()).orElse(false);
     }
 
