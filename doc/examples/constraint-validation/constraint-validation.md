@@ -221,34 +221,36 @@ Validation of constraint failed for the constraint: More than one person matches
           .
       }
 Evidences:
-| person                                                                                    | firstName |
-+-------------------------------------------------------------------------------------------+-----------+
-| http://onto.fel.cvut.cz/ontologies/s-pipes/examples/constraint-validation/people/person-2 | Peter     |
-| http://onto.fel.cvut.cz/ontologies/s-pipes/examples/constraint-validation/people/person-1 | Pavel     |
+| person                                                                                      | firstName | lastName |
++---------------------------------------------------------------------------------------------+-----------+----------+
+| <http://onto.fel.cvut.cz/ontologies/s-pipes/examples/constraint-validation/people/person-2> | "Peter"   | "Hnizdo" |
+| <http://onto.fel.cvut.cz/ontologies/s-pipes/examples/constraint-validation/people/person-1> | "Pavel"   | "Hnizdo" |
 ```
 
-If `execution.exitOnError` is set to `true` in `config-core.properties` , the pipeline will not proceed with execution, and an Error Validation Response in JSON-LD will be retrieved:
+If `execution.exitOnError` is set to `true` in `config-core.properties` , the pipeline will not proceed with execution, and an error validation response in JSON-LD will be retrieved:
 ```
 {
     "@id": "_:b1",
     "@type": "s-pipes:ValidationConstraintError",
     "constraintFailureEvidences": [
         {
-            "@id": "_:b0",
+            "@id": "_:b2",
             "firstName": "Peter",
+            "lastName": "Hnizdo",
             "person": {
                 "@id": "s-pipes:examples/constraint-validation/people/person-2"
             }
         },
         {
-            "@id": "_:b2",
+            "@id": "_:b0",
             "firstName": "Pavel",
+            "lastName": "Hnizdo",
             "person": {
                 "@id": "s-pipes:examples/constraint-validation/people/person-1"
             }
         }
     ],
-    "constraintQuery": "# More than one person matches input parameters\n        PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n\n        SELECT ?person ?lastName ?firstName\n        WHERE {\n          {\n            SELECT (count(distinct ?p) as ?pCount)\n            WHERE {\n               ?p a foaf:Person;\n                  foaf:firstName ?firstName;\n                  foaf:lastName ?lastName;\n              .\n            }\n          }\n\n          FILTER(?pCount > 1)\n\n          ?person a foaf:Person;\n             foaf:lastName ?lastName;\n             foaf:firstName ?firstName;\n          .\n      }",
+    "constraintQuery": "# More than one person matches input parameters\n        PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n\n        SELECT ?person (?lastNameOuter as ?lastName) ?firstName\n        WHERE {\n          {\n            SELECT (count(distinct ?p) as ?pCount)\n            WHERE {\n               ?p a foaf:Person;\n                  foaf:firstName ?firstName;\n                  foaf:lastName ?lastName;\n              .\n            }\n          }\n\n          FILTER(?pCount > 1)\n\n          ?person a foaf:Person;\n             foaf:lastName ?lastNameOuter;\n             foaf:firstName ?firstName;\n          .\n      }",
     "message": "More than one person matches input parameters",
     "module": "http://onto.fel.cvut.cz/ontologies/s-pipes/constraint-validation/construct-matched-person",
     "@context": {
@@ -264,6 +266,9 @@ If `execution.exitOnError` is set to `true` in `config-core.properties` , the pi
         },
         "firstName": {
             "@id": "http://onto.fel.cvut.cz/ontologies/s-pipes/firstName"
+        },
+        "lastName": {
+            "@id": "http://onto.fel.cvut.cz/ontologies/s-pipes/lastName"
         },
         "s-pipes": "http://onto.fel.cvut.cz/ontologies/s-pipes/"
     }
