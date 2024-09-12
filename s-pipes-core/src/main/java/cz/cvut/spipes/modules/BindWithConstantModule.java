@@ -13,13 +13,13 @@ import org.slf4j.LoggerFactory;
 public class BindWithConstantModule extends AnnotatedAbstractModule  {
 
     private static final Logger log = LoggerFactory.getLogger(BindWithConstantModule.class);
-    @Parameter(urlPrefix = SM.uri, name = "outputVariable")
+    @Parameter(iri = SM.outputVariable)
     String outputVariable;
 
-    @Parameter(urlPrefix = SML.uri, name = "value")
+    @Parameter(iri = SML.value)
     RDFNode value;
 
-    @Parameter(urlPrefix = SML.uri, name = "replace")
+    @Parameter(iri = SML.replace)
     private boolean isReplace = false;
 
     @Override
@@ -38,7 +38,7 @@ public class BindWithConstantModule extends AnnotatedAbstractModule  {
 
     @Override
     public String getTypeURI() {
-        return SML.BindWithConstant.getURI();
+        return SML.BindWithConstant;
     }
 
 

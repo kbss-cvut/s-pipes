@@ -1,8 +1,9 @@
 package cz.cvut.spipes.constants;
 
 import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.ResourceFactory;
+
+import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
+import static org.apache.jena.rdf.model.ResourceFactory.createResource;
 
 public class SM {
 
@@ -11,18 +12,22 @@ public class SM {
      */
     public static final String uri = "http://topbraid.org/sparqlmotion#";
 
-    protected static final Resource resource(String local )
-    { return ResourceFactory.createResource( uri + local ); }
+    public static final String next = uri + "next";
+    public static final String outputVariable = uri + "outputVariable";
+    public static final String returnModule = uri + "returnModule";
 
-    protected static final Property property(String local )
-    { return ResourceFactory.createProperty( uri, local ); }
+    public static final String Function = uri + "Function";
+    public static final String Module = uri + "Module";
+    public static final String Modules = uri + "Modules";
 
 
-    public static final Property next = property("next");
-    public static final Property outputVariable = property("outputVariable");
-    public static final Property returnModule = property("returnModule");
+    public static class JENA {
+        public static final Property next = createProperty(SM.next);
+        public static final Property outputVariable = createProperty(SM.outputVariable);
+        public static final Property returnModule = createProperty(SM.returnModule);
 
-    public static final Resource Function = resource("Function");
-    public static final Resource Module = resource("Module");
-    public static final Resource Modules = resource("Modules");
+        public static final org.apache.jena.rdf.model.Resource Function = createResource(SM.Function);
+        public static final org.apache.jena.rdf.model.Resource Module = createResource(SM.Module);
+        public static final org.apache.jena.rdf.model.Resource Modules = createResource(SM.Modules);
+    }
 }

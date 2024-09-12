@@ -37,20 +37,20 @@ public class TarqlModule extends AbstractModule {
     private static final String TARQL_PROGRAM = AppConstants.BIN_DIR + "/tarql";
 
     //sml:constructQuery
-    @Parameter(urlPrefix = SML.uri, name = "constructQuery", comment = "The TARQL Construct queries that deliver the triples that shall be added.")
+    @Parameter(iri = SML.constructQuery, comment = "The TARQL Construct queries that deliver the triples that shall be added.")
     private List<Resource> constructQueries;
 
     // TODO not used field
     private String tableFilePath;
 
     //sml:replace
-    @Parameter(urlPrefix = SML.uri, name = "replace", comment = "If set to true, the output triples will only contain the " +
+    @Parameter(iri = SML.replace, comment = "If set to true, the output triples will only contain the " +
             "constructed triples. If no values or false are specified, the output will be the union of the input triples " +
             "and the constructed triples.")
     private boolean isReplace;
 
     //sml:sourceFilePath
-    @Parameter(urlPrefix = SML.uri, name = "sourceFilePath", comment = "Source CSV file.")
+    @Parameter(iri = SML.sourceFilePath, comment = "Source CSV file.")
     private String sourceFilePath;
 
     public TarqlModule() {
@@ -159,9 +159,9 @@ public class TarqlModule extends AbstractModule {
         log.debug("Loaded {} spin construct queries.", constructQueries.size());
 
         //TODO default value must be taken from template definition
-        isReplace = this.getPropertyValue(SML.replace, false);
+        isReplace = this.getPropertyValue(SML.JENA.replace, false);
 
-        sourceFilePath = getEffectiveValue(SML.sourceFilePath).asLiteral().toString(); // TODO should be Path
+        sourceFilePath = getEffectiveValue(SML.JENA.sourceFilePath).asLiteral().toString(); // TODO should be Path
     }
 
 

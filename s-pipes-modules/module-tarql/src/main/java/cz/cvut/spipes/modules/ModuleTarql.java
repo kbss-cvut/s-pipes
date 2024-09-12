@@ -27,15 +27,15 @@ public class ModuleTarql extends AbstractModule {
     }
 
     static final Property P_TARQL_STRING = getParameter("p-tarql-string");
-    @Parameter(urlPrefix = TYPE_URI + "/", name = "p-tarql-string", comment = "File with the TARQL script." )
+    @Parameter(iri = TYPE_URI + "/" + "p-tarql-string", comment = "File with the TARQL script." )
     private String tarqlString;
 
     static final Property P_ONTOLOGY_IRI = getParameter("p-ontology-iri");
-    @Parameter(urlPrefix = TYPE_URI + "/", name = "p-ontology-iri", comment = "Ontology IRI")
+    @Parameter(iri = TYPE_URI + "/" + "p-ontology-iri", comment = "Ontology IRI")
     private String ontologyIRI;
 
     static final Property P_INPUT_FILE = getParameter("p-input-file");
-    @Parameter(urlPrefix = TYPE_URI + "/", name = "p-input-file", comment = "Input File")
+    @Parameter(iri = TYPE_URI + "/" + "p-input-file", comment = "Input File")
     private String inputFile;
 
 //    /**

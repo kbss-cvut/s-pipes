@@ -56,13 +56,13 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
     private static final String TYPE_PREFIX = TYPE_URI + "/";
     private static final Map<String, Model> marginalDefsModelCache = new HashMap<>();
 
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "marginal-constraint", comment = "Marginal constraint")
+    @Parameter(iri = TYPE_PREFIX + "marginal-constraint", comment = "Marginal constraint")
     private String marginalConstraint;
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "marginals-defs-file-url", comment = "Marginal definitions file url")
+    @Parameter(iri = TYPE_PREFIX + "marginals-defs-file-url", comment = "Marginal definitions file url")
     private String marginalsDefsFileUrl;
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "marginals-file-url", comment = "Marginals file url") // TODO - review comment
+    @Parameter(iri = TYPE_PREFIX + "marginals-file-url", comment = "Marginals file url") // TODO - review comment
     private String marginalsFileUrl;
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "data-service-url", comment = "Data service url")
+    @Parameter(iri = TYPE_PREFIX + "data-service-url", comment = "Data service url")
     private String dataServiceUrl;
 
     private static final String VAR_EXECUTION_ID = "executionId";

@@ -31,20 +31,22 @@ public class ApplyConstructModule extends AnnotatedAbstractModule {
 
     private static final Logger log = LoggerFactory.getLogger(ApplyConstructModule.class);
 
+
     //sml:constructQuery
-    @Parameter(urlPrefix = SML.uri, name = "constructQuery")
+    @Parameter(iri = SML.constructQuery)
     private List<Resource> constructQueries;
 
     //sml:replace
-    @Parameter(urlPrefix = SML.uri, name = "replace")
+    @Parameter(iri = SML.replace)
     private boolean isReplace = false;
 
     //kbss:parseText
     /**
      * Whether the query should be taken from sp:text property instead of from SPIN serialization
      */
-    @Parameter(urlPrefix = KBSS_MODULE.uri, name = "is-parse-text")
+    @Parameter(iri = KBSS_MODULE.is_parse_text)
     private boolean parseText = false;
+
 
     //kbss:iterationCount
     /**
@@ -59,7 +61,7 @@ public class ApplyConstructModule extends AnnotatedAbstractModule {
      * <p>
      * Within each iteration, all queries are evaluated on the same model.
      */
-    @Parameter(urlPrefix = KBSS_MODULE.uri, name = "has-max-iteration-count")
+    @Parameter(iri = KBSS_MODULE.has_max_iteration_count)
     private int iterationCount = 1;
 
     public ApplyConstructModule() {
@@ -166,7 +168,7 @@ public class ApplyConstructModule extends AnnotatedAbstractModule {
 
     @Override
     public String getTypeURI() {
-        return SML.ApplyConstruct.getURI();
+        return SML.ApplyConstruct;
     }
 
 }

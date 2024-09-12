@@ -31,7 +31,7 @@ public class AbstractModuleTest extends AbstractModuleTestHelper {
         module.setInputContext(
                 ExecutionContextFactory.createContext(ModelFactory.createDefaultModel(), variablesBinding));
 
-        RDFNode node = ((AbstractModule) module).getEffectiveValue(SML.value);
+        RDFNode node = ((AbstractModule) module).getEffectiveValue(SML.JENA.value);
 
         assertEquals(node, ResourceFactory.createPlainLiteral("Hello James"), "Effective value computed incorrectly.");
 

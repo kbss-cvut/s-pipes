@@ -23,16 +23,16 @@ public class ImportRDFFromWorkspaceModule extends AnnotatedAbstractModule {
     OntologyDocumentManager ontologyDocumentManager = OntoDocManager.getInstance();
 
     // sml:baseURI : xsd:string
-    @Parameter(urlPrefix = SML.uri, name = "baseURI")
+    @Parameter(iri = SML.baseURI)
     String baseUri;
 
     // sml:ignoreImports : xsd:boolean
-    @Parameter(urlPrefix = SML.uri, name = "ignoreImports")
+    @Parameter(iri = SML.ignoreImports)
     boolean isIgnoreImports = false;
 
     // TODO reconsider support for this property (might change identification of module type)
     // sml:sourceFilePath : xsd:string
-    @Parameter(urlPrefix = SML.uri, name = "sourceFilePath")
+    @Parameter(iri = SML.sourceFilePath)
     Path sourceFilePath;
 
 

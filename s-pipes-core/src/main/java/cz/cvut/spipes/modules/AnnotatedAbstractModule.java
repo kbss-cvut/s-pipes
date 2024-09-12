@@ -1,14 +1,14 @@
 package cz.cvut.spipes.modules;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import cz.cvut.spipes.modules.handlers.*;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The `AnnotatedAbstractModule` class extends the `AbstractModule` class and provides
@@ -35,10 +35,10 @@ public abstract class AnnotatedAbstractModule extends AbstractModule {
             final Parameter p = f.getAnnotation(Parameter.class);
             if ( p == null ) {
                 continue;
-            } else if (vars.containsKey(p.name())) {
-                throw new RuntimeException(String.format("Two parameters are named the same %s, except prefix", p.name()));
+            } else if (vars.containsKey(p.iri())) {
+                throw new RuntimeException(String.format("Two parameters have same iri %s", p.iri()));
             } else {
-                vars.put(p.name(), f);
+                vars.put(p.iri(), f);
             }
 
             log.trace("Processing parameter {} ", f.getName());
@@ -51,7 +51,7 @@ public abstract class AnnotatedAbstractModule extends AbstractModule {
             }
             HandlerRegistry handlerRegistry = HandlerRegistry.getInstance();
             Handler<?> handler = handlerRegistry.getHandler(f.getType(), resource, executionContext, setter);
-            handler.setValueByProperty(ResourceFactory.createProperty(p.urlPrefix()+p.name()));
+            handler.setValueByProperty(ResourceFactory.createProperty(p.iri()));
         }
     }
 }

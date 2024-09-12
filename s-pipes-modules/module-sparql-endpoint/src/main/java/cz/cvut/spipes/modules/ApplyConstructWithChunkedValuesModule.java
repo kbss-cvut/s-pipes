@@ -33,11 +33,11 @@ public class ApplyConstructWithChunkedValuesModule extends ApplyConstructAbstrac
     private static final String VALUES_CLAUSE_MARKER_NAME = "VALUES";
     private static final Property P_CHUNK_SIZE = ResourceFactory.createProperty(TYPE_PREFIX + "chunk-size");
 
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "chunk-size", comment = "Chunk size. Default is 10.")
+    @Parameter(iri = TYPE_PREFIX + "chunk-size", comment = "Chunk size. Default is 10.")
     private Integer chunkSize = DEFAULT_CHUNK_SIZE;
 
-    @Parameter(urlPrefix = SML.uri, name = "selectQuery"
-            , comment = "The select query that will be used to iterate over construct query templates.")
+    @Parameter(iri = SML.selectQuery,
+        comment = "The select query that will be used to iterate over construct query templates.")
     private Select selectQuery;
 
 
@@ -120,8 +120,8 @@ public class ApplyConstructWithChunkedValuesModule extends ApplyConstructAbstrac
     @Override
     public void loadConfiguration() {
         super.loadConfiguration();
-        //iterationCount = this.getPropertyValue(KBSS_MODULE.has_max_iteration_count, 1);
-        parseText = this.getPropertyValue(KBSS_MODULE.is_parse_text, true);
+        //iterationCount = this.getPropertyValue(KBSS_MODULE.JENA.s_max_iteration_count, 1);
+        parseText = this.getPropertyValue(KBSS_MODULE.JENA.is_parse_text, true);
         chunkSize = this.getPropertyValue(P_CHUNK_SIZE, DEFAULT_CHUNK_SIZE);
         selectQuery = getPropertyValue(SML.selectQuery).asResource().as(Select.class);
     }

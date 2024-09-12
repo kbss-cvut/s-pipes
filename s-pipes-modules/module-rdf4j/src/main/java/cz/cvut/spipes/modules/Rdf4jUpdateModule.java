@@ -35,30 +35,30 @@ public class Rdf4jUpdateModule extends AbstractModule {
     private static final String PROPERTY_PREFIX_URI = KBSS_MODULE.uri + "rdf4j";
 
     static final Property P_RDF4J_SERVER_URL = getParameter("p-rdf4j-server-url");
-    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-rdf4j-server-url", comment = "URL of the Rdf4j server")
+    @Parameter(iri = PROPERTY_PREFIX_URI + "/" + "p-rdf4j-server-url", comment = "URL of the Rdf4j server")
     private String rdf4jServerURL;
 
     static final Property P_RDF4J_REPOSITORY_NAME = getParameter("p-rdf4j-repository-name");
 
-    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-rdf4j-repository-name", comment = "Rdf4j repository ID")
+    @Parameter(iri = PROPERTY_PREFIX_URI + "/" + "p-rdf4j-repository-name", comment = "Rdf4j repository ID")
     private String rdf4jRepositoryName;
 
     /**
      * List of SPARQL Update queries that will be executed in this order.
      */
-    @Parameter(urlPrefix = SML.uri, name = "updateQuery", comment = "SPARQL Update query (sp:Update) that should" +
+    @Parameter(iri = SML.updateQuery, comment = "SPARQL Update query (sp:Update) that should" +
         " be executed by this module. The query is read from sp:text property.")
     private List<String> updateQueries;
 
     static final Property P_RDF4J_STOP_ITERATION_ON_STABLE_TRIPLE_COUNT =
         getParameter("p-stop-iteration-on-stable-triple-count");
 
-    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-stop-iteration-on-stable-triple-count",
+    @Parameter(iri = PROPERTY_PREFIX_URI + "/" + "p-stop-iteration-on-stable-triple-count",
             comment = "Stops iteration (i.e. execution of list of queries) if triple count " +
                 "in the last iteration did not change. Default is false.")
     private boolean onlyIfTripleCountChanges;
 
-    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "has-max-iteration-count",
+    @Parameter(iri = PROPERTY_PREFIX_URI + "/" + "has-max-iteration-count",
             comment = "Limits the number of iterations (i.e. executions of list of queries)" +
                 " to the specified value. Default value is 1, which means that all" +
                 " update queries are executed only once.")
@@ -192,7 +192,7 @@ public class Rdf4jUpdateModule extends AbstractModule {
     public void loadConfiguration() {
         rdf4jServerURL = getEffectiveValue(P_RDF4J_SERVER_URL).asLiteral().getString();
         rdf4jRepositoryName = getEffectiveValue(P_RDF4J_REPOSITORY_NAME).asLiteral().getString();
-        iterationCount = getPropertyValue(KBSS_MODULE.has_max_iteration_count,1);
+        iterationCount = getPropertyValue(KBSS_MODULE.JENA.has_max_iteration_count,1);
         onlyIfTripleCountChanges = getPropertyValue(P_RDF4J_STOP_ITERATION_ON_STABLE_TRIPLE_COUNT,false);
         log.debug("Iteration count={}\nOnlyIf...Changes={}"
                 ,iterationCount

@@ -15,7 +15,7 @@ public class ExportToRDFFileModule extends AnnotatedAbstractModule {
 
     @Override
     public String getTypeURI() {
-        return SML.ExportToRDFFile.getURI();
+        return SML.ExportToRDFFile;
     }
 
 }

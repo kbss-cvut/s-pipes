@@ -50,27 +50,27 @@ public class Rdf4jDeployModule extends AbstractModule {
     }
 
     static final Property P_RDF4J_SERVER_URL = getParameter("p-rdf4j-server-url");
-    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-rdf4j-server-url", comment = "URL of the Rdf4j server")
+    @Parameter(iri = PROPERTY_PREFIX_URI + "/" + "p-rdf4j-server-url", comment = "URL of the Rdf4j server")
     private String rdf4jServerURL;
 
     static final Property P_RDF4J_REPOSITORY_NAME = getParameter("p-rdf4j-repository-name");
-    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-rdf4j-repository-name", comment = "Rdf4j repository ID")
+    @Parameter(iri = PROPERTY_PREFIX_URI + "/" + "p-rdf4j-repository-name", comment = "Rdf4j repository ID")
     private String rdf4jRepositoryName;
 
     static final Property P_RDF4J_CONTEXT_IRI = getParameter("p-rdf4j-context-iri");
-    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-rdf4j-context-iri", comment = "IRI of the context that should be used for deployment.")
+    @Parameter(iri = PROPERTY_PREFIX_URI + "/" + "p-rdf4j-context-iri", comment = "IRI of the context that should be used for deployment.")
     private String rdf4jContextIRI;
 
     static final Property P_RDF4J_INFER_CONTEXT_IRIS = getParameter("p-rdf4j-infer-context-iris");
 
-    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-rdf4j-infer-context-iris",
+    @Parameter(iri = PROPERTY_PREFIX_URI + "/" + "p-rdf4j-infer-context-iris",
         comment = "IRI of contexts is inferred from annotated input triples. Only reified triples that contain triple " +
             "?reifiedStatement kbss-module:is-part-of-graph ?graph are processed." +
             " Actual triples related to reified statement are not processed/needed.")
     private boolean inferContextIRIs;
 
     static final Property P_RDF4J_REPOSITORY_USERNAME = getParameter("p-rdf4j-secured-username-variable");
-    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-rdf4j-secured-username-variable", comment = "User name if the repository requires authentication.")
+    @Parameter(iri = PROPERTY_PREFIX_URI + "/" + "p-rdf4j-secured-username-variable", comment = "User name if the repository requires authentication.")
     private String rdf4jSecuredUsernameVariable;
 
     private RepositoryManager repositoryManager;
@@ -82,11 +82,11 @@ public class Rdf4jDeployModule extends AbstractModule {
     }
 
     static final Property P_RDF4J_REPOSITORY_PASSWORD = getParameter("p-rdf4j-secured-password-variable");
-    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-rdf4j-secured-password-variable", comment = "Password if the repository requires authentication.")
+    @Parameter(iri = PROPERTY_PREFIX_URI + "/" + "p-rdf4j-secured-password-variable", comment = "Password if the repository requires authentication.")
     private String rdf4jSecuredPasswordVariable;
 
     static final Property P_IS_REPLACE_CONTEXT_IRI = getParameter("p-is-replace");
-    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-is-replace", comment =
+    @Parameter(iri = PROPERTY_PREFIX_URI + "/" + "p-is-replace", comment =
             "Whether data should be replaced (true) / appended (false) into the specified context or repository.\n" +
             "Default is false.")
     private boolean isReplaceContext;
@@ -220,7 +220,7 @@ public class Rdf4jDeployModule extends AbstractModule {
         Dataset dataset = DatasetFactory.create();
         model.listReifiedStatements().forEachRemaining(
             rs -> {
-                rs.listProperties(KBSS_MODULE.is_part_of_graph)
+                rs.listProperties(KBSS_MODULE.JENA.is_part_of_graph)
                     .mapWith( gs -> gs.getObject().toString())
                         .forEachRemaining(
                             u ->  {

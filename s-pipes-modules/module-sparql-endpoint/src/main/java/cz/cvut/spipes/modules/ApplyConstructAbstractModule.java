@@ -26,26 +26,26 @@ public abstract class ApplyConstructAbstractModule extends AnnotatedAbstractModu
     private static final String PROPERTY_PREFIX_URI = KBSS_MODULE.uri;
     //sml:constructQuery
     // TODO - this parameter is reused in ApplyConstructWithChunkedValuesAndScrollableCursorModule. There the comment should be extended by a note, i.e. "The construct queries with markers #${VALUES} and #${LIMIT_OFFSET}."
-    @Parameter(urlPrefix = SML.uri, name = "constructQuery", comment = "SPARQL Construct query (sp:Construct)" +
+    @Parameter(iri = SML.constructQuery, comment = "SPARQL Construct query (sp:Construct)" +
         " that should be executed by this module. The query is read from sp:text property." +
         " The output of query execution is returned by the module.")
     protected List<Resource> constructQueries;
 
     //sml:replace
-    @Parameter(urlPrefix = SML.uri, name = "replace", comment = "Specifies whether a module should overwrite triples" +
+    @Parameter(iri = SML.replace, comment = "Specifies whether a module should overwrite triples" +
         " from its predecessors. When set to true (default is false), it prevents" +
         " passing through triples from the predecessors.")
     protected boolean isReplace;
 
     //kbss:parseText
-    @Parameter(urlPrefix = KBSS_MODULE.uri, name = "is-parse-text",
+    @Parameter(iri = KBSS_MODULE.is_parse_text,
             comment = "Whether the query should be taken from sp:text property instead of from SPIN serialization," +
                 " default is true."
     )
     protected boolean parseText;
 
     //kbss:iterationCount
-    @Parameter(name = "has-max-iteration-count",
+    @Parameter(iri = KBSS_MODULE.has_max_iteration_count,
             comment =
                     "Maximal number of iterations of the whole rule set. 0 means 0 iterations. The actual number of iterations can be smaller,\n" +
                     "if no new inferences are generated any more.\n" +
@@ -185,8 +185,8 @@ public abstract class ApplyConstructAbstractModule extends AnnotatedAbstractModu
         //TODO default value must be taken from template definition
         isReplace = this.getPropertyValue(SML.replace, false);
 
-        parseText = this.getPropertyValue(KBSS_MODULE.is_parse_text, true);
-        iterationCount = this.getPropertyValue(KBSS_MODULE.has_max_iteration_count, -1);
+        parseText = this.getPropertyValue(KBSS_MODULE.JENA.is_parse_text, true);
+        iterationCount = this.getPropertyValue(KBSS_MODULE.JENA.has_max_iteration_count, -1);
     }
 
 

@@ -34,10 +34,10 @@ public class SUTimeModule extends AbstractModule {
 
     public static final String TYPE_URI = KBSS_MODULE.uri + "temporal-v0.1";
 
-    @Parameter(urlPrefix = DescriptorModel.prefix, name = "has-rule-file", comment = "Rule file, multivalued.") // TODO - revise comment
+    @Parameter(iri = DescriptorModel.has_rule_file, comment = "Rule file, multivalued.") // TODO - revise comment
     private List<Path> ruleFilePaths = new LinkedList<>();
 
-    @Parameter(urlPrefix = DescriptorModel.prefix, name = "has-document-date", comment = "Document date format.") // TODO - revise comment
+    @Parameter(iri = DescriptorModel.has_document_date, comment = "Document date format.") // TODO - revise comment
     private String documentDate; // TODO support other formats ?
 
 
@@ -52,12 +52,12 @@ public class SUTimeModule extends AbstractModule {
     @Override
     public void loadConfiguration() {
 
-        if (this.resource.getProperty(DescriptorModel.has_document_date) != null) { // TODO set current date if not specified
-            documentDate = getEffectiveValue(DescriptorModel.has_document_date).asLiteral().toString();
+        if (this.resource.getProperty(DescriptorModel.JENA.has_document_date) != null) { // TODO set current date if not specified
+            documentDate = getEffectiveValue(DescriptorModel.JENA.has_document_date).asLiteral().toString();
         }
 
-        if (this.resource.getProperty(DescriptorModel.has_rule_file) != null) { //TODO support more rule files
-            ruleFilePaths.add(Paths.get(getEffectiveValue(DescriptorModel.has_rule_file).asLiteral().toString()));
+        if (this.resource.getProperty(DescriptorModel.JENA.has_rule_file) != null) { //TODO support more rule files
+            ruleFilePaths.add(Paths.get(getEffectiveValue(DescriptorModel.JENA.has_rule_file).asLiteral().toString()));
         }
     }
 
@@ -93,12 +93,12 @@ public class SUTimeModule extends AbstractModule {
 
                         Literal beginLiteral = mm.createTypedLiteral(s.getDateBegin());
                         Literal endLiteral = mm.createTypedLiteral(s.getDateEnd());
-                        reifiedSt.addProperty(RDF.type, DescriptorModel.sutime_extraction);
+                        reifiedSt.addProperty(RDF.type, DescriptorModel.JENA.sutime_extraction);
 
-                        reifiedSt.addProperty(DescriptorModel.extracted, s.getDateExtracted());
-                        reifiedSt.addProperty(DescriptorModel.beginDate, beginLiteral);
-                        reifiedSt.addProperty(DescriptorModel.endDate, endLiteral);
-                        reifiedSt.addProperty(DescriptorModel.type, s.getDateType());
+                        reifiedSt.addProperty(DescriptorModel.JENA.extracted, s.getDateExtracted());
+                        reifiedSt.addProperty(DescriptorModel.JENA.beginDate, beginLiteral);
+                        reifiedSt.addProperty(DescriptorModel.JENA.endDate, endLiteral);
+                        reifiedSt.addProperty(DescriptorModel.JENA.type, s.getDateType());
 
                         temporalAnnotationStmts.add(reifiedSt);
                     }

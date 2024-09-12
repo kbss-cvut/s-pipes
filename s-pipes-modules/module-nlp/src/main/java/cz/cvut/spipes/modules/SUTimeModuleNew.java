@@ -41,27 +41,27 @@ public class SUTimeModuleNew extends AbstractModule {
     private static final String LIMIT_OFFSET_CLAUSE_MARKER_NAME = "LIMIT_OFFSET";
     private static final Property P_PAGE_SIZE = ResourceFactory.createProperty(TYPE_PREFIX + "page-size");
 
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "page-size", comment = "Page size. Default value is 10000.")
+    @Parameter(iri = TYPE_PREFIX + "page-size", comment = "Page size. Default value is 10000.")
     private Integer pageSize = DEFAULT_PAGE_SIZE;
 
-    @Parameter(urlPrefix = SML.uri, name = "constructQuery",
+    @Parameter(iri = SML.constructQuery,
             comment = "List of construct queries. The module annotates the lexical form of objects of the output statements of these queries.")// TODO - revise comment
     private List<Resource> constructQueries;
 
     //sml:replace
-    @Parameter(urlPrefix = SML.uri, name = "replace", comment = "Replace context flag. Default value is false." )
+    @Parameter(iri = SML.replace, comment = "Replace context flag. Default value is false." )
     private boolean isReplace;
 
     //kbss:parseText
-    @Parameter(urlPrefix = KBSS_MODULE.uri, name = "is-parse-text",
+    @Parameter(iri = KBSS_MODULE.uri + "is-parse-text",
         comment = "Whether the query should be taken from sp:text property instead of from SPIN serialization," +
             " default is true.")
     private boolean parseText;
 
-    @Parameter(urlPrefix = DescriptorModel.prefix, name = "has-rule-file", comment = "Rule file, multivalued.")// TODO - review comment
+    @Parameter(iri = DescriptorModel.has_rule_file, comment = "Rule file, multivalued.")// TODO - review comment
     private List<Path> ruleFilePaths = new LinkedList<>();
 
-    @Parameter(urlPrefix = DescriptorModel.prefix, name = "has-document-date", comment = "Document date format.")// TODO - review comment
+    @Parameter(iri = DescriptorModel.has_document_date, comment = "Document date format.")// TODO - review comment
     private String documentDate; // TODO support other formats ?
     private AnnotationPipeline pipeline;
 
@@ -84,14 +84,14 @@ public class SUTimeModuleNew extends AbstractModule {
 
     @Override
     public void loadConfiguration() {
-        if (this.resource.getProperty(DescriptorModel.has_document_date) != null) { // TODO set current date if not specified
-            documentDate = getEffectiveValue(DescriptorModel.has_document_date).asLiteral().toString();
+        if (this.resource.getProperty(DescriptorModel.JENA.has_document_date) != null) { // TODO set current date if not specified
+            documentDate = getEffectiveValue(DescriptorModel.JENA.has_document_date).asLiteral().toString();
         }
 
-        if (this.resource.getProperty(DescriptorModel.has_rule_file) != null) { //TODO support more rule files
-            ruleFilePaths.add(Paths.get(getEffectiveValue(DescriptorModel.has_rule_file).asLiteral().toString()));
+        if (this.resource.getProperty(DescriptorModel.JENA.has_rule_file) != null) { //TODO support more rule files
+            ruleFilePaths.add(Paths.get(getEffectiveValue(DescriptorModel.JENA.has_rule_file).asLiteral().toString()));
         }
-        parseText = this.getPropertyValue(KBSS_MODULE.is_parse_text, true);
+        parseText = this.getPropertyValue(KBSS_MODULE.JENA.is_parse_text, true);
         pageSize = this.getPropertyValue(P_PAGE_SIZE, DEFAULT_PAGE_SIZE);
         constructQueries = getResourcesByProperty(SML.constructQuery);
 
@@ -174,12 +174,12 @@ public class SUTimeModuleNew extends AbstractModule {
 
                                 Literal beginLiteral = mm.createTypedLiteral(sdf.format(s.getDateBegin().getTime()));
                                 Literal endLiteral = mm.createTypedLiteral(sdf.format(s.getDateEnd().getTime()));
-                                reifiedSt.addProperty(RDF.type, DescriptorModel.sutime_extraction);
+                                reifiedSt.addProperty(RDF.type, DescriptorModel.JENA.sutime_extraction);
 
-                                reifiedSt.addProperty(DescriptorModel.extracted, s.getDateExtracted());
-                                reifiedSt.addProperty(DescriptorModel.beginDate, beginLiteral);
-                                reifiedSt.addProperty(DescriptorModel.endDate, endLiteral);
-                                reifiedSt.addProperty(DescriptorModel.type, s.getDateType());
+                                reifiedSt.addProperty(DescriptorModel.JENA.extracted, s.getDateExtracted());
+                                reifiedSt.addProperty(DescriptorModel.JENA.beginDate, beginLiteral);
+                                reifiedSt.addProperty(DescriptorModel.JENA.endDate, endLiteral);
+                                reifiedSt.addProperty(DescriptorModel.JENA.type, s.getDateType());
 
                                 temporalAnnotationStmts.add(reifiedSt);
                             }

@@ -48,26 +48,26 @@ public class TextAnalysisModule extends AnnotatedAbstractModule{
     private static final String TYPE_URI = KBSS_MODULE.uri + "text-analysis";
     private static final String TYPE_PREFIX = TYPE_URI + "/";
 
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "service-url", comment = "The URL of the text analysis service to be used.")
+    @Parameter(iri = TYPE_PREFIX + "service-url", comment = "The URL of the text analysis service to be used.")
     private String serviceUrl;
 
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "vocabulary-iri", comment = "The IRI of the vocabulary to be used for entity recognition.")
+    @Parameter(iri = TYPE_PREFIX + "vocabulary-iri", comment = "The IRI of the vocabulary to be used for entity recognition.")
     private String vocabularyIri;
 
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "vocabulary-repository", comment = "The IRI of the repository where the vocabulary is stored.")
+    @Parameter(iri = TYPE_PREFIX + "vocabulary-repository", comment = "The IRI of the repository where the vocabulary is stored.")
     private String vocabularyRepository;
 
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "language", comment = "The language of the text to be analyzed.")
+    @Parameter(iri = TYPE_PREFIX + "language", comment = "The language of the text to be analyzed.")
     private String language;
 
     //sml:replace
-    @Parameter(urlPrefix = SML.uri, name = "replace", comment = "Replace context flag, default is false.")
+    @Parameter(iri = SML.replace, comment = "Replace context flag, default is false.")
     private boolean isReplace = false;
 
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "literals-per-request", comment = "The number of literals to be processed per request to the web service.")
+    @Parameter(iri = TYPE_PREFIX + "literals-per-request", comment = "The number of literals to be processed per request to the web service.")
     private Integer literalsPerRequest;
 
-    @Parameter(urlPrefix = SML.uri, name = "selectQuery",
+    @Parameter(iri = SML.selectQuery,
             comment =
                 "The SPARQL query to be used for selecting literals from the repository.\n" +
                 "<p>\n" +

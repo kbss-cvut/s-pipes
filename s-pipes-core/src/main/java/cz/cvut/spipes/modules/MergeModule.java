@@ -13,7 +13,7 @@ public class MergeModule extends AnnotatedAbstractModule  {
 
     @Override
     public String getTypeURI() {
-        return SML.Merge.getURI();
+        return SML.Merge;
     }
 
 }

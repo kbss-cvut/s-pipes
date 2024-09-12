@@ -28,13 +28,13 @@ public class SparqlEndpointDatasetExplorerModule extends AnnotatedAbstractModule
     public static final String TYPE_URI = KBSS_MODULE.uri + "sparqlEndpointDatasetExplorer-v1";
     private final String nsHttp = "http://onto.fel.cvut.cz/ontologies/http/";
 
-    @Parameter(urlPrefix = TYPE_URI + "/", name = "p-sparql-endpoint-url", comment = "URL of the SPARQL endpoint.")
+    @Parameter(iri = TYPE_URI + "/" + "p-sparql-endpoint-url", comment = "URL of the SPARQL endpoint.")
     private String propSparqlEndpointUrl;
 
-    @Parameter(urlPrefix = TYPE_URI + "/", name = "p-connection-timeout", comment = "Connection Timeout in ms. Default 3000.")
+    @Parameter(iri = TYPE_URI + "/" + "p-connection-timeout", comment = "Connection Timeout in ms. Default 3000.")
     private long propConnectionTimeout = 3000;
 
-    @Parameter(urlPrefix = TYPE_URI + "/", name = "p-query-timeout", comment = "Query Timeout. Default 60000")
+    @Parameter(iri = TYPE_URI + "/" + "p-query-timeout", comment = "Query Timeout. Default 60000")
     private long propQueryTimeout = 60000;
 
     @Override

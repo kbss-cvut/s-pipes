@@ -23,16 +23,16 @@ public class Rdf4jCreateRepositoryModule extends AbstractModule {
 
     static final Property P_RDF4J_SERVER_URL = getParameter("p-rdf4j-server-url");
 
-    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-rdf4j-server-url", comment = "URL of the Rdf4j server")
+    @Parameter(iri = PROPERTY_PREFIX_URI + "/" + "p-rdf4j-server-url", comment = "URL of the Rdf4j server")
     private String rdf4jServerURL;
 
     static final Property P_RDF4J_REPOSITORY_NAME = getParameter("p-rdf4j-repository-name");
-    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-rdf4j-repository-name", comment = "Rdf4j repository ID")
+    @Parameter(iri = PROPERTY_PREFIX_URI + "/" + "p-rdf4j-repository-name", comment = "Rdf4j repository ID")
     private String rdf4jRepositoryName;
 
     static final Property P_RDF4J_IGNORE_IF_EXISTS = getParameter("p-rdf4j-ignore-if-exists");
 
-    @Parameter(urlPrefix = PROPERTY_PREFIX_URI + "/", name = "p-rdf4j-ignore-if-exists",
+    @Parameter(iri = PROPERTY_PREFIX_URI + "/" + "p-rdf4j-ignore-if-exists",
             comment = "Don't try to create new repository if it already exists (Default value is false)")
     private boolean rdf4jIgnoreIfExists;
 
