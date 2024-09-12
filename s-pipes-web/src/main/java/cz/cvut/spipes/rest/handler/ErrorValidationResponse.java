@@ -12,10 +12,7 @@ import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
@@ -90,6 +87,10 @@ public class ErrorValidationResponse {
                       "@id": "http://onto.fel.cvut.cz/ontologies/s-pipes/constraintFailureEvidences",
                       "@container": "@list"
                     },
+                    "columns": {
+                      "@id": "http://onto.fel.cvut.cz/ontologies/s-pipes/columns",
+                      "@container": "@list"
+                    },
                     %s
                     "constraintQuery": "http://onto.fel.cvut.cz/ontologies/s-pipes/constraintQuery" 
                   },
@@ -114,15 +115,26 @@ public class ErrorValidationResponse {
         evidences.forEach(e -> {
             Resource r = model.createResource();
             e.forEach((key, value) -> {
-                    if(value != null){
-                        model.add(
-                                r,
-                                getP(key),
-                                value);
-                    }
-             });
+                if (value != null) {
+                    model.add(
+                            r,
+                            getP(key),
+                            value);
+                }
+            });
             evidenceResources.add(r);
         });
+
+        List<RDFNode> columns = new ArrayList<>();
+        evidences.stream()
+                .findAny()
+                .ifPresent(m -> m.keySet()
+                        .stream()
+                        .map(model::createLiteral)
+                        .forEach(columns::add));
+        Resource listOfColumns = model.createList(columns.iterator());
+        model.add(getP("columns"), RDFS.range, RDF.List);
+        model.add(validationError, getP("columns"), listOfColumns);
 
         model.add(validationError, getP("module"), module);
         Resource listOfEvidences = model.createList(evidenceResources.toArray(RDFNode[]::new));
