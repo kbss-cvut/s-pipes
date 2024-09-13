@@ -5,6 +5,8 @@ import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.impl.GraphChunkedDownload;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -12,6 +14,8 @@ import org.apache.jena.rdf.model.ModelFactory;
 
 // TODO - lable = SpEP retrieve graph
 @Slf4j
+@Getter
+@Setter
 @SPipesModule(label = "sparql endpoint retrieve graph", comment = "Retrieves graph from sparql endpoint specified by " +
         "?endpointUrl and optionaly ?namedGraphId. If ?namedGraphId is not specified it retreaves the default graph.")
 public class RetrieveGraphModule extends AnnotatedAbstractModule {
@@ -29,33 +33,8 @@ public class RetrieveGraphModule extends AnnotatedAbstractModule {
     @Parameter(iri = TYPE_PREFIX + "page-size", comment = "Page size. Default is 10000.")
     private Integer pageSize = DEFAULT_PAGE_SIZE;
 
-    public String getNamedGraphId() {
-        return namedGraphId;
-    }
-
-    public void setNamedGraphId(String namedGraphId) {
-        this.namedGraphId = namedGraphId;
-    }
-
     public String getTypeURI() {
         return TYPE_URI;
-    }
-
-    public String getEndpointUrl() {
-        return endpointUrl;
-    }
-
-    public void setEndpointUrl(String endpointUrl) {
-        this.endpointUrl = endpointUrl;
-    }
-
-    public int getPageSize() {
-        return pageSize;
-    }
-
-
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
     }
 
     @Override

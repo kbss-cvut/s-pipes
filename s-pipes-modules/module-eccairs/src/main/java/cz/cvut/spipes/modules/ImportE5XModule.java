@@ -22,6 +22,8 @@ import cz.cvut.spipes.modules.eccairs.SesameDataDao;
 import cz.cvut.spipes.registry.StreamResource;
 import cz.cvut.spipes.registry.StreamResourceRegistry;
 import cz.cvut.spipes.util.JenaUtils;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.util.FileUtils;
@@ -34,8 +36,10 @@ import java.net.URI;
 import java.util.Arrays;
 
 @Slf4j
+@Getter
+@Setter
 @SPipesModule(label = "import e5x", comment = "Convert e5x xml files to rdf.")
-public class ImportE5XModule extends AbstractModule {
+public class ImportE5XModule extends AnnotatedAbstractModule {
 
     // TODO - this parameter id defined with IRI <http://onto.fel.cvut.cz/ontologies/lib/module-param/has-resource-uri> in  s-pipes-modules\module.sms.ttl
     // TODO - we should be able to annotate directly "StreamResource e5xResource" instead
@@ -153,22 +157,6 @@ public class ImportE5XModule extends AbstractModule {
         e5xResource = getResourceByUri(e5xResourceUriStr);
     }
 
-    public String getE5xResourceUri() {
-        return e5xResource.getUri();
-    }
-
-    public StreamResource getE5xResource() {
-        return e5xResource;
-    }
-
-    public void setE5xResourceUri(String e5xResourceUri) {
-        e5xResource = getResourceByUri(e5xResourceUri);
-    }
-
-    public void setE5xResource(@NotNull StreamResource e5xResource) {
-        this.e5xResource = e5xResource;
-    }
-
     @NotNull
     private StreamResource getResourceByUri(@NotNull String e5xResourceUriStr) {
 
@@ -180,11 +168,4 @@ public class ImportE5XModule extends AbstractModule {
         return res;
     }
 
-    public boolean isComputeEccairsToAviationSafetyOntologyMapping() {
-        return computeEccairsToAviationSafetyOntologyMapping;
-    }
-
-    public void setComputeEccairsToAviationSafetyOntologyMapping(boolean computeEccairsToAviationSafetyOntologyMapping) {
-        this.computeEccairsToAviationSafetyOntologyMapping = computeEccairsToAviationSafetyOntologyMapping;
-    }
 }

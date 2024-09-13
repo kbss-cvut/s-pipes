@@ -16,13 +16,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @SPipesModule(label = "external schemex", comment = "Compute schemex using external script for a specified sourceFilePath.")
-public class ExternalSchemExModule extends AbstractModule {
+public class ExternalSchemExModule extends AnnotatedAbstractModule {
 
     private static final String MODULE_ID = "external-schemex";
     private static final String TYPE_URI = KBSS_MODULE.uri + MODULE_ID;
     private static final String TYPE_PREFIX = TYPE_URI + "/";
     private static final String SCHEMEX_PROGRAM = "schemex";
-    //sml:sourceFilePath
+
     @Parameter(iri = SML.sourceFilePath, comment = "Source file in nt format.")
     private Path sourceFilePath;
 
@@ -63,10 +63,4 @@ public class ExternalSchemExModule extends AbstractModule {
         return TYPE_URI;
     }
 
-    @Override
-    public void loadConfiguration() {
-
-        sourceFilePath = Paths.get(getEffectiveValue(SML.JENA.sourceFilePath).asLiteral().toString());
-
-    }
 }

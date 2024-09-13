@@ -5,6 +5,8 @@ import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.QueryUtils;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
@@ -19,6 +21,8 @@ import org.topbraid.spin.vocabulary.SP;
 import java.util.List;
 
 @Slf4j
+@Getter
+@Setter
 public abstract class ApplyConstructAbstractModule extends AnnotatedAbstractModule {
 
     private static final String TYPE_URI = KBSS_MODULE.uri + "abstract-apply-construct";
@@ -33,13 +37,13 @@ public abstract class ApplyConstructAbstractModule extends AnnotatedAbstractModu
     @Parameter(iri = SML.replace, comment = "Specifies whether a module should overwrite triples" +
         " from its predecessors. When set to true (default is false), it prevents" +
         " passing through triples from the predecessors.")
-    protected boolean isReplace;
+    protected boolean isReplace = false;
 
     @Parameter(iri = KBSS_MODULE.is_parse_text,
             comment = "Whether the query should be taken from sp:text property instead of from SPIN serialization," +
                 " default is true."
     )
-    protected boolean parseText;
+    protected boolean parseText = true;
 
     @Parameter(iri = KBSS_MODULE.has_max_iteration_count,
             comment =
@@ -57,44 +61,10 @@ public abstract class ApplyConstructAbstractModule extends AnnotatedAbstractModu
     )
     protected int iterationCount = -1;
 
-
     public ApplyConstructAbstractModule() {
         // TODO move elsewhere
         SPINModuleRegistry.get().init(); //TODO -- downloads spin from the web (should be cached instead)
     }
-
-    public boolean isParseText() {
-        return parseText;
-    }
-
-    public void setParseText(boolean parseText) {
-        this.parseText = parseText;
-    }
-
-    public boolean isReplace() {
-        return isReplace;
-    }
-
-    public void setReplace(boolean replace) {
-        isReplace = replace;
-    }
-
-    public List<Resource> getConstructQueries() {
-        return constructQueries;
-    }
-
-    public void setConstructQueries(List<Resource> constructQueries) {
-        this.constructQueries = constructQueries;
-    }
-
-    public int getIterationCount() {
-        return iterationCount;
-    }
-
-    public void setIterationCount(int iterationCount) {
-        this.iterationCount = iterationCount;
-    }
-
 
     protected QuerySolution generateIterationBinding(int currentIteration, QuerySolution globalBinding) {
         return globalBinding;
@@ -167,23 +137,23 @@ public abstract class ApplyConstructAbstractModule extends AnnotatedAbstractModu
         return queryStr;
     }
 
-    @Override
-    public void loadConfiguration() {
-
-        // TODO sparql expressions
-        // TODO load default values from configuration
-
-        // TODO does not work with string query as object is not RDF resource ???
-        constructQueries = getResourcesByProperty(SML.JENA.constructQuery);
-
-        log.debug("Loaded {} spin construct queries.", constructQueries.size());
-
-        //TODO default value must be taken from template definition
-        isReplace = this.getPropertyValue(SML.JENA.replace, false);
-
-        parseText = this.getPropertyValue(KBSS_MODULE.JENA.is_parse_text, true);
-        iterationCount = this.getPropertyValue(KBSS_MODULE.JENA.has_max_iteration_count, -1);
-    }
+//    @Override
+//    public void loadConfiguration() {
+//
+//        // TODO sparql expressions
+//        // TODO load default values from configuration
+//
+//        // TODO does not work with string query as object is not RDF resource ???
+//        constructQueries = getResourcesByProperty(SML.JENA.constructQuery);
+//
+//        log.debug("Loaded {} spin construct queries.", constructQueries.size());
+//
+//        //TODO default value must be taken from template definition
+//        isReplace = this.getPropertyValue(SML.JENA.replace, false);
+//
+//        parseText = this.getPropertyValue(KBSS_MODULE.JENA.is_parse_text, true);
+//        iterationCount = this.getPropertyValue(KBSS_MODULE.JENA.has_max_iteration_count, -1);
+//    }
 
 
 }
