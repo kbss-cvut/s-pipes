@@ -48,12 +48,10 @@ public class SUTimeModuleNew extends AbstractModule {
             comment = "List of construct queries. The module annotates the lexical form of objects of the output statements of these queries.")// TODO - revise comment
     private List<Resource> constructQueries;
 
-    //sml:replace
     @Parameter(iri = SML.replace, comment = "Replace context flag. Default value is false." )
     private boolean isReplace;
 
-    //kbss:parseText
-    @Parameter(iri = KBSS_MODULE.uri + "is-parse-text",
+    @Parameter(iri = KBSS_MODULE.is_parse_text,
         comment = "Whether the query should be taken from sp:text property instead of from SPIN serialization," +
             " default is true.")
     private boolean parseText;
