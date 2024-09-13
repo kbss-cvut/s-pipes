@@ -5,20 +5,15 @@ import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.VariablesBinding;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.util.QueryUtils;
-import java.util.Objects;
-
 import lombok.extern.slf4j.Slf4j;
-import org.apache.jena.query.Query;
-import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.query.QuerySolution;
-import org.apache.jena.query.ResultSet;
+import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.jetbrains.annotations.NotNull;
-import org.topbraid.spin.arq.ARQFactory;
 import org.topbraid.spin.model.Select;
+
+import java.util.Objects;
 
 /**
  * TODO Order of queries is not enforced.
@@ -33,11 +28,11 @@ public class ApplyConstructWithChunkedValuesModule extends ApplyConstructAbstrac
     private static final String VALUES_CLAUSE_MARKER_NAME = "VALUES";
     private static final Property P_CHUNK_SIZE = ResourceFactory.createProperty(TYPE_PREFIX + "chunk-size");
 
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "chunk-size", comment = "Chunk size. Default is 10.")
+    @Parameter(iri = TYPE_PREFIX + "chunk-size", comment = "Chunk size. Default is 10.")
     private Integer chunkSize = DEFAULT_CHUNK_SIZE;
 
-    @Parameter(urlPrefix = SML.uri, name = "selectQuery"
-            , comment = "The select query that will be used to iterate over construct query templates.")
+    @Parameter(iri = SML.selectQuery,
+        comment = "The select query that will be used to iterate over construct query templates.")
     private Select selectQuery;
 
 
@@ -120,10 +115,10 @@ public class ApplyConstructWithChunkedValuesModule extends ApplyConstructAbstrac
     @Override
     public void loadConfiguration() {
         super.loadConfiguration();
-        //iterationCount = this.getPropertyValue(KBSS_MODULE.has_max_iteration_count, 1);
-        parseText = this.getPropertyValue(KBSS_MODULE.is_parse_text, true);
+        //iterationCount = this.getPropertyValue(KBSS_MODULE.JENA.s_max_iteration_count, 1);
+        parseText = this.getPropertyValue(KBSS_MODULE.JENA.is_parse_text, true);
         chunkSize = this.getPropertyValue(P_CHUNK_SIZE, DEFAULT_CHUNK_SIZE);
-        selectQuery = getPropertyValue(SML.selectQuery).asResource().as(Select.class);
+        selectQuery = getPropertyValue(SML.JENA.selectQuery).asResource().as(Select.class);
     }
 
     @NotNull

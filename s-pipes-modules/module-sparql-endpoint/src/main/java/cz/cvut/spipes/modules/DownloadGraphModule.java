@@ -25,16 +25,16 @@ public class DownloadGraphModule extends AnnotatedAbstractModule {
     private static final String TYPE_PREFIX = TYPE_URI + "/";
     private static final int DEFAULT_PAGE_SIZE = 10000;
 
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "named-graph-id", comment = "Named graph id")
+    @Parameter(iri = TYPE_PREFIX + "named-graph-id", comment = "Named graph id")
     private String namedGraphId;
 
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "endpoint-url", comment = "Endpoint url")
+    @Parameter(iri = TYPE_PREFIX + "endpoint-url", comment = "Endpoint url")
     private String endpointUrl;
 
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "output-resource-variable", comment = "Output resource variable")
+    @Parameter(iri = TYPE_PREFIX + "output-resource-variable", comment = "Output resource variable")
     private String outputResourceVariable;
 
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "page-size", comment = "Page size. Default value is 10000.")
+    @Parameter(iri = TYPE_PREFIX + "page-size", comment = "Page size. Default value is 10000.")
     private Integer pageSize = DEFAULT_PAGE_SIZE;
 
     protected long numberOfDownloadedTriples;

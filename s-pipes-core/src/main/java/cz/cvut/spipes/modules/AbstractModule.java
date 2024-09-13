@@ -213,13 +213,13 @@ public abstract class AbstractModule implements Module {
     }
 
     private void loadModuleConstraints() {
-        inputConstraintQueries = getResourcesByProperty(KBSS_MODULE.has_input_graph_constraint);
-        outputConstraintQueries = getResourcesByProperty(KBSS_MODULE.has_output_graph_constraint);
+        inputConstraintQueries = getResourcesByProperty(KBSS_MODULE.JENA.has_input_graph_constraint);
+        outputConstraintQueries = getResourcesByProperty(KBSS_MODULE.JENA.has_output_graph_constraint);
     }
 
     private void loadModuleFlags() {
-        isTargetModule = getPropertyValue(KBSS_MODULE.has_debug_mode_flag, false);
-        isInDebugMode = getPropertyValue(KBSS_MODULE.has_debug_mode_flag, false);
+        isTargetModule = getPropertyValue(KBSS_MODULE.JENA.has_debug_mode_flag, false);
+        isInDebugMode = getPropertyValue(KBSS_MODULE.JENA.has_debug_mode_flag, false);
     }
 
 

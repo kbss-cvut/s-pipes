@@ -52,8 +52,7 @@ public class RetrievePrefixesModule extends AnnotatedAbstractModule {
     private static final Logger log = LoggerFactory.getLogger(RetrievePrefixesModule.class);
     private static final String TYPE_URI = KBSS_MODULE.uri + "retrieve-prefixes";
 
-    //sml:replace
-    @Parameter(urlPrefix = SML.uri, name = "replace")
+    @Parameter(iri = SML.replace)
     private boolean isReplace = false;
 
     //TODO refactor -> should be part of execution context

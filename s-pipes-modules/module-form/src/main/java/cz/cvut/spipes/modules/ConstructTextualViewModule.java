@@ -32,26 +32,26 @@ public class ConstructTextualViewModule extends AnnotatedAbstractModule {
 
     private static final String TYPE_URI = KBSS_MODULE.uri + "construct-textual-view";
 
-    @Parameter(urlPrefix = SML.uri, name = "replace", comment = "Replace context flag. Default value is false.")
+    @Parameter(iri = SML.replace, comment = "Replace context flag. Default value is false.")
     private boolean isReplace = false;
 
-    @Parameter(urlPrefix = FORM_MODULE.uri, name = "serialize-unanswered-questions",
+    @Parameter(iri = FORM_MODULE.uri + "serialize-unanswered-questions",
             comment = "If true (default), outputs questions not having answers")
     private boolean isSerializeUnansweredQuestions = true;
 
-    @Parameter(urlPrefix = FORM_MODULE.uri, name = "serialize-answers",
+    @Parameter(iri = FORM_MODULE.uri + "serialize-answers",
             comment = "If true (default), outputs answers not only questions")
     private boolean isSerializeAnswers = true;
 
-    @Parameter(urlPrefix = FORM_MODULE.uri, name = "process-non-root-questions",
+    @Parameter(iri = FORM_MODULE.uri + "process-non-root-questions",
             comment = "If true (default), process all questions, otherwise process only root questions")
     private boolean isProcessNonRootQuestions = true;
 
-    @Parameter(urlPrefix = FORM_MODULE.uri, name = "indentation-string",
+    @Parameter(iri = FORM_MODULE.uri + "indentation-string",
             comment = "Indentation string indents subquestion from questions. By default '  ' is used.")
     private String indentationString = "  ";
 
-    @Parameter(urlPrefix = FORM_MODULE.uri, name = "language",
+    @Parameter(iri = FORM_MODULE.uri + "language",
             comment = "Language to be used to retrieve labels of questions. By default 'en' is used.")
     private String language = "en";
 

@@ -111,31 +111,25 @@ public class TabularModule extends AbstractModule {
     private final Property P_SOURCE_RESOURCE_FORMAT = getSpecificParameter("source-resource-format");
     private final Property P_PROCESS_TABLE_AT_INDEX = getSpecificParameter("process-table-at-index");
 
-    //sml:replace
-    @Parameter(urlPrefix = SML.uri, name = "replace", comment = "Specifies whether a module should overwrite triples" +
+    @Parameter(iri = SML.replace, comment = "Specifies whether a module should overwrite triples" +
         " from its predecessors. When set to true (default is false), it prevents" +
         " passing through triples from the predecessors.")
     private boolean isReplace;
 
-    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "source-resource-uri", comment = "URI of resource" +
+    @Parameter(iri = PARAM_URL_PREFIX + "source-resource-uri", comment = "URI of resource" +
         " that represent tabular data (e.g. resource representing CSV file).")
-    //:source-resource-uri
     private StreamResource sourceResource;
 
-    //:delimiter
-    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "delimiter", comment = "Column delimiter. Default value is comma ','.")
+    @Parameter(iri = PARAM_URL_PREFIX + "delimiter", comment = "Column delimiter. Default value is comma ','.")
     private int delimiter;
 
-    //:quote-character
-    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "quote-character", comment = "Quote character. Default is '\"' if delimiter is ',', '\\0' otherwize.")
+    @Parameter(iri = PARAM_URL_PREFIX + "quote-character", comment = "Quote character. Default is '\"' if delimiter is ',', '\\0' otherwize.")
     private char quoteCharacter;
 
-    //:data-prefix
-    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "data-prefix", comment = "Data prefix")// TODO - improve comment
+    @Parameter(iri = PARAM_URL_PREFIX + "data-prefix", comment = "Data prefix")// TODO - improve comment
     private String dataPrefix;
 
-    //:skip-header
-    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "skip-header", comment = "Skip header. Default is false.")
+    @Parameter(iri = PARAM_URL_PREFIX + "skip-header", comment = "Skip header. Default is false.")
     private boolean skipHeader;
 
     //:process-table-at-index
@@ -144,9 +138,8 @@ public class TabularModule extends AbstractModule {
      */
     private int processTableAtIndex;
 
-    //:output-mode
     // TODO - revise comment
-    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "output-mode", comment = "Output mode. Default is standard-mode('http://onto.fel.cvut.cz/ontologies/lib/module/tabular/standard-mode)")
+    @Parameter(iri = PARAM_URL_PREFIX + "output-mode", comment = "Output mode. Default is standard-mode('http://onto.fel.cvut.cz/ontologies/lib/module/tabular/standard-mode)")
     private Mode outputMode;
 
     //:source-resource-format
@@ -163,8 +156,7 @@ public class TabularModule extends AbstractModule {
      */
     private ResourceFormat sourceResourceFormat = ResourceFormat.PLAIN;
 
-    //:accept-invalid-quoting
-    @Parameter(urlPrefix = PARAM_URL_PREFIX, name = "accept-invalid-quoting", comment = "Accept invalid quoting. Default is false.")
+    @Parameter(iri = PARAM_URL_PREFIX + "accept-invalid-quoting", comment = "Accept invalid quoting. Default is false.")
     private boolean acceptInvalidQuoting;
 
     /**
@@ -482,7 +474,7 @@ public class TabularModule extends AbstractModule {
             getPropertyValue(P_SOURCE_RESOURCE_FORMAT, ResourceFormat.PLAIN.getValue())
         );
         delimiter = getPropertyValue(P_DELIMITER, getDefaultDelimiterSupplier(sourceResourceFormat));
-        isReplace = getPropertyValue(SML.replace, false);
+        isReplace = getPropertyValue(SML.JENA.replace, false);
         skipHeader = getPropertyValue(P_SKIP_HEADER, false);
         processTableAtIndex = getPropertyValue(P_PROCESS_TABLE_AT_INDEX, 0);
         acceptInvalidQuoting = getPropertyValue(P_ACCEPT_INVALID_QUOTING, false);

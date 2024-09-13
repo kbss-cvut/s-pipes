@@ -4,15 +4,6 @@ import cz.cvut.spipes.constants.SM;
 import cz.cvut.spipes.function.ARQFunction;
 import cz.cvut.spipes.modules.Module;
 import cz.cvut.spipes.util.JenaPipelineUtils;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.lang.reflect.Modifier;
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
@@ -27,6 +18,16 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.lang.reflect.Modifier;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class PipelineFactory {
 
@@ -166,7 +167,7 @@ public class PipelineFactory {
                     Resource res = e.getKey();
 
                     // set up input modules
-                    res.listProperties(SM.next).toList().stream()
+                    res.listProperties(SM.JENA.next).toList().stream()
                             .map(st -> {
                                 Module m = res2ModuleMap.get(st.getObject().asResource());
                                 if (m == null) {

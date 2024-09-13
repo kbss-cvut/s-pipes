@@ -5,9 +5,9 @@ import cz.cvut.spipes.engine.ExecutionContext;
 import org.apache.jena.rdf.model.Resource;
 
 public class ReturnRDFModule extends AnnotatedAbstractModule {
-    @Parameter(urlPrefix = SML.uri, name = "serialization")
+    @Parameter(iri = SML.serialization)
     private Resource serialization;
-    @Parameter(urlPrefix = SML.uri, name = "baseURI")
+    @Parameter(iri = SML.baseURI)
     private String baseURI;
 
     @Override
@@ -17,7 +17,7 @@ public class ReturnRDFModule extends AnnotatedAbstractModule {
 
     @Override
     public String getTypeURI() {
-        return SML.ReturnRDF.getURI();
+        return SML.ReturnRDF;
     }
 
 

@@ -1,6 +1,7 @@
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SM;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
+import cz.cvut.spipes.util.URIUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.ResourceFactory;
@@ -129,7 +130,7 @@ public class RdfAnnotationProcessorMojo extends AbstractMojo {
         for (MavenProject submodule : project.getCollectedProjects()) {
 
             //find module's main class
-            var moduleClasses = readAllModuleClasses(submodule);
+                var moduleClasses = readAllModuleClasses(submodule);
             getLog().info("Scanned maven module '" + submodule.getName() + "' and found " + moduleClasses.size()
                     + " SPipes Module(s): [" + moduleClasses.stream()
                     .map(Class::getSimpleName)
@@ -340,19 +341,19 @@ public class RdfAnnotationProcessorMojo extends AbstractMojo {
                         KBSS_MODULE.uri + a.label().replaceAll(" ", "-").toLowerCase()) //todo can be added to the annotation
                 ).ifPresent(r -> baseRdfModel.add(root, RDFS.subClassOf, r));
 
-        baseRdfModel.add(root, RDF.type, SM.Module);
+        baseRdfModel.add(root, RDF.type, SM.JENA.Module);
         baseRdfModel.add(root, RDFS.comment, moduleAnnotation.comment());
         baseRdfModel.add(root, RDFS.label, moduleAnnotation.label());
         for (var annotation : constraintAnnotations) {
             final var modelConstraint = ResourceFactory.createResource();
             baseRdfModel.add(modelConstraint, RDF.type, SPL.Argument);
-            baseRdfModel.add(modelConstraint, SPL.predicate, ResourceFactory.createResource(annotation.urlPrefix() + annotation.name()));
-            baseRdfModel.add(modelConstraint, RDFS.label, annotation.name());
+            baseRdfModel.add(modelConstraint, SPL.predicate, ResourceFactory.createResource(annotation.iri()));
+            baseRdfModel.add(modelConstraint, RDFS.label, URIUtils.getLocalName(annotation.iri()));
             baseRdfModel.add(modelConstraint, RDFS.comment, annotation.comment());
             baseRdfModel.add(root, SPIN.constraint, modelConstraint);
 
             getLog().debug("Added model constraint based on annotation: " +
-                    "(name = " + annotation.name() + ", urlPrefix = " + annotation.urlPrefix() + ")");
+                    "(iri = " + annotation.iri() + ")");
         }
     }
 

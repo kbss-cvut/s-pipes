@@ -39,7 +39,7 @@ public class ImportE5XModule extends AbstractModule {
 
     // TODO - this parameter id defined with IRI <http://onto.fel.cvut.cz/ontologies/lib/module-param/has-resource-uri> in  s-pipes-modules\module.sms.ttl
     // TODO - we should be able to annotate directly "StreamResource e5xResource" instead
-    @Parameter(name = "has-resource-uri", comment = "Uri of a resource referencing content of an e5x file.")
+    @Parameter(iri = KBSS_MODULE.has_resource_uri, comment = "Uri of a resource referencing content of an e5x file.")
     private String e5xResourceUriStr;
 
     StreamResource e5xResource;
@@ -149,7 +149,7 @@ public class ImportE5XModule extends AbstractModule {
 
     @Override
     public void loadConfiguration() {
-        e5xResourceUriStr = getEffectiveValue(KBSS_MODULE.has_resource_uri).asLiteral().toString();
+        e5xResourceUriStr = getEffectiveValue(KBSS_MODULE.JENA.has_resource_uri).asLiteral().toString();
         e5xResource = getResourceByUri(e5xResourceUriStr);
     }
 

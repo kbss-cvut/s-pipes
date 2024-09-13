@@ -4,19 +4,17 @@ import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.engine.VariablesBinding;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.Optional;
-import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.Optional;
 
 public class ImportFileFromURLModule extends AnnotatedAbstractModule {
 
@@ -24,14 +22,14 @@ public class ImportFileFromURLModule extends AnnotatedAbstractModule {
 
     //sml:targetFilePath, required
 
-    @Parameter(urlPrefix = SML.uri, name = "targetFilePath")
+    @Parameter(iri = SML.targetFilePath)
     Path targetFilePath; //TODO $_executionDir ?
 
     //kbss:targetResourceVariable
     String targetResourceVariable;
 
     //sml:url, required
-    @Parameter(urlPrefix = SML.uri, name = "url")
+    @Parameter(iri = SML.url)
     URL url;
 
     @Override
@@ -65,7 +63,7 @@ public class ImportFileFromURLModule extends AnnotatedAbstractModule {
 
     @Override
     public String getTypeURI() {
-        return SML.ImportFileFromURL.getURI();
+        return SML.ImportFileFromURL;
     }
 
     public Path getTargetFilePath() {

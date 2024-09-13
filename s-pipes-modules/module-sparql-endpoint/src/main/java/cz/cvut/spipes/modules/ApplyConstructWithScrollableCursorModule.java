@@ -26,7 +26,7 @@ public class ApplyConstructWithScrollableCursorModule extends ApplyConstructAbst
     private static final String LIMIT_OFFSET_CLAUSE_MARKER_NAME = "LIMIT_OFFSET";
     private static final Property P_PAGE_SIZE = ResourceFactory.createProperty(TYPE_PREFIX + "page-size");
 
-    @Parameter(urlPrefix = TYPE_PREFIX, name = "page-size", comment = "Page size. Default value is 10000.")
+    @Parameter(iri = TYPE_PREFIX + "page-size", comment = "Page size. Default value is 10000.")
     private Integer pageSize = DEFAULT_PAGE_SIZE;
 
     @Override
@@ -78,8 +78,8 @@ public class ApplyConstructWithScrollableCursorModule extends ApplyConstructAbst
     @Override
     public void loadConfiguration() {
         super.loadConfiguration();
-        //iterationCount = this.getPropertyValue(KBSS_MODULE.has_max_iteration_count, 1);
-        parseText = this.getPropertyValue(KBSS_MODULE.is_parse_text, true);
+        //iterationCount = this.getPropertyValue(KBSS_MODULE.JENA.s_max_iteration_count, 1);
+        parseText = this.getPropertyValue(KBSS_MODULE.JENA.is_parse_text, true);
         pageSize = this.getPropertyValue(P_PAGE_SIZE , DEFAULT_PAGE_SIZE);
     }
 }

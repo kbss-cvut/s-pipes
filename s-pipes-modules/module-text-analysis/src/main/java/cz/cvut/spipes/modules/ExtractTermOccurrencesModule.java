@@ -75,7 +75,7 @@ public class ExtractTermOccurrencesModule extends AnnotatedAbstractModule {
     private static final String TYPE_URI = KBSS_MODULE.uri + "extract-term-occurrences";
     private static final String TYPE_PREFIX = TYPE_URI + "/";
 
-    @Parameter(urlPrefix = SML.uri, name = "replace", comment = "Specifies whether a module should overwrite triples" +
+    @Parameter(iri = SML.replace, comment = "Specifies whether a module should overwrite triples" +
         " from its predecessors. When set to true (default is false), it prevents" +
         " passing through triples from the predecessors.")
     private boolean isReplace;
