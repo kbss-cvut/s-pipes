@@ -111,7 +111,6 @@ public class TabularModule extends AbstractModule {
     private final Property P_SOURCE_RESOURCE_FORMAT = getSpecificParameter("source-resource-format");
     private final Property P_PROCESS_TABLE_AT_INDEX = getSpecificParameter("process-table-at-index");
 
-    //sml:replace
     @Parameter(iri = SML.replace, comment = "Specifies whether a module should overwrite triples" +
         " from its predecessors. When set to true (default is false), it prevents" +
         " passing through triples from the predecessors.")
@@ -119,22 +118,17 @@ public class TabularModule extends AbstractModule {
 
     @Parameter(iri = PARAM_URL_PREFIX + "source-resource-uri", comment = "URI of resource" +
         " that represent tabular data (e.g. resource representing CSV file).")
-    //:source-resource-uri
     private StreamResource sourceResource;
 
-    //:delimiter
     @Parameter(iri = PARAM_URL_PREFIX + "delimiter", comment = "Column delimiter. Default value is comma ','.")
     private int delimiter;
 
-    //:quote-character
     @Parameter(iri = PARAM_URL_PREFIX + "quote-character", comment = "Quote character. Default is '\"' if delimiter is ',', '\\0' otherwize.")
     private char quoteCharacter;
 
-    //:data-prefix
     @Parameter(iri = PARAM_URL_PREFIX + "data-prefix", comment = "Data prefix")// TODO - improve comment
     private String dataPrefix;
 
-    //:skip-header
     @Parameter(iri = PARAM_URL_PREFIX + "skip-header", comment = "Skip header. Default is false.")
     private boolean skipHeader;
 
@@ -144,7 +138,6 @@ public class TabularModule extends AbstractModule {
      */
     private int processTableAtIndex;
 
-    //:output-mode
     // TODO - revise comment
     @Parameter(iri = PARAM_URL_PREFIX + "output-mode", comment = "Output mode. Default is standard-mode('http://onto.fel.cvut.cz/ontologies/lib/module/tabular/standard-mode)")
     private Mode outputMode;
@@ -163,7 +156,6 @@ public class TabularModule extends AbstractModule {
      */
     private ResourceFormat sourceResourceFormat = ResourceFormat.PLAIN;
 
-    //:accept-invalid-quoting
     @Parameter(iri = PARAM_URL_PREFIX + "accept-invalid-quoting", comment = "Accept invalid quoting. Default is false.")
     private boolean acceptInvalidQuoting;
 

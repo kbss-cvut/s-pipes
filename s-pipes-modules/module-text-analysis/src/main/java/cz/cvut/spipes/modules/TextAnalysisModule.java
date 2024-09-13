@@ -58,7 +58,6 @@ public class TextAnalysisModule extends AnnotatedAbstractModule{
     @Parameter(iri = TYPE_PREFIX + "language", comment = "The language of the text to be analyzed.")
     private String language;
 
-    //sml:replace
     @Parameter(iri = SML.replace, comment = "Replace context flag, default is false.")
     private boolean isReplace = false;
 

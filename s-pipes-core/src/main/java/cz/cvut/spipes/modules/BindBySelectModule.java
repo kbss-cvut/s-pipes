@@ -18,7 +18,6 @@ public class BindBySelectModule extends AnnotatedAbstractModule {
     @Parameter(iri = SML.selectQuery)
     private Select selectQuery;
 
-    //sml:replace
     @Parameter(iri = SML.replace)
     private boolean isReplace = false;
 

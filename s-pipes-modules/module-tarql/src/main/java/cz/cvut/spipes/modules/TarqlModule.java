@@ -36,20 +36,17 @@ public class TarqlModule extends AbstractModule {
 
     private static final String TARQL_PROGRAM = AppConstants.BIN_DIR + "/tarql";
 
-    //sml:constructQuery
     @Parameter(iri = SML.constructQuery, comment = "The TARQL Construct queries that deliver the triples that shall be added.")
     private List<Resource> constructQueries;
 
     // TODO not used field
     private String tableFilePath;
 
-    //sml:replace
     @Parameter(iri = SML.replace, comment = "If set to true, the output triples will only contain the " +
             "constructed triples. If no values or false are specified, the output will be the union of the input triples " +
             "and the constructed triples.")
     private boolean isReplace;
 
-    //sml:sourceFilePath
     @Parameter(iri = SML.sourceFilePath, comment = "Source CSV file.")
     private String sourceFilePath;
 
