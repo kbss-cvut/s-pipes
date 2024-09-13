@@ -18,7 +18,7 @@ import java.nio.file.Paths;
 @Slf4j
 @Deprecated //TODO merge with TarqlModule functionality
 @SPipesModule(label = "tarql-XXX-2", comment = "Module to convert CSV file to RDF and query it using SPRQL query. The module wraps org.deri.tarql.tarql. This module is depracated.")
-public class ModuleTarql extends AbstractModule {
+public class ModuleTarql extends AnnotatedAbstractModule {
 
     private static final String TYPE_URI = KBSS_MODULE.uri + "tarql" + "-XXX-2";
 
@@ -80,11 +80,4 @@ public class ModuleTarql extends AbstractModule {
         return TYPE_URI;
     }
 
-    @Override
-    public void loadConfiguration() {
-        inputFile = this.getStringPropertyValue(P_INPUT_FILE);
-        tarqlString = this.getStringPropertyValue(P_TARQL_STRING);
-        ontologyIRI = this.getStringPropertyValue(P_ONTOLOGY_IRI);
-//        noHeader = this.getPropertyValue(P_NO_HEADER, false);
-    }
 }

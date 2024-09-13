@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 @SPipesModule(label = "dataset discovery v1", comment =
         "Discovers dataset based on keyword userInput in repository linked.opendata.cz-federated-descriptor-faceted-search " +
         "hosted at http://onto.fel.cvut.cz/rdf4j-server.")
-public class DatasetDiscoveryModule extends AbstractModule {
+public class DatasetDiscoveryModule extends AnnotatedAbstractModule {
 
     private static final String TYPE_URI = KBSS_MODULE.uri + "dataset-discovery-v1";
 
@@ -138,8 +138,4 @@ public class DatasetDiscoveryModule extends AbstractModule {
         return TYPE_URI;
     }
 
-    @Override
-    public void loadConfiguration() {
-        userInput = this.getStringPropertyValue(P_USER_INPUT);
-    }
 }

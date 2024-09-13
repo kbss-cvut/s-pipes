@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @SPipesModule(label = "tarql", comment = "\"Runs one or more TARQL Construct queries on the input triples. The output RDF " +
         "will consist of the constructed triples and (unless sml:replace is true) the input triples.\"")
-public class TarqlModule extends AbstractModule {
+public class TarqlModule extends AnnotatedAbstractModule {
 
     //tarql [options] query.sparql [table.csv [...]]
 
@@ -45,7 +45,7 @@ public class TarqlModule extends AbstractModule {
     @Parameter(iri = SML.replace, comment = "If set to true, the output triples will only contain the " +
             "constructed triples. If no values or false are specified, the output will be the union of the input triples " +
             "and the constructed triples.")
-    private boolean isReplace;
+    private boolean isReplace = false;
 
     @Parameter(iri = SML.sourceFilePath, comment = "Source CSV file.")
     private String sourceFilePath;
@@ -142,26 +142,22 @@ public class TarqlModule extends AbstractModule {
         return KBSS_MODULE.uri + "tarql";
     }
 
-    @Override
-    public void loadConfiguration() {
-        // TODO load default values from configuration
-
-        // TODO does not work with string query as object is not RDF resource ???
-        constructQueries = resource
-                .listProperties(SML.JENA.constructQuery)
-                .toList().stream()
-                .map(st -> st.getObject().asResource())
-                .collect(Collectors.toList());
-
-        log.debug("Loaded {} spin construct queries.", constructQueries.size());
-
-        //TODO default value must be taken from template definition
-        isReplace = this.getPropertyValue(SML.JENA.replace, false);
-
-        sourceFilePath = getEffectiveValue(SML.JENA.sourceFilePath).asLiteral().toString(); // TODO should be Path
-    }
-
-
-
-
+//    @Override
+//    public void loadConfiguration() {
+//        // TODO load default values from configuration
+//
+//        // TODO does not work with string query as object is not RDF resource ???
+//        constructQueries = resource
+//                .listProperties(SML.JENA.constructQuery)
+//                .toList().stream()
+//                .map(st -> st.getObject().asResource())
+//                .collect(Collectors.toList());
+//
+//        log.debug("Loaded {} spin construct queries.", constructQueries.size());
+//
+//        //TODO default value must be taken from template definition
+//        isReplace = this.getPropertyValue(SML.JENA.replace, false);
+//
+//        sourceFilePath = getEffectiveValue(SML.JENA.sourceFilePath).asLiteral().toString(); // TODO should be Path
+//    }
 }

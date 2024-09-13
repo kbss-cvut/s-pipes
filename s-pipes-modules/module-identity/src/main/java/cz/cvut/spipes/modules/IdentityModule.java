@@ -11,7 +11,6 @@ public class IdentityModule extends AnnotatedAbstractModule {
 
     private static final Logger LOG = LoggerFactory.getLogger(IdentityModule.class);
 
-
     @Override
     ExecutionContext executeSelf() {
         return executionContext;
@@ -22,7 +21,4 @@ public class IdentityModule extends AnnotatedAbstractModule {
         return KBSS_MODULE.uri + "identity";
     }
 
-    @Override
-    public void loadConfiguration() {
-    }
 }

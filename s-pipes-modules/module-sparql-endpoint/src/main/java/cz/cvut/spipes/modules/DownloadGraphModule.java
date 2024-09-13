@@ -12,12 +12,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import cz.cvut.spipes.modules.annotations.SPipesModule;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
+
 @Slf4j
+@Getter
+@Setter
 @SPipesModule(label = "sparql endpoint download graph", comment = "Downloads named graph namedGraphId from sparql endpoint endpointUrl.")
 public class DownloadGraphModule extends AnnotatedAbstractModule {
 
@@ -39,48 +44,8 @@ public class DownloadGraphModule extends AnnotatedAbstractModule {
 
     protected long numberOfDownloadedTriples;
 
-    public String getNamedGraphId() {
-        return namedGraphId;
-    }
-
-    public void setNamedGraphId(String namedGraphId) {
-        this.namedGraphId = namedGraphId;
-    }
-
     public String getTypeURI() {
         return TYPE_URI;
-    }
-
-    public String getEndpointUrl() {
-        return endpointUrl;
-    }
-
-    public void setEndpointUrl(String endpointUrl) {
-        this.endpointUrl = endpointUrl;
-    }
-
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    public String getOutputResourceVariable() {
-        return outputResourceVariable;
-    }
-
-    public void setOutputResourceVariable(String outputResourceVariable) {
-        this.outputResourceVariable = outputResourceVariable;
-    }
-
-    public long getNumberOfDownloadedTriples() {
-        return numberOfDownloadedTriples;
-    }
-
-    public void setNumberOfDownloadedTriples(long numberOfDownloadedTriples) {
-        this.numberOfDownloadedTriples = numberOfDownloadedTriples;
     }
 
     @Override
