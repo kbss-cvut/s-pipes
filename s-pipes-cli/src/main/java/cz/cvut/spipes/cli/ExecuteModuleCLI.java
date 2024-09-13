@@ -133,7 +133,7 @@ public class ExecuteModuleCLI {
         // ----- execute pipeline
         ExecutionEngine engine = ExecutionEngineFactory.createEngine();
         Module module = scriptManager.loadFunction(asArgs.executionTarget);
-//          module =  PipelineFactory.loadModulePipeline(inputDataModel.listObjectsOfProperty(SM.returnModule).next().asResource());
+//          module =  PipelineFactory.loadModulePipeline(inputDataModel.listObjectsOfProperty(SM.JENA.returnModule).next().asResource());
 
         if ( module == null ) {
             throw new RuntimeException("Cannot load module/function with id=" + asArgs.executionTarget);

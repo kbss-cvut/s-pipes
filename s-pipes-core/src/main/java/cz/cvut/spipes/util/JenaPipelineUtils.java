@@ -33,7 +33,7 @@ public class JenaPipelineUtils {
                         return false;
                     }
                     Resource objRes = st.getObject().asResource();
-                    return objRes.hasProperty(RDF.type, SM.Module);
+                    return objRes.hasProperty(RDF.type, SM.JENA.Module);
                 }
         ).toList().size() > 0;
     }

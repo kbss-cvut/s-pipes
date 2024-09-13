@@ -48,14 +48,14 @@ public class SML {
         public static final Property serialization = createProperty(SML.serialization);
         public static final Property ignoreImports = createProperty(SML.ignoreImports);
 
-        public static final Resource ApplyConstruct = createResource("ApplyConstruct");
-        public static final Resource ExportToRDFFile = createResource("ExportToRDFFile");
-        public static final Resource ImportRDFFromWorkspace = createResource("ImportRDFFromWorkspace");
-        public static final Resource ImportFileFromURL = createResource("ImportFileFromURL");
-        public static final Resource BindWithConstant = createResource("BindWithConstant");
-        public static final Resource BindBySelect = createResource("BindBySelect");
-        public static final Resource Merge = createResource("Merge");
-        public static final Resource ReturnRDF = createResource("ReturnRDF");
-        public static final Resource JSONLD = createResource("JSONLD");
+        public static final Resource ApplyConstruct = createResource(SML.ApplyConstruct);
+        public static final Resource ExportToRDFFile = createResource(SML.ExportToRDFFile);
+        public static final Resource ImportRDFFromWorkspace = createResource(SML.ImportRDFFromWorkspace);
+        public static final Resource ImportFileFromURL = createResource(SML.ImportFileFromURL);
+        public static final Resource BindWithConstant = createResource(SML.BindWithConstant);
+        public static final Resource BindBySelect = createResource(SML.BindBySelect);
+        public static final Resource Merge = createResource(SML.Merge);
+        public static final Resource ReturnRDF = createResource(SML.ReturnRDF);
+        public static final Resource JSONLD = createResource(SML.JSONLD);
     }
 }

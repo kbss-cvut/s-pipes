@@ -188,7 +188,7 @@ public class Script2FormTest {
         Resource module = sampleScript.listSubjects().filterKeep(s ->
             s.getURI() != null && s.getURI().endsWith("bind-person")
         ).next();
-        Resource moduleType = sampleScript.getResource(SML.BindWithConstant.toString());
+        Resource moduleType = sampleScript.getResource(SML.BindWithConstant);
 
         return new TransformerImpl().script2Form(module, moduleType);
     }

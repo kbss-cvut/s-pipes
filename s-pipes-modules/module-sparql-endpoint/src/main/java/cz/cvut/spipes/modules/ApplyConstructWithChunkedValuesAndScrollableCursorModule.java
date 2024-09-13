@@ -10,16 +10,11 @@ import cz.cvut.spipes.recursion.QueryTemplateRecursionProvider;
 import cz.cvut.spipes.recursion.ScrollableCursorProvider;
 import cz.cvut.spipes.util.QueryUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.jena.query.Query;
-import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.query.QuerySolution;
-import org.apache.jena.query.ResultSet;
+import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.jetbrains.annotations.NotNull;
-import org.topbraid.spin.arq.ARQFactory;
 import org.topbraid.spin.model.Select;
 
 /**

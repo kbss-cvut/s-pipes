@@ -8,12 +8,15 @@ import cz.cvut.spipes.rest.util.ContextLoaderHelper;
 import cz.cvut.spipes.rest.util.ScriptManagerFactory;
 import cz.cvut.spipes.util.RDFMimeType;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.jena.rdf.model.*;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.LinkedList;
@@ -59,7 +62,7 @@ public class SPipesContextController {
         outModel.add(inModel);
         outModel.add(SPipesContextController.createInferences(inModel));
 
-        outModel.add(SM.next, RDF.type, OWL.ObjectProperty);
+        outModel.add(SM.JENA.next, RDF.type, OWL.ObjectProperty);
 
         return outModel;
     }
@@ -70,7 +73,7 @@ public class SPipesContextController {
         return PipelineFactory.getModuleTypes().keySet().stream()
                 .flatMap(mt -> model.listSubjectsWithProperty(RDF.type, mt).toSet().stream())
                 .map(m -> model.createStatement(
-                        m, RDF.type, SM.Modules
+                        m, RDF.type, SM.JENA.Modules
                 )).collect(Collectors.toList());
     }
 }

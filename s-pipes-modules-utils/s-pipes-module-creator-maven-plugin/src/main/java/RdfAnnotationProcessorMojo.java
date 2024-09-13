@@ -341,7 +341,7 @@ public class RdfAnnotationProcessorMojo extends AbstractMojo {
                         KBSS_MODULE.uri + a.label().replaceAll(" ", "-").toLowerCase()) //todo can be added to the annotation
                 ).ifPresent(r -> baseRdfModel.add(root, RDFS.subClassOf, r));
 
-        baseRdfModel.add(root, RDF.type, SM.Module);
+        baseRdfModel.add(root, RDF.type, SM.JENA.Module);
         baseRdfModel.add(root, RDFS.comment, moduleAnnotation.comment());
         baseRdfModel.add(root, RDFS.label, moduleAnnotation.label());
         for (var annotation : constraintAnnotations) {

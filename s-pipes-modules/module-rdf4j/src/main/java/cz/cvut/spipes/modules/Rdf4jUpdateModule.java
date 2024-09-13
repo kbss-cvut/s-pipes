@@ -113,7 +113,7 @@ public class Rdf4jUpdateModule extends AbstractModule {
     public static Resource createUpdateQueryResource(Model model, String updateQuery) {
         return
             model.createResource()
-                .addProperty(RDF.type, SML.updateQuery)
+                .addProperty(RDF.type, SML.JENA.updateQuery)
                 .addProperty(SP.text, ResourceFactory.createPlainLiteral(updateQuery));
     }
 

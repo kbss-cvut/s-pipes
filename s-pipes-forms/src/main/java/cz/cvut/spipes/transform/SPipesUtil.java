@@ -111,7 +111,7 @@ public class SPipesUtil {
 
     private static final Set<String> S_PIPES_TERMS = new HashSet<String>() {
         {
-            add(SM.next.getURI());
+            add(SM.next);
             add(RDF.type.getURI());
         }
     };
