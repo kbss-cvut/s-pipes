@@ -192,7 +192,7 @@ public class TextAnalysisModule extends AnnotatedAbstractModule{
     @Override
     public void loadConfiguration() {
         super.loadConfiguration();
-        selectQuery = getPropertyValue(SML.selectQuery).asResource().as(Select.class);
+        selectQuery = getPropertyValue(SML.JENA.selectQuery).asResource().as(Select.class);
     }
 
     @Override

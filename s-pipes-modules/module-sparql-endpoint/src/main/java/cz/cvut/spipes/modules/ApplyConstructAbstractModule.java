@@ -178,12 +178,12 @@ public abstract class ApplyConstructAbstractModule extends AnnotatedAbstractModu
         // TODO load default values from configuration
 
         // TODO does not work with string query as object is not RDF resource ???
-        constructQueries = getResourcesByProperty(SML.constructQuery);
+        constructQueries = getResourcesByProperty(SML.JENA.constructQuery);
 
         log.debug("Loaded {} spin construct queries.", constructQueries.size());
 
         //TODO default value must be taken from template definition
-        isReplace = this.getPropertyValue(SML.replace, false);
+        isReplace = this.getPropertyValue(SML.JENA.replace, false);
 
         parseText = this.getPropertyValue(KBSS_MODULE.JENA.is_parse_text, true);
         iterationCount = this.getPropertyValue(KBSS_MODULE.JENA.has_max_iteration_count, -1);

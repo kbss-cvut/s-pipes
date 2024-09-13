@@ -151,7 +151,7 @@ public class TarqlModule extends AbstractModule {
 
         // TODO does not work with string query as object is not RDF resource ???
         constructQueries = resource
-                .listProperties(SML.constructQuery)
+                .listProperties(SML.JENA.constructQuery)
                 .toList().stream()
                 .map(st -> st.getObject().asResource())
                 .collect(Collectors.toList());

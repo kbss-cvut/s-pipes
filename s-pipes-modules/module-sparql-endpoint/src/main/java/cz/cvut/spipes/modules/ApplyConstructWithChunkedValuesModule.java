@@ -123,7 +123,7 @@ public class ApplyConstructWithChunkedValuesModule extends ApplyConstructAbstrac
         //iterationCount = this.getPropertyValue(KBSS_MODULE.JENA.s_max_iteration_count, 1);
         parseText = this.getPropertyValue(KBSS_MODULE.JENA.is_parse_text, true);
         chunkSize = this.getPropertyValue(P_CHUNK_SIZE, DEFAULT_CHUNK_SIZE);
-        selectQuery = getPropertyValue(SML.selectQuery).asResource().as(Select.class);
+        selectQuery = getPropertyValue(SML.JENA.selectQuery).asResource().as(Select.class);
     }
 
     @NotNull

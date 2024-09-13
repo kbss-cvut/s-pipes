@@ -208,7 +208,7 @@ public class Rdf4jUpdateModule extends AbstractModule {
     }
 
     private List<String> loadUpdateQueries() {
-        return getResourcesByProperty(SML.updateQuery).stream().map(
+        return getResourcesByProperty(SML.JENA.updateQuery).stream().map(
             r -> r.getProperty(SP.text).getLiteral().getString()).collect(Collectors.toList());
     }
 }

@@ -93,9 +93,9 @@ public class SUTimeModuleNew extends AbstractModule {
         }
         parseText = this.getPropertyValue(KBSS_MODULE.JENA.is_parse_text, true);
         pageSize = this.getPropertyValue(P_PAGE_SIZE, DEFAULT_PAGE_SIZE);
-        constructQueries = getResourcesByProperty(SML.constructQuery);
+        constructQueries = getResourcesByProperty(SML.JENA.constructQuery);
 
-        isReplace = this.getPropertyValue(SML.replace, false);
+        isReplace = this.getPropertyValue(SML.JENA.replace, false);
     }
 
     @Override
