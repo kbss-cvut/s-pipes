@@ -1,6 +1,7 @@
 package cz.cvut.spipes.modules.handlers;
 
 import cz.cvut.spipes.engine.ExecutionContext;
+import cz.cvut.spipes.registry.StreamResource;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.topbraid.spin.model.Select;
@@ -59,6 +60,7 @@ public class HandlerRegistry {
         registerHandler(Path.class, PathHandler.class);
         registerHandler(Resource.class, ResourceHandler.class);
         registerHandler(List.class, ListHandler.class);
+        registerHandler(StreamResource.class, StreamResourceHandler.class);
     }
 
     public synchronized Handler getHandler(Class clazz, Resource resource, ExecutionContext context, Setter setter) {
