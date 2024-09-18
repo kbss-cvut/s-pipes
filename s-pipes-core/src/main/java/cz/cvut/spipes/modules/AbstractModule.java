@@ -71,6 +71,7 @@ public abstract class AbstractModule implements Module {
     public ExecutionContext execute() {
         loadModuleFlags();
         loadConfiguration();
+        loadManualConfiguration();
         loadModuleConstraints();
         String inputModelFilePath = null;
         if (AuditConfig.isEnabled() || isInDebugMode) {

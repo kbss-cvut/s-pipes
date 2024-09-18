@@ -96,7 +96,7 @@ import java.util.function.Supplier;
  * Does not support the <i>suppress output</i> annotation.
  */
 @SPipesModule(label = "Tabular module", comment = "Module for converting tabular data (e.g. CSV or TSV) to RDF")
-public class TabularModule extends AbstractModule {
+public class TabularModule extends AnnotatedAbstractModule {
 
     public static final String TYPE_URI = KBSS_MODULE.uri + "tabular";
     public static final String PARAM_URL_PREFIX = TYPE_URI + "/";
@@ -114,7 +114,7 @@ public class TabularModule extends AbstractModule {
     @Parameter(iri = SML.replace, comment = "Specifies whether a module should overwrite triples" +
         " from its predecessors. When set to true (default is false), it prevents" +
         " passing through triples from the predecessors.")
-    private boolean isReplace;
+    private boolean isReplace = false;
 
     @Parameter(iri = PARAM_URL_PREFIX + "source-resource-uri", comment = "URI of resource" +
         " that represent tabular data (e.g. resource representing CSV file).")
@@ -130,13 +130,14 @@ public class TabularModule extends AbstractModule {
     private String dataPrefix;
 
     @Parameter(iri = PARAM_URL_PREFIX + "skip-header", comment = "Skip header. Default is false.")
-    private boolean skipHeader;
+    private boolean skipHeader = false;
 
     //:process-table-at-index
     /**
      * Required parameter for HTML and EXCEL files that indicates that only specific single table should be processed
      */
-    private int processTableAtIndex;
+    @Parameter(iri = PARAM_URL_PREFIX + "process-table-at-index", comment = "Required parameter for HTML and EXCEL files that indicates that only specific single table should be processed")
+    private int processTableAtIndex = 0;
 
     // TODO - revise comment
     @Parameter(iri = PARAM_URL_PREFIX + "output-mode", comment = "Output mode. Default is standard-mode('http://onto.fel.cvut.cz/ontologies/lib/module/tabular/standard-mode)")
@@ -157,7 +158,7 @@ public class TabularModule extends AbstractModule {
     private ResourceFormat sourceResourceFormat = ResourceFormat.PLAIN;
 
     @Parameter(iri = PARAM_URL_PREFIX + "accept-invalid-quoting", comment = "Accept invalid quoting. Default is false.")
-    private boolean acceptInvalidQuoting;
+    private boolean acceptInvalidQuoting = false;
 
     /**
      * Represent a group of tables.
@@ -469,18 +470,12 @@ public class TabularModule extends AbstractModule {
     }
 
     @Override
-    public void loadConfiguration() {
+    public void loadManualConfiguration() {
         sourceResourceFormat = ResourceFormat.fromString(
             getPropertyValue(P_SOURCE_RESOURCE_FORMAT, ResourceFormat.PLAIN.getValue())
         );
         delimiter = getPropertyValue(P_DELIMITER, getDefaultDelimiterSupplier(sourceResourceFormat));
-        isReplace = getPropertyValue(SML.JENA.replace, false);
-        skipHeader = getPropertyValue(P_SKIP_HEADER, false);
-        processTableAtIndex = getPropertyValue(P_PROCESS_TABLE_AT_INDEX, 0);
-        acceptInvalidQuoting = getPropertyValue(P_ACCEPT_INVALID_QUOTING, false);
         quoteCharacter = getPropertyValue(P_QUOTE_CHARACTER, getDefaultQuoteCharacterSupplier(sourceResourceFormat));
-        dataPrefix = getEffectiveValue(P_DATE_PREFIX).asLiteral().toString();
-        sourceResource = getResourceByUri(getEffectiveValue(P_SOURCE_RESOURCE_URI).asLiteral().toString());
         outputMode = Mode.fromResource(
             getPropertyValue(P_OUTPUT_MODE, Mode.STANDARD.getResource())
         );

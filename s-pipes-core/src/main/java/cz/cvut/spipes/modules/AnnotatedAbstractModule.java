@@ -54,4 +54,7 @@ public abstract class AnnotatedAbstractModule extends AbstractModule {
             handler.setValueByProperty(ResourceFactory.createProperty(p.iri()));
         }
     }
+
+    @Override
+    public void loadManualConfiguration(){}
 }

@@ -30,7 +30,7 @@ import java.nio.file.Paths;
 
 @Slf4j
 @SPipesModule(label = "temporal v0.1", comment = "Annotate temporal expressions in literals in input model.")
-public class SUTimeModule extends AbstractModule {
+public class SUTimeModule extends AnnotatedAbstractModule {
 
     public static final String TYPE_URI = KBSS_MODULE.uri + "temporal-v0.1";
 
@@ -40,7 +40,6 @@ public class SUTimeModule extends AbstractModule {
     @Parameter(iri = DescriptorModel.has_document_date, comment = "Document date format.") // TODO - revise comment
     private String documentDate; // TODO support other formats ?
 
-
     public SUTimeModule() {
     }
 
@@ -49,17 +48,6 @@ public class SUTimeModule extends AbstractModule {
         return TYPE_URI;
     }
 
-    @Override
-    public void loadConfiguration() {
-
-        if (this.resource.getProperty(DescriptorModel.JENA.has_document_date) != null) { // TODO set current date if not specified
-            documentDate = getEffectiveValue(DescriptorModel.JENA.has_document_date).asLiteral().toString();
-        }
-
-        if (this.resource.getProperty(DescriptorModel.JENA.has_rule_file) != null) { //TODO support more rule files
-            ruleFilePaths.add(Paths.get(getEffectiveValue(DescriptorModel.JENA.has_rule_file).asLiteral().toString()));
-        }
-    }
 
     @Override
 
@@ -70,11 +58,7 @@ public class SUTimeModule extends AbstractModule {
     }
 
     private Model analyzeModel(Model m) {
-
-
-
         AnnotationPipeline pipeline = loadPipeline();
-
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         List<ReifiedStatement> temporalAnnotationStmts = new LinkedList<>();
@@ -198,8 +182,5 @@ public class SUTimeModule extends AbstractModule {
         pipeline.addAnnotator(new TimeAnnotator("sutime", props));
         return pipeline;
     }
-
-
-
 
 }
