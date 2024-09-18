@@ -76,10 +76,8 @@ public class ApplyConstructWithScrollableCursorModule extends ApplyConstructAbst
 
 
     @Override
-    public void loadConfiguration() {
+    public void loadManualConfiguration() {
         super.loadConfiguration();
         //iterationCount = this.getPropertyValue(KBSS_MODULE.JENA.s_max_iteration_count, 1);
-        parseText = this.getPropertyValue(KBSS_MODULE.JENA.is_parse_text, true);
-        pageSize = this.getPropertyValue(P_PAGE_SIZE , DEFAULT_PAGE_SIZE);
     }
 }

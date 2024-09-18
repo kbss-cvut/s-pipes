@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 @SPipesModule(label = "rdf4j update", comment = "Updates sparql endpoint configured in rdf4jServerURL" +
     " using specified list updateQueries. The list of queries can be executed multiple times specified by " +
     " `has-max-iteration-count` property.")
-public class Rdf4jUpdateModule extends AbstractModule {
+public class Rdf4jUpdateModule extends AnnotatedAbstractModule {
     private static final String TYPE_URI = KBSS_MODULE.uri + "rdf4j-update";
     private static final String PROPERTY_PREFIX_URI = KBSS_MODULE.uri + "rdf4j";
 
@@ -56,13 +56,13 @@ public class Rdf4jUpdateModule extends AbstractModule {
     @Parameter(iri = PROPERTY_PREFIX_URI + "/" + "p-stop-iteration-on-stable-triple-count",
             comment = "Stops iteration (i.e. execution of list of queries) if triple count " +
                 "in the last iteration did not change. Default is false.")
-    private boolean onlyIfTripleCountChanges;
+    private boolean onlyIfTripleCountChanges = false;
 
     @Parameter(iri = PROPERTY_PREFIX_URI + "/" + "has-max-iteration-count",
             comment = "Limits the number of iterations (i.e. executions of list of queries)" +
                 " to the specified value. Default value is 1, which means that all" +
                 " update queries are executed only once.")
-    private int iterationCount;
+    private int iterationCount = 1;
 
     private Repository updateRepository;
 
@@ -189,11 +189,7 @@ public class Rdf4jUpdateModule extends AbstractModule {
     }
 
     @Override
-    public void loadConfiguration() {
-        rdf4jServerURL = getEffectiveValue(P_RDF4J_SERVER_URL).asLiteral().getString();
-        rdf4jRepositoryName = getEffectiveValue(P_RDF4J_REPOSITORY_NAME).asLiteral().getString();
-        iterationCount = getPropertyValue(KBSS_MODULE.JENA.has_max_iteration_count,1);
-        onlyIfTripleCountChanges = getPropertyValue(P_RDF4J_STOP_ITERATION_ON_STABLE_TRIPLE_COUNT,false);
+    public void loadManualConfiguration() {
         log.debug("Iteration count={}\nOnlyIf...Changes={}"
                 ,iterationCount
                 ,onlyIfTripleCountChanges);

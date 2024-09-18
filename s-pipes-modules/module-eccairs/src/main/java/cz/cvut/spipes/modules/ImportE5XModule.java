@@ -43,9 +43,8 @@ public class ImportE5XModule extends AnnotatedAbstractModule {
 
     // TODO - this parameter id defined with IRI <http://onto.fel.cvut.cz/ontologies/lib/module-param/has-resource-uri> in  s-pipes-modules\module.sms.ttl
     // TODO - we should be able to annotate directly "StreamResource e5xResource" instead
-    @Parameter(iri = KBSS_MODULE.has_resource_uri, comment = "Uri of a resource referencing content of an e5x file.")
-    private String e5xResourceUriStr;
 
+    @Parameter(iri = KBSS_MODULE.has_resource_uri, comment = "Uri of a resource referencing content of an e5x file.")
     StreamResource e5xResource;
 
     private boolean computeEccairsToAviationSafetyOntologyMapping = true;
@@ -149,23 +148,6 @@ public class ImportE5XModule extends AnnotatedAbstractModule {
     @Override
     public String getTypeURI() {
         return KBSS_MODULE.uri + "import-e5x";
-    }
-
-    @Override
-    public void loadConfiguration() {
-        e5xResourceUriStr = getEffectiveValue(KBSS_MODULE.JENA.has_resource_uri).asLiteral().toString();
-        e5xResource = getResourceByUri(e5xResourceUriStr);
-    }
-
-    @NotNull
-    private StreamResource getResourceByUri(@NotNull String e5xResourceUriStr) {
-
-        StreamResource res = StreamResourceRegistry.getInstance().getResourceByUrl(e5xResourceUriStr);
-
-        if (res == null) {
-            throw new ResourceNotFoundException("Stream resource " + e5xResourceUriStr + " not found. ");
-        }
-        return res;
     }
 
 }

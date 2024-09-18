@@ -40,7 +40,7 @@ import java.util.Optional;
         "Module deploys content of input execution context into default context of repository (if p-rdf4j-context-iri " +
         "is not specified) or concrete context (if p-rdf4j-context-iri is specified)."
 )
-public class Rdf4jDeployModule extends AbstractModule {
+public class Rdf4jDeployModule extends AnnotatedAbstractModule {
 
     private final static String TYPE_URI = KBSS_MODULE.uri + "deploy";
     private final static String PROPERTY_PREFIX_URI = KBSS_MODULE.uri + "rdf4j";
@@ -66,8 +66,8 @@ public class Rdf4jDeployModule extends AbstractModule {
     @Parameter(iri = PROPERTY_PREFIX_URI + "/" + "p-rdf4j-infer-context-iris",
         comment = "IRI of contexts is inferred from annotated input triples. Only reified triples that contain triple " +
             "?reifiedStatement kbss-module:is-part-of-graph ?graph are processed." +
-            " Actual triples related to reified statement are not processed/needed.")
-    private boolean inferContextIRIs;
+            " Actual triples related to reified statement are not processed/needed. Default is false.")
+    private boolean inferContextIRIs = false;
 
     static final Property P_RDF4J_REPOSITORY_USERNAME = getParameter("p-rdf4j-secured-username-variable");
     @Parameter(iri = PROPERTY_PREFIX_URI + "/" + "p-rdf4j-secured-username-variable", comment = "User name if the repository requires authentication.")
@@ -89,7 +89,7 @@ public class Rdf4jDeployModule extends AbstractModule {
     @Parameter(iri = PROPERTY_PREFIX_URI + "/" + "p-is-replace", comment =
             "Whether data should be replaced (true) / appended (false) into the specified context or repository.\n" +
             "Default is false.")
-    private boolean isReplaceContext;
+    private boolean isReplaceContext = false;
 
     public String getRdf4jServerURL() {
         return rdf4jServerURL;
@@ -238,19 +238,7 @@ public class Rdf4jDeployModule extends AbstractModule {
     }
 
     @Override
-    public void loadConfiguration() {
-        rdf4jServerURL = getEffectiveValue(P_RDF4J_SERVER_URL).asLiteral().getString();
-        rdf4jRepositoryName = getEffectiveValue(P_RDF4J_REPOSITORY_NAME).asLiteral().getString();
-        if (this.getPropertyValue(P_RDF4J_CONTEXT_IRI) != null) {
-            rdf4jContextIRI = getEffectiveValue(P_RDF4J_CONTEXT_IRI).asLiteral().getString();
-        }
-        isReplaceContext = this.getPropertyValue(P_IS_REPLACE_CONTEXT_IRI, false);
-        rdf4jSecuredUsernameVariable = Optional.ofNullable(
-            getEffectiveValue(P_RDF4J_REPOSITORY_USERNAME)).map(n -> n.asLiteral().getString()
-        ).orElse(null);
-        rdf4jSecuredPasswordVariable = Optional.ofNullable(
-            getEffectiveValue(P_RDF4J_REPOSITORY_PASSWORD)).map(n -> n.asLiteral().getString()
-        ).orElse(null);
+    public void loadManualConfiguration() {
         if (repositoryManager != null && rdf4jServerURL != null) {
             throw new ModuleConfigurationInconsistentException(
                     "Repository manager is already initialized. Trying to override its configuration from RDF.");
@@ -263,7 +251,6 @@ public class Rdf4jDeployModule extends AbstractModule {
             remoteRepositoryManager.setUsernameAndPassword(username, password);
         }
         repository = repositoryManager.getRepository(rdf4jRepositoryName);
-        inferContextIRIs = getPropertyValue(P_RDF4J_INFER_CONTEXT_IRIS,false);
         log.debug("Inferring contexts from annotated input triples.");
     }
     private static @Nullable String getConfigurationVariable(String variableName) {

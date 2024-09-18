@@ -142,22 +142,8 @@ public class TarqlModule extends AnnotatedAbstractModule {
         return KBSS_MODULE.uri + "tarql";
     }
 
-//    @Override
-//    public void loadConfiguration() {
-//        // TODO load default values from configuration
-//
-//        // TODO does not work with string query as object is not RDF resource ???
-//        constructQueries = resource
-//                .listProperties(SML.JENA.constructQuery)
-//                .toList().stream()
-//                .map(st -> st.getObject().asResource())
-//                .collect(Collectors.toList());
-//
-//        log.debug("Loaded {} spin construct queries.", constructQueries.size());
-//
-//        //TODO default value must be taken from template definition
-//        isReplace = this.getPropertyValue(SML.JENA.replace, false);
-//
-//        sourceFilePath = getEffectiveValue(SML.JENA.sourceFilePath).asLiteral().toString(); // TODO should be Path
-//    }
+    @Override
+    public void loadManualConfiguration() {
+        log.debug("Loaded {} spin construct queries.", constructQueries.size());
+    }
 }

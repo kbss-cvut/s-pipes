@@ -380,12 +380,8 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
     }
 
     @Override
-    public void loadConfiguration() {
+    public void loadManualConfiguration() {
         super.loadConfiguration();
-        marginalConstraint = getEffectiveStringValue(TYPE_PREFIX + "marginal-constraint");
-        marginalsDefsFileUrl = getEffectiveStringValue(TYPE_PREFIX + "marginals-defs-file-url");
-        marginalsFileUrl = getEffectiveStringValue(TYPE_PREFIX + "marginals-file-url");
-        dataServiceUrl = getEffectiveStringValue(TYPE_PREFIX + "data-service-url");
     }
 
     private @NotNull

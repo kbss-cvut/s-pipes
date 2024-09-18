@@ -15,6 +15,8 @@ import edu.stanford.nlp.time.TimeAnnotations;
 import edu.stanford.nlp.time.TimeAnnotator;
 import edu.stanford.nlp.time.TimeExpression;
 import edu.stanford.nlp.util.CoreMap;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
@@ -29,11 +31,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Slf4j
+@Getter
+@Setter
 @SPipesModule(label = "temporal-v1", comment = "Module annotates input triples using NLP analysis of time using library SUTime.")
-public class SUTimeModuleNew extends AbstractModule {
+public class SUTimeModuleNew extends AnnotatedAbstractModule {
 
     private static final String TYPE_URI = KBSS_MODULE.uri + "temporal-v1";
     private static final String TYPE_PREFIX = TYPE_URI + "/";
@@ -49,18 +55,18 @@ public class SUTimeModuleNew extends AbstractModule {
     private List<Resource> constructQueries;
 
     @Parameter(iri = SML.replace, comment = "Replace context flag. Default value is false." )
-    private boolean isReplace;
+    private boolean isReplace = false;
 
     @Parameter(iri = KBSS_MODULE.is_parse_text,
         comment = "Whether the query should be taken from sp:text property instead of from SPIN serialization," +
             " default is true.")
-    private boolean parseText;
+    private boolean parseText = true;
 
     @Parameter(iri = DescriptorModel.has_rule_file, comment = "Rule file, multivalued.")// TODO - review comment
     private List<Path> ruleFilePaths = new LinkedList<>();
 
     @Parameter(iri = DescriptorModel.has_document_date, comment = "Document date format.")// TODO - review comment
-    private String documentDate; // TODO support other formats ?
+    private String documentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); // TODO support other formats ?
     private AnnotationPipeline pipeline;
 
     public SUTimeModuleNew() {
@@ -70,30 +76,6 @@ public class SUTimeModuleNew extends AbstractModule {
     @Override
     public String getTypeURI() {
         return TYPE_URI;
-    }
-
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    @Override
-    public void loadConfiguration() {
-        if (this.resource.getProperty(DescriptorModel.JENA.has_document_date) != null) { // TODO set current date if not specified
-            documentDate = getEffectiveValue(DescriptorModel.JENA.has_document_date).asLiteral().toString();
-        }
-
-        if (this.resource.getProperty(DescriptorModel.JENA.has_rule_file) != null) { //TODO support more rule files
-            ruleFilePaths.add(Paths.get(getEffectiveValue(DescriptorModel.JENA.has_rule_file).asLiteral().toString()));
-        }
-        parseText = this.getPropertyValue(KBSS_MODULE.JENA.is_parse_text, true);
-        pageSize = this.getPropertyValue(P_PAGE_SIZE, DEFAULT_PAGE_SIZE);
-        constructQueries = getResourcesByProperty(SML.JENA.constructQuery);
-
-        isReplace = this.getPropertyValue(SML.JENA.replace, false);
     }
 
     @Override
