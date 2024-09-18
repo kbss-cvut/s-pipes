@@ -10,8 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.DatasetFactory;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFLanguages;
 import org.eclipse.rdf4j.model.Resource;
@@ -28,12 +26,12 @@ import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFParseException;
 import org.eclipse.rdf4j.sail.nativerdf.config.NativeStoreConfig;
 import org.jetbrains.annotations.NotNull;
+
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Optional;
 
 @Slf4j
 @SPipesModule(label = "deploy", comment =
@@ -45,23 +43,14 @@ public class Rdf4jDeployModule extends AnnotatedAbstractModule {
     private final static String TYPE_URI = KBSS_MODULE.uri + "deploy";
     private final static String PROPERTY_PREFIX_URI = KBSS_MODULE.uri + "rdf4j";
 
-    private static Property getParameter(final String name) {
-        return ResourceFactory.createProperty(PROPERTY_PREFIX_URI + "/" + name);
-    }
-
-    static final Property P_RDF4J_SERVER_URL = getParameter("p-rdf4j-server-url");
     @Parameter(iri = PROPERTY_PREFIX_URI + "/" + "p-rdf4j-server-url", comment = "URL of the Rdf4j server")
     private String rdf4jServerURL;
 
-    static final Property P_RDF4J_REPOSITORY_NAME = getParameter("p-rdf4j-repository-name");
     @Parameter(iri = PROPERTY_PREFIX_URI + "/" + "p-rdf4j-repository-name", comment = "Rdf4j repository ID")
     private String rdf4jRepositoryName;
 
-    static final Property P_RDF4J_CONTEXT_IRI = getParameter("p-rdf4j-context-iri");
     @Parameter(iri = PROPERTY_PREFIX_URI + "/" + "p-rdf4j-context-iri", comment = "IRI of the context that should be used for deployment.")
     private String rdf4jContextIRI;
-
-    static final Property P_RDF4J_INFER_CONTEXT_IRIS = getParameter("p-rdf4j-infer-context-iris");
 
     @Parameter(iri = PROPERTY_PREFIX_URI + "/" + "p-rdf4j-infer-context-iris",
         comment = "IRI of contexts is inferred from annotated input triples. Only reified triples that contain triple " +
@@ -69,7 +58,6 @@ public class Rdf4jDeployModule extends AnnotatedAbstractModule {
             " Actual triples related to reified statement are not processed/needed. Default is false.")
     private boolean inferContextIRIs = false;
 
-    static final Property P_RDF4J_REPOSITORY_USERNAME = getParameter("p-rdf4j-secured-username-variable");
     @Parameter(iri = PROPERTY_PREFIX_URI + "/" + "p-rdf4j-secured-username-variable", comment = "User name if the repository requires authentication.")
     private String rdf4jSecuredUsernameVariable;
 
@@ -81,11 +69,9 @@ public class Rdf4jDeployModule extends AnnotatedAbstractModule {
         this.repositoryManager = repositoryManager;
     }
 
-    static final Property P_RDF4J_REPOSITORY_PASSWORD = getParameter("p-rdf4j-secured-password-variable");
     @Parameter(iri = PROPERTY_PREFIX_URI + "/" + "p-rdf4j-secured-password-variable", comment = "Password if the repository requires authentication.")
     private String rdf4jSecuredPasswordVariable;
 
-    static final Property P_IS_REPLACE_CONTEXT_IRI = getParameter("p-is-replace");
     @Parameter(iri = PROPERTY_PREFIX_URI + "/" + "p-is-replace", comment =
             "Whether data should be replaced (true) / appended (false) into the specified context or repository.\n" +
             "Default is false.")
