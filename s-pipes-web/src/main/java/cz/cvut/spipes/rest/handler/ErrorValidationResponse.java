@@ -69,8 +69,14 @@ public class ErrorValidationResponse {
                 .map(n -> {
                     if (isResourceByColumn(n)) {
                         return String.format("\"%s\": { \"@id\": \"%s%s\", \"@type\": \"@id\" }", n, S_PIPES, n);
+                    }else{
+                        String type = getPrimitiveTypeForColumn(n);
+                        if(JsonLdCoreLiteralDatatypes.isCorePrimitiveType(type)){
+                            return String.format("\"%s\": { \"@id\": \"%s%s\" }", n, S_PIPES, n);
+                        }
+                        return String.format("\"%s\": { \"@id\": \"%s%s\", \"@type\": \"%s\" }", n, S_PIPES, n, type);
                     }
-                    return String.format("\"%s\": { \"@id\": \"%s%s\" }", n, S_PIPES, n);
+
                 })
                 .collect(Collectors.joining(",\n    ")) + ",";
 
@@ -161,13 +167,12 @@ public class ErrorValidationResponse {
         }
     }
 
+
     private String getPrimitiveTypeForColumn(String column) {
         return evidences.stream()
                 .findAny()
                 .filter(e -> !e.get(column).isResource())
                 .map(e -> getType(e.get(column)))
-                /* filter xsd:string values as it breaks JSON-LD framing algorithm */
-                .filter(type -> !type.equals("http://www.w3.org/2001/XMLSchema#string"))
                 .orElse(null);
     }
 
