@@ -2,7 +2,10 @@ package cz.cvut.spipes.rest.handler;
 
 import java.util.List;
 
-public class XsdCoreDataTypes {
+/**
+* Represents XSD datatypes used in JSON-LD without requiring explicit "@type" declaration.
+**/
+public class JsonLdCoreLiteralDatatypes {
 
     public static final String XSD_NAMESPACE = "http://www.w3.org/2001/XMLSchema#";
 

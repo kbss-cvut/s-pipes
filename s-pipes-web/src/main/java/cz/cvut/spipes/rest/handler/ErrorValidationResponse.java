@@ -71,7 +71,7 @@ public class ErrorValidationResponse {
                         return String.format("\"%s\": { \"@id\": \"%s%s\", \"@type\": \"@id\" }", n, S_PIPES, n);
                     }else{
                         String type = getPrimitiveTypeForColumn(n);
-                        if(XsdCoreDataTypes.isCorePrimitiveType(type)){
+                        if(JsonLdCoreLiteralDatatypes.isCorePrimitiveType(type)){
                             return String.format("\"%s\": { \"@id\": \"%s%s\" }", n, S_PIPES, n);
                         }
                         return String.format("\"%s\": { \"@id\": \"%s%s\", \"@type\": \"%s\" }", n, S_PIPES, n, type);
