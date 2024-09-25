@@ -41,8 +41,6 @@ public interface Module {
      */
     void loadConfiguration();
 
-    void loadManualConfiguration();
-
     Resource getResource();
 
     void setInputModules(List<Module> inputModules);

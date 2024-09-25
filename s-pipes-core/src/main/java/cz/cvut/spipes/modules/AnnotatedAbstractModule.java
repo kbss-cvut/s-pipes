@@ -30,10 +30,10 @@ public abstract class AnnotatedAbstractModule extends AbstractModule {
 
     @Override
     public void loadConfiguration() {
-        final Map<String,Field> vars = new HashMap<>();
-        for(final Field f: this.getClass().getDeclaredFields()) {
+        final Map<String, Field> vars = new HashMap<>();
+        for (final Field f : this.getClass().getDeclaredFields()) {
             final Parameter p = f.getAnnotation(Parameter.class);
-            if ( p == null ) {
+            if (p == null) {
                 continue;
             } else if (vars.containsKey(p.iri())) {
                 throw new RuntimeException(String.format("Two parameters have same iri %s", p.iri()));
@@ -44,17 +44,33 @@ public abstract class AnnotatedAbstractModule extends AbstractModule {
             log.trace("Processing parameter {} ", f.getName());
 
             Setter setter;
-            if(f.getType() == List.class){
+            if (f.getType() == List.class) {
                 setter = new ListSetter(f, this);
-            }else{
+            } else {
                 setter = new FieldSetter(f, this);
             }
             HandlerRegistry handlerRegistry = HandlerRegistry.getInstance();
             Handler<?> handler = handlerRegistry.getHandler(f.getType(), resource, executionContext, setter);
             handler.setValueByProperty(ResourceFactory.createProperty(p.iri()));
         }
+        loadManualConfiguration();
     }
 
-    @Override
-    public void loadManualConfiguration(){}
+    /**
+     * This abstract method is intended to be overridden by subclasses to manually load
+     * specific configurations that are not automatically processed by the
+     * {@link #loadConfiguration()} method.
+     * <p>
+     * The {@link #loadConfiguration()} method first handles automated configuration by
+     * scanning annotated fields and invoking handlers to set their values. Once that
+     * process is complete, {@code loadManualConfiguration} is called to allow subclasses
+     * to define any additional custom configuration logic that is required.
+     * <p>
+     * Subclasses can choose to override this method to provide custom configurations
+     * that cannot be handled automatically. If no manual configuration is necessary,
+     * the default implementation can be used without changes.
+     */
+    public void loadManualConfiguration(){
+        // Default implementation: no manual configuration
+    };
 }
