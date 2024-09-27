@@ -137,23 +137,9 @@ public abstract class ApplyConstructAbstractModule extends AnnotatedAbstractModu
         return queryStr;
     }
 
-//    @Override
-//    public void loadConfiguration() {
-//
-//        // TODO sparql expressions
-//        // TODO load default values from configuration
-//
-//        // TODO does not work with string query as object is not RDF resource ???
-//        constructQueries = getResourcesByProperty(SML.JENA.constructQuery);
-//
-//        log.debug("Loaded {} spin construct queries.", constructQueries.size());
-//
-//        //TODO default value must be taken from template definition
-//        isReplace = this.getPropertyValue(SML.JENA.replace, false);
-//
-//        parseText = this.getPropertyValue(KBSS_MODULE.JENA.is_parse_text, true);
-//        iterationCount = this.getPropertyValue(KBSS_MODULE.JENA.has_max_iteration_count, -1);
-//    }
-
+    @Override
+    public void loadManualConfiguration(){
+        log.debug("Loaded {} spin construct queries.", constructQueries.size());
+    }
 
 }

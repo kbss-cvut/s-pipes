@@ -381,7 +381,7 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
 
     @Override
     public void loadManualConfiguration() {
-        super.loadConfiguration();
+        super.loadManualConfiguration();
     }
 
     private @NotNull

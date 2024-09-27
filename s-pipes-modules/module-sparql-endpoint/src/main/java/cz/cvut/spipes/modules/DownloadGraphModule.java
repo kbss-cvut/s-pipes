@@ -40,7 +40,7 @@ public class DownloadGraphModule extends AnnotatedAbstractModule {
     private String outputResourceVariable;
 
     @Parameter(iri = TYPE_PREFIX + "page-size", comment = "Page size. Default value is 10000.")
-    private Integer pageSize = DEFAULT_PAGE_SIZE;
+    private int pageSize = DEFAULT_PAGE_SIZE;
 
     protected long numberOfDownloadedTriples;
 

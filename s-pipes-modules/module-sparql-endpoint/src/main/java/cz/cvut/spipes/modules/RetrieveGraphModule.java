@@ -31,7 +31,7 @@ public class RetrieveGraphModule extends AnnotatedAbstractModule {
     private String endpointUrl;
 
     @Parameter(iri = TYPE_PREFIX + "page-size", comment = "Page size. Default is 10000.")
-    private Integer pageSize = DEFAULT_PAGE_SIZE;
+    private int pageSize = DEFAULT_PAGE_SIZE;
 
     public String getTypeURI() {
         return TYPE_URI;

@@ -107,7 +107,6 @@ public class ApplyConstructWithChunkedValuesAndScrollableCursorModule extends Ap
 
     @Override
     public void loadManualConfiguration() {
-        super.loadConfiguration();
         super.loadManualConfiguration();
         //iterationCount = this.getPropertyValue(KBSS_MODULE.JENA.s_max_iteration_count, 1);
     }

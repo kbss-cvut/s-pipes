@@ -187,11 +187,6 @@ public class TextAnalysisModule extends AnnotatedAbstractModule{
     }
 
     @Override
-    public void loadManualConfiguration() {
-        super.loadConfiguration();
-    }
-
-    @Override
     public String getTypeURI() {
         return TYPE_URI;
     }

@@ -114,7 +114,7 @@ public class ApplyConstructWithChunkedValuesModule extends ApplyConstructAbstrac
 
     @Override
     public void loadManualConfiguration() {
-        super.loadConfiguration();
+        super.loadManualConfiguration();
         //iterationCount = this.getPropertyValue(KBSS_MODULE.JENA.s_max_iteration_count, 1);
     }
 
