@@ -21,7 +21,7 @@ public class ApplyConstructV2Module extends ApplyConstructAbstractModule {
 
     @Override
     public void loadManualConfiguration() {
-        super.loadConfiguration();
+        super.loadManualConfiguration();
         iterationCount = this.getPropertyValue(KBSS_MODULE.JENA.has_max_iteration_count, 1);
     }
 }

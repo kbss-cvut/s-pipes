@@ -48,7 +48,7 @@ public class SUTimeModuleNew extends AnnotatedAbstractModule {
     private static final Property P_PAGE_SIZE = ResourceFactory.createProperty(TYPE_PREFIX + "page-size");
 
     @Parameter(iri = TYPE_PREFIX + "page-size", comment = "Page size. Default value is 10000.")
-    private Integer pageSize = DEFAULT_PAGE_SIZE;
+    private int pageSize = DEFAULT_PAGE_SIZE;
 
     @Parameter(iri = SML.constructQuery,
             comment = "List of construct queries. The module annotates the lexical form of objects of the output statements of these queries.")// TODO - revise comment

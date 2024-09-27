@@ -35,13 +35,8 @@ public class DatasetDiscoveryModule extends AnnotatedAbstractModule {
 
     private static final String TYPE_URI = KBSS_MODULE.uri + "dataset-discovery-v1";
 
-    private static final Property P_USER_INPUT = getParameter("prp-user-input");
     @Parameter(iri = TYPE_URI + "/" + "prp-user-input", comment = "Keywords query. Keywords are separated by space.")
     private String userInput;
-
-    private static Property getParameter(final String name) {
-        return ResourceFactory.createProperty(TYPE_URI + "/" + name);
-    }
 
     private List<String> getDatasetsForQuery(final String s, final String endpoint) {
         final List<String> datasets = new ArrayList<>();
