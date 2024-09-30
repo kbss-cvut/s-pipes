@@ -120,6 +120,10 @@ public class JenaResourceRegistry implements  ResourceRegistry {
         return getResourceUri(entityId, contexts.iterator().next());
     }
 
+    public boolean doesContextContainsEntity(String entityId) {
+        return fullName2ContextsMap.containsKey(entityId);
+    }
+
 
 
     private Set<String> getLocalName2Contexts(String localEntityId) {
@@ -144,6 +148,7 @@ public class JenaResourceRegistry implements  ResourceRegistry {
     private boolean isLocalNameEntityId(String entityId) {
         return !(isPrefixedEntityId(entityId) || isFullNameEntityId(entityId));
     }
+
 
     private boolean isFullNameEntityId(String entityId) {
         return entityId.contains("#") || entityId.contains("/");
