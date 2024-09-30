@@ -1,5 +1,6 @@
 package cz.cvut.spipes.modules;
 
+import cz.cvut.spipes.exception.ModuleConfigurationInconsistentException;
 import cz.cvut.spipes.modules.handlers.*;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.slf4j.Logger;
@@ -9,6 +10,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 /**
  * The `AnnotatedAbstractModule` class extends the `AbstractModule` class and provides
@@ -30,23 +32,24 @@ public abstract class AnnotatedAbstractModule extends AbstractModule {
      * <p>This method is responsible for processing the fields declared in the class and its superclasses,
      * that are annotated with {@link Parameter}. It ensures that each field is processed only once and
      * verifies that no two fields share the same {@link Parameter#iri()}. If a duplicate is found,
-     * it throws a {@link RuntimeException}.
+     * it throws a {@link ModuleConfigurationInconsistentException}.
      *
      * <p>For each annotated field:
      * <ul>
-     *   <li>A {@link Setter} is selected based on the field's type (e.g., {@link ListSetter} for lists).</li>
+     *   <li>A {@link Setter} is selected based on the field's type (e.g., {@link FieldSetter} for regular fields, {@link ListSetter} for lists).</li>
      *   <li>The {@link HandlerRegistry} retrieves a matching {@link Handler} for the field's type,
      *       which is responsible for setting the value of the field based on its {@link Parameter#iri()}.</li>
      * </ul>
      *
-     * <p>The method continues processing all declared fields, moving up through the class hierarchy
-     * until it reaches the {@code AnnotatedAbstractModule} class itself.
+     * <p>This method processes all declared fields in the class and its subclasses,
+     * moving down through the class hierarchy until it reaches the most derived class.
+     * This ensures that all relevant fields are considered for configuration.</p>
      *
      * <p>After all automatically configurable fields have been processed, it invokes the
      * {@link #loadManualConfiguration()} method to allow subclasses to handle any custom configuration
      * that requires manual intervention.
      *
-     * @throws RuntimeException if two or more fields in the class hierarchy share the same
+     * @throws ModuleConfigurationInconsistentException if two or more fields in the class hierarchy share the same
      *         {@link Parameter#iri()}.
      */
     @Override
@@ -54,14 +57,22 @@ public abstract class AnnotatedAbstractModule extends AbstractModule {
 
         Class<? extends AnnotatedAbstractModule> clazz = this.getClass();
 
-        while(clazz != AnnotatedAbstractModule.class){
+        Stack<Class<? extends AnnotatedAbstractModule>> classStack = new Stack<>();
+
+        while (clazz != AnnotatedAbstractModule.class) {
+            classStack.push(clazz);
+            clazz = (Class<? extends AnnotatedAbstractModule>) clazz.getSuperclass();
+        }
+
+        while(!classStack.isEmpty()){
+            clazz = classStack.pop();
             final Map<String, Field> vars = new HashMap<>();
             for (final Field f : clazz.getDeclaredFields()) {
                 final Parameter p = f.getAnnotation(Parameter.class);
                 if (p == null) {
                     continue;
                 } else if (vars.containsKey(p.iri())) {
-                    throw new RuntimeException(String.format("Two parameters have same iri %s", p.iri()));
+                    throw new ModuleConfigurationInconsistentException(String.format("Two parameters have same iri %s", p.iri()));
                 } else {
                     vars.put(p.iri(), f);
                 }
@@ -78,7 +89,6 @@ public abstract class AnnotatedAbstractModule extends AbstractModule {
                 Handler<?> handler = handlerRegistry.getHandler(f.getType(), resource, executionContext, setter);
                 handler.setValueByProperty(ResourceFactory.createProperty(p.iri()));
             }
-            clazz = (Class<? extends AnnotatedAbstractModule>) clazz.getSuperclass();
         }
         loadManualConfiguration();
     }
