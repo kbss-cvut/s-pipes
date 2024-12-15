@@ -97,7 +97,7 @@ import java.util.function.Supplier;
  */
 @SPipesModule(label = "Tabular module", comment = "Module for converting tabular data (e.g. CSV or TSV) to RDF")
 public class TabularModule extends AnnotatedAbstractModule {
-
+    static {ModuleRegistration.register();}
     public static final String TYPE_URI = KBSS_MODULE.uri + "tabular";
     public static final String PARAM_URL_PREFIX = TYPE_URI + "/";
     private static final Logger LOG = LoggerFactory.getLogger(TabularModule.class);

@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
         "The table is constructed from column and row resources defined in TableSchema and saves it as a new CSV file.\n" +
         "</p>")
 public class RDF2CSVModule extends AnnotatedAbstractModule {
-
+    static {ModuleRegistration.register();}
     public static final String TYPE_URI = KBSS_MODULE.uri + "RDF2CSV";
     public static final String TYPE_PREFIX = TYPE_URI + "/";
 
