@@ -198,6 +198,8 @@ public class TabularModule extends AnnotatedAbstractModule {
         StreamResource originalSourceResource = sourceResource;
         TSVConvertor tsvConvertor = null;
         FileReaderAdapter fileReaderAdapter = new XLSFileReaderAdapter();
+        CsvPreference csvPreference = null;
+
         switch (sourceResourceFormat) {
             case HTML:
                 if (processTableAtIndex == 0) {
@@ -210,6 +212,12 @@ public class TabularModule extends AnnotatedAbstractModule {
                 table.setLabel(tsvConvertor.getTableName(sourceResource));
                 setSourceResource(tsvConvertor.convertToTSV(sourceResource));
                 setDelimiter('\t');
+
+                csvPreference = new CsvPreference.Builder(
+                        quoteCharacter,
+                        delimiter,
+                        System.lineSeparator()).build();
+                fileReaderAdapter = new HTMLFileReaderAdapter(csvPreference);
                 break;
             case XLS:
             case XLSM:
@@ -220,7 +228,7 @@ public class TabularModule extends AnnotatedAbstractModule {
                 fileReaderAdapter = new XLSFileReaderAdapter();
                 break;
             default:
-                CsvPreference csvPreference = new CsvPreference.Builder(
+                csvPreference = new CsvPreference.Builder(
                         quoteCharacter,
                         delimiter,
                         System.lineSeparator()).build();
@@ -240,7 +248,7 @@ public class TabularModule extends AnnotatedAbstractModule {
         List<Statement> rowStatements = new ArrayList<>();
 
         try {
-            fileReaderAdapter.initialise(new ByteArrayInputStream(sourceResource.getContent()), sourceResourceFormat, processTableAtIndex);
+            fileReaderAdapter.initialise(sourceResource, sourceResourceFormat, processTableAtIndex);
             String[] header = fileReaderAdapter.getHeader();
             Set<String> columnNames = new HashSet<>();
 
@@ -257,7 +265,7 @@ public class TabularModule extends AnnotatedAbstractModule {
 
             if (skipHeader) {
                 header = getHeaderFromSchema(inputModel, header, hasInputSchema);
-                fileReaderAdapter.initialise(new ByteArrayInputStream(sourceResource.getContent()), sourceResourceFormat, processTableAtIndex);
+                fileReaderAdapter.initialise(sourceResource, sourceResourceFormat, processTableAtIndex);
             } else if (hasInputSchema) {
                 header = getHeaderFromSchema(inputModel, header, true);
             }
@@ -338,7 +346,7 @@ public class TabularModule extends AnnotatedAbstractModule {
             em.persist(tableGroup);
             em.merge(tableSchema);
 
-            List<Region> regions = fileReaderAdapter.getMergedRegions();
+            List<Region> regions = fileReaderAdapter.getMergedRegions(originalSourceResource);
 
             int cellsNum = 1;
             for (Region region : regions) {

@@ -2,6 +2,7 @@ package cz.cvut.spipes.modules.util;
 
 import cz.cvut.spipes.modules.ResourceFormat;
 import cz.cvut.spipes.modules.model.Region;
+import cz.cvut.spipes.registry.StreamResource;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
@@ -24,12 +25,12 @@ public class XLSFileReaderAdapter implements FileReaderAdapter {
     private Iterator<org.apache.poi.ss.usermodel.Row> rowIterator;
 
     @Override
-    public void initialise(InputStream inputStream, ResourceFormat sourceResourceFormat, int tableIndex) throws IOException {
+    public void initialise(StreamResource sourceResource, ResourceFormat sourceResourceFormat, int tableIndex) throws IOException {
         Workbook workbook;
         if (sourceResourceFormat == ResourceFormat.XLS) {
-            workbook = new HSSFWorkbook(inputStream);
+            workbook = new HSSFWorkbook(new ByteArrayInputStream(sourceResource.getContent()));
         } else {
-            workbook = new XSSFWorkbook(inputStream);
+            workbook = new XSSFWorkbook(new ByteArrayInputStream(sourceResource.getContent()));
         }
         sheet = workbook.getSheetAt(tableIndex - 1);
         rowIterator = sheet.iterator();
@@ -67,7 +68,7 @@ public class XLSFileReaderAdapter implements FileReaderAdapter {
     }
 
     @Override
-    public List<Region> getMergedRegions() {
+    public List<Region> getMergedRegions(StreamResource sourceResource) {
         List<Region> regions = new ArrayList<>();
         for (int i = 0; i < sheet.getNumMergedRegions(); i++) {
             CellRangeAddress region = sheet.getMergedRegion(i);
