@@ -197,6 +197,7 @@ public class TabularModule extends AnnotatedAbstractModule {
 
         StreamResource originalSourceResource = sourceResource;
         TSVConvertor tsvConvertor = null;
+        FileReaderAdapter fileReaderAdapter = new XLSFileReaderAdapter();
         switch (sourceResourceFormat) {
             case HTML:
                 if (processTableAtIndex == 0) {
@@ -216,23 +217,15 @@ public class TabularModule extends AnnotatedAbstractModule {
                 if (processTableAtIndex == 0) {
                     throw new SheetIsNotSpecifiedException("Source resource format is set to XLS(X,M) file but no specific table is set for processing.");
                 }
-
-                return processXLSFile(sourceResource, processTableAtIndex);
-//                tsvConvertor = new XLS2TSVConvertor(processTableAtIndex, sourceResourceFormat);
-//                int numberOfSheets = tsvConvertor.getTablesCount(sourceResource);
-//                table.setLabel(tsvConvertor.getTableName(sourceResource));
-//                LOG.debug("Number of sheets: {}", numberOfSheets);
-//                if ((processTableAtIndex > numberOfSheets) || (processTableAtIndex < 1)) {
-//                    LOG.error("Requested sheet doesn't exist, number of sheets in the doc: {}, requested sheet: {}",
-//                            numberOfSheets,
-//                            processTableAtIndex
-//                    );
-//                    throw new SheetDoesntExistsException("Requested sheet doesn't exists.");
-//                }
-//                setSourceResource(tsvConvertor.convertToTSV(sourceResource));
-//                setDelimiter('\t');
-
-            //break;
+                fileReaderAdapter = new XLSFileReaderAdapter();
+                break;
+            default:
+                CsvPreference csvPreference = new CsvPreference.Builder(
+                        quoteCharacter,
+                        delimiter,
+                        System.lineSeparator()).build();
+                fileReaderAdapter = new CSVFileReaderAdapter(csvPreference);
+                break;
         }
 
         BNodesTransformer bNodesTransformer = new BNodesTransformer();
@@ -246,36 +239,29 @@ public class TabularModule extends AnnotatedAbstractModule {
         List<Column> outputColumns = new ArrayList<>();
         List<Statement> rowStatements = new ArrayList<>();
 
-        CsvPreference csvPreference = new CsvPreference.Builder(
-                quoteCharacter,
-                delimiter,
-                System.lineSeparator()).build();
-
         try {
-            ICsvListReader listReader = getCsvListReader(csvPreference);
+            fileReaderAdapter.initialise(new ByteArrayInputStream(sourceResource.getContent()), sourceResourceFormat, processTableAtIndex);
+            String[] header = fileReaderAdapter.getHeader();
+            Set<String> columnNames = new HashSet<>();
 
-            if (listReader == null) {
-                logMissingQuoteError();
-                return getExecutionContext(inputModel, outputModel);
-            }
-
-            String[] header = listReader.getHeader(true); // skip the header (can't be used with CsvListReader)
+            if (fileReaderAdapter.getLabel() != null)
+                table.setLabel(fileReaderAdapter.getLabel());
 
             if (header == null) {
                 LOG.warn("Input stream resource {} to provide tabular data is empty.", this.sourceResource.getUri());
                 return getExecutionContext(inputModel, outputModel);
             }
-            Set<String> columnNames = new HashSet<>();
 
             TableSchema inputTableSchema = getTableSchema(em);
             hasInputSchema = hasInputSchema(inputTableSchema);
 
             if (skipHeader) {
                 header = getHeaderFromSchema(inputModel, header, hasInputSchema);
-                listReader = new CsvListReader(getReader(), csvPreference);
+                fileReaderAdapter.initialise(new ByteArrayInputStream(sourceResource.getContent()), sourceResourceFormat, processTableAtIndex);
             } else if (hasInputSchema) {
                 header = getHeaderFromSchema(inputModel, header, true);
             }
+
             em.getTransaction().commit();
             em.close();
             em.getEntityManagerFactory().close();
@@ -298,10 +284,15 @@ public class TabularModule extends AnnotatedAbstractModule {
                 if (isDuplicate) throwNotUniqueException(schemaColumn, columnTitle, columnName);
             }
 
-            List<String> row;
             int rowNumber = 0;
-            //for each row
-            while ((row = listReader.read()) != null) {
+            List<String> row;
+            switch (sourceResourceFormat){
+                case XLS, XLSM, XLSX:
+                    row = fileReaderAdapter.getNextRow(); //skip header for xls files
+                    break;
+            }
+            while ((row = fileReaderAdapter.getNextRow()) != null) {
+                //row = fileReaderAdapter.getNextRow();
                 rowNumber++;
                 // 4.6.1 and 4.6.3
                 Row r = new Row();
@@ -339,37 +330,34 @@ public class TabularModule extends AnnotatedAbstractModule {
                     // 4.6.8.7 - else, if cellValue is not null
                 }
             }
-            listReader.close();
-        } catch (IOException | MissingArgumentException e) {
-            LOG.error("Error while reading file from resource uri {}", sourceResource, e);
-        }
+            tableSchema.adjustProperties(hasInputSchema, outputColumns, sourceResource.getUri());
+            tableSchema.setColumnsSet(new HashSet<>(outputColumns));
 
-        tableSchema.adjustProperties(hasInputSchema, outputColumns, sourceResource.getUri());
-        tableSchema.setColumnsSet(new HashSet<>(outputColumns));
+            em = JopaPersistenceUtils.getEntityManager("cz.cvut.spipes.modules.model", outputModel);
+            em.getTransaction().begin();
+            em.persist(tableGroup);
+            em.merge(tableSchema);
 
-        em = JopaPersistenceUtils.getEntityManager("cz.cvut.spipes.modules.model", outputModel);
-        em.getTransaction().begin();
-        em.persist(tableGroup);
-        em.merge(tableSchema);
-
-        if (tsvConvertor != null) {
-            List<Region> regions =  tsvConvertor.getMergedRegions(originalSourceResource);
+            List<Region> regions = fileReaderAdapter.getMergedRegions();
 
             int cellsNum = 1;
             for (Region region : regions) {
                 int firstCellInRegionNum = cellsNum;
-                for(int i = region.getFirstRow();i <= region.getLastRow();i++){
-                    for(int j = region.getFirstColumn();j <= region.getLastColumn();j++) {
-                        Cell cell = new Cell(sourceResource.getUri()+"#cell"+(cellsNum));
+                for (int i = region.getFirstRow(); i <= region.getLastRow(); i++) {
+                    for (int j = region.getFirstColumn(); j <= region.getLastColumn(); j++) {
+                        Cell cell = new Cell(sourceResource.getUri() + "#cell" + cellsNum);
                         cell.setRow(tableSchema.createAboutUrl(i));
                         cell.setColumn(outputColumns.get(j).getUri().toString());
-                        if(cellsNum != firstCellInRegionNum)
-                            cell.setSameValueAsCell(sourceResource.getUri()+"#cell"+(firstCellInRegionNum));
+                        if (cellsNum != firstCellInRegionNum) {
+                            cell.setSameValueAsCell(sourceResource.getUri() + "#cell" + firstCellInRegionNum);
+                        }
                         em.merge(cell);
                         cellsNum++;
                     }
                 }
             }
+        } catch (IOException e) {
+            LOG.error("Error while reading file from resource uri {}", sourceResource, e);
         }
 
         em.getTransaction().commit();
@@ -380,7 +368,7 @@ public class TabularModule extends AnnotatedAbstractModule {
         outputModel.add(rowStatements);
         outputModel.add(bNodesTransformer.transferJOPAEntitiesToBNodes(persistedModel));
 
-        return getExecutionContext(inputModel,outputModel);
+        return getExecutionContext(inputModel, outputModel);
     }
 
     private String getValueFromRow(List<String> row, int index, int expectedRowLength, int currentRecordNumber) {
@@ -713,174 +701,5 @@ public class TabularModule extends AnnotatedAbstractModule {
         if (ExecutionConfig.isExitOnError()) {
             throw new MissingArgumentException(message);
         } else LOG.error(message);
-    }
-
-    private ExecutionContext processXLSFile(StreamResource sourceResource, int tableIndex) {
-        BNodesTransformer bNodesTransformer = new BNodesTransformer();
-        Model inputModel = bNodesTransformer.convertBNodesToNonBNodes(executionContext.getDefaultModel());
-        boolean hasInputSchema = false;
-
-        Model outputModel = ModelFactory.createDefaultModel();
-        EntityManager em = JopaPersistenceUtils.getEntityManager("cz.cvut.spipes.modules.model", inputModel);
-        em.getTransaction().begin();
-
-        List<Column> outputColumns = new ArrayList<>();
-        List<Statement> rowStatements = new ArrayList<>();
-
-        Workbook workbook;
-        try {
-            if (sourceResourceFormat == ResourceFormat.XLS) {
-                workbook = new HSSFWorkbook(new ByteArrayInputStream(sourceResource.getContent()));
-            } else {
-                workbook = new XSSFWorkbook(new ByteArrayInputStream(sourceResource.getContent()));
-            }
-            table.setLabel(workbook.getSheetAt(tableIndex - 1).getSheetName());
-
-            Sheet sheet = workbook.getSheetAt(tableIndex - 1);
-            Iterator<org.apache.poi.ss.usermodel.Row> rowIterator = sheet.iterator();
-
-            org.apache.poi.ss.usermodel.Row headerRow = rowIterator.next();
-            String[] header = StreamSupport.stream(headerRow.spliterator(), false)
-                    .map(cell -> cell.getStringCellValue())
-                    .toArray(String[]::new);
-
-            if (header == null) {
-                LOG.warn("Input stream resource {} to provide tabular data is empty.", this.sourceResource.getUri());
-                return getExecutionContext(inputModel, outputModel);
-            }
-            Set<String> columnNames = new HashSet<>();
-
-            TableSchema inputTableSchema = getTableSchema(em);
-            hasInputSchema = hasInputSchema(inputTableSchema);
-
-            if (skipHeader) {
-                header = getHeaderFromSchema(inputModel, header, hasInputSchema);
-            } else if (hasInputSchema) {
-                header = getHeaderFromSchema(inputModel, header, true);
-            }
-            em.getTransaction().commit();
-            em.close();
-            em.getEntityManagerFactory().close();
-
-            outputColumns = new ArrayList<>(header.length);
-
-            for (String columnTitle : header) {
-                String columnName = normalize(columnTitle);
-                boolean isDuplicate = !columnNames.add(columnName);
-
-                Column schemaColumn = new Column(columnName, columnTitle);
-                outputColumns.add(schemaColumn);
-
-                tableSchema.setAboutUrl(schemaColumn, sourceResource.getUri());
-                schemaColumn.setProperty(
-                        dataPrefix,
-                        sourceResource.getUri(),
-                        hasInputSchema ? tableSchema.getColumn(columnName) : null);
-                schemaColumn.setTitle(columnTitle);
-                if (isDuplicate) throwNotUniqueException(schemaColumn, columnTitle, columnName);
-            }
-
-            int rowNumber = 0;
-            while (rowIterator.hasNext()) {
-                org.apache.poi.ss.usermodel.Row currentRow = rowIterator.next();
-                rowNumber++;
-                // 4.6.1 and 4.6.3
-                Row r = new Row();
-
-                if (outputMode == Mode.STANDARD) {
-                    // 4.6.2
-                    table.getRows().add(r);
-                    // 4.6.4
-                    r.setRownum(rowNumber);
-                    // 4.6.5
-                    r.setUrl(sourceResource.getUri() + "#row=" + (rowNumber + 1));
-                }
-
-                // 4.6.6 - Add titles.
-                // We do not support titles.
-
-                // 4.6.7
-                // In standard mode only, emit the triples generated by running
-                // the algorithm specified in section 6. JSON-LD to RDF over any
-                // non-core annotations specified for the row, with node R as
-                // an initial subject, the non-core annotation as property, and the
-                // value of the non-core annotation as value.
-                DataFormatter formatter = new DataFormatter();
-                ArrayList<String> row = new ArrayList<>();
-
-                for (org.apache.poi.ss.usermodel.Cell cell : currentRow) {
-                    String cellValue = formatter.formatCellValue(cell);
-                    if (cellValue != null && cellValue.matches("[-+]?[0-9]*\\,?[0-9]+")) //xls uses ',' as Decimal separator
-                    { cellValue = cellValue.replace(",", "."); } // so we should replace it with '.'
-                    if (cellValue.isEmpty()) {
-                        row.add(null);
-                    } else {
-                        row.add(cellValue);
-                    }
-                }
-
-                for (int i = 0; i < header.length; i++) {
-                    // 4.6.8.1
-                    Column column = outputColumns.get(i);
-                    String cellValue = getValueFromRow(row, i, header.length, rowNumber);
-                    if (cellValue != null) rowStatements.add(createRowResource(cellValue, rowNumber, column));
-                    // 4.6.8.2
-                    r.setDescribes(tableSchema.createAboutUrl(rowNumber));
-                    //TODO: URITemplate
-
-                    // 4.6.8.5 - else, if value is list and cellOrdering == true
-                    // 4.6.8.6 - else, if value is list
-                    // 4.6.8.7 - else, if cellValue is not null
-                }
-            }
-            tableSchema.adjustProperties(hasInputSchema, outputColumns, sourceResource.getUri());
-            tableSchema.setColumnsSet(new HashSet<>(outputColumns));
-
-            em = JopaPersistenceUtils.getEntityManager("cz.cvut.spipes.modules.model", outputModel);
-            em.getTransaction().begin();
-            em.persist(tableGroup);
-            em.merge(tableSchema);
-
-            sheet = workbook.getSheetAt(tableIndex - 1);
-            List<Region> regions = new ArrayList<>();
-
-            for(int i = 0;i < sheet.getNumMergedRegions();i++){
-                CellRangeAddress region = sheet.getMergedRegion(i);
-                regions.add(new Region(
-                        region.getFirstRow(),
-                        region.getFirstColumn(),
-                        region.getLastRow(),
-                        region.getLastColumn())
-                );
-            }
-
-            int cellsNum = 1;
-            for (Region region : regions) {
-                int firstCellInRegionNum = cellsNum;
-                for(int i = region.getFirstRow();i <= region.getLastRow();i++){
-                    for(int j = region.getFirstColumn();j <= region.getLastColumn();j++) {
-                        Cell cell = new Cell(sourceResource.getUri()+"#cell"+(cellsNum));
-                        cell.setRow(tableSchema.createAboutUrl(i));
-                        cell.setColumn(outputColumns.get(j).getUri().toString());
-                        if(cellsNum != firstCellInRegionNum)
-                            cell.setSameValueAsCell(sourceResource.getUri()+"#cell"+(firstCellInRegionNum));
-                        em.merge(cell);
-                        cellsNum++;
-                    }
-                }
-            }
-        } catch (IOException e) {
-            LOG.error("Error while reading file from resource uri {}", sourceResource, e);
-        }
-
-        em.getTransaction().commit();
-        Model persistedModel = JopaPersistenceUtils.getDataset(em).getDefaultModel();
-        em.getEntityManagerFactory().close();
-
-        tableSchema.addColumnsList(persistedModel, outputColumns);
-        outputModel.add(rowStatements);
-        outputModel.add(bNodesTransformer.transferJOPAEntitiesToBNodes(persistedModel));
-
-        return getExecutionContext(inputModel,outputModel);
     }
 }
