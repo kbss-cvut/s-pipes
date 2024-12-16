@@ -16,6 +16,7 @@ import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.modules.exception.SheetDoesntExistsException;
 import cz.cvut.spipes.modules.exception.SheetIsNotSpecifiedException;
 import cz.cvut.spipes.modules.exception.SpecificationNonComplianceException;
+import cz.cvut.spipes.modules.handlers.ModeHandler;
 import cz.cvut.spipes.modules.model.*;
 import cz.cvut.spipes.modules.util.*;
 import cz.cvut.spipes.registry.StreamResource;
@@ -140,7 +141,7 @@ public class TabularModule extends AnnotatedAbstractModule {
     private int processTableAtIndex = 0;
 
     // TODO - revise comment
-    @Parameter(iri = PARAM_URL_PREFIX + "output-mode", comment = "Output mode. Default is standard-mode('http://onto.fel.cvut.cz/ontologies/lib/module/tabular/standard-mode)")
+    @Parameter(iri = PARAM_URL_PREFIX + "output-mode", comment = "Output mode. Default is standard-mode('http://onto.fel.cvut.cz/ontologies/lib/module/tabular/standard-mode)", handler = ModeHandler.class)
     private Mode outputMode;
 
     //:source-resource-format

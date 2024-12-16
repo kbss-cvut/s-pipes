@@ -53,6 +53,8 @@ public class HandlerRegistry {
         registerHandler(boolean.class, BooleanHandler.class);
         registerHandler(Integer.class, IntegerHandler.class);
         registerHandler(int.class, IntegerHandler.class);
+        registerHandler(char.class, CharacterHandler.class);
+        registerHandler(Character.class, CharacterHandler.class);
         registerHandler(String.class, StringHandler.class);
         registerHandler(RDFNode.class, RDFNodeHandler.class);
         registerHandler(Select.class, SelectHandler.class);
