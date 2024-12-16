@@ -1,12 +1,16 @@
 package cz.cvut.spipes.modules;
 
+import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.exception.ModuleConfigurationInconsistentException;
 import cz.cvut.spipes.modules.handlers.*;
+import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +43,9 @@ public abstract class AnnotatedAbstractModule extends AbstractModule {
      *   <li>A {@link Setter} is selected based on the field's type (e.g., {@link FieldSetter} for regular fields, {@link ListSetter} for lists).</li>
      *   <li>The {@link HandlerRegistry} retrieves a matching {@link Handler} for the field's type,
      *       which is responsible for setting the value of the field based on its {@link Parameter#iri()}.</li>
+     *   <li>If the field specifies a custom handler (via {@link Parameter#handler()}), an instance of the custom handler is created using its
+     *       constructor that accepts {@link Resource}, {@link ExecutionContext}, and {@link Setter} as parameters. This custom handler is
+     *        then used to set the field's value.</li>
      * </ul>
      *
      * <p>This method processes all declared fields in the class and its subclasses,
@@ -85,9 +92,21 @@ public abstract class AnnotatedAbstractModule extends AbstractModule {
                 } else {
                     setter = new FieldSetter(f, this);
                 }
-                HandlerRegistry handlerRegistry = HandlerRegistry.getInstance();
-                Handler<?> handler = handlerRegistry.getHandler(f.getType(), resource, executionContext, setter);
-                handler.setValueByProperty(ResourceFactory.createProperty(p.iri()));
+                Class<?> handlerClazz = p.handler();
+
+                if(handlerClazz != Handler.class){
+                     try{
+                         Constructor<? extends Handler> constructor = (Constructor<? extends Handler>) handlerClazz.getConstructor(Resource.class, ExecutionContext.class, Setter.class);
+                         Handler<?> typeHandler = constructor.newInstance(resource, executionContext, setter);
+                         typeHandler.setValueByProperty(ResourceFactory.createProperty(p.iri()));
+                     } catch (InstantiationException | InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
+                         throw new IllegalArgumentException("No suitable constructor found for handler " + handlerClazz);
+                     }
+                }else{
+                    HandlerRegistry handlerRegistry = HandlerRegistry.getInstance();
+                    Handler<?> typeHandler = handlerRegistry.getHandler(f.getType(), resource, executionContext, setter);
+                    typeHandler.setValueByProperty(ResourceFactory.createProperty(p.iri()));
+                }
             }
         }
         loadManualConfiguration();
