@@ -16,6 +16,7 @@ import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.modules.exception.SheetDoesntExistsException;
 import cz.cvut.spipes.modules.exception.SheetIsNotSpecifiedException;
 import cz.cvut.spipes.modules.exception.SpecificationNonComplianceException;
+import cz.cvut.spipes.modules.handlers.ModeHandler;
 import cz.cvut.spipes.modules.model.*;
 import cz.cvut.spipes.modules.util.*;
 import cz.cvut.spipes.registry.StreamResource;
@@ -97,7 +98,7 @@ import java.util.function.Supplier;
  */
 @SPipesModule(label = "Tabular module", comment = "Module for converting tabular data (e.g. CSV or TSV) to RDF")
 public class TabularModule extends AnnotatedAbstractModule {
-    static {ModuleRegistration.register();}
+
     public static final String TYPE_URI = KBSS_MODULE.uri + "tabular";
     public static final String PARAM_URL_PREFIX = TYPE_URI + "/";
     private static final Logger LOG = LoggerFactory.getLogger(TabularModule.class);
@@ -140,7 +141,7 @@ public class TabularModule extends AnnotatedAbstractModule {
     private int processTableAtIndex = 0;
 
     // TODO - revise comment
-    @Parameter(iri = PARAM_URL_PREFIX + "output-mode", comment = "Output mode. Default is standard-mode('http://onto.fel.cvut.cz/ontologies/lib/module/tabular/standard-mode)")
+    @Parameter(iri = PARAM_URL_PREFIX + "output-mode", comment = "Output mode. Default is standard-mode('http://onto.fel.cvut.cz/ontologies/lib/module/tabular/standard-mode)", handler = ModeHandler.class)
     private Mode outputMode;
 
     //:source-resource-format
