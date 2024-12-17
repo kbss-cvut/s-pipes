@@ -62,8 +62,8 @@ public @interface Parameter {
 
     /**
      * Specifies the custom {@link Handler} implementation to use for this parameter.
-     * If no custom handler is provided, the {@link DefaultHandler} is used by default
-     * which picks the appropriate {@link Handler} implementation based on the field's type
+     * If no custom handler is provided, the {@link DefaultHandler} is used by default,
+     * which selects the appropriate {@link Handler} implementation based on the field's type
      * registered in {@link HandlerRegistry}.
      *
      * @return the class of the custom handler

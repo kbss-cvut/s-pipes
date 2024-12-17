@@ -5,8 +5,8 @@ import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
 
 /**
- * The {@link DefaultHandler} class is a default implementation of the {@link Handler} interface.
- * It delegates handling responsibility to the {@link Handler} class that is registered for the field type
+ * The {@link DefaultHandler} class is the default implementation of the {@link Handler} interface.
+ * It delegates the handling responsibility to the {@link Handler} class registered for the field type
  * within the {@link HandlerRegistry}.
  **/
 public class DefaultHandler extends Handler {
