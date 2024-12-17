@@ -94,7 +94,7 @@ public abstract class AnnotatedAbstractModule extends AbstractModule {
                 }
                 Class<?> handlerClazz = p.handler();
 
-                if(handlerClazz != Handler.class){
+                if(handlerClazz != DefaultHandler.class){
                      try{
                          Constructor<? extends Handler> constructor = (Constructor<? extends Handler>) handlerClazz.getConstructor(Resource.class, ExecutionContext.class, Setter.class);
                          Handler<?> typeHandler = constructor.newInstance(resource, executionContext, setter);
