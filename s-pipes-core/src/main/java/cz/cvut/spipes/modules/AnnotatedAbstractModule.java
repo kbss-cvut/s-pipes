@@ -94,19 +94,15 @@ public abstract class AnnotatedAbstractModule extends AbstractModule {
                 }
                 Class<?> handlerClazz = p.handler();
 
-                if(handlerClazz != Handler.class){
-                     try{
-                         Constructor<? extends Handler> constructor = (Constructor<? extends Handler>) handlerClazz.getConstructor(Resource.class, ExecutionContext.class, Setter.class);
-                         Handler<?> typeHandler = constructor.newInstance(resource, executionContext, setter);
-                         typeHandler.setValueByProperty(ResourceFactory.createProperty(p.iri()));
-                     } catch (InstantiationException | InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
-                         throw new IllegalArgumentException("No suitable constructor found for handler " + handlerClazz);
-                     }
-                }else{
-                    HandlerRegistry handlerRegistry = HandlerRegistry.getInstance();
-                    Handler<?> typeHandler = handlerRegistry.getHandler(f.getType(), resource, executionContext, setter);
+                try {
+                    Constructor<? extends Handler> constructor = (Constructor<? extends Handler>) handlerClazz.getConstructor(Resource.class, ExecutionContext.class, Setter.class);
+                    Handler<?> typeHandler = constructor.newInstance(resource, executionContext, setter);
                     typeHandler.setValueByProperty(ResourceFactory.createProperty(p.iri()));
+                } catch (InstantiationException | InvocationTargetException | IllegalAccessException |
+                         NoSuchMethodException e) {
+                    throw new IllegalArgumentException("No suitable constructor found for handler " + handlerClazz);
                 }
+
             }
         }
         loadManualConfiguration();

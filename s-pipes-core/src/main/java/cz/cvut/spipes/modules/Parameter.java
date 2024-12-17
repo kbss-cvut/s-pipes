@@ -1,6 +1,9 @@
 package cz.cvut.spipes.modules;
 
+import cz.cvut.spipes.modules.handlers.DefaultHandler;
 import cz.cvut.spipes.modules.handlers.Handler;
+import cz.cvut.spipes.modules.handlers.HandlerRegistry;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -17,7 +20,7 @@ import java.lang.annotation.Target;
  *
  * <p>Key attributes:
  * <ul>
- *   <li>{@link #iri()} specifies the IRI of the RDF property associated with anotated Java field.</li>
+ *   <li>{@link #iri()} specifies the IRI of the RDF property associated with annotated Java field.</li>
  *   <li>{@link #comment()} specifies an optional description about the parameter for documentation or informational purposes.</li>
  *   <li>{@link #handler()} allows the specification of a custom {@link Handler} implementation
  *       for managing the field's value. If not provided, the {@link Handler} is used by default.</li>
@@ -59,9 +62,11 @@ public @interface Parameter {
 
     /**
      * Specifies the custom {@link Handler} implementation to use for this parameter.
-     * If no custom handler is provided, the {@link Handler} is used.
+     * If no custom handler is provided, the {@link DefaultHandler} is used by default,
+     * which selects the appropriate {@link Handler} implementation based on the field's type
+     * registered in {@link HandlerRegistry}.
      *
      * @return the class of the custom handler
      */
-    Class<? extends Handler> handler() default Handler.class;
+    Class<? extends Handler> handler() default DefaultHandler.class;
 }
