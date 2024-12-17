@@ -16,7 +16,7 @@ public class DefaultHandler extends Handler {
         super(resource, executionContext, setter);
 
         HandlerRegistry handlerRegistry = HandlerRegistry.getInstance();
-        Handler<?> typeHandler = handlerRegistry.getHandler(setter.getField().getType(), resource, executionContext, setter);
+        typeHandler = handlerRegistry.getHandler(setter.getField().getType(), resource, executionContext, setter);
     }
 
     @Override
