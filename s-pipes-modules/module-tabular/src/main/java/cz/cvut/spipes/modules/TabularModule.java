@@ -31,6 +31,7 @@ import org.supercsv.io.CsvListReader;
 import org.supercsv.io.ICsvListReader;
 import org.supercsv.prefs.CsvPreference;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -113,12 +114,12 @@ public class TabularModule extends AnnotatedAbstractModule {
     private final Property P_PROCESS_TABLE_AT_INDEX = getSpecificParameter("process-table-at-index");
 
     @Parameter(iri = SML.replace, comment = "Specifies whether a module should overwrite triples" +
-        " from its predecessors. When set to true (default is false), it prevents" +
-        " passing through triples from the predecessors.")
+            " from its predecessors. When set to true (default is false), it prevents" +
+            " passing through triples from the predecessors.")
     private boolean isReplace = false;
 
     @Parameter(iri = PARAM_URL_PREFIX + "source-resource-uri", comment = "URI of resource" +
-        " that represent tabular data (e.g. resource representing CSV file).")
+            " that represent tabular data (e.g. resource representing CSV file).")
     private StreamResource sourceResource;
 
     @Parameter(iri = PARAM_URL_PREFIX + "delimiter", comment = "Column delimiter. Default value is comma ','.")
@@ -189,6 +190,8 @@ public class TabularModule extends AnnotatedAbstractModule {
 
         StreamResource originalSourceResource = sourceResource;
         TSVConvertor tsvConvertor = null;
+        FileReaderAdapter fileReaderAdapter = new XLSFileReaderAdapter();
+        CsvPreference csvPreference = null;
 
         switch (sourceResourceFormat) {
             case HTML:
@@ -198,10 +201,7 @@ public class TabularModule extends AnnotatedAbstractModule {
                 if (processTableAtIndex != 1) {
                     throw new UnsupportedOperationException("Support for 'process-table-at-index' different from 1 is not implemented for HTML files yet.");
                 }
-                tsvConvertor = new HTML2TSVConvertor(processTableAtIndex);
-                table.setLabel(tsvConvertor.getTableName(sourceResource));
-                setSourceResource(tsvConvertor.convertToTSV(sourceResource));
-                setDelimiter('\t');
+                fileReaderAdapter = new HTMLFileReaderAdapter();
                 break;
             case XLS:
             case XLSM:
@@ -209,19 +209,14 @@ public class TabularModule extends AnnotatedAbstractModule {
                 if (processTableAtIndex == 0) {
                     throw new SheetIsNotSpecifiedException("Source resource format is set to XLS(X,M) file but no specific table is set for processing.");
                 }
-                tsvConvertor = new XLS2TSVConvertor(processTableAtIndex, sourceResourceFormat);
-                int numberOfSheets = tsvConvertor.getTablesCount(sourceResource);
-                table.setLabel(tsvConvertor.getTableName(sourceResource));
-                LOG.debug("Number of sheets: {}", numberOfSheets);
-                if ((processTableAtIndex > numberOfSheets) || (processTableAtIndex < 1)) {
-                    LOG.error("Requested sheet doesn't exist, number of sheets in the doc: {}, requested sheet: {}",
-                        numberOfSheets,
-                            processTableAtIndex
-                    );
-                    throw new SheetDoesntExistsException("Requested sheet doesn't exists.");
-                }
-                setSourceResource(tsvConvertor.convertToTSV(sourceResource));
-                setDelimiter('\t');
+                fileReaderAdapter = new XLSFileReaderAdapter();
+                break;
+            default:
+                csvPreference = new CsvPreference.Builder(
+                        quoteCharacter,
+                        delimiter,
+                        System.lineSeparator()).build();
+                fileReaderAdapter = new CSVFileReaderAdapter(csvPreference);
                 break;
         }
 
@@ -236,33 +231,25 @@ public class TabularModule extends AnnotatedAbstractModule {
         List<Column> outputColumns = new ArrayList<>();
         List<Statement> rowStatements = new ArrayList<>();
 
-        CsvPreference csvPreference = new CsvPreference.Builder(
-            quoteCharacter,
-            delimiter,
-            System.lineSeparator()).build();
-
         try {
-            ICsvListReader listReader = getCsvListReader(csvPreference);
+            fileReaderAdapter.initialise(new ByteArrayInputStream(sourceResource.getContent()), sourceResourceFormat, processTableAtIndex);
+            String[] header = fileReaderAdapter.getHeader();
+            Set<String> columnNames = new HashSet<>();
 
-            if (listReader == null) {
-                logMissingQuoteError();
-                return getExecutionContext(inputModel, outputModel);
-            }
-
-            String[] header = listReader.getHeader(true); // skip the header (can't be used with CsvListReader)
+            if (fileReaderAdapter.getLabel() != null)
+                table.setLabel(fileReaderAdapter.getLabel());
 
             if (header == null) {
                 LOG.warn("Input stream resource {} to provide tabular data is empty.", this.sourceResource.getUri());
                 return getExecutionContext(inputModel, outputModel);
             }
-            Set<String> columnNames = new HashSet<>();
 
             TableSchema inputTableSchema = getTableSchema(em);
             hasInputSchema = hasInputSchema(inputTableSchema);
 
             if (skipHeader) {
                 header = getHeaderFromSchema(inputModel, header, hasInputSchema);
-                listReader = new CsvListReader(getReader(), csvPreference);
+                fileReaderAdapter.initialise(new ByteArrayInputStream(sourceResource.getContent()), sourceResourceFormat, processTableAtIndex);
             } else if (hasInputSchema) {
                 header = getHeaderFromSchema(inputModel, header, true);
             }
@@ -281,17 +268,21 @@ public class TabularModule extends AnnotatedAbstractModule {
 
                 tableSchema.setAboutUrl(schemaColumn, sourceResource.getUri());
                 schemaColumn.setProperty(
-                    dataPrefix,
-                    sourceResource.getUri(),
-                    hasInputSchema ? tableSchema.getColumn(columnName) : null);
+                        dataPrefix,
+                        sourceResource.getUri(),
+                        hasInputSchema ? tableSchema.getColumn(columnName) : null);
                 schemaColumn.setTitle(columnTitle);
                 if (isDuplicate) throwNotUniqueException(schemaColumn, columnTitle, columnName);
             }
 
-            List<String> row;
             int rowNumber = 0;
-            //for each row
-            while ((row = listReader.read()) != null) {
+            List<String> row;
+            switch (sourceResourceFormat){
+                case XLS, XLSM, XLSX:
+                    row = fileReaderAdapter.getNextRow(); //skip header for xls files
+                    break;
+            }
+            while ((row = fileReaderAdapter.getNextRow()) != null) {
                 rowNumber++;
                 // 4.6.1 and 4.6.3
                 Row r = new Row();
@@ -329,37 +320,34 @@ public class TabularModule extends AnnotatedAbstractModule {
                     // 4.6.8.7 - else, if cellValue is not null
                 }
             }
-            listReader.close();
-        } catch (IOException | MissingArgumentException e) {
-            LOG.error("Error while reading file from resource uri {}", sourceResource, e);
-        }
+            tableSchema.adjustProperties(hasInputSchema, outputColumns, sourceResource.getUri());
+            tableSchema.setColumnsSet(new HashSet<>(outputColumns));
 
-        tableSchema.adjustProperties(hasInputSchema, outputColumns, sourceResource.getUri());
-        tableSchema.setColumnsSet(new HashSet<>(outputColumns));
+            em = JopaPersistenceUtils.getEntityManager("cz.cvut.spipes.modules.model", outputModel);
+            em.getTransaction().begin();
+            em.persist(tableGroup);
+            em.merge(tableSchema);
 
-        em = JopaPersistenceUtils.getEntityManager("cz.cvut.spipes.modules.model", outputModel);
-        em.getTransaction().begin();
-        em.persist(tableGroup);
-        em.merge(tableSchema);
-
-        if (tsvConvertor != null) {
-            List<Region> regions =  tsvConvertor.getMergedRegions(originalSourceResource);
+            List<Region> regions = fileReaderAdapter.getMergedRegions();
 
             int cellsNum = 1;
             for (Region region : regions) {
                 int firstCellInRegionNum = cellsNum;
-                for(int i = region.getFirstRow();i <= region.getLastRow();i++){
-                    for(int j = region.getFirstColumn();j <= region.getLastColumn();j++) {
-                        Cell cell = new Cell(sourceResource.getUri()+"#cell"+(cellsNum));
+                for (int i = region.getFirstRow(); i <= region.getLastRow(); i++) {
+                    for (int j = region.getFirstColumn(); j <= region.getLastColumn(); j++) {
+                        Cell cell = new Cell(sourceResource.getUri() + "#cell" + cellsNum);
                         cell.setRow(tableSchema.createAboutUrl(i));
                         cell.setColumn(outputColumns.get(j).getUri().toString());
-                        if(cellsNum != firstCellInRegionNum)
-                            cell.setSameValueAsCell(sourceResource.getUri()+"#cell"+(firstCellInRegionNum));
+                        if (cellsNum != firstCellInRegionNum) {
+                            cell.setSameValueAsCell(sourceResource.getUri() + "#cell" + firstCellInRegionNum);
+                        }
                         em.merge(cell);
                         cellsNum++;
                     }
                 }
             }
+        } catch (IOException e) {
+            LOG.error("Error while reading file from resource uri {}", sourceResource, e);
         }
 
         em.getTransaction().commit();
@@ -381,19 +369,19 @@ public class TabularModule extends AnnotatedAbstractModule {
             StringBuilder record = new StringBuilder(recordDelimiter);
             for (int i = 0; i < row.size(); i++) {
                 record
-                    .append(i)
-                    .append(":")
-                    .append(row.get(i))
-                    .append(recordDelimiter);
+                        .append(i)
+                        .append(":")
+                        .append(row.get(i))
+                        .append(recordDelimiter);
             }
             LOG.error("Reading input file failed when reading record #{} (may not reflect the line #).\n" +
-                    " It was expected that the current record contains {} values" +
-                    ", but {}. element was not retrieved before whole record was processed.\n" +
-                    "The problematic record: {}",
-                currentRecordNumber,
-                expectedRowLength,
-                index+1,
-                record
+                            " It was expected that the current record contains {} values" +
+                            ", but {}. element was not retrieved before whole record was processed.\n" +
+                            "The problematic record: {}",
+                    currentRecordNumber,
+                    expectedRowLength,
+                    index+1,
+                    record
             );
             throw new SPipesException("Reading input file failed.", e);
         }
@@ -413,9 +401,9 @@ public class TabularModule extends AnnotatedAbstractModule {
         Resource rowResource = ResourceFactory.createResource(tableSchema.createAboutUrl(rowNumber));
 
         return ResourceFactory.createStatement(
-            rowResource,
-            ResourceFactory.createProperty(column.getPropertyUrl()),
-            ResourceFactory.createPlainLiteral(cellValue));
+                rowResource,
+                ResourceFactory.createProperty(column.getPropertyUrl()),
+                ResourceFactory.createPlainLiteral(cellValue));
     }
 
     private boolean hasInputSchema(TableSchema inputTableSchema) {
@@ -429,11 +417,11 @@ public class TabularModule extends AnnotatedAbstractModule {
 
     private TableSchema getTableSchema(EntityManager em) {
         TypedQuery<TableSchema> query = em.createNativeQuery(
-            "PREFIX csvw: <http://www.w3.org/ns/csvw#>\n" +
-                "SELECT ?t WHERE { \n" +
-                "?t a csvw:TableSchema. \n" +
-                "}",
-            TableSchema.class
+                "PREFIX csvw: <http://www.w3.org/ns/csvw#>\n" +
+                        "SELECT ?t WHERE { \n" +
+                        "?t a csvw:TableSchema. \n" +
+                        "}",
+                TableSchema.class
         );
 
         int tableSchemaCount = query.getResultList().size();
@@ -452,14 +440,14 @@ public class TabularModule extends AnnotatedAbstractModule {
 
     private void throwNotUniqueException(Column column, String columnTitle, String columnName) {
         throw new ResourceNotUniqueException(
-            String.format("Unable to create value of property %s due to collision. " +
-                    "Both column titles '%s' and '%s' are normalized to '%s' " +
-                    "and thus would refer to the same property url <%s>.",
-                CSVW.propertyUrl,
-                columnTitle,
-                column.getTitle(),
-                columnName,
-                column.getPropertyUrl()));
+                String.format("Unable to create value of property %s due to collision. " +
+                                "Both column titles '%s' and '%s' are normalized to '%s' " +
+                                "and thus would refer to the same property url <%s>.",
+                        CSVW.propertyUrl,
+                        columnTitle,
+                        column.getTitle(),
+                        columnName,
+                        column.getPropertyUrl()));
     }
 
     private ExecutionContext getExecutionContext(Model inputModel, Model outputModel) {
@@ -473,12 +461,12 @@ public class TabularModule extends AnnotatedAbstractModule {
     @Override
     public void loadManualConfiguration() {
         sourceResourceFormat = ResourceFormat.fromString(
-            getPropertyValue(P_SOURCE_RESOURCE_FORMAT, ResourceFormat.PLAIN.getValue())
+                getPropertyValue(P_SOURCE_RESOURCE_FORMAT, ResourceFormat.PLAIN.getValue())
         );
         delimiter = getPropertyValue(P_DELIMITER, getDefaultDelimiterSupplier(sourceResourceFormat));
         quoteCharacter = getPropertyValue(P_QUOTE_CHARACTER, getDefaultQuoteCharacterSupplier(sourceResourceFormat));
         outputMode = Mode.fromResource(
-            getPropertyValue(P_OUTPUT_MODE, Mode.STANDARD.getResource())
+                getPropertyValue(P_OUTPUT_MODE, Mode.STANDARD.getResource())
         );
         setInputCharset(delimiter);
     }
@@ -514,7 +502,7 @@ public class TabularModule extends AnnotatedAbstractModule {
         if (sourceResourceFormat == ResourceFormat.CSV) {
             return () -> {
                 LOG.debug("Quote character not specified, using double-quote as default value" +
-                    " to be compliant with RFC 4180 (CSV)");
+                        " to be compliant with RFC 4180 (CSV)");
                 return '"';
             };
         }
@@ -524,8 +512,8 @@ public class TabularModule extends AnnotatedAbstractModule {
     private char getPropertyValue(Property property,
                                   Supplier<Character> defaultValueSupplier) {
         return Optional.ofNullable(getPropertyValue(property))
-            .map(n -> n.asLiteral().getChar())
-            .orElseGet(defaultValueSupplier);
+                .map(n -> n.asLiteral().getChar())
+                .orElseGet(defaultValueSupplier);
     }
 
     @Override
@@ -624,7 +612,7 @@ public class TabularModule extends AnnotatedAbstractModule {
 
     public void setDelimiter(int delimiter) {
         if ((sourceResourceFormat == ResourceFormat.CSV && delimiter != ',') ||
-            (sourceResourceFormat == ResourceFormat.TSV && delimiter != '\t')) {
+                (sourceResourceFormat == ResourceFormat.TSV && delimiter != '\t')) {
             throw new SpecificationNonComplianceException(sourceResourceFormat, delimiter);
         }
         this.delimiter = delimiter;
