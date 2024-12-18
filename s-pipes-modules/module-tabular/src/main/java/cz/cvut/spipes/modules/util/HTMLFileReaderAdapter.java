@@ -1,116 +1,124 @@
 package cz.cvut.spipes.modules.util;
 
-import cz.cvut.spipes.InvalidQuotingTokenizer;
-import cz.cvut.spipes.constants.HTML;
 import cz.cvut.spipes.modules.ResourceFormat;
 import cz.cvut.spipes.modules.model.Region;
-import cz.cvut.spipes.registry.StreamResource;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.supercsv.io.CsvListReader;
-import org.supercsv.io.ICsvListReader;
-import org.supercsv.prefs.CsvPreference;
 
 import java.io.*;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class HTMLFileReaderAdapter implements FileReaderAdapter {
-    private ICsvListReader listReader;
-    private CsvPreference csvPreference;
-    private TSVConvertor tsvConvertor;
+    private Elements rows;
+    private int currentIndex;
+    private Element table;
     private String label;
-    private StreamResource sourceResource;
-    private StreamResource originalSourceResource;
-    private Charset inputCharset = Charset.defaultCharset();
-    private boolean acceptInvalidQuoting = false;
 
-    public HTMLFileReaderAdapter(CsvPreference csvPreference) {
-        this.csvPreference = csvPreference;
-    }
+    private List<Region> mergedRegions;
+    private Map<Integer, Map<Integer, String>> mergedCells;
 
     @Override
-    public void initialise(StreamResource sourceResource, ResourceFormat sourceResourceFormat, int tableIndex) throws IOException {
-        this.sourceResource = sourceResource;
-        tsvConvertor = new HTML2TSVConvertor(tableIndex);
-        listReader = getCsvListReader(csvPreference);
-        this.sourceResource = tsvConvertor.convertToTSV(sourceResource);
+    public void initialise(InputStream inputStream, ResourceFormat sourceResourceFormat, int tableIndex) throws IOException {
+        Document doc = Jsoup.parse(inputStream, "UTF-8", "");
+        Element table = doc.select("table").first();
+        rows = table.select("tr");
+        currentIndex = 0;
+        this.table = table;
+        mergedRegions = extractMergedRegions(table);
+        mergedCells = new HashMap<>();
+        label = table.attr("data-name");
     }
+
 
     @Override
     public String[] getHeader() throws IOException {
-        return listReader.getHeader(true);
+        Elements headerCells = rows.get(0).select("th, td");
+        return headerCells.stream()
+                .map(Element::text)
+                .toArray(String[]::new);
     }
 
     @Override
-    public boolean hasNext() throws IOException {
-        return listReader.read() != null;
+    public boolean hasNext() {
+        return currentIndex < rows.size() - 1; // Skip header row
     }
 
     @Override
-    public List<String> getNextRow() throws IOException {
-        return listReader.read();
-    }
+    public List<String> getNextRow() {
+        if (!hasNext()) {
+            return null;
+        }
 
-    @Override
-    public List<Region> getMergedRegions(StreamResource sourceResource) {
-        List<Region> list = new ArrayList<>();
-        Document doc = Jsoup.parseBodyFragment(new String(sourceResource.getContent()));
+        currentIndex++;
+        Elements cells = rows.get(currentIndex).select("td, th");
+        List<String> row = new ArrayList<>();
+        int cellIndex = 0;
 
-        Elements rows = doc.getElementsByTag(HTML.TABLE_ROW_TAG);
+        for (Element cell : cells) {
+            int colspan = Integer.parseInt(cell.attr("colspan").isEmpty() ? "1" : cell.attr("colspan"));
+            int rowspan = Integer.parseInt(cell.attr("rowspan").isEmpty() ? "1" : cell.attr("rowspan"));
+            String cellValue = cell.text();
 
-        for (Element row : rows) {
-            Elements cells = row.getElementsByTag(HTML.TABLE_HEADER_TAG);
-            cells.addAll(row.getElementsByTag(HTML.TABLE_CELL_TAG));
-            int rowNum = row.elementSiblingIndex();
-            int colNum = 0;
-            for(Element cell : cells) {
-                int colspan = parseInt(cell.attr("colspan"), 1);
-                int rowspan = parseInt(cell.attr("rowspan"), 1);
-                if (colspan > 1 || rowspan > 1) {
-                    list.add(new Region(
-                            rowNum,
-                            colNum,
-                            rowNum+rowspan-1,
-                            colNum+colspan-1)
-                    );
+            if (cellValue != null && cellValue.matches("[-+]?[0-9]*\\,?[0-9]+")) {
+                cellValue = cellValue.replace(",", ".");
+            }
+
+            while (row.size() < cellIndex) {
+                row.add(null);
+            }
+
+            row.add(cellValue);
+
+            for (int i = 1; i < colspan; i++) {
+                row.add(null);
+            }
+
+            if (rowspan > 1) {
+                for (int i = 1; i < rowspan; i++) {
+                    mergedCells.computeIfAbsent(currentIndex + i, k -> new HashMap<>()).put(cellIndex, cellValue);
                 }
-                colNum+=colspan;
+            }
+
+            cellIndex += colspan;
+        }
+
+        if (mergedCells.containsKey(currentIndex)) {
+            Map<Integer, String> rowMergedCells = mergedCells.get(currentIndex);
+            for (Map.Entry<Integer, String> entry : rowMergedCells.entrySet()) {
+                row.add(entry.getKey(), null);
+            }
+            mergedCells.remove(currentIndex);
+        }
+
+        return row;
+    }
+
+    @Override
+    public List<Region> getMergedRegions() {
+        return mergedRegions;
+    }
+
+    private List<Region> extractMergedRegions(Element table) {
+        List<Region> regions = new ArrayList<>();
+        Elements rows = table.select("tr");
+        for (int rowIndex = 0; rowIndex < rows.size(); rowIndex++) {
+            Elements cells = rows.get(rowIndex).select("td, th");
+            for (int colIndex = 0; colIndex < cells.size(); colIndex++) {
+                Element cell = cells.get(colIndex);
+                int colspan = Integer.parseInt(cell.attr("colspan").isEmpty() ? "1" : cell.attr("colspan"));
+                int rowspan = Integer.parseInt(cell.attr("rowspan").isEmpty() ? "1" : cell.attr("rowspan"));
+                if (colspan > 1 || rowspan > 1) {
+                    regions.add(new Region(rowIndex, colIndex, rowIndex + rowspan - 1, colIndex + colspan - 1));
+                }
             }
         }
-        return list;
+        return regions;
     }
 
     @Override
     public String getLabel(){
-        return this.label;
-    }
-
-    private ICsvListReader getCsvListReader(CsvPreference csvPreference) {
-        if (acceptInvalidQuoting) {
-            if (csvPreference.getQuoteChar() == '\0') {
-                return null;
-            } else
-                return new CsvListReader(new InvalidQuotingTokenizer(getReader(), csvPreference), csvPreference);
-        }
-        return new CsvListReader(getReader(), csvPreference);
-    }
-
-    private Reader getReader() {
-        return new StringReader(new String(sourceResource.getContent(), inputCharset));
-    }
-
-    int parseInt(String s,int defaultValue){
-        int res = 0;
-        try {
-            res = Integer.parseInt(s);
-        } catch (java.lang.NumberFormatException e){
-            res = defaultValue;
-        }
-        return res;
+        return label;
     }
 }

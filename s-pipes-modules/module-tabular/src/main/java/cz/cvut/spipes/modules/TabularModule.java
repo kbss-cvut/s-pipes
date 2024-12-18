@@ -22,14 +22,7 @@ import cz.cvut.spipes.registry.StreamResource;
 import cz.cvut.spipes.registry.StreamResourceRegistry;
 import cz.cvut.spipes.util.JenaUtils;
 import org.apache.commons.cli.MissingArgumentException;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.jena.rdf.model.*;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.DataFormatter;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +39,6 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Supplier;
-import java.util.stream.StreamSupport;
 
 /**
  * Module for converting input that contains tabular data (e.g. CSV, TSV, XLS, HTML) to RDF
@@ -208,16 +200,7 @@ public class TabularModule extends AnnotatedAbstractModule {
                 if (processTableAtIndex != 1) {
                     throw new UnsupportedOperationException("Support for 'process-table-at-index' different from 1 is not implemented for HTML files yet.");
                 }
-                tsvConvertor = new HTML2TSVConvertor(processTableAtIndex);
-                table.setLabel(tsvConvertor.getTableName(sourceResource));
-                setSourceResource(tsvConvertor.convertToTSV(sourceResource));
-                setDelimiter('\t');
-
-                csvPreference = new CsvPreference.Builder(
-                        quoteCharacter,
-                        delimiter,
-                        System.lineSeparator()).build();
-                fileReaderAdapter = new HTMLFileReaderAdapter(csvPreference);
+                fileReaderAdapter = new HTMLFileReaderAdapter();
                 break;
             case XLS:
             case XLSM:
@@ -248,7 +231,7 @@ public class TabularModule extends AnnotatedAbstractModule {
         List<Statement> rowStatements = new ArrayList<>();
 
         try {
-            fileReaderAdapter.initialise(sourceResource, sourceResourceFormat, processTableAtIndex);
+            fileReaderAdapter.initialise(new ByteArrayInputStream(sourceResource.getContent()), sourceResourceFormat, processTableAtIndex);
             String[] header = fileReaderAdapter.getHeader();
             Set<String> columnNames = new HashSet<>();
 
@@ -265,11 +248,10 @@ public class TabularModule extends AnnotatedAbstractModule {
 
             if (skipHeader) {
                 header = getHeaderFromSchema(inputModel, header, hasInputSchema);
-                fileReaderAdapter.initialise(sourceResource, sourceResourceFormat, processTableAtIndex);
+                fileReaderAdapter.initialise(new ByteArrayInputStream(sourceResource.getContent()), sourceResourceFormat, processTableAtIndex);
             } else if (hasInputSchema) {
                 header = getHeaderFromSchema(inputModel, header, true);
             }
-
             em.getTransaction().commit();
             em.close();
             em.getEntityManagerFactory().close();
@@ -300,7 +282,6 @@ public class TabularModule extends AnnotatedAbstractModule {
                     break;
             }
             while ((row = fileReaderAdapter.getNextRow()) != null) {
-                //row = fileReaderAdapter.getNextRow();
                 rowNumber++;
                 // 4.6.1 and 4.6.3
                 Row r = new Row();
@@ -346,7 +327,7 @@ public class TabularModule extends AnnotatedAbstractModule {
             em.persist(tableGroup);
             em.merge(tableSchema);
 
-            List<Region> regions = fileReaderAdapter.getMergedRegions(originalSourceResource);
+            List<Region> regions = fileReaderAdapter.getMergedRegions();
 
             int cellsNum = 1;
             for (Region region : regions) {
