@@ -2,9 +2,9 @@ package cz.cvut.spipes.modules;
 
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
-import cz.cvut.spipes.engine.VariablesBinding;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.util.QueryUtils;
+import cz.cvut.spipes.util.query.OneStepRewindExtendedResultset;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
@@ -16,13 +16,41 @@ import org.topbraid.spin.model.Select;
 import java.util.Objects;
 
 /**
- * TODO Order of queries is not enforced.
+ * Apply construct query with chunked values.
+ * The construct query is provided as a template with marker `#${VALUES}`.
+ * The marker is substituted with chunked values from a select query.
+ *
+ * <p>Example select query:</p>
+ * <pre>
+ * SELECT ?person ?lastName
+ * WHERE {
+ *   ?person a foaf:Person .
+ *   ?person foaf:lastName ?lastName .
+ * }
+ * </pre>
+ *
+ * <p>Example construct query:</p>
+ * <pre>
+ * CONSTRUCT {
+ *   ?person a :User .
+ *   ?person :has-last-name ?lastName .
+ * }
+ * WHERE {
+ *   #${VALUES}
+ *   FILTER(strlen(?lastName) < 20)
+ * }
+ * </pre>
+ *
+ * <p>TODOs:</p>
+ * <ul>
+ *   <li>Order of queries is not enforced.</li>
+ * </ul>
  */
 @Slf4j
 @SPipesModule(label = "apply construct with chunked values", comment = "Apply construct with chunked values.")
 public class ApplyConstructWithChunkedValuesModule extends ApplyConstructAbstractModule {
 
-    private static final String TYPE_URI = KBSS_MODULE.uri;
+    private static final String TYPE_URI = KBSS_MODULE.uri + "apply-construct-with-chunked-values";
     private static final String TYPE_PREFIX = TYPE_URI + "/";
     private static final int DEFAULT_CHUNK_SIZE = 10;
     private static final String VALUES_CLAUSE_MARKER_NAME = "VALUES";

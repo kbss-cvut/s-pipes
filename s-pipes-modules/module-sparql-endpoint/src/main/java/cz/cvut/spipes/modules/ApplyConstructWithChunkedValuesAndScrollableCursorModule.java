@@ -18,6 +18,10 @@ import org.jetbrains.annotations.NotNull;
 import org.topbraid.spin.model.Select;
 
 /**
+ * Apply construct query with chunked values and scrollable cursor.
+ * See {@link ApplyConstructWithChunkedValuesModule} and {@link ApplyConstructWithScrollableCursorModule}
+ * for more details.
+ *
  * TODO Order of queries is not enforced.
  * TODO issue with redundant call {@link ScrollableCursorProvider}
  * TODO supports only one CONSTRUCT query
