@@ -64,7 +64,6 @@ import cz.cvut.spipes.model.Transformation;
 import cz.cvut.spipes.modules.Module;
 import cz.cvut.spipes.util.DateUtils;
 import cz.cvut.spipes.util.Rdf4jUtils;
-import cz.cvut.spipes.util.ScriptManagerFactory;
 import cz.cvut.spipes.util.TempFileUtils;
 
 public class AdvancedLoggingProgressListener implements ProgressListener {
