@@ -2,12 +2,8 @@ package cz.cvut.spipes.modules;
 
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-/**
- * TODO Order of queries is not enforced.
- */
+
 @SPipesModule(label = "apply construct v2", comment = "Generates triples from input model using specified constructQueries.")
 public class ApplyConstructV2Module extends ApplyConstructAbstractModule {
 

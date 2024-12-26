@@ -96,6 +96,10 @@ public abstract class ApplyConstructAbstractModule extends AnnotatedAbstractModu
 
         Model inferredModel = ModelFactory.createDefaultModel();
         Model previousInferredModel = ModelFactory.createDefaultModel();
+        List<Construct> constructQueriesSorted = constructQueries
+            .stream().map(r -> r.as(Construct.class))
+            .sorted(Comparator.comparing(this::getQueryComment))
+            .toList();
 
         if (!shouldTerminate(0, previousInferredModel, inferredModel)) {
             while (!shouldTerminate(++count, previousInferredModel, inferredModel)) {
@@ -105,8 +109,7 @@ public abstract class ApplyConstructAbstractModule extends AnnotatedAbstractModu
 
                 QuerySolution currentIterationBindings = generateIterationBinding(count, bindings);
 
-                for (Resource constructQueryRes : constructQueries) {
-                    Construct spinConstructRes = constructQueryRes.as(Construct.class);
+                for (Construct spinConstructRes : constructQueriesSorted) {
 
                     Query query;
                     if (parseText) {

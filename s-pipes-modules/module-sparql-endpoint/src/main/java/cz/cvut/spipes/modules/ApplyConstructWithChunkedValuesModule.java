@@ -40,11 +40,6 @@ import java.util.Objects;
  *   FILTER(strlen(?lastName) < 20)
  * }
  * </pre>
- *
- * <p>TODOs:</p>
- * <ul>
- *   <li>Order of queries is not enforced.</li>
- * </ul>
  */
 @Slf4j
 @SPipesModule(label = "apply construct with chunked values", comment = "Apply construct with chunked values.")

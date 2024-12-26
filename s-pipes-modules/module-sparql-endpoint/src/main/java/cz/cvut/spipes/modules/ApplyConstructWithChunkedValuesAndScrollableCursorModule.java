@@ -22,9 +22,7 @@ import org.topbraid.spin.model.Select;
  * See {@link ApplyConstructWithChunkedValuesModule} and {@link ApplyConstructWithScrollableCursorModule}
  * for more details.
  *
- * TODO Order of queries is not enforced.
  * TODO issue with redundant call {@link ScrollableCursorProvider}
- * TODO supports only one CONSTRUCT query
  */
 @Slf4j
 @SPipesModule(label = "apply construct with chunked values and scrollable cursor", comment = "Apply construct with chunked values and scrollable cursor")

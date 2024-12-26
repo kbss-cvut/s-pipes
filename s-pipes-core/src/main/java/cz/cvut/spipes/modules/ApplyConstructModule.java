@@ -22,7 +22,6 @@ import org.topbraid.spin.vocabulary.SP;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * TODO Order of queries is not enforced.
@@ -110,7 +109,7 @@ public class ApplyConstructModule extends AnnotatedAbstractModule {
         List<Construct> constructQueriesSorted = constructQueries
             .stream().map(r -> r.as(Construct.class))
             .sorted(Comparator.comparing(this::getQueryComment))
-            .collect(Collectors.toList());
+            .toList();
 
         while (inferredTriplesCount > 0 && count++ < iterationCount) {
             //      set up variable bindings

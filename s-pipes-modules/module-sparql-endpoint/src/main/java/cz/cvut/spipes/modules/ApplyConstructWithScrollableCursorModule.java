@@ -8,9 +8,7 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResourceFactory;
 
-/**
- * TODO Order of queries is not enforced.
- */
+
 @Slf4j
 @SPipesModule(label = "apply construct with scrollable cursor",
         comment = "Runs one or more construct queries (bound to sml:constructQuery) on the input triples. Queries are " +
