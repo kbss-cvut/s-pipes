@@ -92,10 +92,6 @@ public class ApplyConstructWithChunkedValuesAndScrollableCursorModule extends Ap
     @Override
     protected boolean shouldTerminate(int currentIteration, Model previousIterationModel, Model currentIterationModel) {
 
-        if (!parseText) {
-            throw new IllegalArgumentException("Construct queries with SPIN notations [parseText=false] are not supported as they do not support additions of comments.");
-        }
-
         return getRecursionProvider().shouldTerminate(currentIteration, previousIterationModel, currentIterationModel);
     }
 

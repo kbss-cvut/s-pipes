@@ -18,6 +18,7 @@ import org.topbraid.spin.model.Construct;
 import org.topbraid.spin.system.SPINModuleRegistry;
 import org.topbraid.spin.vocabulary.SP;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
@@ -38,12 +39,6 @@ public abstract class ApplyConstructAbstractModule extends AnnotatedAbstractModu
         " from its predecessors. When set to true (default is false), it prevents" +
         " passing through triples from the predecessors.")
     protected boolean isReplace = false;
-
-    @Parameter(iri = KBSS_MODULE.is_parse_text,
-            comment = "Whether the query should be taken from sp:text property instead of from SPIN serialization," +
-                " default is true."
-    )
-    protected boolean parseText = true;
 
     @Parameter(iri = KBSS_MODULE.has_max_iteration_count,
             comment =
@@ -111,13 +106,8 @@ public abstract class ApplyConstructAbstractModule extends AnnotatedAbstractModu
 
                 for (Construct spinConstructRes : constructQueriesSorted) {
 
-                    Query query;
-                    if (parseText) {
-                        String queryStr = spinConstructRes.getProperty(SP.text).getLiteral().getString();
-                        query = QueryFactory.create(substituteQueryMarkers(count, queryStr));
-                    } else {
-                        query = QueryUtils.createQuery(spinConstructRes);
-                    }
+                    String queryStr = spinConstructRes.getProperty(SP.text).getLiteral().getString();
+                    Query query = QueryFactory.create(substituteQueryMarkers(count, queryStr));
 
                     Model constructedModel = QueryUtils.execConstruct(
                         query,

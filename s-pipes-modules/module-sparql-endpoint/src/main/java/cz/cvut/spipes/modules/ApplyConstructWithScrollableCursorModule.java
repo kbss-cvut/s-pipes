@@ -45,10 +45,6 @@ public class ApplyConstructWithScrollableCursorModule extends ApplyConstructAbst
     @Override
     protected boolean shouldTerminate(int currentIteration, Model previousInferredModel, Model currentInferredModel) {
 
-        if (!parseText) {
-            throw new IllegalArgumentException("Construct queries with SPIN notations [parseText=false] are not supported as they do not support additions of comments.");
-        }
-
         if (currentIteration == iterationCount) {
             return true;
         }
