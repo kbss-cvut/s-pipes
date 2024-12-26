@@ -4,6 +4,8 @@ import static cz.cvut.spipes.debug.config.SwaggerConstants.TRIPLE_FORMAT_NOTE;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
@@ -18,8 +20,8 @@ import cz.cvut.spipes.debug.dto.PipelineComparisonResultDto;
 import cz.cvut.spipes.debug.dto.PipelineExecutionDto;
 import cz.cvut.spipes.debug.service.DebugService;
 import cz.cvut.spipes.debug.service.ScriptService;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 
 @RestController
 public class SPipesDebugController {
@@ -34,7 +36,10 @@ public class SPipesDebugController {
         this.scriptService = scriptService;
     }
 
-    @ApiOperation(value = "Get all pipeline executions", response = List.class)
+    @Operation(summary = "Get all pipeline executions", description = "Retrieve all pipeline executions")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List of pipeline executions")
+    })
     @GetMapping(value = "/executions", produces = {
             JsonLd.MEDIA_TYPE,
             MediaType.APPLICATION_JSON_VALUE,
@@ -44,123 +49,109 @@ public class SPipesDebugController {
         return debugService.getAllPipelineExecutions();
     }
 
+    @Operation(summary = "Get all module executions in pipeline execution", description = "Retrieve module executions for a given pipeline execution ID")
     @GetMapping(value = "/executions/{executionId}/modules", produces = {JsonLd.MEDIA_TYPE, MediaType.APPLICATION_JSON_VALUE})
-    @ApiOperation(value = "Get all module executions in pipeline execution", response = List.class)
     public List<ModuleExecutionDto> getAllModulesByExecutionIdWithExecutionTime(
-            @ApiParam(
+            @Parameter(
                     name = "executionId",
-                    type = "String",
-                    value = "Pipeline execution identifier",
+                    description = "Pipeline execution identifier",
                     example = "1682959945146003",
                     required = true)
             @PathVariable String executionId,
-            @ApiParam(
+            @Parameter(
                     name = "orderBy",
-                    type = "String",
-                    value = "Specifies orderBy field in ModuleExecutionDto",
+                    description = "Specifies orderBy field in ModuleExecutionDto",
                     example = "duration")
             @RequestParam(required = false) String orderBy,
-            @ApiParam(
+            @Parameter(
                     name = "orderType",
-                    type = "String",
-                    value = "ASC or DESC",
+                    description = "ASC or DESC",
                     example = "ASC")
             @RequestParam(required = false) String orderType) {
         return debugService.getAllModuleExecutionsSorted(executionId, orderBy, orderType);
     }
 
+    @Operation(summary = "Get pipeline execution", description = "Retrieve a specific pipeline execution by ID")
     @GetMapping(value = "/executions/{executionId}", produces = {JsonLd.MEDIA_TYPE, MediaType.APPLICATION_JSON_VALUE})
-    @ApiOperation(value = "Get pipeline execution", response = PipelineExecutionDto.class)
     public PipelineExecutionDto getPipelineExecution(
-            @ApiParam(
+            @Parameter(
                     name = "executionId",
-                    type = "String",
-                    value = "Pipeline execution identifier",
+                    description = "Pipeline execution identifier",
                     example = "1682959945146003",
                     required = true)
             @PathVariable String executionId) {
         return debugService.getPipelineExecutionById(executionId);
     }
 
-
+    @Operation(summary = "Compare pipeline executions", description = "Compare two pipeline executions and find the first difference")
     @GetMapping(value = "/executions/{executionId}/compare/{executionToCompareId}", produces = {JsonLd.MEDIA_TYPE, MediaType.APPLICATION_JSON_VALUE})
-    @ApiOperation(value = "Compare pipeline executions and find module execution with first difference", response = PipelineComparisonResultDto.class)
     public PipelineComparisonResultDto compareExecutions(
-            @ApiParam(
+            @Parameter(
                     name = "executionId",
-                    type = "String",
-                    value = "Pipeline execution identifier",
+                    description = "Pipeline execution identifier",
                     example = "1682959945146003",
                     required = true)
             @PathVariable String executionId,
-            @ApiParam(
+            @Parameter(
                     name = "executionToCompareId",
-                    type = "String",
-                    value = "Pipeline execution identifier",
+                    description = "Pipeline execution identifier to compare against",
                     example = "1682959945146003",
                     required = true)
             @PathVariable String executionToCompareId) {
         return debugService.compareExecutions(executionId, executionToCompareId);
     }
 
+    @Operation(summary = "Find module execution that created a triple", description = "Retrieve the module execution responsible for creating a specific triple")
     @GetMapping(value = "/triple-origin/{executionId}")
-    @ApiOperation(value = "Find module execution which created given triple", response = List.class, notes = TRIPLE_FORMAT_NOTE)
     public List<ModuleExecutionDto> findTripleOrigin(
-            @ApiParam(
+            @Parameter(
                     name = "executionId",
-                    type = "String",
-                    value = "Pipeline execution identifier",
+                    description = "Pipeline execution identifier",
                     example = "1682959945146003",
                     required = true)
             @PathVariable String executionId,
-            @ApiParam(
+            @Parameter(
                     name = "graphPattern",
-                    type = "String",
-                    value = "Triple pattern that is wanted to be found",
+                    description = "Triple pattern to search for",
                     example = "<http://some/subject> <http://some/predicate> <http://some/object>",
                     required = true)
             @RequestParam String graphPattern) {
         return scriptService.findTripleOrigin(executionId, graphPattern);
     }
 
+    @Operation(summary = "Find module execution where a triple was removed", description = "Retrieve the module execution responsible for removing a specific triple")
     @GetMapping(value = "/triple-elimination/{executionId}")
-    @ApiOperation(value = "Find module execution where triple was removed", response = List.class, notes = TRIPLE_FORMAT_NOTE)
     public List<ModuleExecutionDto> findTripleElimination(
-            @ApiParam(
+            @Parameter(
                     name = "executionId",
-                    type = "String",
-                    value = "Pipeline execution identifier",
+                    description = "Pipeline execution identifier",
                     example = "1682959945146003",
                     required = true)
             @PathVariable String executionId,
-            @ApiParam(
-                    name = "triple pattern",
-                    type = "String",
-                    value = "Triple pattern that is wanted to be found",
+            @Parameter(
+                    name = "graphPattern",
+                    description = "Triple pattern to search for",
                     example = "<http://some/subject> <http://some/predicate> \"some string!\"",
                     required = true)
             @RequestParam String graphPattern) {
         return scriptService.findTripleEliminationOrigin(executionId, graphPattern);
     }
 
+    @Operation(summary = "Find module execution where a variable was created", description = "Retrieve the module execution responsible for creating a specific variable")
     @GetMapping(value = "/variable-origin/{executionId}")
-    @ApiOperation(value = "Find module execution where variable was created", response = List.class)
     public List<ModuleExecutionDto> findVariableOrigin(
-            @ApiParam(
+            @Parameter(
                     name = "executionId",
-                    type = "String",
-                    value = "Pipeline execution identifier",
+                    description = "Pipeline execution identifier",
                     example = "1682959945146003",
                     required = true)
             @PathVariable String executionId,
-            @ApiParam(
+            @Parameter(
                     name = "variable",
-                    type = "String",
-                    value = "Name of variable",
+                    description = "Name of the variable",
                     example = "firstName",
                     required = true)
             @RequestParam String variable) {
         return scriptService.findVariableOrigin(executionId, variable);
     }
 }
-
