@@ -46,6 +46,11 @@ public class QueryUtils {
     }
 
     public static String serializeToSparql(RDFNode rdfNode) {
+
+        if (rdfNode == null) {
+            return "UNDEF";
+        }
+
         ParameterizedSparqlString pss= new ParameterizedSparqlString();
         pss.appendNode(rdfNode);
         return pss.toString();

@@ -4,7 +4,7 @@ import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.util.QueryUtils;
-import cz.cvut.spipes.util.query.OneStepRewindExtendedResultset;
+import cz.cvut.spipes.util.query.OneStepBackExtendedResultSet;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
@@ -96,9 +96,7 @@ public class ApplyConstructWithChunkedValuesModule extends ApplyConstructAbstrac
 
         log.debug("Executing query of chunk provider ...");
 
-        selectResultSet = execution.execSelect();
-
-        VariablesBinding variablesBinding = new VariablesBinding();
+        selectResultSet = new OneStepBackExtendedResultSet(execution.execSelect());
 
         if (! selectResultSet.hasNext()) {
             log.debug("\"{}\" query did not return any values.", getLabel());
@@ -131,7 +129,7 @@ public class ApplyConstructWithChunkedValuesModule extends ApplyConstructAbstrac
 
         String markerValue = QueryUtils.nextResultsToValuesClause(getCurrentResultSetInstance(), chunkSize);
 
-        log.debug("Creating query with values clause: \n{}.", markerValue );
+        log.trace("Creating query with values clause: \n{}.", markerValue );
 
         return QueryUtils
             .substituteMarkers(VALUES_CLAUSE_MARKER_NAME,
