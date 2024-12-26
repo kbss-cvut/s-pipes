@@ -1,4 +1,4 @@
-package cz.cvut.spipes.util;
+package cz.cvut.spipes.rest.util;
 
 import cz.cvut.spipes.manager.OntoDocManager;
 import cz.cvut.spipes.manager.OntologyDocumentManager;
