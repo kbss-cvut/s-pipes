@@ -13,10 +13,10 @@ import cz.cvut.spipes.modules.Module;
 import cz.cvut.spipes.util.DateUtils;
 import cz.cvut.spipes.util.Rdf4jUtils;
 import cz.cvut.spipes.util.TempFileUtils;
-import cz.cvut.spipes.util.JenaUtils;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.riot.RDFLanguages;
+import org.apache.jena.util.FileUtils;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;
@@ -134,6 +134,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
         Date startDate = new Date();
         addProperty(pipelineExecution, SPIPES.has_pipeline_execution_start_date, startDate);
         addProperty(pipelineExecution, SPIPES.has_pipeline_execution_start_date_unix, startDate.getTime());
+
         if (pipelineExecutionGroupId != null) {
             addProperty(pipelineExecution, PIPELINE_EXECUTION_GROUP_ID, pipelineExecutionGroupId);
         }
