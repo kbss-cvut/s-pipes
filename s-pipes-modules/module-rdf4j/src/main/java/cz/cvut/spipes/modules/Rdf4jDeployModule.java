@@ -111,7 +111,7 @@ public class Rdf4jDeployModule extends AnnotatedAbstractModule {
 
     @Override
     ExecutionContext executeSelf() {
-        log.debug("Deploying data into {} of rdf4j server repository {}/{}.",
+        log.debug("Deploying data into {} of rdf4j server repository {}/repositories/{}.",
             getContextsInfo(),
             rdf4jServerURL,
             rdf4jRepositoryName);
