@@ -101,7 +101,7 @@ public abstract class ApplyConstructAbstractModule extends AnnotatedAbstractModu
 
                 Model inferredInSingleIterationModel = ModelFactory.createDefaultModel();
 
-
+                log.debug("Executing iteration {} ...", count);
                 QuerySolution currentIterationBindings = generateIterationBinding(count, bindings);
 
                 for (Construct spinConstructRes : constructQueriesSorted) {
