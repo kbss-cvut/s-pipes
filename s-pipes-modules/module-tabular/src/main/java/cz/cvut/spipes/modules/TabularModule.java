@@ -113,12 +113,12 @@ public class TabularModule extends AnnotatedAbstractModule {
     private final Property P_PROCESS_TABLE_AT_INDEX = getSpecificParameter("process-table-at-index");
 
     @Parameter(iri = SML.replace, comment = "Specifies whether a module should overwrite triples" +
-        " from its predecessors. When set to true (default is false), it prevents" +
-        " passing through triples from the predecessors.")
+            " from its predecessors. When set to true (default is false), it prevents" +
+            " passing through triples from the predecessors.")
     private boolean isReplace = false;
 
     @Parameter(iri = PARAM_URL_PREFIX + "source-resource-uri", comment = "URI of resource" +
-        " that represent tabular data (e.g. resource representing CSV file).")
+            " that represent tabular data (e.g. resource representing CSV file).")
     private StreamResource sourceResource;
 
     @Parameter(iri = PARAM_URL_PREFIX + "delimiter", comment = "Column delimiter. Default value is comma ','.")
@@ -281,11 +281,13 @@ public class TabularModule extends AnnotatedAbstractModule {
 
                 tableSchema.setAboutUrl(schemaColumn, sourceResource.getUri());
                 schemaColumn.setProperty(
-                    dataPrefix,
-                    sourceResource.getUri(),
-                    hasInputSchema ? tableSchema.getColumn(columnName) : null);
+                        dataPrefix,
+                        sourceResource.getUri(),
+                        hasInputSchema ? tableSchema.getColumn(columnName) : null);
                 schemaColumn.setTitle(columnTitle);
-                if (isDuplicate) throwNotUniqueException(schemaColumn, columnTitle, columnName);
+                if (isDuplicate) {
+                    throwNotUniqueException(schemaColumn, columnTitle, columnName);
+                }
             }
 
             List<String> row;
@@ -348,13 +350,14 @@ public class TabularModule extends AnnotatedAbstractModule {
             int cellsNum = 1;
             for (Region region : regions) {
                 int firstCellInRegionNum = cellsNum;
-                for(int i = region.getFirstRow();i <= region.getLastRow();i++){
-                    for(int j = region.getFirstColumn();j <= region.getLastColumn();j++) {
-                        Cell cell = new Cell(sourceResource.getUri()+"#cell"+(cellsNum));
+                for (int i = region.getFirstRow(); i <= region.getLastRow(); i++) {
+                    for (int j = region.getFirstColumn(); j <= region.getLastColumn(); j++) {
+                        Cell cell = new Cell(sourceResource.getUri() + "#cell" + cellsNum);
                         cell.setRow(tableSchema.createAboutUrl(i));
                         cell.setColumn(outputColumns.get(j).getUri().toString());
-                        if(cellsNum != firstCellInRegionNum)
-                            cell.setSameValueAsCell(sourceResource.getUri()+"#cell"+(firstCellInRegionNum));
+                        if (cellsNum != firstCellInRegionNum) {
+                            cell.setSameValueAsCell(sourceResource.getUri() + "#cell" + firstCellInRegionNum);
+                        }
                         em.merge(cell);
                         cellsNum++;
                     }
@@ -381,19 +384,19 @@ public class TabularModule extends AnnotatedAbstractModule {
             StringBuilder record = new StringBuilder(recordDelimiter);
             for (int i = 0; i < row.size(); i++) {
                 record
-                    .append(i)
-                    .append(":")
-                    .append(row.get(i))
-                    .append(recordDelimiter);
+                        .append(i)
+                        .append(":")
+                        .append(row.get(i))
+                        .append(recordDelimiter);
             }
             LOG.error("Reading input file failed when reading record #{} (may not reflect the line #).\n" +
-                    " It was expected that the current record contains {} values" +
-                    ", but {}. element was not retrieved before whole record was processed.\n" +
-                    "The problematic record: {}",
-                currentRecordNumber,
-                expectedRowLength,
-                index+1,
-                record
+                            " It was expected that the current record contains {} values" +
+                            ", but {}. element was not retrieved before whole record was processed.\n" +
+                            "The problematic record: {}",
+                    currentRecordNumber,
+                    expectedRowLength,
+                    index+1,
+                    record
             );
             throw new SPipesException("Reading input file failed.", e);
         }
@@ -413,9 +416,9 @@ public class TabularModule extends AnnotatedAbstractModule {
         Resource rowResource = ResourceFactory.createResource(tableSchema.createAboutUrl(rowNumber));
 
         return ResourceFactory.createStatement(
-            rowResource,
-            ResourceFactory.createProperty(column.getPropertyUrl()),
-            ResourceFactory.createPlainLiteral(cellValue));
+                rowResource,
+                ResourceFactory.createProperty(column.getPropertyUrl()),
+                ResourceFactory.createPlainLiteral(cellValue));
     }
 
     private boolean hasInputSchema(TableSchema inputTableSchema) {
@@ -429,11 +432,11 @@ public class TabularModule extends AnnotatedAbstractModule {
 
     private TableSchema getTableSchema(EntityManager em) {
         TypedQuery<TableSchema> query = em.createNativeQuery(
-            "PREFIX csvw: <http://www.w3.org/ns/csvw#>\n" +
-                "SELECT ?t WHERE { \n" +
-                "?t a csvw:TableSchema. \n" +
-                "}",
-            TableSchema.class
+                "PREFIX csvw: <http://www.w3.org/ns/csvw#>\n" +
+                        "SELECT ?t WHERE { \n" +
+                        "?t a csvw:TableSchema. \n" +
+                        "}",
+                TableSchema.class
         );
 
         int tableSchemaCount = query.getResultList().size();
@@ -452,14 +455,14 @@ public class TabularModule extends AnnotatedAbstractModule {
 
     private void throwNotUniqueException(Column column, String columnTitle, String columnName) {
         throw new ResourceNotUniqueException(
-            String.format("Unable to create value of property %s due to collision. " +
-                    "Both column titles '%s' and '%s' are normalized to '%s' " +
-                    "and thus would refer to the same property url <%s>.",
-                CSVW.propertyUrl,
-                columnTitle,
-                column.getTitle(),
-                columnName,
-                column.getPropertyUrl()));
+                String.format("Unable to create value of property %s due to collision. " +
+                                "Both column titles '%s' and '%s' are normalized to '%s' " +
+                                "and thus would refer to the same property url <%s>.",
+                        CSVW.propertyUrl,
+                        columnTitle,
+                        column.getTitle(),
+                        columnName,
+                        column.getPropertyUrl()));
     }
 
     private ExecutionContext getExecutionContext(Model inputModel, Model outputModel) {
@@ -473,12 +476,12 @@ public class TabularModule extends AnnotatedAbstractModule {
     @Override
     public void loadManualConfiguration() {
         sourceResourceFormat = ResourceFormat.fromString(
-            getPropertyValue(P_SOURCE_RESOURCE_FORMAT, ResourceFormat.PLAIN.getValue())
+                getPropertyValue(P_SOURCE_RESOURCE_FORMAT, ResourceFormat.PLAIN.getValue())
         );
         delimiter = getPropertyValue(P_DELIMITER, getDefaultDelimiterSupplier(sourceResourceFormat));
         quoteCharacter = getPropertyValue(P_QUOTE_CHARACTER, getDefaultQuoteCharacterSupplier(sourceResourceFormat));
         outputMode = Mode.fromResource(
-            getPropertyValue(P_OUTPUT_MODE, Mode.STANDARD.getResource())
+                getPropertyValue(P_OUTPUT_MODE, Mode.STANDARD.getResource())
         );
         setInputCharset(delimiter);
     }
@@ -514,7 +517,7 @@ public class TabularModule extends AnnotatedAbstractModule {
         if (sourceResourceFormat == ResourceFormat.CSV) {
             return () -> {
                 LOG.debug("Quote character not specified, using double-quote as default value" +
-                    " to be compliant with RFC 4180 (CSV)");
+                        " to be compliant with RFC 4180 (CSV)");
                 return '"';
             };
         }
@@ -524,8 +527,8 @@ public class TabularModule extends AnnotatedAbstractModule {
     private char getPropertyValue(Property property,
                                   Supplier<Character> defaultValueSupplier) {
         return Optional.ofNullable(getPropertyValue(property))
-            .map(n -> n.asLiteral().getChar())
-            .orElseGet(defaultValueSupplier);
+                .map(n -> n.asLiteral().getChar())
+                .orElseGet(defaultValueSupplier);
     }
 
     @Override
@@ -624,7 +627,7 @@ public class TabularModule extends AnnotatedAbstractModule {
 
     public void setDelimiter(int delimiter) {
         if ((sourceResourceFormat == ResourceFormat.CSV && delimiter != ',') ||
-            (sourceResourceFormat == ResourceFormat.TSV && delimiter != '\t')) {
+                (sourceResourceFormat == ResourceFormat.TSV && delimiter != '\t')) {
             throw new SpecificationNonComplianceException(sourceResourceFormat, delimiter);
         }
         this.delimiter = delimiter;
@@ -680,7 +683,9 @@ public class TabularModule extends AnnotatedAbstractModule {
                 tableSchema.setOrderList(orderList);
                 header = createHeaders(header.length, tableSchema.sortColumns(orderList));
 
-            } else LOG.info("Order of columns was not provided in the schema.");
+            } else {
+                LOG.info("Order of columns was not provided in the schema.");
+            }
         } else {
             header = createHeaders(header.length, new ArrayList<>());
         }
@@ -693,7 +698,9 @@ public class TabularModule extends AnnotatedAbstractModule {
         for (int i = 0; i < size; i++) {
             if (!columns.isEmpty()) {
                 headers[i] = columns.get(i).getName();
-            } else headers[i] = "column_" + (i + 1);
+            } else {
+                headers[i] = "column_" + (i + 1);
+            }
         }
         return headers;
     }
