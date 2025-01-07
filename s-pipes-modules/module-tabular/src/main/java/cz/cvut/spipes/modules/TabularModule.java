@@ -13,6 +13,7 @@ import cz.cvut.spipes.exception.ResourceNotFoundException;
 import cz.cvut.spipes.exception.ResourceNotUniqueException;
 import cz.cvut.spipes.exception.SPipesException;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
+import cz.cvut.spipes.modules.exception.MissingArgumentException;
 import cz.cvut.spipes.modules.exception.SheetDoesntExistsException;
 import cz.cvut.spipes.modules.exception.SheetIsNotSpecifiedException;
 import cz.cvut.spipes.modules.exception.SpecificationNonComplianceException;
@@ -22,18 +23,14 @@ import cz.cvut.spipes.modules.util.*;
 import cz.cvut.spipes.registry.StreamResource;
 import cz.cvut.spipes.registry.StreamResourceRegistry;
 import cz.cvut.spipes.util.JenaUtils;
-import org.apache.commons.cli.MissingArgumentException;
 import org.apache.jena.rdf.model.*;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.supercsv.io.CsvListReader;
-import org.supercsv.io.ICsvListReader;
 import org.supercsv.prefs.CsvPreference;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -189,6 +186,8 @@ public class TabularModule extends AnnotatedAbstractModule {
 
         StreamResource originalSourceResource = sourceResource;
         TSVConvertor tsvConvertor = null;
+        StreamReaderAdapter streamReaderAdapter;
+        CsvPreference csvPreference = null;
 
         switch (sourceResourceFormat) {
             case HTML:
@@ -201,7 +200,7 @@ public class TabularModule extends AnnotatedAbstractModule {
                 tsvConvertor = new HTML2TSVConvertor(processTableAtIndex);
                 table.setLabel(tsvConvertor.getTableName(sourceResource));
                 setSourceResource(tsvConvertor.convertToTSV(sourceResource));
-                setDelimiter('\t');
+                streamReaderAdapter = new CSVStreamReaderAdapter(quoteCharacter, '\t');
                 break;
             case XLS:
             case XLSM:
@@ -221,7 +220,10 @@ public class TabularModule extends AnnotatedAbstractModule {
                     throw new SheetDoesntExistsException("Requested sheet doesn't exists.");
                 }
                 setSourceResource(tsvConvertor.convertToTSV(sourceResource));
-                setDelimiter('\t');
+                streamReaderAdapter = new CSVStreamReaderAdapter(quoteCharacter, '\t');
+                break;
+            default:
+                streamReaderAdapter = new CSVStreamReaderAdapter(quoteCharacter, delimiter);
                 break;
         }
 
@@ -236,33 +238,21 @@ public class TabularModule extends AnnotatedAbstractModule {
         List<Column> outputColumns = new ArrayList<>();
         List<Statement> rowStatements = new ArrayList<>();
 
-        CsvPreference csvPreference = new CsvPreference.Builder(
-            quoteCharacter,
-            delimiter,
-            System.lineSeparator()).build();
-
         try {
-            ICsvListReader listReader = getCsvListReader(csvPreference);
-
-            if (listReader == null) {
-                logMissingQuoteError();
-                return getExecutionContext(inputModel, outputModel);
-            }
-
-            String[] header = listReader.getHeader(true); // skip the header (can't be used with CsvListReader)
-
-            if (header == null) {
-                LOG.warn("Input stream resource {} to provide tabular data is empty.", this.sourceResource.getUri());
-                return getExecutionContext(inputModel, outputModel);
-            }
+            streamReaderAdapter.initialise(new ByteArrayInputStream(sourceResource.getContent()),
+                sourceResourceFormat, processTableAtIndex, acceptInvalidQuoting, inputCharset, sourceResource);
+            String[] header = streamReaderAdapter.getHeader(skipHeader);;
             Set<String> columnNames = new HashSet<>();
+
+            if (streamReaderAdapter.getSheetLabel() != null) {
+                table.setLabel(streamReaderAdapter.getSheetLabel());
+            }
 
             TableSchema inputTableSchema = getTableSchema(em);
             hasInputSchema = hasInputSchema(inputTableSchema);
 
             if (skipHeader) {
                 header = getHeaderFromSchema(inputModel, header, hasInputSchema);
-                listReader = new CsvListReader(getReader(), csvPreference);
             } else if (hasInputSchema) {
                 header = getHeaderFromSchema(inputModel, header, true);
             }
@@ -290,10 +280,9 @@ public class TabularModule extends AnnotatedAbstractModule {
                 }
             }
 
-            List<String> row;
             int rowNumber = 0;
-            //for each row
-            while ((row = listReader.read()) != null) {
+            List<String> row;
+            while ((row = streamReaderAdapter.getNextRow()) != null) {
                 rowNumber++;
                 // 4.6.1 and 4.6.3
                 Row r = new Row();
@@ -331,8 +320,12 @@ public class TabularModule extends AnnotatedAbstractModule {
                     // 4.6.8.7 - else, if cellValue is not null
                 }
             }
-            listReader.close();
-        } catch (IOException | MissingArgumentException e) {
+            streamReaderAdapter.close();
+        } catch (MissingArgumentException e) {
+            if (ExecutionConfig.isExitOnError()) {
+                return getExecutionContext(inputModel, outputModel);
+            }
+        } catch (IOException e) {
             LOG.error("Error while reading file from resource uri {}", sourceResource, e);
         }
 
@@ -400,16 +393,6 @@ public class TabularModule extends AnnotatedAbstractModule {
             );
             throw new SPipesException("Reading input file failed.", e);
         }
-    }
-
-    private ICsvListReader getCsvListReader(CsvPreference csvPreference) {
-        if (acceptInvalidQuoting) {
-            if (getQuote() == '\0') {
-                return null;
-            } else
-                return new CsvListReader(new InvalidQuotingTokenizer(getReader(), csvPreference), csvPreference);
-        }
-        return new CsvListReader(getReader(), csvPreference);
     }
 
     private Statement createRowResource(String cellValue, int rowNumber, Column column) {
@@ -590,10 +573,6 @@ public class TabularModule extends AnnotatedAbstractModule {
         return label.trim().replaceAll("[^\\w]", "_");
     }
 
-    private Reader getReader() {
-        return new StringReader(new String(sourceResource.getContent(), inputCharset));
-    }
-
     @NotNull
     private StreamResource getResourceByUri(@NotNull String resourceUri) {
 
@@ -631,10 +610,6 @@ public class TabularModule extends AnnotatedAbstractModule {
             throw new SpecificationNonComplianceException(sourceResourceFormat, delimiter);
         }
         this.delimiter = delimiter;
-    }
-
-    public char getQuote() {
-        return quoteCharacter;
     }
 
     public void setQuoteCharacter(char quoteCharacter) {
@@ -703,12 +678,5 @@ public class TabularModule extends AnnotatedAbstractModule {
             }
         }
         return headers;
-    }
-
-    private void logMissingQuoteError() throws MissingArgumentException {
-        String message = "Quote character must be specified when using custom tokenizer.";
-        if (ExecutionConfig.isExitOnError()) {
-            throw new MissingArgumentException(message);
-        } else LOG.error(message);
     }
 }
