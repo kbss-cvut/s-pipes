@@ -14,7 +14,6 @@ import cz.cvut.spipes.exception.ResourceNotUniqueException;
 import cz.cvut.spipes.exception.SPipesException;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.modules.exception.MissingArgumentException;
-import cz.cvut.spipes.modules.exception.SheetDoesntExistsException;
 import cz.cvut.spipes.modules.exception.SheetIsNotSpecifiedException;
 import cz.cvut.spipes.modules.exception.SpecificationNonComplianceException;
 import cz.cvut.spipes.modules.handlers.ModeHandler;
@@ -197,10 +196,7 @@ public class TabularModule extends AnnotatedAbstractModule {
                 if (processTableAtIndex != 1) {
                     throw new UnsupportedOperationException("Support for 'process-table-at-index' different from 1 is not implemented for HTML files yet.");
                 }
-                tsvConvertor = new HTML2TSVConvertor(processTableAtIndex);
-                table.setLabel(tsvConvertor.getTableName(sourceResource));
-                setSourceResource(tsvConvertor.convertToTSV(sourceResource));
-                streamReaderAdapter = new CSVStreamReaderAdapter(quoteCharacter, '\t');
+                streamReaderAdapter = new HTMLStreamReaderAdapter();
                 break;
             case XLS:
             case XLSM:
@@ -208,19 +204,7 @@ public class TabularModule extends AnnotatedAbstractModule {
                 if (processTableAtIndex == 0) {
                     throw new SheetIsNotSpecifiedException("Source resource format is set to XLS(X,M) file but no specific table is set for processing.");
                 }
-                tsvConvertor = new XLS2TSVConvertor(processTableAtIndex, sourceResourceFormat);
-                int numberOfSheets = tsvConvertor.getTablesCount(sourceResource);
-                table.setLabel(tsvConvertor.getTableName(sourceResource));
-                LOG.debug("Number of sheets: {}", numberOfSheets);
-                if ((processTableAtIndex > numberOfSheets) || (processTableAtIndex < 1)) {
-                    LOG.error("Requested sheet doesn't exist, number of sheets in the doc: {}, requested sheet: {}",
-                        numberOfSheets,
-                            processTableAtIndex
-                    );
-                    throw new SheetDoesntExistsException("Requested sheet doesn't exists.");
-                }
-                setSourceResource(tsvConvertor.convertToTSV(sourceResource));
-                streamReaderAdapter = new CSVStreamReaderAdapter(quoteCharacter, '\t');
+                streamReaderAdapter = new XLSStreamReaderAdapter();
                 break;
             default:
                 streamReaderAdapter = new CSVStreamReaderAdapter(quoteCharacter, delimiter);
@@ -320,14 +304,6 @@ public class TabularModule extends AnnotatedAbstractModule {
                     // 4.6.8.7 - else, if cellValue is not null
                 }
             }
-            streamReaderAdapter.close();
-        } catch (MissingArgumentException e) {
-            if (ExecutionConfig.isExitOnError()) {
-                return getExecutionContext(inputModel, outputModel);
-            }
-        } catch (IOException e) {
-            LOG.error("Error while reading file from resource uri {}", sourceResource, e);
-        }
 
         tableSchema.adjustProperties(hasInputSchema, outputColumns, sourceResource.getUri());
         tableSchema.setColumnsSet(new HashSet<>(outputColumns));
@@ -337,25 +313,31 @@ public class TabularModule extends AnnotatedAbstractModule {
         em.persist(tableGroup);
         em.merge(tableSchema);
 
-        if (tsvConvertor != null) {
-            List<Region> regions =  tsvConvertor.getMergedRegions(originalSourceResource);
+        List<Region> regions = streamReaderAdapter.getMergedRegions();
 
-            int cellsNum = 1;
-            for (Region region : regions) {
-                int firstCellInRegionNum = cellsNum;
-                for (int i = region.getFirstRow(); i <= region.getLastRow(); i++) {
-                    for (int j = region.getFirstColumn(); j <= region.getLastColumn(); j++) {
-                        Cell cell = new Cell(sourceResource.getUri() + "#cell" + cellsNum);
-                        cell.setRow(tableSchema.createAboutUrl(i));
-                        cell.setColumn(outputColumns.get(j).getUri().toString());
-                        if (cellsNum != firstCellInRegionNum) {
-                            cell.setSameValueAsCell(sourceResource.getUri() + "#cell" + firstCellInRegionNum);
-                        }
-                        em.merge(cell);
-                        cellsNum++;
+        int cellsNum = 1;
+        for (Region region : regions) {
+            int firstCellInRegionNum = cellsNum;
+            for (int i = region.getFirstRow(); i <= region.getLastRow(); i++) {
+                for (int j = region.getFirstColumn(); j <= region.getLastColumn(); j++) {
+                    Cell cell = new Cell(sourceResource.getUri() + "#cell" + cellsNum);
+                    cell.setRow(tableSchema.createAboutUrl(i));
+                    cell.setColumn(outputColumns.get(j).getUri().toString());
+                    if (cellsNum != firstCellInRegionNum) {
+                        cell.setSameValueAsCell(sourceResource.getUri() + "#cell" + firstCellInRegionNum);
                     }
+                    em.merge(cell);
+                    cellsNum++;
                 }
             }
+        }
+        streamReaderAdapter.close();
+        } catch (MissingArgumentException e) {
+                if (ExecutionConfig.isExitOnError()) {
+                    return getExecutionContext(inputModel, outputModel);
+                }
+        } catch (IOException e) {
+            LOG.error("Error while reading file from resource uri {}", sourceResource, e);
         }
 
         em.getTransaction().commit();
