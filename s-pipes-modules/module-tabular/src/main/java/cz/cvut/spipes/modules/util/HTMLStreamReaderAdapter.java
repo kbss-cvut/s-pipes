@@ -9,7 +9,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.*;
-import java.nio.charset.Charset;
 import java.util.*;
 
 public class HTMLStreamReaderAdapter implements StreamReaderAdapter {
@@ -23,7 +22,7 @@ public class HTMLStreamReaderAdapter implements StreamReaderAdapter {
 
     @Override
     public void initialise(InputStream inputStream, ResourceFormat sourceResourceFormat,
-                           int tableIndex, boolean acceptInvalidQuoting, Charset inputCharset, StreamResource sourceResource) throws IOException {
+                           int tableIndex, StreamResource sourceResource) throws IOException {
         Document doc = Jsoup.parse(inputStream, "UTF-8", "");
         Element table = doc.select("table").first();
         rows = table.select("tr");

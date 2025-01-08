@@ -91,6 +91,26 @@ import java.util.function.Supplier;
  * Does not support custom table URIs. <br/>
  * Does not support processing of multiple files.<br/>
  * Does not support the <i>suppress output</i> annotation.
+ *
+ * The header processing uses this logic:
+ *
+ * If we have a schema, and we should skip the header:
+ * - not calling getHeader()
+ * - assume that data looks like in schema
+ *
+ * If we have a schema,and we should not skip the header:
+ * - calling getHeader()
+ * - adapt schema to match header of the file
+ *     - if ordering is not specified use ordering or the header
+ *     - reuse column IRIs from Schema
+ *
+ * If we don't have a schema, and we should skip the header:
+ * - not calling getHeader()
+ * - create column names column_1, column_2, etc.
+ *
+ * If we don't have a schema, and we should not skip the header:
+ * - calling getHeader()
+ * - create schema entirely based on the header
  */
 @SPipesModule(label = "Tabular module", comment = "Module for converting tabular data (e.g. CSV or TSV) to RDF")
 public class TabularModule extends AnnotatedAbstractModule {
@@ -207,7 +227,7 @@ public class TabularModule extends AnnotatedAbstractModule {
                 streamReaderAdapter = new XLSStreamReaderAdapter();
                 break;
             default:
-                streamReaderAdapter = new CSVStreamReaderAdapter(quoteCharacter, delimiter);
+                streamReaderAdapter = new CSVStreamReaderAdapter(quoteCharacter, delimiter, acceptInvalidQuoting, inputCharset);
                 break;
         }
 
@@ -224,7 +244,7 @@ public class TabularModule extends AnnotatedAbstractModule {
 
         try {
             streamReaderAdapter.initialise(new ByteArrayInputStream(sourceResource.getContent()),
-                sourceResourceFormat, processTableAtIndex, acceptInvalidQuoting, inputCharset, sourceResource);
+                sourceResourceFormat, processTableAtIndex, sourceResource);
             String[] header = streamReaderAdapter.getHeader(skipHeader);;
             Set<String> columnNames = new HashSet<>();
 

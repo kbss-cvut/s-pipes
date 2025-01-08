@@ -30,15 +30,14 @@ public class CSVStreamReaderAdapter implements StreamReaderAdapter {
     StreamResource sourceResource;
     private final static Logger log = LoggerFactory.getLogger(CSVStreamReaderAdapter.class);
 
-    public CSVStreamReaderAdapter(char quoteCharacter, int delimiter) {
+    public CSVStreamReaderAdapter(char quoteCharacter, int delimiter, boolean acceptInvalidQuoting, Charset inputCharset) {
         this.csvPreference = new CsvPreference.Builder(quoteCharacter, delimiter, System.lineSeparator()).build();
+        this.acceptInvalidQuoting = acceptInvalidQuoting;
+        this.inputCharset = inputCharset;
     }
 
     @Override
-    public void initialise(InputStream inputStream, ResourceFormat sourceResourceFormat, int tableIndex,
-                           boolean acceptInvalidQuoting, Charset inputCharset, StreamResource sourceResource) throws IOException {
-        this.acceptInvalidQuoting = acceptInvalidQuoting;
-        this.inputCharset = inputCharset;
+    public void initialise(InputStream inputStream, ResourceFormat sourceResourceFormat, int tableIndex, StreamResource sourceResource) throws IOException {
         this.sourceResource = sourceResource;
         listReader = getCsvListReader(csvPreference);
         if (listReader == null) {

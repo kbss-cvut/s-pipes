@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -30,14 +29,14 @@ public class XLSStreamReaderAdapter implements StreamReaderAdapter {
     private static final Logger LOG = LoggerFactory.getLogger(XLSStreamReaderAdapter.class);
 
     @Override
-    public void initialise(InputStream inputStream, ResourceFormat sourceResourceFormat, int tableIndex,
-                           boolean acceptInvalidQuoting, Charset inputCharset, StreamResource sourceResource) throws IOException {
+    public void initialise(InputStream inputStream, ResourceFormat sourceResourceFormat, int tableIndex, StreamResource sourceResource) throws IOException {
         Workbook workbook;
         if (sourceResourceFormat == ResourceFormat.XLS) {
             workbook = new HSSFWorkbook(inputStream);
         } else {
             workbook = new XSSFWorkbook(inputStream);
         }
+        LOG.debug("Number of sheets: {}", workbook.getNumberOfSheets());
         if ((tableIndex > workbook.getNumberOfSheets()) || (tableIndex < 1)) {
                 LOG.error("Requested sheet doesn't exist, number of sheets in the doc: {}, requested sheet: {}",
                         workbook.getNumberOfSheets(),
