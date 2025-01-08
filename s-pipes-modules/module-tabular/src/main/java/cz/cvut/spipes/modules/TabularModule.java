@@ -57,7 +57,7 @@ import java.util.function.Supplier;
  * <p>The implementation loosely follows the W3C Recommendation described here:
  * <a href="https://www.w3.org/TR/csv2rdf/">Generating RDF from Tabular Data on the Web</a></p>
  * <p>
- * Within the recommendation, it is possible to define schema
+ * Within the recommendation, it is possible to specify schema
  * defining the shape of the output RDF data
  * (i.e. the input metadata values used for the conversion)
  * using csvw:tableSchema.<br/>
@@ -78,6 +78,19 @@ import java.util.function.Supplier;
  *         ]
  * ]
  * </code></pre>
+ * Table schema can be provided in the input RDF data ("input schema") and is also included in the output RDF data
+ * ("output schema") of this module. If the input schema is provided, the output schema should consistently extend it.
+ * Following situations can happen:
+ * 1) there is no input schema in the input RDF data of this module
+ *   a) {@link TabularModule#skipHeader} is false -- the output schema is created based on the header of the input file
+ *   b) {@link TabularModule#skipHeader} is true -- the output schema is created based on number of columns,
+ *      where column names "column_1", "column_2", etc.
+ * 2) there is an input schema in the input RDF data of this module
+ *   a) {@link TabularModule#skipHeader} is false -- the output schema is consistently extended from data. This is
+ *      typically used when we have input data schema that does not define order of columns, while the output schema
+ *      will be extended with this order based on the header of the input file.
+ *   b) {@link TabularModule#skipHeader} is true -- the output schema is reused from the input RDF data
+ *
  * <p>
  * This module can also be used to process HTML tables, see option {@link TabularModule#sourceResourceFormat}.
  * First, the HTML table is converted to TSV while replacing "\t" with two spaces
@@ -91,26 +104,6 @@ import java.util.function.Supplier;
  * Does not support custom table URIs. <br/>
  * Does not support processing of multiple files.<br/>
  * Does not support the <i>suppress output</i> annotation.
- *
- * The header processing uses this logic:
- *
- * If we have a schema, and we should skip the header:
- * - not calling getHeader()
- * - assume that data looks like in schema
- *
- * If we have a schema,and we should not skip the header:
- * - calling getHeader()
- * - adapt schema to match header of the file
- *     - if ordering is not specified use ordering or the header
- *     - reuse column IRIs from Schema
- *
- * If we don't have a schema, and we should skip the header:
- * - not calling getHeader()
- * - create column names column_1, column_2, etc.
- *
- * If we don't have a schema, and we should not skip the header:
- * - calling getHeader()
- * - create schema entirely based on the header
  */
 @SPipesModule(label = "Tabular module", comment = "Module for converting tabular data (e.g. CSV or TSV) to RDF")
 public class TabularModule extends AnnotatedAbstractModule {
