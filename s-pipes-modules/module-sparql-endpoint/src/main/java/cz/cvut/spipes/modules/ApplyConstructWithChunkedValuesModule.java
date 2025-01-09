@@ -47,20 +47,19 @@ public class ApplyConstructWithChunkedValuesModule extends ApplyConstructAbstrac
 
     private static final String TYPE_URI = KBSS_MODULE.uri + "apply-construct-with-chunked-values";
     private static final String TYPE_PREFIX = TYPE_URI + "/";
-    private static final int DEFAULT_CHUNK_SIZE = 10;
     private static final boolean DEFAULT_USE_PREVIOUS_BINDING_VALUE = true;
     private static final String VALUES_CLAUSE_MARKER_NAME = "VALUES";
     private static final Property P_CHUNK_SIZE = ResourceFactory.createProperty(TYPE_PREFIX + "chunk-size");
 
     @Parameter(iri = TYPE_PREFIX + "chunk-size", comment = "Chunk size. Default is 10.")
-    private Integer chunkSize = DEFAULT_CHUNK_SIZE;
+    private Integer chunkSize = 10;
 
     @Parameter(iri = SML.selectQuery,
         comment = "The select query that will be used to iterate over construct query templates.")
     private Select selectQuery;
 
-    @Parameter(iri = TYPE_PREFIX + "enable-previous-binding", comment = "Default is true.")
-    private boolean UsePreviousBinding = DEFAULT_USE_PREVIOUS_BINDING_VALUE;
+    @Parameter(iri = TYPE_PREFIX + "extend-select-query-result-with-previous-binding", comment = "Default is true.")
+    private boolean isExtendSelectQueryResultWithPreviousBinding = true;
 
 
     private ResultSet selectResultSet;
@@ -95,7 +94,7 @@ public class ApplyConstructWithChunkedValuesModule extends ApplyConstructAbstrac
 
         log.debug("Executing query of chunk provider ...");
 
-        if (UsePreviousBinding)
+        if (isExtendSelectQueryResultWithPreviousBinding)
             selectResultSet = new OneStepBackExtendedResultSet(execution.execSelect());
         else
             selectResultSet = execution.execSelect();
