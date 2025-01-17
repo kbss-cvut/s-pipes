@@ -24,13 +24,10 @@ All terms defined in this section refer to SPipes terminology:
 
 SPipes loads pipelines by recursive traversal of configured directories, searching for ontology files represented by `.ttl` suffix. *Global scripts* are represented by suffix **.sms.ttl**. A script is identified by ontology IRI in which it is defined. Ontology imports (using rdf property **owl:imports**) can be used to modularize scripts into multiple files. The script defines a set of pipelines from its ontology import closure. 
 
-## Examples
+## Example scripts
 
-SPipes script construction, execution, and execution history tracking are explained 
-in [Hello world example](doc/examples/hello-world/hello-world.md).
-Script debugging is explained in [skosify example](doc/examples/skosify/skosify.md).
-Working with RDF4J repository is explained in [rdf4j example](doc/examples/rdf4j-update/rdf4j-update.md).
-Constraint validation is described in [constraint validation example](doc/examples/constraint-validation/constraint-validation.md).
+Script construction, execution, debugging, constraint violation and many other features 
+of SPipes together with specific modules are explained in [example scripts](./doc/examples/examples.md).
 
 ## Structure of Maven Submodules
 
