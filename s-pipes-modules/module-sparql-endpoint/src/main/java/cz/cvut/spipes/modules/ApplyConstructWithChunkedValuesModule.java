@@ -47,7 +47,6 @@ public class ApplyConstructWithChunkedValuesModule extends ApplyConstructAbstrac
 
     private static final String TYPE_URI = KBSS_MODULE.uri + "apply-construct-with-chunked-values";
     private static final String TYPE_PREFIX = TYPE_URI + "/";
-    private static final boolean DEFAULT_USE_PREVIOUS_BINDING_VALUE = true;
     private static final String VALUES_CLAUSE_MARKER_NAME = "VALUES";
     private static final Property P_CHUNK_SIZE = ResourceFactory.createProperty(TYPE_PREFIX + "chunk-size");
 
@@ -83,6 +82,14 @@ public class ApplyConstructWithChunkedValuesModule extends ApplyConstructAbstrac
 
     public void setSelectQuery(Select selectQuery) {
         this.selectQuery = selectQuery;
+    }
+
+    public boolean getIsExtendSelectQueryResultWithPreviousBinding() {
+        return isExtendSelectQueryResultWithPreviousBinding;
+    }
+
+    public void setIsExtendSelectQueryResultWithPreviousBinding(boolean isExtendSelectQueryResultWithPreviousBinding) {
+        this.isExtendSelectQueryResultWithPreviousBinding = isExtendSelectQueryResultWithPreviousBinding;
     }
 
     public void initializeQuery() {
@@ -142,7 +149,7 @@ public class ApplyConstructWithChunkedValuesModule extends ApplyConstructAbstrac
     }
 
     @NotNull
-    private ResultSet getCurrentResultSetInstance() {
+    protected ResultSet getCurrentResultSetInstance() {
         if (selectResultSet == null) {
             initializeQuery();
         }
