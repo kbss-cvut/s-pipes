@@ -12,6 +12,49 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * This is helper class to write tests that load configuration of modules from ttl file
+ * that is organized in directory `test/resources/module/${moduleName}/`.
+ *
+ * The `${moduleName}` is taken from abstract method <code>getModuleName()</code>.
+ * The configuration file should be located at `test/resources/module/${moduleName}/${fileName}`
+ * and to load the module one can call method  <code>getRootModule(fileName)</code>.
+ *
+ * ${fileName} (e.g. config.ttl) must contain only one module and must include declaration of the module type.
+ * Example `./test/module/apply-construct/config.ttl`:
+ *
+ * <pre><code>
+ *
+ * @prefix apply-construct: <http://onto.fel.cvut.cz/ontologies/test/apply-construct#> .
+ * @prefix owl: <http://www.w3.org/2002/07/owl#> .
+ * @prefix sp: <http://spinrdf.org/sp#> .
+ * @prefix sml: <http://topbraid.org/sparqlmotionlib#> .
+ *
+ * # Declare module type (alternatively you can import it using owl:imports)
+ * sml:ApplyConstruct a sm:Module .
+ *
+ * # configure the module
+ * apply-construct:create-sample-triples
+ *   a sml:ApplyConstruct ;
+ *   sml:constructQuery [
+ *       a sp:Construct ;
+ *       sp:text """CONSTRUCT {
+ *     <http://example.org> rdfs:label "label 1" .
+ *     <http://example.org> rdfs:label "label 2" .
+ * }
+ * WHERE {
+ * }""" ;
+ *   ] ;
+ * .
+ *
+ * <http://onto.fel.cvut.cz/ontologies/test/apply-construct/config>
+ *   a owl:Ontology ;
+ *   owl:imports <http://onto.fel.cvut.cz/ontologies/s-pipes> ;
+ * .
+ *
+ * </code></pre>
+ *
+ */
 public abstract class AbstractModuleTestHelper {
 
     private static final String MODULE_DIR_NAME = "module";
@@ -55,11 +98,21 @@ public abstract class AbstractModuleTestHelper {
         return model;
     }
 
-
+    /**
+     *
+     * @return
+     */
     public Module getConfigRootModule() {
         return  getRootModule(CONFIG_FILE_NAME);
     }
 
+    /**
+     * Returns module from a provided configuration file.
+     *
+     * @param fileName of ttl file (e.g. config.ttl) to load module configuration.
+     *                 It should be located at <code>test/resources/module/${fileName}</code>.
+     * @return Returns loaded module from the given file.
+     */
     public Module getRootModule(String fileName) {
         OntModel configModel = getOntModel(fileName);
 
