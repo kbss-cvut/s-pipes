@@ -106,7 +106,8 @@ public abstract class ApplyConstructAbstractModule extends AnnotatedAbstractModu
 
                 for (Construct spinConstructRes : constructQueriesSorted) {
 
-                    String queryStr = spinConstructRes.getProperty(SP.text).getLiteral().getString();
+                    String queryStr = QueryUtils.getQueryPrefixes(spinConstructRes) +
+                            spinConstructRes.getProperty(SP.text).getLiteral().getString();
                     Query query = QueryFactory.create(substituteQueryMarkers(count, queryStr));
 
                     Model constructedModel = QueryUtils.execConstruct(

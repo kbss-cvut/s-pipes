@@ -190,4 +190,14 @@ public class QueryUtils {
             throw e;
         }
     }
+
+    public static String getQueryPrefixes(org.topbraid.spin.model.Query spinQuery) {
+        try {
+            return ARQFactory.get().createPrefixDeclarations(spinQuery.getModel());
+        } catch (QueryParseException e) {
+            String query = ARQFactory.get().createCommandString(spinQuery);
+            log.error("Parse error [1] occurred in query [2].\n[1] ERROR:\n{}\n[2] QUERY:\n{}", e.getMessage(), query);
+            throw e;
+        }
+    }
 }
