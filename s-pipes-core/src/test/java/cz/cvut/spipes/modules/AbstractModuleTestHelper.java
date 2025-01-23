@@ -66,8 +66,11 @@ public abstract class AbstractModuleTestHelper {
      */
     abstract String getModuleName();
 
+    Module getSingleModule(OntModel configModel) {
+        return PipelineFactory.loadPipelines(configModel).get(0);
+    }
+
     public OntModel getConfigOntModel() {
-        JenaTestUtils.mapLocalSPipesDefinitionFiles();
         return getOntModel(CONFIG_FILE_NAME);
     }
 
@@ -116,14 +119,13 @@ public abstract class AbstractModuleTestHelper {
      * @return Returns loaded module from the given file.
      */
     public Module getRootModule(String fileName) {
-        OntModel configModel = getOntModel(fileName);
 
         OntModel ontModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
 
         ontModel.read(
-                getClass().getResourceAsStream(getConfigFilePath()), null, FileUtils.langTurtle);
+                getClass().getResourceAsStream(fileName), null, FileUtils.langTurtle);
 
-        return PipelineFactory.loadPipelines(configModel).get(0);
+        return getSingleModule(ontModel);
     }
 
     public Path getFilePath(String fileName) throws URISyntaxException {
