@@ -99,8 +99,10 @@ public abstract class AbstractModuleTestHelper {
     }
 
     /**
+     * Returns module from a default configuration file located are `test/resources/module/${moduleName}/config.ttl`,
+     * where ${moduleName} is returned by <code>getModuleName()</code>.
      *
-     * @return
+     * @return Returns loaded module.
      */
     public Module getConfigRootModule() {
         return  getRootModule(CONFIG_FILE_NAME);
