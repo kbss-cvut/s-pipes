@@ -1,42 +1,14 @@
-# baseURI: http://onto.fel.cvut.cz/ontologies/lkpr/inference-0.1
+# baseURI: http://onto.fel.cvut.cz/ontologies/test/apply-construct-with-chunked-values/spin-query-config
 
-@prefix : <http://onto.fel.cvut.cz/ontologies/lkpr/inference-0.1/> .
-@prefix apf: <http://jena.apache.org/ARQ/property#> .
-@prefix ata: <http://onto.fel.cvut.cz/voc/ata-100/> .
-@prefix av: <http://onto.fel.cvut.cz/ontologies/lkpr/> .
-@prefix avd: <http://onto.fel.cvut.cz/ontologies/lkpr-data/> .
-@prefix config: <http://onto.fel.cvut.cz/ontologies/lkpr/config/> .
-@prefix csvw: <http://www.w3.org/ns/csvw#> .
-@prefix dl: <http://onto.fel.cvut.cz/ontologies/lkpr/data-lib/> .
-@prefix ffa: <http://onto.fel.cvut.cz/ontologies/safety-performance-application/> .
-@prefix form: <http://onto.fel.cvut.cz/ontologies/form/> .
-@prefix geo: <http://www.opengis.net/ont/geosparql#> .
-@prefix doc: <http://onto.fel.cvut.cz/ontologies/documentation/> .
+@prefix : <http://onto.fel.cvut.cz/ontologies/test/apply-construct-with-chunked-values/> .
 @prefix kbss-module: <http://onto.fel.cvut.cz/ontologies/lib/module/> .
-@prefix km-rdf4j: <http://onto.fel.cvut.cz/ontologies/lib/module/rdf4j/> .
-@prefix km-sesame: <http://onto.fel.cvut.cz/ontologies/lib/module/sesame/> .
 @prefix km-ac-wcv: <http://onto.fel.cvut.cz/ontologies/lib/module/apply-construct-with-chunked-values/> .
-@prefix km-tabular: <http://onto.fel.cvut.cz/ontologies/lib/module/tabular/> .
-@prefix ms: <http://onto.fel.cvut.cz/ontologies/maintenance-schema/> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix spkpis: <http://onto.fel.cvut.cz/ontologies/safety-performance-kpis/> .
-@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix sm: <http://topbraid.org/sparqlmotion#> .
 @prefix sml: <http://topbraid.org/sparqlmotionlib#> .
 @prefix sp: <http://spinrdf.org/sp#> .
-@prefix spif: <http://spinrdf.org/spif#> .
-@prefix spin: <http://spinrdf.org/spin#> .
-@prefix spl: <http://spinrdf.org/spl#> .
-@prefix td: <http://onto.fel.cvut.cz/ontologies/lkpr/tabular-data-0.1/> .
-@prefix ufo: <http://onto.fel.cvut.cz/ontologies/ufo/> .
-@prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<http://onto.fel.cvut.cz/ontologies/lkpr/inference-0.1>
-  a owl:Ontology ;
-.
 kbss-module:apply-construct-with-chunked-values rdf:type sm:Module.
 
 :construct-test-data
