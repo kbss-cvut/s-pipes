@@ -4,7 +4,7 @@
 @prefix kbss-module: <http://onto.fel.cvut.cz/ontologies/lib/module/> .
 @prefix km-ac-wcv: <http://onto.fel.cvut.cz/ontologies/lib/module/apply-construct-with-chunked-values/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix spkpis: <http://onto.fel.cvut.cz/ontologies/safety-performance-kpis/> .
+@prefix airports: <http://onto.fel.cvut.cz/ontologies/airports/> .
 @prefix sm: <http://topbraid.org/sparqlmotion#> .
 @prefix sml: <http://topbraid.org/sparqlmotionlib#> .
 @prefix sp: <http://spinrdf.org/sp#> .
@@ -21,25 +21,22 @@ kbss-module:apply-construct-with-chunked-values rdf:type sm:Module.
 SELECT ?airport ?city
 WHERE {
   VALUES (?airport ?city) {
-    ( "CHO" "Charlottesville" )
-    ( "RIC" "Richmond" )
-    ( "LYH" "Lynchburg" )
+    ( <www.example.org/airports/CHO> "Charlottesville" )
+    ( <www.example.org/airports/RIC> "Richmond" )
+    ( <www.example.org/airports/LYH> "Lynchburg" )
   }
 }
 """ ;
     ] ;
   sml:constructQuery [
       a sp:Construct ;
-      sp:text """# 1 - construct :has-next-trail-point relation
-PREFIX spkpis: <http://onto.fel.cvut.cz/ontologies/safety-performance-kpis/> # TODO support prefixes
-
+      sp:text """# 1 - construct airport ordering
+PREFIX airports: <http://onto.fel.cvut.cz/ontologies/airports/>
 CONSTRUCT {
-  ?timePoint__previous spkpis:has-next-trail-point ?timePoint .
+  ?airport__previous airports:is-before-airport ?airport .
 } WHERE {
 
   #${VALUES}
-
-  FILTER(?trail__previous = ?trail)
 }""" ;
     ] ;
   sml:replace true ;
