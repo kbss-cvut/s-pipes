@@ -1,6 +1,5 @@
 package cz.cvut.spipes.modules;
 
-import cz.cvut.spipes.engine.PipelineFactory;
 import cz.cvut.spipes.test.JenaTestUtils;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
@@ -66,9 +65,7 @@ public abstract class AbstractModuleTestHelper {
      */
     abstract String getModuleName();
 
-    Module getSingleModule(OntModel configModel) {
-        return PipelineFactory.loadPipelines(configModel).get(0);
-    }
+    abstract Object getSingleModule(OntModel configModel);
 
     public OntModel getConfigOntModel() {
         return getOntModel(CONFIG_FILE_NAME);
@@ -107,8 +104,8 @@ public abstract class AbstractModuleTestHelper {
      *
      * @return Returns loaded module.
      */
-    public Module getConfigRootModule() {
-        return  getRootModule(CONFIG_FILE_NAME);
+    public Object getConfigRootModule() {
+        return getRootModule(CONFIG_FILE_NAME);
     }
 
     /**
@@ -118,7 +115,7 @@ public abstract class AbstractModuleTestHelper {
      *                 It should be located at <code>test/resources/module/${fileName}</code>.
      * @return Returns loaded module from the given file.
      */
-    public Module getRootModule(String fileName) {
+    public Object getRootModule(String fileName) {
 
         OntModel ontModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
 
