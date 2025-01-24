@@ -5,10 +5,12 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.util.FileUtils;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.apache.jena.query.Query;
 import org.junit.jupiter.api.Test;
 
 public class JenaUtilsTest {
@@ -42,4 +44,21 @@ public class JenaUtilsTest {
         }
     }
 
+    @Test
+    public void testGetQueryWithModelPrefixes() throws Exception {
+        Model m = ModelFactory.createDefaultModel();
+        m.setNsPrefix("airports_from_model", "http://onto.fel.cvut.cz/ontologies/airports_from_model/");
+        String queryStr = QueryUtils.getQueryWithModelPrefixes("""
+            PREFIX airports_from_query: <http://onto.fel.cvut.cz/ontologies/airports_from_query/>
+            CONSTRUCT {
+              ?airport__previous airports_from_query:is-before-airport ?airport .
+              ?airport__previous airports_from_model:is-before-airport ?airport .
+            } WHERE {
+            
+              #${VALUES}
+            }
+            """, m);
+
+        Query query = new QueryFactory().create(queryStr);
+    }
 }

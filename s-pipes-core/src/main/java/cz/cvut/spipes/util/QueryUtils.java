@@ -11,6 +11,7 @@ import org.topbraid.spin.arq.ARQFactory;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
@@ -191,13 +192,12 @@ public class QueryUtils {
         }
     }
 
-    public static String getQueryPrefixes(org.topbraid.spin.model.Query spinQuery) {
-        try {
-            return ARQFactory.get().createPrefixDeclarations(spinQuery.getModel());
-        } catch (QueryParseException e) {
-            String query = ARQFactory.get().createCommandString(spinQuery);
-            log.error("Parse error [1] occurred in query [2].\n[1] ERROR:\n{}\n[2] QUERY:\n{}", e.getMessage(), query);
-            throw e;
+    public static String getQueryWithModelPrefixes(String query, Model model) {
+        for (Map.Entry<String, String> entry : model.getNsPrefixMap().entrySet()){
+            String key = entry.getKey();
+            String value = entry.getValue();
+            query = "PREFIX " + key + ": <" + value + ">\n" + query;
         }
+        return query;
     }
 }
