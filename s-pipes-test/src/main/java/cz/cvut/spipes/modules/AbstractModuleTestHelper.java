@@ -116,13 +116,14 @@ public abstract class AbstractModuleTestHelper {
      * @return Returns loaded module from the given file.
      */
     public Object getRootModule(String fileName) {
+        OntModel configModel = getOntModel(fileName);
 
         OntModel ontModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
 
         ontModel.read(
-                getClass().getResourceAsStream(fileName), null, FileUtils.langTurtle);
+                getClass().getResourceAsStream(getConfigFilePath()), null, FileUtils.langTurtle);
 
-        return getSingleModule(ontModel);
+        return getSingleModule(configModel);
     }
 
     public Path getFilePath(String fileName) throws URISyntaxException {
