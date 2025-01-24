@@ -71,14 +71,15 @@ public class JenaUtilsTest {
 
         try{
             Query query = new QueryFactory().create(queryStr);
-            assertEquals(query.getPrefixMapping().numPrefixes(), prefixMapQuery.size());
+            assertEquals(query.getPrefixMapping().numPrefixes(), prefixMapQuery.size(),
+                    "Created query does not contain correct amount of prefixes");
 
             for (Map.Entry<String, String> entry : prefixMapQuery.entrySet())
-                assertEquals(query.getPrefixMapping().getNsPrefixURI(entry.getKey()), entry.getValue());
+                assertEquals(query.getPrefixMapping().getNsPrefixURI(entry.getKey()), entry.getValue(),
+                        "Created query does not contain prefix from the predefined query");
         }
         catch (Exception e) {
-            e.printStackTrace();
-            assert(false);
+            assert false: "Query is not parsable. Got an exception: " + e.getMessage();
         }
     }
 
@@ -104,14 +105,15 @@ public class JenaUtilsTest {
                 """, m);
         try{
             Query query = new QueryFactory().create(queryStr);
-            assertEquals(query.getPrefixMapping().numPrefixes(), prefixMapModel.size());
+            assertEquals(query.getPrefixMapping().numPrefixes(), prefixMapModel.size(),
+                    "Created query does not contain correct amount of prefixes");
 
             for (Map.Entry<String, String> entry : prefixMapModel.entrySet())
-                assertEquals(query.getPrefixMapping().getNsPrefixURI(entry.getKey()), entry.getValue());
+                assertEquals(query.getPrefixMapping().getNsPrefixURI(entry.getKey()), entry.getValue(),
+                        "Created query does not contain prefix from the predefined model");
         }
         catch (Exception e) {
-            e.printStackTrace();
-            assert(false);
+            assert false: "Query is not parsable. Got an exception: " + e.getMessage();
         }
     }
 
@@ -148,17 +150,19 @@ public class JenaUtilsTest {
 
         try{
             Query query = new QueryFactory().create(queryStr);
-            assertEquals(query.getPrefixMapping().numPrefixes(), prefixMapQuery.size() + prefixMapModel.size());
+            assertEquals(query.getPrefixMapping().numPrefixes(), prefixMapQuery.size() + prefixMapModel.size(),
+                    "Created query does not contain correct amount of prefixes");
 
             for (Map.Entry<String, String> entry : prefixMapQuery.entrySet())
-                assertEquals(query.getPrefixMapping().getNsPrefixURI(entry.getKey()), entry.getValue());
+                assertEquals(query.getPrefixMapping().getNsPrefixURI(entry.getKey()), entry.getValue(),
+                        "Created query does not contain prefix from the predefined query");
 
             for (Map.Entry<String, String> entry : prefixMapModel.entrySet())
-                assertEquals(query.getPrefixMapping().getNsPrefixURI(entry.getKey()), entry.getValue());
+                assertEquals(query.getPrefixMapping().getNsPrefixURI(entry.getKey()), entry.getValue(),
+                        "Created query does not contain prefix from the predefined model");
         }
         catch (Exception e) {
-            e.printStackTrace();
-            assert(false);
+            assert false: "Query is not parsable. Got an exception: " + e.getMessage();
         }
     }
 }
