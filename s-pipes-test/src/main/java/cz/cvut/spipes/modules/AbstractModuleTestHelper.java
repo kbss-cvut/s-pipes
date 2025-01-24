@@ -66,8 +66,8 @@ public abstract class AbstractModuleTestHelper {
     abstract String getModuleName();
 
     /**
-     * This method should be implemented in other modules to avoid circular dependency
-     * @return First module in model
+     * This method should load single SPipes Module from provided ontology.
+     * @return First module in ontology
      */
     abstract Object getSingleModule(OntModel configModel);
 
@@ -125,7 +125,7 @@ public abstract class AbstractModuleTestHelper {
         OntModel ontModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
 
         ontModel.read(
-                getClass().getResourceAsStream(getConfigFilePath()), null, FileUtils.langTurtle);
+                getClass().getResourceAsStream(getRelativeFilePath(fileName)), null, FileUtils.langTurtle);
 
         return getSingleModule(configModel);
     }
