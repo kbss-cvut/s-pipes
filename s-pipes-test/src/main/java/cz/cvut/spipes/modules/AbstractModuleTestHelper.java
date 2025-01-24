@@ -65,6 +65,10 @@ public abstract class AbstractModuleTestHelper {
      */
     abstract String getModuleName();
 
+    /**
+     * This method should be implemented in other modules to avoid circular dependency
+     * @return First module in model
+     */
     abstract Object getSingleModule(OntModel configModel);
 
     public OntModel getConfigOntModel() {
