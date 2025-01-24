@@ -2,6 +2,7 @@ package cz.cvut.spipes.util;
 
 import java.net.URL;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -47,12 +48,21 @@ public class JenaUtilsTest {
     }
 
     @Test
-    public void testGetQueryWithModelPrefixesFromQuery() throws Exception {
+    public void testGetQueryWithModelPrefixesReturnsAllPrefixesFromQuery() throws Exception {
         Model m = ModelFactory.createDefaultModel();
-        String queryStr = QueryUtils.getQueryWithModelPrefixes("""
-            PREFIX airports_from_query: <http://onto.fel.cvut.cz/ontologies/airports_from_query/>
+
+        Map<String, String> prefixMapQuery = new HashMap();
+        prefixMapQuery.put("airports_from_query1", "http://onto.fel.cvut.cz/ontologies/airports_from_query1/");
+        prefixMapQuery.put("airports_from_query2", "http://onto.fel.cvut.cz/ontologies/airports_from_query2/");
+        prefixMapQuery.put("airports_from_query3", "http://onto.fel.cvut.cz/ontologies/airports_from_query3/");
+
+        String prefixStr = "";
+        for (Map.Entry<String, String> entry : prefixMapQuery.entrySet())
+            prefixStr = prefixStr + "PREFIX " + entry.getKey() + ": <" + entry.getValue() + ">\n";
+
+        String queryStr = QueryUtils.getQueryWithModelPrefixes(prefixStr + """
             CONSTRUCT {
-              ?airport__previous airports_from_query:is-before-airport ?airport .
+              ?airport__previous airports_from_query1:is-before-airport ?airport .
             } WHERE {
             
               #${VALUES}
@@ -61,7 +71,10 @@ public class JenaUtilsTest {
 
         try{
             Query query = new QueryFactory().create(queryStr);
-            assertNotNull(query);
+            assertEquals(query.getPrefixMapping().numPrefixes(), prefixMapQuery.size());
+
+            for (Map.Entry<String, String> entry : prefixMapQuery.entrySet())
+                assertEquals(query.getPrefixMapping().getNsPrefixURI(entry.getKey()), entry.getValue());
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -70,20 +83,78 @@ public class JenaUtilsTest {
     }
 
     @Test
-    public void testGetQueryWithModelPrefixesFromModel() throws Exception {
+    public void testGetQueryWithModelPrefixesReturnsAllPrefixesFromModel() throws Exception {
         Model m = ModelFactory.createDefaultModel();
-        m.setNsPrefix("airports_from_model", "http://onto.fel.cvut.cz/ontologies/airports_from_model/");
+
+        Map<String, String> prefixMapModel = new HashMap();
+        prefixMapModel.put("airports_from_model1", "http://onto.fel.cvut.cz/ontologies/airports_from_model1/");
+        prefixMapModel.put("airports_from_model2", "http://onto.fel.cvut.cz/ontologies/airports_from_model2/");
+        prefixMapModel.put("airports_from_model3", "http://onto.fel.cvut.cz/ontologies/airports_from_model3/");
+
+        for (Map.Entry<String, String> entry : prefixMapModel.entrySet())
+            m.setNsPrefix(entry.getKey(), entry.getValue());
+
         String queryStr = QueryUtils.getQueryWithModelPrefixes("""
                 CONSTRUCT {
-                  ?airport__previous airports_from_model:is-before-airport ?airport .
+                  ?airport__previous airports_from_model1:is-before-airport ?airport .
                 } WHERE {
-                            
+
                   #${VALUES}
                 }
                 """, m);
         try{
             Query query = new QueryFactory().create(queryStr);
-            assertNotNull(query);
+            assertEquals(query.getPrefixMapping().numPrefixes(), prefixMapModel.size());
+
+            for (Map.Entry<String, String> entry : prefixMapModel.entrySet())
+                assertEquals(query.getPrefixMapping().getNsPrefixURI(entry.getKey()), entry.getValue());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            assert(false);
+        }
+    }
+
+    @Test
+    public void testGetQueryWithModelPrefixesReturnsAllPrefixesFromQueryAndModel() throws Exception {
+        Model m = ModelFactory.createDefaultModel();
+
+        Map<String, String> prefixMapQuery = new HashMap();
+        prefixMapQuery.put("airports_from_query1", "http://onto.fel.cvut.cz/ontologies/airports_from_query1/");
+        prefixMapQuery.put("airports_from_query2", "http://onto.fel.cvut.cz/ontologies/airports_from_query2/");
+        prefixMapQuery.put("airports_from_query3", "http://onto.fel.cvut.cz/ontologies/airports_from_query3/");
+
+        String prefixStr = "";
+        for (Map.Entry<String, String> entry : prefixMapQuery.entrySet())
+            prefixStr = prefixStr + "PREFIX " + entry.getKey() + ": <" + entry.getValue() + ">\n";
+
+        Map<String, String> prefixMapModel = new HashMap();
+        prefixMapModel.put("airports_from_model1", "http://onto.fel.cvut.cz/ontologies/airports_from_model1/");
+        prefixMapModel.put("airports_from_model2", "http://onto.fel.cvut.cz/ontologies/airports_from_model2/");
+        prefixMapModel.put("airports_from_model3", "http://onto.fel.cvut.cz/ontologies/airports_from_model3/");
+
+        for (Map.Entry<String, String> entry : prefixMapModel.entrySet())
+            m.setNsPrefix(entry.getKey(), entry.getValue());
+
+        String queryStr = QueryUtils.getQueryWithModelPrefixes(prefixStr + """
+            CONSTRUCT {
+              ?airport__previous airports_from_query1:is-before-airport ?airport .
+              ?airport__previous airports_from_model1:is-before-airport ?airport .
+            } WHERE {
+            
+              #${VALUES}
+            }
+            """, m);
+
+        try{
+            Query query = new QueryFactory().create(queryStr);
+            assertEquals(query.getPrefixMapping().numPrefixes(), prefixMapQuery.size() + prefixMapModel.size());
+
+            for (Map.Entry<String, String> entry : prefixMapQuery.entrySet())
+                assertEquals(query.getPrefixMapping().getNsPrefixURI(entry.getKey()), entry.getValue());
+
+            for (Map.Entry<String, String> entry : prefixMapModel.entrySet())
+                assertEquals(query.getPrefixMapping().getNsPrefixURI(entry.getKey()), entry.getValue());
         }
         catch (Exception e) {
             e.printStackTrace();
