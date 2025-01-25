@@ -139,6 +139,6 @@ public abstract class AbstractModuleTestHelper {
     }
 
     private String getConfigFilePath() {
-        return "/" + MODULE_DIR_NAME + "/" + getModuleName() + "/" + CONFIG_FILE_NAME;
+        return getRelativeFilePath(CONFIG_FILE_NAME);
     }
 }
