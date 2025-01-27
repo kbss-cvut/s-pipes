@@ -51,21 +51,16 @@ public class JenaUtilsTest {
     public void testGetQueryWithModelPrefixesReturnsAllPrefixesFromQuery() throws Exception {
         Model m = ModelFactory.createDefaultModel();
 
-        Map<String, String> prefixMapQuery = new HashMap();
-        prefixMapQuery.put("airports_from_query1", "http://onto.fel.cvut.cz/ontologies/airports_from_query1/");
-        prefixMapQuery.put("airports_from_query2", "http://onto.fel.cvut.cz/ontologies/airports_from_query2/");
-        prefixMapQuery.put("airports_from_query3", "http://onto.fel.cvut.cz/ontologies/airports_from_query3/");
+        Map<String, String> prefixMapQuery = createExampleQueryPrefixMap();
 
-        String prefixStr = "";
-        for (Map.Entry<String, String> entry : prefixMapQuery.entrySet())
-            prefixStr = prefixStr + "PREFIX " + entry.getKey() + ": <" + entry.getValue() + ">\n";
+        String prefixStr = createPrefixDeclarationStringFromMap(prefixMapQuery);
 
         String queryStr = QueryUtils.getQueryWithModelPrefixes(prefixStr + """
             CONSTRUCT {
-              ?airport__previous airports_from_query1:is-before-airport ?airport .
-            } WHERE {
-            
-              #${VALUES}
+             ?p a query-prefix1:Person .
+            }
+            WHERE {
+              ?p a query-prefix1:Person .
             }
             """, m);
 
@@ -87,20 +82,17 @@ public class JenaUtilsTest {
     public void testGetQueryWithModelPrefixesReturnsAllPrefixesFromModel() throws Exception {
         Model m = ModelFactory.createDefaultModel();
 
-        Map<String, String> prefixMapModel = new HashMap();
-        prefixMapModel.put("airports_from_model1", "http://onto.fel.cvut.cz/ontologies/airports_from_model1/");
-        prefixMapModel.put("airports_from_model2", "http://onto.fel.cvut.cz/ontologies/airports_from_model2/");
-        prefixMapModel.put("airports_from_model3", "http://onto.fel.cvut.cz/ontologies/airports_from_model3/");
+        Map<String, String> prefixMapModel = createExampleModelPrefixMap();
 
         for (Map.Entry<String, String> entry : prefixMapModel.entrySet())
             m.setNsPrefix(entry.getKey(), entry.getValue());
 
         String queryStr = QueryUtils.getQueryWithModelPrefixes("""
                 CONSTRUCT {
-                  ?airport__previous airports_from_model1:is-before-airport ?airport .
-                } WHERE {
-
-                  #${VALUES}
+                 ?p a model-prefix1:Person .
+                }
+                WHERE {
+                  ?p a model-prefix1:Person .
                 }
                 """, m);
         try{
@@ -121,31 +113,22 @@ public class JenaUtilsTest {
     public void testGetQueryWithModelPrefixesReturnsAllPrefixesFromQueryAndModel() throws Exception {
         Model m = ModelFactory.createDefaultModel();
 
-        Map<String, String> prefixMapQuery = new HashMap();
-        prefixMapQuery.put("airports_from_query1", "http://onto.fel.cvut.cz/ontologies/airports_from_query1/");
-        prefixMapQuery.put("airports_from_query2", "http://onto.fel.cvut.cz/ontologies/airports_from_query2/");
-        prefixMapQuery.put("airports_from_query3", "http://onto.fel.cvut.cz/ontologies/airports_from_query3/");
+        Map<String, String> prefixMapQuery = createExampleQueryPrefixMap();
 
-        String prefixStr = "";
-        for (Map.Entry<String, String> entry : prefixMapQuery.entrySet())
-            prefixStr = prefixStr + "PREFIX " + entry.getKey() + ": <" + entry.getValue() + ">\n";
+        String prefixStr = createPrefixDeclarationStringFromMap(prefixMapQuery);
 
-        Map<String, String> prefixMapModel = new HashMap();
-        prefixMapModel.put("airports_from_model1", "http://onto.fel.cvut.cz/ontologies/airports_from_model1/");
-        prefixMapModel.put("airports_from_model2", "http://onto.fel.cvut.cz/ontologies/airports_from_model2/");
-        prefixMapModel.put("airports_from_model3", "http://onto.fel.cvut.cz/ontologies/airports_from_model3/");
+        Map<String, String> prefixMapModel = createExampleModelPrefixMap();
 
         for (Map.Entry<String, String> entry : prefixMapModel.entrySet())
             m.setNsPrefix(entry.getKey(), entry.getValue());
 
         String queryStr = QueryUtils.getQueryWithModelPrefixes(prefixStr + """
-            CONSTRUCT {
-              ?airport__previous airports_from_query1:is-before-airport ?airport .
-              ?airport__previous airports_from_model1:is-before-airport ?airport .
-            } WHERE {
-            
-              #${VALUES}
-            }
+                CONSTRUCT {
+                 ?p a model-prefix1:Person .
+                }
+                WHERE {
+                  ?p a query-prefix1:Person .
+                }
             """, m);
 
         try{
@@ -164,5 +147,30 @@ public class JenaUtilsTest {
         catch (Exception e) {
             assert false: "Query is not parsable. Got an exception: " + e.getMessage();
         }
+    }
+
+    private String createPrefixDeclarationStringFromMap(Map<String, String> prefixMap){
+        String prefixStr = prefixMap.entrySet().stream()
+                .map(e -> "PREFIX " + e.getKey() + ": <" + e.getValue() + ">")
+                .collect(Collectors.joining("\n"));
+        return prefixStr;
+    }
+
+    private Map<String, String> createExampleQueryPrefixMap(){
+        Map<String, String> prefixMapQuery = Map.of(
+                "query-prefix1", "http://example.org/query-prefix1/",
+                "query-prefix2", "http://example.org/query-prefix2/",
+                "query-prefix3", "http://example.org/query-prefix3/"
+        );
+        return prefixMapQuery;
+    }
+
+    private Map<String, String> createExampleModelPrefixMap(){
+        Map<String, String> prefixMapModel = Map.of(
+                "model-prefix1", "http://example.org/model-prefix1/",
+                "model-prefix2", "http://example.org/model-prefix2/",
+                "model-prefix3", "http://example.org/model-prefix3/"
+        );
+        return prefixMapModel;
     }
 }
