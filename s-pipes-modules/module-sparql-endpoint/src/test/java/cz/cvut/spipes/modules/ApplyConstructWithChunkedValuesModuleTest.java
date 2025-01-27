@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 
 
-public class ApplyConstructWithChunkedValuesModuleTest extends AbstractModuleTestHelper {
+public class ApplyConstructWithChunkedValuesModuleTest extends AbstractSparqlEndpointModuleTestHelper {
 
     @BeforeEach
     public void setUp() {
