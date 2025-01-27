@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 
-public class ApplyConstructModuleTest extends AbstractModuleTestHelper {
+public class ApplyConstructModuleTest extends AbstractCoreModuleTestHelper {
 
     @BeforeEach
     public void setUp() {

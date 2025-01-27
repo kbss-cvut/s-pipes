@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
- class TabularModuleTest extends AbstractModuleTestHelper {
+ class TabularModuleTest extends AbstractTabularModuleTestHelper {
 
     private TabularModule module;
     private final String DATA_PREFIX = "http://onto.fel.cvut.cz/data/";
