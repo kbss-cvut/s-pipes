@@ -11,7 +11,6 @@ import org.topbraid.spin.arq.ARQFactory;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
@@ -193,11 +192,9 @@ public class QueryUtils {
     }
 
     public static String getQueryWithModelPrefixes(String query, Model model) {
-        for (Map.Entry<String, String> entry : model.getNsPrefixMap().entrySet()){
-            String key = entry.getKey();
-            String value = entry.getValue();
-            query = "PREFIX " + key + ": <" + value + ">\n" + query;
-        }
-        return query;
+        return  model.getNsPrefixMap().entrySet().stream()
+            .map(e -> "PREFIX " + e.getKey() + ": <" + e.getValue() + ">")
+            .collect(Collectors.joining("\n", "", "\n"))
+            + query;
     }
 }
