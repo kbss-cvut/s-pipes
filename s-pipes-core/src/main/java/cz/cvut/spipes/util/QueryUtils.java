@@ -190,4 +190,11 @@ public class QueryUtils {
             throw e;
         }
     }
+
+    public static String getQueryWithModelPrefixes(String query, Model model) {
+        return  model.getNsPrefixMap().entrySet().stream()
+            .map(e -> "PREFIX " + e.getKey() + ": <" + e.getValue() + ">")
+            .collect(Collectors.joining("\n", "", "\n"))
+            + query;
+    }
 }
