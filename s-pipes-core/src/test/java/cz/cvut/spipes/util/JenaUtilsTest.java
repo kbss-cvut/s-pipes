@@ -1,20 +1,19 @@
 package cz.cvut.spipes.util;
 
-import java.net.URL;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.stream.Collectors;
+import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.util.FileUtils;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
-import org.apache.jena.query.Query;
 import org.junit.jupiter.api.Test;
+
+import java.net.URL;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class JenaUtilsTest {
 
@@ -48,7 +47,7 @@ public class JenaUtilsTest {
     }
 
     @Test
-    public void testGetQueryWithModelPrefixesReturnsAllPrefixesFromQuery() throws Exception {
+    public void getQueryWithModelPrefixesReturnsAllPrefixesFromQuery() throws Exception {
         Model m = ModelFactory.createDefaultModel();
 
         Map<String, String> prefixMapQuery = createExampleQueryPrefixMap();
@@ -65,7 +64,7 @@ public class JenaUtilsTest {
             """, m);
 
         try{
-            Query query = new QueryFactory().create(queryStr);
+            Query query = QueryFactory.create(queryStr);
             assertEquals(query.getPrefixMapping().numPrefixes(), prefixMapQuery.size(),
                     "Created query does not contain correct amount of prefixes");
 
@@ -79,7 +78,7 @@ public class JenaUtilsTest {
     }
 
     @Test
-    public void testGetQueryWithModelPrefixesReturnsAllPrefixesFromModel() throws Exception {
+    public void getQueryWithModelPrefixesReturnsAllPrefixesFromModel() throws Exception {
         Model m = ModelFactory.createDefaultModel();
 
         Map<String, String> prefixMapModel = createExampleModelPrefixMap();
@@ -96,7 +95,7 @@ public class JenaUtilsTest {
                 }
                 """, m);
         try{
-            Query query = new QueryFactory().create(queryStr);
+            Query query = QueryFactory.create(queryStr);
             assertEquals(query.getPrefixMapping().numPrefixes(), prefixMapModel.size(),
                     "Created query does not contain correct amount of prefixes");
 
@@ -110,7 +109,7 @@ public class JenaUtilsTest {
     }
 
     @Test
-    public void testGetQueryWithModelPrefixesReturnsAllPrefixesFromQueryAndModel() throws Exception {
+    public void getQueryWithModelPrefixesReturnsAllPrefixesFromQueryAndModel() throws Exception {
         Model m = ModelFactory.createDefaultModel();
 
         Map<String, String> prefixMapQuery = createExampleQueryPrefixMap();
@@ -132,7 +131,7 @@ public class JenaUtilsTest {
             """, m);
 
         try{
-            Query query = new QueryFactory().create(queryStr);
+            Query query = QueryFactory.create(queryStr);
             assertEquals(query.getPrefixMapping().numPrefixes(), prefixMapQuery.size() + prefixMapModel.size(),
                     "Created query does not contain correct amount of prefixes");
 
