@@ -31,7 +31,7 @@ public class ApplyConstructWithChunkedValuesModuleTest extends AbstractSparqlEnd
         module.loadConfiguration();
 
         module.executeSelf();
-        assertEquals(module.getCurrentResultSetInstance().getResultVars().size(), 4);
+        assertEquals(4, module.getCurrentResultSetInstance().getResultVars().size());
     }
 
     @Test
@@ -43,7 +43,7 @@ public class ApplyConstructWithChunkedValuesModuleTest extends AbstractSparqlEnd
         module.setIsExtendSelectQueryResultWithPreviousBinding(false);
 
         module.executeSelf();
-        assertEquals(module.getCurrentResultSetInstance().getResultVars().size(), 2);
+        assertEquals(2, module.getCurrentResultSetInstance().getResultVars().size());
     }
 
 
