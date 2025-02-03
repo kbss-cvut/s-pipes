@@ -16,7 +16,7 @@ kbss-module:apply-construct-with-chunked-values rdf:type sm:Module.
   km-ac-wcv:chunk-size 10000 ;
   sml:selectQuery [
       a sp:Select ;
-      sp:text """# retrieve ordered timepoints of all trails
+      sp:text """# retrieve ordered list of airports
 
 SELECT ?airport ?city
 WHERE {
