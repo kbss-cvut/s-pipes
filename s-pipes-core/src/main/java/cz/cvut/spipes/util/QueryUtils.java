@@ -37,12 +37,10 @@ public class QueryUtils {
 
 
     public static String nextResultsToValuesClause(ResultSet resultSet, int rowsCount) {
-        String clauseBuffer = "\n" +
+        return "\n" +
             getValuesClauseHeader(resultSet) +
             getValuesClauseValues(resultSet, rowsCount) +
             "}\n";
-
-        return clauseBuffer;
     }
 
     public static String serializeToSparql(RDFNode rdfNode) {
