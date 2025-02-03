@@ -149,7 +149,7 @@ public class ApplyConstructWithChunkedValuesModule extends ApplyConstructAbstrac
     }
 
     @NotNull
-    protected ResultSet getCurrentResultSetInstance() {
+    ResultSet getCurrentResultSetInstance() {
         if (selectResultSet == null) {
             initializeQuery();
         }
