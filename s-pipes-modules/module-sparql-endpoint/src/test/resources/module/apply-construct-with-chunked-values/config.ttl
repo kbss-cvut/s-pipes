@@ -1,0 +1,44 @@
+# baseURI: http://onto.fel.cvut.cz/ontologies/test/apply-construct-with-chunked-values/spin-query-config
+
+@prefix : <http://onto.fel.cvut.cz/ontologies/test/apply-construct-with-chunked-values/> .
+@prefix kbss-module: <http://onto.fel.cvut.cz/ontologies/lib/module/> .
+@prefix km-ac-wcv: <http://onto.fel.cvut.cz/ontologies/lib/module/apply-construct-with-chunked-values/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix airports: <http://onto.fel.cvut.cz/ontologies/airports/> .
+@prefix sm: <http://topbraid.org/sparqlmotion#> .
+@prefix sml: <http://topbraid.org/sparqlmotionlib#> .
+@prefix sp: <http://spinrdf.org/sp#> .
+
+kbss-module:apply-construct-with-chunked-values rdf:type sm:Module.
+
+:construct-test-data
+  a kbss-module:apply-construct-with-chunked-values ;
+  km-ac-wcv:chunk-size 10000 ;
+  sml:selectQuery [
+      a sp:Select ;
+      sp:text """# retrieve ordered list of airports
+
+SELECT ?airport ?city
+WHERE {
+  VALUES (?airport ?city) {
+    ( <www.example.org/airports/CHO> "Charlottesville" )
+    ( <www.example.org/airports/RIC> "Richmond" )
+    ( <www.example.org/airports/LYH> "Lynchburg" )
+  }
+}
+""" ;
+    ] ;
+  sml:constructQuery [
+      a sp:Construct ;
+      sp:text """# 1 - construct airport ordering
+PREFIX airports: <http://onto.fel.cvut.cz/ontologies/airports/>
+CONSTRUCT {
+  ?airport__previous airports:is-before-airport ?airport .
+} WHERE {
+
+  #${VALUES}
+}""" ;
+    ] ;
+  sml:replace true ;
+.
+

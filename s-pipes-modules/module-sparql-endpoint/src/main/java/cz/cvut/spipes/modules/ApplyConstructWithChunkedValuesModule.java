@@ -47,16 +47,18 @@ public class ApplyConstructWithChunkedValuesModule extends ApplyConstructAbstrac
 
     private static final String TYPE_URI = KBSS_MODULE.uri + "apply-construct-with-chunked-values";
     private static final String TYPE_PREFIX = TYPE_URI + "/";
-    private static final int DEFAULT_CHUNK_SIZE = 10;
     private static final String VALUES_CLAUSE_MARKER_NAME = "VALUES";
     private static final Property P_CHUNK_SIZE = ResourceFactory.createProperty(TYPE_PREFIX + "chunk-size");
 
     @Parameter(iri = TYPE_PREFIX + "chunk-size", comment = "Chunk size. Default is 10.")
-    private Integer chunkSize = DEFAULT_CHUNK_SIZE;
+    private Integer chunkSize = 10;
 
     @Parameter(iri = SML.selectQuery,
         comment = "The select query that will be used to iterate over construct query templates.")
     private Select selectQuery;
+
+    @Parameter(iri = TYPE_PREFIX + "extend-select-query-result-with-previous-binding", comment = "Default is true.")
+    private boolean isExtendSelectQueryResultWithPreviousBinding = true;
 
 
     private ResultSet selectResultSet;
@@ -82,6 +84,14 @@ public class ApplyConstructWithChunkedValuesModule extends ApplyConstructAbstrac
         this.selectQuery = selectQuery;
     }
 
+    public boolean getIsExtendSelectQueryResultWithPreviousBinding() {
+        return isExtendSelectQueryResultWithPreviousBinding;
+    }
+
+    public void setIsExtendSelectQueryResultWithPreviousBinding(boolean isExtendSelectQueryResultWithPreviousBinding) {
+        this.isExtendSelectQueryResultWithPreviousBinding = isExtendSelectQueryResultWithPreviousBinding;
+    }
+
     public void initializeQuery() {
         Query query = QueryUtils.createQuery(selectQuery);
 
@@ -91,7 +101,10 @@ public class ApplyConstructWithChunkedValuesModule extends ApplyConstructAbstrac
 
         log.debug("Executing query of chunk provider ...");
 
-        selectResultSet = new OneStepBackExtendedResultSet(execution.execSelect());
+        if (isExtendSelectQueryResultWithPreviousBinding)
+            selectResultSet = new OneStepBackExtendedResultSet(execution.execSelect());
+        else
+            selectResultSet = execution.execSelect();
 
         if (! selectResultSet.hasNext()) {
             log.debug("\"{}\" query did not return any values.", getLabel());
@@ -136,7 +149,7 @@ public class ApplyConstructWithChunkedValuesModule extends ApplyConstructAbstrac
     }
 
     @NotNull
-    private ResultSet getCurrentResultSetInstance() {
+    ResultSet getCurrentResultSetInstance() {
         if (selectResultSet == null) {
             initializeQuery();
         }
