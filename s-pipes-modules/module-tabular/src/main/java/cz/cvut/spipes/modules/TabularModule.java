@@ -167,6 +167,10 @@ public class TabularModule extends AnnotatedAbstractModule {
      */
     private ResourceFormat sourceResourceFormat = ResourceFormat.PLAIN;
 
+    public void setAcceptInvalidQuoting(boolean acceptInvalidQuoting) {
+        this.acceptInvalidQuoting = acceptInvalidQuoting;
+    }
+
     @Parameter(iri = PARAM_URL_PREFIX + "accept-invalid-quoting", comment = "Accept invalid quoting. Default is false.")
     private boolean acceptInvalidQuoting = false;
 

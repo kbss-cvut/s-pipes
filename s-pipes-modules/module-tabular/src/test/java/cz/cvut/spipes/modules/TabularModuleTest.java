@@ -329,6 +329,19 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
         }
      }
 
+     @Test
+     void executeSelfWithInvalidQuoting() throws IOException, URISyntaxException {
+         module.setSourceResource(
+                 StreamResourceUtils.getStreamResource(DATA_PREFIX, getFilePath("examples/invalidQuoting/input.csv"))
+         );
+         module.setAcceptInvalidQuoting(false);
+
+         ExecutionContext outputContext = module.executeSelf();
+         Model expectedModel = ModelFactory.createDefaultModel().read(getFilePath("examples/invalidQuoting/invalid-quoting-expected-output.ttl").toString());
+
+         assertIsomorphic(outputContext.getDefaultModel(),expectedModel);
+     }
+
 
     @Override
     public String getModuleName() {

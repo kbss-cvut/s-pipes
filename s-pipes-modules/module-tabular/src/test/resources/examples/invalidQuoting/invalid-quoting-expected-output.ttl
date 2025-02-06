@@ -1,0 +1,83 @@
+<http://onto.fel.cvut.cz/data/#row-2>
+        <http://onto.fel.cvut.cz/data/A>
+                "1" ;
+        <http://onto.fel.cvut.cz/data/B>
+                "2:\n\"2" ;
+        <http://onto.fel.cvut.cz/data/C>
+                "3" .
+
+_:b0    a       <http://www.w3.org/ns/csvw#Column> ;
+        <http://www.w3.org/ns/csvw#name>
+                "A" ;
+        <http://www.w3.org/ns/csvw#propertyUrl>
+                "http://onto.fel.cvut.cz/data/A" ;
+        <http://www.w3.org/ns/csvw#title>
+                "A" ;
+        <https://onto.fel.cvut.cz/ontologies/extension/csvw/property>
+                <http://onto.fel.cvut.cz/data/A> .
+
+_:b1    a       <http://www.w3.org/ns/csvw#Column> ;
+        <http://www.w3.org/ns/csvw#name>
+                "B" ;
+        <http://www.w3.org/ns/csvw#propertyUrl>
+                "http://onto.fel.cvut.cz/data/B" ;
+        <http://www.w3.org/ns/csvw#title>
+                "B" ;
+        <https://onto.fel.cvut.cz/ontologies/extension/csvw/property>
+                <http://onto.fel.cvut.cz/data/B> .
+
+<http://onto.fel.cvut.cz/data/#row-3>
+        <http://onto.fel.cvut.cz/data/A>
+                "4" ;
+        <http://onto.fel.cvut.cz/data/B>
+                "5:\n\"5" ;
+        <http://onto.fel.cvut.cz/data/C>
+                "6" .
+
+[ a       <http://www.w3.org/ns/csvw#TableGroup> ;
+  <http://www.w3.org/ns/csvw#table>
+          [ a       <http://www.w3.org/ns/csvw#Table> ;
+            <http://www.w3.org/ns/csvw#row>
+                    [ a       <http://www.w3.org/ns/csvw#Row> ;
+                      <http://www.w3.org/ns/csvw#describes>
+                              <http://onto.fel.cvut.cz/data/#row-2> ;
+                      <http://www.w3.org/ns/csvw#rownum>
+                              "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                      <http://www.w3.org/ns/csvw#url>
+                              <http://onto.fel.cvut.cz/data/#row=2>
+                    ] ;
+            <http://www.w3.org/ns/csvw#row>
+                    [ a       <http://www.w3.org/ns/csvw#Row> ;
+                      <http://www.w3.org/ns/csvw#describes>
+                              <http://onto.fel.cvut.cz/data/#row-3> ;
+                      <http://www.w3.org/ns/csvw#rownum>
+                              "2"^^<http://www.w3.org/2001/XMLSchema#int> ;
+                      <http://www.w3.org/ns/csvw#url>
+                              <http://onto.fel.cvut.cz/data/#row=3>
+                    ] ;
+            <http://www.w3.org/ns/csvw#tableSchema>
+                    [ a       <http://www.w3.org/ns/csvw#TableSchema> ;
+                      <http://www.w3.org/ns/csvw#aboutUrl>
+                              "http://onto.fel.cvut.cz/data/#row-{_row}"^^<http://www.w3.org/ns/csvw#uriTemplate> ;
+                      <http://www.w3.org/ns/csvw#column>
+                              _:b0 , _:b2 , _:b1 ;
+                      <http://www.w3.org/ns/csvw#columns>
+                              ( _:b0
+                                _:b1
+                                _:b2
+                              )
+                    ] ;
+            <http://www.w3.org/ns/csvw#url>
+                    <http://onto.fel.cvut.cz/data/>
+          ]
+] .
+
+_:b2    a       <http://www.w3.org/ns/csvw#Column> ;
+        <http://www.w3.org/ns/csvw#name>
+                "C" ;
+        <http://www.w3.org/ns/csvw#propertyUrl>
+                "http://onto.fel.cvut.cz/data/C" ;
+        <http://www.w3.org/ns/csvw#title>
+                "C" ;
+        <https://onto.fel.cvut.cz/ontologies/extension/csvw/property>
+                <http://onto.fel.cvut.cz/data/C> .
