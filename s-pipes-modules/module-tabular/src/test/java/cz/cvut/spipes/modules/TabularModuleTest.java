@@ -334,7 +334,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
          module.setSourceResource(
                  StreamResourceUtils.getStreamResource(DATA_PREFIX, getFilePath("examples/invalidQuoting/input.csv"))
          );
-         module.setAcceptInvalidQuoting(false);
+         module.setAcceptInvalidQuoting(true);
 
          ExecutionContext outputContext = module.executeSelf();
          Model expectedModel = ModelFactory.createDefaultModel().read(getFilePath("examples/invalidQuoting/invalid-quoting-expected-output.ttl").toString());

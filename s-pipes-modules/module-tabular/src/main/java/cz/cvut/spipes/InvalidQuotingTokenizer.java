@@ -45,7 +45,7 @@ public class InvalidQuotingTokenizer extends Tokenizer {
 
     @Override
     protected String readLine() throws IOException {
-        final String line = super.readLine();
+        String line = super.readLine();
         if (line == null) {
             return null;
         }
@@ -53,20 +53,45 @@ public class InvalidQuotingTokenizer extends Tokenizer {
         final char quote = getPreferences().getQuoteChar();
         final char delimiter = (char) getPreferences().getDelimiterChar();
 
-        // escape all quotes not next to a delimiter (or start/end of line)
-        final StringBuilder b = new StringBuilder(line);
+        // Handle multi-line quoted columns
+        boolean inQuotes = false;
+        StringBuilder result = new StringBuilder();
+
+        do {
+            if (inQuotes) {
+                result.append('\n');
+            }
+            result.append(line);
+
+            for (int i = 0; i < line.length(); i++) {
+                char c = line.charAt(i);
+                if (c == quote) {
+                    // Toggle the inQuotes flag
+                    inQuotes = !inQuotes;
+                }
+            }
+
+            if (inQuotes) {
+                line = super.readLine();
+            }
+        } while (inQuotes && line != null);
+
+        String finalLine = result.toString();
+
+        // Escape all quotes not next to a delimiter (or start/end of line)
+        StringBuilder b = new StringBuilder(finalLine);
         for (int i = b.length() - 1; i >= 0; i--) {
             if (quote == b.charAt(i)) {
-                final boolean validCharBefore = i - 1 < 0
-                        || b.charAt(i - 1) == delimiter;
-                final boolean validCharAfter = i + 1 == b.length()
-                        || b.charAt(i + 1) == delimiter;
+                boolean validCharBefore = i - 1 < 0 || b.charAt(i - 1) == delimiter;
+                boolean validCharAfter = i + 1 == b.length() || b.charAt(i + 1) == delimiter;
                 if (!(validCharBefore || validCharAfter)) {
-                    // escape that quote!
+                    // Escape that quote!
                     b.insert(i, quote);
                 }
             }
         }
+
         return b.toString();
     }
+
 }

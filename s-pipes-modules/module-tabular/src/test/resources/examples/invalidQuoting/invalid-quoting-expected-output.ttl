@@ -1,11 +1,3 @@
-<http://onto.fel.cvut.cz/data/#row-2>
-        <http://onto.fel.cvut.cz/data/A>
-                "1" ;
-        <http://onto.fel.cvut.cz/data/B>
-                "2:\n\"2" ;
-        <http://onto.fel.cvut.cz/data/C>
-                "3" .
-
 _:b0    a       <http://www.w3.org/ns/csvw#Column> ;
         <http://www.w3.org/ns/csvw#name>
                 "A" ;
@@ -26,11 +18,29 @@ _:b1    a       <http://www.w3.org/ns/csvw#Column> ;
         <https://onto.fel.cvut.cz/ontologies/extension/csvw/property>
                 <http://onto.fel.cvut.cz/data/B> .
 
+_:b2    a       <http://www.w3.org/ns/csvw#Column> ;
+        <http://www.w3.org/ns/csvw#name>
+                "C" ;
+        <http://www.w3.org/ns/csvw#propertyUrl>
+                "http://onto.fel.cvut.cz/data/C" ;
+        <http://www.w3.org/ns/csvw#title>
+                "C" ;
+        <https://onto.fel.cvut.cz/ontologies/extension/csvw/property>
+                <http://onto.fel.cvut.cz/data/C> .
+
+<http://onto.fel.cvut.cz/data/#row-2>
+        <http://onto.fel.cvut.cz/data/A>
+                "1" ;
+        <http://onto.fel.cvut.cz/data/B>
+                "2:\n\"\"2" ;
+        <http://onto.fel.cvut.cz/data/C>
+                "3" .
+
 <http://onto.fel.cvut.cz/data/#row-3>
         <http://onto.fel.cvut.cz/data/A>
                 "4" ;
         <http://onto.fel.cvut.cz/data/B>
-                "5:\n\"5" ;
+                "5:\n\"\"5" ;
         <http://onto.fel.cvut.cz/data/C>
                 "6" .
 
@@ -60,7 +70,7 @@ _:b1    a       <http://www.w3.org/ns/csvw#Column> ;
                       <http://www.w3.org/ns/csvw#aboutUrl>
                               "http://onto.fel.cvut.cz/data/#row-{_row}"^^<http://www.w3.org/ns/csvw#uriTemplate> ;
                       <http://www.w3.org/ns/csvw#column>
-                              _:b0 , _:b2 , _:b1 ;
+                              _:b0 , _:b1 , _:b2 ;
                       <http://www.w3.org/ns/csvw#columns>
                               ( _:b0
                                 _:b1
@@ -72,12 +82,3 @@ _:b1    a       <http://www.w3.org/ns/csvw#Column> ;
           ]
 ] .
 
-_:b2    a       <http://www.w3.org/ns/csvw#Column> ;
-        <http://www.w3.org/ns/csvw#name>
-                "C" ;
-        <http://www.w3.org/ns/csvw#propertyUrl>
-                "http://onto.fel.cvut.cz/data/C" ;
-        <http://www.w3.org/ns/csvw#title>
-                "C" ;
-        <https://onto.fel.cvut.cz/ontologies/extension/csvw/property>
-                <http://onto.fel.cvut.cz/data/C> .
