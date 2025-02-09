@@ -23,10 +23,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.nio.file.DirectoryIteratorException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Instant;
 import java.util.*;
@@ -103,8 +100,9 @@ public class OntoDocManager implements OntologyDocumentManager {
     public void registerDocuments(Path directoryOrFilePath) {
 
         if (Files.isDirectory(directoryOrFilePath) && Files.isSymbolicLink(directoryOrFilePath)) {
-            log.warn("Ignoring to register documents from directory {}. Directories that are symbolic links " +
+            log.error("Cannot register documents from directory {}. Directories that are symbolic links " +
                      "are not supported.", directoryOrFilePath );
+            throw new IllegalArgumentException("Symbolic link directories in 'scripts.contextPaths' variable are not supported: " + directoryOrFilePath);
         }
 
         // get all baseIRIs
@@ -170,26 +168,28 @@ public class OntoDocManager implements OntologyDocumentManager {
 
         try (Stream<Path> stream = Files.walk(directoryOrFilePath)) {
             stream
-                    .filter(f -> !Files.isDirectory(f))
+                    .filter(Files::isRegularFile)
                     .filter(f -> {
                         String fileName = f.getFileName().toString();
                         return isFileNameSupported(fileName);
                     })
                     .forEach(file -> {
-                        if(reloadFiles && !wasModified(file)){
+                        if (reloadFiles && !wasModified(file)) {
+                            log.debug("Skipping unmodified file: {}", file.toUri());
                             return;
                         }
                         String lang = FileUtils.guessLang(file.getFileName().toString());
 
-                        log.debug("Loading model from {} ...", file.toUri());
+                        log.info("Loading model from {} ...", file.toUri());
                         Model model = loadModel(file, lang);
 
                         if (model != null) {
                             OntoDocManager.addSPINRelevantModel(file.toAbsolutePath().toString(), model);
+                            file2Model.put(file.toString(), model);
+                            log.debug("Successfully loaded model from {}.", file.toUri());
+                        } else {
+                            log.warn("Failed to load model from {}", file.toUri());
                         }
-
-                        file2Model.put(file.toString(), model);
-
                     });
         } catch (IOException | DirectoryIteratorException e) {
             // IOException can never be thrown by the iteration.
