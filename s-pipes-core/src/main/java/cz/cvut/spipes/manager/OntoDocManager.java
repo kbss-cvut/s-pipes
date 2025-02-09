@@ -180,12 +180,13 @@ public class OntoDocManager implements OntologyDocumentManager {
                         }
                         String lang = FileUtils.guessLang(file.getFileName().toString());
 
+                        log.info("Loading model from {} ...", file.toUri());
                         Model model = loadModel(file, lang);
 
                         if (model != null) {
                             OntoDocManager.addSPINRelevantModel(file.toAbsolutePath().toString(), model);
                             file2Model.put(file.toString(), model);
-                            log.debug("Loading model from {} ...", file.toUri());
+                            log.debug("Successfully loaded model from {}.", file.toUri());
                         } else {
                             log.warn("Failed to load model from {}", file.toUri());
                         }
