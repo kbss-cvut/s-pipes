@@ -100,7 +100,7 @@ public class OntoDocManager implements OntologyDocumentManager {
     public void registerDocuments(Path directoryOrFilePath) {
 
         if (Files.isDirectory(directoryOrFilePath) && Files.isSymbolicLink(directoryOrFilePath)) {
-            log.error("Ignoring to register documents from directory {}. Directories that are symbolic links " +
+            log.error("Cannot register documents from directory {}. Directories that are symbolic links " +
                      "are not supported.", directoryOrFilePath );
             throw new IllegalArgumentException("Symbolic link directories in 'scripts.contextPaths' variable are not supported: " + directoryOrFilePath);
         }
