@@ -105,7 +105,7 @@ public class JenaPipelineUtils {
         return null;
     }
 
-    public static String loadResource(String path) {
+    private static String loadResource(String path) {
         try (InputStream is = JenaPipelineUtils.class.getResourceAsStream(path)) {
             if (is == null) {
                 throw new IllegalArgumentException("Resource with path " + path + " not found.");
