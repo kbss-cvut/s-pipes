@@ -57,7 +57,6 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
                 "http://test-file",
                 getFilePath("examples/countries/input.tsv"))
         );
-
         ExecutionContext outputContext = module.executeSelf();
         Model expectedModel = ModelFactory.createDefaultModel().read(getFilePath("examples/countries/plaintext-expected-output.ttl").toString());
 
@@ -335,6 +334,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
                  StreamResourceUtils.getStreamResource(DATA_PREFIX, getFilePath("examples/invalidQuoting/input.csv"))
          );
          module.setAcceptInvalidQuoting(true);
+         module.setDelimiter(',');
 
          ExecutionContext outputContext = module.executeSelf();
          Model expectedModel = ModelFactory.createDefaultModel().read(getFilePath("examples/invalidQuoting/invalid-quoting-expected-output.ttl").toString());

@@ -68,7 +68,7 @@ _:b0    a       <http://www.w3.org/ns/csvw#Column> ;
         <http://onto.fel.cvut.cz/data/A>
                 "4" ;
         <http://onto.fel.cvut.cz/data/B>
-                "5 \n\"5 5" ;
+                "5\n\"5 5" ;
         <http://onto.fel.cvut.cz/data/C>
                 "6" .
 
