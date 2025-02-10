@@ -61,14 +61,19 @@ public class InvalidQuotingTokenizer extends Tokenizer {
             if (inQuotes) {
                 result.append('\n');
             }
-            result.append(line);
 
             for (int i = 0; i < line.length(); i++) {
                 char c = line.charAt(i);
                 if (c == quote) {
-                    // Toggle the inQuotes flag
-                    inQuotes = !inQuotes;
+                    boolean isEscapedQuote = (i > 0 && line.charAt(i - 1) == delimiter) ||
+                            (i < line.length() - 1 && line.charAt(i + 1) == delimiter);
+
+                    if (!isEscapedQuote) {
+                        // Toggle the inQuotes flag
+                        inQuotes = !inQuotes;
+                    }
                 }
+                result.append(c);
             }
 
             if (inQuotes) {
@@ -76,22 +81,7 @@ public class InvalidQuotingTokenizer extends Tokenizer {
             }
         } while (inQuotes && line != null);
 
-        String finalLine = result.toString();
-
-        // Escape all quotes not next to a delimiter (or start/end of line)
-        StringBuilder b = new StringBuilder(finalLine);
-        for (int i = b.length() - 1; i >= 0; i--) {
-            if (quote == b.charAt(i)) {
-                boolean validCharBefore = i - 1 < 0 || b.charAt(i - 1) == delimiter;
-                boolean validCharAfter = i + 1 == b.length() || b.charAt(i + 1) == delimiter;
-                if (!(validCharBefore || validCharAfter)) {
-                    // Escape that quote!
-                    b.insert(i, quote);
-                }
-            }
-        }
-
-        return b.toString();
+        return result.toString();
     }
 
 }
