@@ -65,12 +65,15 @@ public class InvalidQuotingTokenizer extends Tokenizer {
             for (int i = 0; i < line.length(); i++) {
                 char c = line.charAt(i);
                 if (c == quote) {
-                    boolean isEscapedQuote = (i > 0 && line.charAt(i - 1) == delimiter) ||
-                            (i < line.length() - 1 && line.charAt(i + 1) == delimiter);
+                    boolean isCorrectQuote = (i == 0 || line.charAt(i - 1) == quote || line.charAt(i - 1) == delimiter) ||
+                            (i == line.length() - 1 || line.charAt(i + 1) == quote || line.charAt(i + 1) == delimiter);
 
-                    if (!isEscapedQuote) {
+                    if (isCorrectQuote) {
                         // Toggle the inQuotes flag
                         inQuotes = !inQuotes;
+                    } else {
+                        // Close the quote
+                        result.append(quote);
                     }
                 }
                 result.append(c);
