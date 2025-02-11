@@ -1,10 +1,9 @@
 package cz.cvut.spipes.modules.handlers;
 
 import cz.cvut.spipes.engine.ExecutionContext;
-import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.Statement;
 
 public class IntegerHandler extends BaseRDFNodeHandler<Integer>{
 
@@ -14,7 +13,11 @@ public class IntegerHandler extends BaseRDFNodeHandler<Integer>{
 
     @Override
     Integer getRDFNodeValue(RDFNode node) {
-        return node.asLiteral().getInt();
+        Literal literal = node.asLiteral();
+        if (node.asLiteral().getValue() instanceof Integer) {
+            return literal.getInt();
+        } else {
+            return (int) literal.getChar();
+        }
     }
-
 }
