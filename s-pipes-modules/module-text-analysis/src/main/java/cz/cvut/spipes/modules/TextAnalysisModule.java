@@ -33,14 +33,14 @@ import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
 import static org.apache.commons.lang.StringEscapeUtils.unescapeHtml;
 
 @Slf4j
-@SPipesModule(label = "Text analysis module", comment =
-"Module for text analysis.\n" +
-"<p>\n" +
-"This class provides a module for text analysis.\n" +
-"It uses an external web service to analyze text data and retrieve annotated text.\n" +
-"It analyse the text using a SKOS vocabulary that is stored in RDF4J repository.\n" +
-"</p>"
-)
+@SPipesModule(label = "Text analysis module", comment = """
+        Module for text analysis.
+        <p>
+        This class provides a module for text analysis.
+        It uses an external web service to analyze text data and retrieve annotated text.
+        It analyse the text using a SKOS vocabulary that is stored in RDF4J repository.
+        </p>
+        """)
 public class TextAnalysisModule extends AnnotatedAbstractModule{
 
     private static final String TYPE_URI = KBSS_MODULE.uri + "text-analysis";
