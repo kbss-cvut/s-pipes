@@ -58,19 +58,19 @@ _:b0    a       <http://www.w3.org/ns/csvw#Column> ;
 
 <http://onto.fel.cvut.cz/data/#row-2>
         <http://onto.fel.cvut.cz/data/A>
-                "1" ;
+                "1A" ;
         <http://onto.fel.cvut.cz/data/B>
-                "2 \" 2" ;
+                "1B \" 1B" ;
         <http://onto.fel.cvut.cz/data/C>
-                "3" .
+                "1C" .
 
 <http://onto.fel.cvut.cz/data/#row-3>
         <http://onto.fel.cvut.cz/data/A>
-                "4" ;
+                "2A" ;
         <http://onto.fel.cvut.cz/data/B>
-                "5\n\"5 5" ;
+                "2B\n\"2B 2B" ;
         <http://onto.fel.cvut.cz/data/C>
-                "6" .
+                "2C" .
 
 _:b2    a       <http://www.w3.org/ns/csvw#Column> ;
         <http://www.w3.org/ns/csvw#name>
