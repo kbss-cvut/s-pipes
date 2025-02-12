@@ -45,7 +45,7 @@ public class InvalidQuotingTokenizer extends Tokenizer {
 
     @Override
     protected String readLine() throws IOException {
-        final String line = super.readLine();
+        String line = super.readLine();
         if (line == null) {
             return null;
         }
@@ -53,20 +53,38 @@ public class InvalidQuotingTokenizer extends Tokenizer {
         final char quote = getPreferences().getQuoteChar();
         final char delimiter = (char) getPreferences().getDelimiterChar();
 
-        // escape all quotes not next to a delimiter (or start/end of line)
-        final StringBuilder b = new StringBuilder(line);
-        for (int i = b.length() - 1; i >= 0; i--) {
-            if (quote == b.charAt(i)) {
-                final boolean validCharBefore = i - 1 < 0
-                        || b.charAt(i - 1) == delimiter;
-                final boolean validCharAfter = i + 1 == b.length()
-                        || b.charAt(i + 1) == delimiter;
-                if (!(validCharBefore || validCharAfter)) {
-                    // escape that quote!
-                    b.insert(i, quote);
-                }
+        // Handle multi-line quoted columns
+        boolean inQuotes = false;
+        StringBuilder result = new StringBuilder();
+
+        do {
+            if (inQuotes) {
+                result.append('\n');
             }
-        }
-        return b.toString();
+
+            for (int i = 0; i < line.length(); i++) {
+                char c = line.charAt(i);
+                if (c == quote) {
+                    boolean isCorrectQuote = (i == 0 || line.charAt(i - 1) == quote || line.charAt(i - 1) == delimiter) ||
+                            (i == line.length() - 1 || line.charAt(i + 1) == quote || line.charAt(i + 1) == delimiter);
+
+                    if (isCorrectQuote) {
+                        // Toggle the inQuotes flag
+                        inQuotes = !inQuotes;
+                    } else {
+                        // Close the quote
+                        result.append(quote);
+                    }
+                }
+                result.append(c);
+            }
+
+            if (inQuotes) {
+                line = super.readLine();
+            }
+        } while (inQuotes && line != null);
+
+        return result.toString();
     }
+
 }
