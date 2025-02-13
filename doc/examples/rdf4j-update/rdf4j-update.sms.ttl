@@ -16,6 +16,7 @@
 @prefix spl: <http://spinrdf.org/spl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdf4j: <http://onto.fel.cvut.cz/ontologies/lib/module/rdf4j/> .
+@prefix ex-people: <http://example.org/people/>
 
 <http://onto.fel.cvut.cz/ontologies/s-pipes/rdf-update-example>
   a owl:Ontology ;
@@ -36,7 +37,6 @@
   sml:updateQuery [
       a sp:Update ;
       sp:text """
-PREFIX ex-people: <http://example.org/people/>
 DELETE {
 	ex-people:john ex-people:age ?oldAge .
 }
