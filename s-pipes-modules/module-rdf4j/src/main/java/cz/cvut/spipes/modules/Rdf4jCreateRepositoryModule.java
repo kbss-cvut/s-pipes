@@ -36,7 +36,6 @@ public class Rdf4jCreateRepositoryModule extends AnnotatedAbstractModule {
             comment = "Don't try to create new repository if it already exists (Default value is false)")
     private boolean rdf4jIgnoreIfExists = false;
 
-    @Parameter(iri = PROPERTY_PREFIX_URI + "/" + "p-rdf4j-server-url", comment = "URL of the Rdf4j server")
     private RepositoryManager repositoryManager;
 
     public String getRdf4jServerURL() {
