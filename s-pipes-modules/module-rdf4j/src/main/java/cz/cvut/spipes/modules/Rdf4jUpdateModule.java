@@ -133,7 +133,9 @@ public class Rdf4jUpdateModule extends AnnotatedAbstractModule {
                 oldTriplesCount = newTriplesCount;
                 for (int j = 0; j < updateQueries.size(); j++) {
                     String updateQuery = updateQueries.get(j);
-                    updateQuery = QueryUtils.getQueryWithModelPrefixes(updateQuery, this.resource.getModel());
+                    if (this.resource != null) {
+                        updateQuery = QueryUtils.getQueryWithModelPrefixes(updateQuery, this.resource.getModel());
+                    }
                     if (log.isTraceEnabled()) {
                         String queryComment = QueryUtils.getQueryComment(updateQuery);
                         log.trace(
