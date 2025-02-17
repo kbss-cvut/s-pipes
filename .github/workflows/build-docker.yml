@@ -12,6 +12,7 @@ env:
   MAIN_BRANCH_NAME: main
 jobs:
   build-and-publish:
+    if: github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
