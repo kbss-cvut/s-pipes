@@ -4,6 +4,7 @@ import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.exceptions.RepositoryAlreadyExistsException;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
+import cz.cvut.spipes.modules.handlers.RepositoryManagerHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResourceFactory;
@@ -13,8 +14,6 @@ import org.eclipse.rdf4j.repository.manager.RepositoryManager;
 import org.eclipse.rdf4j.repository.sail.config.SailRepositoryConfig;
 import org.eclipse.rdf4j.sail.nativerdf.config.NativeStoreConfig;
 
-import java.util.Objects;
-
 @Slf4j
 @SPipesModule(label = "rdf4j create repository", comment = "Module creates native store rdf4j repository on the given server with the given name.")
 public class Rdf4jCreateRepositoryModule extends AnnotatedAbstractModule {
@@ -23,7 +22,6 @@ public class Rdf4jCreateRepositoryModule extends AnnotatedAbstractModule {
 
     static final Property P_RDF4J_SERVER_URL = getParameter("p-rdf4j-server-url");
 
-    @Parameter(iri = PROPERTY_PREFIX_URI + "/" + "p-rdf4j-server-url", comment = "URL of the Rdf4j server")
     private String rdf4jServerURL;
 
     static final Property P_RDF4J_REPOSITORY_NAME = getParameter("p-rdf4j-repository-name");
@@ -36,6 +34,7 @@ public class Rdf4jCreateRepositoryModule extends AnnotatedAbstractModule {
             comment = "Don't try to create new repository if it already exists (Default value is false)")
     private boolean rdf4jIgnoreIfExists = false;
 
+    @Parameter(iri = PROPERTY_PREFIX_URI + "/" + "p-rdf4j-server-url", comment = "URL of the Rdf4j server", handler= RepositoryManagerHandler.class)
     private RepositoryManager repositoryManager;
 
     public String getRdf4jServerURL() {
@@ -102,6 +101,6 @@ public class Rdf4jCreateRepositoryModule extends AnnotatedAbstractModule {
 
     @Override
     public void loadManualConfiguration() {
-        repositoryManager = new RemoteRepositoryManager(rdf4jServerURL);
+        rdf4jServerURL = ((RemoteRepositoryManager) repositoryManager).getServerURL();
     }
 }
