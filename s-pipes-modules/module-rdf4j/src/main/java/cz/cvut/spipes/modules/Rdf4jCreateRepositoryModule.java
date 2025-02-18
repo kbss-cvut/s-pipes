@@ -22,8 +22,6 @@ public class Rdf4jCreateRepositoryModule extends AnnotatedAbstractModule {
 
     static final Property P_RDF4J_SERVER_URL = getParameter("p-rdf4j-server-url");
 
-    private String rdf4jServerURL;
-
     static final Property P_RDF4J_REPOSITORY_NAME = getParameter("p-rdf4j-repository-name");
     @Parameter(iri = PROPERTY_PREFIX_URI + "/" + "p-rdf4j-repository-name", comment = "Rdf4j repository ID")
     private String rdf4jRepositoryName;
@@ -36,14 +34,6 @@ public class Rdf4jCreateRepositoryModule extends AnnotatedAbstractModule {
 
     @Parameter(iri = PROPERTY_PREFIX_URI + "/" + "p-rdf4j-server-url", comment = "URL of the Rdf4j server", handler= RepositoryManagerHandler.class)
     private RepositoryManager repositoryManager;
-
-    public String getRdf4jServerURL() {
-        return rdf4jServerURL;
-    }
-
-    public void setRdf4jServerURL(String rdf4jServerURL) {
-        this.rdf4jServerURL = rdf4jServerURL;
-    }
 
     public String getRdf4jRepositoryName() {
         return rdf4jRepositoryName;
@@ -76,7 +66,7 @@ public class Rdf4jCreateRepositoryModule extends AnnotatedAbstractModule {
 
         repositoryManager.init();
         log.info("Server url:{}, Repsitory name:{}, Ignore if repository exist:{}.",
-                rdf4jServerURL,
+                ((RemoteRepositoryManager) repositoryManager).getServerURL(),
                 rdf4jRepositoryName,
                 rdf4jIgnoreIfExists);
 
@@ -97,10 +87,5 @@ public class Rdf4jCreateRepositoryModule extends AnnotatedAbstractModule {
     @Override
     public String getTypeURI() {
         return TYPE_URI;
-    }
-
-    @Override
-    public void loadManualConfiguration() {
-        rdf4jServerURL = ((RemoteRepositoryManager) repositoryManager).getServerURL();
     }
 }
