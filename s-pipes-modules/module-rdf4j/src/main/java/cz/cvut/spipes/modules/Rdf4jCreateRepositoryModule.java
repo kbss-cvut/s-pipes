@@ -59,6 +59,15 @@ public class Rdf4jCreateRepositoryModule extends AnnotatedAbstractModule {
         this.repositoryManager = repositoryManager;
     }
 
+    private String getServerURL () {
+        if (repositoryManager instanceof RemoteRepositoryManager) {
+            return ((RemoteRepositoryManager) repositoryManager).getServerURL();
+        } else {
+            log.warn("Cannot get server URL from repositoryManager because it is not an instance of RemoteRepositoryManager");
+            return null;
+        }
+    }
+
     @Override
     ExecutionContext executeSelf() {
         NativeStoreConfig nativeStoreConfig = new NativeStoreConfig();
@@ -66,8 +75,7 @@ public class Rdf4jCreateRepositoryModule extends AnnotatedAbstractModule {
 
         repositoryManager.init();
         log.info("Server url:{}, Repsitory name:{}, Ignore if repository exist:{}.",
-                (repositoryManager instanceof RemoteRepositoryManager) ?
-                        ((RemoteRepositoryManager) repositoryManager).getServerURL() : null,
+                getServerURL(),
                 rdf4jRepositoryName,
                 rdf4jIgnoreIfExists);
 
