@@ -66,7 +66,8 @@ public class Rdf4jCreateRepositoryModule extends AnnotatedAbstractModule {
 
         repositoryManager.init();
         log.info("Server url:{}, Repsitory name:{}, Ignore if repository exist:{}.",
-                ((RemoteRepositoryManager) repositoryManager).getServerURL(),
+                (repositoryManager instanceof RemoteRepositoryManager) ?
+                        ((RemoteRepositoryManager) repositoryManager).getServerURL() : null,
                 rdf4jRepositoryName,
                 rdf4jIgnoreIfExists);
 
