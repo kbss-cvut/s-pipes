@@ -4,6 +4,7 @@ import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.exceptions.RepositoryAlreadyExistsException;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
+import cz.cvut.spipes.modules.handlers.RepositoryManagerHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResourceFactory;
@@ -13,8 +14,6 @@ import org.eclipse.rdf4j.repository.manager.RepositoryManager;
 import org.eclipse.rdf4j.repository.sail.config.SailRepositoryConfig;
 import org.eclipse.rdf4j.sail.nativerdf.config.NativeStoreConfig;
 
-import java.util.Objects;
-
 @Slf4j
 @SPipesModule(label = "rdf4j create repository", comment = "Module creates native store rdf4j repository on the given server with the given name.")
 public class Rdf4jCreateRepositoryModule extends AnnotatedAbstractModule {
@@ -22,9 +21,6 @@ public class Rdf4jCreateRepositoryModule extends AnnotatedAbstractModule {
     private static final String PROPERTY_PREFIX_URI = KBSS_MODULE.uri + "rdf4j";
 
     static final Property P_RDF4J_SERVER_URL = getParameter("p-rdf4j-server-url");
-
-    @Parameter(iri = PROPERTY_PREFIX_URI + "/" + "p-rdf4j-server-url", comment = "URL of the Rdf4j server")
-    private String rdf4jServerURL;
 
     static final Property P_RDF4J_REPOSITORY_NAME = getParameter("p-rdf4j-repository-name");
     @Parameter(iri = PROPERTY_PREFIX_URI + "/" + "p-rdf4j-repository-name", comment = "Rdf4j repository ID")
@@ -36,16 +32,8 @@ public class Rdf4jCreateRepositoryModule extends AnnotatedAbstractModule {
             comment = "Don't try to create new repository if it already exists (Default value is false)")
     private boolean rdf4jIgnoreIfExists = false;
 
-    @Parameter(iri = PROPERTY_PREFIX_URI + "/" + "p-rdf4j-server-url", comment = "URL of the Rdf4j server")
+    @Parameter(iri = PROPERTY_PREFIX_URI + "/" + "p-rdf4j-server-url", comment = "URL of the Rdf4j server", handler= RepositoryManagerHandler.class)
     private RepositoryManager repositoryManager;
-
-    public String getRdf4jServerURL() {
-        return rdf4jServerURL;
-    }
-
-    public void setRdf4jServerURL(String rdf4jServerURL) {
-        this.rdf4jServerURL = rdf4jServerURL;
-    }
 
     public String getRdf4jRepositoryName() {
         return rdf4jRepositoryName;
@@ -71,6 +59,15 @@ public class Rdf4jCreateRepositoryModule extends AnnotatedAbstractModule {
         this.repositoryManager = repositoryManager;
     }
 
+    private String getServerURL () {
+        if (repositoryManager instanceof RemoteRepositoryManager) {
+            return ((RemoteRepositoryManager) repositoryManager).getServerURL();
+        } else {
+            log.warn("Cannot get server URL from repositoryManager because it is not an instance of RemoteRepositoryManager");
+            return null;
+        }
+    }
+
     @Override
     ExecutionContext executeSelf() {
         NativeStoreConfig nativeStoreConfig = new NativeStoreConfig();
@@ -78,7 +75,7 @@ public class Rdf4jCreateRepositoryModule extends AnnotatedAbstractModule {
 
         repositoryManager.init();
         log.info("Server url:{}, Repsitory name:{}, Ignore if repository exist:{}.",
-                rdf4jServerURL,
+                getServerURL(),
                 rdf4jRepositoryName,
                 rdf4jIgnoreIfExists);
 
@@ -99,10 +96,5 @@ public class Rdf4jCreateRepositoryModule extends AnnotatedAbstractModule {
     @Override
     public String getTypeURI() {
         return TYPE_URI;
-    }
-
-    @Override
-    public void loadManualConfiguration() {
-        repositoryManager = new RemoteRepositoryManager(rdf4jServerURL);
     }
 }
