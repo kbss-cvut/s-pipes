@@ -6,7 +6,8 @@ public class ReservedParams {
      */
     public static final String P_ID = "_pId";
     /**
-     * Request parameter - URL of the resource containing configuration
+     * Request parameter - URL of the resource containing configuration,
+     * such as execution logging of the s-pipes engine.
      */
     public static final String P_CONFIG_URL = "_pConfigURL";
     /**
@@ -19,6 +20,7 @@ public class ReservedParams {
     public static final String P_INPUT_BINDING_URL = "_pInputBindingURL";
     /**
      * Output binding - URL of the file where output bindings are stored
+     * after execution of module finishes.
      */
     public static final String P_OUTPUT_BINDING_URL = "_pOutputBindingURL";
 }

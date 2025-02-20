@@ -163,6 +163,13 @@ public class OntoDocManager implements OntologyDocumentManager {
         return false;
     }
 
+    /**
+     * Returns mapping filePath --> model for all files recursively defined by <code>directoryOrFilePath</code>.
+     * If <code>this.reloadFiles=true</code>, it ignores files that are older than <code>this.lastTime</code>.
+     *
+     * @param directoryOrFilePath File or directory to by searched recursively for models.
+     * @return Mapping filePath to model.
+     */
     public static Map<String, Model> getAllFile2Model(Path directoryOrFilePath) {
         Map<String, Model> file2Model = new HashMap<>();
 
@@ -223,11 +230,19 @@ public class OntoDocManager implements OntologyDocumentManager {
         allLoadedFilesModel = ModelFactory.createDefaultModel();
     }
 
-    static Map<String, String> getAllBaseIris(Path directoryorFilePath) {
+    /**
+     * Returns mapping filePath --> baseUri for all files recursively defined by <code>directoryOrFilePath</code>.
+     * BaseUri is uri of the ontology defined in the model loaded from the file.
+     * If <code>this.reloadFiles=true</code>, it ignores files that are older than <code>this.lastTime</code>.
+     *
+     * @param directoryOrFilePath File or directory to by searched recursively for models.
+     * @return Mapping filePath to baseURI.
+     */
+    static Map<String, String> getAllBaseIris(Path directoryOrFilePath) {
 
         Map<String, String> baseUri2file = new HashMap<>();
 
-        getAllFile2Model(directoryorFilePath).entrySet().forEach(e -> {
+        getAllFile2Model(directoryOrFilePath).entrySet().forEach(e -> {
             String file = e.getKey();
             Model model = e.getValue();
 
