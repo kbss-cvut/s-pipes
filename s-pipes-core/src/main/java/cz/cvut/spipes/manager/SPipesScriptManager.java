@@ -88,7 +88,7 @@ public class SPipesScriptManager {
 
         // TODO check moduleTypeUri
 
-        return PipelineFactory.loadPipeline(scriptsRepository.getResource(resourceUri, resourceContextUri));
+        return PipelineFactory.loadModule(scriptsRepository.getResource(resourceUri, resourceContextUri));
     }
 
     public Module loadFunction(String functionId) {

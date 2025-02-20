@@ -34,6 +34,8 @@ import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static cz.cvut.spipes.rest.util.ContextLoaderHelper.isKeepUpdated;
+
 @Slf4j
 @RestController
 @EnableWebMvc
@@ -222,7 +224,12 @@ public class SPipesServiceController {
 
         ExecutionEngine engine = createExecutionEngine(configModel);
         ContextLoaderHelper.updateContextsIfNecessary(scriptManager);
-        Module module = PipelineFactory.loadModule(configModel.createResource(id));
+        Module module = null;
+        if (isKeepUpdated()) {
+            module = scriptManager.loadModule(id, null, null);
+        } else {
+            module = PipelineFactory.loadModule(configModel.createResource(id));
+        }
         if (module == null) {
             throw new SPipesServiceException("Cannot load module with id=" + id);
         }
