@@ -5,7 +5,7 @@ import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import cz.cvut.kbss.jopa.model.JOPAPersistenceProperties;
 import cz.cvut.kbss.jopa.model.JOPAPersistenceProvider;
 import cz.cvut.kbss.ontodriver.config.OntoDriverProperties;
-import cz.cvut.kbss.ontodriver.sesame.config.SesameOntoDriverProperties;
+import cz.cvut.kbss.ontodriver.rdf4j.config.Rdf4jOntoDriverProperties;
 import java.util.HashMap;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
@@ -34,7 +34,7 @@ public class RDF4JPersistenceFactory {
         // View transactional changes during transaction
         props.put(OntoDriverProperties.USE_TRANSACTIONAL_ONTOLOGY, Boolean.TRUE.toString());
         // Don't use Sesame inference
-        props.put(SesameOntoDriverProperties.SESAME_USE_INFERENCE, Boolean.FALSE.toString());
+        props.put(Rdf4jOntoDriverProperties.USE_INFERENCE, Boolean.FALSE.toString());
         // Don't use cache
         props.put(JOPAPersistenceProperties.CACHE_ENABLED, Boolean.FALSE.toString());
         // Ontology language
