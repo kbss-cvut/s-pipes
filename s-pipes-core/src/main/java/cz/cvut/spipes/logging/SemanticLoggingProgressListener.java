@@ -50,9 +50,9 @@ public class SemanticLoggingProgressListener implements ProgressListener {
     private static final Map<Long, Path> logDir= new HashMap<>();
 
     private static final String P_HAS_PART =
-        Vocabulary.ONTOLOGY_IRI_dataset_descriptor + "/has-part";
+        Vocabulary.ONTOLOGY_IRI_DATASET_DESCRIPTOR + "/has-part";
     private static final String P_HAS_NEXT =
-        Vocabulary.ONTOLOGY_IRI_dataset_descriptor + "/has-next";
+        Vocabulary.ONTOLOGY_IRI_DATASET_DESCRIPTOR + "/has-next";
 
     static {
         final Map<String, String> props = new HashMap<>();
