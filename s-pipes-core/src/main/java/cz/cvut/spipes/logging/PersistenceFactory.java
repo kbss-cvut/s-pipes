@@ -34,7 +34,7 @@ public class PersistenceFactory {
         props.put(OntoDriverProperties.USE_TRANSACTIONAL_ONTOLOGY, Boolean.TRUE.toString());
         // Use in-memory storage if not remote or local file path specified
         props.put(Rdf4jOntoDriverProperties.USE_VOLATILE_STORAGE, Boolean.TRUE.toString());
-        // Don't use Sesame inference
+        // Don't use inference
         props.put(Rdf4jOntoDriverProperties.USE_INFERENCE, Boolean.FALSE.toString());
         // Ontology language
         props.put(JOPAPersistenceProperties.LANG, "en");
