@@ -39,6 +39,10 @@ public class CoreConfigProperies {
         }
     }
 
+    public static void set(String name, String value) {
+        prop.setProperty(name, value);
+    }
+
     public static String get(String name) {
         String value = prop.getProperty(name);
         if (value == null) {

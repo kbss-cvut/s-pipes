@@ -3,6 +3,7 @@ package cz.cvut.spipes.rest;
 import cz.cvut.spipes.config.WebAppConfig;
 import cz.cvut.spipes.engine.VariablesBinding;
 import cz.cvut.spipes.rest.util.ReservedParams;
+import cz.cvut.spipes.util.CoreConfigProperies;
 import cz.cvut.spipes.util.RDFMimeType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.Model;
@@ -63,6 +64,7 @@ public class SPipesServiceControllerTest {
     public void testRunNoModule() throws Exception {
         final RequestBuilder rb = get("/module");
         mockMvc.perform(rb).andExpect(status().is4xxClientError());
+        CoreConfigProperies.set("contextsLoader.data.keepUpdated", "false");
     }
 
     @Test
