@@ -27,9 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -366,7 +364,11 @@ public class SPipesServiceController {
     private void extendBindingFromURL(VariablesBinding inputVariablesBinding, URL inputBindingURL) {
         try {
             final VariablesBinding vb2 = new VariablesBinding();
-            vb2.load(inputBindingURL.openStream(), FileUtils.langTurtle);
+            String path = inputBindingURL.getPath();
+            File file = new File(path);
+            InputStream is = new FileInputStream(file);
+            vb2.load(is, FileUtils.langTurtle);
+            is.close();
             VariablesBinding vb3 = inputVariablesBinding.extendConsistently(vb2);
             if (vb3.isEmpty()) {
                 log.debug("- no conflict between bindings loaded from '{}' and those provided in query string.",
