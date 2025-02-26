@@ -33,6 +33,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static cz.cvut.spipes.rest.util.ContextLoaderHelper.isKeepUpdated;
+import static cz.cvut.spipes.util.VariableBindingUtils.extendBindingFromURL;
 
 @Slf4j
 @RestController
@@ -359,30 +360,6 @@ public class SPipesServiceController {
             throw new SPipesServiceException("Could not load model from URL " + modelUrl + ".");
         }
         return outputModel;
-    }
-
-    private void extendBindingFromURL(VariablesBinding inputVariablesBinding, URL inputBindingURL) {
-        try {
-            final VariablesBinding vb2 = new VariablesBinding();
-            String path = inputBindingURL.getPath();
-            File file = new File(path);
-            InputStream is = new FileInputStream(file);
-            vb2.load(is, FileUtils.langTurtle);
-            is.close();
-            VariablesBinding vb3 = inputVariablesBinding.extendConsistently(vb2);
-            if (vb3.isEmpty()) {
-                log.debug("- no conflict between bindings loaded from '{}' and those provided in query string.",
-                    ReservedParams.P_INPUT_BINDING_URL
-                );
-            } else {
-                log.info("- conflicts found between bindings loaded from '{}' and those provided in query string: {}",
-                    ReservedParams.P_INPUT_BINDING_URL, vb3
-                );
-            }
-        } catch (IOException e) {
-            log.warn("Could not read data from parameter {}={}, caused by: {}", ReservedParams.P_INPUT_BINDING_URL, inputBindingURL, e);
-        }
-
     }
 
 }
