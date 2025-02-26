@@ -8,6 +8,7 @@ import java.net.URL;
 
 import static cz.cvut.spipes.util.VariableBindingUtils.extendBindingFromURL;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.reflections.Reflections.log;
 
 class VariableBindingUtilsTest {
 
@@ -36,7 +37,11 @@ class VariableBindingUtilsTest {
             URL fileURL = tempFile.toURI().toURL();
 
             VariablesBinding inputVariablesBinding = new VariablesBinding();
-            extendBindingFromURL(inputVariablesBinding, fileURL);
+            try {
+                extendBindingFromURL(inputVariablesBinding, fileURL);
+            } catch (IOException e) {
+                log.warn("Could not read data from parameter {}={}, caused by: {}", "_pInputBindingURL", fileURL, e.getMessage());
+            }
 
             assertFalse(inputVariablesBinding.isEmpty());
         } catch (IOException e) {
