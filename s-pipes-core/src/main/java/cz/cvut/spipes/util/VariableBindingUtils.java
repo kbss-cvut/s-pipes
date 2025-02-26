@@ -26,28 +26,16 @@ public class VariableBindingUtils {
         return newVB;
     }
 
-    public static void extendBindingFromURL(VariablesBinding inputVariablesBinding, URL inputBindingURL) {
-        try {
-            final VariablesBinding vb2 = new VariablesBinding();
-            String path = inputBindingURL.getPath();
-            File file = new File(path);
-            InputStream is = new FileInputStream(file);
+    public static void extendBindingFromURL(VariablesBinding inputVariablesBinding, URL inputBindingURL) throws IOException {
+        try (InputStream is = new FileInputStream(new File(inputBindingURL.getPath()))) {
+            VariablesBinding vb2 = new VariablesBinding();
             vb2.load(is, FileUtils.langTurtle);
-            is.close();
-            //vb2.load(inputBindingURL.openStream(), FileUtils.langTurtle);
             VariablesBinding vb3 = inputVariablesBinding.extendConsistently(vb2);
             if (vb3.isEmpty()) {
-                log.debug("No conflict found between bindings loaded from '{}' and those provided in query string.",
-                        "_pInputBindingURL"
-                );
+                log.debug("No conflict found between bindings loaded from '{}' and those provided in query string.", inputBindingURL);
             } else {
-                log.warn("Conflicts found between bindings loaded from '{}' and those provided in query string: {}",
-                        "_pInputBindingURL", vb3
-                );
+                log.warn("Conflicts found between bindings loaded from '{}' and those provided in query string: {}", inputBindingURL, vb3);
             }
-        } catch (IOException e) {
-            log.warn("Could not read data from parameter {}={}, caused by: {}", "_pInputBindingURL", inputBindingURL, e);
         }
-
     }
 }
