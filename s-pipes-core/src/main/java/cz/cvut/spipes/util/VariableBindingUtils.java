@@ -29,7 +29,13 @@ public class VariableBindingUtils {
     public static void extendBindingFromURL(VariablesBinding inputVariablesBinding, URL inputBindingURL) throws IOException {
         try (InputStream is = new FileInputStream(new File(inputBindingURL.getPath()))) {
             VariablesBinding vb2 = new VariablesBinding();
+
+            // Working way to load
             vb2.load(is, FileUtils.langTurtle);
+
+            // Not working way to load
+            //vb2.load(inputBindingURL.openStream(), FileUtils.langTurtle);
+
             VariablesBinding vb3 = inputVariablesBinding.extendConsistently(vb2);
             if (vb3.isEmpty()) {
                 log.debug("No conflict found between bindings loaded from '{}' and those provided in query string.", inputBindingURL);
