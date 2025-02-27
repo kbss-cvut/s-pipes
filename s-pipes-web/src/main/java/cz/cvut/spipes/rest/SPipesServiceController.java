@@ -16,6 +16,7 @@ import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.riot.Lang;
 import org.apache.jena.util.FileUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -285,7 +286,7 @@ public class SPipesServiceController {
 
     private void saveOutputBinding(File outputBindingPath, VariablesBinding outputVariablesBinding) {
         try {
-            outputVariablesBinding.save(new FileOutputStream(outputBindingPath), FileUtils.langTurtle);
+            outputVariablesBinding.save(new FileOutputStream(outputBindingPath), Lang.TTL);
         } catch (IOException e) {
             throw new SPipesServiceException("Cannot save output binding.", e);
         }

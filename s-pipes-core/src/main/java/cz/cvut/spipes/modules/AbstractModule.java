@@ -27,7 +27,10 @@ import org.topbraid.spin.model.Select;
 import org.topbraid.spin.util.SPINExpressions;
 import org.topbraid.spin.vocabulary.SP;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -108,7 +111,7 @@ public abstract class AbstractModule implements Module {
         String inputModelFileUrl = FILE_PREFIX + Optional.ofNullable(inputModelFilePath)
             .orElse(saveModelToTemporaryFile(executionContext.getDefaultModel()));
         String inputBindingFileUrl = FILE_PREFIX + saveModelToTemporaryFile(executionContext.getVariablesBinding().getModel());
-        String configModelFileUrl = FILE_PREFIX + saveModelToTemporaryFile(this.resource.getModel());
+        String configModelFileUrl = FILE_PREFIX + saveScriptToTemporaryFile(this.resource.getModel());
 
         Map<String, String> requestParams = new HashMap<>();
         requestParams.put("_pId", this.resource.getURI());
@@ -175,17 +178,20 @@ public abstract class AbstractModule implements Module {
 
     /* ------------------ PRIVATE METHODS --------------------- */
 
-    // TODO revise
-    protected String saveModelToTemporaryFile(Model model) {
+    interface RDFModelWriter {
+        void write(OutputStream outputStream, Model model);
+    }
+
+    private String saveModelToTemporaryFile(RDFModelWriter rdfModelWriter, Model model, String filePrefix) {
         File tempFile = null;
         try {
-            tempFile = Files.createTempFile("formgen-", ".ttl").toFile();
+            tempFile = Files.createTempFile(filePrefix, ".ttl").toFile();
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
         try (OutputStream tempFileIs = new FileOutputStream(tempFile)) {
-            model.write(tempFileIs, FileUtils.langTurtle);
+            rdfModelWriter.write(tempFileIs, model);
 
             return tempFile.getAbsolutePath();
         } catch (IOException e) {
@@ -194,22 +200,33 @@ public abstract class AbstractModule implements Module {
         }
     }
 
-    protected String saveFullModelToTemporaryFile(OntModel model) {
-        File tempFile = null;
-        try {
-            tempFile = Files.createTempFile("formgen-", ".ttl").toFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-        try (OutputStream tempFileIs = new FileOutputStream(tempFile)) {
-            model.writeAll(tempFileIs, FileUtils.langTurtle);
+    protected String saveModelToTemporaryFile(Model model) {
+        return saveModelToTemporaryFile(
+            JenaUtils::write,
+            model,
+            "model-output-"
+        );
+    }
 
-            return tempFile.getAbsolutePath();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
+    protected String saveScriptToTemporaryFile(Model model) {
+        return saveModelToTemporaryFile(
+            JenaUtils::writeScript,
+            model,
+            "model-output-"
+        );
+    }
+
+    protected String saveFullModelToTemporaryFile(OntModel model) {
+        return saveModelToTemporaryFile(
+            new RDFModelWriter() {
+                @Override
+                public void write(OutputStream outputStream, Model model) {
+                    ((OntModel) model).writeAll(outputStream, FileUtils.langTurtle);
+                }
+            },
+            model,
+            "full-model-output-"
+        );
     }
 
     private void loadModuleConstraints() {

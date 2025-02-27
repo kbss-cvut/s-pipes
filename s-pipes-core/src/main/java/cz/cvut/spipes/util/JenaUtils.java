@@ -6,7 +6,9 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.util.FileUtils;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFWriter;
+import org.apache.jena.riot.RIOT;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.jetbrains.annotations.NotNull;
@@ -15,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -38,7 +41,7 @@ public class JenaUtils {
 
         List<Resource> resList;
         if (model.getGraph() instanceof MultiUnion) {
-             resList = ModelFactory.createModelForGraph(((MultiUnion) model.getGraph()).getBaseGraph()).listResourcesWithProperty(RDF.type, OWL.Ontology).toList();
+            resList = ModelFactory.createModelForGraph(((MultiUnion) model.getGraph()).getBaseGraph()).listResourcesWithProperty(RDF.type, OWL.Ontology).toList();
         } else {
             resList = model.listResourcesWithProperty(RDF.type, OWL.Ontology).toList();
         }
@@ -110,10 +113,50 @@ public class JenaUtils {
         try {
             Path file = Files.createTempFile("model-output-", ".ttl");
             log.debug("Saving model to temporary file " + file.toString() + " ...");
-            model.write(Files.newOutputStream(file.toFile().toPath()), FileUtils.langTurtle);
+            JenaUtils.write(Files.newOutputStream(file.toFile().toPath()), model);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+    }
+
+    /**
+     * Common method to write rdf data within SPipes to specified output stream.
+     * To write SPipes scripts use {@link #writeScript(OutputStream, Model)} instead.
+     *
+     * @param outputStream output stream to write data to
+     * @param model rdf data to write
+     */
+    public static void write(OutputStream outputStream, Model model){
+        write(outputStream, model, Lang.TTL);
+    }
+
+    /**
+     * Common method to rdf data within SPipes to specified output stream.
+     * To write SPipes scripts use {@link #writeScript(OutputStream, Model)} instead.
+     *
+     * @param outputStream output stream to write data to
+     * @param model rdf data to write
+     * @param lang format of the output data
+     */
+    public static void write(OutputStream outputStream, Model model, Lang lang){
+        RDFWriter.create()
+            .source(model)
+            .lang(lang)
+            .output(outputStream);
+    }
+
+    /**
+     * Common method to write SPipes scripts to specified output stream.
+     * To write generic rdf data use {@link #write(OutputStream, Model)} instead.
+     *
+     * @param outputStream output stream to write data to
+     * @param model rdf data to write
+     */
+    public static void writeScript(OutputStream outputStream, Model model){
+        RDFWriter.create()
+            .source(model)
+            .set(RIOT.multilineLiterals, true)
+            .output(outputStream);
     }
 }

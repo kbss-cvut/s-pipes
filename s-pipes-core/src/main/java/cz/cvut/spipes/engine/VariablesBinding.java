@@ -1,9 +1,11 @@
 package cz.cvut.spipes.engine;
 
+import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.RDFNodeUtils;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.rdf.model.*;
+import org.apache.jena.riot.Lang;
 import org.apache.jena.vocabulary.RDF;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -130,8 +132,8 @@ public class VariablesBinding {
         return ResourceFactory.createProperty(property);
     }
 
-    public void save(final OutputStream os, final String lang) {
-        getModel().write(os, lang);
+    public void save(final OutputStream os, Lang lang) {
+        JenaUtils.write(os, getModel(), lang);
     }
 
     public Model getModel() {
