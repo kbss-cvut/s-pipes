@@ -264,7 +264,12 @@ public class SPipesServiceController {
 
         final VariablesBinding inputVariablesBinding = new VariablesBinding(transform(parameters));
         if (inputBindingURL != null) {
-            extendBindingFromURL(inputVariablesBinding, inputBindingURL);
+            try {
+                extendBindingFromURL(inputVariablesBinding, inputBindingURL);
+            }
+            catch (IOException e){
+                log.warn("Could not read data from parameter {}={}, caused by: {}", ReservedParams.P_INPUT_BINDING_URL, inputBindingURL, e.getMessage());
+            }
         }
         log.info("- input variable binding ={}", inputVariablesBinding);
 
