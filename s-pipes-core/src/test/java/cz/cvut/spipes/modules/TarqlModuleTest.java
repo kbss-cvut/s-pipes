@@ -5,6 +5,7 @@ import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionEngine;
 import cz.cvut.spipes.engine.ExecutionEngineFactory;
 import cz.cvut.spipes.engine.PipelineFactory;
+import cz.cvut.spipes.util.JenaUtils;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -25,8 +26,7 @@ public class TarqlModuleTest {
                 "http://onto.fel.cvut.cz/ontologies/test/tarql#CreateSampleTriples");
 
         ExecutionContext ec = module.execute();
-        ec.getDefaultModel().write(System.out);
-
+        JenaUtils.write(ec.getDefaultModel());
     }
 
 }

@@ -144,7 +144,7 @@ public class SPipesServiceControllerTest {
             inputVariablesBinding = new VariablesBinding();
         }
         File inputBindingFile = File.createTempFile("s-pipes-test-input-binding","ttl");
-        inputVariablesBinding.save(new FileOutputStream(inputBindingFile), "TURTLE");
+        inputVariablesBinding.save(new FileOutputStream(inputBindingFile), Lang.TTL);
 
         if ( expectedOutputVariablesBinding == null ) {
             expectedOutputVariablesBinding = new VariablesBinding();

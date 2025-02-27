@@ -7,6 +7,7 @@ import cz.cvut.spipes.manager.OntoDocManager;
 import cz.cvut.spipes.manager.OntologyDocumentManager;
 import cz.cvut.spipes.manager.SPipesScriptManager;
 import cz.cvut.spipes.modules.Module;
+import cz.cvut.spipes.util.JenaUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.QuerySolutionMap;
@@ -178,9 +179,9 @@ public class ExecuteModuleCLI {
 //
         // return output data
         if (asArgs.outputRdfFile != null) {
-            outputExecutionContext.getDefaultModel().write(new FileOutputStream(asArgs.outputRdfFile), FileUtils.langTurtle);
+            JenaUtils.write(outputExecutionContext.getDefaultModel(), new FileOutputStream(asArgs.outputRdfFile));
         } else {
-            outputExecutionContext.getDefaultModel().write(System.out, FileUtils.langTurtle);
+            JenaUtils.write(outputExecutionContext.getDefaultModel());
         }
 
     }

@@ -10,11 +10,15 @@ import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+
+import cz.cvut.spipes.util.JenaUtils;
 import org.apache.jena.rdf.model.ResourceFactory;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.apache.jena.riot.Lang;
 import org.junit.jupiter.api.Test;
 
 public class VariablesBindingTest {
@@ -75,7 +79,7 @@ public class VariablesBindingTest {
 
         final File f = File.createTempFile("variables-binding", "ttl");
 
-        vb.save(new FileOutputStream(f), "TURTLE");
+        vb.save(new FileOutputStream(f), Lang.TTL);
 
         final VariablesBinding vb2 = new VariablesBinding();
         vb2.load(new FileInputStream(f), "TURTLE");

@@ -35,6 +35,7 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.riot.Lang;
 import org.apache.jena.util.FileUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -367,7 +368,7 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
         String filePath = getFilePrefix() + fileName;
         try {
             log.debug("Saving model to temporary file " + filePath + " ...");
-            model.write(new FileOutputStream(filePath), FileUtils.langTurtle);
+            JenaUtils.write(model, new FileOutputStream(filePath));
         } catch (IOException e) {
             e.printStackTrace();
         }

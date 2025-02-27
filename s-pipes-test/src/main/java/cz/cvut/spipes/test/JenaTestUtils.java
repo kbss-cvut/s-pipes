@@ -5,6 +5,9 @@ import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFWriter;
+import org.apache.jena.riot.RIOT;
 import org.apache.jena.util.FileManager;
 import org.apache.jena.util.FileUtils;
 import org.slf4j.Logger;
@@ -76,7 +79,11 @@ public class JenaTestUtils {
         try {
             Path file = Files.createTempFile("model-output-", ".ttl");
             log.debug("Saving model to temporary file " + file.toString() + " ...");
-            model.write(Files.newOutputStream(file.toFile().toPath()), FileUtils.langTurtle);
+            RDFWriter.create()
+                    .source(model)
+                    .lang(Lang.TTL)
+                    .set(RIOT.multilineLiterals, true)
+                    .output(Files.newOutputStream(file.toFile().toPath()));
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -14,6 +14,7 @@ import org.apache.jena.atlas.lib.NotImplemented;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.*;
+import org.apache.jena.riot.Lang;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
@@ -185,7 +186,7 @@ public abstract class AbstractModule implements Module {
             return null;
         }
         try (OutputStream tempFileIs = new FileOutputStream(tempFile)) {
-            model.write(tempFileIs, FileUtils.langTurtle);
+            JenaUtils.write(model, tempFileIs);
 
             return tempFile.getAbsolutePath();
         } catch (IOException e) {

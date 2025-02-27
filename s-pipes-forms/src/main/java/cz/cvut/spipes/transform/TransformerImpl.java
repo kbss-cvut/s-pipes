@@ -6,11 +6,13 @@ import cz.cvut.sforms.model.Answer;
 import cz.cvut.sforms.model.PrefixDefinition;
 import cz.cvut.sforms.model.Question;
 import cz.cvut.sforms.util.FormUtils;
+import cz.cvut.spipes.util.JenaUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.query.Query;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.rdf.model.impl.PropertyImpl;
+import org.apache.jena.riot.Lang;
 import org.apache.jena.util.ResourceUtils;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
@@ -155,7 +157,7 @@ public class TransformerImpl implements Transformer {
         Answer ttlA = new Answer();
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-        ModelFactory.createDefaultModel().add(module.listProperties()).write(os, "TTL");
+        JenaUtils.write(ModelFactory.createDefaultModel().add(module.listProperties()));
         String ttlStr = os.toString();
         ttlA.setTextValue(ttlStr);
         ttlA.setHash(DigestUtils.sha1Hex(ttlStr));
