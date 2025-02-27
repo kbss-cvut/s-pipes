@@ -133,7 +133,7 @@ public class VariablesBinding {
     }
 
     public void save(final OutputStream os, Lang lang) {
-        JenaUtils.write(getModel(), os, lang);
+        JenaUtils.write(os, getModel(), lang);
     }
 
     public Model getModel() {

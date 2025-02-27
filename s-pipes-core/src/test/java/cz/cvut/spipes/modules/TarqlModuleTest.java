@@ -26,7 +26,7 @@ public class TarqlModuleTest {
                 "http://onto.fel.cvut.cz/ontologies/test/tarql#CreateSampleTriples");
 
         ExecutionContext ec = module.execute();
-        JenaUtils.write(ec.getDefaultModel());
+        JenaUtils.write(System.out, ec.getDefaultModel());
     }
 
 }

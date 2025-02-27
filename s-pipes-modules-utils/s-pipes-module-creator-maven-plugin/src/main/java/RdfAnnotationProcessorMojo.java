@@ -6,8 +6,6 @@ import cz.cvut.spipes.util.URIUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.ResourceFactory;
-import org.apache.jena.riot.Lang;
-import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
@@ -371,13 +369,13 @@ public class RdfAnnotationProcessorMojo extends AbstractMojo {
             Files.createFile(filepath);
         }
 
-        JenaUtils.write(model, Files.newOutputStream(filepath));
+        JenaUtils.write(Files.newOutputStream(filepath), model);
         getLog().info("Successfully written constraints to file: " + filepath);
     }
 
     private void writeModelToStdout(Model model) {
         var out = new ByteArrayOutputStream();
-        JenaUtils.write(model, out);
+        JenaUtils.write(out, model);
 
         getLog().info("Generated RDF:\n" +
                 "-----------------------------------\n" +

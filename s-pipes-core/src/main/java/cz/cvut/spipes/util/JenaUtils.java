@@ -8,8 +8,6 @@ import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFWriter;
-import org.apache.jena.riot.RIOT;
-import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.jetbrains.annotations.NotNull;
@@ -114,34 +112,22 @@ public class JenaUtils {
         try {
             Path file = Files.createTempFile("model-output-", ".ttl");
             log.debug("Saving model to temporary file " + file.toString() + " ...");
-            JenaUtils.write(model, Files.newOutputStream(file.toFile().toPath()));
+            JenaUtils.write(Files.newOutputStream(file.toFile().toPath()), model);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
 
-    public static void write(Model model){
-        RDFWriter.create()
-                .source(model)
-                .lang(Lang.TTL)
-                .set(RIOT.multilineLiterals, true)
-                .output(System.out);
+    public static void write(OutputStream outputStream, Model model){
+        write(outputStream, model, Lang.TTL);
     }
 
-    public static void write(Model model, OutputStream os){
-        RDFWriter.create()
-                .source(model)
-                .lang(Lang.TTL)
-                .set(RIOT.multilineLiterals, true)
-                .output(os);
-    }
-
-    public static void write(Model model, OutputStream os, Lang lang){
+    public static void write(OutputStream outputStream, Model model, Lang lang){
         RDFWriter.create()
                 .source(model)
                 .lang(lang)
-                .set(RIOT.multilineLiterals, true)
-                .output(os);
+                .output(outputStream);
     }
+
 }

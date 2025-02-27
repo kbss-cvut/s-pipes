@@ -19,8 +19,6 @@ import org.apache.jena.util.LocationMapper;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.file.Path;
@@ -179,9 +177,9 @@ public class ExecuteModuleCLI {
 //
         // return output data
         if (asArgs.outputRdfFile != null) {
-            JenaUtils.write(outputExecutionContext.getDefaultModel(), new FileOutputStream(asArgs.outputRdfFile));
+            JenaUtils.write(new FileOutputStream(asArgs.outputRdfFile), outputExecutionContext.getDefaultModel());
         } else {
-            JenaUtils.write(outputExecutionContext.getDefaultModel());
+            JenaUtils.write(System.out, outputExecutionContext.getDefaultModel());
         }
 
     }

@@ -14,8 +14,6 @@ import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.TempFileUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.riot.Lang;
-import org.apache.jena.util.FileUtils;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
@@ -191,7 +189,7 @@ public class SemanticLoggingProgressListener implements ProgressListener {
             return null;
         }
         try (OutputStream fileIs = new FileOutputStream(file)) {
-            JenaUtils.write(model, fileIs);
+            JenaUtils.write(fileIs, model);
             return file.toURI().toURL().toString();
         } catch (IOException e) {
             log.error("Error during dataset snapshot saving.", e);
