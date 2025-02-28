@@ -848,11 +848,9 @@ ddo:vocabulary-property-partition rdf:type owl:Class ;
                 ddo:dataset-snapshot
                 ddo:dataset-source
                 ddo:description
-                ddo:human-interpretation
                 ddo:intent
                 ddo:organization
                 ddo:person
-                ddo:sparql-construct
                 ddo:transformation
               )
 ] .
