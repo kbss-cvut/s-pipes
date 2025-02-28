@@ -2,6 +2,7 @@ package cz.cvut.spipes.rest;
 
 import cz.cvut.spipes.config.WebAppConfig;
 import cz.cvut.spipes.engine.VariablesBinding;
+import cz.cvut.spipes.rest.util.ContextLoaderHelper;
 import cz.cvut.spipes.rest.util.ReservedParams;
 import cz.cvut.spipes.util.RDFMimeType;
 import lombok.extern.slf4j.Slf4j;
@@ -12,10 +13,12 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFLanguages;
 import org.apache.jena.vocabulary.RDFS;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.MockedStatic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +38,7 @@ import java.io.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.mockStatic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -53,10 +57,20 @@ public class SPipesServiceControllerTest {
     protected WebApplicationContext ctx;
 
     private MockMvc mockMvc;
+    private MockedStatic<ContextLoaderHelper> mocked;
 
     @BeforeEach
     public void setUp() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(ctx).build();
+        mocked = mockStatic(ContextLoaderHelper.class);
+        mocked.when(ContextLoaderHelper::isKeepUpdated).thenReturn(false);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        if (mocked != null) {
+            mocked.close();
+        }
     }
 
     @Test
