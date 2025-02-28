@@ -110,21 +110,20 @@
                                                                   
                                                                   rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/source-dataset-snapshot> ;
                                                                   
-                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> ,
-                                                                              <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> .
+                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> .
 
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-intent
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-intent> rdf:type owl:ObjectProperty ;
-                                                                   
+
                                                                    rdfs:label "has intent"^^xsd:string ;
-                                                                   
+
                                                                    rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-exploring-journalist> ;
-                                                                   
+
                                                                    rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/intent> ;
-                                                                   
+
                                                                    owl:inverseOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-intent> .
 
 
@@ -132,13 +131,13 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-item
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-item> rdf:type owl:ObjectProperty ;
-                                                                 
+
                                                                  rdfs:label "has item"^^xsd:string ;
-                                                                 
+
                                                                  rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data-item> ;
-                                                                 
+
                                                                  owl:inverseOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-item> ;
-                                                                 
+
                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/single-item-selector> .
 
 
@@ -146,13 +145,13 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-member
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-member> rdf:type owl:ObjectProperty ;
-                                                                   
+
                                                                    rdfs:label "has member"^^xsd:string ;
-                                                                   
+
                                                                    rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data> ;
-                                                                   
+
                                                                    rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data-item> ;
-                                                                   
+
                                                                    owl:inverseOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-member> .
 
 
@@ -160,49 +159,27 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-output
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-output> rdf:type owl:ObjectProperty ;
-                                                                   
+
                                                                    rdfs:label "has output"^^xsd:string ;
-                                                                   
+
                                                                    owl:inverseOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-output> ;
-                                                                   
-                                                                   rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/target-dataset-snapshot> ;
-                                                                   
-                                                                   rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> ,
-                                                                               <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> .
-
-###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-rdf4j-output
-
-<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-rdf4j-output> rdf:type owl:ObjectProperty ;
-
-                                                                   rdfs:label "has rdf4j output"^^xsd:string ;
 
                                                                    rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/target-dataset-snapshot> ;
 
-                                                                   rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> ,
-                                                                               <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> .
+                                                                   rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> .
 
-###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-rdf4j-input
-
-<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-rdf4j-input> rdf:type owl:ObjectProperty ;
-
-                                                                   rdfs:label "has rdf4j input"^^xsd:string ;
-
-                                                                   rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/target-dataset-snapshot> ;
-
-                                                                   rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> ,
-                                                                               <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-published-dataset-snapshot
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-published-dataset-snapshot> rdf:type owl:ObjectProperty ;
-                                                                                       
+
                                                                                        rdfs:label "has published dataset snapshot"^^xsd:string ;
-                                                                                       
+
                                                                                        rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-publication> ;
-                                                                                       
+
                                                                                        rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot> ;
-                                                                                       
+
                                                                                        owl:inverseOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-published-dataset-snapshot> .
 
 
@@ -210,13 +187,13 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-publisher
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-publisher> rdf:type owl:ObjectProperty ;
-                                                                      
+
                                                                       rdfs:label "has publisher"^^xsd:string ;
-                                                                      
+
                                                                       rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-publication> ;
-                                                                      
+
                                                                       owl:inverseOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-publisher> ;
-                                                                      
+
                                                                       rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/publisher> .
 
 
@@ -224,14 +201,14 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-source
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-source> rdf:type owl:ObjectProperty ;
-                                                                   
+
                                                                    rdfs:label "has source"^^xsd:string ;
-                                                                   
+
                                                                    rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-publication> ,
                                                                                <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/description> ;
-                                                                   
+
                                                                    owl:inverseOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-source> ;
-                                                                   
+
                                                                    rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/single-snapshot-dataset-source> .
 
 
@@ -239,13 +216,13 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-sub-dataset-snapshot
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-sub-dataset-snapshot> rdf:type owl:ObjectProperty ;
-                                                                                 
+
                                                                                  rdfs:label "has sub dataset snapshot"^^xsd:string ;
-                                                                                 
+
                                                                                  rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot> ;
-                                                                                 
+
                                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot> ;
-                                                                                 
+
                                                                                  owl:inverseOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-sub-dataset-snapshot> .
 
 
@@ -253,13 +230,13 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-subdataset
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-subdataset> rdf:type owl:ObjectProperty ;
-                                                                       
+
                                                                        rdfs:label "has subdataset"^^xsd:string ;
-                                                                       
+
                                                                        rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset> ;
-                                                                       
+
                                                                        rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset> ;
-                                                                       
+
                                                                        owl:inverseOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-subdataset> .
 
 
@@ -267,11 +244,11 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.constitutes
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.constitutes> rdf:type owl:ObjectProperty ;
-                                                                        
+
                                                                         rdfs:label "INV.constitutes"^^xsd:string ;
-                                                                        
+
                                                                         rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data> ;
-                                                                        
+
                                                                         rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot> .
 
 
@@ -279,11 +256,11 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.describes
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.describes> rdf:type owl:ObjectProperty ;
-                                                                      
+
                                                                       rdfs:label "INV.describes"^^xsd:string ;
-                                                                      
+
                                                                       rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-descriptor> ;
-                                                                      
+
                                                                       rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/described-data-artifact> .
 
 
@@ -291,11 +268,11 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-dataset
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-dataset> rdf:type owl:ObjectProperty ;
-                                                                        
+
                                                                         rdfs:label "INV.has dataset"^^xsd:string ;
-                                                                        
+
                                                                         rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset> ;
-                                                                        
+
                                                                         rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot> .
 
 
@@ -303,11 +280,11 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-dataset-descriptor
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-dataset-descriptor> rdf:type owl:ObjectProperty ;
-                                                                                   
+
                                                                                    rdfs:label "INV.has dataset descriptor"^^xsd:string ;
-                                                                                   
+
                                                                                    rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-descriptor> ;
-                                                                                   
+
                                                                                    rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/description> .
 
 
@@ -315,11 +292,11 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-dataset-explorer
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-dataset-explorer> rdf:type owl:ObjectProperty ;
-                                                                                 
+
                                                                                  rdfs:label "INV.has dataset explorer"^^xsd:string ;
-                                                                                 
+
                                                                                  rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-exploration> ;
-                                                                                 
+
                                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-exploring-journalist> .
 
 
@@ -327,11 +304,11 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-explored-dataset
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-explored-dataset> rdf:type owl:ObjectProperty ;
-                                                                                 
+
                                                                                  rdfs:label "INV.has explored dataset"^^xsd:string ;
-                                                                                 
+
                                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset> ;
-                                                                                 
+
                                                                                  rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-exploration> .
 
 
@@ -339,24 +316,23 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-input
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-input> rdf:type owl:ObjectProperty ;
-                                                                      
+
                                                                       rdfs:label "INV.has input"^^xsd:string ;
-                                                                      
+
                                                                       rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/source-dataset-snapshot> ;
-                                                                      
-                                                                      rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation>,
-                                                                                 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> .
+
+                                                                      rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> .
 
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-intent
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-intent> rdf:type owl:ObjectProperty ;
-                                                                       
+
                                                                        rdfs:label "INV.has intent"^^xsd:string ;
-                                                                       
+
                                                                        rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-exploring-journalist> ;
-                                                                       
+
                                                                        rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/intent> .
 
 
@@ -364,11 +340,11 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-item
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-item> rdf:type owl:ObjectProperty ;
-                                                                     
+
                                                                      rdfs:label "INV.has item"^^xsd:string ;
-                                                                     
+
                                                                      rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data-item> ;
-                                                                     
+
                                                                      rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/single-item-selector> .
 
 
@@ -376,11 +352,11 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-member
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-member> rdf:type owl:ObjectProperty ;
-                                                                       
+
                                                                        rdfs:label "INV.has member"^^xsd:string ;
-                                                                       
+
                                                                        rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data> ;
-                                                                       
+
                                                                        rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data-item> .
 
 
@@ -388,24 +364,23 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-output
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-output> rdf:type owl:ObjectProperty ;
-                                                                       
+
                                                                        rdfs:label "INV.has output"^^xsd:string ;
-                                                                       
+
                                                                        rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/target-dataset-snapshot> ;
-                                                                       
-                                                                       rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> ,
-                                                                                  <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> .
+
+                                                                       rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> .
 
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-published-dataset-snapshot
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-published-dataset-snapshot> rdf:type owl:ObjectProperty ;
-                                                                                           
+
                                                                                            rdfs:label "INV.has published dataset snapshot"^^xsd:string ;
-                                                                                           
+
                                                                                            rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-publication> ;
-                                                                                           
+
                                                                                            rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot> .
 
 
@@ -413,11 +388,11 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-publisher
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-publisher> rdf:type owl:ObjectProperty ;
-                                                                          
+
                                                                           rdfs:label "INV.has publisher"^^xsd:string ;
-                                                                          
+
                                                                           rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-publication> ;
-                                                                          
+
                                                                           rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/publisher> .
 
 
@@ -425,12 +400,12 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-source
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-source> rdf:type owl:ObjectProperty ;
-                                                                       
+
                                                                        rdfs:label "INV.has source"^^xsd:string ;
-                                                                       
+
                                                                        rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-publication> ,
                                                                                   <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/description> ;
-                                                                       
+
                                                                        rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/single-snapshot-dataset-source> .
 
 
@@ -438,11 +413,11 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-sub-dataset-snapshot
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-sub-dataset-snapshot> rdf:type owl:ObjectProperty ;
-                                                                                     
+
                                                                                      rdfs:label "INV.has sub dataset snapshot"^^xsd:string ;
-                                                                                     
+
                                                                                      rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot> ;
-                                                                                     
+
                                                                                      rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot> .
 
 
@@ -450,11 +425,11 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-subdataset
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-subdataset> rdf:type owl:ObjectProperty ;
-                                                                           
+
                                                                            rdfs:label "INV.has subdataset"^^xsd:string ;
-                                                                           
+
                                                                            rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset> ;
-                                                                           
+
                                                                            rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset> .
 
 
@@ -462,24 +437,23 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.is-created-by
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.is-created-by> rdf:type owl:ObjectProperty ;
-                                                                          
+
                                                                           rdfs:label "INV.is created by"^^xsd:string ;
-                                                                          
+
                                                                           rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/execution-context-dataset-source> ;
-                                                                          
-                                                                          rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> ,
-                                                                                      <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> .
+
+                                                                          rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> .
 
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.is-description-of
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.is-description-of> rdf:type owl:ObjectProperty ;
-                                                                              
+
                                                                               rdfs:label "INV.is description of"^^xsd:string ;
-                                                                              
+
                                                                               rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/described-data-artifact> ;
-                                                                              
+
                                                                               rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/description> .
 
 
@@ -487,11 +461,11 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.is-part-of
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.is-part-of> rdf:type owl:ObjectProperty ;
-                                                                       
+
                                                                        rdfs:label "INV.is part of"^^xsd:string ;
-                                                                       
+
                                                                        rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data> ;
-                                                                       
+
                                                                        rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data> .
 
 
@@ -499,11 +473,11 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.offers-dataset
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.offers-dataset> rdf:type owl:ObjectProperty ;
-                                                                           
+
                                                                            rdfs:label "INV.offers dataset"^^xsd:string ;
-                                                                           
+
                                                                            rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset> ;
-                                                                           
+
                                                                            rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-source> .
 
 
@@ -511,11 +485,11 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.uses
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.uses> rdf:type owl:ObjectProperty ;
-                                                                 
+
                                                                  rdfs:label "INV.uses"^^xsd:string ;
-                                                                 
+
                                                                  rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-exploration> ;
-                                                                 
+
                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/intent> .
 
 
@@ -523,28 +497,27 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/is-created-by
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/is-created-by> rdf:type owl:ObjectProperty ;
-                                                                      
+
                                                                       rdfs:label "is created by"^^xsd:string ;
-                                                                      
+
                                                                       rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/execution-context-dataset-source> ;
-                                                                      
+
                                                                       owl:inverseOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.is-created-by> ;
-                                                                      
-                                                                      rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation>,
-                                                                                 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> .
+
+                                                                      rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> .
 
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/is-description-of
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/is-description-of> rdf:type owl:ObjectProperty ;
-                                                                          
+
                                                                           rdfs:label "is description of"^^xsd:string ;
-                                                                          
+
                                                                           rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/described-data-artifact> ;
-                                                                          
+
                                                                           rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/description> ;
-                                                                          
+
                                                                           owl:inverseOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.is-description-of> .
 
 
@@ -552,13 +525,13 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/is-part-of
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/is-part-of> rdf:type owl:ObjectProperty ;
-                                                                   
+
                                                                    rdfs:label "is part of"^^xsd:string ;
-                                                                   
+
                                                                    rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data> ;
-                                                                   
+
                                                                    rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data> ;
-                                                                   
+
                                                                    owl:inverseOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.is-part-of> .
 
 
@@ -566,13 +539,13 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/offers-dataset
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/offers-dataset> rdf:type owl:ObjectProperty ;
-                                                                       
+
                                                                        rdfs:label "offers dataset"^^xsd:string ;
-                                                                       
+
                                                                        rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset> ;
-                                                                       
+
                                                                        rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-source> ;
-                                                                       
+
                                                                        owl:inverseOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.offers-dataset> .
 
 
@@ -580,84 +553,17 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/uses
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/uses> rdf:type owl:ObjectProperty ;
-                                                             
+
                                                              rdfs:label "uses"^^xsd:string ;
-                                                             
+
                                                              rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-exploration> ;
-                                                             
+
                                                              rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/intent> ;
-                                                             
+
                                                              owl:inverseOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.uses> .
 
 
-###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-part
 
-<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-part> rdf:type owl:ObjectProperty ;
-
-                                                                      rdfs:label "has part"^^xsd:string ;
-
-                                                                      rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> ,
-                                                                                  <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-execution> ;
-
-                                                                      rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> ,
-                                                                                 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> .
-
-
-###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-next
-
-<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-next> rdf:type owl:ObjectProperty ;
-
-                                                                      rdfs:label "has next"^^xsd:string ;
-
-                                                                      rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> ,
-                                                                                  <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> ;
-
-                                                                      rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> ,
-                                                                                 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> .
-
-
-### http://onto.fel.cvut.cz/ontologies/s-pipes/has-related-resource
-
-<http://onto.fel.cvut.cz/ontologies/s-pipes/has-related-resource> rdf:type owl:ObjectProperty ;
-
-                                                                  rdfs:label "has related resource"^^xsd:string ;
-
-                                                                  rdfs:range <http://onto.fel.cvut.cz/ontologies/s-pipes/related-resource> ;
-
-                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> ,
-                                                                              <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-execution>  .
-
-###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison/pipeline
-
-<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison/pipeline> rdf:type owl:ObjectProperty ;
-
-                                                                      rdfs:label "Comparing pipeline"^^xsd:string ;
-
-                                                                      rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison> ;
-
-                                                                      rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-execution> .
-
-
-###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison/compare-to
-
-<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison/compare-to> rdf:type owl:ObjectProperty ;
-
-                                                                      rdfs:label "Comparing to pipeline"^^xsd:string ;
-
-                                                                      rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison> ;
-
-                                                                      rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-execution> .
-
-
-###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison/difference-found-in
-
-<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison/difference-found-in> rdf:type owl:ObjectProperty ;
-
-                                                                      rdfs:label "Difference found in"^^xsd:string ;
-
-                                                                      rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison> ;
-
-                                                                      rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> .
 
 
 #################################################################
@@ -670,12 +576,12 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-creation-date
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-creation-date> rdf:type owl:DatatypeProperty ;
-                                                                          
+
                                                                           rdfs:label "has creation date"^^xsd:string ;
-                                                                          
+
                                                                           rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-publication> ,
                                                                                       <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/description> ;
-                                                                          
+
                                                                           rdfs:range xsd:string .
 
 
@@ -683,11 +589,11 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-data-hash
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-data-hash> rdf:type owl:DatatypeProperty ;
-                                                                      
+
                                                                       rdfs:label "has-data-hash"^^xsd:string ;
-                                                                      
+
                                                                       rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot> ;
-                                                                      
+
                                                                       rdfs:range xsd:string .
 
 
@@ -695,11 +601,11 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-download-url
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-download-url> rdf:type owl:DatatypeProperty ;
-                                                                         
+
                                                                          rdfs:label "has download url"^^xsd:string ;
-                                                                         
+
                                                                          rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/url-dataset-source> ;
-                                                                         
+
                                                                          rdfs:range xsd:string .
 
 
@@ -707,12 +613,12 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-endpoint-url
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-endpoint-url> rdf:type owl:DatatypeProperty ;
-                                                                         
+
                                                                          rdfs:label "has endpoint url"^^xsd:string ;
-                                                                         
+
                                                                          rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/named-graph-sparql-endpoint-dataset-source> ,
                                                                                      <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/sparql-endpoint-dataset-source> ;
-                                                                         
+
                                                                          rdfs:range xsd:string .
 
 
@@ -720,11 +626,11 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-graph-id
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-graph-id> rdf:type owl:DatatypeProperty ;
-                                                                     
+
                                                                      rdfs:label "has graph id"^^xsd:string ;
-                                                                     
+
                                                                      rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/named-graph-sparql-endpoint-dataset-source> ;
-                                                                     
+
                                                                      rdfs:range xsd:string .
 
 
@@ -732,11 +638,11 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-retrieval-date
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-retrieval-date> rdf:type owl:DatatypeProperty ;
-                                                                           
+
                                                                            rdfs:label "has-retrieval-date"^^xsd:string ;
-                                                                           
+
                                                                            rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot> ;
-                                                                           
+
                                                                            rdfs:range xsd:string .
 
 
@@ -744,174 +650,16 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/name
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/name> rdf:type owl:DatatypeProperty ;
-                                                             
+
                                                              rdfs:label "name"^^xsd:string ;
-                                                             
+
                                                              rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-source> ;
-                                                             
+
                                                              rdfs:range xsd:string .
 
 
-###  http://onto.fel.cvut.cz/ontologies/s-pipes/has-module-execution-start-date
 
-<http://onto.fel.cvut.cz/ontologies/s-pipes/has-module-execution-start-date> rdf:type owl:DatatypeProperty ;
 
-                                                                  rdfs:label "has module execution start date"^^xsd:string ;
-
-                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> ;
-
-                                                                  rdfs:range xsd:string .
-
-###  http://onto.fel.cvut.cz/ontologies/s-pipes/has-module-execution-finish-date
-
-<http://onto.fel.cvut.cz/ontologies/s-pipes/has-module-execution-finish-date> rdf:type owl:DatatypeProperty ;
-
-                                                                  rdfs:label "has module execution finish date"^^xsd:string ;
-
-                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> ;
-
-                                                                  rdfs:range xsd:string .
-
-###  http://onto.fel.cvut.cz/ontologies/s-pipes/has-pipeline-execution-start-date
-
-<http://onto.fel.cvut.cz/ontologies/s-pipes/has-pipeline-execution-start-date> rdf:type owl:DatatypeProperty ;
-
-                                                                  rdfs:label "has pipeline execution start date"^^xsd:string ;
-
-                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-execution> ;
-
-                                                                  rdfs:range xsd:string .
-
-###  http://onto.fel.cvut.cz/ontologies/s-pipes/has-module-id
-
-<http://onto.fel.cvut.cz/ontologies/s-pipes/has-module-id> rdf:type owl:DatatypeProperty ;
-
-                                                                  rdfs:label "has module id"^^xsd:string ;
-
-                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> ;
-
-                                                                  rdfs:range xsd:string .
-
-
-###  http://onto.fel.cvut.cz/ontologies/s-pipes/has-output-model-triple-count
-
-<http://onto.fel.cvut.cz/ontologies/s-pipes/has-output-model-triple-count> rdf:type owl:DatatypeProperty ;
-
-                                                                  rdfs:label "has output triple count"^^xsd:string ;
-
-                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> ;
-
-                                                                  rdfs:range xsd:long .
-
-###  http://onto.fel.cvut.cz/ontologies/s-pipes/has-input-model-triple-count
-
-<http://onto.fel.cvut.cz/ontologies/s-pipes/has-input-model-triple-count> rdf:type owl:DatatypeProperty ;
-
-                                                                  rdfs:label "has input triple count"^^xsd:string ;
-
-                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> ;
-
-                                                                  rdfs:range xsd:long .
-
-
-### http://onto.fel.cvut.cz/ontologies/s-pipes/has-execution-start-date
-
-<http://onto.fel.cvut.cz/ontologies/s-pipes/has-execution-start-date> rdf:type owl:DatatypeProperty ;
-
-                                                                  rdfs:label "has execution start date"^^xsd:string ;
-
-                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> ,
-                                                                              <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-execution> ;
-
-                                                                  rdfs:range xsd:string .
-
-
-### http://onto.fel.cvut.cz/ontologies/s-pipes/has-execution-finish-date
-
-<http://onto.fel.cvut.cz/ontologies/s-pipes/has-execution-finish-date> rdf:type owl:DatatypeProperty ;
-
-                                                                  rdfs:label "has execution finish date"^^xsd:string ;
-
-                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> ,
-                                                                              <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-execution> ;
-
-                                                                  rdfs:range xsd:string .
-
-
-### http://onto.fel.cvut.cz/ontologies/s-pipes/has-module-id
-
-<http://onto.fel.cvut.cz/ontologies/s-pipes/has-module-id>        rdf:type owl:DatatypeProperty ;
-
-                                                                  rdfs:label "has module id"^^xsd:string ;
-
-                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> ;
-
-                                                                  rdfs:range xsd:string .
-
-
-### http://onto.fel.cvut.cz/ontologies/s-pipes/related-resource/value
-
-<http://onto.fel.cvut.cz/ontologies/s-pipes/related-resource/value> rdf:type owl:DatatypeProperty ;
-
-                                                                  rdfs:label "has value"^^xsd:string ;
-
-                                                                  rdfs:domain <http://onto.fel.cvut.cz/ontologies/s-pipes/related-resource> ;
-
-                                                                  rdfs:range xsd:string .
-
-
-### http://onto.fel.cvut.cz/ontologies/s-pipes/name
-
-<http://onto.fel.cvut.cz/ontologies/s-pipes/name>    rdf:type owl:DatatypeProperty ;
-
-                                                                rdfs:label "name"^^xsd:string ;
-
-                                                                rdfs:domain owl:Thing ;
-
-                                                                rdfs:range xsd:string .
-
-
-### http://onto.fel.cvut.cz/ontologies/s-pipes/has-module-execution
-
-<http://onto.fel.cvut.cz/ontologies/s-pipes/has-module-execution> rdf:type owl:DatatypeProperty ;
-
-                                                                rdfs:label "has module execution"^^xsd:string ;
-
-                                                                rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-execution> ;
-
-                                                                rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> .
-
-
-### http://onto.fel.cvut.cz/ontologies/s-pipes/executed-in
-
-<http://onto.fel.cvut.cz/ontologies/s-pipes/executed-in> rdf:type owl:DatatypeProperty ;
-
-                                                                rdfs:label "executed in"^^xsd:string ;
-
-                                                                rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> ;
-
-                                                                rdfs:range <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-execution> .
-
-### http://onto.fel.cvut.cz/ontologies/s-pipes/has-duration
-
-<http://onto.fel.cvut.cz/ontologies/s-pipes/has-duration> rdf:type owl:DatatypeProperty ;
-
-                                                                rdfs:label "has duration ms"^^xsd:string ;
-
-                                                                rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> ;
-
-                                                                rdfs:range xsd:string .
-
-
-###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison/are-same
-
-<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison/are-same> rdf:type owl:DatatypeProperty ;
-
-                                                                      rdfs:label "Are same"^^xsd:string ;
-
-                                                                      rdfs:domain <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison> ;
-
-                                                                      rdfs:range xsd:boolean .
 
 #################################################################
 #
@@ -923,9 +671,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/agent
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/agent> rdf:type owl:Class ;
-                                                              
+
                                                               rdfs:label "Agent"^^xsd:string ;
-                                                              
+
                                                               rdfs:subClassOf owl:Thing .
 
 
@@ -933,9 +681,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/content-descriptor
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/content-descriptor> rdf:type owl:Class ;
-                                                                           
+
                                                                            rdfs:label "Content Descriptor"^^xsd:string ;
-                                                                           
+
                                                                            rdfs:subClassOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-descriptor> .
 
 
@@ -943,9 +691,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data> rdf:type owl:Class ;
-                                                             
+
                                                              rdfs:label "Data"^^xsd:string ;
-                                                             
+
                                                              rdfs:subClassOf owl:Thing ,
                                                                              [ rdf:type owl:Restriction ;
                                                                                owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.is-part-of> ;
@@ -972,9 +720,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data-item
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data-item> rdf:type owl:Class ;
-                                                                  
+
                                                                   rdfs:label "Data Item"^^xsd:string ;
-                                                                  
+
                                                                   rdfs:subClassOf owl:Thing ,
                                                                                   [ rdf:type owl:Restriction ;
                                                                                     owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-member> ;
@@ -992,9 +740,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset> rdf:type owl:Class ;
-                                                                
+
                                                                 rdfs:label "Dataset"^^xsd:string ;
-                                                                
+
                                                                 rdfs:subClassOf owl:Thing ,
                                                                                 [ rdf:type owl:Restriction ;
                                                                                   owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-dataset> ;
@@ -1024,9 +772,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-descriptor
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-descriptor> rdf:type owl:Class ;
-                                                                           
+
                                                                            rdfs:label "Dataset Descriptor"^^xsd:string ;
-                                                                           
+
                                                                            rdfs:subClassOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot> ,
                                                                                            [ rdf:type owl:Restriction ;
                                                                                              owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-dataset-descriptor> ;
@@ -1044,9 +792,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-exploration
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-exploration> rdf:type owl:Class ;
-                                                                            
+
                                                                             rdfs:label "Dataset Exploration"^^xsd:string ;
-                                                                            
+
                                                                             rdfs:subClassOf owl:Thing ,
                                                                                             [ rdf:type owl:Restriction ;
                                                                                               owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-explored-dataset> ;
@@ -1067,9 +815,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-exploring-journalist
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-exploring-journalist> rdf:type owl:Class ;
-                                                                                     
+
                                                                                      rdfs:label "Dataset Exploring Journalist"^^xsd:string ;
-                                                                                     
+
                                                                                      rdfs:subClassOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/person> ,
                                                                                                      [ rdf:type owl:Restriction ;
                                                                                                        owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-dataset-explorer> ;
@@ -1086,9 +834,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-publication
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-publication> rdf:type owl:Class ;
-                                                                            
+
                                                                             rdfs:label "Dataset Publication"^^xsd:string ;
-                                                                            
+
                                                                             rdfs:subClassOf owl:Thing ,
                                                                                             [ rdf:type owl:Restriction ;
                                                                                               owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-published-dataset-snapshot> ;
@@ -1110,9 +858,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-selector
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-selector> rdf:type owl:Class ;
-                                                                         
+
                                                                          rdfs:label "Dataset Selector"^^xsd:string ;
-                                                                         
+
                                                                          rdfs:subClassOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/content-descriptor> .
 
 
@@ -1120,9 +868,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot> rdf:type owl:Class ;
-                                                                         
+
                                                                          rdfs:label "Dataset Snapshot"^^xsd:string ;
-                                                                         
+
                                                                          rdfs:subClassOf owl:Thing ,
                                                                                          [ rdf:type owl:Restriction ;
                                                                                            owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-sub-dataset-snapshot> ;
@@ -1154,9 +902,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-source
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-source> rdf:type owl:Class ;
-                                                                       
+
                                                                        rdfs:label "Dataset Source"^^xsd:string ;
-                                                                       
+
                                                                        rdfs:subClassOf owl:Thing ,
                                                                                        [ rdf:type owl:Restriction ;
                                                                                          owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/offers-dataset> ;
@@ -1168,9 +916,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/described-data-artifact
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/described-data-artifact> rdf:type owl:Class ;
-                                                                                
+
                                                                                 rdfs:label "Described Data Artifact"^^xsd:string ;
-                                                                                
+
                                                                                 rdfs:subClassOf owl:Thing ,
                                                                                                 [ rdf:type owl:Restriction ;
                                                                                                   owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.describes> ;
@@ -1186,9 +934,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/described-dataset
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/described-dataset> rdf:type owl:Class ;
-                                                                          
+
                                                                           rdfs:label "Described Dataset"^^xsd:string ;
-                                                                          
+
                                                                           rdfs:subClassOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset> ,
                                                                                           <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/described-data-artifact> .
 
@@ -1197,9 +945,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/described-dataset-snapshot
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/described-dataset-snapshot> rdf:type owl:Class ;
-                                                                                   
+
                                                                                    rdfs:label "Described Dataset Snapshot"^^xsd:string ;
-                                                                                   
+
                                                                                    rdfs:subClassOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot> ,
                                                                                                    <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/described-data-artifact> .
 
@@ -1208,9 +956,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/description
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/description> rdf:type owl:Class ;
-                                                                    
+
                                                                     rdfs:label "Description"^^xsd:string ;
-                                                                    
+
                                                                     rdfs:subClassOf owl:Thing ,
                                                                                     [ rdf:type owl:Restriction ;
                                                                                       owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/is-description-of> ;
@@ -1233,9 +981,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/entity-partition
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/entity-partition> rdf:type owl:Class ;
-                                                                         
+
                                                                          rdfs:label "Entity Partition"^^xsd:string ;
-                                                                         
+
                                                                          rdfs:subClassOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-selector> .
 
 
@@ -1243,9 +991,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/execution-context-dataset-source
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/execution-context-dataset-source> rdf:type owl:Class ;
-                                                                                         
+
                                                                                          rdfs:label "Execution Context Dataset Source"^^xsd:string ;
-                                                                                         
+
                                                                                          rdfs:subClassOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-source> ,
                                                                                                          [ rdf:type owl:Restriction ;
                                                                                                            owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/is-created-by> ;
@@ -1258,9 +1006,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/human-interpretation
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/human-interpretation> rdf:type owl:Class ;
-                                                                             
+
                                                                              rdfs:label "Human Interpretation"^^xsd:string ;
-                                                                             
+
                                                                              rdfs:subClassOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> .
 
 
@@ -1268,9 +1016,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/intent
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/intent> rdf:type owl:Class ;
-                                                               
+
                                                                rdfs:label "Intent"^^xsd:string ;
-                                                               
+
                                                                rdfs:subClassOf owl:Thing ,
                                                                                [ rdf:type owl:Restriction ;
                                                                                  owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.uses> ;
@@ -1288,9 +1036,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/named-graph-sparql-endpoint-dataset-source
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/named-graph-sparql-endpoint-dataset-source> rdf:type owl:Class ;
-                                                                                                   
+
                                                                                                    rdfs:label "Named graph SPARQL Endpoint Dataset Source"^^xsd:string ;
-                                                                                                   
+
                                                                                                    rdfs:subClassOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/url-dataset-source> .
 
 
@@ -1298,9 +1046,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/non-content-descriptor
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/non-content-descriptor> rdf:type owl:Class ;
-                                                                               
+
                                                                                rdfs:label "Non-content Descriptor"^^xsd:string ;
-                                                                               
+
                                                                                rdfs:subClassOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-descriptor> .
 
 
@@ -1308,9 +1056,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/organization
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/organization> rdf:type owl:Class ;
-                                                                     
+
                                                                      rdfs:label "Organization"^^xsd:string ;
-                                                                     
+
                                                                      rdfs:subClassOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/agent> .
 
 
@@ -1318,9 +1066,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/person
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/person> rdf:type owl:Class ;
-                                                               
+
                                                                rdfs:label "Person"^^xsd:string ;
-                                                               
+
                                                                rdfs:subClassOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/agent> .
 
 
@@ -1328,9 +1076,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/publisher
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/publisher> rdf:type owl:Class ;
-                                                                  
+
                                                                   rdfs:label "Publisher"^^xsd:string ;
-                                                                  
+
                                                                   rdfs:subClassOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/agent> ,
                                                                                   [ rdf:type owl:Restriction ;
                                                                                     owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-publisher> ;
@@ -1342,9 +1090,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/single-item-selector
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/single-item-selector> rdf:type owl:Class ;
-                                                                             
+
                                                                              rdfs:label "Single Item Selector"^^xsd:string ;
-                                                                             
+
                                                                              rdfs:subClassOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-selector> ,
                                                                                              [ rdf:type owl:Restriction ;
                                                                                                owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-item> ;
@@ -1357,9 +1105,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/single-snapshot-dataset-source
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/single-snapshot-dataset-source> rdf:type owl:Class ;
-                                                                                       
+
                                                                                        rdfs:label "Single Snapshot Dataset Source"^^xsd:string ;
-                                                                                       
+
                                                                                        rdfs:subClassOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-source> ,
                                                                                                        [ rdf:type owl:Restriction ;
                                                                                                          owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-source> ;
@@ -1376,9 +1124,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/source-dataset-snapshot
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/source-dataset-snapshot> rdf:type owl:Class ;
-                                                                                
+
                                                                                 rdfs:label "Source Dataset Snapshot"^^xsd:string ;
-                                                                                
+
                                                                                 rdfs:subClassOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot> ,
                                                                                                 [ rdf:type owl:Restriction ;
                                                                                                   owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-input> ;
@@ -1390,9 +1138,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/sparql-construct
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/sparql-construct> rdf:type owl:Class ;
-                                                                         
+
                                                                          rdfs:label "SPARQL Construct"^^xsd:string ;
-                                                                         
+
                                                                          rdfs:subClassOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> .
 
 
@@ -1400,9 +1148,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/sparql-endpoint-dataset-source
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/sparql-endpoint-dataset-source> rdf:type owl:Class ;
-                                                                                       
+
                                                                                        rdfs:label "SPARQL Endpoint Dataset Source"^^xsd:string ;
-                                                                                       
+
                                                                                        rdfs:subClassOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/url-dataset-source> .
 
 
@@ -1410,9 +1158,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/spatial-content-descriptor
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/spatial-content-descriptor> rdf:type owl:Class ;
-                                                                                   
+
                                                                                    rdfs:label "Spatial Content Descriptor"^^xsd:string ;
-                                                                                   
+
                                                                                    rdfs:subClassOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/content-descriptor> .
 
 
@@ -1420,9 +1168,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/spo-summary-descriptor
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/spo-summary-descriptor> rdf:type owl:Class ;
-                                                                               
+
                                                                                rdfs:label "SPO Summary Descriptor"^^xsd:string ;
-                                                                               
+
                                                                                rdfs:subClassOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/content-descriptor> .
 
 
@@ -1430,9 +1178,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/target-dataset-snapshot
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/target-dataset-snapshot> rdf:type owl:Class ;
-                                                                                
+
                                                                                 rdfs:label "Target Dataset Snapshot"^^xsd:string ;
-                                                                                
+
                                                                                 rdfs:subClassOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot> ,
                                                                                                 [ rdf:type owl:Restriction ;
                                                                                                   owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-output> ;
@@ -1444,9 +1192,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/temporal-content-descriptor
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/temporal-content-descriptor> rdf:type owl:Class ;
-                                                                                    
+
                                                                                     rdfs:label "Temporal Content Descriptor"^^xsd:string ;
-                                                                                    
+
                                                                                     rdfs:subClassOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/content-descriptor> .
 
 
@@ -1454,31 +1202,8 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation> rdf:type owl:Class ;
-                                                                       
+
                                                                        rdfs:label "Transformation"^^xsd:string ;
-                                                                       
-                                                                       rdfs:subClassOf owl:Thing ,
-                                                                                       [ rdf:type owl:Restriction ;
-                                                                                         owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-input> ;
-                                                                                         owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/source-dataset-snapshot> ;
-                                                                                         owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                                                                       ] ,
-                                                                                       [ rdf:type owl:Restriction ;
-                                                                                         owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.is-created-by> ;
-                                                                                         owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/execution-context-dataset-source> ;
-                                                                                         owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                                                                       ] ,
-                                                                                       [ rdf:type owl:Restriction ;
-                                                                                         owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-output> ;
-                                                                                         owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/target-dataset-snapshot> ;
-                                                                                         owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                                                                       ] .
-
-###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution
-
-<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution> rdf:type owl:Class ;
-
-                                                                       rdfs:label "Module execution"^^xsd:string ;
 
                                                                        rdfs:subClassOf owl:Thing ,
                                                                                        [ rdf:type owl:Restriction ;
@@ -1497,55 +1222,14 @@
                                                                                          owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger
                                                                                        ] .
 
-###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-execution
-
-<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-execution> rdf:type owl:Class ;
-
-                                                                       rdfs:label "Pipeline execution"^^xsd:string ;
-
-                                                                       rdfs:subClassOf owl:Thing ,
-                                                                                       [ rdf:type owl:Restriction ;
-                                                                                         owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-input> ;
-                                                                                         owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/source-dataset-snapshot> ;
-                                                                                         owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                                                                       ] ,
-                                                                                       [ rdf:type owl:Restriction ;
-                                                                                         owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.is-created-by> ;
-                                                                                         owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/execution-context-dataset-source> ;
-                                                                                         owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                                                                       ] ,
-                                                                                       [ rdf:type owl:Restriction ;
-                                                                                         owl:onProperty <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-output> ;
-                                                                                         owl:onClass <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/target-dataset-snapshot> ;
-                                                                                         owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger
-                                                                                       ] .
-
-
-###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison
-
-<http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison> rdf:type owl:Class ;
-
-                                                                       rdfs:label "Pipeline execution comparison"^^xsd:string ;
-
-                                                                       rdfs:subClassOf owl:Thing .
-
-
-
-### http://onto.fel.cvut.cz/ontologies/s-pipes/related-resource
-
-<http://onto.fel.cvut.cz/ontologies/s-pipes/related-resource>     rdf:type owl:Class ;
-
-                                                                  rdfs:label ""^^xsd:string ;
-
-                                                                     rdfs:subClassOf owl:Thing .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/url
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/url> rdf:type owl:Class ;
-                                                            
+
                                                             rdfs:label "url"^^xsd:string ;
-                                                            
+
                                                             rdfs:subClassOf owl:Thing .
 
 
@@ -1553,9 +1237,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/url-dataset-source
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/url-dataset-source> rdf:type owl:Class ;
-                                                                           
+
                                                                            rdfs:label "Url Dataset Source"^^xsd:string ;
-                                                                           
+
                                                                            rdfs:subClassOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-source> .
 
 
@@ -1563,9 +1247,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/vocabulary-class-partition
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/vocabulary-class-partition> rdf:type owl:Class ;
-                                                                                   
+
                                                                                    rdfs:label "Vocabulary Class Partition"^^xsd:string ;
-                                                                                   
+
                                                                                    rdfs:subClassOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/entity-partition> .
 
 
@@ -1573,9 +1257,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/vocabulary-instance
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/vocabulary-instance> rdf:type owl:Class ;
-                                                                            
+
                                                                             rdfs:label "Vocabulary Instance"^^xsd:string ;
-                                                                            
+
                                                                             rdfs:subClassOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/content-descriptor> .
 
 
@@ -1583,9 +1267,9 @@
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/vocabulary-property-partition
 
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/vocabulary-property-partition> rdf:type owl:Class ;
-                                                                                      
+
                                                                                       rdfs:label "Vocabulary Property Partition"^^xsd:string ;
-                                                                                      
+
                                                                                       rdfs:subClassOf <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/entity-partition> .
 
 
@@ -1614,8 +1298,6 @@
                 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/person>
                 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/sparql-construct>
                 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation>
-                <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-execution>
-                <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution>
               )
 ] .
 

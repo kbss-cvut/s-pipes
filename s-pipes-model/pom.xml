@@ -54,10 +54,10 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <ontology-iri>http://onto.fel.cvut.cz/ontologies/dataset-descriptor</ontology-iri>
+                    <ontology-iri>http://onto.fel.cvut.cz/ontologies/s-pipes-model</ontology-iri>
                     <package>cz.cvut.spipes</package>
                     <output-directory>${project.basedir}/src/main/java</output-directory>
-                    <mapping-file>${project.basedir}/src/main/resources/dataset-descriptor-ontology/mapping</mapping-file>
+                    <mapping-file>${project.basedir}/src/main/resources/mapping</mapping-file>
                     <whole-ontology-as-ics>true</whole-ontology-as-ics>
                     <vocabulary-only>true</vocabulary-only>
                 </configuration>
