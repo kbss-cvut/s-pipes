@@ -40,7 +40,7 @@ ddo:has-part rdf:type owl:ObjectProperty ;
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-rdf4j-input
 ddo:has-rdf4j-input rdf:type owl:ObjectProperty ;
                     rdfs:domain ddo:module-execution ;
-                    rdfs:range ddo:target-dataset-snapshot ;
+                    rdfs:range ddo:source-dataset-snapshot ;
                     rdfs:label "has rdf4j input"^^xsd:string .
 
 
@@ -199,8 +199,33 @@ ddo:module-execution rdf:type owl:Class ;
                                      owl:Thing ,
                                      [ rdf:type owl:Restriction ;
                                        owl:onProperty ddo:has-input ;
+                                       owl:allValuesFrom ddo:source-dataset-snapshot
+                                     ] ,
+                                     [ rdf:type owl:Restriction ;
+                                       owl:onProperty ddo:has-next ;
+                                       owl:allValuesFrom ddo:module-execution
+                                     ] ,
+                                     [ rdf:type owl:Restriction ;
+                                       owl:onProperty ddo:has-rdf4j-input ;
+                                       owl:allValuesFrom ddo:source-dataset-snapshot
+                                     ] ,
+                                     [ rdf:type owl:Restriction ;
+                                       owl:onProperty ddo:has-rdf4j-output ;
+                                       owl:allValuesFrom ddo:target-dataset-snapshot
+                                     ] ,
+                                     [ rdf:type owl:Restriction ;
+                                       owl:onProperty s-pipes:executed-in ;
+                                       owl:allValuesFrom ddo:pipeline-execution
+                                     ] ,
+                                     [ rdf:type owl:Restriction ;
+                                       owl:onProperty ddo:has-input ;
                                        owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                        owl:onClass ddo:source-dataset-snapshot
+                                     ] ,
+                                     [ rdf:type owl:Restriction ;
+                                       owl:onProperty ddo:has-next ;
+                                       owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                       owl:onClass ddo:module-execution
                                      ] ,
                                      [ rdf:type owl:Restriction ;
                                        owl:onProperty ddo:has-output ;
@@ -208,9 +233,36 @@ ddo:module-execution rdf:type owl:Class ;
                                        owl:onClass ddo:target-dataset-snapshot
                                      ] ,
                                      [ rdf:type owl:Restriction ;
+                                       owl:onProperty ddo:has-rdf4j-input ;
+                                       owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                       owl:onClass ddo:source-dataset-snapshot
+                                     ] ,
+                                     [ rdf:type owl:Restriction ;
+                                       owl:onProperty ddo:has-rdf4j-output ;
+                                       owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                       owl:onClass ddo:target-dataset-snapshot
+                                     ] ,
+                                     [ rdf:type owl:Restriction ;
                                        owl:onProperty ddo:inv.is-created-by ;
                                        owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                        owl:onClass ddo:execution-context-dataset-source
+                                     ] ,
+                                     [ rdf:type owl:Restriction ;
+                                       owl:onProperty s-pipes:executed-in ;
+                                       owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                       owl:onClass ddo:pipeline-execution
+                                     ] ,
+                                     [ rdf:type owl:Restriction ;
+                                       owl:onProperty s-pipes:has-duration ;
+                                       owl:allValuesFrom xsd:long
+                                     ] ,
+                                     [ rdf:type owl:Restriction ;
+                                       owl:onProperty s-pipes:has-input-model-triple-count ;
+                                       owl:allValuesFrom xsd:long
+                                     ] ,
+                                     [ rdf:type owl:Restriction ;
+                                       owl:onProperty s-pipes:has-output-model-triple-count ;
+                                       owl:allValuesFrom xsd:long
                                      ] ;
                      owl:disjointWith ddo:pipeline-execution ;
                      rdfs:label "Module execution"^^xsd:string .
@@ -227,6 +279,10 @@ ddo:pipeline-execution rdf:type owl:Class ;
                        rdfs:subClassOf ddo:transformation ,
                                        owl:Thing ,
                                        [ rdf:type owl:Restriction ;
+                                         owl:onProperty ddo:has-part ;
+                                         owl:allValuesFrom ddo:module-execution
+                                       ] ,
+                                       [ rdf:type owl:Restriction ;
                                          owl:onProperty ddo:has-input ;
                                          owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                          owl:onClass ddo:source-dataset-snapshot
@@ -240,6 +296,10 @@ ddo:pipeline-execution rdf:type owl:Class ;
                                          owl:onProperty ddo:inv.is-created-by ;
                                          owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                          owl:onClass ddo:execution-context-dataset-source
+                                       ] ,
+                                       [ rdf:type owl:Restriction ;
+                                         owl:onProperty s-pipes:has-pipeline-execution-start-date ;
+                                         owl:allValuesFrom xsd:string
                                        ] ;
                        rdfs:label "Pipeline execution"^^xsd:string .
 
@@ -260,7 +320,7 @@ ddo:transformation rdf:type owl:Class ;
 ###  http://onto.fel.cvut.cz/ontologies/s-pipes/related-resource
 s-pipes:related-resource rdf:type owl:Class ;
                          rdfs:subClassOf owl:Thing ;
-                         rdfs:label ""^^xsd:string .
+                         rdfs:label "Related resource"^^xsd:string .
 
 
 ###  Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi
