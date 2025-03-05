@@ -11,12 +11,12 @@ import cz.cvut.spipes.engine.ProgressListener;
 import cz.cvut.spipes.model.*;
 import cz.cvut.spipes.modules.Module;
 import cz.cvut.spipes.util.DateUtils;
+import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.Rdf4jUtils;
 import cz.cvut.spipes.util.TempFileUtils;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.riot.RDFLanguages;
-import org.apache.jena.util.FileUtils;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.ValueFactory;
@@ -284,7 +284,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
             getModulesSourceDatasetSnapshotUrl(pipelineExecutionId, moduleExecutionId, SnapshotRole.OUTPUT_GRAPH)
         );
         moduleExecution.setHas_output(Collections.singleton(output));
-        SourceDatasetSnapshot rdf4jOutput = new SourceDatasetSnapshot();
+        TargetDatasetSnapshot rdf4jOutput = new TargetDatasetSnapshot();
         rdf4jOutput.setId(getContextIri(moduleExecution, "output"));
         moduleExecution.setHas_rdf4j_output(rdf4jOutput);
 
