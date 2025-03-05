@@ -59,6 +59,7 @@
                     <output-directory>${project.basedir}/src/main/java</output-directory>
                     <mapping-file>${project.basedir}/src/main/resources/mapping</mapping-file>
                     <whole-ontology-as-ics>true</whole-ontology-as-ics>
+                    <properties-type>object</properties-type>
                     <vocabulary-only>true</vocabulary-only>
                 </configuration>
             </plugin>
