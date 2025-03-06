@@ -17,3 +17,8 @@ there is a description about what are Pipelines and Modules. So basically Module
 representing data about executed Module or Pipeline. It can contain such data as, where are stored output of modules, time, when execution
 happened and a lot of different useful information.
 
+## Hands-on tutorial
+
+With SPipes debug module you can retrieve information about executed pipelines and modules through REST API.
+You can go over hands-on tutorial to see how to use it [here](./doc/hands-on-tutorial/hands-on-tutorial.md).
+
