@@ -23,8 +23,6 @@ EXPOSE 8080
 RUN rm -rf /usr/local/tomcat/webapps/*
 
 COPY --from=modules_checkout ./s-pipes-modules /scripts/s-pipes-modules
-COPY --from=maven_build /s-pipes/s-pipes-web/target/s-pipes-web-*[0-9] /usr/local/tomcat/webapps/s-pipes
-
-COPY --from=MAVEN_BUILD /s-pipes-debug/target/s-pipes-debug-*.war /usr/local/tomcat/webapps/s-pipes-debug.war
+COPY --from=maven_build "/s-pipes/s-pipes-web/target/s-pipes-web-*[0-9]" /usr/local/tomcat/webapps/s-pipes
 
 CMD ["catalina.sh","run"]
