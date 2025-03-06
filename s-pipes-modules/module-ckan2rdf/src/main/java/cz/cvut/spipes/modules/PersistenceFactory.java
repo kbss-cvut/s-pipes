@@ -20,7 +20,7 @@ import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import cz.cvut.kbss.jopa.model.JOPAPersistenceProperties;
 import cz.cvut.kbss.jopa.model.JOPAPersistenceProvider;
 import cz.cvut.kbss.ontodriver.config.OntoDriverProperties;
-import cz.cvut.kbss.ontodriver.sesame.config.SesameOntoDriverProperties;
+import cz.cvut.kbss.ontodriver.rdf4j.config.Rdf4jOntoDriverProperties;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,9 +47,9 @@ public class PersistenceFactory {
         // View transactional changes during transaction
         props.put(OntoDriverProperties.USE_TRANSACTIONAL_ONTOLOGY, Boolean.TRUE.toString());
         // Use in-memory storage if not remote or local file path specified
-        props.put(SesameOntoDriverProperties.SESAME_USE_VOLATILE_STORAGE, Boolean.TRUE.toString());
+        props.put(Rdf4jOntoDriverProperties.USE_VOLATILE_STORAGE, Boolean.TRUE.toString());
         // Don't use Sesame inference
-        props.put(SesameOntoDriverProperties.SESAME_USE_INFERENCE, Boolean.FALSE.toString());
+        props.put(Rdf4jOntoDriverProperties.USE_INFERENCE, Boolean.FALSE.toString());
         // Ontology language
         props.put(JOPAPersistenceProperties.LANG, "en");
         if (properties != null) {

@@ -6,12 +6,10 @@ import cz.cvut.kbss.jopa.model.descriptors.EntityDescriptor;
 import cz.cvut.spipes.Vocabulary;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ProgressListener;
-import cz.cvut.spipes.model.SourceDatasetSnapshot;
-import cz.cvut.spipes.model.Thing;
-import cz.cvut.spipes.model.Transformation;
+import cz.cvut.spipes.model.*;
 import cz.cvut.spipes.modules.Module;
-import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.TempFileUtils;
+import cz.cvut.spipes.util.JenaUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
@@ -49,10 +47,6 @@ public class SemanticLoggingProgressListener implements ProgressListener {
 
     private static final Map<Long, Path> logDir= new HashMap<>();
 
-    private static final String P_HAS_PART =
-        Vocabulary.ONTOLOGY_IRI_dataset_descriptor + "/has-part";
-    private static final String P_HAS_NEXT =
-        Vocabulary.ONTOLOGY_IRI_dataset_descriptor + "/has-next";
 
     static {
         final Map<String, String> props = new HashMap<>();
@@ -70,7 +64,7 @@ public class SemanticLoggingProgressListener implements ProgressListener {
     @Override public void pipelineExecutionStarted(final long pipelineExecutionId) {
         Thing pipelineExecution = new Thing();
         pipelineExecution.setId(getPipelineExecutionIri(pipelineExecutionId));
-        pipelineExecution.setTypes(Collections.singleton(Vocabulary.s_c_transformation));
+        pipelineExecution.setTypes(Collections.singleton(Vocabulary.s_c_pipeline_execution));
 
         executionMap.put(pipelineExecution.getId(), pipelineExecution);
         final Path pipelineExecutionDir = FileSystemLogger.resolvePipelineExecution(pipelineExecutionId);
@@ -118,7 +112,7 @@ public class SemanticLoggingProgressListener implements ProgressListener {
                                                  final Module outputModule,
                                                  final ExecutionContext inputContext,
                                                  final String predecessorModuleExecutionId) {
-        Transformation moduleExecution = new Transformation();
+        ModuleExecution moduleExecution = new ModuleExecution();
         moduleExecution.setId(getModuleExecutionIri(moduleExecutionId));
         executionMap.put(moduleExecution.getId(), moduleExecution);
 
@@ -130,7 +124,7 @@ public class SemanticLoggingProgressListener implements ProgressListener {
         if (predecessorModuleExecutionId != null) {
             Map<String, Set<Object>> properties2 = new HashMap<>();
             properties2
-                .put(P_HAS_NEXT, Collections.singleton(URI.create(getModuleExecutionIri(predecessorModuleExecutionId))));
+                .put(Vocabulary.s_p_has_next, Collections.singleton(URI.create(getModuleExecutionIri(predecessorModuleExecutionId))));
             moduleExecution.setProperties(properties2);
         }
     }
@@ -138,11 +132,11 @@ public class SemanticLoggingProgressListener implements ProgressListener {
     @Override public void moduleExecutionFinished(long pipelineExecutionId, final String moduleExecutionId,
                                                   final Module module) {
         final EntityManager em = entityManagerMap.get(getPipelineExecutionIri(pipelineExecutionId));
-        Transformation moduleExecution =
-            (Transformation) executionMap.get(getModuleExecutionIri(moduleExecutionId));
+        ModuleExecution moduleExecution =
+            (ModuleExecution) executionMap.get(getModuleExecutionIri(moduleExecutionId));
 
         Map<String, Set<Object>> properties = new HashMap<>();
-        properties.put(P_HAS_PART, Collections.singleton(URI.create(moduleExecution.getId())));
+        properties.put(Vocabulary.s_p_has_next, Collections.singleton(URI.create(moduleExecution.getId())));
 
         Thing output = new Thing();
         output.setId(saveModelToFile(getDir(pipelineExecutionId), FileSystemLogger.getModuleOutputFilename(moduleExecutionId), module.getOutputContext().getDefaultModel()));
@@ -151,14 +145,14 @@ public class SemanticLoggingProgressListener implements ProgressListener {
         synchronized (em) {
             if (em.isOpen()) {
                 em.getTransaction().begin();
-                final Transformation pipelineExecution =
-                    em.find(Transformation.class, getPipelineExecutionIri(pipelineExecutionId));
+                final PipelineExecution pipelineExecution =
+                    em.find(PipelineExecution.class, getPipelineExecutionIri(pipelineExecutionId));
                 final EntityDescriptor pd = new EntityDescriptor(URI.create(pipelineExecution.getId()));
 
                 pipelineExecution.setProperties(properties);
                 if (moduleExecution.getProperties() != null && moduleExecution.getProperties().containsKey(
-                    P_HAS_NEXT)) {
-                    String nextId = moduleExecution.getProperties().get(P_HAS_NEXT).iterator()
+                    Vocabulary.s_p_has_next)) {
+                    String nextId = moduleExecution.getProperties().get(Vocabulary.s_p_has_next).iterator()
                                                    .next().toString();
                     Thing next = new Thing();
                     next.setId(nextId);
@@ -198,10 +192,10 @@ public class SemanticLoggingProgressListener implements ProgressListener {
     }
 
     private String getPipelineExecutionIri(final long pipelineId) {
-        return Vocabulary.s_c_transformation + "/" + pipelineId;
+        return Vocabulary.s_c_pipeline_execution + "/" + pipelineId;
     }
 
     private String getModuleExecutionIri(final String moduleExecutionId) {
-        return Vocabulary.s_c_transformation + "/" + moduleExecutionId;
+        return Vocabulary.s_c_module_execution + "/" + moduleExecutionId;
     }
 }

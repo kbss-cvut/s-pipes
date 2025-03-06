@@ -77,7 +77,7 @@ public class SMScriptCollectionRepository implements ScriptCollectionRepository 
     }
 
 
-    private OntModel getContextClosure(@NotNull  String context) {
+    public OntModel getContextClosure(@NotNull  String context) {
         OntModel model = ontoDocManager.getOntology(context);
 
         model.getNsPrefixMap().forEach((name, url) -> {

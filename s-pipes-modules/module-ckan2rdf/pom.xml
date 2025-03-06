@@ -37,7 +37,7 @@
         </dependency>
         <dependency>
             <groupId>cz.cvut.kbss.jopa</groupId>
-            <artifactId>ontodriver-sesame</artifactId>
+            <artifactId>ontodriver-rdf4j</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
