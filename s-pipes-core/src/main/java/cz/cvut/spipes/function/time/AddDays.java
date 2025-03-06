@@ -6,10 +6,8 @@ import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.datatypes.xsd.impl.XSDBaseStringType;
 import org.apache.jena.datatypes.xsd.impl.XSDDateType;
-import org.apache.jena.graph.Node;
 import org.apache.jena.sparql.expr.NodeValue;
-import org.apache.jena.sparql.function.FunctionEnv;
-import org.topbraid.spin.arq.AbstractFunction2;
+import org.apache.jena.sparql.function.FunctionBase2;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -19,7 +17,7 @@ import java.util.Optional;
  * Extend specified `date` by number of `days`. Return typed literal with same datatype.
  * Currently, supports only xsd:date datatype.
  */
-public class AddDays extends AbstractFunction2 implements ValueFunction {
+public class AddDays extends FunctionBase2 implements ValueFunction {
 
 
     private static final String TYPE_IRI = KBSS_TIMEF.uri + "add-days";
@@ -29,17 +27,17 @@ public class AddDays extends AbstractFunction2 implements ValueFunction {
         return TYPE_IRI;
     }
 
-    @Override
-    protected NodeValue exec(Node date, Node days, FunctionEnv env) {
 
+    @Override
+    public NodeValue exec(NodeValue date, NodeValue days) {
         Long daysToAdd = getDays(days);
         RDFDatatype datatype = getDatatype(date);
 
         try {
             if (datatype != null && daysToAdd != null) {
                 //TODO quite slow to parse everytime
-               String newDate = LocalDate.parse(date.getLiteral().getValue().toString()).plusDays(daysToAdd).toString();
-               return NodeValue.makeNode(newDate, datatype);
+                String newDate = LocalDate.parse(date.asNode().getLiteral().getValue().toString()).plusDays(daysToAdd).toString();
+                return NodeValue.makeNode(newDate, datatype);
             }
         } catch (DateTimeParseException e){
         }
@@ -47,19 +45,19 @@ public class AddDays extends AbstractFunction2 implements ValueFunction {
         return null;
     }
 
-    private Long getDays(Node days) {
+    private Long getDays(NodeValue days) {
         return Optional.of(days)
-            .filter(Node::isLiteral)
-            .filter(n -> n.getLiteralValue() instanceof Integer)
-            .map(n -> ((Integer) n.getLiteralValue()).longValue())
+            .filter(NodeValue::isLiteral)
+            .filter(n -> n.asNode().getLiteralValue() instanceof Integer)
+            .map(n -> ((Integer) n.asNode().getLiteralValue()).longValue())
             .orElse(null);
     }
 
-    RDFDatatype getDatatype(Node date) {
+    RDFDatatype getDatatype(NodeValue date) {
 
         return Optional.of(date)
-            .filter(Node::isLiteral)
-            .map(n -> getNewDatatype(n.getLiteralDatatype()))
+            .filter(NodeValue::isLiteral)
+            .map(n -> getNewDatatype(n.getNode().getLiteralDatatype()))
             .orElse(null);
     }
 
