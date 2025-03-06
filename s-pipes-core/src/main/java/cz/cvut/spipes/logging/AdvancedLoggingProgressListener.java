@@ -56,10 +56,6 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
     private static final Map<String, Object> metadataMap = new HashMap<>();
     private static final Map<String, EntityManager> entityManagerMap = new HashMap<>();
     private static final Map<Long, Path> logDir = new HashMap<>();
-    public static final String P_HAS_PART =
-            Vocabulary.ONTOLOGY_IRI_dataset_descriptor + "/has-part";
-    private static final String P_HAS_NEXT =
-        Vocabulary.ONTOLOGY_IRI_dataset_descriptor + "/has-next";
     private static final String P_HAS_INPUT_BINDDING =
         Vocabulary.ONTOLOGY_IRI_dataset_descriptor + "/has-input-binding";
     private static final String LOCAL_NAME = "advanced-logging-progress-listener";
@@ -244,7 +240,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
         if (predecessorModuleExecutionId != null) {
             addProperty(
                 moduleExecution,
-                ResourceFactory.createProperty(P_HAS_NEXT),
+                ResourceFactory.createProperty(Vocabulary.s_p_has_next),
                 URI.create(getModuleExecutionIri(predecessorModuleExecutionId)));
         }
 
@@ -277,7 +273,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
 
         // construct model
         Map<String, Set<Object>> properties = new HashMap<>();
-        properties.put(P_HAS_PART, Collections.singleton(URI.create(moduleExecution.getId())));
+        properties.put(Vocabulary.s_p_has_part, Collections.singleton(URI.create(moduleExecution.getId())));
 
         Thing output = new Thing();
         output.setId(
@@ -300,8 +296,8 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
                 pipelineExecution.setProperties(properties);
 
                 if (moduleExecution.getProperties() != null && moduleExecution.getProperties().containsKey(
-                    P_HAS_NEXT)) {
-                    String nextId = moduleExecution.getProperties().get(P_HAS_NEXT).iterator()
+                    Vocabulary.s_p_has_next)) {
+                    String nextId = moduleExecution.getProperties().get(Vocabulary.s_p_has_next).iterator()
                         .next().toString();
                     Thing next = new Thing();
                     next.setId(nextId);
