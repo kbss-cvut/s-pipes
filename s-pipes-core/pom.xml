@@ -101,7 +101,6 @@
         <dependency>
             <groupId>com.intellij</groupId>
             <artifactId>annotations</artifactId>
-            <version>9.0.4</version>
         </dependency>
         <dependency>
             <groupId>cz.cvut.kbss.jopa</groupId>
