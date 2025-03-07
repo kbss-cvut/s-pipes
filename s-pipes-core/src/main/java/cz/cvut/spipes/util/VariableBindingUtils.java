@@ -11,6 +11,13 @@ import static org.reflections.Reflections.log;
 
 public class VariableBindingUtils {
 
+    /**
+     * Returns new variables binding from provided variables binding restricted to listed variables.
+     * @param variablesBinding Variables binding from which values are copied.
+     * @param varNames Names of variables that should be copied to the new binding.
+     * @throws IllegalStateException If the provided variables binding does not contain a variable with the given name.
+     * @return new variables binding
+     */
     public static VariablesBinding restrict(VariablesBinding variablesBinding, String... varNames) {
         VariablesBinding newVB = variablesBinding.restrictTo(varNames);
         Arrays.stream(varNames).forEach(

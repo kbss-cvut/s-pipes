@@ -94,9 +94,9 @@ public class VariablesBinding {
     }
 
     /**
-     * Returns new binding restricted to listed variables.
-     * @param varNames Names of variables that should be copied from source binding.
-     * @return new binding
+     * Returns new variables binding from this variables binding restricted to listed variables.
+     * @param varNames Names of variables that should be copied from this variables binding.
+     * @return new variables binding
      */
     public VariablesBinding restrictTo(@NotNull List<String> varNames) {
         VariablesBinding newBinding = new VariablesBinding();
@@ -113,9 +113,9 @@ public class VariablesBinding {
     }
 
     /**
-     * Returns new binding restricted to listed variables.
-     * @param varNames Names of variables that should be copied from source binding.
-     * @return new binding
+     * Returns new variables binding from this variables binding restricted to listed variables.
+     * @param varNames Names of variables that should be copied to the new binding.
+     * @return new variables binding
      */
     public VariablesBinding restrictTo(@NotNull String ... varNames) {
         return restrictTo(Arrays.asList(varNames));
