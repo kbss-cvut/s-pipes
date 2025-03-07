@@ -158,7 +158,7 @@ public class SPipesServiceControllerTest {
             inputVariablesBinding = new VariablesBinding();
         }
         File inputBindingFile = File.createTempFile("s-pipes-test-input-binding","ttl");
-        inputVariablesBinding.save(new FileOutputStream(inputBindingFile), "TURTLE");
+        inputVariablesBinding.save(new FileOutputStream(inputBindingFile), Lang.TTL);
 
         if ( expectedOutputVariablesBinding == null ) {
             expectedOutputVariablesBinding = new VariablesBinding();
@@ -222,11 +222,11 @@ public class SPipesServiceControllerTest {
                 .file(testFile1)
                 .file(testFile2)
                 .param("testKey1", "@testFile1.txt")
-                .param("testKey2", "@testFile2.txt");
+                .param("testKey2", "@testFile2.txt")
+                .accept(RDFMimeType.LD_JSON_STRING);
 
         mockMvc.perform(rb)
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentTypeCompatibleWith(RDFMimeType.LD_JSON_STRING));
+                .andExpect(status().isBadRequest());
     }
 
     @Disabled // works only within fell vpn

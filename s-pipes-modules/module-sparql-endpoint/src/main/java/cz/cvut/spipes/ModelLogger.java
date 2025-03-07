@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import cz.cvut.spipes.util.JenaUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.util.FileUtils;
 import org.slf4j.Logger;
 
 @Slf4j
@@ -27,7 +27,7 @@ public class ModelLogger {
             try {
                 filePath = getLogDirectory().resolve(modelId + ".ttl");
                 classLogger.trace("Saving model with id " + modelId + " to " + filePath);
-                model.write(Files.newOutputStream(filePath), FileUtils.langTurtle);
+                JenaUtils.write(Files.newOutputStream(filePath), model);
             } catch (IOException e) {
                 log.warn("Unnable to save model to " + filePath);
             }

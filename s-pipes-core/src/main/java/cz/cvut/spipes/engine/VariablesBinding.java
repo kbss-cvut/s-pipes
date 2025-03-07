@@ -1,9 +1,11 @@
 package cz.cvut.spipes.engine;
 
+import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.RDFNodeUtils;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.rdf.model.*;
+import org.apache.jena.riot.Lang;
 import org.apache.jena.vocabulary.RDF;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -120,18 +122,18 @@ public class VariablesBinding {
     }
 
 
-    static final String BASE_URI = "http://onto.fel.cvut.cz/ontologies/s-pipes/";
-    static final String QUERY_SOLUTION = BASE_URI + "query_solution";
-    static final String HAS_BINDING = BASE_URI + "has_binding";
-    static final String HAS_BOUND_VARIABLE = BASE_URI + "has_bound_variable";
-    static final String HAS_BOUND_VALUE = BASE_URI + "has_bound_value";
+    public static final String BASE_URI = "http://onto.fel.cvut.cz/ontologies/s-pipes/";
+    public static final String QUERY_SOLUTION = BASE_URI + "query_solution";
+    public static final String HAS_BINDING = BASE_URI + "has_binding";
+    public static final String HAS_BOUND_VARIABLE = BASE_URI + "has_bound_variable";
+    public static final String HAS_BOUND_VALUE = BASE_URI + "has_bound_value";
 
     private static Property p(String property) {
         return ResourceFactory.createProperty(property);
     }
 
-    public void save(final OutputStream os, final String lang) {
-        getModel().write(os, lang);
+    public void save(final OutputStream os, Lang lang) {
+        JenaUtils.write(os, getModel(), lang);
     }
 
     public Model getModel() {

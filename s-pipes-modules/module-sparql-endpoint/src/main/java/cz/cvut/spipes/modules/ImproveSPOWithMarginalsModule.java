@@ -367,7 +367,7 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
         String filePath = getFilePrefix() + fileName;
         try {
             log.debug("Saving model to temporary file " + filePath + " ...");
-            model.write(new FileOutputStream(filePath), FileUtils.langTurtle);
+            JenaUtils.write(new FileOutputStream(filePath), model);
         } catch (IOException e) {
             e.printStackTrace();
         }
