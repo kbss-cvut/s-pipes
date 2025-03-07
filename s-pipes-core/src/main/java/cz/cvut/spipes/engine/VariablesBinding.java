@@ -68,7 +68,7 @@ public class VariablesBinding {
 
 
     /**
-     * Extend this binding by provided binding.
+     * Extend this binding with provided binding.
      *
      * @return Conflicting binding that was not possible to add to this binding due to inconsistency in values.
      */
