@@ -193,7 +193,7 @@ public abstract class AbstractModule implements Module {
         try (OutputStream tempFileIs = new FileOutputStream(tempFile)) {
             rdfModelWriter.write(tempFileIs, model);
 
-            return tempFile.getAbsolutePath();
+            return tempFile.toURI().toURL().toString();
         } catch (IOException e) {
             e.printStackTrace();
             return null;
