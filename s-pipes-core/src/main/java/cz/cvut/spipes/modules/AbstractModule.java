@@ -105,13 +105,13 @@ public abstract class AbstractModule implements Module {
     }
 
     private void generateLinkToRerunExecution(String inputModelFilePath) {
-        final String FILE_PREFIX = "file://";
         final String SPIPES_SERVICE_URL = ExecutionConfig.getDevelopmentServiceUrl();
 
-        String inputModelFileUrl = FILE_PREFIX + Optional.ofNullable(inputModelFilePath)
+        String inputModelFileUrl = Optional.ofNullable(inputModelFilePath)
             .orElse(saveModelToTemporaryFile(executionContext.getDefaultModel()));
-        String inputBindingFileUrl = FILE_PREFIX + saveModelToTemporaryFile(executionContext.getVariablesBinding().getModel());
-        String configModelFileUrl = FILE_PREFIX + saveScriptToTemporaryFile(this.resource.getModel());
+        String inputBindingFileUrl = saveModelToTemporaryFile(executionContext.getVariablesBinding().getModel());
+        String configModelFileUrl = saveModelToTemporaryFile(this.resource.getModel());
+
 
         Map<String, String> requestParams = new HashMap<>();
         requestParams.put("_pId", this.resource.getURI());
@@ -193,7 +193,7 @@ public abstract class AbstractModule implements Module {
         try (OutputStream tempFileIs = new FileOutputStream(tempFile)) {
             rdfModelWriter.write(tempFileIs, model);
 
-            return tempFile.getAbsolutePath();
+            return tempFile.toURI().toURL().toString();
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -207,7 +207,7 @@ public abstract class AbstractModule implements Module {
             "model-output-"
         );
     }
-
+  
     protected String saveScriptToTemporaryFile(Model model) {
         return saveModelToTemporaryFile(
             JenaUtils::writeScript,
