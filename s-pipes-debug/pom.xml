@@ -49,13 +49,6 @@
             <version>2.6.4</version>
         </dependency>
 
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.1.0</version>
-            <scope>provided</scope>
-        </dependency>
-
         <!-- KBSS-CVUT -->
         <dependency>
             <groupId>cz.cvut.kbss</groupId>
