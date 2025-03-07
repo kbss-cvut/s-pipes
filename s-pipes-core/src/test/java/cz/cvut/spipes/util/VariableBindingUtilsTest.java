@@ -1,4 +1,8 @@
 package cz.cvut.spipes.util;
+
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
 import cz.cvut.spipes.engine.VariablesBinding;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,37 +14,29 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.URL;
-import java.util.List;
 import java.util.concurrent.Executors;
 
 import static cz.cvut.spipes.util.VariableBindingUtils.extendBindingFromURL;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.reflections.Reflections.log;
-
-import com.sun.net.httpserver.HttpServer;
-import com.sun.net.httpserver.HttpHandler;
-import com.sun.net.httpserver.HttpExchange;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class VariableBindingUtilsTest {
 
     private String testData = """
-            <http://onto.fel.cvut.cz/ontologies/s-pipes/query_solution_1740574722036/personId>
-                    <http://onto.fel.cvut.cz/ontologies/s-pipes/has_bound_value>
-                            "robert-plant" ;
-                    <http://onto.fel.cvut.cz/ontologies/s-pipes/has_bound_variable>
-                            "personId" .
-                            
-            <http://onto.fel.cvut.cz/ontologies/s-pipes/query_solution_1740574722036/personName>
-                    <http://onto.fel.cvut.cz/ontologies/s-pipes/has_bound_value>
-                            "Robert Plant" ;
-                    <http://onto.fel.cvut.cz/ontologies/s-pipes/has_bound_variable>
-                            "personName" .
+            PREFIX : <http://onto.fel.cvut.cz/ontologies/s-pipes/query_solution_1740574722036/>
+            PREFIX s-pipes: <http://onto.fel.cvut.cz/ontologies/s-pipes/>
+            
+            :personId 
+               s-pipes:has_bound_variable "personId" ;
+               s-pipes:has_bound_value "robert-plant" ;
+            .                
+            :personName
+              s-pipes:has_bound_variable "personName" ;
+              s-pipes:has_bound_value "Robert Plant" ;
+            .
                             
             <http://onto.fel.cvut.cz/ontologies/s-pipes/query_solution_1740574722036>
-                    a       <http://onto.fel.cvut.cz/ontologies/s-pipes/query_solution> ;
-                    <http://onto.fel.cvut.cz/ontologies/s-pipes/has_binding>
-                            <http://onto.fel.cvut.cz/ontologies/s-pipes/query_solution_1740574722036/personId>, 
-                            <http://onto.fel.cvut.cz/ontologies/s-pipes/query_solution_1740574722036/personName>.                                             
+              a s-pipes:query_solution ;
+              s-pipes:has_binding :personId, :personName .
             """;
 
     private HttpServer server;
@@ -68,33 +64,33 @@ class VariableBindingUtilsTest {
     @Test
     void extendBindingFromURLLoadsLocalDataCorrectly(@TempDir File tempDir) throws Exception {
         File tempFile = new File(tempDir, "test.ttl");
+        saveDataToFile(tempFile, testData);
 
-        try (FileOutputStream fos = new FileOutputStream(tempFile)) {
-            fos.write(testData.getBytes());
-        }
 
-        // Emulating saving of the path like SaveModelToTemporaryFile does
-        // Reading URL from parameters like ServiceParametersHelper does
-        String filePath = tempFile.toURI().toURL().toString();
-        URL fileURL = new URL(filePath);
+        URL extendingVariablesBindingURL = tempFile.toURI().toURL();
 
-        VariablesBinding inputVariablesBinding = new VariablesBinding();
-        extendBindingFromURL(inputVariablesBinding, fileURL);
+        VariablesBinding targetVariablesBinding = new VariablesBinding();
+        extendBindingFromURL(targetVariablesBinding, extendingVariablesBindingURL);
 
-        assertEquals("robert-plant", inputVariablesBinding.getNode("personId").toString());
-        assertEquals("Robert Plant", inputVariablesBinding.getNode("personName").toString());
+        assertEquals("robert-plant", targetVariablesBinding.getNode("personId").toString());
+        assertEquals("Robert Plant", targetVariablesBinding.getNode("personName").toString());
     }
 
     @Test
     void extendBindingFromURLLoadsDataFromHttpUrlCorrectly() throws Exception {
-        URL url = new URL("http://localhost:" + server.getAddress().getPort() + "/test.ttl");
+        URL extendingVariablesBindingURL = new URL("http://localhost:" + server.getAddress().getPort() + "/test.ttl");
 
-        VariablesBinding inputVariablesBinding = new VariablesBinding();
-        extendBindingFromURL(inputVariablesBinding, url);
+        VariablesBinding targetVariablesBinding = new VariablesBinding();
+        extendBindingFromURL(targetVariablesBinding, extendingVariablesBindingURL);
 
-        assertEquals("robert-plant", inputVariablesBinding.getNode("personId").toString());
-        assertEquals("Robert Plant", inputVariablesBinding.getNode("personName").toString());
+        assertEquals("robert-plant", targetVariablesBinding.getNode("personId").toString());
+        assertEquals("Robert Plant", targetVariablesBinding.getNode("personName").toString());
 
     }
 
+    private void saveDataToFile(File tempFile, String testData) throws IOException {
+        try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+            fos.write(testData.getBytes());
+        }
+    }
 }
