@@ -1,7 +1,5 @@
 package cz.cvut.spipes.debug.rest.controller;
 
-import static cz.cvut.spipes.debug.config.SwaggerConstants.TRIPLE_FORMAT_NOTE;
-
 import java.util.List;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
