@@ -12,7 +12,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@ComponentScan(basePackages = "cz.cvut.spipes.debug.persistance.dao")
 @EnableTransactionManagement
 public class PersistenceConfig {
     @Bean
