@@ -1,6 +1,5 @@
 package cz.cvut.spipes.util;
 
-import java.io.IOException;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.repository.config.RepositoryConfig;
@@ -31,7 +30,7 @@ public class Rdf4jUtils {
                 repositoryManager.addRepositoryConfig(repConfig);
                 repository = repositoryManager.getRepository(repositoryName);
             }
-            repository.initialize();
+            repository.init();
 
         } catch (final RepositoryException | RDFParseException | RepositoryConfigException e) {
             log.error(e.getMessage(), e);

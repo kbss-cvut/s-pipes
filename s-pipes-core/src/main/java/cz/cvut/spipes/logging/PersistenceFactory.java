@@ -29,12 +29,12 @@ public class PersistenceFactory {
         final Map<String, String> props = new HashMap<>();
         // Here we set up basic storage access properties-driver class, physical location of the storage
         props.put(JOPAPersistenceProperties.DATA_SOURCE_CLASS,
-            "cz.cvut.kbss.ontodriver.sesame.SesameDataSource");
+            "cz.cvut.kbss.ontodriver.rdf4j.Rdf4jDataSource");
         // View transactional changes during transaction
         props.put(OntoDriverProperties.USE_TRANSACTIONAL_ONTOLOGY, Boolean.TRUE.toString());
         // Use in-memory storage if not remote or local file path specified
         props.put(Rdf4jOntoDriverProperties.USE_VOLATILE_STORAGE, Boolean.TRUE.toString());
-        // Don't use Sesame inference
+        // Don't use inference
         props.put(Rdf4jOntoDriverProperties.USE_INFERENCE, Boolean.FALSE.toString());
         // Ontology language
         props.put(JOPAPersistenceProperties.LANG, "en");
