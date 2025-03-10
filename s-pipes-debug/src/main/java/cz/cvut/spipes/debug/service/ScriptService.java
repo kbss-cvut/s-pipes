@@ -1,17 +1,8 @@
 package cz.cvut.spipes.debug.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
-import org.apache.catalina.Pipeline;
-import org.springframework.stereotype.Service;
-
+import cz.cvut.spipes.debug.dto.ModuleExecutionDto;
 import cz.cvut.spipes.debug.exception.NotFoundException;
 import cz.cvut.spipes.debug.mapper.ModuleExecutionMapper;
-import cz.cvut.spipes.debug.dto.ModuleExecutionDto;
 import cz.cvut.spipes.debug.persistance.dao.InputBindingDao;
 import cz.cvut.spipes.debug.persistance.dao.ModuleExecutionDao;
 import cz.cvut.spipes.debug.persistance.dao.PipelineExecutionDao;
@@ -19,6 +10,13 @@ import cz.cvut.spipes.debug.tree.ExecutionTree;
 import cz.cvut.spipes.model.ModuleExecution;
 import cz.cvut.spipes.model.PipelineExecution;
 import cz.cvut.spipes.model.Thing;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 
 @Service
