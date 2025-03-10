@@ -33,7 +33,6 @@ import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import cz.cvut.spipes.debug.config.PropertyResolver;
 
 @Configuration
-@PropertySource("classpath:config.properties")
 public class RDf4jPersistenceProvider {
 
     private static final Logger LOG = LoggerFactory.getLogger(RDf4jPersistenceProvider.class);
@@ -61,7 +60,6 @@ public class RDf4jPersistenceProvider {
     private void initializeStorage() {
         final String repoUrl = buildRepoUrl(propertyResolver.getProperty(DEFAULT_REPOSITORY_NAME));
         initializeStorage(repoUrl);
-
     }
 
     public void changeRepository(String repositoryName) {

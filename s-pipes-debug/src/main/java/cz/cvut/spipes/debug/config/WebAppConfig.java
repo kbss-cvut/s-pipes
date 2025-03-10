@@ -26,7 +26,6 @@ import cz.cvut.kbss.jsonld.jackson.serialization.SerializationConstants;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan("cz.cvut.spipes.debug")
 public class WebAppConfig implements WebMvcConfigurer {
 
     @Bean(name = "jsonLdMapper")
