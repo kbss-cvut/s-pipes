@@ -156,6 +156,7 @@ public class JenaUtils {
     public static void writeScript(OutputStream outputStream, Model model){
         RDFWriter.create()
             .source(model)
+            .lang(Lang.TTL)
             .set(RIOT.multilineLiterals, true)
             .output(outputStream);
     }
