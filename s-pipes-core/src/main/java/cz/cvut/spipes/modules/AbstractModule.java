@@ -105,7 +105,7 @@ public abstract class AbstractModule implements Module {
     }
 
     private void generateLinkToRerunExecution(String inputModelFilePath) {
-        final String FILE_PREFIX = "file://";
+        final String FILE_PREFIX = "file:/";
         final String SPIPES_SERVICE_URL = ExecutionConfig.getDevelopmentServiceUrl();
 
         String inputModelFileUrl = FILE_PREFIX + Optional.ofNullable(inputModelFilePath)
@@ -193,7 +193,7 @@ public abstract class AbstractModule implements Module {
         try (OutputStream tempFileIs = new FileOutputStream(tempFile)) {
             rdfModelWriter.write(tempFileIs, model);
 
-            return tempFile.toURI().toURL().toString().replace("file:/", "");
+            return tempFile.getAbsolutePath();
         } catch (IOException e) {
             e.printStackTrace();
             return null;
