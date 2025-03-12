@@ -36,7 +36,6 @@ import cz.cvut.spipes.debug.config.PropertyResolver;
  * Provides entity manager factory as a Spring bean.
  */
 @Configuration
-@PropertySource("classpath:config.properties")
 public class PersistenceFactory {
 
     private static final String REPOSITORY_NAME_PROPERTY = "repositoryName";

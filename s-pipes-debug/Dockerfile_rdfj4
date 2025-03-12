@@ -1,5 +1,0 @@
-FROM eclipse/rdf4j-workbench:3.7.7
-
-USER root
-
-RUN chown -R _apt:root /var/rdf4j/
