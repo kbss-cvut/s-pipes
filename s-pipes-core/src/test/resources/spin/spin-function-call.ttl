@@ -18,10 +18,10 @@
 [
       rdf:type kbss-spif:create-sparql-service-url ;
       sp:arg1 [
-          sp:varName "repositoryUrl" ;
+          sp:varName "sparqlEndpoint" ;
         ] ;
       sp:arg2 [
-          sp:varName "reportGraphId" ;
+          sp:varName "defaultGraphUri" ;
         ] ;
 ]
 .
