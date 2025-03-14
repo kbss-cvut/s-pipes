@@ -10,13 +10,13 @@ public class SFormsVocabularyJena {
         throw new IllegalStateException("Utility class");
     }
 
-    public static final Property s_p_constraint = getProperty(cz.cvut.sforms.Vocabulary.s_p_constraint);
-    public static final Property s_p_defaultValue = getProperty(cz.cvut.sforms.Vocabulary.s_p_defaultValue);
-    public static final Property s_p_optional = getProperty(cz.cvut.sforms.Vocabulary.s_p_optional);
-    public static final Property s_p_predicate_A = getProperty(Vocabulary.s_p_predicate_A);
-    public static final Property s_p_valueType = getProperty(cz.cvut.sforms.Vocabulary.s_p_valueType);
-    public static final Property s_p_minCount = getProperty(cz.cvut.sforms.Vocabulary.s_p_minCount);
-    public static final Property s_p_maxCount = getProperty(cz.cvut.sforms.Vocabulary.s_p_maxCount);
+    public static final Property s_p_constraint = getProperty(cz.cvut.sforms.Vocabulary.s_p_spl_constraint);
+    public static final Property s_p_defaultValue = getProperty(cz.cvut.sforms.Vocabulary.s_p_spl_defaultValue);
+    public static final Property s_p_optional = getProperty(cz.cvut.sforms.Vocabulary.s_p_spl_optional);
+    public static final Property s_p_predicate_A = getProperty(Vocabulary.s_p_spl_predicate);
+    public static final Property s_p_valueType = getProperty(cz.cvut.sforms.Vocabulary.s_p_spl_valueType);
+    public static final Property s_p_minCount = getProperty(cz.cvut.sforms.Vocabulary.s_p_spl_minCount);
+    public static final Property s_p_maxCount = getProperty(cz.cvut.sforms.Vocabulary.s_p_spl_maxCount);
     public static final Property s_p_has_related_question = getProperty(cz.cvut.sforms.Vocabulary.s_p_has_related_question);
     public static final Property s_p_has_answer = getProperty(cz.cvut.sforms.Vocabulary.s_p_has_answer);
     public static final Property s_p_has_origin_path = getProperty(cz.cvut.sforms.Vocabulary.s_p_has_origin_path);
