@@ -127,7 +127,10 @@ public abstract class AbstractModule implements Module {
     }
 
     private String convertPathToURL (String filePath) {
-        return new File(filePath).toURI().toString();
+        if (filePath.startsWith("/")) {
+            filePath = filePath.substring(1); // removing leading '/' for UNIX file paths
+        }
+        return "file:///" + filePath;
     }
 
     @Override
