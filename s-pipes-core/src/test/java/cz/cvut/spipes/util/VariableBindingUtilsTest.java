@@ -66,8 +66,12 @@ class VariableBindingUtilsTest {
         File tempFile = new File(tempDir, "test.ttl");
         saveDataToFile(tempFile, testData);
 
+        String filePath = tempFile.getAbsolutePath();
+        if (filePath.startsWith("/")) {
+            filePath = filePath.substring(1); // removing leading '/' for UNIX file paths
+        }
 
-        URL extendingVariablesBindingURL = tempFile.toURI().toURL();
+        URL extendingVariablesBindingURL = new URL("file:///" + filePath);
 
         VariablesBinding targetVariablesBinding = new VariablesBinding();
         extendBindingFromURL(targetVariablesBinding, extendingVariablesBindingURL);
