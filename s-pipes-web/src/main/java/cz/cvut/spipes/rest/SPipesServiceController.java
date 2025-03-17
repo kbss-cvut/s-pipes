@@ -27,12 +27,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static cz.cvut.spipes.rest.util.ContextLoaderHelper.isKeepUpdated;
+import static cz.cvut.spipes.util.VariableBindingUtils.extendBindingFromURL;
 
 @Slf4j
 @RestController
@@ -222,7 +223,12 @@ public class SPipesServiceController {
 
         ExecutionEngine engine = createExecutionEngine(configModel);
         ContextLoaderHelper.updateContextsIfNecessary(scriptManager);
-        Module module = PipelineFactory.loadModule(configModel.createResource(id));
+        Module module = null;
+        if (isKeepUpdated()) {
+            module = scriptManager.loadModule(id, null, null);
+        } else {
+            module = PipelineFactory.loadModule(configModel.createResource(id));
+        }
         if (module == null) {
             throw new SPipesServiceException("Cannot load module with id=" + id);
         }
@@ -258,7 +264,12 @@ public class SPipesServiceController {
 
         final VariablesBinding inputVariablesBinding = new VariablesBinding(transform(parameters));
         if (inputBindingURL != null) {
-            extendBindingFromURL(inputVariablesBinding, inputBindingURL);
+            try {
+                extendBindingFromURL(inputVariablesBinding, inputBindingURL);
+            }
+            catch (IOException e){
+                log.warn("Could not read data from parameter {}={}, caused by: {}", ReservedParams.P_INPUT_BINDING_URL, inputBindingURL, e.getMessage());
+            }
         }
         log.info("- input variable binding ={}", inputVariablesBinding);
 
@@ -354,26 +365,6 @@ public class SPipesServiceController {
             throw new SPipesServiceException("Could not load model from URL " + modelUrl + ".");
         }
         return outputModel;
-    }
-
-    private void extendBindingFromURL(VariablesBinding inputVariablesBinding, URL inputBindingURL) {
-        try {
-            final VariablesBinding vb2 = new VariablesBinding();
-            vb2.load(inputBindingURL.openStream(), FileUtils.langTurtle);
-            VariablesBinding vb3 = inputVariablesBinding.extendConsistently(vb2);
-            if (vb3.isEmpty()) {
-                log.debug("- no conflict between bindings loaded from '{}' and those provided in query string.",
-                    ReservedParams.P_INPUT_BINDING_URL
-                );
-            } else {
-                log.info("- conflicts found between bindings loaded from '{}' and those provided in query string: {}",
-                    ReservedParams.P_INPUT_BINDING_URL, vb3
-                );
-            }
-        } catch (IOException e) {
-            log.warn("Could not read data from parameter {}={}, caused by: {}", ReservedParams.P_INPUT_BINDING_URL, inputBindingURL, e);
-        }
-
     }
 
 }
