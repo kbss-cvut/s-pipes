@@ -7,9 +7,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cz.cvut.spipes.modules</groupId>
     <artifactId>s-pipes-modules-text-analysis</artifactId>
-    <version>${project.parent.version}</version>
     <packaging>jar</packaging>
 
     <name>SPipes Generated Module - module-text-analysis</name>
