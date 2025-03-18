@@ -10,7 +10,6 @@ import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ProgressListener;
 import cz.cvut.spipes.model.*;
 import cz.cvut.spipes.modules.Module;
-import cz.cvut.spipes.util.DateUtils;
 import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.Rdf4jUtils;
 import cz.cvut.spipes.util.TempFileUtils;
@@ -101,7 +100,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
 
     @Override
     public void pipelineExecutionStarted(final long pipelineExecutionId) {
-        Thing pipelineExecution = new Thing();
+        PipelineExecution pipelineExecution = new PipelineExecution();
         pipelineExecution.setId(getPipelineExecutionIri(pipelineExecutionId));
         pipelineExecution.setTypes(Collections.singleton(Vocabulary.s_c_transformation));
 
@@ -181,7 +180,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
 
             String pipelineName = metadataMap.get(SPIPES.has_pipeline_name.toString()).toString();
             // new
-            Date startDate = DateUtils.toDate(getSingletonPropertyValue(pipelineExecution, SPIPES.has_pipeline_execution_start_date));
+            Date startDate = pipelineExecution.getHas_pipepline_execution_date();
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_finish_date, finishDate);
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_finish_date_unix, finishDate.getTime());
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_duration, computeDuration(startDate, finishDate));
