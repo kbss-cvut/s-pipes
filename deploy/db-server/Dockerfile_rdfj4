@@ -2,6 +2,6 @@ FROM eclipse/rdf4j-workbench:3.7.7
 
 USER root
 
-COPY ./repositories /var/rdf4j/server/repositories
+COPY ./db-server/repositories /var/rdf4j/server/repositories
 
 RUN chown -R _apt:root /var/rdf4j/
