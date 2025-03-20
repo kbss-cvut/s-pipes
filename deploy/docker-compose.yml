@@ -5,14 +5,16 @@ services:
     image: nginx:alpine
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "80:80"
+    networks:
+      - s-pipes-network
     depends_on:
       - s-pipes-engine
       - s-pipes-engine-debug
 
   s-pipes-engine:
     image: ghcr.io/kbss-cvut/s-pipes/s-pipes-engine:latest
-    ports:
-      - "8081:8080"
     depends_on:
       - rdf4j
     environment:
@@ -24,32 +26,34 @@ services:
       - /usr/local/tomcat/temp/:/usr/local/tomcat/temp/
       - ./s-pipes-engine/s-pipes-progress-listener-config.ttl:/usr/local/tomcat/webapps/s-pipes/WEB-INF/classes/config.ttl
       - ./../doc/examples:/scripts/root:ro
+    networks:
+      - s-pipes-network
 
   s-pipes-engine-debug:
     image: ghcr.io/kbss-cvut/s-pipes/s-pipes-engine-debug:latest
-    ports:
-      - "8082:8080"
-    expose:
-      - "8080"
     depends_on:
       - rdf4j
     environment:
       - STORAGE_URL=http://rdf4j:8080/rdf4j-server/repositories
+    networks:
+      - s-pipes-network
 
   rdf4j:
     build:
       context: .
       dockerfile: ./db-server/Dockerfile_rdfj4
-    ports:
-      - "8080:8080"
-    expose:
-      - "8080"
     environment:
       - JAVA_OPTS=-Xms1g -Xmx4g
     volumes:
       - data:/var/rdf4j
       - logs:/usr/local/tomcat/logs
+    networks:
+      - s-pipes-network
 
 volumes:
   data:
   logs:
+
+networks:
+  s-pipes-network:
+    driver: bridge
