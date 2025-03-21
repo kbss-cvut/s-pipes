@@ -1,29 +1,25 @@
-version: '3.7'
-
 services:
   nginx:
     image: nginx:alpine
     ports:
-      - "8080:80"
+      - "1234:80"
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+        - ./nginx/nginx.conf:/etc/nginx/templates/nginx.conf.template:ro
     depends_on:
       - s-pipes-engine
       - s-pipes-engine-debug
+      - db-server
+    environment:
+        NGINX_ENVSUBST_OUTPUT_DIR: /etc/nginx
+        APP_ORIGIN: "http://localhost:1234"
 
   s-pipes-engine:
     image: ghcr.io/kbss-cvut/s-pipes/s-pipes-engine:latest
     expose:
       - "8080"
     depends_on:
-      - rdf4j
-    environment:
-      CONTEXT_PATH: "./../doc/examples;./../../s-pipes-modules"
-      STORAGE_URL: "http:/localhost:8080/db-server/rdf4j-server/repositories"
+      - db-server
     volumes:
-      - /tmp:/tmp
-      - /home:/home
-      - /usr/local/tomcat/temp/:/usr/local/tomcat/temp/
       - ./s-pipes-engine/s-pipes-progress-listener-config.ttl:/usr/local/tomcat/webapps/s-pipes/WEB-INF/classes/config.ttl
       - ./../doc/examples:/scripts/root:ro
 
@@ -32,22 +28,22 @@ services:
     expose:
       - "8080"
     depends_on:
-      - rdf4j
+      - db-server
     environment:
-      - STORAGE_URL=http://rdf4j:8080/rdf4j-server/repositories
+      - STORAGE_URL=http://db-server:7200/repositories
+      - REPOSITORY_NAME=s-pipes-execution-log
 
-  rdf4j:
-    build:
-      context: .
-      dockerfile: ./db-server/Dockerfile_rdfj4
-    expose:
-      - "8080"
-    environment:
-      - JAVA_OPTS=-Xms1g -Xmx4g
-    volumes:
-      - data:/var/rdf4j
-      - logs:/usr/local/tomcat/logs
+  db-server:
+      build:
+          context: ./db-server
+      environment:
+          GDB_JAVA_OPTS: "-Dgraphdb.external-url=http://localhost:1234/db-server"
+      expose:
+          - "7200"
+      restart: always
+      volumes:
+          - ./db-server/init-config:/repo-config:ro
+          - db-server:/opt/graphdb/home
 
 volumes:
-  data:
-  logs:
+  db-server:
