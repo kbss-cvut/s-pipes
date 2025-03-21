@@ -43,7 +43,7 @@ public class PersistenceFactory {
         final Map<String, String> props = new HashMap<>();
         // Basic storage access properties - driver class, physical location of the storage
         props.put(JOPAPersistenceProperties.DATA_SOURCE_CLASS,
-            "cz.cvut.kbss.ontodriver.sesame.SesameDataSource");
+            "cz.cvut.kbss.ontodriver.rdf4j.Rdf4jDataSource");
         // View transactional changes during transaction
         props.put(OntoDriverProperties.USE_TRANSACTIONAL_ONTOLOGY, Boolean.TRUE.toString());
         // Use in-memory storage if not remote or local file path specified
