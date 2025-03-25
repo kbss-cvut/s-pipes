@@ -8,7 +8,7 @@ RUN mvn clean package -T 2C -DskipTests -q
 
 FROM eclipse-temurin:17-jdk-alpine as runtime
 
-COPY --from=build "/s-pipes/s-pipes-debug/target/s-pipes-debug-[0-9]*" s-pipes-debug.jar
+COPY --from=build "/s-pipes/s-pipes-debug/target/s-pipes-debug-[0-9]*[0-9].jar" s-pipes-debug.jar
 
 EXPOSE 8080
 
