@@ -29,7 +29,7 @@
         <org.aspectj.version>1.9.21</org.aspectj.version>
         <org.junit.jupiter.version>5.8.2</org.junit.jupiter.version>
         <org.mockito.version>3.12.4</org.mockito.version>
-        <commons.io.version>2.7</commons.io.version>
+        <commons.io.version>2.14.0</commons.io.version>
         <org.projectlombok.lombok.version>1.18.30</org.projectlombok.lombok.version>
     </properties>
 
