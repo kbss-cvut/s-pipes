@@ -22,6 +22,7 @@
         <org.apache.jena>3.17.0</org.apache.jena>
         <org.springframework.version>5.3.19</org.springframework.version>
         <org.springframework.security.version>5.3.1.RELEASE</org.springframework.security.version>
+        <org.springframework.boot.version>2.6.6</org.springframework.boot.version>
         <com.fasterxml.jackson.version>2.11.0</com.fasterxml.jackson.version>
         <org.eclipse.rdf4j.version>3.7.3</org.eclipse.rdf4j.version>
         <cz.cvut.kbss.jopa.version>0.19.3</cz.cvut.kbss.jopa.version>
@@ -200,11 +201,28 @@
                 <version>1.15</version>
             </dependency>
 
+            <!-- Spring Boot -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-hateoas</artifactId>
+                <version>${org.springframework.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>${org.springframework.boot.version}</version>
+            </dependency>
+
             <!-- Testing -->
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-test</artifactId>
                 <version>${org.springframework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${org.springframework.boot.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
@@ -317,6 +335,20 @@
                         <execution>
                             <goals>
                                 <goal>test-jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${org.springframework.boot.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <!-- Ensures executable JAR since we are not
+                                     using spring-boot-starter-parent -->
+                                <goal>repackage</goal>
                             </goals>
                         </execution>
                     </executions>
