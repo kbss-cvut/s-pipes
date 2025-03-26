@@ -6,7 +6,7 @@ COPY ./ ./
 
 RUN mvn clean package -T 2C -DskipTests -q
 
-FROM eclipse-temurin:17-jdk-alpine as runtime
+FROM eclipse-temurin:17-jdk-alpine AS runtime
 
 COPY --from=build "/s-pipes/s-pipes-debug/target/s-pipes-debug-[0-9]*[0-9].jar" s-pipes-debug.jar
 
