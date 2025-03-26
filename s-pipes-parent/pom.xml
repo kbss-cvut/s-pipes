@@ -24,9 +24,8 @@
         <org.springframework.security.version>5.3.1.RELEASE</org.springframework.security.version>
         <org.springframework.boot.version>2.6.6</org.springframework.boot.version>
         <com.fasterxml.jackson.version>2.11.0</com.fasterxml.jackson.version>
-        <org.eclipse.rdf4j.version>3.7.3</org.eclipse.rdf4j.version>
-        <cz.cvut.kbss.jopa.version>0.19.3</cz.cvut.kbss.jopa.version>
-        <org.aspectj.version>1.9.21</org.aspectj.version>
+        <org.eclipse.rdf4j.version>5.0.3</org.eclipse.rdf4j.version>
+        <cz.cvut.kbss.jopa.version>2.2.0</cz.cvut.kbss.jopa.version>
         <org.junit.jupiter.version>5.8.2</org.junit.jupiter.version>
         <org.mockito.version>3.12.4</org.mockito.version>
         <commons.io.version>2.7</commons.io.version>
@@ -322,11 +321,6 @@
     <build>
         <pluginManagement>
             <plugins>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>aspectj-maven-plugin</artifactId>
-                    <version>1.14.0</version>
-                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
