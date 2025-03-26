@@ -1,6 +1,7 @@
 
 package cz.cvut.spipes.debug.config;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.*;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -67,7 +68,10 @@ public class WebAppConfig implements WebMvcConfigurer {
     @Bean
     public RequestMappingHandlerAdapter requestMappingHandlerAdapter() {
         final RequestMappingHandlerAdapter adapter = new RequestMappingHandlerAdapter();
-        adapter.setMessageConverters(List.of(createJsonLdMessageConverter(), mappingJackson2HttpMessageConverter()));
+        List<HttpMessageConverter<?>> defaultConverters = new ArrayList<>(adapter.getMessageConverters());
+        defaultConverters.add(createJsonLdMessageConverter());
+        defaultConverters.add(mappingJackson2HttpMessageConverter());
+        adapter.setMessageConverters(defaultConverters);
         return adapter;
     }
 
