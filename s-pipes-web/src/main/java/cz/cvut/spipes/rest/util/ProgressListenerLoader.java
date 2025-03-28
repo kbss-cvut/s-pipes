@@ -30,6 +30,7 @@ public class ProgressListenerLoader {
                         Constructor<?> ctor = clazz.getConstructor(Resource.class);
                         ProgressListener pl = (ProgressListener) ctor.newInstance(new Object[] {r});
                         progressListeners.add(pl);
+                        log.info("Using progress listener: " + pl);
                     } catch (ClassNotFoundException | NoSuchMethodException |
                         InstantiationException | IllegalAccessException |
                         InvocationTargetException e) {
