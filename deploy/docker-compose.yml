@@ -19,6 +19,8 @@ services:
       - "8080"
     depends_on:
       - db-server
+    environment:
+      EXECUTION_CONFIGURL: "/usr/local/tomcat/webapps/s-pipes/WEB-INF/classes/config.ttl"
     volumes:
       - ./s-pipes-engine/s-pipes-progress-listener-config.ttl:/usr/local/tomcat/webapps/s-pipes/WEB-INF/classes/config.ttl
       - ./../doc/examples:/scripts/root:ro
@@ -40,7 +42,6 @@ services:
           GDB_JAVA_OPTS: "-Dgraphdb.external-url=http://localhost:1234/db-server"
       expose:
           - "7200"
-      restart: always
       volumes:
           - ./db-server/init-config:/repo-config:ro
           - db-server:/opt/graphdb/home
