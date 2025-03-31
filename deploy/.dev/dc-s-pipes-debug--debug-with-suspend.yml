@@ -1,0 +1,6 @@
+services:
+  s-pipes-engine-debug:
+    ports:
+      - "127.0.0.1:${JAVA_DEBUG_S_PIPES_DEBUG_PORT:-5005}:5005"
+    environment:
+      JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005"
