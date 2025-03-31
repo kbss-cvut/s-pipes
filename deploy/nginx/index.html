@@ -99,7 +99,7 @@
     }
 
     function checkAllServices() {
-        checkServiceStatus("/s-pipes/", "s-pipes-status");
+        checkServiceStatus("/s-pipes/actuator/health", "s-pipes-status");
         checkServiceStatus("/s-pipes-debug/actuator/health", "s-pipes-debug-status");
         checkServiceStatus("/db-server/repositories/s-pipes-execution-log/health", "db-server-status");
     }
