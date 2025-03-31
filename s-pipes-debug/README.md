@@ -6,7 +6,7 @@ SPipes debug module provides web API tools for retrieving different information 
 
 The following software needs to be installed on the system for development:
 
-- JDK 11
+- JDK 17
 - Maven
 - RDF4J server
 
@@ -22,3 +22,5 @@ happened and a lot of different useful information.
 With SPipes debug module you can retrieve information about executed pipelines and modules through REST API.
 You can go over hands-on tutorial to see how to use it [here](./doc/hands-on-tutorial/hands-on-tutorial.md).
 
+## Health Check
+To check that the `s-pipes-debug` is running, use path `/actuator/health` (e.g. `http://localhost:8080/s-pipes-debug/actuator/health`).
