@@ -21,6 +21,7 @@ import java.util.Map;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 
+import com.github.ledsoft.jopa.loader.BootAwareClasspathScanner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -81,6 +82,7 @@ public class PersistenceFactory {
         final Map<String, String> properties = new HashMap<>(PARAMS);
         properties.put(JOPAPersistenceProperties.ONTOLOGY_PHYSICAL_URI_KEY, repositoryUrl);
         properties.put(JOPAPersistenceProperties.DATA_SOURCE_CLASS, propertyResolver.getProperty(DRIVER_PROPERTY));
+        properties.put(JOPAPersistenceProperties.CLASSPATH_SCANNER_CLASS, BootAwareClasspathScanner.class.getName());
         this.emf = Persistence.createEntityManagerFactory("debug", properties);
     }
 

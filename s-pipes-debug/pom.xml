@@ -65,6 +65,11 @@
             <artifactId>jopa-spring-transaction</artifactId>
             <version>0.1.2</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.ledsoft</groupId>
+            <artifactId>jopa-spring-boot-loader</artifactId>
+            <version>0.0.1</version>
+        </dependency>
 
         <!--  Other  -->
         <dependency>
