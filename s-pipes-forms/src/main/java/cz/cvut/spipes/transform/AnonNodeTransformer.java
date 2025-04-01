@@ -20,7 +20,7 @@ public class AnonNodeTransformer {
 
     public static String serialize(RDFNode node) {
         Resource r = node.asResource();
-        Property text = ResourceFactory.createProperty(Vocabulary.s_p_text);
+        Property text = ResourceFactory.createProperty(Vocabulary.s_p_sp_text);
 
         if (r.getProperty(text) != null) {
             return r.getProperty(text).getLiteral().getString();
