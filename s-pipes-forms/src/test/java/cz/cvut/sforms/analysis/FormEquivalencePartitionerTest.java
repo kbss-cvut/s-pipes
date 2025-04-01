@@ -24,7 +24,7 @@ public class FormEquivalencePartitionerTest {
     private FormGenerator g;
 
     @BeforeEach
-    private void initEach() {
+    void initEach() {
         g = new FormGenerator();
         formEquivalence = new FormEquivalencePartitioner();
     }

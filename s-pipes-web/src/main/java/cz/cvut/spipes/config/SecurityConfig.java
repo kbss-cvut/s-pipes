@@ -2,12 +2,10 @@ package cz.cvut.spipes.config;
 
 
 import cz.cvut.spipes.security.SecurityConstants;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-
 //@Configuration
 //@EnableWebSecurity(debug = false)
 //@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig  {
 
     private static final String[] COOKIES_TO_DESTROY = {
             SecurityConstants.SESSION_COOKIE_NAME,

@@ -12,6 +12,9 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.*;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.converter.support.AllEncompassingFormHttpMessageConverter;
+import org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter;
+import org.springframework.http.converter.yaml.MappingJackson2YamlHttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -68,7 +71,14 @@ public class WebAppConfig implements WebMvcConfigurer {
     @Bean
     public RequestMappingHandlerAdapter requestMappingHandlerAdapter() {
         final RequestMappingHandlerAdapter adapter = new RequestMappingHandlerAdapter();
-        List<HttpMessageConverter<?>> defaultConverters = new ArrayList<>(adapter.getMessageConverters());
+        List<HttpMessageConverter<?>> defaultConverters = new ArrayList<>();
+        defaultConverters.add(new ByteArrayHttpMessageConverter());
+        defaultConverters.add(new StringHttpMessageConverter());
+        defaultConverters.add(new ResourceHttpMessageConverter());
+        defaultConverters.add(new ResourceRegionHttpMessageConverter());
+        defaultConverters.add(new AllEncompassingFormHttpMessageConverter());
+        defaultConverters.add(new Jaxb2RootElementHttpMessageConverter());
+        defaultConverters.add(new MappingJackson2YamlHttpMessageConverter());
         defaultConverters.add(createJsonLdMessageConverter());
         defaultConverters.add(mappingJackson2HttpMessageConverter());
         adapter.setMessageConverters(defaultConverters);

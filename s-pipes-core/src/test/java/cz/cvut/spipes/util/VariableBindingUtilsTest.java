@@ -43,6 +43,7 @@ class VariableBindingUtilsTest {
 
     @BeforeEach
     void setup() throws IOException {
+        org.reflections.Reflections.log = org.slf4j.LoggerFactory.getLogger("Reflections");
         server = HttpServer.create(new InetSocketAddress(0), 0);
         server.createContext("/test.ttl", new HttpHandler() {
             @Override

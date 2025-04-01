@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockedStatic;
+import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +62,7 @@ public class SPipesServiceControllerTest {
 
     @BeforeEach
     public void setUp() {
+        Reflections.log = LoggerFactory.getLogger("Reflections");
         this.mockMvc = MockMvcBuilders.webAppContextSetup(ctx).build();
         mocked = mockStatic(ContextLoaderHelper.class);
         mocked.when(ContextLoaderHelper::isKeepUpdated).thenReturn(false);
