@@ -53,7 +53,7 @@ public class SPipesServiceControllerTest {
 
     public static final String SAMPLE_IDENTITY_MODULE = "http://onto.fel.cvut.cz/ontologies/s-pipes/identity#SampleIdentity";
     public static final String CREATE_SAMPLE_TRIPLES = "http://onto.fel.cvut.cz/ontologies/test/apply-construct#CreateSampleTriples";
-    private static final Logger log = LoggerFactory.getLogger(SPipesServiceControllerTest.class);
+
     @Autowired
     protected WebApplicationContext ctx;
 

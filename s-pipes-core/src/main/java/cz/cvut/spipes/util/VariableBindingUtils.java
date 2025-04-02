@@ -13,6 +13,8 @@ import static org.reflections.Reflections.log;
 
 public class VariableBindingUtils {
 
+    private static final Logger log = LoggerFactory.getLogger(VariableBindingUtils.class);
+
     /**
      * Returns new variables binding from provided variables binding restricted to listed variables.
      * @param variablesBinding Variables binding from which values are copied.
@@ -20,9 +22,6 @@ public class VariableBindingUtils {
      * @throws IllegalStateException If the provided variables binding does not contain a variable with the given name.
      * @return new variables binding
      */
-
-    private static final Logger log = LoggerFactory.getLogger(VariableBindingUtils.class);
-
     public static VariablesBinding restrict(VariablesBinding variablesBinding, String... varNames) {
         VariablesBinding newVB = variablesBinding.restrictTo(varNames);
         Arrays.stream(varNames).forEach(
