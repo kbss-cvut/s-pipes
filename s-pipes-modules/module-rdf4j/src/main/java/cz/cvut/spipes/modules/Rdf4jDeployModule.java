@@ -27,7 +27,7 @@ import org.eclipse.rdf4j.rio.RDFParseException;
 import org.eclipse.rdf4j.sail.nativerdf.config.NativeStoreConfig;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
