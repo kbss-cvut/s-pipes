@@ -2,6 +2,8 @@ package cz.cvut.spipes.util;
 
 import cz.cvut.spipes.engine.VariablesBinding;
 import org.apache.jena.util.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URL;
@@ -18,6 +20,9 @@ public class VariableBindingUtils {
      * @throws IllegalStateException If the provided variables binding does not contain a variable with the given name.
      * @return new variables binding
      */
+
+    private static final Logger log = LoggerFactory.getLogger(VariableBindingUtils.class);
+
     public static VariablesBinding restrict(VariablesBinding variablesBinding, String... varNames) {
         VariablesBinding newVB = variablesBinding.restrictTo(varNames);
         Arrays.stream(varNames).forEach(
