@@ -72,22 +72,22 @@
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-core</artifactId>
-                <version>1.5.6</version>
+                <version>${ch.qos.logback.version}</version>
             </dependency>
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
-                <version>1.5.6</version>
+                <version>${ch.qos.logback.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>jcl-over-slf4j</artifactId>
-                <version>2.0.7</version>
+                <version>${org.slf4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
-                <version>2.0.7</version>
+                <version>${org.slf4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
@@ -98,6 +98,11 @@
                 <groupId>com.github.jsonld-java</groupId>
                 <artifactId>jsonld-java</artifactId>
                 <version>0.9.0</version>
+            </dependency>
+            <dependency>
+                <groupId>cz.cvut.kbss.jsonld</groupId>
+                <artifactId>jb4jsonld-jackson</artifactId>
+                <version>0.10.0</version>
             </dependency>
             <dependency>
                 <groupId>xerces</groupId>
@@ -127,12 +132,12 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>
-                <version>2.14.0</version>
+                <version>${com.fasterxml.jackson.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>2.14.0</version>
+                <version>${com.fasterxml.jackson.version}</version>
             </dependency>
 
             <!-- JOPA -->
@@ -181,6 +186,11 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-webmvc</artifactId>
+                <version>${org.springframework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-tx</artifactId>
                 <version>${org.springframework.version}</version>
             </dependency>
 
