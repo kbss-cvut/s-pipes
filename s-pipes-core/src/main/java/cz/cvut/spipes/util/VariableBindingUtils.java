@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 
-import static org.reflections.Reflections.log;
-
 public class VariableBindingUtils {
 
     private static final Logger log = LoggerFactory.getLogger(VariableBindingUtils.class);
