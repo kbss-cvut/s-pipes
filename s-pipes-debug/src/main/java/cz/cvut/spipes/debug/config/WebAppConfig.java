@@ -15,7 +15,6 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -63,16 +62,6 @@ public class WebAppConfig implements WebMvcConfigurer {
                 jsonLdObjectMapper());
         converter.setSupportedMediaTypes(Collections.singletonList(MediaType.valueOf(JsonLd.MEDIA_TYPE)));
         return converter;
-    }
-
-    @Bean
-    public RequestMappingHandlerAdapter requestMappingHandlerAdapter() {
-        final RequestMappingHandlerAdapter adapter = new RequestMappingHandlerAdapter();
-        List<HttpMessageConverter<?>> defaultConverters = new ArrayList<>(adapter.getMessageConverters());
-        defaultConverters.add(createJsonLdMessageConverter());
-        defaultConverters.add(mappingJackson2HttpMessageConverter());
-        adapter.setMessageConverters(defaultConverters);
-        return adapter;
     }
 
     @Override

@@ -8,8 +8,8 @@ import cz.cvut.spipes.modules.Module;
 import cz.cvut.spipes.rest.util.*;
 import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.RDFMimeType;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.QuerySolutionMap;
@@ -64,8 +64,8 @@ public class SPipesServiceController {
         return runModule(ModelFactory.createDefaultModel(), parameters);
     }
 
-    @ApiOperation(
-        value = "Run a module."
+    @Operation(
+        description = "Run a module."
     )
     @PostMapping(
         value = "/module",
@@ -83,26 +83,26 @@ public class SPipesServiceController {
         }
     )
     public Model processPostRequest(
-        @ApiParam(value = "Input RDF model that is fed to the module. Additional models can be specified using"
+        @Parameter(description = "Input RDF model that is fed to the module. Additional models can be specified using"
             + " parameter '" + ReservedParams.P_INPUT_GRAPH_URL + "'. In case, more than one model is specified, they are merged"
             + " into one union model before fed to the module.")
         @RequestBody Model inputModel,
         @RequestParam(name = ReservedParams.P_ID)
-        @ApiParam(value = "Id of the module.")
+        @Parameter(description = "Id of the module.")
             String pId,
         @RequestParam(name = ReservedParams.P_CONFIG_URL, required = false)
-        @ApiParam(value = "Url used to set configuration of the module and possibly a logging.")
+        @Parameter(description = "Url used to set configuration of the module and possibly a logging.")
             String pConfigURL,
         @RequestParam(value = ReservedParams.P_INPUT_GRAPH_URL, required = false)
-        @ApiParam(value = "Url used to retrieve input graph for the module. See 'inputModel' parameter for"
+        @Parameter(description = "Url used to retrieve input graph for the module. See 'inputModel' parameter for"
             + " additional info.")
             String pInputGraphURL,
         @RequestParam(name = ReservedParams.P_INPUT_BINDING_URL, required = false)
-        @ApiParam(value = "Url used to retrieve input binding of the module. Note that additional request parameters"
+        @Parameter(description = "Url used to retrieve input binding of the module. Note that additional request parameters"
             + " can be used for same purpose.")
             String pInputBindingURL,
         @RequestParam(name = ReservedParams.P_OUTPUT_BINDING_URL, required = false)
-        @ApiParam(value = "Url used to retrieve output binding of the module.")
+        @Parameter(description = "Url used to retrieve output binding of the module.")
             String pOutputBindingURL,
         @RequestParam MultiValueMap<String, String> parameters
     ) {

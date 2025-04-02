@@ -2,14 +2,16 @@ package cz.cvut.spipes.util;
 
 import cz.cvut.spipes.engine.VariablesBinding;
 import org.apache.jena.util.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 
-import static org.reflections.Reflections.log;
-
 public class VariableBindingUtils {
+
+    private static final Logger log = LoggerFactory.getLogger(VariableBindingUtils.class);
 
     /**
      * Returns new variables binding from provided variables binding restricted to listed variables.
