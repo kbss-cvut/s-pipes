@@ -43,6 +43,10 @@ So, basically ModuleExecution and PipelineExecution are entities representing da
 It can contain such data as, where are stored output of modules,
 the time when execution happened, and a lot of different useful information.
 
+To restart this tutorial (i.e. start from Scenario 1 again) it is sufficient to remove all data from the 
+[database that logs executions](http://localhost:1234/db-server/graphs) using button `🗑 Clear Repository`.
+
+
 # Scenario 1: Run Hello World Example
 ### In this scenario you will run the "Hello, World!" script and check its correct execution using Swagger-UI and GraphDB
 
@@ -62,22 +66,22 @@ the time when execution happened, and a lot of different useful information.
 
 ## Expected results:
 
-Greeting message in JSON-LD format: "Hello TestName TestSurname."
+* greeting message in JSON-LD format: "Hello TestName TestSurname."
 
-More than one graph in GraphDB
+* more than one graph in GraphDB
 
-One executed pipeline through debug API
+* one executed pipeline through debug API
 
 # Scenario 2: Modify and Compare Executions
 ### In this scenario you will modify the "Hello, World!" script and compare the two pipelines
 
 1) Let’s change a bit our script: open [doc/examples/hello-world/hello-world.sms.ttl](../../../doc/examples/hello-world/hello-world.sms.ttl) and change
 
-   BIND(concat("Hello ", ?personName, ".") as ?greetingMessage) 
+   `BIND(concat("Hello ", ?personName, ".") as ?greetingMessage)` 
 
    to
-   
-   BIND(concat("Hello ", ?personName, "!") as ?greetingMessage)
+
+   `BIND(concat("Hello ", ?personName, "!") as ?greetingMessage)`
 
 2) Run the script one more time in the same way as scenario 1 (point 1).
 
@@ -92,11 +96,11 @@ One executed pipeline through debug API
 
 ## Expected results:
 
-Greeting message in JSON-LD format: "Hello TestName TestSurname!"
+* greeting message in JSON-LD format: "Hello TestName TestSurname!"
 
-Two executed pipeline through debug API
+* two executed pipeline through debug API
 
-Difference found in **construct-greeting** module
+* difference found in **construct-greeting** module
 
 # Scenario 3: Analyze Executed Modules
 ### In this scenario you will analyse executed modules of your previously executed pipeline
@@ -115,9 +119,9 @@ Difference found in **construct-greeting** module
 
 ## Expected results:
 
-**express-greeting_Return** is the slowest module
+* **express-greeting_Return** is the slowest module
 
-**express-greeting_Return** and **construct-greeting** produce the same amount of triplets - one triplet
+* **express-greeting_Return** and **construct-greeting** produce the same amount of triplets - one triplet
 
 # Scenario 4: Investigate Triples and Variables
 ### In this scenario you will analyse which module creates specific triplet and variable
@@ -158,6 +162,6 @@ will not match any triplet.
 
 ## Expected results:
 
-**construct-greeting** module created that triplet
+* **construct-greeting** module created that triplet
 
-**bind-person-name** produced the variable **lastName**
+* **bind-person-name** produced the variable **lastName**
