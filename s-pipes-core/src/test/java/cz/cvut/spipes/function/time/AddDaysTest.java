@@ -2,7 +2,6 @@ package cz.cvut.spipes.function.time;
 
 import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
-import org.apache.jena.graph.Node;
 import org.apache.jena.sparql.expr.NodeValue;
 import org.junit.jupiter.api.Test;
 
@@ -16,10 +15,10 @@ public class AddDaysTest {
     public void execReturnsTimeFromPast() {
 
         AddDays addDays = new AddDays();
-        Node date = getDateNode("2022-01-01").asNode();
-        Node days = NodeValue.makeNodeDecimal("-1").asNode();
+        NodeValue date = getDateNode("2022-01-01");
+        NodeValue days = NodeValue.makeNodeDecimal("-1");
 
-        NodeValue returnedDate = addDays.exec(date, days, null);
+        NodeValue returnedDate = addDays.exec(date, days);
 
         NodeValue expectedDate = getDateNode("2021-12-31");
         assertEquals(expectedDate, returnedDate);
@@ -27,14 +26,14 @@ public class AddDaysTest {
 
     @Test
     public void execReturnsDatatypeOfInputLiteral() {
-        Node days = NodeValue.makeNodeDecimal("1").asNode();
+        NodeValue days = NodeValue.makeNodeDecimal("1");
 
         Stream.of(XSDDatatype.XSDdate, XSDDatatype.XSDstring).forEach(
             dt -> {
-                Node date = getNode("2021-12-31", dt).asNode();
+                NodeValue date = getNode("2021-12-31", dt);
 
                 AddDays addDays = new AddDays();
-                NodeValue returnedDate = addDays.exec(date, days, null);
+                NodeValue returnedDate = addDays.exec(date, days);
 
                 NodeValue expectedDate = getNode("2022-01-01", dt);
                 assertEquals(expectedDate, returnedDate);
