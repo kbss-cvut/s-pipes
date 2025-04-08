@@ -1,4 +1,4 @@
-name: Build docker
+name: Push docker engine image
 on:
   push:
     branches: [ main ]
