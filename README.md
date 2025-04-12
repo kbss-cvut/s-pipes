@@ -82,7 +82,7 @@ The following software needs to be installed on the system for development:
 
 - JDK 17 or newer
 - Maven 3
-- Apache Tomcat 9.0
+- Apache Tomcat 10.1.5 or newer
 
 ## Dockerization
 
