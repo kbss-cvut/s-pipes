@@ -18,7 +18,7 @@
 
     <properties>
         <cz.cvut.kbss.jopa.version>0.19.3</cz.cvut.kbss.jopa.version>
-        <cz.cvut.kbss.jsonld.version>0.9.0</cz.cvut.kbss.jsonld.version>
+        <cz.cvut.kbss.jsonld.version>0.14.2</cz.cvut.kbss.jsonld.version>
         <org.mapstruct.version>1.5.3.Final</org.mapstruct.version>
     </properties>
 
