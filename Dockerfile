@@ -5,6 +5,8 @@ WORKDIR /s-pipes
 
 COPY ./ ./
 
+RUN mvn -B de.qaware.maven:go-offline-maven-plugin:resolve-dependencies
+
 RUN mvn clean package -T 2C -DskipTests -q
 
 
