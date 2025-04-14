@@ -104,7 +104,7 @@
             <dependency>
                 <groupId>cz.cvut.kbss.jsonld</groupId>
                 <artifactId>jb4jsonld-jackson</artifactId>
-                <version>0.10.0</version>
+                <version>0.14.2</version>
             </dependency>
             <dependency>
                 <groupId>xerces</groupId>
