@@ -2,6 +2,7 @@ package cz.cvut.spipes.transform;
 
 import cz.cvut.kbss.jopa.loaders.ClasspathScanner;
 import cz.cvut.kbss.jopa.loaders.DefaultClasspathScanner;
+import cz.cvut.sforms.util.SPipesFormsClassPathScanner;
 import cz.cvut.spipes.constants.SM;
 import org.apache.jena.rdf.model.InfModel;
 import org.apache.jena.rdf.model.Model;
@@ -53,7 +54,7 @@ public class SPipesUtil {
 
         // Find command related classes
 
-        ClasspathScanner scanner = new DefaultClasspathScanner();
+        ClasspathScanner scanner = new SPipesFormsClassPathScanner();
         scanner.addListener(c -> {
             if(Command.class.isAssignableFrom(c) && c.isInterface())
                 classes.add(c);
