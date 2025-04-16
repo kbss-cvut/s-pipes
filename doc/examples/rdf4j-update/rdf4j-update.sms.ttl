@@ -28,10 +28,10 @@
   rdf4j:p-rdf4j-server-url "http://localhost:8080/rdf4j-server/" ;
   rdf4j:p-rdf4j-repository-name "test-update" ;
   rdf4j:p-rdf4j-ignore-if-exists "true" ;
-  sm:next :update-repository ;
+  sm:next :update-rdf4j-repository ;
 .
 
-:update-repository
+:update-rdf4j-repository
   a kbss:rdf4j-update ;
   sm:next :update-repository_Return ;
   sml:updateQuery [
