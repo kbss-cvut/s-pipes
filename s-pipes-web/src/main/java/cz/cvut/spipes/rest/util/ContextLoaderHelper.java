@@ -1,6 +1,6 @@
 package cz.cvut.spipes.rest.util;
 
-import cz.cvut.spipes.config.ContextLoaderConfig;
+import cz.cvut.spipes.config.ContextsConfig;
 import cz.cvut.spipes.manager.OntoDocManager;
 import cz.cvut.spipes.manager.OntologyDocumentManager;
 import cz.cvut.spipes.manager.SPipesScriptManager;
@@ -39,7 +39,7 @@ public class ContextLoaderHelper {
      * @return List of baseIRIs of global scripts.
      */
     public static List<String> registerGlobalScripts(OntologyDocumentManager ontDocManager) {
-        List<Path> scriptPaths = ContextLoaderConfig.getScriptPaths();
+        List<Path> scriptPaths = ContextsConfig.getScriptPaths();
         scriptPaths.forEach(
                 ontDocManager::registerDocuments
         );

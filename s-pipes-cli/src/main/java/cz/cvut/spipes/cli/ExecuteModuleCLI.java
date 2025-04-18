@@ -1,8 +1,9 @@
 package cz.cvut.spipes.cli;
 
 import cz.cvut.kbss.util.CmdLineUtils;
-import cz.cvut.spipes.constants.AppConstants;
+import cz.cvut.spipes.config.ContextsConfig;
 import cz.cvut.spipes.engine.*;
+import cz.cvut.spipes.exception.SPipesException;
 import cz.cvut.spipes.manager.OntoDocManager;
 import cz.cvut.spipes.manager.OntologyDocumentManager;
 import cz.cvut.spipes.manager.SPipesScriptManager;
@@ -13,6 +14,7 @@ import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.util.LocationMapper;
@@ -22,12 +24,9 @@ import org.kohsuke.args4j.Option;
 
 import java.io.*;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class ExecuteModuleCLI {
@@ -73,6 +72,8 @@ public class ExecuteModuleCLI {
 //    @Option(name = "-r", aliases = "--module-resource-uri", metaVar = "CONFIG_RESOURCE_URI", usage = "RDF configuration uri")
     private String configResourceUri;
 
+    @Option(name = "-M", aliases = "--execute-module-type-only", usage = "Execute module type without loading scripts")
+    private boolean isExecuteModuleTypeOnly;
     @Option(name = "-f", aliases = "--execute-only-one-function", usage = "Execute only one function (TEMPORARY)")
     private boolean isExecuteOnlyOneFunction;
 
@@ -112,6 +113,11 @@ public class ExecuteModuleCLI {
         if (asArgs.isInputDataFromStdIn) {
             log.info("Loading input data from std-in ...");
             inputDataModel.read(System.in, null, FileUtils.langTurtle);
+        }
+
+        if (asArgs.isExecuteModuleTypeOnly) {
+            Class<? extends Module> moduleType = ExecuteModuleCLI.getModuleTypesByModuleName(asArgs.executionTarget);
+            throw new IllegalArgumentException("Parameter --execute-module-type-only not implemented.");
         }
 
         // ----- load modules and functions
@@ -260,18 +266,9 @@ public class ExecuteModuleCLI {
 
 
     private static SPipesScriptManager createSPipesScriptManager() {
-        List<Path> scriptPaths = new LinkedList<>();
+        List<Path> scriptPaths = ContextsConfig.getScriptPaths();
 
         // load from environment variables
-        String spipesOntologiesPathsStr = System.getenv(AppConstants.SYSVAR_SPIPES_ONTOLOGIES_PATH);
-        log.debug("Loading scripts from system variable {} = {}", AppConstants.SYSVAR_SPIPES_ONTOLOGIES_PATH, spipesOntologiesPathsStr);
-        if (spipesOntologiesPathsStr != null) {
-            scriptPaths.addAll(
-                    Arrays.stream(spipesOntologiesPathsStr.split(";"))
-                    .map(path -> Paths.get(path))
-                    .collect(Collectors.toList())
-            );
-        }
 
         // load ontologies from config file
 
@@ -329,5 +326,31 @@ public class ExecuteModuleCLI {
         m.read(new FileInputStream(modelFile), null);
 
         return  m;
+    }
+
+    private static Class<? extends Module> getModuleTypesByModuleName(String moduleTypeId) {
+        Class<? extends Module> moduleClass =
+            PipelineFactory.getModuleTypes().get(ResourceFactory.createResource(moduleTypeId));
+        if (moduleClass != null) {
+            return moduleClass;
+        }
+        List<Map.Entry<Resource, Class<? extends Module>>> entries = PipelineFactory.getModuleTypes().entrySet().stream().filter(
+                e -> e.getKey().getURI().contains(moduleTypeId)
+        ).toList();
+        if (entries.size() > 1) {
+            List<String> matchedModuleIris = entries.stream().map(
+                    e -> e.getKey().getURI()
+            ).toList();
+            throw new SPipesException("Module type search string '" + moduleTypeId + "' is not unique within found module types " +
+                matchedModuleIris + "."
+            );
+        } else if (entries.isEmpty()) {
+            throw new SPipesException("Module type search string '" + moduleTypeId + "' not found" +
+                " among registered module types " + PipelineFactory.getModuleTypes().keySet() + ".");
+        } else {
+            Map.Entry<Resource, Class<? extends Module>> foundEntry = entries.stream().findFirst().get();
+            log.debug("Matched module type {}.", foundEntry.getKey().getURI());
+            return foundEntry.getValue();
+        }
     }
 }

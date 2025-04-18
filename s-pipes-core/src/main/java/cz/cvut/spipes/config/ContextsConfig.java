@@ -7,7 +7,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ContextLoaderConfig {
+public class ContextsConfig {
+
 
     public static List<Path> getScriptPaths() {
         return Arrays
