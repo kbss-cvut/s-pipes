@@ -5,7 +5,7 @@ services:
       - "1234:80"
     volumes:
         - ./nginx/nginx.conf:/etc/nginx/templates/nginx.conf.template:ro
-        - ./nginx/index.html:/usr/share/nginx/html/index.html:ro
+        - ./nginx/index.html:/usr/share/nginx/html/dashboard/index.html:ro
     depends_on:
       - s-pipes-engine
       - s-pipes-engine-debug

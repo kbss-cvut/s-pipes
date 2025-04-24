@@ -18,6 +18,10 @@
         }
 
         .dashboard-container {
+            display: grid;
+            grid-template-rows: auto;
+            grid-template-columns: auto;
+            gap: 20px;
             background: white;
             padding: 40px;
             border-radius: 12px;
@@ -27,6 +31,7 @@
 
         h1 {
             font-size: 2em;
+            grid-column: span 2;
             margin-bottom: 20px;
         }
 
@@ -34,6 +39,12 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
+        }
+
+        .button-container:last-child {
+            grid-row: 2;
+            grid-column: 2;
+            align-self: center;
         }
 
         .service-button {
@@ -63,6 +74,23 @@
             border-radius: 50%;
             background-color: gray;
         }
+
+        .docs-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 10px;
+            padding: 12px 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #444;
+            background: #fff;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -70,14 +98,19 @@
 <div class="dashboard-container">
     <h1>SPipes Main Dashboard</h1>
     <div class="button-container">
-        <a href="./s-pipes/" class="service-button">
+        <a href="../s-pipes/" class="service-button">
             SPipes <span class="status-dot" id="s-pipes-status"></span>
         </a>
-        <a href="./s-pipes-debug/" class="service-button">
+        <a href="../s-pipes-debug/" class="service-button">
             SPipes Debug <span class="status-dot" id="s-pipes-debug-status"></span>
         </a>
-        <a href="./db-server/" class="service-button">
+        <a href="../db-server/" class="service-button">
             DB Server <span class="status-dot" id="db-server-status"></span>
+        </a>
+    </div>
+    <div class="button-container">
+        <a href="../s-pipes-debug/swagger-ui.html" class="docs-button">
+            &#128196;
         </a>
     </div>
 </div>
