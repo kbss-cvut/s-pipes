@@ -41,7 +41,7 @@ public class WebAppConfig implements WebMvcConfigurer {
 
     @Override
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
-        configurer.enable();
+        configurer.enable("default");
     }
 
     @Bean(name = "multipartResolver")
