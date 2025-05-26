@@ -96,6 +96,45 @@ import java.util.function.Supplier;
  * First, the HTML table is converted to TSV while replacing "\t" with two spaces
  * and then processed as usual.
  * Take a look at the option {@link TabularModule#sourceResourceFormat} and class {@link HTML2TSVConvertor} for more details.
+ *
+ * <p>
+ * Tabular module converts cell values in HTML tables to plain text or html (preserves html tags) based on the <code>preserveTags</code>
+ * attributes defined in the table and its elements. HTML tags in a cell value are preserved if a <code>preserveTags=true</code>
+ * attribute is specified on the cell, row, column header or table element. Otherwise, cell value is converted to plain text.
+ * text.
+ *
+ * Here are some examples:
+ * <ul>
+ * <li> to convert all cell values in a table to plain text - no need to specify <code>preserveTags</code> anywhere</li>
+ * <li> to preserve all tags in all cells - specify <code>preserveTags="true"</code> only on table element
+ * <pre><code>
+ * <table preserveTags="true">
+ * ...
+ * </table>
+ * </code></pre>
+ * </li>
+ * <li> to preserve tags of cell values of a column (<code>Description</code>) - specify <code>preserveTags="true"</code> on the column (<code>Description</code>)
+ * <pre><code>
+ * <table>
+ * <ht><td>Id</td>  <td>Label</td>   <td preserveTags="true">Description</td></th>
+ * <tr><td>1</td>   <td>Sugar</td>   <td><span>Sugar</span> is sweet</td></tr>
+ * <tr><td>2</td>   <td>Salt</td>    <td><a href="...">Salt</a> is salty</td></tr>
+ * ...
+ * </table>
+ * </code></pre>
+ * </li>
+ * <li> to preserve tags for all rows in a column (<code>Description</code>) except for cell at row 2 - specify <code>preserveTags="true"</code>
+ * on the column (<code>Description</code>) and <code>preserveTags="false"</code> on second row cell in the column (<code>Description</code>).
+ * <pre><code>
+ * <table>
+ * <ht><td>Id</td>  <td>Label</td>   <td preserveTags="true">Description</td></th>
+ * <tr><td>1</td>   <td>Sugar</td>   <td><span>Sugar</span> is sweet</td></tr>
+ * <tr><td>2</td>   <td>Salt</td>    <td preserveTags="false"><a href="...">Salt</a> is salty</td></tr>
+ * ...
+ * </table>
+ * </code></pre>
+ * </li>
+ * </ul>
  * Also, in a similar way this module can process XLS tables. Note, that processing multiple sheets isn't supported,
  * so {@link TabularModule#processTableAtIndex} parameter is required (range 1...number of sheets).
  * <p>
