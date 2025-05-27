@@ -26,7 +26,6 @@ import org.apache.jena.rdf.model.*;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.supercsv.prefs.CsvPreference;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -95,7 +94,8 @@ import java.util.function.Supplier;
  * This module can also be used to process HTML tables, see option {@link TabularModule#sourceResourceFormat}.
  * First, the HTML table is converted to TSV while replacing "\t" with two spaces
  * and then processed as usual.
- * Take a look at the option {@link TabularModule#sourceResourceFormat} and class {@link HTML2TSVConvertor} for more details.
+ * Take a look at the option {@link TabularModule#sourceResourceFormat}
+ * and class {@link HTMLStreamReaderAdapter} for more details.
  *
  * <p>
  * Tabular module converts cell values in HTML tables to plain text or html (preserves html tags) based on the <code>preserveTags</code>
@@ -239,10 +239,7 @@ public class TabularModule extends AnnotatedAbstractModule {
         tableGroup = onTableGroup(null);
         table = onTable(null);
 
-        StreamResource originalSourceResource = sourceResource;
-        TSVConvertor tsvConvertor = null;
         StreamReaderAdapter streamReaderAdapter;
-        CsvPreference csvPreference = null;
 
         switch (sourceResourceFormat) {
             case HTML:
