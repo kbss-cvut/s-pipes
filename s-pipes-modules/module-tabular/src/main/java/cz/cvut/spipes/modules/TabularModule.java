@@ -101,7 +101,6 @@ import java.util.function.Supplier;
  * Tabular module converts cell values in HTML tables to plain text or html (preserves html tags) based on the <code>preserveTags</code>
  * attributes defined in the table and its elements. HTML tags in a cell value are preserved if a <code>preserveTags=true</code>
  * attribute is specified on the cell, row, column header or table element. Otherwise, cell value is converted to plain text.
- * text.
  *
  * Here are some examples:
  * <ul>
