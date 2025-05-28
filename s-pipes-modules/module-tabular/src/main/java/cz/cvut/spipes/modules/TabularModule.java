@@ -94,8 +94,7 @@ import java.util.function.Supplier;
  * This module can also be used to process HTML tables, see option {@link TabularModule#sourceResourceFormat}.
  * First, the HTML table is converted to TSV while replacing "\t" with two spaces
  * and then processed as usual.
- * Take a look at the option {@link TabularModule#sourceResourceFormat}
- * and class {@link HTMLStreamReaderAdapter} for more details.
+ * Take a look at the option {@link TabularModule#sourceResourceFormat}.
  *
  * <p>
  * Tabular module converts cell values in HTML tables to plain text or html (preserves html tags) based on the <code>preserveTags</code>
