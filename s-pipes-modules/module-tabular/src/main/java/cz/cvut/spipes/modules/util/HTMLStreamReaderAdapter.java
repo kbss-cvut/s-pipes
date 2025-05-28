@@ -6,16 +6,22 @@ import cz.cvut.spipes.registry.StreamResource;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Stream;
 
 public class HTMLStreamReaderAdapter implements StreamReaderAdapter {
+    public static final String PRESERVE_TAGS = "preserveTags";
+
     private Elements rows;
     private int currentIndex;
     private Element table;
     private String label;
+    private Boolean tablePreserveTags;
+    private Boolean[] columnPreserveTags;
 
     private List<Region> mergedRegions;
     private Map<Integer, Map<Integer, String>> mergedCells;
@@ -31,12 +37,31 @@ public class HTMLStreamReaderAdapter implements StreamReaderAdapter {
         mergedRegions = extractMergedRegions(table);
         mergedCells = new HashMap<>();
         label = table.attr("data-name");
+        Elements header = getHeaderElements();
+        tablePreserveTags = getPreserveTags(table);
+        columnPreserveTags = new Boolean[header.size()];
+        for (int i = 0; i < header.size(); i++) {
+            columnPreserveTags[i] = getPreserveTags(header.get(i));
+        }
     }
 
+    protected Boolean getPreserveTags(Node n) {
+        return n.hasAttr(PRESERVE_TAGS) ? Boolean.parseBoolean(n.attr(PRESERVE_TAGS)) : null;
+    }
 
+    protected boolean isCellPreserveTags(Node cell, int index){
+        Boolean cellPreserveTags = getPreserveTags(cell);
+        return Stream.of(cellPreserveTags, columnPreserveTags[index], tablePreserveTags)
+                .filter(Objects::nonNull)
+                .findFirst().orElse(false);
+    }
+
+    public Elements getHeaderElements()  {
+        return rows.get(0).select("th, td");
+    }
     @Override
     public String[] getHeader(boolean skipHeader) throws IOException {
-        Elements headerCells = rows.get(0).select("th, td");
+        Elements headerCells = getHeaderElements();
         return headerCells.stream()
                 .map(Element::text)
                 .toArray(String[]::new);
@@ -57,10 +82,12 @@ public class HTMLStreamReaderAdapter implements StreamReaderAdapter {
         List<String> row = new ArrayList<>();
         int cellIndex = 0;
 
-        for (Element cell : cells) {
+        for (int j = 0; j < cells.size(); j++) {
+            Element cell = cells.get(j);
             int colspan = Integer.parseInt(cell.attr("colspan").isEmpty() ? "1" : cell.attr("colspan"));
             int rowspan = Integer.parseInt(cell.attr("rowspan").isEmpty() ? "1" : cell.attr("rowspan"));
-            String cellValue = cell.text();
+
+            String cellValue = isCellPreserveTags(cell, j) ? cell.html() : cell.text();
 
             if (cellValue != null && cellValue.matches("[-+]?[0-9]*\\,?[0-9]+")) {
                 cellValue = cellValue.replace(",", ".");
