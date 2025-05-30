@@ -53,18 +53,7 @@ public class SPipesServiceController {
         scriptManager = ScriptManagerFactory.getSingletonSPipesScriptManager();
     }
 
-    @Operation(
-        responses = {
-            @ApiResponse(responseCode = "200", description = "RDF data",
-                content = {
-                    @Content(mediaType = RDFMimeType.LD_JSON_STRING, schema = @Schema(hidden = true)),
-                    @Content(mediaType = RDFMimeType.N_TRIPLES_STRING, schema = @Schema(hidden = true)),
-                    @Content(mediaType = RDFMimeType.RDF_XML_STRING, schema = @Schema(hidden = true)),
-                    @Content(mediaType = RDFMimeType.TURTLE_STRING, schema = @Schema(hidden = true))
-                }
-            )
-        }
-    )
+    @RdfApiResponse
     @GetMapping(
         value = "/module",
         produces = {
@@ -79,22 +68,7 @@ public class SPipesServiceController {
         return runModule(ModelFactory.createDefaultModel(), parameters);
     }
 
-    @Operation(
-        summary = "Run a module.",
-        description = "Executes a module and returns RDF output.",
-        responses = {
-            @ApiResponse(
-                responseCode = "200",
-                description = "RDF data",
-                    content = {
-                        @Content(mediaType = RDFMimeType.LD_JSON_STRING, schema = @Schema(hidden = true)),
-                        @Content(mediaType = RDFMimeType.N_TRIPLES_STRING, schema = @Schema(hidden = true)),
-                        @Content(mediaType = RDFMimeType.RDF_XML_STRING, schema = @Schema(hidden = true)),
-                        @Content(mediaType = RDFMimeType.TURTLE_STRING, schema = @Schema(hidden = true))
-                    }
-            )
-        }
-    )
+    @RdfApiResponse
     @PostMapping(
         value = "/module",
         consumes = {
@@ -139,18 +113,7 @@ public class SPipesServiceController {
         return runModule(inputModel, parameters);
     }
 
-    @Operation(
-        responses = {
-            @ApiResponse(responseCode = "200", description = "RDF data",
-                content = {
-                    @Content(mediaType = RDFMimeType.LD_JSON_STRING + ";charset=utf-8", schema = @Schema(hidden = true)),
-                    @Content(mediaType = RDFMimeType.N_TRIPLES_STRING, schema = @Schema(hidden = true)),
-                    @Content(mediaType = RDFMimeType.RDF_XML_STRING, schema = @Schema(hidden = true)),
-                    @Content(mediaType = RDFMimeType.TURTLE_STRING, schema = @Schema(hidden = true))
-                }
-            )
-        }
-    )
+    @RdfApiResponse
     @GetMapping(
         value = "/service",
         produces = {
@@ -171,18 +134,7 @@ public class SPipesServiceController {
      * @param parameters url query parameters
      * @return a {@link Model} representing the processed RDF
      */
-    @Operation(
-        responses = {
-            @ApiResponse(responseCode = "200", description = "RDF data",
-                content = {
-                    @Content(mediaType = RDFMimeType.LD_JSON_STRING + ";charset=utf-8", schema = @Schema(hidden = true)),
-                    @Content(mediaType = RDFMimeType.N_TRIPLES_STRING, schema = @Schema(hidden = true)),
-                    @Content(mediaType = RDFMimeType.RDF_XML_STRING, schema = @Schema(hidden = true)),
-                    @Content(mediaType = RDFMimeType.TURTLE_STRING, schema = @Schema(hidden = true))
-                }
-            )
-        }
-    )
+    @RdfApiResponse
     @PostMapping(
         value = "/service",
         consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
