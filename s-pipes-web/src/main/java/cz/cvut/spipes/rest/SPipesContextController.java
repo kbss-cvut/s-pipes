@@ -7,6 +7,10 @@ import cz.cvut.spipes.manager.SPipesScriptManager;
 import cz.cvut.spipes.rest.util.ContextLoaderHelper;
 import cz.cvut.spipes.rest.util.ScriptManagerFactory;
 import cz.cvut.spipes.util.RDFMimeType;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -38,6 +42,17 @@ public class SPipesContextController {
         globalScripts = new LinkedList<>(scriptManager.getGlobalScripts());
     }
 
+    @Operation(
+        summary = "Retrieve context data",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "RDF data",
+                content = @Content(
+                    mediaType = RDFMimeType.TURTLE_STRING,
+                    schema = @Schema(hidden = true)
+                )
+            )
+        }
+    )
     @RequestMapping(
             value = "/contexts/{id}/data",
             method = RequestMethod.GET,
