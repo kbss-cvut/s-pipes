@@ -10,6 +10,9 @@ import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.RDFMimeType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.QuerySolutionMap;
@@ -50,6 +53,7 @@ public class SPipesServiceController {
         scriptManager = ScriptManagerFactory.getSingletonSPipesScriptManager();
     }
 
+    @RdfApiResponse
     @GetMapping(
         value = "/module",
         produces = {
@@ -64,9 +68,7 @@ public class SPipesServiceController {
         return runModule(ModelFactory.createDefaultModel(), parameters);
     }
 
-    @Operation(
-        description = "Run a module."
-    )
+    @RdfApiResponse
     @PostMapping(
         value = "/module",
         consumes = {
@@ -82,10 +84,10 @@ public class SPipesServiceController {
             RDFMimeType.TURTLE_STRING
         }
     )
-    public Model processPostRequest(
+    public @Schema(hidden = true) Model processPostRequest(
         @Parameter(description = "Input RDF model that is fed to the module. Additional models can be specified using"
             + " parameter '" + ReservedParams.P_INPUT_GRAPH_URL + "'. In case, more than one model is specified, they are merged"
-            + " into one union model before fed to the module.")
+            + " into one union model before fed to the module.", hidden = true)
         @RequestBody Model inputModel,
         @RequestParam(name = ReservedParams.P_ID)
         @Parameter(description = "Id of the module.")
@@ -111,6 +113,7 @@ public class SPipesServiceController {
         return runModule(inputModel, parameters);
     }
 
+    @RdfApiResponse
     @GetMapping(
         value = "/service",
         produces = {
@@ -131,6 +134,7 @@ public class SPipesServiceController {
      * @param parameters url query parameters
      * @return a {@link Model} representing the processed RDF
      */
+    @RdfApiResponse
     @PostMapping(
         value = "/service",
         consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
