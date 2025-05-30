@@ -56,10 +56,12 @@ public class SPipesServiceController {
     @Operation(
         responses = {
             @ApiResponse(responseCode = "200", description = "RDF data",
-                content = @Content(
-                    mediaType = RDFMimeType.TURTLE_STRING,
-                    schema = @Schema(hidden = true)
-                )
+                content = {
+                    @Content(mediaType = RDFMimeType.LD_JSON_STRING, schema = @Schema(hidden = true)),
+                    @Content(mediaType = RDFMimeType.N_TRIPLES_STRING, schema = @Schema(hidden = true)),
+                    @Content(mediaType = RDFMimeType.RDF_XML_STRING, schema = @Schema(hidden = true)),
+                    @Content(mediaType = RDFMimeType.TURTLE_STRING, schema = @Schema(hidden = true))
+                }
             )
         }
     )
@@ -84,10 +86,12 @@ public class SPipesServiceController {
             @ApiResponse(
                 responseCode = "200",
                 description = "RDF data",
-                content = @Content(
-                    mediaType = RDFMimeType.TURTLE_STRING,
-                    schema = @Schema(hidden = true)
-                )
+                    content = {
+                        @Content(mediaType = RDFMimeType.LD_JSON_STRING, schema = @Schema(hidden = true)),
+                        @Content(mediaType = RDFMimeType.N_TRIPLES_STRING, schema = @Schema(hidden = true)),
+                        @Content(mediaType = RDFMimeType.RDF_XML_STRING, schema = @Schema(hidden = true)),
+                        @Content(mediaType = RDFMimeType.TURTLE_STRING, schema = @Schema(hidden = true))
+                    }
             )
         }
     )
@@ -138,10 +142,12 @@ public class SPipesServiceController {
     @Operation(
         responses = {
             @ApiResponse(responseCode = "200", description = "RDF data",
-                content = @Content(
-                    mediaType = RDFMimeType.TURTLE_STRING,
-                    schema = @Schema(hidden = true)
-                )
+                content = {
+                    @Content(mediaType = RDFMimeType.LD_JSON_STRING + ";charset=utf-8", schema = @Schema(hidden = true)),
+                    @Content(mediaType = RDFMimeType.N_TRIPLES_STRING, schema = @Schema(hidden = true)),
+                    @Content(mediaType = RDFMimeType.RDF_XML_STRING, schema = @Schema(hidden = true)),
+                    @Content(mediaType = RDFMimeType.TURTLE_STRING, schema = @Schema(hidden = true))
+                }
             )
         }
     )
@@ -168,10 +174,12 @@ public class SPipesServiceController {
     @Operation(
         responses = {
             @ApiResponse(responseCode = "200", description = "RDF data",
-                content = @Content(
-                    mediaType = RDFMimeType.TURTLE_STRING,
-                    schema = @Schema(hidden = true)
-                )
+                content = {
+                    @Content(mediaType = RDFMimeType.LD_JSON_STRING + ";charset=utf-8", schema = @Schema(hidden = true)),
+                    @Content(mediaType = RDFMimeType.N_TRIPLES_STRING, schema = @Schema(hidden = true)),
+                    @Content(mediaType = RDFMimeType.RDF_XML_STRING, schema = @Schema(hidden = true)),
+                    @Content(mediaType = RDFMimeType.TURTLE_STRING, schema = @Schema(hidden = true))
+                }
             )
         }
     )
