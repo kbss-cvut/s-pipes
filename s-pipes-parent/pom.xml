@@ -20,7 +20,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jdk.version>17</jdk.version>
         <org.apache.jena>3.17.0</org.apache.jena>
-        <org.springframework.version>6.2.5</org.springframework.version>
+        <org.springframework.version>6.2.7</org.springframework.version>
         <org.springframework.security.version>6.2.8</org.springframework.security.version>
         <org.springframework.boot.version>3.4.2</org.springframework.boot.version>
         <com.fasterxml.jackson.version>2.14.0</com.fasterxml.jackson.version>
