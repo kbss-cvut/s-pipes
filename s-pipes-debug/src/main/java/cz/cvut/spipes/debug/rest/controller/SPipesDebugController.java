@@ -55,17 +55,17 @@ public class SPipesDebugController {
                     description = "Pipeline execution identifier",
                     example = "1682959945146003",
                     required = true)
-            @PathVariable("executionId") String executionId,
+            @PathVariable String executionId,
             @Parameter(
                     name = "orderBy",
                     description = "Specifies orderBy field in ModuleExecutionDto",
                     example = "duration")
-            @RequestParam(name = "orderBy", required = false) String orderBy,
+            @RequestParam(required = false) String orderBy,
             @Parameter(
                     name = "orderType",
                     description = "ASC or DESC",
                     example = "ASC")
-            @RequestParam(name = "orderType", required = false) String orderType) {
+            @RequestParam(required = false) String orderType) {
         return debugService.getAllModuleExecutionsSorted(executionId, orderBy, orderType);
     }
 
@@ -77,7 +77,7 @@ public class SPipesDebugController {
                     description = "Pipeline execution identifier",
                     example = "1682959945146003",
                     required = true)
-            @PathVariable("executionId") String executionId) {
+            @PathVariable String executionId) {
         return debugService.getPipelineExecutionById(executionId);
     }
 
@@ -89,13 +89,13 @@ public class SPipesDebugController {
                     description = "Pipeline execution identifier",
                     example = "1682959945146003",
                     required = true)
-            @PathVariable("executionId") String executionId,
+            @PathVariable String executionId,
             @Parameter(
                     name = "executionToCompareId",
                     description = "Pipeline execution identifier to compare against",
                     example = "1682959945146003",
                     required = true)
-            @PathVariable("executionToCompareId") String executionToCompareId) {
+            @PathVariable String executionToCompareId) {
         return debugService.compareExecutions(executionId, executionToCompareId);
     }
 
@@ -107,13 +107,13 @@ public class SPipesDebugController {
                     description = "Pipeline execution identifier",
                     example = "1682959945146003",
                     required = true)
-            @PathVariable("executionId") String executionId,
+            @PathVariable String executionId,
             @Parameter(
                     name = "graphPattern",
                     description = "Triple pattern to search for",
                     example = "<http://some/subject> <http://some/predicate> <http://some/object>",
                     required = true)
-            @RequestParam(name = "graphPattern") String graphPattern) {
+            @RequestParam String graphPattern) {
         return scriptService.findTripleOrigin(executionId, graphPattern);
     }
 
@@ -125,13 +125,13 @@ public class SPipesDebugController {
                     description = "Pipeline execution identifier",
                     example = "1682959945146003",
                     required = true)
-            @PathVariable("executionId") String executionId,
+            @PathVariable String executionId,
             @Parameter(
                     name = "graphPattern",
                     description = "Triple pattern to search for",
                     example = "<http://some/subject> <http://some/predicate> \"some string!\"",
                     required = true)
-            @RequestParam(name = "graphPattern") String graphPattern) {
+            @RequestParam String graphPattern) {
         return scriptService.findTripleEliminationOrigin(executionId, graphPattern);
     }
 
@@ -143,13 +143,13 @@ public class SPipesDebugController {
                     description = "Pipeline execution identifier",
                     example = "1682959945146003",
                     required = true)
-            @PathVariable("executionId") String executionId,
+            @PathVariable String executionId,
             @Parameter(
                     name = "variable",
                     description = "Name of the variable",
                     example = "firstName",
                     required = true)
-            @RequestParam(name = "variable") String variable) {
+            @RequestParam String variable) {
         return scriptService.findVariableOrigin(executionId, variable);
     }
 }
