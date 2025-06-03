@@ -10,9 +10,7 @@ import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.RDFMimeType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.QuerySolutionMap;
@@ -63,7 +61,10 @@ public class SPipesServiceController {
             RDFMimeType.TURTLE_STRING
         }
     )
-    public Model processGetRequest(@RequestParam MultiValueMap<String, String> parameters) {
+    public Model processGetRequest(
+            @RequestParam @Schema(description = "Request Parameters",
+            example = "{\"_pId\": \"value1\", \"param2\": \"value2\"}")
+                                       MultiValueMap<String, String> parameters) {
         log.info("Processing GET request.");
         return runModule(ModelFactory.createDefaultModel(), parameters);
     }
@@ -123,7 +124,10 @@ public class SPipesServiceController {
             RDFMimeType.TURTLE_STRING
         }
     )
-    public Model processServiceGetRequest(@RequestParam MultiValueMap<String, String> parameters) {
+    public Model processServiceGetRequest(
+            @RequestParam @Schema(description = "Request Parameters",
+                    example = "{\"_pId\": \"value1\", \"param2\": \"value2\"}")
+            MultiValueMap<String, String> parameters) {
         log.info("Processing service GET request.");
         return runService(ModelFactory.createDefaultModel(), parameters);
     }
@@ -145,9 +149,10 @@ public class SPipesServiceController {
             RDFMimeType.TURTLE_STRING
         }
     )
-    public Model processServicePostRequest(@RequestParam MultiValueMap<String, String> parameters,
-                                           @RequestParam("files") MultipartFile[] files) {
-
+    public Model processServicePostRequest(@RequestParam @Schema(description = "Request Parameters",
+           example = "{\"_pId\": \"value1\", \"param2\": \"value2\"}")
+           MultiValueMap<String, String> parameters,
+           @RequestParam("files") MultipartFile[] files) {
 
         List<StreamResourceDTO> newStreamResources = new LinkedList<>();
         MultiValueMap<String, String> newParameters =
