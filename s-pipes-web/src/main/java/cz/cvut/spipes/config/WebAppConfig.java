@@ -39,11 +39,6 @@ public class WebAppConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 
-    @Override
-    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
-        configurer.enable("default");
-    }
-
     @Bean(name = "multipartResolver")
     public StandardServletMultipartResolver getMultipartResolver() {
         return new StandardServletMultipartResolver();
