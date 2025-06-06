@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -38,11 +39,6 @@ public class WebAppConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 
-    @Override
-    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
-        configurer.enable();
-    }
-
     @Bean(name = "multipartResolver")
     public StandardServletMultipartResolver getMultipartResolver() {
         return new StandardServletMultipartResolver();
@@ -60,6 +56,7 @@ public class WebAppConfig implements WebMvcConfigurer {
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
 
+        converters.add(new ByteArrayHttpMessageConverter());
         final RDFMediaTypeConverter RDFConverter = new RDFMediaTypeConverter();
         converters.add(RDFConverter);
         final MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();

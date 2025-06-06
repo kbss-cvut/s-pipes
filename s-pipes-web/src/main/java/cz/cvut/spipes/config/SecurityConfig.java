@@ -12,7 +12,6 @@ public class SecurityConfig  {
             SecurityConstants.REMEMBER_ME_COOKIE_NAME,
             SecurityConstants.CSRF_COOKIE_NAME
     };
-
 //    @Autowired
 //    private AuthenticationEntryPoint authenticationEntryPoint;
 //
