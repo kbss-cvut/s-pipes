@@ -2,16 +2,8 @@ package cz.cvut.spipes.config;
 
 
 import cz.cvut.spipes.security.SecurityConstants;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.web.SecurityFilterChain;
-
-@Configuration
-@EnableWebSecurity(debug = false)
+//@Configuration
+//@EnableWebSecurity(debug = false)
 //@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig  {
 
@@ -20,20 +12,6 @@ public class SecurityConfig  {
             SecurityConstants.REMEMBER_ME_COOKIE_NAME,
             SecurityConstants.CSRF_COOKIE_NAME
     };
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/**").permitAll()
-        ).csrf(csrf -> csrf.disable());
-        return http.build();
-    }
-
-    @Bean
-    UserDetailsService emptyDetailsService() {
-        return username -> { throw new UsernameNotFoundException("no local users, only JWT tokens allowed"); };
-    }
-
 //    @Autowired
 //    private AuthenticationEntryPoint authenticationEntryPoint;
 //
