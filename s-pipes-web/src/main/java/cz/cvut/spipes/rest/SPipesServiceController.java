@@ -6,6 +6,7 @@ import cz.cvut.spipes.exception.SPipesServiceException;
 import cz.cvut.spipes.manager.SPipesScriptManager;
 import cz.cvut.spipes.manager.factory.ContextLoaderHelper;
 import cz.cvut.spipes.manager.factory.ScriptManagerFactory;
+import cz.cvut.spipes.modules.AbstractModule;
 import cz.cvut.spipes.modules.Module;
 import cz.cvut.spipes.rest.util.*;
 import cz.cvut.spipes.util.JenaUtils;
@@ -203,6 +204,8 @@ public class SPipesServiceController {
         Model configModel = extractConfigurationModel(parameters);
         ExecutionContext inputExecutionContext = extractInputExecutionContext(inputDataModel, parameters);
 
+        AbstractModule.setIsExecutionOfFunction(inputExecutionContext);
+
         ExecutionEngine engine = createExecutionEngine(configModel);
 
         // EXECUTE PIPELINE
@@ -230,6 +233,8 @@ public class SPipesServiceController {
         File outputBindingPath = extractOutputBindingPath(parameters);
         Model configModel = extractConfigurationModel(parameters);
         ExecutionContext inputExecutionContext = extractInputExecutionContext(inputDataModel, parameters);
+
+        AbstractModule.setIsExecutionOfModule(inputExecutionContext);
 
         ExecutionEngine engine = createExecutionEngine(configModel);
         ContextLoaderHelper.updateContextsIfNecessary(scriptManager);
