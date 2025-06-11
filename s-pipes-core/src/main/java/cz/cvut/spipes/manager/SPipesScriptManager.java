@@ -9,6 +9,7 @@ import cz.cvut.spipes.registry.ResourceRegistry;
 import cz.cvut.spipes.repository.SMScriptCollectionRepository;
 import cz.cvut.spipes.repository.ScriptCollectionRepository;
 import cz.cvut.spipes.util.JenaPipelineUtils;
+import org.apache.jena.ontology.OntDocumentManager;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.Resource;
 import org.slf4j.Logger;
@@ -121,6 +122,43 @@ public class SPipesScriptManager {
     }
 
 
+    /**
+     *
+     * @param moduleId
+     * @param contextUri
+     * @return path to file containing the module identified by <code>moduleId</code> if <code>contextUri</code> is null
+     * otherwise the path to the file containing <code>contextUri</code>
+     */
+    public String getModuleLocation(final String moduleId, final String contextUri) {
+        String resourceContextUri;
+        // find existing module
+        if (contextUri == null) {
+            resourceContextUri = moduleRegistry.getContexts(moduleId).iterator().next();
+        } else {
+            resourceContextUri = contextUri;
+        }
+        return getLocation(resourceContextUri);
+    }
+
+    /**
+     *
+     * @param functionId
+     * @return the location of the file containing the function identified by <code>functionId</code>
+     */
+    public String getFunctionLocation(final String functionId) {
+        String resourceUri = functionRegistry.getResourceUri(functionId);
+        String resourceContextUri = functionRegistry.getContexts(resourceUri).iterator().next();
+        return getLocation(resourceContextUri);
+    }
+
+    /**
+     * @implNote Based on jena's OntDocumentManager.
+     * @param ontologyIRI
+     * @return file path at which <code>ontologyIRI</code> is loaded
+     */
+    public String getLocation(String ontologyIRI) {
+        return OntDocumentManager.getInstance().doAltURLMapping(ontologyIRI);
+    }
     // id -> contexts
     // function id-s
 

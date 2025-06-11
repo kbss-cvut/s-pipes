@@ -12,6 +12,7 @@ import cz.cvut.spipes.spin.model.Ask;
 import cz.cvut.spipes.spin.model.Construct;
 import cz.cvut.spipes.spin.model.SPINFactory;
 import cz.cvut.spipes.spin.model.Select;
+import cz.cvut.spipes.manager.factory.ScriptManagerFactory;
 import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.QueryUtils;
 import cz.cvut.spipes.util.SPINUtils;
@@ -50,6 +51,34 @@ import static java.util.stream.Collectors.joining;
  * and logging during execution.
  */
 public abstract class AbstractModule implements Module {
+    public static final String ID_PARAM = "_pId";
+    public static final String IS_EXECUTION_OF = "isExecutionOf";
+    public static final String IS_EXECUTION_OF_MODULE = "module";
+    public static final String IS_EXECUTION_OF_FUNCTION = "function";
+
+
+
+    /**
+     * Adds a binding of var isExecutionOf as "module"
+     * @param context
+     */
+    public static void setIsExecutionOfModule(ExecutionContext context){
+        context.getVariablesBinding().add(
+                IS_EXECUTION_OF,
+                context.getDefaultModel().createLiteral(IS_EXECUTION_OF_MODULE)
+        );
+    }
+
+    /**
+     * Adds a binding of var isExecutionOf as "function"
+     * @param context
+     */
+    public static void setIsExecutionOfFunction(ExecutionContext context){
+        context.getVariablesBinding().add(
+                IS_EXECUTION_OF,
+                context.getDefaultModel().createLiteral(IS_EXECUTION_OF_FUNCTION)
+        );
+    }
 
     private static final Logger log = LoggerFactory.getLogger(AbstractModule.class);
     Resource resource;
@@ -105,6 +134,44 @@ public abstract class AbstractModule implements Module {
 
     private String encodeValue(String value) {
         return URLEncoder.encode(value, StandardCharsets.UTF_8);
+    }
+
+    /**
+     *
+     * @return "module" or "function" based on weather the current module is executed as a function or as a module
+     */
+    public String getIsExecutionOf(){
+        return Optional.ofNullable(executionContext.getVariablesBinding().getNode(IS_EXECUTION_OF))
+                .map(RDFNode::toString)
+                .orElse(null);
+    }
+
+    /**
+     *
+     * @return "module" or "function" based on weather the current module is executed as a function or as a module
+     */
+    public String getId(){
+        return Optional.ofNullable(executionContext.getVariablesBinding().getNode(ID_PARAM))
+                .map(RDFNode::toString)
+                .orElse(null);
+    }
+
+    // TODO - Check if this will work in debugging! For example, when executing a module (i.e. "service/module" runModule)
+    //  defined in file1 as part of a function defined in file2 (with). In such cases, this method will return the parent
+    //  directory of file1 instead of correct parent directory of file2.
+    //  Solutions:
+    //  - To overcome this issue the the ontology iri of file2 (the one containing the function) needs to be passed to
+    //  this method. May be it is ok to pass it as binding in the execution context.
+    public File getRootScriptFile(){
+        String id = getId();
+        String isExecutionOf = getIsExecutionOf();
+
+        String file = switch (isExecutionOf) {
+            case IS_EXECUTION_OF_MODULE -> ScriptManagerFactory.getSingletonSPipesScriptManager().getModuleLocation(id, null);
+            case IS_EXECUTION_OF_FUNCTION -> ScriptManagerFactory.getSingletonSPipesScriptManager().getFunctionLocation(id);
+            default -> null;
+        };
+        return Optional.ofNullable(file).map(File::new).orElse(null);
     }
 
     private void generateLinkToRerunExecution(String inputModelFilePath) {
