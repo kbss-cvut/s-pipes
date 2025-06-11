@@ -4,11 +4,12 @@ import cz.cvut.spipes.config.ExecutionConfig;
 import cz.cvut.spipes.engine.*;
 import cz.cvut.spipes.exception.SPipesServiceException;
 import cz.cvut.spipes.manager.SPipesScriptManager;
+import cz.cvut.spipes.manager.factory.ContextLoaderHelper;
+import cz.cvut.spipes.manager.factory.ScriptManagerFactory;
 import cz.cvut.spipes.modules.Module;
 import cz.cvut.spipes.rest.util.*;
 import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.RDFMimeType;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +34,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static cz.cvut.spipes.rest.util.ContextLoaderHelper.isKeepUpdated;
+import static cz.cvut.spipes.manager.factory.ContextLoaderHelper.isKeepUpdated;
 import static cz.cvut.spipes.util.VariableBindingUtils.extendBindingFromURL;
 
 @Slf4j

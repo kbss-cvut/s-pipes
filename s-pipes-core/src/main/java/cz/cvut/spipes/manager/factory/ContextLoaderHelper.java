@@ -1,19 +1,21 @@
-package cz.cvut.spipes.rest.util;
+package cz.cvut.spipes.manager.factory;
 
 import cz.cvut.spipes.config.ContextsConfig;
 import cz.cvut.spipes.manager.OntoDocManager;
 import cz.cvut.spipes.manager.OntologyDocumentManager;
 import cz.cvut.spipes.manager.SPipesScriptManager;
 import cz.cvut.spipes.util.CoreConfigProperies;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.util.LocationMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.List;
 
-@Slf4j
 public class ContextLoaderHelper {
+
+    private static final Logger log = LoggerFactory.getLogger(ContextLoaderHelper.class);
 
     // TODO should not point to scriptManager
 
