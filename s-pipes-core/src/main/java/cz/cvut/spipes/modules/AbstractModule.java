@@ -162,6 +162,20 @@ public abstract class AbstractModule implements Module {
     //  Solutions:
     //  - To overcome this issue the the ontology iri of file2 (the one containing the function) needs to be passed to
     //  this method. May be it is ok to pass it as binding in the execution context.
+    /**
+     * This method returns the root script file derived from the current <code>AbstractModule.executionContext</code>.
+     * If <code>AbstractModule.executionContext</code>  is a function execution (i.e. pipeline) the file the function
+     * declaration is returned. If <code>AbstractModule.executionContext</code> is a module execution the file
+     * containing the module declaration is retuned.
+     *
+     * A <code>AbstractModule.executionContext</code> is function or module execution if it contains a binding of
+     * variable <code>IS_EXECUTION_OF</code> with value IS_EXECUTION_OF_FUNCTION and IS_EXECUTION_OF_MODULE respectively.
+     *
+     * @apiNote the caller must ensure that the binding is added before executing the pipeline or the model.
+     * @apiNote Downstream modules (modules executed before this module) can alter the bindings IS_EXECUTION_OF.
+     *
+     * @return the root script file or null if IS_EXECUTION_OF binding is missing or incorrect
+     */
     public File getRootScriptFile(){
         String id = getId();
         String isExecutionOf = getIsExecutionOf();
