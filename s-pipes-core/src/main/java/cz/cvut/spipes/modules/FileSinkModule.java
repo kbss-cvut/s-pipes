@@ -3,8 +3,6 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.constants.SML;
 import cz.cvut.spipes.engine.ExecutionContext;
-import cz.cvut.spipes.manager.SPipesScriptManager;
-import cz.cvut.spipes.manager.factory.ScriptManagerFactory;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.util.QueryUtils;
 import org.apache.jena.query.*;
@@ -15,6 +13,48 @@ import java.io.File;
 import java.io.IOException;
 
 @SPipesModule(label = "Persist model to files in workspace", comment = """
+        Use <code>FileSinkModule</code> module to save files in a directory relative to the root script's directory. The module passes the input execution
+        context downstream, i.e. to the next module in the pipeline.
+        <p>
+        Parameters:
+        <ul>
+        <li>
+        <code>outputDirectory</code> - path relative to root script file, default is ".".  In an Execution contexts the\s
+        root script file is the file defining the executed function or single module, see
+        <code>AbstractModule.getRootScriptFile</code>.
+        </li>
+        <li>
+        <code>selectQuery</code> - sparql select query generating files. The query must have two variables
+        <ul>
+        <li>
+        <code>fileName</code> - should return path relative to <code>outputDirectory</code> where the file will be saved.
+        </li>
+        <li><code>content</code> - should return the contents of the file to saved at <code>fileName</code></li>
+        </ul>
+        </li>
+        </ul>
+        
+        <b>Example of usage:</b>
+        <p>
+        Consider the <code>FileSinkModule</code> is used in the pipeline of a <code>hello-world</code> function defined in\s
+        "<code>$SCRIPT_PATH$/</code>hello-world.sms.ttl". The module configured as shown below. Executing the function
+        will create a file at "<code>$SCRIPT_PATH$/</code>target/greeting.html" with the content\s
+        "<code>&lthtml&gt&ltbody&gt&lth1&gtHello world&lth1&gt&lt/body&gt&lt/html&gt</code>"
+        <p>
+        Configuration:
+        
+        <table>
+        <style></style>
+        <tr>
+        <td><b><code>outputDirectory</code></b> = </td> <td>"target"</td>
+        </tr>
+        <tr>
+        <td><b><code>selectQuery</code></b> = </td><td><pre>""\"SELECT ?fileName ?content{
+        	BIND("greeting.html" as ?fileName)
+        	BIND("&lthtml&gt&ltbody&gt&lth1&gtHello world&lth1&gt&lt/body&gt&lt/html&gt" as ?content)
+        }""\"</pre></td>
+        </tr>
+        </table>
         """)
 public class FileSinkModule extends AnnotatedAbstractModule {
 
