@@ -8,8 +8,8 @@ import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.graph.Node;
 import org.apache.jena.rdf.model.LiteralRequiredException;
 import org.apache.jena.sparql.expr.NodeValue;
+import org.apache.jena.sparql.function.FunctionBase3;
 import org.apache.jena.sparql.function.FunctionEnv;
-import org.topbraid.spin.arq.AbstractFunction3;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,7 +22,7 @@ import java.util.*;
  * Converts a string in a semi-structured format into a xsd:date, xsd:dateTime or xsd:time literal.
  * The input string must be in a given template format, e.g. \"dd.MM.yyyy\" for strings such as 4.2.2022."
  */
-public class ParseDate extends AbstractFunction3 implements ValueFunction {
+public class ParseDate extends FunctionBase3 implements ValueFunction {
 
     private static final String TYPE_IRI = SPIF.uri + "parseDate";
 
@@ -35,19 +35,17 @@ public class ParseDate extends AbstractFunction3 implements ValueFunction {
      * @param text The input string.
      * @param pattern The template of the input string.
      * @param patternLanguage The code of the language (e.g. \"de\" for German) to use for parsing. May be <code>null</code>.
-     * @param env Environment of the function. May be <code>null</code>.
      * @return NodeValue with parsed date/time/datetime.
      */
     @Override
-    public NodeValue exec(Node text, Node pattern, Node patternLanguage, FunctionEnv env) {
+    public NodeValue exec(NodeValue text, NodeValue pattern, NodeValue patternLanguage) {
         if(text == null || pattern == null){
             return null;
         }
-
         String textValue = getRequiredParameterLiteralValue(text);
         String patternValue = getRequiredParameterLiteralValue(pattern);
 
-        Optional<Node> patternLanguageNode = Optional.ofNullable(patternLanguage);
+        Optional<NodeValue> patternLanguageNode = Optional.ofNullable(patternLanguage);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(patternValue);
         patternLanguageNode.ifPresent(node -> checkLocaleFormat(node, formatter, textValue));
 
@@ -69,7 +67,8 @@ public class ParseDate extends AbstractFunction3 implements ValueFunction {
         }
     }
 
-    private String getRequiredParameterLiteralValue(Node text) {
+    private String getRequiredParameterLiteralValue(NodeValue textNV) {
+        Node text = textNV.asNode();
         if(text.isLiteral()){
             return text.getLiteralValue().toString();
         }else{
@@ -77,8 +76,8 @@ public class ParseDate extends AbstractFunction3 implements ValueFunction {
         }
     }
 
-    private void checkLocaleFormat(Node patternLanguageNode, DateTimeFormatter formatter, String textValue){
-        String patternLanguageValue = patternLanguageNode.getLiteralValue().toString();
+    private void checkLocaleFormat(NodeValue patternLanguageNode, DateTimeFormatter formatter, String textValue){
+        String patternLanguageValue = patternLanguageNode.asNode().getLiteralValue().toString();
         formatter = formatter.withLocale(new Locale(patternLanguageValue));
 
         LocalDate ld = LocalDate.parse(textValue,formatter);

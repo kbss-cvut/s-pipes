@@ -1,12 +1,10 @@
 package cz.cvut.spipes.function;
 
-import org.apache.jena.graph.Node;
 import org.apache.jena.sparql.expr.NodeValue;
-import org.apache.jena.sparql.function.FunctionEnv;
+import org.apache.jena.sparql.function.FunctionBase2;
 import org.apache.jena.vocabulary.XSD;
-import org.topbraid.spin.arq.AbstractFunction2;
 
-public class MatchesRelativeIri extends AbstractFunction2 implements ValueFunction {
+public class MatchesRelativeIri extends FunctionBase2 implements ValueFunction {
 
 
     private static final String TYPE_IRI = "http://onto.fel.cvut.cz/ontologies/lib/function/general/matches-relative-iri";
@@ -18,15 +16,15 @@ public class MatchesRelativeIri extends AbstractFunction2 implements ValueFuncti
     }
 
     @Override
-    protected NodeValue exec(Node object, Node relativeIRI, FunctionEnv env) {
+    public NodeValue exec(NodeValue object, NodeValue relativeIRI) {
 
         if (hasSecondArgument(relativeIRI)) {
-            if (! object.toString().equals(relativeIRI.getLiteral().toString())) {
+            if (! object.toString().equals(relativeIRI.asNode().getLiteral().toString())) {
                 return  NodeValue.makeNodeBoolean(false);
             }
         }
 
-        if (! object.isURI()) {
+        if (! object.isIRI()) {
             return NodeValue.makeNodeBoolean(false);
         }
 
@@ -38,9 +36,9 @@ public class MatchesRelativeIri extends AbstractFunction2 implements ValueFuncti
 
     }
 
-    private boolean hasSecondArgument(Node relativeIRI) {
+    private boolean hasSecondArgument(NodeValue relativeIRI) {
         if (relativeIRI != null) {
-            if ((! relativeIRI.isLiteral()) && (relativeIRI.getLiteralDatatypeURI().equals(XSD.xstring.toString()))) {
+            if ((! relativeIRI.isLiteral()) && (relativeIRI.asNode().getLiteralDatatypeURI().equals(XSD.xstring.toString()))) {
                 throw new IllegalStateException("Argument '" + relativeIRI + "' is not of type xsd:string.");
             }
             return true;
