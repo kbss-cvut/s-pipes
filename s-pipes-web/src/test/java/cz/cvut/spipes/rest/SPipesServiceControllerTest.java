@@ -2,7 +2,7 @@ package cz.cvut.spipes.rest;
 
 import cz.cvut.spipes.config.WebAppConfig;
 import cz.cvut.spipes.engine.VariablesBinding;
-import cz.cvut.spipes.rest.util.ContextLoaderHelper;
+import cz.cvut.spipes.manager.factory.ContextLoaderHelper;
 import cz.cvut.spipes.rest.util.ReservedParams;
 import cz.cvut.spipes.util.RDFMimeType;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +38,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mockStatic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Slf4j
