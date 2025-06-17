@@ -94,7 +94,7 @@ public class SpinIntegrationTest {
     }
 
     @Test
-    public void executeSPINQueryWithCustomJavaFunction() {
+    public void executeQueryWithCustomJavaFunction() {
 
         PipelineFactory.registerFunctionsOnClassPath();
 
