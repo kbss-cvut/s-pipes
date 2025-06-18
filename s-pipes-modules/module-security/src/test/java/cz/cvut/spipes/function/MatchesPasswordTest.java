@@ -15,10 +15,10 @@ public class MatchesPasswordTest {
     public void execReturnsTrueIfRawMatchesEncodedPassword() {
 
         MatchesPassword passwordEncoder = new MatchesPassword();
-        Node rawPasswordNode = NodeValue.makeNodeString("rawPassword").asNode();
-        Node encodedPasswordNode = NodeValue.makeNodeString(encoder.encode("rawPassword")).asNode();
+        NodeValue rawPasswordNode = NodeValue.makeNodeString("rawPassword");
+        NodeValue encodedPasswordNode = NodeValue.makeNodeString(encoder.encode("rawPassword"));
 
-        NodeValue retVal = passwordEncoder.exec(rawPasswordNode, encodedPasswordNode,null);
+        NodeValue retVal = passwordEncoder.exec(rawPasswordNode, encodedPasswordNode);
 
         assertTrue(retVal.getBoolean());
     }
@@ -27,10 +27,10 @@ public class MatchesPasswordTest {
     public void execReturnsFalseIfRawMatchesEncodedPassword() {
 
         MatchesPassword passwordEncoder = new MatchesPassword();
-        Node rawPasswordNode = NodeValue.makeNodeString("rawPassword").asNode();
-        Node encodedPasswordNode = NodeValue.makeNodeString(encoder.encode("DIFFERENT_Password")).asNode();
+        NodeValue rawPasswordNode = NodeValue.makeNodeString("rawPassword");
+        NodeValue encodedPasswordNode = NodeValue.makeNodeString(encoder.encode("DIFFERENT_Password"));
 
-        NodeValue retVal = passwordEncoder.exec(rawPasswordNode, encodedPasswordNode,null);
+        NodeValue retVal = passwordEncoder.exec(rawPasswordNode, encodedPasswordNode);
 
         assertFalse(retVal.getBoolean());
     }

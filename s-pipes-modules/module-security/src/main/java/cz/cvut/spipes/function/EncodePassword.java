@@ -1,15 +1,9 @@
 package cz.cvut.spipes.function;
 
-import cz.cvut.spipes.function.ARQFunction;
-import cz.cvut.spipes.function.ValueFunction;
-import org.apache.jena.graph.Node;
 import org.apache.jena.sparql.expr.NodeValue;
-import org.apache.jena.sparql.function.FunctionEnv;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.topbraid.spin.arq.AbstractFunction1;
+import org.apache.jena.sparql.function.FunctionBase1;
 
-public class EncodePassword extends AbstractFunction1 implements ValueFunction {
+public class EncodePassword extends FunctionBase1 implements ValueFunction {
 
 
     private org.springframework.security.crypto.password.PasswordEncoder encoder = PasswordEncoderConfig.getEncoder();
@@ -27,8 +21,8 @@ public class EncodePassword extends AbstractFunction1 implements ValueFunction {
     }
 
     @Override
-    protected NodeValue exec(Node rawPassword, FunctionEnv env) {
-        String encodedPassword = encoder.encode(rawPassword.getLiteral().getValue().toString());
+    public NodeValue exec(NodeValue rawPassword) {
+        String encodedPassword = encoder.encode(rawPassword.asNode().getLiteral().getValue().toString());
         return NodeValue.makeNodeString(encodedPassword);
     }
 
