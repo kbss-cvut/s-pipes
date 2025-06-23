@@ -10,6 +10,7 @@ import cz.cvut.spipes.engine.VariablesBinding;
 import cz.cvut.spipes.exception.ValidationConstraintFailedException;
 import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.QueryUtils;
+import cz.cvut.spipes.util.SPipesUtil;
 import org.apache.jena.atlas.lib.NotImplemented;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.query.*;
@@ -66,6 +67,10 @@ public abstract class AbstractModule implements Module {
     // load each properties
     // valiadation of required parameter
     // ?? validation of shape of input graph
+    // TODO move elsewhere?
+    static {
+        SPipesUtil.init(); // initialize system functoins
+    }
 
 
     abstract ExecutionContext executeSelf();

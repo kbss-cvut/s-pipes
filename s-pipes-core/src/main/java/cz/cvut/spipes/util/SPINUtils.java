@@ -2,16 +2,12 @@ package cz.cvut.spipes.util;
 
 import cz.cvut.spipes.constants.SM;
 import cz.cvut.spipes.constants.SMF;
-import org.apache.jena.rdf.model.Resource;
-import org.topbraid.spin.system.SPINModuleRegistry;
 import org.topbraid.spin.vocabulary.SP;
 import org.topbraid.spin.vocabulary.SPL;
 import org.topbraid.spin.vocabulary.SPR;
+import org.apache.jena.sparql.function.FunctionRegistry;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public class SPINUtils {
     private static final Set<String> COMMON_PREFIXES = new HashSet<String>() {{
@@ -26,11 +22,16 @@ public class SPINUtils {
         add("http://www.w3.org/2005/xpath-functions#");
     }};
 
+    // TODO - unify api with SPipesUtil.getNonSystemFunctions
     public static List<String> getRegisteredCustomFunctions() {
-        return SPINModuleRegistry.get().getFunctions().stream()
-                .map(Resource::getURI)
-                .filter(SPINUtils::startWithCustomPrefix)
-                .collect(Collectors.toList());
+        List<String> ret = new ArrayList<>();
+        Iterator<String> iter = FunctionRegistry.get().keys();
+        while (iter.hasNext()){
+            String key = iter.next();
+            if(startWithCustomPrefix(key))
+                ret.add(key);
+        }
+        return ret;
     }
 
     private static boolean startWithCustomPrefix(String url) {

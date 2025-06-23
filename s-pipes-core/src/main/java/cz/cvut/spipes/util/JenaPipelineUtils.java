@@ -82,7 +82,7 @@ public class JenaPipelineUtils {
         return function2retModuleMap;
     }
 
-    //TODO
+    //TODO - use of SPINModuleRegistry is deprecated
     public static List<Resource> findPipelineModules(Resource rootModule) {
         OntModel ontModel = loadLibrary();
 

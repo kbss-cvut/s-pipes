@@ -17,7 +17,6 @@ import org.apache.jena.rdf.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.topbraid.spin.model.Construct;
-import org.topbraid.spin.system.SPINModuleRegistry;
 import org.topbraid.spin.vocabulary.SP;
 
 import java.util.Comparator;
@@ -56,11 +55,6 @@ public class ApplyConstructModule extends AnnotatedAbstractModule {
      */
     @Parameter(iri = KBSS_MODULE.has_max_iteration_count)
     private int iterationCount = 1;
-
-    public ApplyConstructModule() {
-        // TODO move elsewhere
-        SPINModuleRegistry.get().init(); //TODO -- downloads spin from the web (should be cached instead)
-    }
 
     public boolean isParseText() {
         return parseText;

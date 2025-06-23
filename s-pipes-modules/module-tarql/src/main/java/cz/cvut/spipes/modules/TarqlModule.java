@@ -50,11 +50,6 @@ public class TarqlModule extends AnnotatedAbstractModule {
     @Parameter(iri = SML.sourceFilePath, comment = "Source CSV file.")
     private String sourceFilePath;
 
-    public TarqlModule() {
-        //SPINModuleRegistry.get().init(); // TODO move elsewhere
-    }
-
-
     @Override
     public ExecutionContext executeSelf() {
 
