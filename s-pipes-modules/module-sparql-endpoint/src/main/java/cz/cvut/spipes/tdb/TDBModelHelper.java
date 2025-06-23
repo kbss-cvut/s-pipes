@@ -1,7 +1,7 @@
 package cz.cvut.spipes.tdb;
 
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.tdb.store.GraphTDB;
+import org.apache.jena.tdb1.store.GraphTDB;
 
 class TDBModelHelper {
 

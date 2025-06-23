@@ -8,6 +8,7 @@ import org.apache.jena.sparql.engine.binding.Binding;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * ResultSet that extends the original result set by adding bindings from the previous query solution.
@@ -98,5 +99,15 @@ public class OneStepBackExtendedResultSet implements ResultSet  {
     @Override
     public Model getResourceModel() {
         return resultSet.getResourceModel();
+    }
+
+    @Override
+    public void forEachRemaining(Consumer<? super QuerySolution> action) {
+        resultSet.forEachRemaining(action);
+    }
+
+    @Override
+    public void close() {
+        resultSet.close();
     }
 }

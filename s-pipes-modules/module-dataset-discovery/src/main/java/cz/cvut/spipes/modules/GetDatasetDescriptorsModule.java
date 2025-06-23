@@ -6,20 +6,19 @@ import cz.cvut.spipes.modules.annotations.SPipesModule;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.jena.query.*;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryFactory;
+import org.apache.jena.query.Syntax;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.sparql.core.Var;
-import org.apache.jena.sparql.engine.binding.BindingHashMap;
-import org.apache.jena.sparql.engine.binding.BindingMap;
+import org.apache.jena.sparql.engine.binding.BindingBuilder;
+import org.apache.jena.sparql.engine.binding.BindingFactory;
+import org.apache.jena.sparql.exec.http.QueryExecutionHTTP;
 import org.apache.jena.util.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.Optional;
 
 @Slf4j
 @Getter
@@ -56,18 +55,18 @@ public class GetDatasetDescriptorsModule extends AnnotatedAbstractModule {
             QueryFactory.parse(query, queryString, "", Syntax.syntaxSPARQL_11);
 
             final Var g = Var.alloc("ds");
-            final BindingMap bm = new BindingHashMap();
+            final BindingBuilder bm = BindingFactory.builder();
             bm.add(g, ResourceFactory.createPlainLiteral(prpDatasetIri).asNode());
 
             query.setValuesDataBlock(
                 Collections.singletonList(g),
-                Collections.singletonList(bm)
+                Collections.singletonList(bm.build())
             );
 
-            QueryExecution qexec = QueryExecutionFactory.sparqlService(endpointUrl, query);
-            Model m = qexec.execConstruct();
-
-            executionContext.getDefaultModel().add(m);
+            try (QueryExecutionHTTP qexec = QueryExecutionHTTP.service(endpointUrl, query)) {
+                Model m = qexec.execConstruct();
+                executionContext.getDefaultModel().add(m);
+            }
 
         } catch (IOException e) {
             e.printStackTrace();

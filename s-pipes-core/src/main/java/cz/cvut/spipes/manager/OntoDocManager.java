@@ -394,7 +394,7 @@ public class OntoDocManager implements OntologyDocumentManager {
         public void handleFailedRead(String url, Model model, Exception e) {
 
             if (e instanceof HttpException) {
-                int responseCode = ((HttpException) e).getResponseCode();
+                int responseCode = ((HttpException) e).getStatusCode();
                 if (responseCode == 404) {
                     log.warn("Attempt to read ontology from {} returned HTTP code '404 - Not Found'.", url);
                     return;

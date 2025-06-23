@@ -10,7 +10,7 @@ public class RDFMimeType {
     public static final String LD_JSON_STRING = "application/ld+json";
 
     public static MediaType transform(Lang contentType) {
-        return MediaType.parseMediaType(contentType.getContentType().getContentType());
+        return MediaType.parseMediaType(contentType.getContentType().getContentTypeStr());
     }
 //    TODO ?
 //    text/trig

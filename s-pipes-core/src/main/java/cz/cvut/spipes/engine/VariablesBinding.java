@@ -6,8 +6,10 @@ import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.riot.Lang;
+import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.engine.binding.Binding;
-import org.apache.jena.sparql.engine.binding.BindingUtils;
+import org.apache.jena.sparql.engine.binding.BindingBuilder;
+import org.apache.jena.sparql.engine.binding.BindingFactory;
 import org.apache.jena.vocabulary.RDF;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -61,7 +63,11 @@ public class VariablesBinding {
     }
 
     public Binding asBinding() {
-        return BindingUtils.asBinding(binding);
+        if(binding == null)
+            return BindingFactory.empty();
+        BindingBuilder bb = BindingBuilder.create();
+        binding.varNames().forEachRemaining(v -> bb.add(Var.alloc(v), binding.get(v).asNode()));
+        return bb.build();
     }
 
     public boolean isEmpty() {
