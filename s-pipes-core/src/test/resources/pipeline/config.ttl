@@ -18,56 +18,56 @@
 .
 sml:bind-greeting-1
   rdf:type sml:BindWithConstant ;
-  sm:outputVariable "greetingMessage"^^xsd:string ;
+  sm:outputVariable "greetingMessage" ;
   sml:value [
       rdf:type sp:concat ;
       sp:arg1 "Hello " ;
       sp:arg2 [
-          sp:varName "name"^^xsd:string ;
+          sp:varName "name" ;
         ] ;
     ] ;
-  rdfs:label "Bind greeting"^^xsd:string ;
+  rdfs:label "Bind greeting" ;
 .
 sml:bind-greeting-2
   rdf:type sml:BindWithConstant ;
   sm:nodeX 317 ;
   sm:nodeY 170 ;
-  sm:outputVariable "greetingMessage"^^xsd:string ;
+  sm:outputVariable "greetingMessage" ;
   sml:value [
       rdf:type sp:concat ;
       sp:arg1 "Welcome " ;
       sp:arg2 [
-          sp:varName "firstname"^^xsd:string ;
+          sp:varName "firstname" ;
         ] ;
       sp:arg3 " " ;
       sp:arg4 [
-          sp:varName "surname"^^xsd:string ;
+          sp:varName "surname" ;
         ] ;
     ] ;
-  rdfs:label "bind-greeting"^^xsd:string ;
+  rdfs:label "bind-greeting" ;
 .
 sml:bind-name-1
   rdf:type sml:BindWithConstant ;
   sm:next sml:bind-greeting-1 ;
-  sm:outputVariable "name"^^xsd:string ;
-  sml:value "Miroslav"^^xsd:string ;
-  rdfs:label "Bind name"^^xsd:string ;
+  sm:outputVariable "name" ;
+  sml:value "Miroslav" ;
+  rdfs:label "Bind name" ;
 .
 sml:bind-name-2
   rdf:type sml:BindWithConstant ;
   sm:next sml:bind-greeting-2 ;
   sm:nodeX 448 ;
   sm:nodeY 30 ;
-  sm:outputVariable "firstname"^^xsd:string ;
-  sml:value "James"^^xsd:string ;
-  rdfs:label "Bind name"^^xsd:string ;
+  sm:outputVariable "firstname" ;
+  sml:value "James" ;
+  rdfs:label "Bind name" ;
 .
 sml:bind-name-3
   rdf:type sml:BindWithConstant ;
   sm:next sml:bind-greeting-2 ;
   sm:nodeX 280 ;
   sm:nodeY 21 ;
-  sm:outputVariable "surname"^^xsd:string ;
-  sml:value "Bond"^^xsd:string ;
-  rdfs:label "Bind name"^^xsd:string ;
+  sm:outputVariable "surname" ;
+  sml:value "Bond" ;
+  rdfs:label "Bind name" ;
 .

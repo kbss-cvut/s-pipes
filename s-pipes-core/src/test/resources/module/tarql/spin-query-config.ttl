@@ -22,21 +22,21 @@ tarql-module:CreateSampleTriples
             sp:object "example" ;
             sp:predicate rdfs:label ;
             sp:subject [
-                sp:varName "ECCAIRSEventID"^^xsd:string ;
+                sp:varName "ECCAIRSEventID" ;
               ] ;
           ]
           [
             sp:object "some uri" ;
             sp:predicate rdfs:label ;
             sp:subject [
-                sp:varName "URI"^^xsd:string ;
+                sp:varName "URI" ;
               ] ;
           ]
           [
             sp:object "some uri2" ;
             sp:predicate rdfs:label ;
             sp:subject [
-                sp:varName "URI2"^^xsd:string ;
+                sp:varName "URI2" ;
               ] ;
           ]
         ) ;
@@ -48,7 +48,7 @@ tarql-module:CreateSampleTriples
 WHERE {
     BIND (URI(CONCAT('http://companies/', STR(?ROWNUM))) AS ?URI)
     BIND (URI(CONCAT('http://companies/', ?ECCAIRSEventID, \"---\",STR(?ROWNUM))) AS ?URI2)
-}"""^^xsd:string ;
+}""" ;
       sp:where (
           [
             rdf:type sp:Bind ;
@@ -60,13 +60,13 @@ WHERE {
                     sp:arg2 [
                         rdf:type sp:str ;
                         sp:arg1 [
-                            sp:varName "ROWNUM"^^xsd:string ;
+                            sp:varName "ROWNUM" ;
                           ] ;
                       ] ;
                   ] ;
               ] ;
             sp:variable [
-                sp:varName "URI"^^xsd:string ;
+                sp:varName "URI" ;
               ] ;
           ]
           [
@@ -77,26 +77,26 @@ WHERE {
                     rdf:type sp:concat ;
                     sp:arg1 "http://companies/" ;
                     sp:arg2 [
-                        sp:varName "ECCAIRSEventID"^^xsd:string ;
+                        sp:varName "ECCAIRSEventID" ;
                       ] ;
                     sp:arg3 "---" ;
                     sp:arg4 [
                         rdf:type sp:str ;
                         sp:arg1 [
-                            sp:varName "ROWNUM"^^xsd:string ;
+                            sp:varName "ROWNUM" ;
                           ] ;
                       ] ;
                   ] ;
               ] ;
             sp:variable [
-                sp:varName "URI2"^^xsd:string ;
+                sp:varName "URI2" ;
               ] ;
           ]
         ) ;
     ] ;
   sml:replace "true"^^xsd:boolean ;
-  sml:sourceFilePath "/home/blcha/projects/kbss/git/s-pipes/s-pipes-core/src/test/resources/tarql-module/table.csv"^^xsd:string ;
-  rdfs:label "Create sample triples"^^xsd:string ;
+  sml:sourceFilePath "/home/blcha/projects/kbss/git/s-pipes/s-pipes-core/src/test/resources/tarql-module/table.csv" ;
+  rdfs:label "Create sample triples" ;
 .
 <http://onto.fel.cvut.cz/ontologies/test/tarql-module/spin-query-config>
   rdf:type owl:Ontology ;

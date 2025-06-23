@@ -17,11 +17,11 @@ identity:SampleIdentity
 
   sm:nodeX 292 ;
   sm:nodeY 155 ;
-  rdfs:label "Sample identity"^^xsd:string ;
+  rdfs:label "Sample identity" ;
 .
 <http://onto.fel.cvut.cz/ontologies/s-pipes/identity/spin-query-config>
   rdf:type owl:Ontology ;
   owl:imports <http://topbraid.org/sparqlmotionfunctions> ;
   owl:imports <http://topbraid.org/sparqlmotionlib-tbc> ;
-  owl:versionInfo "Created with TopBraid Composer"^^xsd:string ;
+  owl:versionInfo "Created with TopBraid Composer" ;
 .

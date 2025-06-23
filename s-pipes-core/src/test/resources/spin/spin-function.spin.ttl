@@ -28,12 +28,12 @@ WHERE {
                  rdf:type spl:Argument ;
                  spl:predicate sp:arg1 ;
                  spl:valueType xsd:string ;
-                 rdfs:comment "Sparql endpoint uri (e.g. http://onto.fel.cvut.cz/openrdf-sesame/repositories/test-repo)."^^xsd:string ;
+                 rdfs:comment "Sparql endpoint uri (e.g. http://onto.fel.cvut.cz/openrdf-sesame/repositories/test-repo)." ;
              ] ;
     spin:constraint [
                  rdf:type spl:Argument ;
                  spl:predicate sp:arg2 ;
-                 rdfs:comment "URI of named graph (e.g. http://example.org/my-ontology)."^^xsd:string ;
+                 rdfs:comment "URI of named graph (e.g. http://example.org/my-ontology)." ;
              ] ;
-    rdfs:comment "Construct sparql service url from ?sparqlEndpointUrl and ?namedGraphURI."^^xsd:string ;
+    rdfs:comment "Construct sparql service url from ?sparqlEndpointUrl and ?namedGraphURI." ;
 .

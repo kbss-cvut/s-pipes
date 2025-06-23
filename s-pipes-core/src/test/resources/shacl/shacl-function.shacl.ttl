@@ -26,7 +26,7 @@
 .
 kbss-shaclf:create-sparql-service-url
   rdf:type sh:SPARQLFunction ;
-  rdfs:label "create-sparql-service-url"^^xsd:string ;
+  rdfs:label "create-sparql-service-url" ;
   sh:returnType  xsd:anyURI ;
   sh:select """SELECT ?serviceUrl
 WHERE {

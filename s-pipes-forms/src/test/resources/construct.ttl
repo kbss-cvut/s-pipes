@@ -14,204 +14,204 @@
             sp:object descriptor:spo-summary-descriptor ;
             sp:predicate rdf:type ;
             sp:subject [
-                sp:varName "descriptor"^^xsd:string ;
+                sp:varName "descriptor" ;
               ] ;
           ]
           [
             sp:object [
-                sp:varName "description"^^xsd:string ;
+                sp:varName "description" ;
               ] ;
             sp:predicate <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-dataset-descriptor> ;
             sp:subject [
-                sp:varName "descriptor"^^xsd:string ;
+                sp:varName "descriptor" ;
               ] ;
           ]
           [
             sp:object descriptor:description ;
             sp:predicate rdf:type ;
             sp:subject [
-                sp:varName "description"^^xsd:string ;
+                sp:varName "description" ;
               ] ;
           ]
           [
             sp:object [
-                sp:varName "datasetSnapshot"^^xsd:string ;
+                sp:varName "datasetSnapshot" ;
               ] ;
             sp:predicate descriptor:is-description-of ;
             sp:subject [
-                sp:varName "description"^^xsd:string ;
+                sp:varName "description" ;
               ] ;
           ]
           [
             sp:object descriptor:described-dataset-snapshot ;
             sp:predicate rdf:type ;
             sp:subject [
-                sp:varName "datasetSnapshot"^^xsd:string ;
+                sp:varName "datasetSnapshot" ;
               ] ;
           ]
           [
             sp:object [
-                sp:varName "snapshotHash"^^xsd:string ;
+                sp:varName "snapshotHash" ;
               ] ;
             sp:predicate descriptor:has-data-hash ;
             sp:subject [
-                sp:varName "datasetSnapshot"^^xsd:string ;
+                sp:varName "datasetSnapshot" ;
               ] ;
           ]
           [
             sp:object [
-                sp:varName "snapshotRetrievalDate"^^xsd:string ;
+                sp:varName "snapshotRetrievalDate" ;
               ] ;
             sp:predicate descriptor:has-retrieval-date ;
             sp:subject [
-                sp:varName "datasetSnapshot"^^xsd:string ;
+                sp:varName "datasetSnapshot" ;
               ] ;
           ]
           [
             sp:object [
-                sp:varName "dataset"^^xsd:string ;
+                sp:varName "dataset" ;
               ] ;
             sp:predicate descriptor:has-dataset ;
             sp:subject [
-                sp:varName "datasetSnapshot"^^xsd:string ;
+                sp:varName "datasetSnapshot" ;
               ] ;
           ]
           [
             sp:object descriptor:dataset ;
             sp:predicate rdf:type ;
             sp:subject [
-                sp:varName "dataset"^^xsd:string ;
+                sp:varName "dataset" ;
               ] ;
           ]
           [
             sp:object [
-                sp:varName "datasetSource"^^xsd:string ;
+                sp:varName "datasetSource" ;
               ] ;
             sp:predicate descriptor:has-source ;
             sp:subject [
-                sp:varName "description"^^xsd:string ;
+                sp:varName "description" ;
               ] ;
           ]
           [
             sp:object [
-                sp:varName "datasetSourceType"^^xsd:string ;
+                sp:varName "datasetSourceType" ;
               ] ;
             sp:predicate rdf:type ;
             sp:subject [
-                sp:varName "datasetSource"^^xsd:string ;
+                sp:varName "datasetSource" ;
               ] ;
           ]
           [
             sp:object [
-                sp:varName "snapshotDownloadUrl_"^^xsd:string ;
+                sp:varName "snapshotDownloadUrl_" ;
               ] ;
             sp:predicate descriptor:has-download-url ;
             sp:subject [
-                sp:varName "datasetSource"^^xsd:string ;
+                sp:varName "datasetSource" ;
               ] ;
           ]
           [
             sp:object [
-                sp:varName "datasetEndpointUrl"^^xsd:string ;
+                sp:varName "datasetEndpointUrl" ;
               ] ;
             sp:predicate descriptor:has-endpoint-url ;
             sp:subject [
-                sp:varName "datasetSource"^^xsd:string ;
+                sp:varName "datasetSource" ;
               ] ;
           ]
           [
             sp:object [
-                sp:varName "snapshotGraphId"^^xsd:string ;
+                sp:varName "snapshotGraphId" ;
               ] ;
             sp:predicate descriptor:has-graph-id ;
             sp:subject [
-                sp:varName "datasetSource"^^xsd:string ;
+                sp:varName "datasetSource" ;
               ] ;
           ]
           [
             sp:object [
-                sp:varName "eventsDate"^^xsd:string ;
+                sp:varName "eventsDate" ;
               ] ;
             sp:predicate descriptor:has-creation-date ;
             sp:subject [
-                sp:varName "description"^^xsd:string ;
+                sp:varName "description" ;
               ] ;
           ]
           [
             sp:object [
-                sp:varName "datasetSnapshot"^^xsd:string ;
+                sp:varName "datasetSnapshot" ;
               ] ;
             sp:predicate descriptor:describes ;
             sp:subject [
-                sp:varName "descriptor"^^xsd:string ;
+                sp:varName "descriptor" ;
               ] ;
           ]
           [
             sp:object [
-                sp:varName "publication"^^xsd:string ;
+                sp:varName "publication" ;
               ] ;
             sp:predicate <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-published-dataset-snapshot> ;
             sp:subject [
-                sp:varName "descriptor"^^xsd:string ;
+                sp:varName "descriptor" ;
               ] ;
           ]
           [
             sp:object descriptor:dataset-publication ;
             sp:predicate rdf:type ;
             sp:subject [
-                sp:varName "publication"^^xsd:string ;
+                sp:varName "publication" ;
               ] ;
           ]
           [
             sp:object [
-                sp:varName "eventsDate"^^xsd:string ;
+                sp:varName "eventsDate" ;
               ] ;
             sp:predicate descriptor:has-creation-date ;
             sp:subject [
-                sp:varName "publication"^^xsd:string ;
+                sp:varName "publication" ;
               ] ;
           ]
           [
             sp:object [
-                sp:varName "descriptorSource"^^xsd:string ;
+                sp:varName "descriptorSource" ;
               ] ;
             sp:predicate descriptor:has-source ;
             sp:subject [
-                sp:varName "publication"^^xsd:string ;
+                sp:varName "publication" ;
               ] ;
           ]
           [
             sp:object descriptor:named-graph-sparql-endpoint-dataset-source ;
             sp:predicate rdf:type ;
             sp:subject [
-                sp:varName "descriptorSource"^^xsd:string ;
+                sp:varName "descriptorSource" ;
               ] ;
           ]
           [
             sp:object [
-                sp:varName "descriptorDownloadUrl_"^^xsd:string ;
+                sp:varName "descriptorDownloadUrl_" ;
               ] ;
             sp:predicate descriptor:has-download-url ;
             sp:subject [
-                sp:varName "descriptorSource"^^xsd:string ;
+                sp:varName "descriptorSource" ;
               ] ;
           ]
           [
             sp:object [
-                sp:varName "descriptorEndpointUrl"^^xsd:string ;
+                sp:varName "descriptorEndpointUrl" ;
               ] ;
             sp:predicate descriptor:has-endpoint-url ;
             sp:subject [
-                sp:varName "descriptorSource"^^xsd:string ;
+                sp:varName "descriptorSource" ;
               ] ;
           ]
           [
             sp:object [
-                sp:varName "descriptorGraphId"^^xsd:string ;
+                sp:varName "descriptorGraphId" ;
               ] ;
             sp:predicate descriptor:has-graph-id ;
             sp:subject [
-                sp:varName "descriptorSource"^^xsd:string ;
+                sp:varName "descriptorSource" ;
               ] ;
           ]
         ) ;
@@ -257,7 +257,7 @@ WHERE
     BIND(iri(?descriptorEndpointUrl) AS ?descriptorEndpointUrl_)
     BIND(iri(?descriptorDownloadUrl) AS ?descriptorDownloadUrl_)
 }
-"""^^xsd:string ;
+""" ;
       sp:where (
           [
             rdf:type sp:Bind ;
@@ -265,7 +265,7 @@ WHERE
                 rdf:type sp:now ;
               ] ;
             sp:variable [
-                sp:varName "eventsDate"^^xsd:string ;
+                sp:varName "eventsDate" ;
               ] ;
           ]
           [
@@ -277,17 +277,17 @@ WHERE
                     sp:arg1 [
                         rdf:type sp:str ;
                         sp:arg1 [
-                            sp:varName "descriptorType"^^xsd:string ;
+                            sp:varName "descriptorType" ;
                           ] ;
                       ] ;
                     sp:arg2 "--" ;
                     sp:arg3 [
-                        sp:varName "snapshotHash"^^xsd:string ;
+                        sp:varName "snapshotHash" ;
                       ] ;
                   ] ;
               ] ;
             sp:variable [
-                sp:varName "descriptor"^^xsd:string ;
+                sp:varName "descriptor" ;
               ] ;
           ]
           [
@@ -306,12 +306,12 @@ WHERE
                         sp:arg1 [
                             rdf:type sp:concat ;
                             sp:arg1 [
-                                sp:varName "transformationHash"^^xsd:string ;
+                                sp:varName "transformationHash" ;
                               ] ;
                             sp:arg2 [
                                 rdf:type sp:str ;
                                 sp:arg1 [
-                                    sp:varName "eventsDate"^^xsd:string ;
+                                    sp:varName "eventsDate" ;
                                   ] ;
                               ] ;
                           ] ;
@@ -319,7 +319,7 @@ WHERE
                   ] ;
               ] ;
             sp:variable [
-                sp:varName "description"^^xsd:string ;
+                sp:varName "description" ;
               ] ;
           ]
           [
@@ -334,12 +334,12 @@ WHERE
                       ] ;
                     sp:arg2 "--" ;
                     sp:arg3 [
-                        sp:varName "snapshotHash"^^xsd:string ;
+                        sp:varName "snapshotHash" ;
                       ] ;
                   ] ;
               ] ;
             sp:variable [
-                sp:varName "datasetSnapshot"^^xsd:string ;
+                sp:varName "datasetSnapshot" ;
               ] ;
           ]
           [
@@ -349,7 +349,7 @@ WHERE
                 sp:arg1 [
                     rdf:type sp:iri ;
                     sp:arg1 [
-                        sp:varName "oldDatasetSource"^^xsd:string ;
+                        sp:varName "oldDatasetSource" ;
                       ] ;
                   ] ;
                 sp:arg2 [
@@ -362,13 +362,13 @@ WHERE
                           ] ;
                         sp:arg2 "--" ;
                         sp:arg3 [
-                            sp:varName "datasetSourceHash"^^xsd:string ;
+                            sp:varName "datasetSourceHash" ;
                           ] ;
                       ] ;
                   ] ;
               ] ;
             sp:variable [
-                sp:varName "datasetSource"^^xsd:string ;
+                sp:varName "datasetSource" ;
               ] ;
           ]
           [
@@ -378,14 +378,14 @@ WHERE
                 sp:arg1 [
                     rdf:type sp:bound ;
                     sp:arg1 [
-                        sp:varName "snapshotGraphId"^^xsd:string ;
+                        sp:varName "snapshotGraphId" ;
                       ] ;
                   ] ;
                 sp:arg2 descriptor:named-graph-sparql-endpoint-dataset-source ;
                 sp:arg3 descriptor:sparql-endpoint-dataset-source ;
               ] ;
             sp:variable [
-                sp:varName "datasetSourceType"^^xsd:string ;
+                sp:varName "datasetSourceType" ;
               ] ;
           ]
           [
@@ -400,12 +400,12 @@ WHERE
                       ] ;
                     sp:arg2 "--" ;
                     sp:arg3 [
-                        sp:varName "datasetSourceHash"^^xsd:string ;
+                        sp:varName "datasetSourceHash" ;
                       ] ;
                   ] ;
               ] ;
             sp:variable [
-                sp:varName "dataset"^^xsd:string ;
+                sp:varName "dataset" ;
               ] ;
           ]
           [
@@ -424,12 +424,12 @@ WHERE
                         sp:arg1 [
                             rdf:type sp:concat ;
                             sp:arg1 [
-                                sp:varName "transformationHash"^^xsd:string ;
+                                sp:varName "transformationHash" ;
                               ] ;
                             sp:arg2 [
                                 rdf:type sp:str ;
                                 sp:arg1 [
-                                    sp:varName "eventsDate"^^xsd:string ;
+                                    sp:varName "eventsDate" ;
                                   ] ;
                               ] ;
                           ] ;
@@ -437,7 +437,7 @@ WHERE
                   ] ;
               ] ;
             sp:variable [
-                sp:varName "publication"^^xsd:string ;
+                sp:varName "publication" ;
               ] ;
           ]
           [
@@ -447,15 +447,15 @@ WHERE
                 sp:arg1 [
                     rdf:type sp:concat ;
                     sp:arg1 [
-                        sp:varName "descriptorEndpointUrl"^^xsd:string ;
+                        sp:varName "descriptorEndpointUrl" ;
                       ] ;
                     sp:arg2 [
-                        sp:varName "descriptorGraphId"^^xsd:string ;
+                        sp:varName "descriptorGraphId" ;
                       ] ;
                   ] ;
               ] ;
             sp:variable [
-                sp:varName "descriptorSourceHash"^^xsd:string ;
+                sp:varName "descriptorSourceHash" ;
               ] ;
           ]
           [
@@ -465,7 +465,7 @@ WHERE
                 sp:arg1 [
                     rdf:type sp:iri ;
                     sp:arg1 [
-                        sp:varName "oldDescriptorSource"^^xsd:string ;
+                        sp:varName "oldDescriptorSource" ;
                       ] ;
                   ] ;
                 sp:arg2 [
@@ -478,13 +478,13 @@ WHERE
                           ] ;
                         sp:arg2 "--" ;
                         sp:arg3 [
-                            sp:varName "descriptorSourceHash"^^xsd:string ;
+                            sp:varName "descriptorSourceHash" ;
                           ] ;
                       ] ;
                   ] ;
               ] ;
             sp:variable [
-                sp:varName "descriptorSource"^^xsd:string ;
+                sp:varName "descriptorSource" ;
               ] ;
           ]
           [
@@ -492,11 +492,11 @@ WHERE
             sp:expression [
                 rdf:type sp:iri ;
                 sp:arg1 [
-                    sp:varName "datasetEndpointUrl"^^xsd:string ;
+                    sp:varName "datasetEndpointUrl" ;
                   ] ;
               ] ;
             sp:variable [
-                sp:varName "datasetEndpointUrl_"^^xsd:string ;
+                sp:varName "datasetEndpointUrl_" ;
               ] ;
           ]
           [
@@ -504,11 +504,11 @@ WHERE
             sp:expression [
                 rdf:type sp:iri ;
                 sp:arg1 [
-                    sp:varName "snapshotDownloadUrl"^^xsd:string ;
+                    sp:varName "snapshotDownloadUrl" ;
                   ] ;
               ] ;
             sp:variable [
-                sp:varName "snapshotDownloadUrl_"^^xsd:string ;
+                sp:varName "snapshotDownloadUrl_" ;
               ] ;
           ]
           [
@@ -516,11 +516,11 @@ WHERE
             sp:expression [
                 rdf:type sp:iri ;
                 sp:arg1 [
-                    sp:varName "descriptorEndpointUrl"^^xsd:string ;
+                    sp:varName "descriptorEndpointUrl" ;
                   ] ;
               ] ;
             sp:variable [
-                sp:varName "descriptorEndpointUrl_"^^xsd:string ;
+                sp:varName "descriptorEndpointUrl_" ;
               ] ;
           ]
           [
@@ -528,11 +528,11 @@ WHERE
             sp:expression [
                 rdf:type sp:iri ;
                 sp:arg1 [
-                    sp:varName "descriptorDownloadUrl"^^xsd:string ;
+                    sp:varName "descriptorDownloadUrl" ;
                   ] ;
               ] ;
             sp:variable [
-                sp:varName "descriptorDownloadUrl_"^^xsd:string ;
+                sp:varName "descriptorDownloadUrl_" ;
               ] ;
           ]
         ) ;

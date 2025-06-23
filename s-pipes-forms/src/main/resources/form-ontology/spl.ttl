@@ -9,25 +9,25 @@
 @prefix spl: <http://spinrdf.org/spl#> .
 
 <http://spinrdf.org/spl> a owl:Ontology ;
-	owl:versionInfo "1.3.0"^^xsd:string ;
+	owl:versionInfo "1.3.0" ;
 	owl:imports <http://spinrdf.org/spin> ;
-	rdfs:label "SPIN Standard Library"^^xsd:string ;
-	rdfs:comment "A collection of generally useful SPARQL functions (expressed as SPIN functions), and SPIN templates. Also provides a top-level classification of functions, and definitions of the standard SPARQL functions."^^xsd:string ;
+	rdfs:label "SPIN Standard Library" ;
+	rdfs:comment "A collection of generally useful SPARQL functions (expressed as SPIN functions), and SPIN templates. Also provides a top-level classification of functions, and definitions of the standard SPARQL functions." ;
 	a spin:LibraryOntology .
 
 spl:ConstraintTemplate a rdfs:Class ;
 	rdfs:subClassOf spin:ConstructTemplate ;
-	rdfs:label "Constraint template"^^xsd:string ;
-	rdfs:comment "Metaclass for CONSTRUCT templates that create spin:ConstraintViolations and can be used as values of spin:constraint."^^xsd:string .
+	rdfs:label "Constraint template" ;
+	rdfs:comment "Metaclass for CONSTRUCT templates that create spin:ConstraintViolations and can be used as values of spin:constraint." .
 
 spl:TestCase a rdfs:Class ;
 	rdfs:subClassOf rdfs:Resource ;
-	rdfs:label "Test case"^^xsd:string ;
-	rdfs:comment "A test to verify that a SPIN function or magic property works as expected, and to generate documentation of example uses of the function. Each TestCase consists of a SPARQL function call or an expression that can be executed with spin:eval, and an expected result. The test framework only needs to execute spin:eval on the expression and compare it with the expected result."^^xsd:string ;
+	rdfs:label "Test case" ;
+	rdfs:comment "A test to verify that a SPIN function or magic property works as expected, and to generate documentation of example uses of the function. Each TestCase consists of a SPARQL function call or an expression that can be executed with spin:eval, and an expected result. The test framework only needs to execute spin:eval on the expression and compare it with the expected result." ;
 	spin:constraint _:node1c016l4n0x1 .
 
 _:node1c016l4n0x1 a spl:Argument ;
-	rdfs:comment "The test expression or SELECT query (anything that can be evaluated with spin:eval)."^^xsd:string ;
+	rdfs:comment "The test expression or SELECT query (anything that can be evaluated with spin:eval)." ;
 	spl:predicate spl:testExpression .
 
 spl:testExpression a rdf:Property .
@@ -35,7 +35,7 @@ spl:testExpression a rdf:Property .
 spl:TestCase spin:constraint _:node1c016l4n0x2 .
 
 _:node1c016l4n0x2 a spl:Argument ;
-	rdfs:comment "The expected result of the test case, or nothing to indicate that an error is expected."^^xsd:string ;
+	rdfs:comment "The expected result of the test case, or nothing to indicate that an error is expected." ;
 	spl:predicate spl:testResult .
 
 spl:testResult a rdf:Property .
@@ -44,12 +44,12 @@ _:node1c016l4n0x2 spl:optional "true"^^xsd:boolean .
 
 spl:UnionTemplate a rdfs:Class ;
 	rdfs:subClassOf spin:Template ;
-	rdfs:label "Union template"^^xsd:string ;
-	rdfs:comment "This type can be used for templates that serve as the union (or \"collector\") of other templates. Union templates differ from other templates in that all spl:Arguments are optional. This means that union templates can be declared as subclasses of multiple other templates, yet when instantiated, only some of the arguments defined by the superclasses need to be filled in."^^xsd:string .
+	rdfs:label "Union template" ;
+	rdfs:comment "This type can be used for templates that serve as the union (or \"collector\") of other templates. Union templates differ from other templates in that all spl:Arguments are optional. This means that union templates can be declared as subclasses of multiple other templates, yet when instantiated, only some of the arguments defined by the superclasses need to be filled in." .
 
 spl:instance a rdf:Property ;
 	rdfs:subPropertyOf sp:arg ;
-	rdfs:label "instance"^^xsd:string ;
+	rdfs:label "instance" ;
 	rdfs:domain sp:ModuleCall .
 
 <http://spinrdf.org/arg#property> a rdf:Property ;
@@ -57,22 +57,22 @@ spl:instance a rdf:Property ;
 
 spl:class a rdf:Property ;
 	rdfs:subPropertyOf sp:arg ;
-	rdfs:label "class"^^xsd:string .
+	rdfs:label "class" .
 
 spl:count a rdf:Property ;
 	rdfs:subPropertyOf sp:arg ;
-	rdfs:label "count"^^xsd:string .
+	rdfs:label "count" .
 
 spl:testExpression a rdf:Property ;
 	rdfs:subPropertyOf sp:arg ;
-	rdfs:label "test expression"^^xsd:string .
+	rdfs:label "test expression" .
 
 spl:minCount a rdf:Property ;
 	rdfs:subPropertyOf spl:count .
 
 spl:valueType a rdf:Property ;
 	rdfs:subPropertyOf sp:arg ;
-	rdfs:label "value type"^^xsd:string .
+	rdfs:label "value type" .
 
 spl:maxCount a rdf:Property ;
 	rdfs:subPropertyOf spl:count .
@@ -85,11 +85,11 @@ spl:maxCount a rdf:Property ;
 
 spl:testResult a rdf:Property ;
 	rdfs:subPropertyOf sp:arg ;
-	rdfs:label "testResult"^^xsd:string .
+	rdfs:label "testResult" .
 
 spl:predicate a rdf:Property ;
 	rdfs:subPropertyOf sp:arg ;
-	rdfs:label "predicate"^^xsd:string .
+	rdfs:label "predicate" .
 
 <http://spinrdf.org/arg#minCount> a rdf:Property ;
 	rdfs:subPropertyOf sp:arg .
@@ -99,12 +99,12 @@ spl:predicate a rdf:Property ;
 
 spl:defaultValue a rdf:Property ;
 	rdfs:subPropertyOf sp:arg ;
-	rdfs:label "default value"^^xsd:string .
+	rdfs:label "default value" .
 
 spl:optional a rdf:Property ;
 	rdfs:subPropertyOf sp:arg ;
 	rdfs:range xsd:boolean ;
-	rdfs:label "optional"^^xsd:string .
+	rdfs:label "optional" .
 
 <http://spinrdf.org/arg#pattern> a rdf:Property ;
 	rdfs:subPropertyOf sp:arg .
@@ -114,9 +114,9 @@ spl:optional a rdf:Property ;
 
 spl:SPINOverview a spin:SelectTemplate ;
 	rdfs:subClassOf spin:SelectTemplates ;
-	rdfs:label "SPIN Overview"^^xsd:string ;
-	rdfs:comment "Finds all constraints and rules attached to classes in the current graph, using spin:constraint, spin:constructor, spin:rule or their sub-properties. The result set will contain the associated class, the predicate, and the SPIN rule."^^xsd:string ;
-	spin:labelTemplate "SPIN Overview"^^xsd:string ;
+	rdfs:label "SPIN Overview" ;
+	rdfs:comment "Finds all constraints and rules attached to classes in the current graph, using spin:constraint, spin:constructor, spin:rule or their sub-properties. The result set will contain the associated class, the predicate, and the SPIN rule." ;
+	spin:labelTemplate "SPIN Overview" ;
 	spin:body _:node1c016l4n0x3 .
 
 _:node1c016l4n0x3 a sp:Select ;
@@ -138,7 +138,7 @@ _:node1c016l4n0x7 rdf:rest rdf:nil ;
 _:node1c016l4n0x9 a sp:Bind ;
 	sp:variable _:node1c016l4n0x10 .
 
-_:node1c016l4n0x10 sp:varName "bp"^^xsd:string .
+_:node1c016l4n0x10 sp:varName "bp" .
 
 _:node1c016l4n0x9 sp:expression spin:constraint .
 
@@ -152,7 +152,7 @@ _:node1c016l4n0x11 rdf:rest rdf:nil ;
 _:node1c016l4n0x13 a sp:Bind ;
 	sp:variable _:node1c016l4n0x14 .
 
-_:node1c016l4n0x14 sp:varName "bp"^^xsd:string .
+_:node1c016l4n0x14 sp:varName "bp" .
 
 _:node1c016l4n0x13 sp:expression spin:constructor .
 
@@ -166,7 +166,7 @@ _:node1c016l4n0x15 rdf:rest rdf:nil ;
 _:node1c016l4n0x17 a sp:Bind ;
 	sp:variable _:node1c016l4n0x18 .
 
-_:node1c016l4n0x18 sp:varName "bp"^^xsd:string .
+_:node1c016l4n0x18 sp:varName "bp" .
 
 _:node1c016l4n0x17 sp:expression spin:rule .
 
@@ -179,7 +179,7 @@ _:node1c016l4n0x20 rdf:first _:node1c016l4n0x19 .
 _:node1c016l4n0x19 a sp:TriplePath ;
 	sp:subject _:node1c016l4n0x21 .
 
-_:node1c016l4n0x21 sp:varName "property"^^xsd:string .
+_:node1c016l4n0x21 sp:varName "property" .
 
 _:node1c016l4n0x19 sp:path _:node1c016l4n0x22 .
 
@@ -190,7 +190,7 @@ _:node1c016l4n0x22 a sp:ModPath ;
 
 _:node1c016l4n0x19 sp:object _:node1c016l4n0x23 .
 
-_:node1c016l4n0x23 sp:varName "bp"^^xsd:string .
+_:node1c016l4n0x23 sp:varName "bp" .
 
 _:node1c016l4n0x20 rdf:rest _:node1c016l4n0x25 .
 
@@ -198,15 +198,15 @@ _:node1c016l4n0x25 rdf:first _:node1c016l4n0x24 .
 
 _:node1c016l4n0x24 sp:subject _:node1c016l4n0x26 .
 
-_:node1c016l4n0x26 sp:varName "class"^^xsd:string .
+_:node1c016l4n0x26 sp:varName "class" .
 
 _:node1c016l4n0x24 sp:predicate _:node1c016l4n0x27 .
 
-_:node1c016l4n0x27 sp:varName "property"^^xsd:string .
+_:node1c016l4n0x27 sp:varName "property" .
 
 _:node1c016l4n0x24 sp:object _:node1c016l4n0x28 .
 
-_:node1c016l4n0x28 sp:varName "rule"^^xsd:string .
+_:node1c016l4n0x28 sp:varName "rule" .
 
 _:node1c016l4n0x25 rdf:rest _:node1c016l4n0x30 .
 
@@ -219,7 +219,7 @@ _:node1c016l4n0x31 a sp:ne ;
 	sp:arg2 spin:Modules ;
 	sp:arg1 _:node1c016l4n0x32 .
 
-_:node1c016l4n0x32 sp:varName "class"^^xsd:string .
+_:node1c016l4n0x32 sp:varName "class" .
 
 _:node1c016l4n0x30 rdf:rest _:node1c016l4n0x34 .
 
@@ -235,7 +235,7 @@ _:node1c016l4n0x37 rdf:first _:node1c016l4n0x36 .
 
 _:node1c016l4n0x36 sp:subject _:node1c016l4n0x38 .
 
-_:node1c016l4n0x38 sp:varName "rule"^^xsd:string .
+_:node1c016l4n0x38 sp:varName "rule" .
 
 _:node1c016l4n0x36 sp:predicate rdf:type ;
 	sp:object spl:Argument .
@@ -244,12 +244,12 @@ spl:Argument a spin:ConstructTemplate ;
 	spin:constraint _:node1c016l4n0x39 .
 
 _:node1c016l4n0x39 a spl:Argument ;
-	rdfs:comment "the property holding the values of each function call"^^xsd:string ;
+	rdfs:comment "the property holding the values of each function call" ;
 	spl:valueType rdf:Property ;
 	spl:predicate spl:predicate .
 
-spl:Argument rdfs:comment "Provides metadata about an argument of a SPIN Function or Template. Arguments wrap a given rdf:Property (predicate) and specify its value type and whether the argument is optional. When used as spin:constraint, the body of this template will verify that a non-optional value exists and that it has the specified value type. Arguments that have been declared spl:optional true become optional if the type of ?this is spl:UnionTemplate."^^xsd:string ;
-	rdfs:label "Argument"^^xsd:string ;
+spl:Argument rdfs:comment "Provides metadata about an argument of a SPIN Function or Template. Arguments wrap a given rdf:Property (predicate) and specify its value type and whether the argument is optional. When used as spin:constraint, the body of this template will verify that a non-optional value exists and that it has the specified value type. Arguments that have been declared spl:optional true become optional if the type of ?this is spl:UnionTemplate." ;
+	rdfs:label "Argument" ;
 	spin:body _:node1c016l4n0x40 .
 
 _:node1c016l4n0x40 a sp:Construct ;
@@ -282,7 +282,7 @@ _:node1c016l4n0x50 rdf:first _:node1c016l4n0x49 .
 _:node1c016l4n0x49 a sp:Bind ;
 	sp:variable _:node1c016l4n0x51 .
 
-_:node1c016l4n0x51 sp:varName "label"^^xsd:string .
+_:node1c016l4n0x51 sp:varName "label" .
 
 _:node1c016l4n0x49 sp:expression _:node1c016l4n0x52 .
 
@@ -292,7 +292,7 @@ _:node1c016l4n0x52 a sp:concat ;
 _:node1c016l4n0x53 a afn:localname ;
 	sp:arg1 _:node1c016l4n0x54 .
 
-_:node1c016l4n0x54 sp:varName "predicate"^^xsd:string .
+_:node1c016l4n0x54 sp:varName "predicate" .
 
 _:node1c016l4n0x52 sp:arg1 "Missing value for argument" .
 
@@ -315,7 +315,7 @@ _:node1c016l4n0x59 a sp:eq ;
 	sp:arg2 "false"^^xsd:boolean ;
 	sp:arg1 _:node1c016l4n0x60 .
 
-_:node1c016l4n0x60 sp:varName "optional"^^xsd:string .
+_:node1c016l4n0x60 sp:varName "optional" .
 
 _:node1c016l4n0x58 sp:arg1 _:node1c016l4n0x61 .
 
@@ -325,7 +325,7 @@ _:node1c016l4n0x61 a sp:not ;
 _:node1c016l4n0x62 a sp:bound ;
 	sp:arg1 _:node1c016l4n0x63 .
 
-_:node1c016l4n0x63 sp:varName "optional"^^xsd:string .
+_:node1c016l4n0x63 sp:varName "optional" .
 
 _:node1c016l4n0x56 rdf:rest _:node1c016l4n0x65 .
 
@@ -342,11 +342,11 @@ _:node1c016l4n0x68 rdf:first _:node1c016l4n0x67 .
 _:node1c016l4n0x67 sp:subject spin:_this ;
 	sp:predicate _:node1c016l4n0x69 .
 
-_:node1c016l4n0x69 sp:varName "predicate"^^xsd:string .
+_:node1c016l4n0x69 sp:varName "predicate" .
 
 _:node1c016l4n0x67 sp:object _:node1c016l4n0x70 .
 
-_:node1c016l4n0x70 sp:varName "value"^^xsd:string .
+_:node1c016l4n0x70 sp:varName "value" .
 
 _:node1c016l4n0x68 rdf:rest rdf:nil .
 
@@ -366,7 +366,7 @@ _:node1c016l4n0x74 sp:subject spin:_this ;
 	sp:predicate rdf:type ;
 	sp:object _:node1c016l4n0x76 .
 
-_:node1c016l4n0x76 sp:varName "template"^^xsd:string .
+_:node1c016l4n0x76 sp:varName "template" .
 
 _:node1c016l4n0x75 rdf:rest _:node1c016l4n0x78 .
 
@@ -379,7 +379,7 @@ _:node1c016l4n0x79 a spl:instanceOf ;
 	sp:arg2 spl:UnionTemplate ;
 	sp:arg1 _:node1c016l4n0x80 .
 
-_:node1c016l4n0x80 sp:varName "template"^^xsd:string .
+_:node1c016l4n0x80 sp:varName "template" .
 
 _:node1c016l4n0x78 rdf:rest rdf:nil .
 
@@ -396,7 +396,7 @@ _:node1c016l4n0x84 rdf:first _:node1c016l4n0x83 .
 _:node1c016l4n0x83 a sp:Bind ;
 	sp:variable _:node1c016l4n0x85 .
 
-_:node1c016l4n0x85 sp:varName "label"^^xsd:string .
+_:node1c016l4n0x85 sp:varName "label" .
 
 _:node1c016l4n0x83 sp:expression _:node1c016l4n0x86 .
 
@@ -407,7 +407,7 @@ _:node1c016l4n0x86 a sp:concat ;
 _:node1c016l4n0x87 a afn:localname ;
 	sp:arg1 _:node1c016l4n0x88 .
 
-_:node1c016l4n0x88 sp:varName "valueType"^^xsd:string .
+_:node1c016l4n0x88 sp:varName "valueType" .
 
 _:node1c016l4n0x86 sp:arg3 "(expected:" ;
 	sp:arg2 _:node1c016l4n0x89 .
@@ -415,7 +415,7 @@ _:node1c016l4n0x86 sp:arg3 "(expected:" ;
 _:node1c016l4n0x89 a afn:localname ;
 	sp:arg1 _:node1c016l4n0x90 .
 
-_:node1c016l4n0x90 sp:varName "predicate"^^xsd:string .
+_:node1c016l4n0x90 sp:varName "predicate" .
 
 _:node1c016l4n0x86 sp:arg1 "Incorrect type of argument" .
 
@@ -434,7 +434,7 @@ _:node1c016l4n0x93 a sp:Filter ;
 _:node1c016l4n0x94 a sp:bound ;
 	sp:arg1 _:node1c016l4n0x95 .
 
-_:node1c016l4n0x95 sp:varName "valueType"^^xsd:string .
+_:node1c016l4n0x95 sp:varName "valueType" .
 
 _:node1c016l4n0x92 rdf:rest _:node1c016l4n0x97 .
 
@@ -443,11 +443,11 @@ _:node1c016l4n0x97 rdf:first _:node1c016l4n0x96 .
 _:node1c016l4n0x96 sp:subject spin:_this ;
 	sp:predicate _:node1c016l4n0x98 .
 
-_:node1c016l4n0x98 sp:varName "predicate"^^xsd:string .
+_:node1c016l4n0x98 sp:varName "predicate" .
 
 _:node1c016l4n0x96 sp:object _:node1c016l4n0x99 .
 
-_:node1c016l4n0x99 sp:varName "value"^^xsd:string .
+_:node1c016l4n0x99 sp:varName "value" .
 
 _:node1c016l4n0x97 rdf:rest _:node1c016l4n0x101 .
 
@@ -465,7 +465,7 @@ _:node1c016l4n0x103 a sp:or ;
 _:node1c016l4n0x104 a sp:isLiteral ;
 	sp:arg1 _:node1c016l4n0x105 .
 
-_:node1c016l4n0x105 sp:varName "value"^^xsd:string .
+_:node1c016l4n0x105 sp:varName "value" .
 
 _:node1c016l4n0x103 sp:arg1 _:node1c016l4n0x106 .
 
@@ -473,7 +473,7 @@ _:node1c016l4n0x106 a sp:ne ;
 	sp:arg2 rdfs:Resource ;
 	sp:arg1 _:node1c016l4n0x107 .
 
-_:node1c016l4n0x107 sp:varName "valueType"^^xsd:string .
+_:node1c016l4n0x107 sp:varName "valueType" .
 
 _:node1c016l4n0x102 sp:arg1 _:node1c016l4n0x108 .
 
@@ -483,11 +483,11 @@ _:node1c016l4n0x108 a sp:not ;
 _:node1c016l4n0x109 a spl:instanceOf ;
 	sp:arg2 _:node1c016l4n0x110 .
 
-_:node1c016l4n0x110 sp:varName "valueType"^^xsd:string .
+_:node1c016l4n0x110 sp:varName "valueType" .
 
 _:node1c016l4n0x109 sp:arg1 _:node1c016l4n0x111 .
 
-_:node1c016l4n0x111 sp:varName "value"^^xsd:string .
+_:node1c016l4n0x111 sp:varName "value" .
 
 _:node1c016l4n0x101 rdf:rest rdf:nil .
 
@@ -519,7 +519,7 @@ _:node1c016l4n0x117 sp:subject _:node1c016l4n0x114 ;
 	sp:predicate spin:violationPath ;
 	sp:object _:node1c016l4n0x119 .
 
-_:node1c016l4n0x119 sp:varName "predicate"^^xsd:string .
+_:node1c016l4n0x119 sp:varName "predicate" .
 
 _:node1c016l4n0x118 rdf:rest _:node1c016l4n0x121 .
 
@@ -529,14 +529,14 @@ _:node1c016l4n0x120 sp:subject _:node1c016l4n0x114 ;
 	sp:predicate rdfs:label ;
 	sp:object _:node1c016l4n0x122 .
 
-_:node1c016l4n0x122 sp:varName "label"^^xsd:string .
+_:node1c016l4n0x122 sp:varName "label" .
 
 _:node1c016l4n0x121 rdf:rest rdf:nil .
 
 spl:Argument spin:constraint _:node1c016l4n0x123 .
 
 _:node1c016l4n0x123 a spl:Argument ;
-	rdfs:comment "indicates whether the argument is optional"^^xsd:string ;
+	rdfs:comment "indicates whether the argument is optional" ;
 	spl:valueType xsd:boolean ;
 	spl:predicate spl:optional ;
 	spl:optional "true"^^xsd:boolean .
@@ -544,16 +544,16 @@ _:node1c016l4n0x123 a spl:Argument ;
 spl:Argument spin:constraint _:node1c016l4n0x124 .
 
 _:node1c016l4n0x124 a spl:Argument ;
-	rdfs:comment "the default value for the argument"^^xsd:string ;
+	rdfs:comment "the default value for the argument" ;
 	spl:predicate spl:defaultValue ;
 	spl:optional "true"^^xsd:boolean .
 
-spl:Argument spin:labelTemplate "Argument {?predicate} : {?valueType}"^^xsd:string ;
+spl:Argument spin:labelTemplate "Argument {?predicate} : {?valueType}" ;
 	rdfs:subClassOf spin:ConstructTemplates ;
 	spin:constraint _:node1c016l4n0x125 .
 
 _:node1c016l4n0x125 a spl:Argument ;
-	rdfs:comment "the value type of the argument"^^xsd:string ;
+	rdfs:comment "the value type of the argument" ;
 	spl:valueType rdfs:Class ;
 	spl:predicate spl:valueType ;
 	spl:optional "true"^^xsd:boolean .
@@ -561,7 +561,7 @@ _:node1c016l4n0x125 a spl:Argument ;
 spl:Argument spin:constraint _:node1c016l4n0x126 .
 
 _:node1c016l4n0x126 a spl:Argument ;
-	rdfs:comment "a comment describing the argument"^^xsd:string ;
+	rdfs:comment "a comment describing the argument" ;
 	spl:valueType xsd:string ;
 	spl:predicate rdfs:comment ;
 	spl:optional "true"^^xsd:boolean .
@@ -582,7 +582,7 @@ _:node1c016l4n0x131 rdf:first _:node1c016l4n0x130 .
 
 _:node1c016l4n0x130 sp:subject _:node1c016l4n0x132 .
 
-_:node1c016l4n0x132 sp:varName "rule"^^xsd:string .
+_:node1c016l4n0x132 sp:varName "rule" .
 
 _:node1c016l4n0x130 sp:predicate rdf:type ;
 	sp:object spl:Attribute .
@@ -606,7 +606,7 @@ _:node1c016l4n0x134 a spl:Argument ;
 	spl:optional "true"^^xsd:boolean .
 
 spl:Attribute rdfs:subClassOf spin:ConstructTemplates ;
-	rdfs:label "Attribute"^^xsd:string ;
+	rdfs:label "Attribute" ;
 	spin:body _:node1c016l4n0x135 .
 
 _:node1c016l4n0x135 a sp:Construct ;
@@ -631,14 +631,14 @@ _:node1c016l4n0x141 a sp:and ;
 _:node1c016l4n0x142 a sp:lt ;
 	sp:arg2 _:node1c016l4n0x143 .
 
-_:node1c016l4n0x143 sp:varName "minCount"^^xsd:string .
+_:node1c016l4n0x143 sp:varName "minCount" .
 
 _:node1c016l4n0x142 sp:arg1 _:node1c016l4n0x144 .
 
 _:node1c016l4n0x144 a spl:objectCount ;
 	sp:arg2 _:node1c016l4n0x145 .
 
-_:node1c016l4n0x145 sp:varName "predicate"^^xsd:string .
+_:node1c016l4n0x145 sp:varName "predicate" .
 
 _:node1c016l4n0x144 sp:arg1 spin:_this .
 
@@ -647,7 +647,7 @@ _:node1c016l4n0x141 sp:arg1 _:node1c016l4n0x146 .
 _:node1c016l4n0x146 a sp:bound ;
 	sp:arg1 _:node1c016l4n0x147 .
 
-_:node1c016l4n0x147 sp:varName "minCount"^^xsd:string .
+_:node1c016l4n0x147 sp:varName "minCount" .
 
 _:node1c016l4n0x139 rdf:rest _:node1c016l4n0x149 .
 
@@ -665,14 +665,14 @@ _:node1c016l4n0x151 a sp:and ;
 _:node1c016l4n0x152 a sp:gt ;
 	sp:arg2 _:node1c016l4n0x153 .
 
-_:node1c016l4n0x153 sp:varName "maxCount"^^xsd:string .
+_:node1c016l4n0x153 sp:varName "maxCount" .
 
 _:node1c016l4n0x152 sp:arg1 _:node1c016l4n0x154 .
 
 _:node1c016l4n0x154 a spl:objectCount ;
 	sp:arg2 _:node1c016l4n0x155 .
 
-_:node1c016l4n0x155 sp:varName "predicate"^^xsd:string .
+_:node1c016l4n0x155 sp:varName "predicate" .
 
 _:node1c016l4n0x154 sp:arg1 spin:_this .
 
@@ -681,7 +681,7 @@ _:node1c016l4n0x151 sp:arg1 _:node1c016l4n0x156 .
 _:node1c016l4n0x156 a sp:bound ;
 	sp:arg1 _:node1c016l4n0x157 .
 
-_:node1c016l4n0x157 sp:varName "maxCount"^^xsd:string .
+_:node1c016l4n0x157 sp:varName "maxCount" .
 
 _:node1c016l4n0x149 rdf:rest _:node1c016l4n0x159 .
 
@@ -694,11 +694,11 @@ _:node1c016l4n0x161 rdf:first _:node1c016l4n0x160 .
 _:node1c016l4n0x160 sp:subject spin:_this ;
 	sp:predicate _:node1c016l4n0x162 .
 
-_:node1c016l4n0x162 sp:varName "predicate"^^xsd:string .
+_:node1c016l4n0x162 sp:varName "predicate" .
 
 _:node1c016l4n0x160 sp:object _:node1c016l4n0x163 .
 
-_:node1c016l4n0x163 sp:varName "value"^^xsd:string .
+_:node1c016l4n0x163 sp:varName "value" .
 
 _:node1c016l4n0x161 rdf:rest _:node1c016l4n0x165 .
 
@@ -713,11 +713,11 @@ _:node1c016l4n0x166 a sp:not ;
 _:node1c016l4n0x167 a spl:instanceOf ;
 	sp:arg2 _:node1c016l4n0x168 .
 
-_:node1c016l4n0x168 sp:varName "valueType"^^xsd:string .
+_:node1c016l4n0x168 sp:varName "valueType" .
 
 _:node1c016l4n0x167 sp:arg1 _:node1c016l4n0x169 .
 
-_:node1c016l4n0x169 sp:varName "value"^^xsd:string .
+_:node1c016l4n0x169 sp:varName "value" .
 
 _:node1c016l4n0x165 rdf:rest rdf:nil .
 
@@ -729,7 +729,7 @@ _:node1c016l4n0x170 a sp:Filter ;
 _:node1c016l4n0x171 a sp:bound ;
 	sp:arg1 _:node1c016l4n0x172 .
 
-_:node1c016l4n0x172 sp:varName "valueType"^^xsd:string .
+_:node1c016l4n0x172 sp:varName "valueType" .
 
 _:node1c016l4n0x159 rdf:rest rdf:nil .
 
@@ -759,7 +759,7 @@ _:node1c016l4n0x178 sp:subject _:node1c016l4n0x175 ;
 	sp:predicate spin:violationPath ;
 	sp:object _:node1c016l4n0x180 .
 
-_:node1c016l4n0x180 sp:varName "predicate"^^xsd:string .
+_:node1c016l4n0x180 sp:varName "predicate" .
 
 _:node1c016l4n0x179 rdf:rest rdf:nil .
 
@@ -771,7 +771,7 @@ _:node1c016l4n0x181 a spl:Argument ;
 	spl:predicate spl:maxCount ;
 	spl:optional "true"^^xsd:boolean .
 
-spl:Attribute spin:labelTemplate "Attribute {?predicate} : {?valueType} [{?minCount},{?maxCount}]"^^xsd:string ;
+spl:Attribute spin:labelTemplate "Attribute {?predicate} : {?valueType} [{?minCount},{?maxCount}]" ;
 	spin:constraint _:node1c016l4n0x182 .
 
 _:node1c016l4n0x182 a spl:Argument ;
@@ -803,19 +803,19 @@ _:node1c016l4n0x3 sp:resultVariables _:node1c016l4n0x186 .
 
 _:node1c016l4n0x186 rdf:first _:node1c016l4n0x185 .
 
-_:node1c016l4n0x185 sp:varName "class"^^xsd:string .
+_:node1c016l4n0x185 sp:varName "class" .
 
 _:node1c016l4n0x186 rdf:rest _:node1c016l4n0x188 .
 
 _:node1c016l4n0x188 rdf:first _:node1c016l4n0x187 .
 
-_:node1c016l4n0x187 sp:varName "property"^^xsd:string .
+_:node1c016l4n0x187 sp:varName "property" .
 
 _:node1c016l4n0x188 rdf:rest _:node1c016l4n0x190 .
 
 _:node1c016l4n0x190 rdf:first _:node1c016l4n0x189 .
 
-_:node1c016l4n0x189 sp:varName "rule"^^xsd:string .
+_:node1c016l4n0x189 sp:varName "rule" .
 
 _:node1c016l4n0x190 rdf:rest rdf:nil .
 
@@ -829,15 +829,15 @@ _:node1c016l4n0x191 a spl:instanceOf ;
 
 spl:relevantPropertyAtClass a spin:MagicProperty ;
 	rdfs:subClassOf spin:MagicProperties ;
-	rdfs:label "relevant property at class"^^xsd:string ;
+	rdfs:label "relevant property at class" ;
 	rdfs:comment """A magic property that establishes a relationship between properties (left) and classes (right) to determine which properties are \"relevant\" for the class. Relevant means that they have the class in their domain and/or restrictions, including superclasses and sub-properties (unless they define their own domain). Domains consisting of an owl:unionOf are also handled.
 
-Note that the performance of the body of this magic property has been optimized for the case in which the class is given, so ideally use this for queries such as  ?property spl:relevantPropertyAtClass skos:Concept ."""^^xsd:string ;
+Note that the performance of the body of this magic property has been optimized for the case in which the class is given, so ideally use this for queries such as  ?property spl:relevantPropertyAtClass skos:Concept .""" ;
 	spin:returnType rdfs:Class ;
 	spin:constraint _:node1c016l4n0x192 .
 
 _:node1c016l4n0x192 a spl:Argument ;
-	rdfs:comment "The property."^^xsd:string ;
+	rdfs:comment "The property." ;
 	spl:valueType rdf:Property ;
 	spl:predicate sp:arg1 .
 
@@ -851,7 +851,7 @@ _:node1c016l4n0x195 rdf:first _:node1c016l4n0x194 .
 _:node1c016l4n0x194 a sp:TriplePath ;
 	sp:subject _:node1c016l4n0x196 .
 
-_:node1c016l4n0x196 sp:varName "class"^^xsd:string .
+_:node1c016l4n0x196 sp:varName "class" .
 
 _:node1c016l4n0x194 sp:path _:node1c016l4n0x197 .
 
@@ -862,7 +862,7 @@ _:node1c016l4n0x197 a sp:ModPath ;
 
 _:node1c016l4n0x194 sp:object _:node1c016l4n0x198 .
 
-_:node1c016l4n0x198 sp:varName "superClass"^^xsd:string .
+_:node1c016l4n0x198 sp:varName "superClass" .
 
 _:node1c016l4n0x195 rdf:rest _:node1c016l4n0x200 .
 
@@ -878,12 +878,12 @@ _:node1c016l4n0x201 rdf:rest rdf:nil ;
 
 _:node1c016l4n0x203 sp:subject _:node1c016l4n0x204 .
 
-_:node1c016l4n0x204 sp:varName "property"^^xsd:string .
+_:node1c016l4n0x204 sp:varName "property" .
 
 _:node1c016l4n0x203 sp:predicate rdfs:domain ;
 	sp:object _:node1c016l4n0x205 .
 
-_:node1c016l4n0x205 sp:varName "superClass"^^xsd:string .
+_:node1c016l4n0x205 sp:varName "superClass" .
 
 _:node1c016l4n0x202 rdf:rest _:node1c016l4n0x207 .
 
@@ -894,12 +894,12 @@ _:node1c016l4n0x206 rdf:rest rdf:nil ;
 
 _:node1c016l4n0x208 sp:subject _:node1c016l4n0x209 .
 
-_:node1c016l4n0x209 sp:varName "superClass"^^xsd:string .
+_:node1c016l4n0x209 sp:varName "superClass" .
 
 _:node1c016l4n0x208 sp:predicate owl:onProperty ;
 	sp:object _:node1c016l4n0x210 .
 
-_:node1c016l4n0x210 sp:varName "property"^^xsd:string .
+_:node1c016l4n0x210 sp:varName "property" .
 
 _:node1c016l4n0x207 rdf:rest _:node1c016l4n0x212 .
 
@@ -912,7 +912,7 @@ _:node1c016l4n0x214 rdf:first _:node1c016l4n0x213 .
 _:node1c016l4n0x213 a sp:TriplePath ;
 	sp:subject _:node1c016l4n0x215 .
 
-_:node1c016l4n0x215 sp:varName "list"^^xsd:string .
+_:node1c016l4n0x215 sp:varName "list" .
 
 _:node1c016l4n0x213 sp:path _:node1c016l4n0x216 .
 
@@ -923,7 +923,7 @@ _:node1c016l4n0x216 a sp:ModPath ;
 
 _:node1c016l4n0x213 sp:object _:node1c016l4n0x217 .
 
-_:node1c016l4n0x217 sp:varName "listSegment"^^xsd:string .
+_:node1c016l4n0x217 sp:varName "listSegment" .
 
 _:node1c016l4n0x214 rdf:rest _:node1c016l4n0x219 .
 
@@ -932,7 +932,7 @@ _:node1c016l4n0x219 rdf:first _:node1c016l4n0x218 .
 _:node1c016l4n0x218 a sp:TriplePath ;
 	sp:subject _:node1c016l4n0x220 .
 
-_:node1c016l4n0x220 sp:varName "property"^^xsd:string .
+_:node1c016l4n0x220 sp:varName "property" .
 
 _:node1c016l4n0x218 sp:path _:node1c016l4n0x221 .
 
@@ -942,7 +942,7 @@ _:node1c016l4n0x221 a sp:SeqPath ;
 
 _:node1c016l4n0x218 sp:object _:node1c016l4n0x222 .
 
-_:node1c016l4n0x222 sp:varName "list"^^xsd:string .
+_:node1c016l4n0x222 sp:varName "list" .
 
 _:node1c016l4n0x219 rdf:rest rdf:nil .
 
@@ -950,12 +950,12 @@ _:node1c016l4n0x211 rdf:first _:node1c016l4n0x223 .
 
 _:node1c016l4n0x223 sp:subject _:node1c016l4n0x224 .
 
-_:node1c016l4n0x224 sp:varName "listSegment"^^xsd:string .
+_:node1c016l4n0x224 sp:varName "listSegment" .
 
 _:node1c016l4n0x223 sp:predicate rdf:first ;
 	sp:object _:node1c016l4n0x225 .
 
-_:node1c016l4n0x225 sp:varName "superClass"^^xsd:string .
+_:node1c016l4n0x225 sp:varName "superClass" .
 
 _:node1c016l4n0x212 rdf:rest rdf:nil .
 
@@ -974,7 +974,7 @@ _:node1c016l4n0x228 a sp:ModPath ;
 
 _:node1c016l4n0x226 sp:object _:node1c016l4n0x229 .
 
-_:node1c016l4n0x229 sp:varName "property"^^xsd:string .
+_:node1c016l4n0x229 sp:varName "property" .
 
 _:node1c016l4n0x227 rdf:rest _:node1c016l4n0x231 .
 
@@ -995,7 +995,7 @@ _:node1c016l4n0x234 sp:subject spin:_arg1 ;
 	sp:predicate rdfs:domain ;
 	sp:object _:node1c016l4n0x236 .
 
-_:node1c016l4n0x236 sp:varName "anyDomain"^^xsd:string .
+_:node1c016l4n0x236 sp:varName "anyDomain" .
 
 _:node1c016l4n0x235 rdf:rest rdf:nil .
 
@@ -1004,7 +1004,7 @@ _:node1c016l4n0x232 sp:arg1 _:node1c016l4n0x237 .
 _:node1c016l4n0x237 a sp:eq ;
 	sp:arg2 _:node1c016l4n0x238 .
 
-_:node1c016l4n0x238 sp:varName "property"^^xsd:string .
+_:node1c016l4n0x238 sp:varName "property" .
 
 _:node1c016l4n0x237 sp:arg1 spin:_arg1 .
 
@@ -1018,7 +1018,7 @@ _:node1c016l4n0x239 a sp:Filter ;
 _:node1c016l4n0x241 a sp:isIRI ;
 	sp:arg1 _:node1c016l4n0x242 .
 
-_:node1c016l4n0x242 sp:varName "class"^^xsd:string .
+_:node1c016l4n0x242 sp:varName "class" .
 
 _:node1c016l4n0x240 rdf:rest rdf:nil .
 
@@ -1026,7 +1026,7 @@ _:node1c016l4n0x193 sp:resultVariables _:node1c016l4n0x244 .
 
 _:node1c016l4n0x244 rdf:first _:node1c016l4n0x243 .
 
-_:node1c016l4n0x243 sp:varName "class"^^xsd:string .
+_:node1c016l4n0x243 sp:varName "class" .
 
 _:node1c016l4n0x244 rdf:rest rdf:nil .
 
@@ -1034,20 +1034,20 @@ _:node1c016l4n0x193 sp:distinct "true"^^xsd:boolean .
 
 spl:InferDefaultValue a spin:ConstructTemplate ;
 	rdfs:subClassOf spin:ConstructTemplates ;
-	rdfs:label "Infer default value"^^xsd:string ;
-	rdfs:comment "Can be used to infer default values for a given subject/predicate combination. This is typically assigned as spin:rule to a class. If ?this does not already have a value for a given property {?predicate}, then this will infer the value {?defaultValue}."^^xsd:string ;
-	spin:labelTemplate "Default value for {?predicate}: {?defaultValue}"^^xsd:string ;
+	rdfs:label "Infer default value" ;
+	rdfs:comment "Can be used to infer default values for a given subject/predicate combination. This is typically assigned as spin:rule to a class. If ?this does not already have a value for a given property {?predicate}, then this will infer the value {?defaultValue}." ;
+	spin:labelTemplate "Default value for {?predicate}: {?defaultValue}" ;
 	spin:constraint _:node1c016l4n0x245 .
 
 _:node1c016l4n0x245 a spl:Argument ;
-	rdfs:comment "The predicate to infer the default value of."^^xsd:string ;
+	rdfs:comment "The predicate to infer the default value of." ;
 	spl:valueType rdf:Property ;
 	spl:predicate spl:predicate .
 
 spl:InferDefaultValue spin:constraint _:node1c016l4n0x246 .
 
 _:node1c016l4n0x246 a spl:Argument ;
-	rdfs:comment "The default value to infer."^^xsd:string ;
+	rdfs:comment "The default value to infer." ;
 	spl:predicate spl:defaultValue .
 
 spl:InferDefaultValue spin:body _:node1c016l4n0x247 .
@@ -1065,11 +1065,11 @@ _:node1c016l4n0x251 rdf:first _:node1c016l4n0x250 .
 _:node1c016l4n0x250 sp:subject spin:_this ;
 	sp:predicate _:node1c016l4n0x252 .
 
-_:node1c016l4n0x252 sp:varName "predicate"^^xsd:string .
+_:node1c016l4n0x252 sp:varName "predicate" .
 
 _:node1c016l4n0x250 sp:object _:node1c016l4n0x253 .
 
-_:node1c016l4n0x253 sp:varName "anyValue"^^xsd:string .
+_:node1c016l4n0x253 sp:varName "anyValue" .
 
 _:node1c016l4n0x251 rdf:rest rdf:nil .
 
@@ -1086,7 +1086,7 @@ _:node1c016l4n0x256 a sp:not ;
 _:node1c016l4n0x257 a sp:bound ;
 	sp:arg1 _:node1c016l4n0x258 .
 
-_:node1c016l4n0x258 sp:varName "anyValue"^^xsd:string .
+_:node1c016l4n0x258 sp:varName "anyValue" .
 
 _:node1c016l4n0x255 rdf:rest rdf:nil .
 
@@ -1097,11 +1097,11 @@ _:node1c016l4n0x260 rdf:first _:node1c016l4n0x259 .
 _:node1c016l4n0x259 sp:subject spin:_this ;
 	sp:predicate _:node1c016l4n0x261 .
 
-_:node1c016l4n0x261 sp:varName "predicate"^^xsd:string .
+_:node1c016l4n0x261 sp:varName "predicate" .
 
 _:node1c016l4n0x259 sp:object _:node1c016l4n0x262 .
 
-_:node1c016l4n0x262 sp:varName "defaultValue"^^xsd:string .
+_:node1c016l4n0x262 sp:varName "defaultValue" .
 
 _:node1c016l4n0x260 rdf:rest rdf:nil .
 
@@ -1110,27 +1110,27 @@ sp:coalesce a spin:Function ;
 
 spl:MiscFunctions a spin:Function ;
 	rdfs:subClassOf spin:Functions ;
-	rdfs:label "Misc functions"^^xsd:string ;
-	rdfs:comment "A collection of functions that are difficult to categorize."^^xsd:string ;
+	rdfs:label "Misc functions" ;
+	rdfs:comment "A collection of functions that are difficult to categorize." ;
 	spin:abstract "true"^^xsd:boolean .
 
-sp:coalesce rdfs:label "COALESCE"^^xsd:string ;
-	rdfs:comment "Takes any number of arguments, and returns the first bound argument, starting at the left."^^xsd:string ;
-	spin:symbol "COALESCE"^^xsd:string .
+sp:coalesce rdfs:label "COALESCE" ;
+	rdfs:comment "Takes any number of arguments, and returns the first bound argument, starting at the left." ;
+	spin:symbol "COALESCE" .
 
 sp:rand a spin:Function ;
 	rdfs:subClassOf spl:MathematicalFunctions .
 
 spl:MathematicalFunctions a spin:Function ;
 	rdfs:subClassOf spin:Functions ;
-	rdfs:label "Mathematical functions"^^xsd:string ;
-	rdfs:comment "A collection of functions operating on numbers."^^xsd:string ;
+	rdfs:label "Mathematical functions" ;
+	rdfs:comment "A collection of functions operating on numbers." ;
 	spin:abstract "true"^^xsd:boolean .
 
 sp:rand rdfs:seeAlso <http://www.w3.org/TR/sparql11-query/#idp3722352> ;
-	rdfs:label "rand"^^xsd:string ;
-	rdfs:comment "Returns a number between 0 (inclusive) and 1.0e0 (exclusive). Different numbers can be produced every time this function is invoked. Numbers should be produced with approximately equal probability."^^xsd:string ;
-	spin:symbol "RAND"^^xsd:string ;
+	rdfs:label "rand" ;
+	rdfs:comment "Returns a number between 0 (inclusive) and 1.0e0 (exclusive). Different numbers can be produced every time this function is invoked. Numbers should be produced with approximately equal probability." ;
+	spin:symbol "RAND" ;
 	spin:returnType xsd:double .
 
 sp:year a spin:Function ;
@@ -1138,18 +1138,18 @@ sp:year a spin:Function ;
 
 spl:DateFunctions a spin:Function ;
 	rdfs:subClassOf spin:Functions ;
-	rdfs:label "Date functions"^^xsd:string ;
-	rdfs:comment "A collection of functions that operate on date/time literals."^^xsd:string ;
+	rdfs:label "Date functions" ;
+	rdfs:comment "A collection of functions that operate on date/time literals." ;
 	spin:abstract "true"^^xsd:boolean .
 
-sp:year rdfs:label "year"^^xsd:string ;
-	rdfs:comment "Extracts the year from a date/time literal."^^xsd:string ;
-	spin:symbol "year"^^xsd:string ;
+sp:year rdfs:label "year" ;
+	rdfs:comment "Extracts the year from a date/time literal." ;
+	spin:symbol "year" ;
 	spin:returnType xsd:integer ;
 	spin:constraint _:node1c016l4n0x263 .
 
 _:node1c016l4n0x263 a spl:Argument ;
-	rdfs:comment "The date or dateTime argument."^^xsd:string ;
+	rdfs:comment "The date or dateTime argument." ;
 	spl:valueType rdfs:Literal ;
 	spl:predicate sp:arg1 .
 
@@ -1158,30 +1158,30 @@ spl:objectInGraph a spin:Function ;
 
 spl:OntologyFunctions a spin:Function ;
 	rdfs:subClassOf spin:Functions ;
-	rdfs:label "Ontology functions"^^xsd:string ;
-	rdfs:comment "A collection of functions performing ontology-related operations."^^xsd:string ;
+	rdfs:label "Ontology functions" ;
+	rdfs:comment "A collection of functions performing ontology-related operations." ;
 	spin:abstract "true"^^xsd:boolean .
 
-spl:objectInGraph rdfs:label "object in graph"^^xsd:string ;
-	rdfs:comment "Gets the object of a given subject (?arg1) / predicate (?arg2) combination in a given graph ?arg3. Note that if multiple values are present then the result might be unpredictably random."^^xsd:string ;
+spl:objectInGraph rdfs:label "object in graph" ;
+	rdfs:comment "Gets the object of a given subject (?arg1) / predicate (?arg2) combination in a given graph ?arg3. Note that if multiple values are present then the result might be unpredictably random." ;
 	spin:constraint _:node1c016l4n0x264 .
 
 _:node1c016l4n0x264 a spl:Argument ;
-	rdfs:comment "The graph to query in."^^xsd:string ;
+	rdfs:comment "The graph to query in." ;
 	spl:valueType rdfs:Resource ;
 	spl:predicate sp:arg3 .
 
 spl:objectInGraph spin:constraint _:node1c016l4n0x265 .
 
 _:node1c016l4n0x265 a spl:Argument ;
-	rdfs:comment "The predicate to get the object of."^^xsd:string ;
+	rdfs:comment "The predicate to get the object of." ;
 	spl:valueType rdf:Property ;
 	spl:predicate sp:arg2 .
 
 spl:objectInGraph spin:constraint _:node1c016l4n0x266 .
 
 _:node1c016l4n0x266 a spl:Argument ;
-	rdfs:comment "The subject to get the object from."^^xsd:string ;
+	rdfs:comment "The subject to get the object from." ;
 	spl:valueType rdfs:Resource ;
 	spl:predicate sp:arg1 .
 
@@ -1202,7 +1202,7 @@ _:node1c016l4n0x270 sp:subject spin:_arg1 ;
 	sp:predicate spin:_arg2 ;
 	sp:object _:node1c016l4n0x272 .
 
-_:node1c016l4n0x272 sp:varName "object"^^xsd:string .
+_:node1c016l4n0x272 sp:varName "object" .
 
 _:node1c016l4n0x271 rdf:rest rdf:nil .
 
@@ -1212,20 +1212,20 @@ _:node1c016l4n0x267 sp:resultVariables _:node1c016l4n0x274 .
 
 _:node1c016l4n0x274 rdf:first _:node1c016l4n0x273 .
 
-_:node1c016l4n0x273 sp:varName "object"^^xsd:string .
+_:node1c016l4n0x273 sp:varName "object" .
 
 _:node1c016l4n0x274 rdf:rest rdf:nil .
 
 sp:round a spin:Function ;
 	rdfs:subClassOf spl:MathematicalFunctions ;
 	rdfs:seeAlso <http://www.w3.org/TR/sparql11-query/#func-round> ;
-	rdfs:label "round"^^xsd:string ;
-	rdfs:comment "Returns the number with no fractional part that is closest to the argument. If there are two such numbers, then the one that is closest to positive infinity is returned. An error is raised if ?arg1 is not a numeric value."^^xsd:string ;
-	spin:symbol "round"^^xsd:string ;
+	rdfs:label "round" ;
+	rdfs:comment "Returns the number with no fractional part that is closest to the argument. If there are two such numbers, then the one that is closest to positive infinity is returned. An error is raised if ?arg1 is not a numeric value." ;
+	spin:symbol "round" ;
 	spin:constraint _:node1c016l4n0x275 .
 
 _:node1c016l4n0x275 a spl:Argument ;
-	rdfs:comment "The number to round."^^xsd:string ;
+	rdfs:comment "The number to round." ;
 	spl:predicate sp:arg1 .
 
 sp:strlen a spin:Function ;
@@ -1233,19 +1233,19 @@ sp:strlen a spin:Function ;
 
 spl:StringFunctions a spin:Function ;
 	rdfs:subClassOf spin:Functions ;
-	rdfs:label "String functions"^^xsd:string ;
-	rdfs:comment "A collection of functions that return strings."^^xsd:string ;
+	rdfs:label "String functions" ;
+	rdfs:comment "A collection of functions that return strings." ;
 	spin:abstract "true"^^xsd:boolean .
 
 sp:strlen rdfs:seeAlso <http://www.w3.org/TR/sparql11-query/#func-strlen> ;
-	rdfs:label "strlen"^^xsd:string ;
-	rdfs:comment "Computes the length of a given input string."^^xsd:string ;
-	spin:symbol "STRLEN"^^xsd:string ;
+	rdfs:label "strlen" ;
+	rdfs:comment "Computes the length of a given input string." ;
+	spin:symbol "STRLEN" ;
 	spin:returnType xsd:integer ;
 	spin:constraint _:node1c016l4n0x276 .
 
 _:node1c016l4n0x276 a spl:Argument ;
-	rdfs:comment "The input string."^^xsd:string ;
+	rdfs:comment "The input string." ;
 	spl:valueType xsd:string ;
 	spl:predicate sp:arg1 .
 
@@ -1260,21 +1260,21 @@ _:node1c016l4n0x277 a spl:instanceOf ;
 sp:strends a spin:Function ;
 	rdfs:subClassOf spl:StringFunctions ;
 	rdfs:seeAlso <http://www.w3.org/TR/sparql11-query/#func-ends> ;
-	rdfs:label "strends"^^xsd:string ;
-	rdfs:comment "Returns true if the lexical form of ?arg1 ends with the lexical form of ?arg2, otherwise it returns false."^^xsd:string ;
-	spin:symbol "STRENDS"^^xsd:string ;
+	rdfs:label "strends" ;
+	rdfs:comment "Returns true if the lexical form of ?arg1 ends with the lexical form of ?arg2, otherwise it returns false." ;
+	spin:symbol "STRENDS" ;
 	spin:returnType xsd:boolean ;
 	spin:constraint _:node1c016l4n0x278 .
 
 _:node1c016l4n0x278 a spl:Argument ;
-	rdfs:comment "The sub-string that the input string is supposed to end with."^^xsd:string ;
+	rdfs:comment "The sub-string that the input string is supposed to end with." ;
 	spl:valueType xsd:string ;
 	spl:predicate sp:arg2 .
 
 sp:strends spin:constraint _:node1c016l4n0x279 .
 
 _:node1c016l4n0x279 a spl:Argument ;
-	rdfs:comment "The input string."^^xsd:string ;
+	rdfs:comment "The input string." ;
 	spl:valueType xsd:string ;
 	spl:predicate sp:arg1 .
 
@@ -1283,31 +1283,31 @@ spl:hasValueOfType a spin:Function ;
 
 spl:BooleanFunctions a spin:Function ;
 	rdfs:subClassOf spin:Functions ;
-	rdfs:label "Boolean functions"^^xsd:string ;
-	rdfs:comment "A collection of functions that return a boolean value (true or false)."^^xsd:string ;
+	rdfs:label "Boolean functions" ;
+	rdfs:comment "A collection of functions that return a boolean value (true or false)." ;
 	spin:abstract "true"^^xsd:boolean .
 
-spl:hasValueOfType rdfs:label "hasValueOfType"^^xsd:string ;
+spl:hasValueOfType rdfs:label "hasValueOfType" ;
 	rdfs:comment "Checks whether a given subject (?arg1) has at least one value of a given type (?arg3) for a given property (?arg2) or one of its sub-properties." ;
 	spin:returnType xsd:boolean ;
 	spin:constraint _:node1c016l4n0x280 .
 
 _:node1c016l4n0x280 a spl:Argument ;
-	rdfs:comment "the type to match against"^^xsd:string ;
+	rdfs:comment "the type to match against" ;
 	spl:valueType rdfs:Class ;
 	spl:predicate sp:arg3 .
 
 spl:hasValueOfType spin:constraint _:node1c016l4n0x281 .
 
 _:node1c016l4n0x281 a spl:Argument ;
-	rdfs:comment "the expected property"^^xsd:string ;
+	rdfs:comment "the expected property" ;
 	spl:valueType rdf:Property ;
 	spl:predicate sp:arg2 .
 
 spl:hasValueOfType spin:constraint _:node1c016l4n0x282 .
 
 _:node1c016l4n0x282 a spl:Argument ;
-	rdfs:comment "the subject that is expected to have the value"^^xsd:string ;
+	rdfs:comment "the subject that is expected to have the value" ;
 	spl:valueType rdfs:Resource ;
 	spl:predicate sp:arg1 .
 
@@ -1321,7 +1321,7 @@ _:node1c016l4n0x285 rdf:first _:node1c016l4n0x284 .
 _:node1c016l4n0x284 a sp:TriplePath ;
 	sp:subject _:node1c016l4n0x286 .
 
-_:node1c016l4n0x286 sp:varName "p"^^xsd:string .
+_:node1c016l4n0x286 sp:varName "p" .
 
 _:node1c016l4n0x284 sp:path _:node1c016l4n0x287 .
 
@@ -1339,11 +1339,11 @@ _:node1c016l4n0x289 rdf:first _:node1c016l4n0x288 .
 _:node1c016l4n0x288 sp:subject spin:_arg1 ;
 	sp:predicate _:node1c016l4n0x290 .
 
-_:node1c016l4n0x290 sp:varName "p"^^xsd:string .
+_:node1c016l4n0x290 sp:varName "p" .
 
 _:node1c016l4n0x288 sp:object _:node1c016l4n0x291 .
 
-_:node1c016l4n0x291 sp:varName "value"^^xsd:string .
+_:node1c016l4n0x291 sp:varName "value" .
 
 _:node1c016l4n0x289 rdf:rest _:node1c016l4n0x293 .
 
@@ -1356,19 +1356,19 @@ _:node1c016l4n0x294 a spl:instanceOf ;
 	sp:arg2 spin:_arg3 ;
 	sp:arg1 _:node1c016l4n0x295 .
 
-_:node1c016l4n0x295 sp:varName "value"^^xsd:string .
+_:node1c016l4n0x295 sp:varName "value" .
 
 _:node1c016l4n0x293 rdf:rest rdf:nil .
 
 spl:AllArguments a spin:SelectTemplate ;
 	rdfs:subClassOf spin:SelectTemplates ;
-	rdfs:label "All arguments"^^xsd:string ;
-	rdfs:comment "Gets a list of all spl:Arguments declared at a given class and its superclasses."^^xsd:string ;
-	spin:labelTemplate "All spl:Arguments of {?class}"^^xsd:string ;
+	rdfs:label "All arguments" ;
+	rdfs:comment "Gets a list of all spl:Arguments declared at a given class and its superclasses." ;
+	spin:labelTemplate "All spl:Arguments of {?class}" ;
 	spin:constraint _:node1c016l4n0x296 .
 
 _:node1c016l4n0x296 a spl:Argument ;
-	rdfs:comment "The class to get the arguments of."^^xsd:string ;
+	rdfs:comment "The class to get the arguments of." ;
 	spl:valueType rdfs:Class ;
 	spl:predicate spl:class .
 
@@ -1382,7 +1382,7 @@ _:node1c016l4n0x299 rdf:first _:node1c016l4n0x298 .
 _:node1c016l4n0x298 a sp:TriplePath ;
 	sp:subject _:node1c016l4n0x300 .
 
-_:node1c016l4n0x300 sp:varName "class"^^xsd:string .
+_:node1c016l4n0x300 sp:varName "class" .
 
 _:node1c016l4n0x298 sp:path _:node1c016l4n0x301 .
 
@@ -1393,7 +1393,7 @@ _:node1c016l4n0x301 a sp:ModPath ;
 
 _:node1c016l4n0x298 sp:object _:node1c016l4n0x302 .
 
-_:node1c016l4n0x302 sp:varName "atClass"^^xsd:string .
+_:node1c016l4n0x302 sp:varName "atClass" .
 
 _:node1c016l4n0x299 rdf:rest _:node1c016l4n0x304 .
 
@@ -1401,12 +1401,12 @@ _:node1c016l4n0x304 rdf:first _:node1c016l4n0x303 .
 
 _:node1c016l4n0x303 sp:subject _:node1c016l4n0x305 .
 
-_:node1c016l4n0x305 sp:varName "atClass"^^xsd:string .
+_:node1c016l4n0x305 sp:varName "atClass" .
 
 _:node1c016l4n0x303 sp:predicate spin:constraint ;
 	sp:object _:node1c016l4n0x306 .
 
-_:node1c016l4n0x306 sp:varName "arg"^^xsd:string .
+_:node1c016l4n0x306 sp:varName "arg" .
 
 _:node1c016l4n0x304 rdf:rest _:node1c016l4n0x308 .
 
@@ -1414,7 +1414,7 @@ _:node1c016l4n0x308 rdf:first _:node1c016l4n0x307 .
 
 _:node1c016l4n0x307 sp:subject _:node1c016l4n0x309 .
 
-_:node1c016l4n0x309 sp:varName "arg"^^xsd:string .
+_:node1c016l4n0x309 sp:varName "arg" .
 
 _:node1c016l4n0x307 sp:predicate rdf:type ;
 	sp:object spl:Argument .
@@ -1425,27 +1425,27 @@ _:node1c016l4n0x297 sp:resultVariables _:node1c016l4n0x311 .
 
 _:node1c016l4n0x311 rdf:first _:node1c016l4n0x310 .
 
-_:node1c016l4n0x310 sp:varName "arg"^^xsd:string .
+_:node1c016l4n0x310 sp:varName "arg" .
 
 _:node1c016l4n0x311 rdf:rest _:node1c016l4n0x313 .
 
 _:node1c016l4n0x313 rdf:first _:node1c016l4n0x312 .
 
-_:node1c016l4n0x312 sp:varName "atClass"^^xsd:string .
+_:node1c016l4n0x312 sp:varName "atClass" .
 
 _:node1c016l4n0x313 rdf:rest rdf:nil .
 
 sp:sha1 a spin:Function ;
 	rdfs:subClassOf spl:MiscFunctions ;
 	rdfs:seeAlso <http://www.w3.org/TR/sparql11-query/#func-sha1> ;
-	rdfs:label "sha1"^^xsd:string ;
-	rdfs:comment "Returns the SHA1 checksum, as a hex digit string, calculated on the UTF-8 representation of the simple literal or lexical form of the xsd:string. Hex digits SHOULD be in lower case."^^xsd:string ;
-	spin:symbol "SHA1"^^xsd:string ;
+	rdfs:label "sha1" ;
+	rdfs:comment "Returns the SHA1 checksum, as a hex digit string, calculated on the UTF-8 representation of the simple literal or lexical form of the xsd:string. Hex digits SHOULD be in lower case." ;
+	spin:symbol "SHA1" ;
 	spin:returnType xsd:string ;
 	spin:constraint _:node1c016l4n0x314 .
 
 _:node1c016l4n0x314 a spl:Argument ;
-	rdfs:comment "The input literal."^^xsd:string ;
+	rdfs:comment "The input literal." ;
 	spl:predicate sp:arg1 .
 
 spl:RegexPropertyConstraint a spl:ConstraintTemplate ;
@@ -1456,27 +1456,27 @@ spl:PropertyConstraintTemplates a spl:ConstraintTemplate ;
 
 spl:ConstraintTemplates a spl:ConstraintTemplate ;
 	rdfs:subClassOf spin:ConstructTemplates ;
-	rdfs:label "Constraint templates"^^xsd:string ;
-	rdfs:comment "Abstract superclass of templates that can be used as spin:constraints. The subclasses are expected to construct spin:ConstraintViolations and use ?this to talk about the instances of the associated class."^^xsd:string ;
+	rdfs:label "Constraint templates" ;
+	rdfs:comment "Abstract superclass of templates that can be used as spin:constraints. The subclasses are expected to construct spin:ConstraintViolations and use ?this to talk about the instances of the associated class." ;
 	spin:abstract "true"^^xsd:boolean .
 
-spl:PropertyConstraintTemplates rdfs:label "Property constraint templates"^^xsd:string ;
-	rdfs:comment "Abstract superclass of constraint templates that constrain exactly one property."^^xsd:string ;
+spl:PropertyConstraintTemplates rdfs:label "Property constraint templates" ;
+	rdfs:comment "Abstract superclass of constraint templates that constrain exactly one property." ;
 	spin:constraint _:node1c016l4n0x315 .
 
 _:node1c016l4n0x315 a spl:Argument ;
-	rdfs:comment "The property being constrained."^^xsd:string ;
+	rdfs:comment "The property being constrained." ;
 	spl:valueType rdf:Property ;
 	spl:predicate <http://spinrdf.org/arg#property> .
 
 spl:PropertyConstraintTemplates spin:abstract "true"^^xsd:boolean .
 
-spl:RegexPropertyConstraint rdfs:label "Regex property constraint"^^xsd:string ;
-	spin:labelTemplate "Values of {?property} must match the regular expression {?pattern}"^^xsd:string ;
+spl:RegexPropertyConstraint rdfs:label "Regex property constraint" ;
+	spin:labelTemplate "Values of {?property} must match the regular expression {?pattern}" ;
 	spin:constraint _:node1c016l4n0x316 .
 
 _:node1c016l4n0x316 a spl:Argument ;
-	rdfs:comment "The regular expression to match."^^xsd:string ;
+	rdfs:comment "The regular expression to match." ;
 	spl:valueType xsd:string ;
 	spl:predicate <http://spinrdf.org/arg#pattern> .
 
@@ -1490,11 +1490,11 @@ _:node1c016l4n0x319 rdf:first _:node1c016l4n0x318 .
 _:node1c016l4n0x318 sp:subject spin:_this ;
 	sp:predicate _:node1c016l4n0x320 .
 
-_:node1c016l4n0x320 sp:varName "property"^^xsd:string .
+_:node1c016l4n0x320 sp:varName "property" .
 
 _:node1c016l4n0x318 sp:object _:node1c016l4n0x321 .
 
-_:node1c016l4n0x321 sp:varName "object"^^xsd:string .
+_:node1c016l4n0x321 sp:varName "object" .
 
 _:node1c016l4n0x319 rdf:rest _:node1c016l4n0x323 .
 
@@ -1509,14 +1509,14 @@ _:node1c016l4n0x324 a sp:not ;
 _:node1c016l4n0x325 a sp:regex ;
 	sp:arg2 _:node1c016l4n0x326 .
 
-_:node1c016l4n0x326 sp:varName "pattern"^^xsd:string .
+_:node1c016l4n0x326 sp:varName "pattern" .
 
 _:node1c016l4n0x325 sp:arg1 _:node1c016l4n0x327 .
 
 _:node1c016l4n0x327 a xsd:string ;
 	sp:arg1 _:node1c016l4n0x328 .
 
-_:node1c016l4n0x328 sp:varName "object"^^xsd:string .
+_:node1c016l4n0x328 sp:varName "object" .
 
 _:node1c016l4n0x323 rdf:rest _:node1c016l4n0x330 .
 
@@ -1525,7 +1525,7 @@ _:node1c016l4n0x330 rdf:first _:node1c016l4n0x329 .
 _:node1c016l4n0x329 a sp:Bind ;
 	sp:variable _:node1c016l4n0x331 .
 
-_:node1c016l4n0x331 sp:varName "message"^^xsd:string .
+_:node1c016l4n0x331 sp:varName "message" .
 
 _:node1c016l4n0x329 sp:expression _:node1c016l4n0x332 .
 
@@ -1533,12 +1533,12 @@ _:node1c016l4n0x332 a sp:concat ;
 	sp:arg5 "\"" ;
 	sp:arg4 _:node1c016l4n0x333 .
 
-_:node1c016l4n0x333 sp:varName "pattern"^^xsd:string .
+_:node1c016l4n0x333 sp:varName "pattern" .
 
 _:node1c016l4n0x332 sp:arg3 "must match the regular expression \"" ;
 	sp:arg2 _:node1c016l4n0x334 .
 
-_:node1c016l4n0x334 sp:varName "object"^^xsd:string .
+_:node1c016l4n0x334 sp:varName "object" .
 
 _:node1c016l4n0x332 sp:arg1 "Value" .
 
@@ -1568,7 +1568,7 @@ _:node1c016l4n0x340 sp:subject _:node1c016l4n0x337 ;
 	sp:predicate spin:violationPath ;
 	sp:object _:node1c016l4n0x342 .
 
-_:node1c016l4n0x342 sp:varName "property"^^xsd:string .
+_:node1c016l4n0x342 sp:varName "property" .
 
 _:node1c016l4n0x341 rdf:rest _:node1c016l4n0x344 .
 
@@ -1578,22 +1578,22 @@ _:node1c016l4n0x343 sp:subject _:node1c016l4n0x337 ;
 	sp:predicate rdfs:label ;
 	sp:object _:node1c016l4n0x345 .
 
-_:node1c016l4n0x345 sp:varName "message"^^xsd:string .
+_:node1c016l4n0x345 sp:varName "message" .
 
 _:node1c016l4n0x344 rdf:rest rdf:nil .
 
 sp:tz a spin:Function ;
 	rdfs:subClassOf spl:DateFunctions ;
 	rdfs:seeAlso <http://www.w3.org/TR/sparql11-query/#func-tz> ;
-	rdfs:label "tz"^^xsd:string ;
-	rdfs:comment "Returns the timezone part of ?arg1 as a simple literal. Returns the empty string if there is no timezone."^^xsd:string ;
-	spin:symbol "TZ"^^xsd:string .
+	rdfs:label "tz" ;
+	rdfs:comment "Returns the timezone part of ?arg1 as a simple literal. Returns the empty string if there is no timezone." ;
+	spin:symbol "TZ" .
 
 sp:now a spin:Function ;
 	rdfs:subClassOf spl:DateFunctions ;
-	rdfs:label "now"^^xsd:string ;
-	rdfs:comment "Gets the current date and time as an xsd:dateTime literal."^^xsd:string ;
-	spin:symbol "now"^^xsd:string ;
+	rdfs:label "now" ;
+	rdfs:comment "Gets the current date and time as an xsd:dateTime literal." ;
+	spin:symbol "now" ;
 	spin:returnType xsd:dateTime .
 
 spl:Test-instanceOf-lingualString a spl:TestCase ;
@@ -1613,9 +1613,9 @@ _:node1c016l4n0x347 a spl:object ;
 
 sp:str a spin:Function ;
 	rdfs:subClassOf spl:StringFunctions ;
-	rdfs:label "str"^^xsd:string ;
+	rdfs:label "str" ;
 	rdfs:comment "Returns the lexical form of ?arg1 (a literal); returns the codepoint representation of ?arg1 (an IRI). This is useful for examining parts of an IRI, for instance, the host-name." ;
-	spin:symbol "str"^^xsd:string ;
+	spin:symbol "str" ;
 	spin:returnType xsd:string ;
 	spin:constraint _:node1c016l4n0x348 .
 
@@ -1626,37 +1626,37 @@ _:node1c016l4n0x348 a spl:Argument ;
 sp:ceil a spin:Function ;
 	rdfs:subClassOf spl:MathematicalFunctions ;
 	rdfs:seeAlso <http://www.w3.org/TR/sparql11-query/#func-ceil> ;
-	rdfs:label "ceil"^^xsd:string ;
-	rdfs:comment "Returns the smallest (closest to negative infinity) number with no fractional part that is not less than the value of arg. An error is raised if ?arg1 is not a numeric value."^^xsd:string ;
-	spin:symbol "ceil"^^xsd:string ;
+	rdfs:label "ceil" ;
+	rdfs:comment "Returns the smallest (closest to negative infinity) number with no fractional part that is not less than the value of arg. An error is raised if ?arg1 is not a numeric value." ;
+	spin:symbol "ceil" ;
 	spin:constraint _:node1c016l4n0x349 .
 
 _:node1c016l4n0x349 a spl:Argument ;
-	rdfs:comment "The number to get the ceiling of."^^xsd:string ;
+	rdfs:comment "The number to get the ceiling of." ;
 	spl:predicate sp:arg1 .
 
 spl:hasValue a spin:Function ;
 	rdfs:subClassOf spl:BooleanFunctions ;
-	rdfs:label "hasValue"^^xsd:string ;
+	rdfs:label "hasValue" ;
 	rdfs:comment "Checks whether a given resource (?arg1) has a given value (?arg3) for a given property (?arg2) or one of the sub-properties of it." ;
 	spin:returnType xsd:boolean ;
 	spin:constraint _:node1c016l4n0x350 .
 
 _:node1c016l4n0x350 a spl:Argument ;
-	rdfs:comment "the expected value"^^xsd:string ;
+	rdfs:comment "the expected value" ;
 	spl:predicate sp:arg3 .
 
 spl:hasValue spin:constraint _:node1c016l4n0x351 .
 
 _:node1c016l4n0x351 a spl:Argument ;
-	rdfs:comment "the property that is expected to hold the value"^^xsd:string ;
+	rdfs:comment "the property that is expected to hold the value" ;
 	spl:valueType rdf:Property ;
 	spl:predicate sp:arg2 .
 
 spl:hasValue spin:constraint _:node1c016l4n0x352 .
 
 _:node1c016l4n0x352 a spl:Argument ;
-	rdfs:comment "the subject that is expected to have the value"^^xsd:string ;
+	rdfs:comment "the subject that is expected to have the value" ;
 	spl:valueType rdfs:Resource ;
 	spl:predicate sp:arg1 .
 
@@ -1670,7 +1670,7 @@ _:node1c016l4n0x355 rdf:first _:node1c016l4n0x354 .
 _:node1c016l4n0x354 a sp:TriplePath ;
 	sp:subject _:node1c016l4n0x356 .
 
-_:node1c016l4n0x356 sp:varName "p"^^xsd:string .
+_:node1c016l4n0x356 sp:varName "p" .
 
 _:node1c016l4n0x354 sp:path _:node1c016l4n0x357 .
 
@@ -1688,7 +1688,7 @@ _:node1c016l4n0x359 rdf:first _:node1c016l4n0x358 .
 _:node1c016l4n0x358 sp:subject spin:_arg1 ;
 	sp:predicate _:node1c016l4n0x360 .
 
-_:node1c016l4n0x360 sp:varName "p"^^xsd:string .
+_:node1c016l4n0x360 sp:varName "p" .
 
 _:node1c016l4n0x358 sp:object spin:_arg3 .
 
@@ -1697,67 +1697,67 @@ _:node1c016l4n0x359 rdf:rest rdf:nil .
 sp:floor a spin:Function ;
 	rdfs:subClassOf spl:MathematicalFunctions ;
 	rdfs:seeAlso <http://www.w3.org/TR/sparql11-query/#func-floor> ;
-	rdfs:label "floor"^^xsd:string ;
-	rdfs:comment "Returns the largest (closest to positive infinity) number with no fractional part that is not greater than the value of ?arg1. An error is raised if ?arg1 is not a numeric value."^^xsd:string ;
-	spin:symbol "floor"^^xsd:string ;
+	rdfs:label "floor" ;
+	rdfs:comment "Returns the largest (closest to positive infinity) number with no fractional part that is not greater than the value of ?arg1. An error is raised if ?arg1 is not a numeric value." ;
+	spin:symbol "floor" ;
 	spin:constraint _:node1c016l4n0x361 .
 
 _:node1c016l4n0x361 a spl:Argument ;
-	rdfs:comment "The value to get the floor of."^^xsd:string ;
+	rdfs:comment "The value to get the floor of." ;
 	spl:predicate sp:arg1 .
 
 sp:timezone a spin:Function ;
 	rdfs:subClassOf spl:DateFunctions ;
 	rdfs:seeAlso <http://www.w3.org/TR/sparql11-query/#func-timezone> ;
-	rdfs:label "timezone"^^xsd:string ;
-	rdfs:comment "Returns the timezone part of ?arg1 as an xsd:dayTimeDuration. Raises an error if there is no timezone."^^xsd:string ;
-	spin:symbol "TIMEZONE"^^xsd:string ;
+	rdfs:label "timezone" ;
+	rdfs:comment "Returns the timezone part of ?arg1 as an xsd:dayTimeDuration. Raises an error if there is no timezone." ;
+	spin:symbol "TIMEZONE" ;
 	spin:returnType xsd:duration ;
 	spin:constraint _:node1c016l4n0x362 .
 
 _:node1c016l4n0x362 a spl:Argument ;
-	rdfs:comment "The input time."^^xsd:string ;
+	rdfs:comment "The input time." ;
 	spl:valueType xsd:dateTime ;
 	spl:predicate sp:arg1 .
 
 sp:in a spin:Function ;
 	rdfs:subClassOf spl:BooleanFunctions ;
-	rdfs:label "IN"^^xsd:string ;
-	rdfs:comment "Checks whether the value on the left (?arg1) is one of the values on the right (?arg2, ?arg3 ...)."^^xsd:string ;
-	spin:symbol "IN"^^xsd:string ;
+	rdfs:label "IN" ;
+	rdfs:comment "Checks whether the value on the left (?arg1) is one of the values on the right (?arg2, ?arg3 ...)." ;
+	spin:symbol "IN" ;
 	spin:returnType xsd:boolean ;
 	spin:constraint _:node1c016l4n0x363 .
 
 _:node1c016l4n0x363 a spl:Argument ;
-	rdfs:comment "The value to find."^^xsd:string ;
+	rdfs:comment "The value to find." ;
 	spl:predicate sp:arg1 .
 
 sp:strstarts a spin:Function ;
 	rdfs:subClassOf spl:StringFunctions ;
 	rdfs:seeAlso <http://www.w3.org/TR/sparql11-query/#func-starts> ;
-	rdfs:label "strstarts"^^xsd:string ;
-	rdfs:comment "Returns true if the lexical form of ?arg1 begins with the lexical form of ?arg2, otherwise it returns false."^^xsd:string ;
-	spin:symbol "STRSTARTS"^^xsd:string ;
+	rdfs:label "strstarts" ;
+	rdfs:comment "Returns true if the lexical form of ?arg1 begins with the lexical form of ?arg2, otherwise it returns false." ;
+	spin:symbol "STRSTARTS" ;
 	spin:returnType xsd:boolean ;
 	spin:constraint _:node1c016l4n0x364 .
 
 _:node1c016l4n0x364 a spl:Argument ;
-	rdfs:comment "The sub-string that the input string is supposed to begin with."^^xsd:string ;
+	rdfs:comment "The sub-string that the input string is supposed to begin with." ;
 	spl:valueType xsd:string ;
 	spl:predicate sp:arg2 .
 
 sp:strstarts spin:constraint _:node1c016l4n0x365 .
 
 _:node1c016l4n0x365 a spl:Argument ;
-	rdfs:comment "The input string."^^xsd:string ;
+	rdfs:comment "The input string." ;
 	spl:valueType xsd:string ;
 	spl:predicate sp:arg1 .
 
 sp:ge a spin:Function ;
 	rdfs:subClassOf spl:BooleanFunctions ;
-	rdfs:label "ge"^^xsd:string ;
+	rdfs:label "ge" ;
 	rdfs:comment "Returns true if ?arg1 >= ?arg2." ;
-	spin:symbol ">="^^xsd:string ;
+	spin:symbol ">=" ;
 	spin:returnType xsd:boolean ;
 	spin:constraint _:node1c016l4n0x366 .
 
@@ -1775,13 +1775,13 @@ _:node1c016l4n0x367 a spl:Argument ;
 
 spl:hasArgument a spin:Function ;
 	rdfs:subClassOf spl:BooleanFunctions ;
-	rdfs:label "has argument"^^xsd:string ;
-	rdfs:comment "Checks if a given module class (?module) has at least one declared spl:Argument."^^xsd:string ;
+	rdfs:label "has argument" ;
+	rdfs:comment "Checks if a given module class (?module) has at least one declared spl:Argument." ;
 	spin:returnType xsd:boolean ;
 	spin:constraint _:node1c016l4n0x368 .
 
 _:node1c016l4n0x368 a spl:Argument ;
-	rdfs:comment "The module class to check."^^xsd:string ;
+	rdfs:comment "The module class to check." ;
 	spl:valueType spin:Module ;
 	spl:predicate spl:class .
 
@@ -1795,7 +1795,7 @@ _:node1c016l4n0x371 rdf:first _:node1c016l4n0x370 .
 _:node1c016l4n0x370 a sp:TriplePath ;
 	sp:subject _:node1c016l4n0x372 .
 
-_:node1c016l4n0x372 sp:varName "class"^^xsd:string .
+_:node1c016l4n0x372 sp:varName "class" .
 
 _:node1c016l4n0x370 sp:path _:node1c016l4n0x373 .
 
@@ -1806,7 +1806,7 @@ _:node1c016l4n0x373 a sp:ModPath ;
 
 _:node1c016l4n0x370 sp:object _:node1c016l4n0x374 .
 
-_:node1c016l4n0x374 sp:varName "superClass"^^xsd:string .
+_:node1c016l4n0x374 sp:varName "superClass" .
 
 _:node1c016l4n0x371 rdf:rest _:node1c016l4n0x376 .
 
@@ -1814,12 +1814,12 @@ _:node1c016l4n0x376 rdf:first _:node1c016l4n0x375 .
 
 _:node1c016l4n0x375 sp:subject _:node1c016l4n0x377 .
 
-_:node1c016l4n0x377 sp:varName "superClass"^^xsd:string .
+_:node1c016l4n0x377 sp:varName "superClass" .
 
 _:node1c016l4n0x375 sp:predicate spin:constraint ;
 	sp:object _:node1c016l4n0x378 .
 
-_:node1c016l4n0x378 sp:varName "con"^^xsd:string .
+_:node1c016l4n0x378 sp:varName "con" .
 
 _:node1c016l4n0x376 rdf:rest _:node1c016l4n0x380 .
 
@@ -1827,7 +1827,7 @@ _:node1c016l4n0x380 rdf:first _:node1c016l4n0x379 .
 
 _:node1c016l4n0x379 sp:subject _:node1c016l4n0x381 .
 
-_:node1c016l4n0x381 sp:varName "con"^^xsd:string .
+_:node1c016l4n0x381 sp:varName "con" .
 
 _:node1c016l4n0x379 sp:predicate rdf:type ;
 	sp:object spl:Argument .
@@ -1836,18 +1836,18 @@ _:node1c016l4n0x380 rdf:rest rdf:nil .
 
 spl:subject a spin:Function ;
 	rdfs:subClassOf spl:OntologyFunctions ;
-	rdfs:label "subject"^^xsd:string ;
-	rdfs:comment "Gets the \"first\" subject of a given predicate (?arg1)/object (?arg2) combination. Note that if multiple values are present then the result might be unpredictably random."^^xsd:string ;
+	rdfs:label "subject" ;
+	rdfs:comment "Gets the \"first\" subject of a given predicate (?arg1)/object (?arg2) combination. Note that if multiple values are present then the result might be unpredictably random." ;
 	spin:constraint _:node1c016l4n0x382 .
 
 _:node1c016l4n0x382 a spl:Argument ;
-	rdfs:comment "The object."^^xsd:string ;
+	rdfs:comment "The object." ;
 	spl:predicate sp:arg2 .
 
 spl:subject spin:constraint _:node1c016l4n0x383 .
 
 _:node1c016l4n0x383 a spl:Argument ;
-	rdfs:comment "The predicate."^^xsd:string ;
+	rdfs:comment "The predicate." ;
 	spl:valueType rdf:Property ;
 	spl:predicate sp:arg1 .
 
@@ -1860,7 +1860,7 @@ _:node1c016l4n0x386 rdf:first _:node1c016l4n0x385 .
 
 _:node1c016l4n0x385 sp:subject _:node1c016l4n0x387 .
 
-_:node1c016l4n0x387 sp:varName "subject"^^xsd:string .
+_:node1c016l4n0x387 sp:varName "subject" .
 
 _:node1c016l4n0x385 sp:predicate spin:_arg1 ;
 	sp:object spin:_arg2 .
@@ -1871,15 +1871,15 @@ _:node1c016l4n0x384 sp:resultVariables _:node1c016l4n0x389 .
 
 _:node1c016l4n0x389 rdf:first _:node1c016l4n0x388 .
 
-_:node1c016l4n0x388 sp:varName "subject"^^xsd:string .
+_:node1c016l4n0x388 sp:varName "subject" .
 
 _:node1c016l4n0x389 rdf:rest rdf:nil .
 
 sp:isURI a spin:Function ;
 	rdfs:subClassOf spl:BooleanFunctions ;
-	rdfs:label "isURI"^^xsd:string ;
+	rdfs:label "isURI" ;
 	rdfs:comment "Checks whether a node is a URI." ;
-	spin:symbol "isURI"^^xsd:string ;
+	spin:symbol "isURI" ;
 	spin:returnType xsd:boolean ;
 	spin:constraint _:node1c016l4n0x390 .
 
@@ -1889,14 +1889,14 @@ _:node1c016l4n0x390 a spl:Argument ;
 
 sp:hours a spin:Function ;
 	rdfs:subClassOf spl:DateFunctions ;
-	rdfs:label "hours"^^xsd:string ;
-	rdfs:comment "Extracts the hours from a date/time literal."^^xsd:string ;
-	spin:symbol "hours"^^xsd:string ;
+	rdfs:label "hours" ;
+	rdfs:comment "Extracts the hours from a date/time literal." ;
+	spin:symbol "hours" ;
 	spin:returnType xsd:integer ;
 	spin:constraint _:node1c016l4n0x391 .
 
 _:node1c016l4n0x391 a spl:Argument ;
-	rdfs:comment "The dateTime or time argument."^^xsd:string ;
+	rdfs:comment "The dateTime or time argument." ;
 	spl:valueType rdfs:Literal ;
 	spl:predicate sp:arg1 .
 
@@ -1906,13 +1906,13 @@ spl:Test-instanceOf-typedString a spl:TestCase ;
 
 _:node1c016l4n0x392 a spl:instanceOf ;
 	sp:arg2 xsd:string ;
-	sp:arg1 "test"^^xsd:string .
+	sp:arg1 "test" .
 
 sp:unaryPlus a spin:Function ;
 	rdfs:subClassOf spl:MathematicalFunctions ;
-	rdfs:label "unary plus"^^xsd:string ;
+	rdfs:label "unary plus" ;
 	rdfs:comment "Returns the operand ?arg1 with the sign unchanged. Semantically, this operation performs no operation." ;
-	spin:symbol "+"^^xsd:string ;
+	spin:symbol "+" ;
 	spin:constraint _:node1c016l4n0x393 .
 
 _:node1c016l4n0x393 a spl:Argument ;
@@ -1922,14 +1922,14 @@ _:node1c016l4n0x393 a spl:Argument ;
 
 sp:minutes a spin:Function ;
 	rdfs:subClassOf spl:DateFunctions ;
-	rdfs:label "minutes"^^xsd:string ;
-	rdfs:comment "Extracts the minutes from a date/time literal."^^xsd:string ;
-	spin:symbol "minutes"^^xsd:string ;
+	rdfs:label "minutes" ;
+	rdfs:comment "Extracts the minutes from a date/time literal." ;
+	spin:symbol "minutes" ;
 	spin:returnType xsd:integer ;
 	spin:constraint _:node1c016l4n0x394 .
 
 _:node1c016l4n0x394 a spl:Argument ;
-	rdfs:comment "The dateTime or time argument."^^xsd:string ;
+	rdfs:comment "The dateTime or time argument." ;
 	spl:valueType rdfs:Literal ;
 	spl:predicate sp:arg1 .
 
@@ -1937,90 +1937,90 @@ sp:replace a spin:Function ;
 	spin:constraint _:node1c016l4n0x395 .
 
 _:node1c016l4n0x395 a spl:Argument ;
-	rdfs:comment "The replacement string."^^xsd:string ;
+	rdfs:comment "The replacement string." ;
 	spl:valueType xsd:string ;
 	spl:predicate sp:arg3 .
 
 sp:replace spin:constraint _:node1c016l4n0x396 .
 
 _:node1c016l4n0x396 a spl:Argument ;
-	rdfs:comment "The input string."^^xsd:string ;
+	rdfs:comment "The input string." ;
 	spl:valueType xsd:string ;
 	spl:predicate sp:arg1 .
 
 sp:replace spin:constraint _:node1c016l4n0x397 .
 
 _:node1c016l4n0x397 a spl:Argument ;
-	rdfs:comment "The pattern to replace."^^xsd:string ;
+	rdfs:comment "The pattern to replace." ;
 	spl:valueType xsd:string ;
 	spl:predicate sp:arg2 .
 
-sp:replace rdfs:comment "Replaces each non-overlapping occurrence of a regular expression pattern with a replacement string. Regular expession matching may involve modifier flags."^^xsd:string ;
+sp:replace rdfs:comment "Replaces each non-overlapping occurrence of a regular expression pattern with a replacement string. Regular expession matching may involve modifier flags." ;
 	spin:returnType xsd:string ;
 	spin:constraint _:node1c016l4n0x398 .
 
 _:node1c016l4n0x398 a spl:Argument ;
-	rdfs:comment "Additional flags for the replacement."^^xsd:string ;
+	rdfs:comment "Additional flags for the replacement." ;
 	spl:valueType xsd:string ;
 	spl:predicate sp:arg4 ;
 	spl:optional "true"^^xsd:boolean .
 
 sp:replace rdfs:subClassOf spl:StringFunctions ;
 	rdfs:seeAlso <http://www.w3.org/TR/sparql11-query/#func-replace> ;
-	rdfs:label "replace"^^xsd:string ;
-	spin:symbol "REPLACE"^^xsd:string .
+	rdfs:label "replace" ;
+	spin:symbol "REPLACE" .
 
 sp:notIn a spin:Function ;
 	rdfs:subClassOf spl:BooleanFunctions ;
-	rdfs:label "NOT IN"^^xsd:string ;
-	rdfs:comment "Checks whether the value on the left (?arg1) is none of the values on the right (?arg2, ?arg3 ...)."^^xsd:string ;
-	spin:symbol "NOT IN"^^xsd:string ;
+	rdfs:label "NOT IN" ;
+	rdfs:comment "Checks whether the value on the left (?arg1) is none of the values on the right (?arg2, ?arg3 ...)." ;
+	spin:symbol "NOT IN" ;
 	spin:returnType xsd:boolean ;
 	spin:constraint _:node1c016l4n0x399 .
 
 _:node1c016l4n0x399 a spl:Argument ;
-	rdfs:comment "The value to find."^^xsd:string ;
+	rdfs:comment "The value to find." ;
 	spl:predicate sp:arg1 .
 
 sp:strafter a spin:Function ;
 	rdfs:subClassOf spl:StringFunctions ;
 	rdfs:seeAlso <http://www.w3.org/TR/sparql11-query/#func-strafter> ;
-	rdfs:label "strafter"^^xsd:string ;
-	rdfs:comment "Returns a literal of the same kind (simple literal, plain literal same language tag, xsd:string) as the first argument arg1. The lexical form of the result is the substring of the value of arg1 that proceeds in arg1 the first occurrence of the lexical form of arg2; otherwise the lexical form of the result is the empty string. If the lexical form of arg2 is the empty string, the lexical form of the result is the emprty string."^^xsd:string ;
-	spin:symbol "STRAFTER"^^xsd:string ;
+	rdfs:label "strafter" ;
+	rdfs:comment "Returns a literal of the same kind (simple literal, plain literal same language tag, xsd:string) as the first argument arg1. The lexical form of the result is the substring of the value of arg1 that proceeds in arg1 the first occurrence of the lexical form of arg2; otherwise the lexical form of the result is the empty string. If the lexical form of arg2 is the empty string, the lexical form of the result is the emprty string." ;
+	spin:symbol "STRAFTER" ;
 	spin:returnType xsd:string ;
 	spin:constraint _:node1c016l4n0x400 .
 
 _:node1c016l4n0x400 a spl:Argument ;
-	rdfs:comment "The pattern to find within the input string."^^xsd:string ;
+	rdfs:comment "The pattern to find within the input string." ;
 	spl:valueType xsd:string ;
 	spl:predicate sp:arg2 .
 
 sp:strafter spin:constraint _:node1c016l4n0x401 .
 
 _:node1c016l4n0x401 a spl:Argument ;
-	rdfs:comment "The input string."^^xsd:string ;
+	rdfs:comment "The input string." ;
 	spl:valueType xsd:string ;
 	spl:predicate sp:arg1 .
 
 sp:sha384 a spin:Function ;
 	rdfs:subClassOf spl:MiscFunctions ;
 	rdfs:seeAlso <http://www.w3.org/TR/sparql11-query/#func-sha384> ;
-	rdfs:label "sha384"^^xsd:string ;
-	rdfs:comment "Returns the SHA384 checksum, as a hex digit string, calculated on the UTF-8 representation of the simple literal or lexical form of the xsd:string. Hex digits SHOULD be in lower case."^^xsd:string ;
-	spin:symbol "SHA384"^^xsd:string ;
+	rdfs:label "sha384" ;
+	rdfs:comment "Returns the SHA384 checksum, as a hex digit string, calculated on the UTF-8 representation of the simple literal or lexical form of the xsd:string. Hex digits SHOULD be in lower case." ;
+	spin:symbol "SHA384" ;
 	spin:returnType xsd:string ;
 	spin:constraint _:node1c016l4n0x402 .
 
 _:node1c016l4n0x402 a spl:Argument ;
-	rdfs:comment "The input literal."^^xsd:string ;
+	rdfs:comment "The input literal." ;
 	spl:predicate sp:arg1 .
 
 sp:lang a spin:Function ;
 	rdfs:subClassOf spl:StringFunctions ;
-	rdfs:label "lang"^^xsd:string ;
+	rdfs:label "lang" ;
 	rdfs:comment "Returns the language tag of ?arg1, if it has one. It returns \"\" if the literal has no language tag. Node that the RDF data model does not include literals with an empty language tag." ;
-	spin:symbol "lang"^^xsd:string ;
+	spin:symbol "lang" ;
 	spin:returnType xsd:string ;
 	spin:constraint _:node1c016l4n0x403 .
 
@@ -2032,47 +2032,47 @@ _:node1c016l4n0x403 a spl:Argument ;
 sp:md5 a spin:Function ;
 	rdfs:subClassOf spl:MiscFunctions ;
 	rdfs:seeAlso <http://www.w3.org/TR/sparql11-query/#func-md5> ;
-	rdfs:label "md5"^^xsd:string ;
-	rdfs:comment "Returns the MD5 checksum, as a hex digit string, calculated on the UTF-8 representation of the simple literal or lexical form of the xsd:string. Hex digits SHOULD be in lower case."^^xsd:string ;
-	spin:symbol "MD5"^^xsd:string ;
+	rdfs:label "md5" ;
+	rdfs:comment "Returns the MD5 checksum, as a hex digit string, calculated on the UTF-8 representation of the simple literal or lexical form of the xsd:string. Hex digits SHOULD be in lower case." ;
+	spin:symbol "MD5" ;
 	spin:returnType xsd:string ;
 	spin:constraint _:node1c016l4n0x404 .
 
 _:node1c016l4n0x404 a spl:Argument ;
-	rdfs:comment "The input literal."^^xsd:string ;
+	rdfs:comment "The input literal." ;
 	spl:predicate sp:arg1 .
 
 sp:sha256 a spin:Function ;
 	rdfs:subClassOf spl:MiscFunctions ;
 	rdfs:seeAlso <http://www.w3.org/TR/sparql11-query/#func-sha256> ;
-	rdfs:label "sha256"^^xsd:string ;
-	rdfs:comment "Returns the SHA256 checksum, as a hex digit string, calculated on the UTF-8 representation of the simple literal or lexical form of the xsd:string. Hex digits SHOULD be in lower case."^^xsd:string ;
-	spin:symbol "SHA256"^^xsd:string ;
+	rdfs:label "sha256" ;
+	rdfs:comment "Returns the SHA256 checksum, as a hex digit string, calculated on the UTF-8 representation of the simple literal or lexical form of the xsd:string. Hex digits SHOULD be in lower case." ;
+	spin:symbol "SHA256" ;
 	spin:returnType xsd:string ;
 	spin:constraint _:node1c016l4n0x405 .
 
 _:node1c016l4n0x405 a spl:Argument ;
-	rdfs:comment "The input literal."^^xsd:string ;
+	rdfs:comment "The input literal." ;
 	spl:predicate sp:arg1 .
 
 sp:strbefore a spin:Function ;
 	rdfs:subClassOf spl:StringFunctions ;
 	rdfs:seeAlso <http://www.w3.org/TR/sparql11-query/#func-strbefore> ;
-	rdfs:label "strbefore"^^xsd:string ;
-	rdfs:comment "Returns a literal of the same kind (simple literal, plain literal same language tag, xsd:string) as the first argument arg1. The lexical form of the result is the substring of the value of arg1 that precedes in arg1 the first occurrence of the lexical form of arg2; otherwise the lexical form of the result is the empty string. If the lexical form of arg2 is the empty string, the lexical form of the result is the emprty string."^^xsd:string ;
-	spin:symbol "STRBEFORE"^^xsd:string ;
+	rdfs:label "strbefore" ;
+	rdfs:comment "Returns a literal of the same kind (simple literal, plain literal same language tag, xsd:string) as the first argument arg1. The lexical form of the result is the substring of the value of arg1 that precedes in arg1 the first occurrence of the lexical form of arg2; otherwise the lexical form of the result is the empty string. If the lexical form of arg2 is the empty string, the lexical form of the result is the emprty string." ;
+	spin:symbol "STRBEFORE" ;
 	spin:returnType xsd:string ;
 	spin:constraint _:node1c016l4n0x406 .
 
 _:node1c016l4n0x406 a spl:Argument ;
-	rdfs:comment "The pattern to find within the input string."^^xsd:string ;
+	rdfs:comment "The pattern to find within the input string." ;
 	spl:valueType xsd:string ;
 	spl:predicate sp:arg2 .
 
 sp:strbefore spin:constraint _:node1c016l4n0x407 .
 
 _:node1c016l4n0x407 a spl:Argument ;
-	rdfs:comment "The input string."^^xsd:string ;
+	rdfs:comment "The input string." ;
 	spl:valueType xsd:string ;
 	spl:predicate sp:arg1 .
 
@@ -2081,19 +2081,19 @@ spl:ExistencePropertyPairConstraint a spl:ConstraintTemplate ;
 
 spl:PropertyPairConstraintTemplates a spl:ConstraintTemplate ;
 	rdfs:subClassOf spl:PropertyConstraintTemplates ;
-	rdfs:label "Property pair constraint templates"^^xsd:string ;
-	rdfs:comment "Abstract base class for templates that take two properties as arguments and establish a relationship between them."^^xsd:string ;
+	rdfs:label "Property pair constraint templates" ;
+	rdfs:comment "Abstract base class for templates that take two properties as arguments and establish a relationship between them." ;
 	spin:constraint _:node1c016l4n0x408 .
 
 _:node1c016l4n0x408 a spl:Argument ;
-	rdfs:comment "The \"other\" property."^^xsd:string ;
+	rdfs:comment "The \"other\" property." ;
 	spl:valueType rdf:Property ;
 	spl:predicate <http://spinrdf.org/arg#otherProperty> .
 
 spl:PropertyPairConstraintTemplates spin:abstract "true"^^xsd:boolean .
 
-spl:ExistencePropertyPairConstraint rdfs:label "Existence property pair constraint"^^xsd:string ;
-	spin:labelTemplate "The property {?property} must have a value whenever {?otherProperty} has a value"^^xsd:string ;
+spl:ExistencePropertyPairConstraint rdfs:label "Existence property pair constraint" ;
+	spin:labelTemplate "The property {?property} must have a value whenever {?otherProperty} has a value" ;
 	spin:body _:node1c016l4n0x409 .
 
 _:node1c016l4n0x409 a sp:Construct ;
@@ -2112,11 +2112,11 @@ _:node1c016l4n0x414 rdf:first _:node1c016l4n0x413 .
 _:node1c016l4n0x413 sp:subject spin:_this ;
 	sp:predicate _:node1c016l4n0x415 .
 
-_:node1c016l4n0x415 sp:varName "otherProperty"^^xsd:string .
+_:node1c016l4n0x415 sp:varName "otherProperty" .
 
 _:node1c016l4n0x413 sp:object _:node1c016l4n0x416 .
 
-_:node1c016l4n0x416 sp:varName "someValue"^^xsd:string .
+_:node1c016l4n0x416 sp:varName "someValue" .
 
 _:node1c016l4n0x414 rdf:rest rdf:nil .
 
@@ -2135,11 +2135,11 @@ _:node1c016l4n0x421 rdf:first _:node1c016l4n0x420 .
 _:node1c016l4n0x420 sp:subject spin:_this ;
 	sp:predicate _:node1c016l4n0x422 .
 
-_:node1c016l4n0x422 sp:varName "property"^^xsd:string .
+_:node1c016l4n0x422 sp:varName "property" .
 
 _:node1c016l4n0x420 sp:object _:node1c016l4n0x423 .
 
-_:node1c016l4n0x423 sp:varName "object"^^xsd:string .
+_:node1c016l4n0x423 sp:varName "object" .
 
 _:node1c016l4n0x421 rdf:rest rdf:nil .
 
@@ -2150,7 +2150,7 @@ _:node1c016l4n0x425 rdf:first _:node1c016l4n0x424 .
 _:node1c016l4n0x424 a sp:Bind ;
 	sp:variable _:node1c016l4n0x426 .
 
-_:node1c016l4n0x426 sp:varName "message"^^xsd:string .
+_:node1c016l4n0x426 sp:varName "message" .
 
 _:node1c016l4n0x424 sp:expression _:node1c016l4n0x427 .
 
@@ -2158,7 +2158,7 @@ _:node1c016l4n0x427 a sp:concat ;
 	sp:arg3 "has" ;
 	sp:arg2 _:node1c016l4n0x428 .
 
-_:node1c016l4n0x428 sp:varName "otherProperty"^^xsd:string .
+_:node1c016l4n0x428 sp:varName "otherProperty" .
 
 _:node1c016l4n0x427 sp:arg1 "Property must have a value because" .
 
@@ -2188,7 +2188,7 @@ _:node1c016l4n0x434 sp:subject _:node1c016l4n0x431 ;
 	sp:predicate spin:violationPath ;
 	sp:object _:node1c016l4n0x436 .
 
-_:node1c016l4n0x436 sp:varName "property"^^xsd:string .
+_:node1c016l4n0x436 sp:varName "property" .
 
 _:node1c016l4n0x435 rdf:rest _:node1c016l4n0x438 .
 
@@ -2198,42 +2198,42 @@ _:node1c016l4n0x437 sp:subject _:node1c016l4n0x431 ;
 	sp:predicate rdfs:label ;
 	sp:object _:node1c016l4n0x439 .
 
-_:node1c016l4n0x439 sp:varName "message"^^xsd:string .
+_:node1c016l4n0x439 sp:varName "message" .
 
 _:node1c016l4n0x438 rdf:rest rdf:nil .
 
 sp:strlang a spin:Function ;
 	rdfs:subClassOf spl:StringFunctions ;
 	rdfs:seeAlso <http://www.w3.org/TR/sparql11-query/#func-strlang> ;
-	rdfs:label "strlang"^^xsd:string ;
-	rdfs:comment "Takes a string (?arg1) and a language (?arg2) and constructs a literal with a corresponding language tag."^^xsd:string ;
-	spin:symbol "STRLANG"^^xsd:string ;
+	rdfs:label "strlang" ;
+	rdfs:comment "Takes a string (?arg1) and a language (?arg2) and constructs a literal with a corresponding language tag." ;
+	spin:symbol "STRLANG" ;
 	spin:returnType rdf:PlainLiteral ;
 	spin:constraint _:node1c016l4n0x440 .
 
 _:node1c016l4n0x440 a spl:Argument ;
-	rdfs:comment "The language tag, e.g. \"en-AU\"."^^xsd:string ;
+	rdfs:comment "The language tag, e.g. \"en-AU\"." ;
 	spl:valueType xsd:string ;
 	spl:predicate sp:arg2 .
 
 sp:strlang spin:constraint _:node1c016l4n0x441 .
 
 _:node1c016l4n0x441 a spl:Argument ;
-	rdfs:comment "The string value."^^xsd:string ;
+	rdfs:comment "The string value." ;
 	spl:valueType xsd:string ;
 	spl:predicate sp:arg1 .
 
 sp:lcase a spin:Function ;
 	rdfs:subClassOf spl:StringFunctions ;
 	rdfs:seeAlso <http://www.w3.org/TR/sparql11-query/#func-lcase> ;
-	rdfs:label "LCASE"^^xsd:string ;
-	rdfs:comment "Converts a string to lower case characters."^^xsd:string ;
-	spin:symbol "LCASE"^^xsd:string ;
+	rdfs:label "LCASE" ;
+	rdfs:comment "Converts a string to lower case characters." ;
+	spin:symbol "LCASE" ;
 	spin:returnType xsd:string ;
 	spin:constraint _:node1c016l4n0x442 .
 
 _:node1c016l4n0x442 a spl:Argument ;
-	rdfs:comment "The input string."^^xsd:string ;
+	rdfs:comment "The input string." ;
 	spl:valueType xsd:string ;
 	spl:predicate sp:arg1 .
 
@@ -2243,26 +2243,26 @@ spl:Test-instanceOf-typedString-false a spl:TestCase ;
 
 _:node1c016l4n0x443 a spl:instanceOf ;
 	sp:arg2 xsd:integer ;
-	sp:arg1 "test"^^xsd:string .
+	sp:arg1 "test" .
 
 sp:uri a spin:Function ;
 	rdfs:subClassOf spl:OntologyFunctions ;
-	rdfs:label "URI"^^xsd:string ;
-	rdfs:comment "Equivalent to IRI."^^xsd:string ;
-	spin:symbol "URI"^^xsd:string ;
+	rdfs:label "URI" ;
+	rdfs:comment "Equivalent to IRI." ;
+	spin:symbol "URI" ;
 	spin:returnType rdfs:Resource ;
 	spin:constraint _:node1c016l4n0x444 .
 
 _:node1c016l4n0x444 a spl:Argument ;
-	rdfs:comment "The IRI string to convert to a resource."^^xsd:string ;
+	rdfs:comment "The IRI string to convert to a resource." ;
 	spl:valueType xsd:string ;
 	spl:predicate sp:arg1 .
 
 sp:le a spin:Function ;
 	rdfs:subClassOf spl:BooleanFunctions ;
-	rdfs:label "le"^^xsd:string ;
+	rdfs:label "le" ;
 	rdfs:comment "Returns true if ?arg1 <= ?arg2." ;
-	spin:symbol "<="^^xsd:string ;
+	spin:symbol "<=" ;
 	spin:returnType xsd:boolean ;
 	spin:constraint _:node1c016l4n0x445 .
 
@@ -2281,32 +2281,32 @@ _:node1c016l4n0x446 a spl:Argument ;
 sp:bnode a spin:Function ;
 	rdfs:subClassOf spl:OntologyFunctions ;
 	rdfs:seeAlso <http://www.w3.org/TR/sparql11-query/#func-bnode> ;
-	rdfs:label "bnode"^^xsd:string ;
-	rdfs:comment "Constructs a blank node that is distinct from all blank nodes in the dataset being queried and distinct from all blank nodes created by calls to this constructor for other query solutions. If the no argument form is used, every call results in a distinct blank node. If the form with a simple literal is used, every call results in distinct blank nodes for different simple literals, and the same blank node for calls with the same simple literal within expressions for one solution mapping. This functionality is compatible with the treatment of blank nodes in SPARQL CONSTRUCT templates."^^xsd:string ;
-	spin:symbol "BNODE"^^xsd:string ;
+	rdfs:label "bnode" ;
+	rdfs:comment "Constructs a blank node that is distinct from all blank nodes in the dataset being queried and distinct from all blank nodes created by calls to this constructor for other query solutions. If the no argument form is used, every call results in a distinct blank node. If the form with a simple literal is used, every call results in distinct blank nodes for different simple literals, and the same blank node for calls with the same simple literal within expressions for one solution mapping. This functionality is compatible with the treatment of blank nodes in SPARQL CONSTRUCT templates." ;
+	spin:symbol "BNODE" ;
 	spin:constraint _:node1c016l4n0x447 .
 
 _:node1c016l4n0x447 a spl:Argument ;
-	rdfs:comment "A literal input node."^^xsd:string ;
+	rdfs:comment "A literal input node." ;
 	spl:predicate sp:arg1 ;
 	spl:optional "true"^^xsd:boolean .
 
 spl:min a spin:Function ;
 	rdfs:subClassOf spl:MathematicalFunctions ;
-	rdfs:label "min"^^xsd:string ;
-	rdfs:comment "Takes two arguments and returns the smaller one of them."^^xsd:string ;
+	rdfs:label "min" ;
+	rdfs:comment "Takes two arguments and returns the smaller one of them." ;
 	spin:returnType rdfs:Literal ;
 	spin:constraint _:node1c016l4n0x448 .
 
 _:node1c016l4n0x448 a spl:Argument ;
-	rdfs:comment "The second argument."^^xsd:string ;
+	rdfs:comment "The second argument." ;
 	spl:valueType rdfs:Literal ;
 	spl:predicate sp:arg2 .
 
 spl:min spin:constraint _:node1c016l4n0x449 .
 
 _:node1c016l4n0x449 a spl:Argument ;
-	rdfs:comment "The first argument."^^xsd:string ;
+	rdfs:comment "The first argument." ;
 	spl:valueType rdfs:Literal ;
 	spl:predicate sp:arg1 .
 
@@ -2320,7 +2320,7 @@ _:node1c016l4n0x452 rdf:first _:node1c016l4n0x451 .
 _:node1c016l4n0x451 a sp:Bind ;
 	sp:variable _:node1c016l4n0x453 .
 
-_:node1c016l4n0x453 sp:varName "result"^^xsd:string .
+_:node1c016l4n0x453 sp:varName "result" .
 
 _:node1c016l4n0x451 sp:expression _:node1c016l4n0x454 .
 
@@ -2339,33 +2339,33 @@ _:node1c016l4n0x450 sp:resultVariables _:node1c016l4n0x457 .
 
 _:node1c016l4n0x457 rdf:first _:node1c016l4n0x456 .
 
-_:node1c016l4n0x456 sp:varName "result"^^xsd:string .
+_:node1c016l4n0x456 sp:varName "result" .
 
 _:node1c016l4n0x457 rdf:rest rdf:nil .
 
 sp:struuid a spin:Function ;
 	rdfs:subClassOf spl:StringFunctions ;
-	rdfs:label "struuid"^^xsd:string ;
-	rdfs:comment "Returns a string that is the scheme specific part of UUID. That is, as a simple literal, the result of generating a UUID, converting to a simple literal and removing the initial urn:uuid:."^^xsd:string ;
-	spin:symbol "STRUUID"^^xsd:string ;
+	rdfs:label "struuid" ;
+	rdfs:comment "Returns a string that is the scheme specific part of UUID. That is, as a simple literal, the result of generating a UUID, converting to a simple literal and removing the initial urn:uuid:." ;
+	spin:symbol "STRUUID" ;
 	spin:returnType xsd:string .
 
 spl:max a spin:Function ;
 	rdfs:subClassOf spl:MathematicalFunctions ;
-	rdfs:label "max"^^xsd:string ;
-	rdfs:comment "Takes two arguments and returns the larger one of them."^^xsd:string ;
+	rdfs:label "max" ;
+	rdfs:comment "Takes two arguments and returns the larger one of them." ;
 	spin:returnType rdfs:Literal ;
 	spin:constraint _:node1c016l4n0x458 .
 
 _:node1c016l4n0x458 a spl:Argument ;
-	rdfs:comment "The second argument."^^xsd:string ;
+	rdfs:comment "The second argument." ;
 	spl:valueType rdfs:Literal ;
 	spl:predicate sp:arg2 .
 
 spl:max spin:constraint _:node1c016l4n0x459 .
 
 _:node1c016l4n0x459 a spl:Argument ;
-	rdfs:comment "The first argument."^^xsd:string ;
+	rdfs:comment "The first argument." ;
 	spl:valueType rdfs:Literal ;
 	spl:predicate sp:arg1 .
 
@@ -2379,7 +2379,7 @@ _:node1c016l4n0x462 rdf:first _:node1c016l4n0x461 .
 _:node1c016l4n0x461 a sp:Bind ;
 	sp:variable _:node1c016l4n0x463 .
 
-_:node1c016l4n0x463 sp:varName "result"^^xsd:string .
+_:node1c016l4n0x463 sp:varName "result" .
 
 _:node1c016l4n0x461 sp:expression _:node1c016l4n0x464 .
 
@@ -2398,39 +2398,39 @@ _:node1c016l4n0x460 sp:resultVariables _:node1c016l4n0x467 .
 
 _:node1c016l4n0x467 rdf:first _:node1c016l4n0x466 .
 
-_:node1c016l4n0x466 sp:varName "result"^^xsd:string .
+_:node1c016l4n0x466 sp:varName "result" .
 
 _:node1c016l4n0x467 rdf:rest rdf:nil .
 
 sp:seconds a spin:Function ;
 	rdfs:subClassOf spl:DateFunctions ;
-	rdfs:label "seconds"^^xsd:string ;
-	rdfs:comment "Extracts the seconds from a date/time literal."^^xsd:string ;
-	spin:symbol "seconds"^^xsd:string ;
+	rdfs:label "seconds" ;
+	rdfs:comment "Extracts the seconds from a date/time literal." ;
+	spin:symbol "seconds" ;
 	spin:returnType xsd:integer ;
 	spin:constraint _:node1c016l4n0x468 .
 
 _:node1c016l4n0x468 a spl:Argument ;
-	rdfs:comment "The dateTime or time argument."^^xsd:string ;
+	rdfs:comment "The dateTime or time argument." ;
 	spl:valueType rdfs:Literal ;
 	spl:predicate sp:arg1 .
 
 spl:subPropertyOf a spin:Function ;
 	rdfs:subClassOf spl:OntologyFunctions ;
-	rdfs:label "sub property of"^^xsd:string ;
-	rdfs:comment "Checks whether a given property (?arg1) is a (transitive) sub-property of another property (?arg2)."^^xsd:string ;
+	rdfs:label "sub property of" ;
+	rdfs:comment "Checks whether a given property (?arg1) is a (transitive) sub-property of another property (?arg2)." ;
 	spin:returnType xsd:boolean ;
 	spin:constraint _:node1c016l4n0x469 .
 
 _:node1c016l4n0x469 a spl:Argument ;
-	rdfs:comment "The potential super-property."^^xsd:string ;
+	rdfs:comment "The potential super-property." ;
 	spl:valueType rdf:Property ;
 	spl:predicate sp:arg2 .
 
 spl:subPropertyOf spin:constraint _:node1c016l4n0x470 .
 
 _:node1c016l4n0x470 a spl:Argument ;
-	rdfs:comment "The potential sub-property."^^xsd:string ;
+	rdfs:comment "The potential sub-property." ;
 	spl:valueType rdf:Property ;
 	spl:predicate sp:arg1 .
 
@@ -2456,13 +2456,13 @@ _:node1c016l4n0x473 rdf:rest rdf:nil .
 
 spl:RangePropertyConstraint a spl:ConstraintTemplate ;
 	rdfs:subClassOf spl:PropertyConstraintTemplates ;
-	rdfs:label "Range property constraint"^^xsd:string ;
-	rdfs:comment "Represents a constraint that narrows down a property by a minimum and maximum value compared by <= and >=."^^xsd:string ;
-	spin:labelTemplate "Values of {?property} must be within the interval [ {?min} , {?max} ]"^^xsd:string ;
+	rdfs:label "Range property constraint" ;
+	rdfs:comment "Represents a constraint that narrows down a property by a minimum and maximum value compared by <= and >=." ;
+	spin:labelTemplate "Values of {?property} must be within the interval [ {?min} , {?max} ]" ;
 	spin:constraint _:node1c016l4n0x475 .
 
 _:node1c016l4n0x475 a spl:Argument ;
-	rdfs:comment "The minimum value."^^xsd:string ;
+	rdfs:comment "The minimum value." ;
 	spl:valueType rdfs:Literal ;
 	spl:predicate <http://spinrdf.org/arg#min> ;
 	spl:optional "true"^^xsd:boolean .
@@ -2470,7 +2470,7 @@ _:node1c016l4n0x475 a spl:Argument ;
 spl:RangePropertyConstraint spin:constraint _:node1c016l4n0x476 .
 
 _:node1c016l4n0x476 a spl:Argument ;
-	rdfs:comment "The maximum value."^^xsd:string ;
+	rdfs:comment "The maximum value." ;
 	spl:valueType rdfs:Literal ;
 	spl:predicate <http://spinrdf.org/arg#max> ;
 	spl:optional "true"^^xsd:boolean .
@@ -2485,11 +2485,11 @@ _:node1c016l4n0x479 rdf:first _:node1c016l4n0x478 .
 _:node1c016l4n0x478 sp:subject spin:_this ;
 	sp:predicate _:node1c016l4n0x480 .
 
-_:node1c016l4n0x480 sp:varName "property"^^xsd:string .
+_:node1c016l4n0x480 sp:varName "property" .
 
 _:node1c016l4n0x478 sp:object _:node1c016l4n0x481 .
 
-_:node1c016l4n0x481 sp:varName "object"^^xsd:string .
+_:node1c016l4n0x481 sp:varName "object" .
 
 _:node1c016l4n0x479 rdf:rest _:node1c016l4n0x483 .
 
@@ -2507,18 +2507,18 @@ _:node1c016l4n0x485 a sp:and ;
 _:node1c016l4n0x486 a sp:gt ;
 	sp:arg2 _:node1c016l4n0x487 .
 
-_:node1c016l4n0x487 sp:varName "max"^^xsd:string .
+_:node1c016l4n0x487 sp:varName "max" .
 
 _:node1c016l4n0x486 sp:arg1 _:node1c016l4n0x488 .
 
-_:node1c016l4n0x488 sp:varName "object"^^xsd:string .
+_:node1c016l4n0x488 sp:varName "object" .
 
 _:node1c016l4n0x485 sp:arg1 _:node1c016l4n0x489 .
 
 _:node1c016l4n0x489 a sp:bound ;
 	sp:arg1 _:node1c016l4n0x490 .
 
-_:node1c016l4n0x490 sp:varName "max"^^xsd:string .
+_:node1c016l4n0x490 sp:varName "max" .
 
 _:node1c016l4n0x484 sp:arg1 _:node1c016l4n0x491 .
 
@@ -2528,18 +2528,18 @@ _:node1c016l4n0x491 a sp:and ;
 _:node1c016l4n0x492 a sp:lt ;
 	sp:arg2 _:node1c016l4n0x493 .
 
-_:node1c016l4n0x493 sp:varName "min"^^xsd:string .
+_:node1c016l4n0x493 sp:varName "min" .
 
 _:node1c016l4n0x492 sp:arg1 _:node1c016l4n0x494 .
 
-_:node1c016l4n0x494 sp:varName "object"^^xsd:string .
+_:node1c016l4n0x494 sp:varName "object" .
 
 _:node1c016l4n0x491 sp:arg1 _:node1c016l4n0x495 .
 
 _:node1c016l4n0x495 a sp:bound ;
 	sp:arg1 _:node1c016l4n0x496 .
 
-_:node1c016l4n0x496 sp:varName "min"^^xsd:string .
+_:node1c016l4n0x496 sp:varName "min" .
 
 _:node1c016l4n0x483 rdf:rest _:node1c016l4n0x498 .
 
@@ -2548,7 +2548,7 @@ _:node1c016l4n0x498 rdf:first _:node1c016l4n0x497 .
 _:node1c016l4n0x497 a sp:Bind ;
 	sp:variable _:node1c016l4n0x499 .
 
-_:node1c016l4n0x499 sp:varName "message"^^xsd:string .
+_:node1c016l4n0x499 sp:varName "message" .
 
 _:node1c016l4n0x497 sp:expression _:node1c016l4n0x500 .
 
@@ -2556,17 +2556,17 @@ _:node1c016l4n0x500 a sp:concat ;
 	sp:arg7 "]" ;
 	sp:arg6 _:node1c016l4n0x501 .
 
-_:node1c016l4n0x501 sp:varName "max"^^xsd:string .
+_:node1c016l4n0x501 sp:varName "max" .
 
 _:node1c016l4n0x500 sp:arg5 "," ;
 	sp:arg4 _:node1c016l4n0x502 .
 
-_:node1c016l4n0x502 sp:varName "min"^^xsd:string .
+_:node1c016l4n0x502 sp:varName "min" .
 
 _:node1c016l4n0x500 sp:arg3 "must be in the interval [" ;
 	sp:arg2 _:node1c016l4n0x503 .
 
-_:node1c016l4n0x503 sp:varName "object"^^xsd:string .
+_:node1c016l4n0x503 sp:varName "object" .
 
 _:node1c016l4n0x500 sp:arg1 "Value" .
 
@@ -2596,7 +2596,7 @@ _:node1c016l4n0x509 sp:subject _:node1c016l4n0x506 ;
 	sp:predicate spin:violationPath ;
 	sp:object _:node1c016l4n0x511 .
 
-_:node1c016l4n0x511 sp:varName "property"^^xsd:string .
+_:node1c016l4n0x511 sp:varName "property" .
 
 _:node1c016l4n0x510 rdf:rest _:node1c016l4n0x513 .
 
@@ -2606,7 +2606,7 @@ _:node1c016l4n0x512 sp:subject _:node1c016l4n0x506 ;
 	sp:predicate rdfs:label ;
 	sp:object _:node1c016l4n0x514 .
 
-_:node1c016l4n0x514 sp:varName "message"^^xsd:string .
+_:node1c016l4n0x514 sp:varName "message" .
 
 _:node1c016l4n0x513 rdf:rest rdf:nil .
 
@@ -2614,20 +2614,20 @@ spl:RangePropertyConstraint spin:abstract "true"^^xsd:boolean .
 
 spl:subClassOf a spin:Function ;
 	rdfs:subClassOf spl:OntologyFunctions ;
-	rdfs:label "sub class of"^^xsd:string ;
-	rdfs:comment "Checks whether a given class (?arg1) is a (transitive) sub-class of another class (?arg2)."^^xsd:string ;
+	rdfs:label "sub class of" ;
+	rdfs:comment "Checks whether a given class (?arg1) is a (transitive) sub-class of another class (?arg2)." ;
 	spin:returnType xsd:boolean ;
 	spin:constraint _:node1c016l4n0x515 .
 
 _:node1c016l4n0x515 a spl:Argument ;
-	rdfs:comment "The potential super-class."^^xsd:string ;
+	rdfs:comment "The potential super-class." ;
 	spl:valueType rdfs:Class ;
 	spl:predicate sp:arg2 .
 
 spl:subClassOf spin:constraint _:node1c016l4n0x516 .
 
 _:node1c016l4n0x516 a spl:Argument ;
-	rdfs:comment "The potential sub-class."^^xsd:string ;
+	rdfs:comment "The potential sub-class." ;
 	spl:valueType rdfs:Class ;
 	spl:predicate sp:arg1 .
 
@@ -2653,9 +2653,9 @@ _:node1c016l4n0x519 rdf:rest rdf:nil .
 
 sp:divide a spin:Function ;
 	rdfs:subClassOf spl:MathematicalFunctions ;
-	rdfs:label "divide"^^xsd:string ;
+	rdfs:label "divide" ;
 	rdfs:comment "Returns the arithmetic quotient of its operands." ;
-	spin:symbol "/"^^xsd:string ;
+	spin:symbol "/" ;
 	spin:returnType rdfs:Literal ;
 	spin:constraint _:node1c016l4n0x521 .
 
@@ -2674,25 +2674,25 @@ _:node1c016l4n0x522 a spl:Argument ;
 sp:isNumeric a spin:Function ;
 	rdfs:subClassOf spl:BooleanFunctions ;
 	rdfs:seeAlso <http://www.w3.org/TR/sparql11-query/#func-isNumeric> ;
-	rdfs:label "is numeric"^^xsd:string ;
-	rdfs:comment "Returns true if arg1 is a numeric value. Returns false otherwise. term is numeric if it has an appropriate datatype (see the section Operand Data Types) and has a valid lexical form, making it a valid argument to functions and operators taking numeric arguments."^^xsd:string ;
-	spin:symbol "isNumeric"^^xsd:string ;
+	rdfs:label "is numeric" ;
+	rdfs:comment "Returns true if arg1 is a numeric value. Returns false otherwise. term is numeric if it has an appropriate datatype (see the section Operand Data Types) and has a valid lexical form, making it a valid argument to functions and operators taking numeric arguments." ;
+	spin:symbol "isNumeric" ;
 	spin:constraint _:node1c016l4n0x523 .
 
 _:node1c016l4n0x523 a spl:Argument ;
-	rdfs:comment "The node to check whether it's numeric."^^xsd:string ;
+	rdfs:comment "The node to check whether it's numeric." ;
 	spl:predicate sp:arg1 .
 
 sp:day a spin:Function ;
 	rdfs:subClassOf spl:DateFunctions ;
-	rdfs:label "day"^^xsd:string ;
-	rdfs:comment "Extracts the day from a date/time literal."^^xsd:string ;
-	spin:symbol "day"^^xsd:string ;
+	rdfs:label "day" ;
+	rdfs:comment "Extracts the day from a date/time literal." ;
+	spin:symbol "day" ;
 	spin:returnType xsd:integer ;
 	spin:constraint _:node1c016l4n0x524 .
 
 _:node1c016l4n0x524 a spl:Argument ;
-	rdfs:comment "The date or dateTime argument."^^xsd:string ;
+	rdfs:comment "The date or dateTime argument." ;
 	spl:valueType rdfs:Literal ;
 	spl:predicate sp:arg1 .
 
@@ -2701,12 +2701,12 @@ spl:ObjectCountPropertyConstraint a spl:ConstraintTemplate ;
 
 spl:CountPropertyConstraintTemplates a spl:ConstraintTemplate ;
 	rdfs:subClassOf spl:PropertyConstraintTemplates ;
-	rdfs:label "Count property constraint templates"^^xsd:string ;
-	rdfs:comment "Abstract superclass of property constraints that compare the number of values with either min or max count."^^xsd:string ;
+	rdfs:label "Count property constraint templates" ;
+	rdfs:comment "Abstract superclass of property constraints that compare the number of values with either min or max count." ;
 	spin:constraint _:node1c016l4n0x525 .
 
 _:node1c016l4n0x525 a spl:Argument ;
-	rdfs:comment "The minimum number of values that the property must have."^^xsd:string ;
+	rdfs:comment "The minimum number of values that the property must have." ;
 	spl:valueType xsd:integer ;
 	spl:predicate <http://spinrdf.org/arg#minCount> ;
 	spl:optional "true"^^xsd:boolean .
@@ -2714,16 +2714,16 @@ _:node1c016l4n0x525 a spl:Argument ;
 spl:CountPropertyConstraintTemplates spin:constraint _:node1c016l4n0x526 .
 
 _:node1c016l4n0x526 a spl:Argument ;
-	rdfs:comment "The maximum number of values that the property must have."^^xsd:string ;
+	rdfs:comment "The maximum number of values that the property must have." ;
 	spl:valueType xsd:integer ;
 	spl:predicate <http://spinrdf.org/arg#maxCount> ;
 	spl:optional "true"^^xsd:boolean .
 
 spl:CountPropertyConstraintTemplates spin:abstract "true"^^xsd:boolean .
 
-spl:ObjectCountPropertyConstraint rdfs:label "Object count property constraint"^^xsd:string ;
-	rdfs:comment "Represents a constraint that can be attached to a class to specify that a given property must have between min and max values."^^xsd:string ;
-	spin:labelTemplate "The property {?property} must have between {?minCount} and {?maxCount} values"^^xsd:string ;
+spl:ObjectCountPropertyConstraint rdfs:label "Object count property constraint" ;
+	rdfs:comment "Represents a constraint that can be attached to a class to specify that a given property must have between min and max values." ;
+	spin:labelTemplate "The property {?property} must have between {?minCount} and {?maxCount} values" ;
 	spin:body _:node1c016l4n0x527 .
 
 _:node1c016l4n0x527 a sp:Construct ;
@@ -2734,14 +2734,14 @@ _:node1c016l4n0x529 rdf:first _:node1c016l4n0x528 .
 _:node1c016l4n0x528 a sp:Bind ;
 	sp:variable _:node1c016l4n0x530 .
 
-_:node1c016l4n0x530 sp:varName "objectCount"^^xsd:string .
+_:node1c016l4n0x530 sp:varName "objectCount" .
 
 _:node1c016l4n0x528 sp:expression _:node1c016l4n0x531 .
 
 _:node1c016l4n0x531 a spl:objectCount ;
 	sp:arg2 _:node1c016l4n0x532 .
 
-_:node1c016l4n0x532 sp:varName "property"^^xsd:string .
+_:node1c016l4n0x532 sp:varName "property" .
 
 _:node1c016l4n0x531 sp:arg1 spin:_this .
 
@@ -2761,18 +2761,18 @@ _:node1c016l4n0x536 a sp:and ;
 _:node1c016l4n0x537 a sp:gt ;
 	sp:arg2 _:node1c016l4n0x538 .
 
-_:node1c016l4n0x538 sp:varName "maxCount"^^xsd:string .
+_:node1c016l4n0x538 sp:varName "maxCount" .
 
 _:node1c016l4n0x537 sp:arg1 _:node1c016l4n0x539 .
 
-_:node1c016l4n0x539 sp:varName "objectCount"^^xsd:string .
+_:node1c016l4n0x539 sp:varName "objectCount" .
 
 _:node1c016l4n0x536 sp:arg1 _:node1c016l4n0x540 .
 
 _:node1c016l4n0x540 a sp:bound ;
 	sp:arg1 _:node1c016l4n0x541 .
 
-_:node1c016l4n0x541 sp:varName "maxCount"^^xsd:string .
+_:node1c016l4n0x541 sp:varName "maxCount" .
 
 _:node1c016l4n0x535 sp:arg1 _:node1c016l4n0x542 .
 
@@ -2782,18 +2782,18 @@ _:node1c016l4n0x542 a sp:and ;
 _:node1c016l4n0x543 a sp:lt ;
 	sp:arg2 _:node1c016l4n0x544 .
 
-_:node1c016l4n0x544 sp:varName "minCount"^^xsd:string .
+_:node1c016l4n0x544 sp:varName "minCount" .
 
 _:node1c016l4n0x543 sp:arg1 _:node1c016l4n0x545 .
 
-_:node1c016l4n0x545 sp:varName "objectCount"^^xsd:string .
+_:node1c016l4n0x545 sp:varName "objectCount" .
 
 _:node1c016l4n0x542 sp:arg1 _:node1c016l4n0x546 .
 
 _:node1c016l4n0x546 a sp:bound ;
 	sp:arg1 _:node1c016l4n0x547 .
 
-_:node1c016l4n0x547 sp:varName "minCount"^^xsd:string .
+_:node1c016l4n0x547 sp:varName "minCount" .
 
 _:node1c016l4n0x534 rdf:rest _:node1c016l4n0x549 .
 
@@ -2802,14 +2802,14 @@ _:node1c016l4n0x549 rdf:first _:node1c016l4n0x548 .
 _:node1c016l4n0x548 a sp:Bind ;
 	sp:variable _:node1c016l4n0x550 .
 
-_:node1c016l4n0x550 sp:varName "message"^^xsd:string .
+_:node1c016l4n0x550 sp:varName "message" .
 
 _:node1c016l4n0x548 sp:expression _:node1c016l4n0x551 .
 
 _:node1c016l4n0x551 a sp:concat ;
 	sp:arg2 _:node1c016l4n0x552 .
 
-_:node1c016l4n0x552 sp:varName "objectCount"^^xsd:string .
+_:node1c016l4n0x552 sp:varName "objectCount" .
 
 _:node1c016l4n0x551 sp:arg1 "Invalid number of values:" .
 
@@ -2839,7 +2839,7 @@ _:node1c016l4n0x558 sp:subject _:node1c016l4n0x555 ;
 	sp:predicate spin:violationPath ;
 	sp:object _:node1c016l4n0x560 .
 
-_:node1c016l4n0x560 sp:varName "property"^^xsd:string .
+_:node1c016l4n0x560 sp:varName "property" .
 
 _:node1c016l4n0x559 rdf:rest _:node1c016l4n0x562 .
 
@@ -2849,15 +2849,15 @@ _:node1c016l4n0x561 sp:subject _:node1c016l4n0x555 ;
 	sp:predicate rdfs:label ;
 	sp:object _:node1c016l4n0x563 .
 
-_:node1c016l4n0x563 sp:varName "message"^^xsd:string .
+_:node1c016l4n0x563 sp:varName "message" .
 
 _:node1c016l4n0x562 rdf:rest rdf:nil .
 
 sp:unaryMinus a spin:Function ;
 	rdfs:subClassOf spl:MathematicalFunctions ;
-	rdfs:label "unary minus"^^xsd:string ;
+	rdfs:label "unary minus" ;
 	rdfs:comment "Returns the operand ?arg1 with the sign reversed. If ?arg1 is positive, its negative is returned; if it is negative, its positive is returned." ;
-	spin:symbol "-"^^xsd:string ;
+	spin:symbol "-" ;
 	spin:constraint _:node1c016l4n0x564 .
 
 _:node1c016l4n0x564 a spl:Argument ;
@@ -2867,22 +2867,22 @@ _:node1c016l4n0x564 a spl:Argument ;
 
 sp:iri a spin:Function ;
 	rdfs:subClassOf spl:OntologyFunctions ;
-	rdfs:label "IRI"^^xsd:string ;
-	rdfs:comment "Creates a IRI resource (node) from a given IRI string (?arg1)."^^xsd:string ;
-	spin:symbol "IRI"^^xsd:string ;
+	rdfs:label "IRI" ;
+	rdfs:comment "Creates a IRI resource (node) from a given IRI string (?arg1)." ;
+	spin:symbol "IRI" ;
 	spin:returnType rdfs:Resource ;
 	spin:constraint _:node1c016l4n0x565 .
 
 _:node1c016l4n0x565 a spl:Argument ;
-	rdfs:comment "The IRI string to convert to a resource."^^xsd:string ;
+	rdfs:comment "The IRI string to convert to a resource." ;
 	spl:valueType xsd:string ;
 	spl:predicate sp:arg1 .
 
 spl:UntypedObjectPropertyConstraint a spl:ConstraintTemplate ;
 	rdfs:subClassOf spl:PropertyConstraintTemplates ;
-	rdfs:label "Untyped object property constraint"^^xsd:string ;
-	rdfs:comment "A generic SPIN template that can be used to declare a constraint that all values of a given property must have an rdf:type."^^xsd:string ;
-	spin:labelTemplate "Values of {?property} must have a type"^^xsd:string ;
+	rdfs:label "Untyped object property constraint" ;
+	rdfs:comment "A generic SPIN template that can be used to declare a constraint that all values of a given property must have an rdf:type." ;
+	spin:labelTemplate "Values of {?property} must have a type" ;
 	spin:body _:node1c016l4n0x566 .
 
 _:node1c016l4n0x566 a sp:Construct ;
@@ -2893,11 +2893,11 @@ _:node1c016l4n0x568 rdf:first _:node1c016l4n0x567 .
 _:node1c016l4n0x567 sp:subject spin:_this ;
 	sp:predicate _:node1c016l4n0x569 .
 
-_:node1c016l4n0x569 sp:varName "property"^^xsd:string .
+_:node1c016l4n0x569 sp:varName "property" .
 
 _:node1c016l4n0x567 sp:object _:node1c016l4n0x570 .
 
-_:node1c016l4n0x570 sp:varName "object"^^xsd:string .
+_:node1c016l4n0x570 sp:varName "object" .
 
 _:node1c016l4n0x568 rdf:rest _:node1c016l4n0x572 .
 
@@ -2913,12 +2913,12 @@ _:node1c016l4n0x575 rdf:first _:node1c016l4n0x574 .
 
 _:node1c016l4n0x574 sp:subject _:node1c016l4n0x576 .
 
-_:node1c016l4n0x576 sp:varName "object"^^xsd:string .
+_:node1c016l4n0x576 sp:varName "object" .
 
 _:node1c016l4n0x574 sp:predicate rdf:type ;
 	sp:object _:node1c016l4n0x577 .
 
-_:node1c016l4n0x577 sp:varName "anyType"^^xsd:string .
+_:node1c016l4n0x577 sp:varName "anyType" .
 
 _:node1c016l4n0x575 rdf:rest rdf:nil .
 
@@ -2929,7 +2929,7 @@ _:node1c016l4n0x579 rdf:first _:node1c016l4n0x578 .
 _:node1c016l4n0x578 a sp:Bind ;
 	sp:variable _:node1c016l4n0x580 .
 
-_:node1c016l4n0x580 sp:varName "message"^^xsd:string .
+_:node1c016l4n0x580 sp:varName "message" .
 
 _:node1c016l4n0x578 sp:expression _:node1c016l4n0x581 .
 
@@ -2937,7 +2937,7 @@ _:node1c016l4n0x581 a sp:concat ;
 	sp:arg3 "must have a type" ;
 	sp:arg2 _:node1c016l4n0x582 .
 
-_:node1c016l4n0x582 sp:varName "object"^^xsd:string .
+_:node1c016l4n0x582 sp:varName "object" .
 
 _:node1c016l4n0x581 sp:arg1 "Value" .
 
@@ -2967,7 +2967,7 @@ _:node1c016l4n0x588 sp:subject _:node1c016l4n0x585 ;
 	sp:predicate spin:violationPath ;
 	sp:object _:node1c016l4n0x590 .
 
-_:node1c016l4n0x590 sp:varName "property"^^xsd:string .
+_:node1c016l4n0x590 sp:varName "property" .
 
 _:node1c016l4n0x589 rdf:rest _:node1c016l4n0x592 .
 
@@ -2977,7 +2977,7 @@ _:node1c016l4n0x591 sp:subject _:node1c016l4n0x585 ;
 	sp:predicate rdfs:label ;
 	sp:object _:node1c016l4n0x593 .
 
-_:node1c016l4n0x593 sp:varName "message"^^xsd:string .
+_:node1c016l4n0x593 sp:varName "message" .
 
 _:node1c016l4n0x592 rdf:rest rdf:nil .
 
@@ -2987,7 +2987,7 @@ spl:Test-instanceOf-rdfsLiteral a spl:TestCase ;
 
 _:node1c016l4n0x594 a spl:instanceOf ;
 	sp:arg2 rdfs:Literal ;
-	sp:arg1 "test"^^xsd:string .
+	sp:arg1 "test" .
 
 spl:Test-instanceOf-rdfsClass a spl:TestCase ;
 	spl:testResult "true"^^xsd:boolean ;
@@ -2999,31 +2999,31 @@ _:node1c016l4n0x595 a spl:instanceOf ;
 
 sp:month a spin:Function ;
 	rdfs:subClassOf spl:DateFunctions ;
-	rdfs:label "month"^^xsd:string ;
-	rdfs:comment "Extracts the month from a date/time literal."^^xsd:string ;
-	spin:symbol "month"^^xsd:string ;
+	rdfs:label "month" ;
+	rdfs:comment "Extracts the month from a date/time literal." ;
+	spin:symbol "month" ;
 	spin:returnType xsd:integer ;
 	spin:constraint _:node1c016l4n0x596 .
 
 _:node1c016l4n0x596 a spl:Argument ;
-	rdfs:comment "The date or dateTime argument."^^xsd:string ;
+	rdfs:comment "The date or dateTime argument." ;
 	spl:valueType rdfs:Literal ;
 	spl:predicate sp:arg1 .
 
 sp:encode_for_uri a spin:Function ;
 	rdfs:subClassOf spl:StringFunctions ;
-	rdfs:label "encode_for_uri"^^xsd:string ;
-	spin:symbol "ENCODE_FOR_URI"^^xsd:string ;
+	rdfs:label "encode_for_uri" ;
+	spin:symbol "ENCODE_FOR_URI" ;
 	spin:returnType xsd:string ;
 	spin:constraint _:node1c016l4n0x597 .
 
 _:node1c016l4n0x597 a spl:Argument ;
-	rdfs:comment "The string to convert."^^xsd:string ;
+	rdfs:comment "The string to convert." ;
 	spl:valueType xsd:string ;
 	spl:predicate sp:arg1 .
 
 spl:Test-object-labelOfArgument a spl:TestCase ;
-	spl:testResult "Argument"^^xsd:string ;
+	spl:testResult "Argument" ;
 	spl:testExpression _:node1c016l4n0x598 .
 
 _:node1c016l4n0x598 a sp:Select ;
@@ -3040,7 +3040,7 @@ _:node1c016l4n0x602 rdf:first _:node1c016l4n0x601 .
 _:node1c016l4n0x601 a sp:Bind ;
 	sp:variable _:node1c016l4n0x603 .
 
-_:node1c016l4n0x603 sp:varName "value"^^xsd:string .
+_:node1c016l4n0x603 sp:varName "value" .
 
 _:node1c016l4n0x601 sp:expression _:node1c016l4n0x604 .
 
@@ -3056,29 +3056,29 @@ _:node1c016l4n0x598 sp:resultVariables _:node1c016l4n0x606 .
 
 _:node1c016l4n0x606 rdf:first _:node1c016l4n0x605 .
 
-_:node1c016l4n0x605 sp:varName "value"^^xsd:string .
+_:node1c016l4n0x605 sp:varName "value" .
 
 _:node1c016l4n0x606 rdf:rest rdf:nil .
 
 sp:ucase a spin:Function ;
 	rdfs:subClassOf spl:StringFunctions ;
 	rdfs:seeAlso <http://www.w3.org/TR/sparql11-query/#func-ucase> ;
-	rdfs:label "UCASE"^^xsd:string ;
-	rdfs:comment "Converts a string to upper case characters."^^xsd:string ;
-	spin:symbol "UCASE"^^xsd:string ;
+	rdfs:label "UCASE" ;
+	rdfs:comment "Converts a string to upper case characters." ;
+	spin:symbol "UCASE" ;
 	spin:returnType xsd:string ;
 	spin:constraint _:node1c016l4n0x607 .
 
 _:node1c016l4n0x607 a spl:Argument ;
-	rdfs:comment "The input string."^^xsd:string ;
+	rdfs:comment "The input string." ;
 	spl:valueType xsd:string ;
 	spl:predicate sp:arg1 .
 
 sp:mul a spin:Function ;
 	rdfs:subClassOf spl:MathematicalFunctions ;
-	rdfs:label "mul"^^xsd:string ;
+	rdfs:label "mul" ;
 	rdfs:comment "Returns the arithmetic product of its operands." ;
-	spin:symbol "*"^^xsd:string ;
+	spin:symbol "*" ;
 	spin:constraint _:node1c016l4n0x608 .
 
 _:node1c016l4n0x608 a spl:Argument ;
@@ -3095,9 +3095,9 @@ _:node1c016l4n0x609 a spl:Argument ;
 
 spl:ConstructDefaultValues a spin:ConstructTemplate ;
 	rdfs:subClassOf spin:ConstructTemplates ;
-	rdfs:label "Construct default values"^^xsd:string ;
+	rdfs:label "Construct default values" ;
 	rdfs:comment "This template can be attached as spin:constructor to a root class such as rdfs:Resource to ensure that SPIN processors assign default values to certain properties. Looks for any templates attached as spin:constraints to the types of ?this and then assigns their declared spl:defaultValues." ;
-	spin:labelTemplate "Construct default values"^^xsd:string ;
+	spin:labelTemplate "Construct default values" ;
 	spin:body _:node1c016l4n0x610 .
 
 _:node1c016l4n0x610 a sp:Construct ;
@@ -3109,7 +3109,7 @@ _:node1c016l4n0x611 sp:subject spin:_this ;
 	sp:predicate rdf:type ;
 	sp:object _:node1c016l4n0x613 .
 
-_:node1c016l4n0x613 sp:varName "directType"^^xsd:string .
+_:node1c016l4n0x613 sp:varName "directType" .
 
 _:node1c016l4n0x612 rdf:rest _:node1c016l4n0x615 .
 
@@ -3118,7 +3118,7 @@ _:node1c016l4n0x615 rdf:first _:node1c016l4n0x614 .
 _:node1c016l4n0x614 a sp:TriplePath ;
 	sp:subject _:node1c016l4n0x616 .
 
-_:node1c016l4n0x616 sp:varName "directType"^^xsd:string .
+_:node1c016l4n0x616 sp:varName "directType" .
 
 _:node1c016l4n0x614 sp:path _:node1c016l4n0x617 .
 
@@ -3129,7 +3129,7 @@ _:node1c016l4n0x617 a sp:ModPath ;
 
 _:node1c016l4n0x614 sp:object _:node1c016l4n0x618 .
 
-_:node1c016l4n0x618 sp:varName "type"^^xsd:string .
+_:node1c016l4n0x618 sp:varName "type" .
 
 _:node1c016l4n0x615 rdf:rest _:node1c016l4n0x620 .
 
@@ -3137,12 +3137,12 @@ _:node1c016l4n0x620 rdf:first _:node1c016l4n0x619 .
 
 _:node1c016l4n0x619 sp:subject _:node1c016l4n0x621 .
 
-_:node1c016l4n0x621 sp:varName "type"^^xsd:string .
+_:node1c016l4n0x621 sp:varName "type" .
 
 _:node1c016l4n0x619 sp:predicate spin:constraint ;
 	sp:object _:node1c016l4n0x622 .
 
-_:node1c016l4n0x622 sp:varName "attribute"^^xsd:string .
+_:node1c016l4n0x622 sp:varName "attribute" .
 
 _:node1c016l4n0x620 rdf:rest _:node1c016l4n0x624 .
 
@@ -3150,12 +3150,12 @@ _:node1c016l4n0x624 rdf:first _:node1c016l4n0x623 .
 
 _:node1c016l4n0x623 sp:subject _:node1c016l4n0x625 .
 
-_:node1c016l4n0x625 sp:varName "attribute"^^xsd:string .
+_:node1c016l4n0x625 sp:varName "attribute" .
 
 _:node1c016l4n0x623 sp:predicate spl:defaultValue ;
 	sp:object _:node1c016l4n0x626 .
 
-_:node1c016l4n0x626 sp:varName "defaultValue"^^xsd:string .
+_:node1c016l4n0x626 sp:varName "defaultValue" .
 
 _:node1c016l4n0x624 rdf:rest _:node1c016l4n0x628 .
 
@@ -3163,12 +3163,12 @@ _:node1c016l4n0x628 rdf:first _:node1c016l4n0x627 .
 
 _:node1c016l4n0x627 sp:subject _:node1c016l4n0x629 .
 
-_:node1c016l4n0x629 sp:varName "attribute"^^xsd:string .
+_:node1c016l4n0x629 sp:varName "attribute" .
 
 _:node1c016l4n0x627 sp:predicate spl:predicate ;
 	sp:object _:node1c016l4n0x630 .
 
-_:node1c016l4n0x630 sp:varName "predicate"^^xsd:string .
+_:node1c016l4n0x630 sp:varName "predicate" .
 
 _:node1c016l4n0x628 rdf:rest rdf:nil .
 
@@ -3179,18 +3179,18 @@ _:node1c016l4n0x632 rdf:first _:node1c016l4n0x631 .
 _:node1c016l4n0x631 sp:subject spin:_this ;
 	sp:predicate _:node1c016l4n0x633 .
 
-_:node1c016l4n0x633 sp:varName "predicate"^^xsd:string .
+_:node1c016l4n0x633 sp:varName "predicate" .
 
 _:node1c016l4n0x631 sp:object _:node1c016l4n0x634 .
 
-_:node1c016l4n0x634 sp:varName "defaultValue"^^xsd:string .
+_:node1c016l4n0x634 sp:varName "defaultValue" .
 
 _:node1c016l4n0x632 rdf:rest rdf:nil .
 
 spl:RunTestCases a spin:SelectTemplate ;
 	rdfs:subClassOf spin:SelectTemplates ;
-	rdfs:label "Run test cases"^^xsd:string ;
-	rdfs:comment "Runs all spl:TestCases on the current model."^^xsd:string ;
+	rdfs:label "Run test cases" ;
+	rdfs:comment "Runs all spl:TestCases on the current model." ;
 	spin:body _:node1c016l4n0x635 .
 
 _:node1c016l4n0x635 a sp:Select ;
@@ -3200,12 +3200,12 @@ _:node1c016l4n0x637 rdf:first _:node1c016l4n0x636 .
 
 _:node1c016l4n0x636 sp:subject _:node1c016l4n0x638 .
 
-_:node1c016l4n0x638 sp:varName "testCase"^^xsd:string .
+_:node1c016l4n0x638 sp:varName "testCase" .
 
 _:node1c016l4n0x636 sp:predicate spl:testExpression ;
 	sp:object _:node1c016l4n0x639 .
 
-_:node1c016l4n0x639 sp:varName "expr"^^xsd:string .
+_:node1c016l4n0x639 sp:varName "expr" .
 
 _:node1c016l4n0x637 rdf:rest _:node1c016l4n0x641 .
 
@@ -3218,12 +3218,12 @@ _:node1c016l4n0x643 rdf:first _:node1c016l4n0x642 .
 
 _:node1c016l4n0x642 sp:subject _:node1c016l4n0x644 .
 
-_:node1c016l4n0x644 sp:varName "testCase"^^xsd:string .
+_:node1c016l4n0x644 sp:varName "testCase" .
 
 _:node1c016l4n0x642 sp:predicate spl:testResult ;
 	sp:object _:node1c016l4n0x645 .
 
-_:node1c016l4n0x645 sp:varName "expected"^^xsd:string .
+_:node1c016l4n0x645 sp:varName "expected" .
 
 _:node1c016l4n0x643 rdf:rest rdf:nil .
 
@@ -3234,14 +3234,14 @@ _:node1c016l4n0x647 rdf:first _:node1c016l4n0x646 .
 _:node1c016l4n0x646 a sp:Bind ;
 	sp:variable _:node1c016l4n0x648 .
 
-_:node1c016l4n0x648 sp:varName "actual"^^xsd:string .
+_:node1c016l4n0x648 sp:varName "actual" .
 
 _:node1c016l4n0x646 sp:expression _:node1c016l4n0x649 .
 
 _:node1c016l4n0x649 a spin:eval ;
 	sp:arg1 _:node1c016l4n0x650 .
 
-_:node1c016l4n0x650 sp:varName "expr"^^xsd:string .
+_:node1c016l4n0x650 sp:varName "expr" .
 
 _:node1c016l4n0x647 rdf:rest _:node1c016l4n0x652 .
 
@@ -3259,18 +3259,18 @@ _:node1c016l4n0x654 a sp:and ;
 _:node1c016l4n0x655 a sp:ne ;
 	sp:arg2 _:node1c016l4n0x656 .
 
-_:node1c016l4n0x656 sp:varName "expected"^^xsd:string .
+_:node1c016l4n0x656 sp:varName "expected" .
 
 _:node1c016l4n0x655 sp:arg1 _:node1c016l4n0x657 .
 
-_:node1c016l4n0x657 sp:varName "actual"^^xsd:string .
+_:node1c016l4n0x657 sp:varName "actual" .
 
 _:node1c016l4n0x654 sp:arg1 _:node1c016l4n0x658 .
 
 _:node1c016l4n0x658 a sp:bound ;
 	sp:arg1 _:node1c016l4n0x659 .
 
-_:node1c016l4n0x659 sp:varName "expected"^^xsd:string .
+_:node1c016l4n0x659 sp:varName "expected" .
 
 _:node1c016l4n0x653 sp:arg1 _:node1c016l4n0x660 .
 
@@ -3280,14 +3280,14 @@ _:node1c016l4n0x660 a sp:ne ;
 _:node1c016l4n0x661 a sp:bound ;
 	sp:arg1 _:node1c016l4n0x662 .
 
-_:node1c016l4n0x662 sp:varName "actual"^^xsd:string .
+_:node1c016l4n0x662 sp:varName "actual" .
 
 _:node1c016l4n0x660 sp:arg1 _:node1c016l4n0x663 .
 
 _:node1c016l4n0x663 a sp:bound ;
 	sp:arg1 _:node1c016l4n0x664 .
 
-_:node1c016l4n0x664 sp:varName "expected"^^xsd:string .
+_:node1c016l4n0x664 sp:varName "expected" .
 
 _:node1c016l4n0x652 rdf:rest rdf:nil .
 
@@ -3295,19 +3295,19 @@ _:node1c016l4n0x635 sp:resultVariables _:node1c016l4n0x666 .
 
 _:node1c016l4n0x666 rdf:first _:node1c016l4n0x665 .
 
-_:node1c016l4n0x665 sp:varName "testCase"^^xsd:string .
+_:node1c016l4n0x665 sp:varName "testCase" .
 
 _:node1c016l4n0x666 rdf:rest _:node1c016l4n0x668 .
 
 _:node1c016l4n0x668 rdf:first _:node1c016l4n0x667 .
 
-_:node1c016l4n0x667 sp:varName "expected"^^xsd:string .
+_:node1c016l4n0x667 sp:varName "expected" .
 
 _:node1c016l4n0x668 rdf:rest _:node1c016l4n0x670 .
 
 _:node1c016l4n0x670 rdf:first _:node1c016l4n0x669 .
 
-_:node1c016l4n0x669 sp:varName "actual"^^xsd:string .
+_:node1c016l4n0x669 sp:varName "actual" .
 
 _:node1c016l4n0x670 rdf:rest rdf:nil .
 
@@ -3323,28 +3323,28 @@ sp:substr a spin:Function ;
 	spin:constraint _:node1c016l4n0x672 .
 
 _:node1c016l4n0x672 a spl:Argument ;
-	rdfs:comment "The start index."^^xsd:string ;
+	rdfs:comment "The start index." ;
 	spl:valueType xsd:integer ;
 	spl:predicate sp:arg2 .
 
-sp:substr rdfs:comment "Gets the sub-string of a given string. The index of the first character is 1."^^xsd:string ;
+sp:substr rdfs:comment "Gets the sub-string of a given string. The index of the first character is 1." ;
 	spin:constraint _:node1c016l4n0x673 .
 
 _:node1c016l4n0x673 a spl:Argument ;
-	rdfs:comment "The input string."^^xsd:string ;
+	rdfs:comment "The input string." ;
 	spl:valueType xsd:string ;
 	spl:predicate sp:arg1 .
 
 sp:substr spin:constraint _:node1c016l4n0x674 .
 
 _:node1c016l4n0x674 a spl:Argument ;
-	rdfs:comment "The end index."^^xsd:string ;
+	rdfs:comment "The end index." ;
 	spl:valueType xsd:integer ;
 	spl:predicate sp:arg3 ;
 	spl:optional "true"^^xsd:boolean .
 
-sp:substr rdfs:label "substr"^^xsd:string ;
-	spin:symbol "SUBSTR"^^xsd:string ;
+sp:substr rdfs:label "substr" ;
+	spin:symbol "SUBSTR" ;
 	rdfs:seeAlso <http://www.w3.org/TR/sparql11-query/#func-substr> ;
 	spin:returnType xsd:string ;
 	rdfs:subClassOf spl:StringFunctions .
@@ -3359,19 +3359,19 @@ _:node1c016l4n0x675 a spl:instanceOf ;
 
 spl:objectSubProp a spin:Function ;
 	rdfs:subClassOf spl:OntologyFunctions ;
-	rdfs:label "object sub prop"^^xsd:string ;
-	rdfs:comment "Gets the object of a given subject (?arg1) / predicate (?arg2) combination, also taking the sub-properties of ?arg2 into account. Note that if multiple values are present then the result might be unpredictably random."^^xsd:string ;
+	rdfs:label "object sub prop" ;
+	rdfs:comment "Gets the object of a given subject (?arg1) / predicate (?arg2) combination, also taking the sub-properties of ?arg2 into account. Note that if multiple values are present then the result might be unpredictably random." ;
 	spin:constraint _:node1c016l4n0x676 .
 
 _:node1c016l4n0x676 a spl:Argument ;
-	rdfs:comment "The predicate to get the object of (including sub-properties of it)."^^xsd:string ;
+	rdfs:comment "The predicate to get the object of (including sub-properties of it)." ;
 	spl:valueType rdf:Property ;
 	spl:predicate sp:arg2 .
 
 spl:objectSubProp spin:constraint _:node1c016l4n0x677 .
 
 _:node1c016l4n0x677 a spl:Argument ;
-	rdfs:comment "The subject to get the object from."^^xsd:string ;
+	rdfs:comment "The subject to get the object from." ;
 	spl:valueType rdfs:Resource ;
 	spl:predicate sp:arg1 .
 
@@ -3385,7 +3385,7 @@ _:node1c016l4n0x680 rdf:first _:node1c016l4n0x679 .
 _:node1c016l4n0x679 a sp:TriplePath ;
 	sp:subject _:node1c016l4n0x681 .
 
-_:node1c016l4n0x681 sp:varName "property"^^xsd:string .
+_:node1c016l4n0x681 sp:varName "property" .
 
 _:node1c016l4n0x679 sp:path _:node1c016l4n0x682 .
 
@@ -3403,11 +3403,11 @@ _:node1c016l4n0x684 rdf:first _:node1c016l4n0x683 .
 _:node1c016l4n0x683 sp:subject spin:_arg1 ;
 	sp:predicate _:node1c016l4n0x685 .
 
-_:node1c016l4n0x685 sp:varName "property"^^xsd:string .
+_:node1c016l4n0x685 sp:varName "property" .
 
 _:node1c016l4n0x683 sp:object _:node1c016l4n0x686 .
 
-_:node1c016l4n0x686 sp:varName "object"^^xsd:string .
+_:node1c016l4n0x686 sp:varName "object" .
 
 _:node1c016l4n0x684 rdf:rest rdf:nil .
 
@@ -3415,15 +3415,15 @@ _:node1c016l4n0x678 sp:resultVariables _:node1c016l4n0x688 .
 
 _:node1c016l4n0x688 rdf:first _:node1c016l4n0x687 .
 
-_:node1c016l4n0x687 sp:varName "object"^^xsd:string .
+_:node1c016l4n0x687 sp:varName "object" .
 
 _:node1c016l4n0x688 rdf:rest rdf:nil .
 
 sp:sub a spin:Function ;
 	rdfs:subClassOf spl:MathematicalFunctions ;
-	rdfs:label "sub"^^xsd:string ;
+	rdfs:label "sub" ;
 	rdfs:comment "Returns the arithmetic difference of its operands." ;
-	spin:symbol "-"^^xsd:string ;
+	spin:symbol "-" ;
 	spin:constraint _:node1c016l4n0x689 .
 
 _:node1c016l4n0x689 a spl:Argument ;
@@ -3440,19 +3440,19 @@ _:node1c016l4n0x690 a spl:Argument ;
 
 spl:subjectCount a spin:Function ;
 	rdfs:subClassOf spl:OntologyFunctions ;
-	rdfs:label "subjectCount"^^xsd:string ;
-	rdfs:comment "Gets the number of values of a given property (?arg1) at a given object (?arg2). The result is the number of matches of (?subject, ?arg1, ?arg2)."^^xsd:string ;
+	rdfs:label "subjectCount" ;
+	rdfs:comment "Gets the number of values of a given property (?arg1) at a given object (?arg2). The result is the number of matches of (?subject, ?arg1, ?arg2)." ;
 	spin:returnType xsd:integer ;
 	spin:constraint _:node1c016l4n0x691 .
 
 _:node1c016l4n0x691 a spl:Argument ;
-	rdfs:comment "the object to get the number of subjects of"^^xsd:string ;
+	rdfs:comment "the object to get the number of subjects of" ;
 	spl:predicate sp:arg2 .
 
 spl:subjectCount spin:constraint _:node1c016l4n0x692 .
 
 _:node1c016l4n0x692 a spl:Argument ;
-	rdfs:comment "the predicate to get the number of subjects of"^^xsd:string ;
+	rdfs:comment "the predicate to get the number of subjects of" ;
 	spl:valueType rdf:Property ;
 	spl:predicate sp:arg1 .
 
@@ -3465,7 +3465,7 @@ _:node1c016l4n0x695 rdf:first _:node1c016l4n0x694 .
 
 _:node1c016l4n0x694 sp:subject _:node1c016l4n0x696 .
 
-_:node1c016l4n0x696 sp:varName "subject"^^xsd:string .
+_:node1c016l4n0x696 sp:varName "subject" .
 
 _:node1c016l4n0x694 sp:predicate spin:_arg1 ;
 	sp:object spin:_arg2 .
@@ -3476,20 +3476,20 @@ _:node1c016l4n0x693 sp:resultVariables _:node1c016l4n0x698 .
 
 _:node1c016l4n0x698 rdf:first _:node1c016l4n0x697 .
 
-_:node1c016l4n0x697 sp:varName "result"^^xsd:string ;
+_:node1c016l4n0x697 sp:varName "result" ;
 	sp:expression _:node1c016l4n0x699 .
 
 _:node1c016l4n0x699 a sp:Count ;
 	sp:expression _:node1c016l4n0x700 .
 
-_:node1c016l4n0x700 sp:varName "subject"^^xsd:string .
+_:node1c016l4n0x700 sp:varName "subject" .
 
 _:node1c016l4n0x698 rdf:rest rdf:nil .
 
 spl:NonExistencePropertyPairConstraint a spl:ConstraintTemplate ;
 	rdfs:subClassOf spl:PropertyPairConstraintTemplates ;
-	rdfs:label "Non-existence property pair constraint"^^xsd:string ;
-	spin:labelTemplate "The property {?property} must have no values as long as {?otherProperty} has none"^^xsd:string ;
+	rdfs:label "Non-existence property pair constraint" ;
+	spin:labelTemplate "The property {?property} must have no values as long as {?otherProperty} has none" ;
 	spin:body _:node1c016l4n0x701 .
 
 _:node1c016l4n0x701 a sp:Construct ;
@@ -3508,11 +3508,11 @@ _:node1c016l4n0x706 rdf:first _:node1c016l4n0x705 .
 _:node1c016l4n0x705 sp:subject spin:_this ;
 	sp:predicate _:node1c016l4n0x707 .
 
-_:node1c016l4n0x707 sp:varName "otherProperty"^^xsd:string .
+_:node1c016l4n0x707 sp:varName "otherProperty" .
 
 _:node1c016l4n0x705 sp:object _:node1c016l4n0x708 .
 
-_:node1c016l4n0x708 sp:varName "someValue"^^xsd:string .
+_:node1c016l4n0x708 sp:varName "someValue" .
 
 _:node1c016l4n0x706 rdf:rest rdf:nil .
 
@@ -3531,11 +3531,11 @@ _:node1c016l4n0x713 rdf:first _:node1c016l4n0x712 .
 _:node1c016l4n0x712 sp:subject spin:_this ;
 	sp:predicate _:node1c016l4n0x714 .
 
-_:node1c016l4n0x714 sp:varName "property"^^xsd:string .
+_:node1c016l4n0x714 sp:varName "property" .
 
 _:node1c016l4n0x712 sp:object _:node1c016l4n0x715 .
 
-_:node1c016l4n0x715 sp:varName "object"^^xsd:string .
+_:node1c016l4n0x715 sp:varName "object" .
 
 _:node1c016l4n0x713 rdf:rest rdf:nil .
 
@@ -3546,7 +3546,7 @@ _:node1c016l4n0x717 rdf:first _:node1c016l4n0x716 .
 _:node1c016l4n0x716 a sp:Bind ;
 	sp:variable _:node1c016l4n0x718 .
 
-_:node1c016l4n0x718 sp:varName "message"^^xsd:string .
+_:node1c016l4n0x718 sp:varName "message" .
 
 _:node1c016l4n0x716 sp:expression _:node1c016l4n0x719 .
 
@@ -3554,7 +3554,7 @@ _:node1c016l4n0x719 a sp:concat ;
 	sp:arg3 "has none" ;
 	sp:arg2 _:node1c016l4n0x720 .
 
-_:node1c016l4n0x720 sp:varName "otherProperty"^^xsd:string .
+_:node1c016l4n0x720 sp:varName "otherProperty" .
 
 _:node1c016l4n0x719 sp:arg1 "Property must have no values because" .
 
@@ -3584,7 +3584,7 @@ _:node1c016l4n0x726 sp:subject _:node1c016l4n0x723 ;
 	sp:predicate spin:violationPath ;
 	sp:object _:node1c016l4n0x728 .
 
-_:node1c016l4n0x728 sp:varName "property"^^xsd:string .
+_:node1c016l4n0x728 sp:varName "property" .
 
 _:node1c016l4n0x727 rdf:rest _:node1c016l4n0x730 .
 
@@ -3594,27 +3594,27 @@ _:node1c016l4n0x729 sp:subject _:node1c016l4n0x723 ;
 	sp:predicate rdfs:label ;
 	sp:object _:node1c016l4n0x731 .
 
-_:node1c016l4n0x731 sp:varName "message"^^xsd:string .
+_:node1c016l4n0x731 sp:varName "message" .
 
 _:node1c016l4n0x730 rdf:rest rdf:nil .
 
 sp:abs a spin:Function ;
 	rdfs:subClassOf spl:MathematicalFunctions ;
 	rdfs:seeAlso <http://www.w3.org/TR/sparql11-query/#func-abs> ;
-	rdfs:label "abs"^^xsd:string ;
-	rdfs:comment "Returns the absolute value of arg. An error is raised if arg is not a numeric value."^^xsd:string ;
-	spin:symbol "abs"^^xsd:string ;
+	rdfs:label "abs" ;
+	rdfs:comment "Returns the absolute value of arg. An error is raised if arg is not a numeric value." ;
+	spin:symbol "abs" ;
 	spin:constraint _:node1c016l4n0x732 .
 
 _:node1c016l4n0x732 a spl:Argument ;
-	rdfs:comment "The input value."^^xsd:string ;
+	rdfs:comment "The input value." ;
 	spl:predicate sp:arg1 .
 
 sp:add a spin:Function ;
 	rdfs:subClassOf spl:MathematicalFunctions ;
-	rdfs:label "add"^^xsd:string ;
+	rdfs:label "add" ;
 	rdfs:comment "Returns the arithmetic sum of its operands." ;
-	spin:symbol "+"^^xsd:string ;
+	spin:symbol "+" ;
 	spin:constraint _:node1c016l4n0x733 .
 
 _:node1c016l4n0x733 a spl:Argument ;
@@ -3632,14 +3632,14 @@ _:node1c016l4n0x734 a spl:Argument ;
 sp:sha512 a spin:Function ;
 	rdfs:subClassOf spl:MiscFunctions ;
 	rdfs:seeAlso <http://www.w3.org/TR/sparql11-query/#func-sha512> ;
-	rdfs:label "sha512"^^xsd:string ;
-	rdfs:comment "Returns the SHA512 checksum, as a hex digit string, calculated on the UTF-8 representation of the simple literal or lexical form of the xsd:string. Hex digits SHOULD be in lower case."^^xsd:string ;
-	spin:symbol "SHA512"^^xsd:string ;
+	rdfs:label "sha512" ;
+	rdfs:comment "Returns the SHA512 checksum, as a hex digit string, calculated on the UTF-8 representation of the simple literal or lexical form of the xsd:string. Hex digits SHOULD be in lower case." ;
+	spin:symbol "SHA512" ;
 	spin:returnType xsd:string ;
 	spin:constraint _:node1c016l4n0x735 .
 
 _:node1c016l4n0x735 a spl:Argument ;
-	rdfs:comment "The input literal."^^xsd:string ;
+	rdfs:comment "The input literal." ;
 	spl:predicate sp:arg1 .
 
 sp:UUID a spin:Function ;
@@ -3647,20 +3647,20 @@ sp:UUID a spin:Function ;
 
 spl:URIFunctions a spin:Function ;
 	rdfs:subClassOf spin:Functions ;
-	rdfs:label "URI functions"^^xsd:string ;
-	rdfs:comment "A collection of functions that create URI resources."^^xsd:string ;
+	rdfs:label "URI functions" ;
+	rdfs:comment "A collection of functions that create URI resources." ;
 	spin:abstract "true"^^xsd:boolean .
 
-sp:UUID rdfs:label "UUID"^^xsd:string ;
-	rdfs:comment "Returns a fresh IRI from the UUID URN scheme. Each call of UUID() returns a different UUID. It must not be the \"nil\" UUID (all zeroes). The variant and version of the UUID is implementation dependent."^^xsd:string ;
-	spin:symbol "UUID"^^xsd:string ;
+sp:UUID rdfs:label "UUID" ;
+	rdfs:comment "Returns a fresh IRI from the UUID URN scheme. Each call of UUID() returns a different UUID. It must not be the \"nil\" UUID (all zeroes). The variant and version of the UUID is implementation dependent." ;
+	spin:symbol "UUID" ;
 	spin:returnType rdfs:Resource .
 
 sp:langMatches a spin:Function ;
 	rdfs:subClassOf spl:StringFunctions ;
-	rdfs:label "langMatches"^^xsd:string ;
+	rdfs:label "langMatches" ;
 	rdfs:comment "Returns true if language-tag (first argument) matches language-range (second argument) per the basic filtering scheme defined in [RFC4647] section 3.3.1." ;
-	spin:symbol "langMatches"^^xsd:string ;
+	spin:symbol "langMatches" ;
 	spin:returnType xsd:boolean ;
 	spin:constraint _:node1c016l4n0x736 .
 
@@ -3679,52 +3679,52 @@ _:node1c016l4n0x737 a spl:Argument ;
 sp:strdt a spin:Function ;
 	rdfs:subClassOf spl:OntologyFunctions ;
 	rdfs:seeAlso <http://www.w3.org/TR/sparql11-query/#func-strdt> ;
-	rdfs:label "strdt"^^xsd:string ;
-	rdfs:comment "Constructs a literal with lexical form and type as specified by the arguments."^^xsd:string ;
-	spin:symbol "STRDT"^^xsd:string ;
+	rdfs:label "strdt" ;
+	rdfs:comment "Constructs a literal with lexical form and type as specified by the arguments." ;
+	spin:symbol "STRDT" ;
 	spin:constraint _:node1c016l4n0x738 .
 
 _:node1c016l4n0x738 a spl:Argument ;
-	rdfs:comment "The datatype of the new literal."^^xsd:string ;
+	rdfs:comment "The datatype of the new literal." ;
 	spl:valueType rdfs:Datatype ;
 	spl:predicate sp:arg2 .
 
 sp:strdt spin:constraint _:node1c016l4n0x739 .
 
 _:node1c016l4n0x739 a spl:Argument ;
-	rdfs:comment "The lexical form of the new literal."^^xsd:string ;
+	rdfs:comment "The lexical form of the new literal." ;
 	spl:valueType xsd:string ;
 	spl:predicate sp:arg1 .
 
 sp:contains a spin:Function ;
 	rdfs:subClassOf spl:StringFunctions ;
 	rdfs:seeAlso <http://www.w3.org/TR/sparql11-query/#func-contains> ;
-	rdfs:label "contains"^^xsd:string ;
-	rdfs:comment "Returns an xsd:boolean indicating whether or not the value of ?arg1 contains (at the beginning, at the end, or anywhere within) at least one sequence of collation units that provides a minimal match to the collation units in the value of ?arg2, according to the collation that is used."^^xsd:string ;
-	spin:symbol "CONTAINS"^^xsd:string ;
+	rdfs:label "contains" ;
+	rdfs:comment "Returns an xsd:boolean indicating whether or not the value of ?arg1 contains (at the beginning, at the end, or anywhere within) at least one sequence of collation units that provides a minimal match to the collation units in the value of ?arg2, according to the collation that is used." ;
+	spin:symbol "CONTAINS" ;
 	spin:constraint _:node1c016l4n0x740 .
 
 _:node1c016l4n0x740 a spl:Argument ;
-	rdfs:comment "The sub-string to search for in the input string."^^xsd:string ;
+	rdfs:comment "The sub-string to search for in the input string." ;
 	spl:valueType xsd:string ;
 	spl:predicate sp:arg2 .
 
 sp:contains spin:constraint _:node1c016l4n0x741 .
 
 _:node1c016l4n0x741 a spl:Argument ;
-	rdfs:comment "The input string."^^xsd:string ;
+	rdfs:comment "The input string." ;
 	spl:valueType xsd:string ;
 	spl:predicate sp:arg1 .
 
 spl:isUntypedLiteral a spin:Function ;
 	rdfs:subClassOf spl:BooleanFunctions ;
-	rdfs:label "isUntypedLiteral"^^xsd:string ;
+	rdfs:label "isUntypedLiteral" ;
 	rdfs:comment "Checks whether a given literal is untyped. This function was introduced because the built-in datatype operand in SPARQL casts untyped literals to xsd:string, making it impossible to check it this way. This function here uses a work-around using sameTerm instead." ;
 	spin:returnType xsd:boolean ;
 	spin:constraint _:node1c016l4n0x742 .
 
 _:node1c016l4n0x742 a spl:Argument ;
-	rdfs:comment "The literal to test."^^xsd:string ;
+	rdfs:comment "The literal to test." ;
 	spl:valueType rdfs:Literal ;
 	spl:predicate sp:arg1 .
 
@@ -3770,7 +3770,7 @@ _:node1c016l4n0x752 a spl:Argument ;
 spin:eval spin:constraint _:node1c016l4n0x753 .
 
 _:node1c016l4n0x753 a spl:Argument ;
-	rdfs:comment "The expression to evaluate. Should be a sp:Select, sp:Ask, a sp:Variable or an instance of a SPARQL function class, but may also be a simple RDF value."^^xsd:string ;
+	rdfs:comment "The expression to evaluate. Should be a sp:Select, sp:Ask, a sp:Variable or an instance of a SPARQL function class, but may also be a simple RDF value." ;
 	spl:predicate sp:arg1 .
 
 _:node1c016l4n0x754 a sp:eq ;
@@ -3779,25 +3779,25 @@ _:node1c016l4n0x754 a sp:eq ;
 
 sp:if a spin:Function ;
 	rdfs:subClassOf spl:MiscFunctions ;
-	rdfs:label "IF"^^xsd:string ;
-	rdfs:comment "The SPARQL 1.1 built-in function IF."^^xsd:string ;
-	spin:symbol "IF"^^xsd:string ;
+	rdfs:label "IF" ;
+	rdfs:comment "The SPARQL 1.1 built-in function IF." ;
+	spin:symbol "IF" ;
 	spin:constraint _:node1c016l4n0x755 .
 
 _:node1c016l4n0x755 a spl:Argument ;
-	rdfs:comment "The function result if ?arg1 is false."^^xsd:string ;
+	rdfs:comment "The function result if ?arg1 is false." ;
 	spl:predicate sp:arg3 .
 
 sp:if spin:constraint _:node1c016l4n0x756 .
 
 _:node1c016l4n0x756 a spl:Argument ;
-	rdfs:comment "The function result if ?arg1 is true."^^xsd:string ;
+	rdfs:comment "The function result if ?arg1 is true." ;
 	spl:predicate sp:arg2 .
 
 sp:if spin:constraint _:node1c016l4n0x757 .
 
 _:node1c016l4n0x757 a spl:Argument ;
-	rdfs:comment "A condition to evaluate - if true then the ?arg2 will be returned, otherwise ?arg3."^^xsd:string ;
+	rdfs:comment "A condition to evaluate - if true then the ?arg2 will be returned, otherwise ?arg3." ;
 	spl:valueType xsd:boolean ;
 	spl:predicate sp:arg1 .
 
@@ -3809,7 +3809,7 @@ _:node1c016l4n0x758 a spl:Argument ;
 _:node1c016l4n0x759 a sp:TriplePath ;
 	sp:subject _:node1c016l4n0x760 .
 
-_:node1c016l4n0x760 sp:varName "class"^^xsd:string .
+_:node1c016l4n0x760 sp:varName "class" .
 
 _:node1c016l4n0x759 sp:path _:node1c016l4n0x761 .
 
@@ -3820,7 +3820,7 @@ _:node1c016l4n0x761 a sp:ModPath ;
 
 _:node1c016l4n0x759 sp:object spin:_arg2 .
 
-_:node1c016l4n0x762 sp:varName "object"^^xsd:string .
+_:node1c016l4n0x762 sp:varName "object" .
 
 _:node1c016l4n0x763 a spl:Argument ;
 	rdfs:comment "the first operand" ;
@@ -3855,7 +3855,7 @@ _:node1c016l4n0x770 a sp:or ;
 _:node1c016l4n0x771 a sp:eq ;
 	sp:arg2 _:node1c016l4n0x772 .
 
-_:node1c016l4n0x772 sp:varName "datatype"^^xsd:string .
+_:node1c016l4n0x772 sp:varName "datatype" .
 
 _:node1c016l4n0x771 sp:arg1 rdf:langString .
 
@@ -3867,7 +3867,7 @@ _:node1c016l4n0x773 a sp:not ;
 _:node1c016l4n0x774 a sp:bound ;
 	sp:arg1 _:node1c016l4n0x775 .
 
-_:node1c016l4n0x775 sp:varName "datatype"^^xsd:string .
+_:node1c016l4n0x775 sp:varName "datatype" .
 
 _:node1c016l4n0x767 sp:arg1 _:node1c016l4n0x776 .
 
@@ -3879,7 +3879,7 @@ _:node1c016l4n0x777 a sp:eq ;
 	sp:arg2 spin:_arg2 ;
 	sp:arg1 _:node1c016l4n0x778 .
 
-_:node1c016l4n0x778 sp:varName "datatype"^^xsd:string .
+_:node1c016l4n0x778 sp:varName "datatype" .
 
 _:node1c016l4n0x779 a sp:datatype ;
 	sp:arg1 spin:_arg1 .
@@ -3887,9 +3887,9 @@ _:node1c016l4n0x779 a sp:datatype ;
 _:node1c016l4n0x780 rdf:rest rdf:nil ;
 	rdf:first _:node1c016l4n0x781 .
 
-_:node1c016l4n0x781 sp:varName "object"^^xsd:string .
+_:node1c016l4n0x781 sp:varName "object" .
 
-_:node1c016l4n0x782 sp:varName "class"^^xsd:string .
+_:node1c016l4n0x782 sp:varName "class" .
 
 _:node1c016l4n0x783 rdf:rest rdf:nil ;
 	rdf:first _:node1c016l4n0x784 .
@@ -3898,21 +3898,21 @@ _:node1c016l4n0x784 sp:subject spin:_arg1 ;
 	sp:predicate spin:_arg2 ;
 	sp:object _:node1c016l4n0x785 .
 
-_:node1c016l4n0x785 sp:varName "object"^^xsd:string .
+_:node1c016l4n0x785 sp:varName "object" .
 
-_:node1c016l4n0x786 sp:varName "object"^^xsd:string .
+_:node1c016l4n0x786 sp:varName "object" .
 
 _:node1c016l4n0x787 rdf:rest rdf:nil ;
 	rdf:first _:node1c016l4n0x788 .
 
-_:node1c016l4n0x788 sp:varName "result"^^xsd:string ;
+_:node1c016l4n0x788 sp:varName "result" ;
 	sp:expression _:node1c016l4n0x789 .
 
 _:node1c016l4n0x789 a sp:Count ;
 	sp:expression _:node1c016l4n0x786 .
 
 _:node1c016l4n0x790 a spl:Argument ;
-	rdfs:comment "The predicate to get the object of."^^xsd:string ;
+	rdfs:comment "The predicate to get the object of." ;
 	spl:valueType rdf:Property ;
 	spl:predicate sp:arg2 .
 
@@ -3929,9 +3929,9 @@ _:node1c016l4n0x793 a spl:Argument ;
 
 sp:not a spin:Function ;
 	rdfs:subClassOf spl:BooleanFunctions ;
-	rdfs:label "not"^^xsd:string ;
+	rdfs:label "not" ;
 	rdfs:comment "Returns the boolean negation of the argument." ;
-	spin:symbol "!"^^xsd:string ;
+	spin:symbol "!" ;
 	spin:returnType xsd:boolean ;
 	spin:constraint _:node1c016l4n0x794 .
 
@@ -3941,7 +3941,7 @@ _:node1c016l4n0x794 a spl:Argument ;
 	spl:predicate sp:arg1 .
 
 spl:instanceOf a spin:Function ;
-	owl:versionInfo "Note that in TopBraid this function has been implemented in native Java code, for performance reasons."^^xsd:string ;
+	owl:versionInfo "Note that in TopBraid this function has been implemented in native Java code, for performance reasons." ;
 	spin:body _:node1c016l4n0x795 .
 
 _:node1c016l4n0x795 a sp:Ask ;
@@ -3999,7 +3999,7 @@ _:node1c016l4n0x809 rdf:rest _:node1c016l4n0x765 ;
 _:node1c016l4n0x810 a sp:Bind ;
 	sp:variable _:node1c016l4n0x811 .
 
-_:node1c016l4n0x811 sp:varName "datatype"^^xsd:string .
+_:node1c016l4n0x811 sp:varName "datatype" .
 
 _:node1c016l4n0x810 sp:expression _:node1c016l4n0x779 .
 
@@ -4028,7 +4028,7 @@ _:node1c016l4n0x815 a spl:Argument ;
 
 spl:instanceOf rdfs:comment "Checks whether a given resource (?arg1) has a given type (?arg2). In order to fulfill this condition, there must either be a triple ?arg1 rdf:type ?arg2, or ?instance rdf:type ?subClass where ?subClass is a subclass of ?arg2. If the first argument is a literal, then the second argument must be the matching XSD datatype." ;
 	spin:returnType xsd:boolean ;
-	spin:labelTemplate "{?arg1} instance of {?arg2}"^^xsd:string ;
+	spin:labelTemplate "{?arg1} instance of {?arg2}" ;
 	spin:constraint _:node1c016l4n0x816 .
 
 _:node1c016l4n0x816 a spl:Argument ;
@@ -4036,7 +4036,7 @@ _:node1c016l4n0x816 a spl:Argument ;
 	spl:valueType rdfs:Resource ;
 	spl:predicate sp:arg1 .
 
-spl:instanceOf rdfs:label "instanceOf"^^xsd:string ;
+spl:instanceOf rdfs:label "instanceOf" ;
 	rdfs:subClassOf spl:BooleanFunctions .
 
 _:node1c016l4n0x817 a sp:Select ;
@@ -4044,20 +4044,20 @@ _:node1c016l4n0x817 a sp:Select ;
 	sp:resultVariables _:node1c016l4n0x780 .
 
 _:node1c016l4n0x818 a spl:Argument ;
-	rdfs:comment "The subject to get the object from."^^xsd:string ;
+	rdfs:comment "The subject to get the object from." ;
 	spl:valueType rdfs:Resource ;
 	spl:predicate sp:arg1 .
 
 _:node1c016l4n0x819 a spl:Argument ;
-	rdfs:comment "the subject to get the number of objects of"^^xsd:string ;
+	rdfs:comment "the subject to get the number of objects of" ;
 	spl:valueType rdfs:Resource ;
 	spl:predicate sp:arg1 .
 
 sp:lt a spin:Function ;
 	rdfs:subClassOf spl:BooleanFunctions ;
-	rdfs:label "lt"^^xsd:string ;
+	rdfs:label "lt" ;
 	rdfs:comment "Returns true if ?arg1 < ?arg2." ;
-	spin:symbol "<"^^xsd:string ;
+	spin:symbol "<" ;
 	spin:returnType xsd:boolean ;
 	spin:constraint _:node1c016l4n0x758 , _:node1c016l4n0x820 .
 
@@ -4068,9 +4068,9 @@ _:node1c016l4n0x820 a spl:Argument ;
 
 sp:eq a spin:Function ;
 	rdfs:subClassOf spl:BooleanFunctions ;
-	rdfs:label "eq"^^xsd:string ;
+	rdfs:label "eq" ;
 	rdfs:comment "Returns true if both arguments are equal." ;
-	spin:symbol "="^^xsd:string ;
+	spin:symbol "=" ;
 	spin:returnType xsd:boolean ;
 	spin:constraint _:node1c016l4n0x821 .
 
@@ -4088,16 +4088,16 @@ _:node1c016l4n0x822 a spl:Argument ;
 
 sp:notExists a spin:Function ;
 	rdfs:subClassOf spl:BooleanFunctions ;
-	rdfs:label "NOT EXISTS"^^xsd:string ;
-	rdfs:comment "The filter function NOT EXISTS. The graph pattern is stored in sp:elements."^^xsd:string ;
-	spin:symbol "NOT EXISTS"^^xsd:string ;
+	rdfs:label "NOT EXISTS" ;
+	rdfs:comment "The filter function NOT EXISTS. The graph pattern is stored in sp:elements." ;
+	spin:symbol "NOT EXISTS" ;
 	spin:returnType xsd:boolean .
 
 sp:concat a spin:Function ;
 	rdfs:subClassOf spl:StringFunctions ;
-	rdfs:label "concat"^^xsd:string ;
-	rdfs:comment "The CONCAT built-in function. Creates a single string by concatenating all arguments from left to right. Note that if any one of the arguments is unbound (null) then the whole result string will be unbound."^^xsd:string ;
-	spin:symbol "CONCAT"^^xsd:string ;
+	rdfs:label "concat" ;
+	rdfs:comment "The CONCAT built-in function. Creates a single string by concatenating all arguments from left to right. Note that if any one of the arguments is unbound (null) then the whole result string will be unbound." ;
+	spin:symbol "CONCAT" ;
 	spin:returnType xsd:string .
 
 _:node1c016l4n0x823 a spl:Argument ;
@@ -4111,9 +4111,9 @@ _:node1c016l4n0x824 a spl:Argument ;
 
 sp:isIRI a spin:Function ;
 	rdfs:subClassOf spl:BooleanFunctions ;
-	rdfs:label "isIRI"^^xsd:string ;
+	rdfs:label "isIRI" ;
 	rdfs:comment "Checks whether a given node is a IRI node." ;
-	spin:symbol "isIRI"^^xsd:string ;
+	spin:symbol "isIRI" ;
 	spin:returnType xsd:boolean ;
 	spin:constraint _:node1c016l4n0x825 .
 
@@ -4137,9 +4137,9 @@ _:node1c016l4n0x828 a spl:Argument ;
 
 sp:datatype a spin:Function ;
 	rdfs:subClassOf spl:OntologyFunctions ;
-	rdfs:label "datatype"^^xsd:string ;
+	rdfs:label "datatype" ;
 	rdfs:comment "Returns the datatype IRI of argument ?arg1; returns xsd:string if the parameter is a simple literal." ;
-	spin:symbol "datatype"^^xsd:string ;
+	spin:symbol "datatype" ;
 	spin:returnType rdfs:Class ;
 	spin:constraint _:node1c016l4n0x829 .
 
@@ -4150,9 +4150,9 @@ _:node1c016l4n0x829 a spl:Argument ;
 
 sp:gt a spin:Function ;
 	rdfs:subClassOf spl:BooleanFunctions ;
-	rdfs:label "gt"^^xsd:string ;
+	rdfs:label "gt" ;
 	rdfs:comment "Returns true if ?arg1 > arg2." ;
-	spin:symbol ">"^^xsd:string ;
+	spin:symbol ">" ;
 	spin:returnType xsd:boolean ;
 	spin:constraint _:node1c016l4n0x764 , _:node1c016l4n0x824 .
 
@@ -4164,9 +4164,9 @@ _:node1c016l4n0x830 a spl:Argument ;
 
 sp:ne a spin:Function ;
 	rdfs:subClassOf spl:BooleanFunctions ;
-	rdfs:label "ne"^^xsd:string ;
+	rdfs:label "ne" ;
 	rdfs:comment "Returns true if ?arg1 != ?arg2." ;
-	spin:symbol "!="^^xsd:string ;
+	spin:symbol "!=" ;
 	spin:returnType xsd:boolean ;
 	spin:constraint _:node1c016l4n0x831 .
 
@@ -4177,18 +4177,18 @@ _:node1c016l4n0x831 a spl:Argument ;
 sp:ne spin:constraint _:node1c016l4n0x763 .
 
 spl:object a spin:Function ;
-	owl:versionInfo "Note that in TopBraid this function has been implemented in native Java code, for performance reasons."^^xsd:string ;
+	owl:versionInfo "Note that in TopBraid this function has been implemented in native Java code, for performance reasons." ;
 	rdfs:subClassOf spl:OntologyFunctions ;
-	rdfs:label "object"^^xsd:string ;
-	rdfs:comment "Gets the object of a given subject (?arg1) / predicate (?arg2) combination. Note that if multiple values are present then the result might be unpredictably random."^^xsd:string ;
+	rdfs:label "object" ;
+	rdfs:comment "Gets the object of a given subject (?arg1) / predicate (?arg2) combination. Note that if multiple values are present then the result might be unpredictably random." ;
 	spin:constraint _:node1c016l4n0x790 , _:node1c016l4n0x818 ;
 	spin:body _:node1c016l4n0x817 .
 
 sp:bound a spin:Function ;
 	rdfs:subClassOf spl:BooleanFunctions ;
-	rdfs:label "bound"^^xsd:string ;
+	rdfs:label "bound" ;
 	rdfs:comment "Returns true if ?arg1 is bound to a value. Returns false otherwise. Variables with the value NaN or INF are considered bound." ;
-	spin:symbol "bound"^^xsd:string ;
+	spin:symbol "bound" ;
 	spin:returnType xsd:boolean ;
 	spin:constraint _:node1c016l4n0x832 .
 
@@ -4198,7 +4198,7 @@ _:node1c016l4n0x832 a spl:Argument ;
 
 spl:objectCount a spin:Function ;
 	rdfs:subClassOf spl:OntologyFunctions ;
-	rdfs:label "objectCount"^^xsd:string ;
+	rdfs:label "objectCount" ;
 	rdfs:comment "Gets the number of values of a given property (?arg2) at a given subject (?arg1). The result is the number of matches of (?arg1, ?arg2, ?object)." ;
 	spin:returnType xsd:integer ;
 	spin:constraint _:node1c016l4n0x827 , _:node1c016l4n0x819 ;
@@ -4226,14 +4226,14 @@ sp:regex a spin:Function ;
 	spin:constraint _:node1c016l4n0x830 ;
 	rdfs:subClassOf spl:StringFunctions ;
 	spin:constraint _:node1c016l4n0x834 ;
-	spin:symbol "regex"^^xsd:string ;
-	rdfs:label "regex"^^xsd:string .
+	spin:symbol "regex" ;
+	rdfs:label "regex" .
 
 sp:and a spin:Function ;
 	rdfs:subClassOf spl:BooleanFunctions ;
-	rdfs:label "and"^^xsd:string ;
+	rdfs:label "and" ;
 	rdfs:comment "Return the logical AND between two (boolean) operands." ;
-	spin:symbol "&&"^^xsd:string ;
+	spin:symbol "&&" ;
 	spin:returnType xsd:boolean ;
 	spin:constraint _:node1c016l4n0x835 , _:node1c016l4n0x826 .
 
@@ -4244,17 +4244,17 @@ _:node1c016l4n0x836 a spl:Argument ;
 
 sp:isBlank a spin:Function ;
 	rdfs:subClassOf spl:BooleanFunctions ;
-	rdfs:label "isBlank"^^xsd:string ;
+	rdfs:label "isBlank" ;
 	rdfs:comment "Checks whether a given node is a blank node." ;
-	spin:symbol "isBlank"^^xsd:string ;
+	spin:symbol "isBlank" ;
 	spin:returnType xsd:boolean ;
 	spin:constraint _:node1c016l4n0x793 .
 
 sp:or a spin:Function ;
 	rdfs:subClassOf spl:BooleanFunctions ;
-	rdfs:label "or"^^xsd:string ;
+	rdfs:label "or" ;
 	rdfs:comment "Returns the logical OR between two (boolean) operands." ;
-	spin:symbol "||"^^xsd:string ;
+	spin:symbol "||" ;
 	spin:returnType xsd:boolean ;
 	spin:constraint _:node1c016l4n0x836 , _:node1c016l4n0x837 .
 
@@ -4270,23 +4270,23 @@ _:node1c016l4n0x838 a spl:Argument ;
 sp:sameTerm a spin:Function ;
 	rdfs:subClassOf spl:BooleanFunctions ;
 	rdfs:seeAlso <http://www.w3.org/TR/sparql11-query/#func-sameTerm> ;
-	rdfs:label "same term"^^xsd:string ;
-	rdfs:comment "Returns TRUE if ?arg1 and ?arg2 are the same RDF term as defined in Resource Description Framework (RDF): Concepts and Abstract Syntax; returns FALSE otherwise."^^xsd:string ;
-	spin:symbol "sameTerm"^^xsd:string ;
+	rdfs:label "same term" ;
+	rdfs:comment "Returns TRUE if ?arg1 and ?arg2 are the same RDF term as defined in Resource Description Framework (RDF): Concepts and Abstract Syntax; returns FALSE otherwise." ;
+	spin:symbol "sameTerm" ;
 	spin:returnType xsd:boolean ;
 	spin:constraint _:node1c016l4n0x838 , _:node1c016l4n0x828 .
 
 sp:exists a spin:Function ;
 	rdfs:subClassOf spl:BooleanFunctions ;
-	rdfs:label "EXISTS"^^xsd:string ;
-	rdfs:comment "The filter function EXISTS. The graph pattern is stored in sp:elements."^^xsd:string ;
-	spin:symbol "EXISTS"^^xsd:string ;
+	rdfs:label "EXISTS" ;
+	rdfs:comment "The filter function EXISTS. The graph pattern is stored in sp:elements." ;
+	spin:symbol "EXISTS" ;
 	spin:returnType xsd:boolean .
 
 sp:isLiteral a spin:Function ;
 	rdfs:subClassOf spl:BooleanFunctions ;
-	rdfs:label "isLiteral"^^xsd:string ;
+	rdfs:label "isLiteral" ;
 	rdfs:comment "Checks whether a given node is a literal." ;
-	spin:symbol "isLiteral"^^xsd:string ;
+	spin:symbol "isLiteral" ;
 	spin:returnType xsd:boolean ;
 	spin:constraint _:node1c016l4n0x823 .

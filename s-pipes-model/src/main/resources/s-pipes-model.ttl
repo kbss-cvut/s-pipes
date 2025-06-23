@@ -23,7 +23,7 @@ ddo:has-input rdf:type owl:ObjectProperty .
 ddo:has-next rdf:type owl:ObjectProperty ;
              rdfs:domain ddo:module-execution ;
              rdfs:range ddo:module-execution ;
-             rdfs:label "has next"^^xsd:string .
+             rdfs:label "has next" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-output
@@ -34,21 +34,21 @@ ddo:has-output rdf:type owl:ObjectProperty .
 ddo:has-part rdf:type owl:ObjectProperty ;
              rdfs:domain ddo:pipeline-execution ;
              rdfs:range ddo:module-execution ;
-             rdfs:label "has part"^^xsd:string .
+             rdfs:label "has part" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-rdf4j-input
 ddo:has-rdf4j-input rdf:type owl:ObjectProperty ;
                     rdfs:domain ddo:module-execution ;
                     rdfs:range ddo:source-dataset-snapshot ;
-                    rdfs:label "has rdf4j input"^^xsd:string .
+                    rdfs:label "has rdf4j input" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-rdf4j-output
 ddo:has-rdf4j-output rdf:type owl:ObjectProperty ;
                      rdfs:domain ddo:module-execution ;
                      rdfs:range ddo:target-dataset-snapshot ;
-                     rdfs:label "has rdf4j output"^^xsd:string .
+                     rdfs:label "has rdf4j output" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.is-created-by
@@ -59,42 +59,42 @@ ddo:inv.is-created-by rdf:type owl:ObjectProperty .
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison/compare-to> rdf:type owl:ObjectProperty ;
                                                                                        rdfs:domain ddo:pipeline-comparison ;
                                                                                        rdfs:range ddo:pipeline-execution ;
-                                                                                       rdfs:label "Comparing to pipeline"^^xsd:string .
+                                                                                       rdfs:label "Comparing to pipeline" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison/difference-found-in
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison/difference-found-in> rdf:type owl:ObjectProperty ;
                                                                                                 rdfs:domain ddo:pipeline-comparison ;
                                                                                                 rdfs:range ddo:module-execution ;
-                                                                                                rdfs:label "Difference found in"^^xsd:string .
+                                                                                                rdfs:label "Difference found in" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison/pipeline
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison/pipeline> rdf:type owl:ObjectProperty ;
                                                                                      rdfs:domain ddo:pipeline-comparison ;
                                                                                      rdfs:range ddo:pipeline-execution ;
-                                                                                     rdfs:label "Comparing pipeline"^^xsd:string .
+                                                                                     rdfs:label "Comparing pipeline" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/s-pipes/executed-in
 s-pipes:executed-in rdf:type owl:ObjectProperty ;
                     rdfs:domain ddo:module-execution ;
                     rdfs:range ddo:pipeline-execution ;
-                    rdfs:label "executed in"^^xsd:string .
+                    rdfs:label "executed in" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/s-pipes/has-module-execution
 s-pipes:has-module-execution rdf:type owl:ObjectProperty ;
                              rdfs:domain ddo:pipeline-execution ;
                              rdfs:range ddo:module-execution ;
-                             rdfs:label "has module execution"^^xsd:string .
+                             rdfs:label "has module execution" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/s-pipes/has-related-resource
 s-pipes:has-related-resource rdf:type owl:ObjectProperty ;
                              rdfs:domain ddo:transformation ;
                              rdfs:range s-pipes:related-resource ;
-                             rdfs:label "has related resource"^^xsd:string .
+                             rdfs:label "has related resource" .
 
 
 #################################################################
@@ -105,84 +105,84 @@ s-pipes:has-related-resource rdf:type owl:ObjectProperty ;
 <http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison/are-same> rdf:type owl:DatatypeProperty ;
                                                                                      rdfs:domain ddo:pipeline-comparison ;
                                                                                      rdfs:range xsd:boolean ;
-                                                                                     rdfs:label "Are same"^^xsd:string .
+                                                                                     rdfs:label "Are same" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/s-pipes/has-duration
 s-pipes:has-duration rdf:type owl:DatatypeProperty ;
                      rdfs:domain ddo:module-execution ;
                      rdfs:range xsd:string ;
-                     rdfs:label "has duration ms"^^xsd:string .
+                     rdfs:label "has duration ms" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/s-pipes/has-execution-finish-date
 s-pipes:has-execution-finish-date rdf:type owl:DatatypeProperty ;
                                   rdfs:domain ddo:transformation ;
                                   rdfs:range xsd:string ;
-                                  rdfs:label "has execution finish date"^^xsd:string .
+                                  rdfs:label "has execution finish date" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/s-pipes/has-execution-start-date
 s-pipes:has-execution-start-date rdf:type owl:DatatypeProperty ;
                                  rdfs:domain ddo:transformation ;
                                  rdfs:range xsd:string ;
-                                 rdfs:label "has execution start date"^^xsd:string .
+                                 rdfs:label "has execution start date" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/s-pipes/has-input-model-triple-count
 s-pipes:has-input-model-triple-count rdf:type owl:DatatypeProperty ;
                                      rdfs:domain ddo:module-execution ;
                                      rdfs:range xsd:long ;
-                                     rdfs:label "has input triple count"^^xsd:string .
+                                     rdfs:label "has input triple count" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/s-pipes/has-module-execution-finish-date
 s-pipes:has-module-execution-finish-date rdf:type owl:DatatypeProperty ;
                                          rdfs:domain ddo:module-execution ;
                                          rdfs:range xsd:string ;
-                                         rdfs:label "has module execution finish date"^^xsd:string .
+                                         rdfs:label "has module execution finish date" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/s-pipes/has-module-execution-start-date
 s-pipes:has-module-execution-start-date rdf:type owl:DatatypeProperty ;
                                         rdfs:domain ddo:module-execution ;
                                         rdfs:range xsd:string ;
-                                        rdfs:label "has module execution start date"^^xsd:string .
+                                        rdfs:label "has module execution start date" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/s-pipes/has-module-id
 s-pipes:has-module-id rdf:type owl:DatatypeProperty ;
                       rdfs:domain ddo:module-execution ;
                       rdfs:range xsd:string ;
-                      rdfs:label "has module id"^^xsd:string .
+                      rdfs:label "has module id" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/s-pipes/has-output-model-triple-count
 s-pipes:has-output-model-triple-count rdf:type owl:DatatypeProperty ;
                                       rdfs:domain ddo:module-execution ;
                                       rdfs:range xsd:long ;
-                                      rdfs:label "has output triple count"^^xsd:string .
+                                      rdfs:label "has output triple count" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/s-pipes/has-pipeline-execution-start-date
 s-pipes:has-pipeline-execution-start-date rdf:type owl:DatatypeProperty ;
                                           rdfs:domain ddo:pipeline-execution ;
                                           rdfs:range xsd:string ;
-                                          rdfs:label "has pipeline execution start date"^^xsd:string .
+                                          rdfs:label "has pipeline execution start date" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/s-pipes/name
 s-pipes:name rdf:type owl:DatatypeProperty ;
              rdfs:domain owl:Thing ;
              rdfs:range xsd:string ;
-             rdfs:label "name"^^xsd:string .
+             rdfs:label "name" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/s-pipes/related-resource/value
 <http://onto.fel.cvut.cz/ontologies/s-pipes/related-resource/value> rdf:type owl:DatatypeProperty ;
                                                                     rdfs:domain s-pipes:related-resource ;
                                                                     rdfs:range xsd:string ;
-                                                                    rdfs:label "has value"^^xsd:string .
+                                                                    rdfs:label "has value" .
 
 
 #################################################################
@@ -265,13 +265,13 @@ ddo:module-execution rdf:type owl:Class ;
                                        owl:allValuesFrom xsd:long
                                      ] ;
                      owl:disjointWith ddo:pipeline-execution ;
-                     rdfs:label "Module execution"^^xsd:string .
+                     rdfs:label "Module execution" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison
 ddo:pipeline-comparison rdf:type owl:Class ;
                         rdfs:subClassOf owl:Thing ;
-                        rdfs:label "Pipeline execution comparison"^^xsd:string .
+                        rdfs:label "Pipeline execution comparison" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-execution
@@ -301,7 +301,7 @@ ddo:pipeline-execution rdf:type owl:Class ;
                                          owl:onProperty s-pipes:has-pipeline-execution-start-date ;
                                          owl:allValuesFrom xsd:string
                                        ] ;
-                       rdfs:label "Pipeline execution"^^xsd:string .
+                       rdfs:label "Pipeline execution" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/source-dataset-snapshot
@@ -320,7 +320,7 @@ ddo:transformation rdf:type owl:Class ;
 ###  http://onto.fel.cvut.cz/ontologies/s-pipes/related-resource
 s-pipes:related-resource rdf:type owl:Class ;
                          rdfs:subClassOf owl:Thing ;
-                         rdfs:label "Related resource"^^xsd:string .
+                         rdfs:label "Related resource" .
 
 
 ###  Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi

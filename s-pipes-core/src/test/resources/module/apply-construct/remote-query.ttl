@@ -19,13 +19,13 @@ apply-construct:CreateSampleTriples
       sp:templates (
           [
             sp:object [
-                sp:varName "o"^^xsd:string ;
+                sp:varName "o" ;
               ] ;
             sp:predicate [
-                sp:varName "p"^^xsd:string ;
+                sp:varName "p" ;
               ] ;
             sp:subject [
-                sp:varName "s"^^xsd:string ;
+                sp:varName "s" ;
               ] ;
           ]
         ) ;
@@ -36,31 +36,31 @@ WHERE {
     SERVICE ?sampleServiceUri {
            ?s ?p ?o .
     }
-}"""^^xsd:string ;
+}""" ;
       sp:where (
           [
             rdf:type sp:Service ;
             sp:elements (
                 [
                   sp:object [
-                      sp:varName "o"^^xsd:string ;
+                      sp:varName "o" ;
                     ] ;
                   sp:predicate [
-                      sp:varName "p"^^xsd:string ;
+                      sp:varName "p" ;
                     ] ;
                   sp:subject [
-                      sp:varName "s"^^xsd:string ;
+                      sp:varName "s" ;
                     ] ;
                 ]
               ) ;
             sp:serviceURI [
-                sp:varName "sampleServiceUri"^^xsd:string ;
+                sp:varName "sampleServiceUri" ;
               ] ;
           ]
         ) ;
     ] ;
   sml:replace "true"^^xsd:boolean ;
-  rdfs:label "Create sample triples"^^xsd:string ;
+  rdfs:label "Create sample triples" ;
 .
 <http://onto.fel.cvut.cz/ontologies/test/apply-construct/spin-remote-query-config>
   rdf:type owl:Ontology ;

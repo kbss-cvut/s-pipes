@@ -18,7 +18,7 @@ dd:SampleDatasetDiscovery
   ddm:p-user-input "zakon 2000" ;
   sm:nodeX 292 ;
   sm:nodeY 155 ;
-  rdfs:label "Sample Dataset Descriptor"^^xsd:string ;
+  rdfs:label "Sample Dataset Descriptor" ;
 .
 
 dd:SampleGetDatasetDescriptors
@@ -26,5 +26,5 @@ dd:SampleGetDatasetDescriptors
   ddm:p-dataset-iri <http://linked.opendata.cz/resource/dataset/vavai/projects> ;
   sm:nodeX 292 ;
   sm:nodeY 155 ;
-  rdfs:label "Sample Get Dataset Descriptors"^^xsd:string ;
+  rdfs:label "Sample Get Dataset Descriptors" ;
 .
