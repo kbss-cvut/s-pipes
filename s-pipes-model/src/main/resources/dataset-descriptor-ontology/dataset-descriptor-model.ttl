@@ -18,7 +18,7 @@ ddo:constitutes rdf:type owl:ObjectProperty ;
                 owl:inverseOf ddo:inv.constitutes ;
                 rdfs:domain ddo:dataset-snapshot ;
                 rdfs:range ddo:data ;
-                rdfs:label "constitutes"^^xsd:string .
+                rdfs:label "constitutes" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/describes
@@ -26,7 +26,7 @@ ddo:describes rdf:type owl:ObjectProperty ;
               owl:inverseOf ddo:inv.describes ;
               rdfs:domain ddo:dataset-descriptor ;
               rdfs:range ddo:described-data-artifact ;
-              rdfs:label "describes"^^xsd:string .
+              rdfs:label "describes" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-dataset
@@ -34,7 +34,7 @@ ddo:has-dataset rdf:type owl:ObjectProperty ;
                 owl:inverseOf ddo:inv.has-dataset ;
                 rdfs:domain ddo:dataset-snapshot ;
                 rdfs:range ddo:dataset ;
-                rdfs:label "has dataset"^^xsd:string .
+                rdfs:label "has dataset" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-dataset-descriptor
@@ -42,7 +42,7 @@ ddo:has-dataset-descriptor rdf:type owl:ObjectProperty ;
                            owl:inverseOf ddo:inv.has-dataset-descriptor ;
                            rdfs:domain ddo:description ;
                            rdfs:range ddo:dataset-descriptor ;
-                           rdfs:label "has dataset descriptor"^^xsd:string .
+                           rdfs:label "has dataset descriptor" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-dataset-explorer
@@ -50,7 +50,7 @@ ddo:has-dataset-explorer rdf:type owl:ObjectProperty ;
                          owl:inverseOf ddo:inv.has-dataset-explorer ;
                          rdfs:domain ddo:dataset-exploration ;
                          rdfs:range ddo:dataset-exploring-journalist ;
-                         rdfs:label "has dataset explorer"^^xsd:string .
+                         rdfs:label "has dataset explorer" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-explored-dataset
@@ -58,7 +58,7 @@ ddo:has-explored-dataset rdf:type owl:ObjectProperty ;
                          owl:inverseOf ddo:inv.has-explored-dataset ;
                          rdfs:domain ddo:dataset-exploration ;
                          rdfs:range ddo:dataset ;
-                         rdfs:label "has explored dataset"^^xsd:string .
+                         rdfs:label "has explored dataset" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-input
@@ -66,7 +66,7 @@ ddo:has-input rdf:type owl:ObjectProperty ;
               owl:inverseOf ddo:inv.has-input ;
               rdfs:domain ddo:transformation ;
               rdfs:range ddo:source-dataset-snapshot ;
-              rdfs:label "has input"^^xsd:string .
+              rdfs:label "has input" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-intent
@@ -74,7 +74,7 @@ ddo:has-intent rdf:type owl:ObjectProperty ;
                owl:inverseOf ddo:inv.has-intent ;
                rdfs:domain ddo:dataset-exploring-journalist ;
                rdfs:range ddo:intent ;
-               rdfs:label "has intent"^^xsd:string .
+               rdfs:label "has intent" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-item
@@ -82,7 +82,7 @@ ddo:has-item rdf:type owl:ObjectProperty ;
              owl:inverseOf ddo:inv.has-item ;
              rdfs:domain ddo:single-item-selector ;
              rdfs:range ddo:data-item ;
-             rdfs:label "has item"^^xsd:string .
+             rdfs:label "has item" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-member
@@ -90,7 +90,7 @@ ddo:has-member rdf:type owl:ObjectProperty ;
                owl:inverseOf ddo:inv.has-member ;
                rdfs:domain ddo:data ;
                rdfs:range ddo:data-item ;
-               rdfs:label "has member"^^xsd:string .
+               rdfs:label "has member" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-output
@@ -98,7 +98,7 @@ ddo:has-output rdf:type owl:ObjectProperty ;
                owl:inverseOf ddo:inv.has-output ;
                rdfs:domain ddo:transformation ;
                rdfs:range ddo:target-dataset-snapshot ;
-               rdfs:label "has output"^^xsd:string .
+               rdfs:label "has output" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-published-dataset-snapshot
@@ -106,7 +106,7 @@ ddo:has-published-dataset-snapshot rdf:type owl:ObjectProperty ;
                                    owl:inverseOf ddo:inv.has-published-dataset-snapshot ;
                                    rdfs:domain ddo:dataset-publication ;
                                    rdfs:range ddo:dataset-snapshot ;
-                                   rdfs:label "has published dataset snapshot"^^xsd:string .
+                                   rdfs:label "has published dataset snapshot" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-publisher
@@ -114,7 +114,7 @@ ddo:has-publisher rdf:type owl:ObjectProperty ;
                   owl:inverseOf ddo:inv.has-publisher ;
                   rdfs:domain ddo:dataset-publication ;
                   rdfs:range ddo:publisher ;
-                  rdfs:label "has publisher"^^xsd:string .
+                  rdfs:label "has publisher" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-source
@@ -123,7 +123,7 @@ ddo:has-source rdf:type owl:ObjectProperty ;
                rdfs:domain ddo:dataset-publication ,
                            ddo:description ;
                rdfs:range ddo:single-snapshot-dataset-source ;
-               rdfs:label "has source"^^xsd:string .
+               rdfs:label "has source" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-sub-dataset-snapshot
@@ -131,7 +131,7 @@ ddo:has-sub-dataset-snapshot rdf:type owl:ObjectProperty ;
                              owl:inverseOf ddo:inv.has-sub-dataset-snapshot ;
                              rdfs:domain ddo:dataset-snapshot ;
                              rdfs:range ddo:dataset-snapshot ;
-                             rdfs:label "has sub dataset snapshot"^^xsd:string .
+                             rdfs:label "has sub dataset snapshot" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-subdataset
@@ -139,98 +139,98 @@ ddo:has-subdataset rdf:type owl:ObjectProperty ;
                    owl:inverseOf ddo:inv.has-subdataset ;
                    rdfs:domain ddo:dataset ;
                    rdfs:range ddo:dataset ;
-                   rdfs:label "has subdataset"^^xsd:string .
+                   rdfs:label "has subdataset" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.constitutes
 ddo:inv.constitutes rdf:type owl:ObjectProperty ;
                     rdfs:domain ddo:data ;
                     rdfs:range ddo:dataset-snapshot ;
-                    rdfs:label "INV.constitutes"^^xsd:string .
+                    rdfs:label "INV.constitutes" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.describes
 ddo:inv.describes rdf:type owl:ObjectProperty ;
                   rdfs:domain ddo:described-data-artifact ;
                   rdfs:range ddo:dataset-descriptor ;
-                  rdfs:label "INV.describes"^^xsd:string .
+                  rdfs:label "INV.describes" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-dataset
 ddo:inv.has-dataset rdf:type owl:ObjectProperty ;
                     rdfs:domain ddo:dataset ;
                     rdfs:range ddo:dataset-snapshot ;
-                    rdfs:label "INV.has dataset"^^xsd:string .
+                    rdfs:label "INV.has dataset" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-dataset-descriptor
 ddo:inv.has-dataset-descriptor rdf:type owl:ObjectProperty ;
                                rdfs:domain ddo:dataset-descriptor ;
                                rdfs:range ddo:description ;
-                               rdfs:label "INV.has dataset descriptor"^^xsd:string .
+                               rdfs:label "INV.has dataset descriptor" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-dataset-explorer
 ddo:inv.has-dataset-explorer rdf:type owl:ObjectProperty ;
                              rdfs:domain ddo:dataset-exploring-journalist ;
                              rdfs:range ddo:dataset-exploration ;
-                             rdfs:label "INV.has dataset explorer"^^xsd:string .
+                             rdfs:label "INV.has dataset explorer" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-explored-dataset
 ddo:inv.has-explored-dataset rdf:type owl:ObjectProperty ;
                              rdfs:domain ddo:dataset ;
                              rdfs:range ddo:dataset-exploration ;
-                             rdfs:label "INV.has explored dataset"^^xsd:string .
+                             rdfs:label "INV.has explored dataset" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-input
 ddo:inv.has-input rdf:type owl:ObjectProperty ;
                   rdfs:domain ddo:source-dataset-snapshot ;
                   rdfs:range ddo:transformation ;
-                  rdfs:label "INV.has input"^^xsd:string .
+                  rdfs:label "INV.has input" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-intent
 ddo:inv.has-intent rdf:type owl:ObjectProperty ;
                    rdfs:domain ddo:intent ;
                    rdfs:range ddo:dataset-exploring-journalist ;
-                   rdfs:label "INV.has intent"^^xsd:string .
+                   rdfs:label "INV.has intent" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-item
 ddo:inv.has-item rdf:type owl:ObjectProperty ;
                  rdfs:domain ddo:data-item ;
                  rdfs:range ddo:single-item-selector ;
-                 rdfs:label "INV.has item"^^xsd:string .
+                 rdfs:label "INV.has item" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-member
 ddo:inv.has-member rdf:type owl:ObjectProperty ;
                    rdfs:domain ddo:data-item ;
                    rdfs:range ddo:data ;
-                   rdfs:label "INV.has member"^^xsd:string .
+                   rdfs:label "INV.has member" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-output
 ddo:inv.has-output rdf:type owl:ObjectProperty ;
                    rdfs:domain ddo:target-dataset-snapshot ;
                    rdfs:range ddo:transformation ;
-                   rdfs:label "INV.has output"^^xsd:string .
+                   rdfs:label "INV.has output" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-published-dataset-snapshot
 ddo:inv.has-published-dataset-snapshot rdf:type owl:ObjectProperty ;
                                        rdfs:domain ddo:dataset-snapshot ;
                                        rdfs:range ddo:dataset-publication ;
-                                       rdfs:label "INV.has published dataset snapshot"^^xsd:string .
+                                       rdfs:label "INV.has published dataset snapshot" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-publisher
 ddo:inv.has-publisher rdf:type owl:ObjectProperty ;
                       rdfs:domain ddo:publisher ;
                       rdfs:range ddo:dataset-publication ;
-                      rdfs:label "INV.has publisher"^^xsd:string .
+                      rdfs:label "INV.has publisher" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-source
@@ -238,21 +238,21 @@ ddo:inv.has-source rdf:type owl:ObjectProperty ;
                    rdfs:domain ddo:single-snapshot-dataset-source ;
                    rdfs:range ddo:dataset-publication ,
                               ddo:description ;
-                   rdfs:label "INV.has source"^^xsd:string .
+                   rdfs:label "INV.has source" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-sub-dataset-snapshot
 ddo:inv.has-sub-dataset-snapshot rdf:type owl:ObjectProperty ;
                                  rdfs:domain ddo:dataset-snapshot ;
                                  rdfs:range ddo:dataset-snapshot ;
-                                 rdfs:label "INV.has sub dataset snapshot"^^xsd:string .
+                                 rdfs:label "INV.has sub dataset snapshot" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.has-subdataset
 ddo:inv.has-subdataset rdf:type owl:ObjectProperty ;
                        rdfs:domain ddo:dataset ;
                        rdfs:range ddo:dataset ;
-                       rdfs:label "INV.has subdataset"^^xsd:string .
+                       rdfs:label "INV.has subdataset" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.is-created-by
@@ -260,7 +260,7 @@ ddo:inv.is-created-by rdf:type owl:ObjectProperty ;
                       owl:inverseOf ddo:is-created-by ;
                       rdfs:domain ddo:transformation ;
                       rdfs:range ddo:execution-context-dataset-source ;
-                      rdfs:label "INV.is created by"^^xsd:string .
+                      rdfs:label "INV.is created by" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.is-description-of
@@ -268,7 +268,7 @@ ddo:inv.is-description-of rdf:type owl:ObjectProperty ;
                           owl:inverseOf ddo:is-description-of ;
                           rdfs:domain ddo:described-data-artifact ;
                           rdfs:range ddo:description ;
-                          rdfs:label "INV.is description of"^^xsd:string .
+                          rdfs:label "INV.is description of" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.is-part-of
@@ -276,7 +276,7 @@ ddo:inv.is-part-of rdf:type owl:ObjectProperty ;
                    owl:inverseOf ddo:is-part-of ;
                    rdfs:domain ddo:data ;
                    rdfs:range ddo:data ;
-                   rdfs:label "INV.is part of"^^xsd:string .
+                   rdfs:label "INV.is part of" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.offers-dataset
@@ -284,7 +284,7 @@ ddo:inv.offers-dataset rdf:type owl:ObjectProperty ;
                        owl:inverseOf ddo:offers-dataset ;
                        rdfs:domain ddo:dataset ;
                        rdfs:range ddo:dataset-source ;
-                       rdfs:label "INV.offers dataset"^^xsd:string .
+                       rdfs:label "INV.offers dataset" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/inv.uses
@@ -292,42 +292,42 @@ ddo:inv.uses rdf:type owl:ObjectProperty ;
              owl:inverseOf ddo:uses ;
              rdfs:domain ddo:intent ;
              rdfs:range ddo:dataset-exploration ;
-             rdfs:label "INV.uses"^^xsd:string .
+             rdfs:label "INV.uses" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/is-created-by
 ddo:is-created-by rdf:type owl:ObjectProperty ;
                   rdfs:domain ddo:execution-context-dataset-source ;
                   rdfs:range ddo:transformation ;
-                  rdfs:label "is created by"^^xsd:string .
+                  rdfs:label "is created by" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/is-description-of
 ddo:is-description-of rdf:type owl:ObjectProperty ;
                       rdfs:domain ddo:description ;
                       rdfs:range ddo:described-data-artifact ;
-                      rdfs:label "is description of"^^xsd:string .
+                      rdfs:label "is description of" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/is-part-of
 ddo:is-part-of rdf:type owl:ObjectProperty ;
                rdfs:domain ddo:data ;
                rdfs:range ddo:data ;
-               rdfs:label "is part of"^^xsd:string .
+               rdfs:label "is part of" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/offers-dataset
 ddo:offers-dataset rdf:type owl:ObjectProperty ;
                    rdfs:domain ddo:dataset-source ;
                    rdfs:range ddo:dataset ;
-                   rdfs:label "offers dataset"^^xsd:string .
+                   rdfs:label "offers dataset" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/uses
 ddo:uses rdf:type owl:ObjectProperty ;
          rdfs:domain ddo:dataset-exploration ;
          rdfs:range ddo:intent ;
-         rdfs:label "uses"^^xsd:string .
+         rdfs:label "uses" .
 
 
 #################################################################
@@ -339,21 +339,21 @@ ddo:has-creation-date rdf:type owl:DatatypeProperty ;
                       rdfs:domain ddo:dataset-publication ,
                                   ddo:description ;
                       rdfs:range xsd:string ;
-                      rdfs:label "has creation date"^^xsd:string .
+                      rdfs:label "has creation date" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-data-hash
 ddo:has-data-hash rdf:type owl:DatatypeProperty ;
                   rdfs:domain ddo:dataset-snapshot ;
                   rdfs:range xsd:string ;
-                  rdfs:label "has-data-hash"^^xsd:string .
+                  rdfs:label "has-data-hash" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-download-url
 ddo:has-download-url rdf:type owl:DatatypeProperty ;
                      rdfs:domain ddo:url-dataset-source ;
                      rdfs:range xsd:string ;
-                     rdfs:label "has download url"^^xsd:string .
+                     rdfs:label "has download url" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-endpoint-url
@@ -361,28 +361,28 @@ ddo:has-endpoint-url rdf:type owl:DatatypeProperty ;
                      rdfs:domain ddo:named-graph-sparql-endpoint-dataset-source ,
                                  ddo:sparql-endpoint-dataset-source ;
                      rdfs:range xsd:string ;
-                     rdfs:label "has endpoint url"^^xsd:string .
+                     rdfs:label "has endpoint url" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-graph-id
 ddo:has-graph-id rdf:type owl:DatatypeProperty ;
                  rdfs:domain ddo:named-graph-sparql-endpoint-dataset-source ;
                  rdfs:range xsd:string ;
-                 rdfs:label "has graph id"^^xsd:string .
+                 rdfs:label "has graph id" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-retrieval-date
 ddo:has-retrieval-date rdf:type owl:DatatypeProperty ;
                        rdfs:domain ddo:dataset-snapshot ;
                        rdfs:range xsd:string ;
-                       rdfs:label "has-retrieval-date"^^xsd:string .
+                       rdfs:label "has-retrieval-date" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/name
 ddo:name rdf:type owl:DatatypeProperty ;
          rdfs:domain ddo:dataset-source ;
          rdfs:range xsd:string ;
-         rdfs:label "name"^^xsd:string .
+         rdfs:label "name" .
 
 
 #################################################################
@@ -392,13 +392,13 @@ ddo:name rdf:type owl:DatatypeProperty ;
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/agent
 ddo:agent rdf:type owl:Class ;
           rdfs:subClassOf owl:Thing ;
-          rdfs:label "Agent"^^xsd:string .
+          rdfs:label "Agent" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/content-descriptor
 ddo:content-descriptor rdf:type owl:Class ;
                        rdfs:subClassOf ddo:dataset-descriptor ;
-                       rdfs:label "Content Descriptor"^^xsd:string .
+                       rdfs:label "Content Descriptor" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data
@@ -423,7 +423,7 @@ ddo:data rdf:type owl:Class ;
                            owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                            owl:onClass ddo:data
                          ] ;
-         rdfs:label "Data"^^xsd:string .
+         rdfs:label "Data" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/data-item
@@ -439,7 +439,7 @@ ddo:data-item rdf:type owl:Class ;
                                 owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                 owl:onClass ddo:data
                               ] ;
-              rdfs:label "Data Item"^^xsd:string .
+              rdfs:label "Data Item" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset
@@ -467,7 +467,7 @@ ddo:dataset rdf:type owl:Class ;
                               owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                               owl:onClass ddo:dataset
                             ] ;
-            rdfs:label "Dataset"^^xsd:string .
+            rdfs:label "Dataset" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-descriptor
@@ -483,7 +483,7 @@ ddo:dataset-descriptor rdf:type owl:Class ;
                                          owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                          owl:onClass ddo:description
                                        ] ;
-                       rdfs:label "Dataset Descriptor"^^xsd:string .
+                       rdfs:label "Dataset Descriptor" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-exploration
@@ -502,7 +502,7 @@ ddo:dataset-exploration rdf:type owl:Class ;
                                           owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                           owl:onClass ddo:dataset-exploring-journalist
                                         ] ;
-                        rdfs:label "Dataset Exploration"^^xsd:string .
+                        rdfs:label "Dataset Exploration" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-exploring-journalist
@@ -517,7 +517,7 @@ ddo:dataset-exploring-journalist rdf:type owl:Class ;
                                                    owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                                    owl:onClass ddo:dataset-exploration
                                                  ] ;
-                                 rdfs:label "Dataset Exploring Journalist"^^xsd:string .
+                                 rdfs:label "Dataset Exploring Journalist" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-publication
@@ -537,13 +537,13 @@ ddo:dataset-publication rdf:type owl:Class ;
                                           owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                           owl:onClass ddo:publisher
                                         ] ;
-                        rdfs:label "Dataset Publication"^^xsd:string .
+                        rdfs:label "Dataset Publication" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-selector
 ddo:dataset-selector rdf:type owl:Class ;
                      rdfs:subClassOf ddo:content-descriptor ;
-                     rdfs:label "Dataset Selector"^^xsd:string .
+                     rdfs:label "Dataset Selector" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-snapshot
@@ -573,7 +573,7 @@ ddo:dataset-snapshot rdf:type owl:Class ;
                                        owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                        owl:onClass ddo:dataset-snapshot
                                      ] ;
-                     rdfs:label "Dataset Snapshot"^^xsd:string .
+                     rdfs:label "Dataset Snapshot" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/dataset-source
@@ -583,7 +583,7 @@ ddo:dataset-source rdf:type owl:Class ;
                                      owl:onProperty ddo:offers-dataset ;
                                      owl:allValuesFrom ddo:dataset
                                    ] ;
-                   rdfs:label "Dataset Source"^^xsd:string .
+                   rdfs:label "Dataset Source" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/described-data-artifact
@@ -597,21 +597,21 @@ ddo:described-data-artifact rdf:type owl:Class ;
                                               owl:onProperty ddo:inv.is-description-of ;
                                               owl:allValuesFrom ddo:description
                                             ] ;
-                            rdfs:label "Described Data Artifact"^^xsd:string .
+                            rdfs:label "Described Data Artifact" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/described-dataset
 ddo:described-dataset rdf:type owl:Class ;
                       rdfs:subClassOf ddo:dataset ,
                                       ddo:described-data-artifact ;
-                      rdfs:label "Described Dataset"^^xsd:string .
+                      rdfs:label "Described Dataset" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/described-dataset-snapshot
 ddo:described-dataset-snapshot rdf:type owl:Class ;
                                rdfs:subClassOf ddo:dataset-snapshot ,
                                                ddo:described-data-artifact ;
-                               rdfs:label "Described Dataset Snapshot"^^xsd:string .
+                               rdfs:label "Described Dataset Snapshot" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/description
@@ -632,13 +632,13 @@ ddo:description rdf:type owl:Class ;
                                   owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                   owl:onClass ddo:described-data-artifact
                                 ] ;
-                rdfs:label "Description"^^xsd:string .
+                rdfs:label "Description" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/entity-partition
 ddo:entity-partition rdf:type owl:Class ;
                      rdfs:subClassOf ddo:dataset-selector ;
-                     rdfs:label "Entity Partition"^^xsd:string .
+                     rdfs:label "Entity Partition" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/execution-context-dataset-source
@@ -649,13 +649,13 @@ ddo:execution-context-dataset-source rdf:type owl:Class ;
                                                        owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                                        owl:onClass ddo:transformation
                                                      ] ;
-                                     rdfs:label "Execution Context Dataset Source"^^xsd:string .
+                                     rdfs:label "Execution Context Dataset Source" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/human-interpretation
 ddo:human-interpretation rdf:type owl:Class ;
                          rdfs:subClassOf ddo:transformation ;
-                         rdfs:label "Human Interpretation"^^xsd:string .
+                         rdfs:label "Human Interpretation" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/intent
@@ -671,31 +671,31 @@ ddo:intent rdf:type owl:Class ;
                              owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                              owl:onClass ddo:dataset-exploration
                            ] ;
-           rdfs:label "Intent"^^xsd:string .
+           rdfs:label "Intent" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/named-graph-sparql-endpoint-dataset-source
 ddo:named-graph-sparql-endpoint-dataset-source rdf:type owl:Class ;
                                                rdfs:subClassOf ddo:url-dataset-source ;
-                                               rdfs:label "Named graph SPARQL Endpoint Dataset Source"^^xsd:string .
+                                               rdfs:label "Named graph SPARQL Endpoint Dataset Source" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/non-content-descriptor
 ddo:non-content-descriptor rdf:type owl:Class ;
                            rdfs:subClassOf ddo:dataset-descriptor ;
-                           rdfs:label "Non-content Descriptor"^^xsd:string .
+                           rdfs:label "Non-content Descriptor" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/organization
 ddo:organization rdf:type owl:Class ;
                  rdfs:subClassOf ddo:agent ;
-                 rdfs:label "Organization"^^xsd:string .
+                 rdfs:label "Organization" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/person
 ddo:person rdf:type owl:Class ;
            rdfs:subClassOf ddo:agent ;
-           rdfs:label "Person"^^xsd:string .
+           rdfs:label "Person" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/publisher
@@ -705,7 +705,7 @@ ddo:publisher rdf:type owl:Class ;
                                 owl:onProperty ddo:inv.has-publisher ;
                                 owl:allValuesFrom ddo:dataset-publication
                               ] ;
-              rdfs:label "Publisher"^^xsd:string .
+              rdfs:label "Publisher" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/single-item-selector
@@ -716,7 +716,7 @@ ddo:single-item-selector rdf:type owl:Class ;
                                            owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                            owl:onClass ddo:data-item
                                          ] ;
-                         rdfs:label "Single Item Selector"^^xsd:string .
+                         rdfs:label "Single Item Selector" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/single-snapshot-dataset-source
@@ -731,7 +731,7 @@ ddo:single-snapshot-dataset-source rdf:type owl:Class ;
                                                      owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                                      owl:onClass ddo:dataset-publication
                                                    ] ;
-                                   rdfs:label "Single Snapshot Dataset Source"^^xsd:string .
+                                   rdfs:label "Single Snapshot Dataset Source" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/source-dataset-snapshot
@@ -741,31 +741,31 @@ ddo:source-dataset-snapshot rdf:type owl:Class ;
                                               owl:onProperty ddo:inv.has-input ;
                                               owl:allValuesFrom ddo:transformation
                                             ] ;
-                            rdfs:label "Source Dataset Snapshot"^^xsd:string .
+                            rdfs:label "Source Dataset Snapshot" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/sparql-construct
 ddo:sparql-construct rdf:type owl:Class ;
                      rdfs:subClassOf ddo:transformation ;
-                     rdfs:label "SPARQL Construct"^^xsd:string .
+                     rdfs:label "SPARQL Construct" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/sparql-endpoint-dataset-source
 ddo:sparql-endpoint-dataset-source rdf:type owl:Class ;
                                    rdfs:subClassOf ddo:url-dataset-source ;
-                                   rdfs:label "SPARQL Endpoint Dataset Source"^^xsd:string .
+                                   rdfs:label "SPARQL Endpoint Dataset Source" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/spatial-content-descriptor
 ddo:spatial-content-descriptor rdf:type owl:Class ;
                                rdfs:subClassOf ddo:content-descriptor ;
-                               rdfs:label "Spatial Content Descriptor"^^xsd:string .
+                               rdfs:label "Spatial Content Descriptor" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/spo-summary-descriptor
 ddo:spo-summary-descriptor rdf:type owl:Class ;
                            rdfs:subClassOf ddo:content-descriptor ;
-                           rdfs:label "SPO Summary Descriptor"^^xsd:string .
+                           rdfs:label "SPO Summary Descriptor" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/target-dataset-snapshot
@@ -775,13 +775,13 @@ ddo:target-dataset-snapshot rdf:type owl:Class ;
                                               owl:onProperty ddo:inv.has-output ;
                                               owl:allValuesFrom ddo:transformation
                                             ] ;
-                            rdfs:label "Target Dataset Snapshot"^^xsd:string .
+                            rdfs:label "Target Dataset Snapshot" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/temporal-content-descriptor
 ddo:temporal-content-descriptor rdf:type owl:Class ;
                                 rdfs:subClassOf ddo:content-descriptor ;
-                                rdfs:label "Temporal Content Descriptor"^^xsd:string .
+                                rdfs:label "Temporal Content Descriptor" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/transformation
@@ -802,37 +802,37 @@ ddo:transformation rdf:type owl:Class ;
                                      owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                      owl:onClass ddo:execution-context-dataset-source
                                    ] ;
-                   rdfs:label "Transformation"^^xsd:string .
+                   rdfs:label "Transformation" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/url
 ddo:url rdf:type owl:Class ;
         rdfs:subClassOf owl:Thing ;
-        rdfs:label "url"^^xsd:string .
+        rdfs:label "url" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/url-dataset-source
 ddo:url-dataset-source rdf:type owl:Class ;
                        rdfs:subClassOf ddo:dataset-source ;
-                       rdfs:label "Url Dataset Source"^^xsd:string .
+                       rdfs:label "Url Dataset Source" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/vocabulary-class-partition
 ddo:vocabulary-class-partition rdf:type owl:Class ;
                                rdfs:subClassOf ddo:entity-partition ;
-                               rdfs:label "Vocabulary Class Partition"^^xsd:string .
+                               rdfs:label "Vocabulary Class Partition" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/vocabulary-instance
 ddo:vocabulary-instance rdf:type owl:Class ;
                         rdfs:subClassOf ddo:content-descriptor ;
-                        rdfs:label "Vocabulary Instance"^^xsd:string .
+                        rdfs:label "Vocabulary Instance" .
 
 
 ###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/vocabulary-property-partition
 ddo:vocabulary-property-partition rdf:type owl:Class ;
                                   rdfs:subClassOf ddo:entity-partition ;
-                                  rdfs:label "Vocabulary Property Partition"^^xsd:string .
+                                  rdfs:label "Vocabulary Property Partition" .
 
 
 #################################################################

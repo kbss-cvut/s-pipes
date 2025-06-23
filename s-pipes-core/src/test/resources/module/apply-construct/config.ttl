@@ -35,11 +35,11 @@ apply-construct:CreateSampleTriples
 }
 WHERE {
     
-}"""^^xsd:string ;
+}""" ;
       sp:where () ;
     ] ;
   sml:replace "true"^^xsd:boolean ;
-  rdfs:label "Create sample triples"^^xsd:string ;
+  rdfs:label "Create sample triples" ;
 .
 <http://onto.fel.cvut.cz/ontologies/test/apply-construct/spin-query-config>
   rdf:type owl:Ontology ;

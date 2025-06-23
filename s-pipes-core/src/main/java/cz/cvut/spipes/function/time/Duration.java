@@ -6,8 +6,7 @@ import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.sparql.expr.NodeValue;
-import org.apache.jena.sparql.function.FunctionEnv;
-import org.topbraid.spin.arq.AbstractFunction2;
+import org.apache.jena.sparql.function.FunctionBase2;
 
 import jakarta.xml.bind.DatatypeConverter;
 import java.util.Calendar;
@@ -16,7 +15,7 @@ import java.util.Calendar;
  * Computes the time difference between two xsd:dateTime values in milliseconds and returns the result as xsd:long.
  * Returns a negative value if the first parameter represents a later time.
  */
-public class Duration extends AbstractFunction2 implements ValueFunction {
+public class Duration extends FunctionBase2 implements ValueFunction {
 
     private static final String TYPE_IRI = KBSS_TIMEF.uri + "duration-in-ms";
 
@@ -26,7 +25,7 @@ public class Duration extends AbstractFunction2 implements ValueFunction {
     }
 
     @Override
-    protected NodeValue exec(Node startDateTime, Node endDateTime, FunctionEnv functionEnv) {
+    public NodeValue exec(NodeValue startDateTime, NodeValue endDateTime) {
         Calendar start = parseNodeToCalendar(startDateTime);
         Calendar end = parseNodeToCalendar(endDateTime);
 
@@ -35,7 +34,7 @@ public class Duration extends AbstractFunction2 implements ValueFunction {
         return NodeValue.makeNode(node);
     }
 
-    private Calendar parseNodeToCalendar(Node dateTime){
-        return DatatypeConverter.parseDateTime(dateTime.getLiteral().getLexicalForm());
+    private Calendar parseNodeToCalendar(NodeValue dateTime){
+        return DatatypeConverter.parseDateTime(dateTime.asNode().getLiteral().getLexicalForm());
     }
 }

@@ -19,22 +19,22 @@ sml:bind-greeting
   rdf:type sml:BindWithConstant ;
   sm:nodeX 289 ;
   sm:nodeY 209 ;
-  sm:outputVariable "greetingMessage"^^xsd:string ;
+  sm:outputVariable "greetingMessage" ;
   sml:value [
       rdf:type sp:concat ;
       sp:arg1 "Hello " ;
       sp:arg2 [
-          sp:varName "name"^^xsd:string ;
+          sp:varName "name" ;
         ] ;
     ] ;
-  rdfs:label "bind-greeting"^^xsd:string ;
+  rdfs:label "bind-greeting" ;
 .
 sml:bind-name
   rdf:type sml:BindWithConstant ;
   sm:next sml:bind-greeting ;
   sm:nodeX 291 ;
   sm:nodeY 43 ;
-  sm:outputVariable "name"^^xsd:string ;
-  sml:value "Miroslav"^^xsd:string ;
-  rdfs:label "Bind name"^^xsd:string ;
+  sm:outputVariable "name" ;
+  sml:value "Miroslav" ;
+  rdfs:label "Bind name" ;
 .

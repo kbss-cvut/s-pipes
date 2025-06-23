@@ -14,10 +14,10 @@ class DurationTest {
     public void execSimple() {
 
         Duration duration = new Duration();
-        Node startDateTime = getDateTimeNode("2023-08-21T13:00:00.100").asNode();
-        Node endDateTime = getDateTimeNode("2023-08-21T13:00:00.250").asNode();
+        NodeValue startDateTime = getDateTimeNode("2023-08-21T13:00:00.100");
+        NodeValue endDateTime = getDateTimeNode("2023-08-21T13:00:00.250");
 
-        NodeValue durationInMS = duration.exec(startDateTime, endDateTime, null);
+        NodeValue durationInMS = duration.exec(startDateTime, endDateTime);
         long expected = 150;
         assertEquals(expected,durationInMS.getInteger().intValue());
     }
@@ -26,10 +26,10 @@ class DurationTest {
     public void execStartDateTimeIsLaterThenEndDateTime() {
 
         Duration duration = new Duration();
-        Node startDateTime = getDateTimeNode("2023-08-21T13:20:00").asNode();
-        Node endDateTime = getDateTimeNode("2023-08-21T13:00:00").asNode();
+        NodeValue startDateTime = getDateTimeNode("2023-08-21T13:20:00");
+        NodeValue endDateTime = getDateTimeNode("2023-08-21T13:00:00");
 
-        NodeValue durationInMS = duration.exec(startDateTime, endDateTime,null);
+        NodeValue durationInMS = duration.exec(startDateTime, endDateTime);
         long expected = -1200000;
         assertEquals(expected,durationInMS.getInteger().intValue());
     }
@@ -38,10 +38,10 @@ class DurationTest {
     public void execTimeZoneFormat() {
 
         Duration duration = new Duration();
-        Node startDateTime = getDateTimeNode("2023-08-21T15:30:00.100-05:00").asNode();
-        Node endDateTime = getDateTimeNode("2023-08-21T14:30:05.600-06:00").asNode();
+        NodeValue startDateTime = getDateTimeNode("2023-08-21T15:30:00.100-05:00");
+        NodeValue endDateTime = getDateTimeNode("2023-08-21T14:30:05.600-06:00");
 
-        NodeValue durationInMS = duration.exec(startDateTime, endDateTime,null);
+        NodeValue durationInMS = duration.exec(startDateTime, endDateTime);
         long expected = 5500;
         assertEquals(expected,durationInMS.getInteger().intValue());
     }

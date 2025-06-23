@@ -11,43 +11,43 @@
 <http://onto.fel.cvut.cz/ontologies/form-layout>
   rdf:type owl:Ontology ;
   owl:imports <http://onto.fel.cvut.cz/ontologies/form> ;
-  owl:versionInfo "Created with TopBraid Composer"^^xsd:string ;
+  owl:versionInfo "Created with TopBraid Composer" ;
 .
 form-lt:LayoutClassRule
   rdf:type owl:Class ;
-  rdfs:label "Layout class rule"^^xsd:string ;
+  rdfs:label "Layout class rule" ;
   rdfs:subClassOf owl:Thing ;
 .
 form-lt:has-layout-class
   rdf:type owl:DatatypeProperty ;
-  rdfs:comment "Question layout class (e.g. \"type-ahead\", \"section\")"^^xsd:string ;
-  rdfs:label "Question layout class"^^xsd:string ;
+  rdfs:comment "Question layout class (e.g. \"type-ahead\", \"section\")" ;
+  rdfs:label "Question layout class" ;
 .
 form-lt:has-required-value
   rdf:type owl:DatatypeProperty ;
-  rdfs:comment "Question has required value"^^xsd:string ;
-  rdfs:label "ha required value"^^xsd:string ;
+  rdfs:comment "Question has required value" ;
+  rdfs:label "ha required value" ;
   rdfs:range xsd:boolean ;
 .
 form-lt:is-disabled
   rdf:type owl:DatatypeProperty ;
-  rdfs:comment "Defines whether this question should be disabled"^^xsd:string ;
-  rdfs:label "is disabled"^^xsd:string ;
+  rdfs:comment "Defines whether this question should be disabled" ;
+  rdfs:label "is disabled" ;
   rdfs:range xsd:boolean ;
 .
 form-lt:is-hidden
   rdf:type owl:DatatypeProperty ;
-  rdfs:comment "Defines whether this question should be hidden"^^xsd:string ;
-  rdfs:label "is hidden"^^xsd:string ;
+  rdfs:comment "Defines whether this question should be hidden" ;
+  rdfs:label "is hidden" ;
   rdfs:range xsd:boolean ;
 .
 form-lt:outputValue
   rdf:type owl:DatatypeProperty ;
-  rdfs:label "Form layout output value"^^xsd:string ;
+  rdfs:label "Form layout output value" ;
   rdfs:range xsd:string ;
 .
 form-lt:propertyPath
   rdf:type owl:DatatypeProperty ;
-  rdfs:label "Form layout property path"^^xsd:string ;
+  rdfs:label "Form layout property path" ;
   rdfs:range xsd:string ;
 .
