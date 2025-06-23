@@ -9,6 +9,7 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.impl.ModelCom;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.RDFParser;
 import org.apache.jena.riot.system.StreamRDF;
 import org.apache.jena.riot.system.StreamRDFLib;
 
@@ -49,7 +50,7 @@ public class StreamRDFWithJena {
 //        StreamOps.
         InputStream is = new FileInputStream(inputFile);
         // parse the InputStream is an transform it to a streamRDF stream of triples/quads (in this case triples)
-        RDFDataMgr.parse(streamRDF, is, lang);
+        RDFParser.source(is).lang(lang).parse(streamRDF);
     }
 
     /**
@@ -73,7 +74,7 @@ public class StreamRDFWithJena {
 //        StreamOps.
         InputStream is = new FileInputStream(inputFile);
         // parse the InputStream is an transform it to a streamRDF stream of triples/quads (in this case triples)
-        RDFDataMgr.parse(streamRDF, is, lang);
+        RDFParser.source(is).lang(lang).parse(streamRDF);
     }
     
     public static class CountURISink extends SinkNull<Triple> {

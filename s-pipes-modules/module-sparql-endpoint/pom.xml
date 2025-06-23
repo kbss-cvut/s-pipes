@@ -21,7 +21,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.jena</groupId>
-            <artifactId>jena-tdb</artifactId>
+            <artifactId>jena-tdb1</artifactId>
             <version>${org.apache.jena}</version>
         </dependency>
 

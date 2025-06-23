@@ -74,14 +74,14 @@ public class JenaStreamRDFExperiment {
         final StreamRDF dest = StreamRDFLib.graph(m.getGraph()) ;
         try {
             System.out.println("mock parser: sending first triple");
-            dest.triple(new Triple(
+            dest.triple(Triple.create(
                     NodeFactory.createURI("http://ont.fel.cvut.cz/Person"),
                     NodeFactory.createURI("http://ont.fel.cvut.cz/birthDate"),
                     NodeFactory.createLiteralByValue(new Date(), XSDDatatype.XSDdate)));
 
             Thread.sleep(3000);
             System.out.println("mock parser: sending second triple");
-            dest.triple(new Triple(
+            dest.triple(Triple.create(
                     NodeFactory.createURI("http://ont.fel.cvut.cz/Person"),
                     NodeFactory.createURI("http://ont.fel.cvut.cz/name"),
                     NodeFactory.createLiteral("George", "en")));
