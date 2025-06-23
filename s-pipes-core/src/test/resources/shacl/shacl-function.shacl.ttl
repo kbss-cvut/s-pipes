@@ -27,8 +27,7 @@
 kbss-shaclf:create-sparql-service-url
   rdf:type sh:SPARQLFunction ;
   rdfs:label "create-sparql-service-url"^^xsd:string ;
-  sh:returnType  xsd:anyURI ; # TODO - is there a better alternative return type?
-#  rdfs:subClassOf 	spin:Functions ; TODO - is this needed?
+  sh:returnType  xsd:anyURI ;
   sh:select """SELECT ?serviceUrl
 WHERE {
     BIND (IRI(CONCAT(str($arg1), \"?default-graph-uri=\", ENCODE_FOR_URI(str($arg2)))) AS ?serviceUrl) .

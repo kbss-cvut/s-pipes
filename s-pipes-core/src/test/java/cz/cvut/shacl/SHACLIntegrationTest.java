@@ -20,8 +20,7 @@ import org.apache.jena.util.FileUtils;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.topbraid.shacl.arq.SHACLFunctions;
-import org.topbraid.spin.system.SPINModuleRegistry;
-import org.topbraid.spin.vocabulary.SP;
+import cz.cvut.spipes.spin.vocabulary.SP;
 
 import java.io.InputStream;
 import java.net.URLEncoder;
