@@ -2,6 +2,7 @@ package cz.cvut.spipes.modules.handlers;
 
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.exception.ScriptRuntimeErrorException;
+import cz.cvut.spipes.util.SPipesUtil;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
@@ -22,6 +23,10 @@ import java.util.Optional;
  * @param <T> The type of the value that this handler converts RDF nodes to.
  */
 abstract public class BaseRDFNodeHandler<T> extends Handler<T> {
+
+    static{
+        SPipesUtil.init(); // load system functions and jena enh nodes (e.g. Construct and Select)
+    }
 
     public BaseRDFNodeHandler(Resource resource, ExecutionContext executionContext, Setter<? super T> setter) {
         super(resource, executionContext, setter);

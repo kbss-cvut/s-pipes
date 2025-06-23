@@ -1,6 +1,7 @@
 package cz.cvut.shacl;
 
 import cz.cvut.spipes.constants.SML;
+import cz.cvut.spipes.util.SPipesUtil;
 import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.query.*;
@@ -76,7 +77,7 @@ public class SHACLIntegrationTest {
         Model funcDefModel = getCustomSHACLRDFFunctionModel();
 
         // register custom function
-        SHACLFunctions.registerFunctions(funcDefModel);
+        SPipesUtil.resetFunctions(funcDefModel);
 
         // load custom function call
         Model funcCallModel = ModelFactory.createDefaultModel();

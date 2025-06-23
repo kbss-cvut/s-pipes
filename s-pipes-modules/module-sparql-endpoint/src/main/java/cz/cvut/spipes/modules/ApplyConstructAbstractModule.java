@@ -15,7 +15,6 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.topbraid.spin.model.Construct;
-import org.topbraid.spin.system.SPINModuleRegistry;
 import org.topbraid.spin.vocabulary.SP;
 
 import java.util.Comparator;
@@ -55,11 +54,6 @@ public abstract class ApplyConstructAbstractModule extends AnnotatedAbstractModu
 
     )
     protected int iterationCount = -1;
-
-    public ApplyConstructAbstractModule() {
-        // TODO move elsewhere
-        SPINModuleRegistry.get().init(); //TODO -- downloads spin from the web (should be cached instead)
-    }
 
     protected QuerySolution generateIterationBinding(int currentIteration, QuerySolution globalBinding) {
         return globalBinding;
