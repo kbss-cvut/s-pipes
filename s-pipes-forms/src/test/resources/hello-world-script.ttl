@@ -39,12 +39,9 @@
         rdfs:label          "Bind greeting message" ;
         sm:next             :bind-greeting-message ;
         sm:outputVariable   "salutation" ;
-        sml:value [ a        sp:concat ;
-                                    sp:arg1   [ sp:varName  "salutation" ] ;
-                                    sp:arg2   [ sp:varName  " " ] ;
-                                    sp:arg3   [ sp:varName  "person" ] ;
-                                    sp:arg4   [ sp:varName  "." ] ;
-                                  ] .
+        sml:value [ a sp:Expression ;
+                    sp:text """concat(?salutation, " ", ?person, ".")""" ;]
+.
 
 
 

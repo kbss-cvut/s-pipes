@@ -18,14 +18,10 @@
 .
 sml:bind-greeting-1
   rdf:type sml:BindWithConstant ;
-  sm:outputVariable "greetingMessage" ;
-  sml:value [
-      rdf:type sp:concat ;
-      sp:arg1 "Hello " ;
-      sp:arg2 [
-          sp:varName "name" ;
-        ] ;
-    ] ;
+  sm:outputVariable "greetingMessage"^^xsd:string ;
+  sml:value [ a sp:Expression ;
+              sp:text """concat("Hello ", ?name)""" ;
+  ] ;
   rdfs:label "Bind greeting" ;
 .
 sml:bind-greeting-2
@@ -33,17 +29,9 @@ sml:bind-greeting-2
   sm:nodeX 317 ;
   sm:nodeY 170 ;
   sm:outputVariable "greetingMessage" ;
-  sml:value [
-      rdf:type sp:concat ;
-      sp:arg1 "Welcome " ;
-      sp:arg2 [
-          sp:varName "firstname" ;
-        ] ;
-      sp:arg3 " " ;
-      sp:arg4 [
-          sp:varName "surname" ;
-        ] ;
-    ] ;
+  sml:value [ a sp:Expression ;
+              sp:text """concat("Welcome ", ?firstname, " ", ?surname)""" ;
+  ] ;
   rdfs:label "bind-greeting" ;
 .
 sml:bind-name-1

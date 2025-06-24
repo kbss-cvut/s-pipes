@@ -1,6 +1,7 @@
 package cz.cvut.shacl;
 
 import cz.cvut.spipes.constants.SML;
+import cz.cvut.spipes.util.SPINUtils;
 import cz.cvut.spipes.util.SPipesUtil;
 import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.ontology.OntModelSpec;
@@ -8,20 +9,14 @@ import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.engine.binding.BindingFactory;
 import org.apache.jena.sparql.engine.binding.BindingMap;
-import org.apache.jena.sparql.expr.Expr;
-import org.apache.jena.sparql.expr.NodeValue;
-import org.apache.jena.sparql.function.FunctionEnv;
-import org.apache.jena.sparql.function.FunctionEnvBase;
-import org.apache.jena.sparql.util.ExprUtils;
 import org.apache.jena.util.FileUtils;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.topbraid.shacl.arq.SHACLFunctions;
-import cz.cvut.spipes.spin.vocabulary.SP;
 
 import java.io.InputStream;
 import java.net.URLEncoder;
@@ -87,14 +82,10 @@ public class SHACLIntegrationTest {
         funcCallModel.read(funcCallIs, null, FileUtils.langTurtle);
 
         RDFNode call = funcCallModel
-                .listStatements(null, funcCallModel.getProperty(SML.value),(RDFNode)null).nextStatement()
-                .getObject().asResource().listProperties(SP.expression).nextStatement().getObject();
-
-        PrefixMapping pm = PrefixMapping.Factory.create().setNsPrefixes(funcCallModel.getNsPrefixMap());
-//        NodeExpression callExpr = NodeExpressionFactory.get().create(call); // TODO - potential alternative
-//        Expr callExpr = SSE.parseExpr("kbss-spif:create-sparql-service-url(?sparqlEndpoint, ?defaultGraphUri)", pm);
-        Expr callExpr = ExprUtils.parse(call.toString(), pm);
-
+                .listStatements(null, funcCallModel.getProperty(SML.value),(RDFNode)null)
+                .mapWith(Statement::getObject)
+                .filterKeep(SPINUtils::isExpression)
+                .next();
 
         // evaluate expression
         BindingMap bindings = BindingFactory.create();
@@ -103,9 +94,7 @@ public class SHACLIntegrationTest {
         bindings.add(Var.alloc("sparqlEndpoint"), NodeFactory.createLiteral(repositoryUrl));
         bindings.add(Var.alloc("defaultGraphUri"), NodeFactory.createLiteral(graphId));
 
-        FunctionEnv fe = new FunctionEnvBase(null, null, DatasetFactory.create().asDatasetGraph());
-
-        NodeValue nodeValue = callExpr.eval(bindings, fe);
+        RDFNode nodeValue = SPINUtils.evaluate(call, bindings);
 
         assertEquals(nodeValue.asNode().toString(), constructServiceUrl(repositoryUrl, graphId));
     }

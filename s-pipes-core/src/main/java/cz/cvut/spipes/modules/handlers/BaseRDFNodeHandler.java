@@ -2,16 +2,13 @@ package cz.cvut.spipes.modules.handlers;
 
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.exception.ScriptRuntimeErrorException;
-import cz.cvut.spipes.util.SPipesUtil;
 import org.apache.jena.query.QuerySolution;
+import cz.cvut.spipes.util.SPINUtils;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
-import org.topbraid.spin.model.SPINFactory;
-import org.topbraid.spin.util.SPINExpressions;
 
-import java.io.IOException;
 import java.util.Optional;
 
 
@@ -23,10 +20,6 @@ import java.util.Optional;
  * @param <T> The type of the value that this handler converts RDF nodes to.
  */
 abstract public class BaseRDFNodeHandler<T> extends Handler<T> {
-
-    static{
-        SPipesUtil.init(); // load system functions and jena enh nodes (e.g. Construct and Select)
-    }
 
     public BaseRDFNodeHandler(Resource resource, ExecutionContext executionContext, Setter<? super T> setter) {
         super(resource, executionContext, setter);
@@ -49,13 +42,7 @@ abstract public class BaseRDFNodeHandler<T> extends Handler<T> {
                 .map(r -> r.getProperty(property))
                 .map(Statement::getObject)
                 .orElse(null);
-        if (SPINExpressions.isExpression(valueNode)) {
-            Resource expr = (Resource) SPINFactory.asExpression(valueNode);
-            QuerySolution bindings = executionContext.getVariablesBinding().asQuerySolution();
-            return SPINExpressions.evaluate(expr, resource.getModel(), bindings);
-        } else {
-            return valueNode;
-        }
+        return SPINUtils.evaluate(valueNode, executionContext);
     }
 
     /**
