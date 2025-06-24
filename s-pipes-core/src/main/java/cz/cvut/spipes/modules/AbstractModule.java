@@ -26,7 +26,7 @@ import org.topbraid.spin.model.Construct;
 import org.topbraid.spin.model.SPINFactory;
 import org.topbraid.spin.model.Select;
 import org.topbraid.spin.util.SPINExpressions;
-import org.topbraid.spin.vocabulary.SP;
+import cz.cvut.spipes.spin.vocabulary.SP;
 
 import java.io.File;
 import java.io.FileOutputStream;
