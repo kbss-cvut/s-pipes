@@ -53,15 +53,9 @@ of constructed RDF.
         a sml:BindWithConstant ;
         sm:next :bind-person-id ;
         sm:outputVariable "personName" ;
-        sml:value [
-            a sp:concat ;
-            sp:arg1 [
-                sp:varName "firstName" ;
-            ] ;
-            sp:arg2 " " ;
-            sp:arg3 [
-                sp:varName "lastName" ;
-            ] ;
+        sml:value [ 
+            a sp:Expression ;
+            sp:text """concat(?firstName, " ", ?lastName)""" ; 
         ] ;
         rdfs:label "Bind person name" ;
     .

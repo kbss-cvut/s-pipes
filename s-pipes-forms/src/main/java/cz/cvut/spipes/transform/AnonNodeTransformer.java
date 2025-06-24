@@ -9,9 +9,6 @@ import org.apache.jena.rdf.model.*;
 import org.apache.jena.shared.PrefixMapping;
 import org.apache.jena.shared.impl.PrefixMappingImpl;
 import org.topbraid.spin.arq.ARQFactory;
-import org.topbraid.spin.model.SPINFactory;
-import org.topbraid.spin.util.SPINExpressions;
-//import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Map;
 import java.util.Optional;
@@ -24,9 +21,6 @@ public class AnonNodeTransformer {
 
         if (r.getProperty(text) != null) {
             return r.getProperty(text).getLiteral().getString();
-        }
-        if (SPINExpressions.isExpression(r)) {
-            return SPINFactory.asExpression(r).toString();
         }
         Class commandCls = Optional.ofNullable(SPipesUtil.getSPinCommandType(r))
                  .map(p -> p.getClazz())

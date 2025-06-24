@@ -2,14 +2,31 @@ package cz.cvut.spipes.util;
 
 import cz.cvut.spipes.constants.SM;
 import cz.cvut.spipes.constants.SMF;
+import cz.cvut.spipes.engine.ExecutionContext;
+import cz.cvut.spipes.engine.VariablesBinding;
 import cz.cvut.spipes.spin.vocabulary.SP;
 import cz.cvut.spipes.spin.vocabulary.SPL;
 import cz.cvut.spipes.spin.vocabulary.SPR;
+import org.apache.jena.query.DatasetFactory;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.sparql.engine.binding.Binding;
+import org.apache.jena.sparql.engine.binding.BindingFactory;
+import org.apache.jena.sparql.expr.Expr;
+import org.apache.jena.sparql.expr.NodeValue;
+import org.apache.jena.sparql.function.FunctionEnv;
+import org.apache.jena.sparql.function.FunctionEnvBase;
 import org.apache.jena.sparql.function.FunctionRegistry;
+import org.apache.jena.sparql.util.ExprUtils;
+import org.apache.jena.vocabulary.RDF;
 
 import java.util.*;
 
 public class SPINUtils {
+    static {
+        SPipesUtil.init();
+    }
+
     private static final Set<String> COMMON_PREFIXES = new HashSet<String>() {{
         add("http://jena.hpl.hp.com/ARQ/function#");
         add(SP.NS);
@@ -36,5 +53,32 @@ public class SPINUtils {
 
     private static boolean startWithCustomPrefix(String url) {
         return COMMON_PREFIXES.stream().noneMatch(url::startsWith);
+    }
+
+    public static boolean isExpression(RDFNode node){
+        return node != null && node.isAnon() && node.asResource().hasProperty(RDF.type, SP.Expression);
+    }
+
+    public static RDFNode evaluate(RDFNode constantOrExpression, ExecutionContext context) {
+        return evaluate(constantOrExpression, Optional.ofNullable(context)
+                .map(ExecutionContext::getVariablesBinding)
+                .map(VariablesBinding::asBinding)
+                .orElse(BindingFactory.create()));
+    }
+
+    public static RDFNode evaluate(RDFNode constantOrExpression, Binding bindings) {
+        RDFNode valueNode = constantOrExpression;
+        if(!isExpression(valueNode))
+            return valueNode;
+
+        Model model = valueNode.getModel();
+        String exprStr = valueNode.asResource().listProperties(SP.text).nextStatement().getObject().toString();
+
+        Expr expr = ExprUtils.parse(exprStr.replaceAll("\\\\\"", "\""), model.getGraph().getPrefixMapping());
+
+        FunctionEnv fe = new FunctionEnvBase(null, null, DatasetFactory.create(model).asDatasetGraph());
+        NodeValue retNode = expr.eval(bindings, fe);
+
+        return model.getRDFNode(retNode.asNode());
     }
 }
