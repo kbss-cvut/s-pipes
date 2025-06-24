@@ -24,7 +24,7 @@ import org.apache.jena.query.QuerySolution;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.RDF;
 import org.topbraid.spin.model.Construct;
-import org.topbraid.spin.vocabulary.SP;
+import cz.cvut.spipes.spin.vocabulary.SP;
 
 import java.io.IOException;
 import java.nio.file.Path;

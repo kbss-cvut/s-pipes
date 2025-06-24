@@ -2,9 +2,9 @@ package cz.cvut.spipes.util;
 
 import cz.cvut.spipes.constants.SM;
 import cz.cvut.spipes.constants.SMF;
-import org.topbraid.spin.vocabulary.SP;
-import org.topbraid.spin.vocabulary.SPL;
-import org.topbraid.spin.vocabulary.SPR;
+import cz.cvut.spipes.spin.vocabulary.SP;
+import cz.cvut.spipes.spin.vocabulary.SPL;
+import cz.cvut.spipes.spin.vocabulary.SPR;
 import org.apache.jena.sparql.function.FunctionRegistry;
 
 import java.util.*;
