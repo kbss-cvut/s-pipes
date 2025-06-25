@@ -1,6 +1,6 @@
 package cz.cvut.sforms.util;
 
-import cz.cvut.kbss.jopa.loaders.DefaultClasspathScanner;
+import com.github.ledsoft.jopa.loader.BootAwareClasspathScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,7 +10,7 @@ import java.net.URL;
 import java.util.Enumeration;
 import java.util.jar.JarFile;
 
-public class SPipesFormsClassPathScanner extends DefaultClasspathScanner {
+public class SPipesFormsClassPathScanner extends BootAwareClasspathScanner {
     private static final Logger LOG = LoggerFactory.getLogger(SPipesFormsClassPathScanner.class);
 
     protected void processElements(Enumeration<URL> urls, String scanPath) throws IOException {
