@@ -16,19 +16,6 @@ apply-construct:CreateSampleTriples
   sm:nodeY 155 ;
   sml:constructQuery [
       rdf:type sp:Construct ;
-      sp:templates (
-          [
-            sp:object [
-                sp:varName "o" ;
-              ] ;
-            sp:predicate [
-                sp:varName "p" ;
-              ] ;
-            sp:subject [
-                sp:varName "s" ;
-              ] ;
-          ]
-        ) ;
       sp:text """CONSTRUCT {
     ?s ?p ?o .
 }
@@ -37,27 +24,6 @@ WHERE {
            ?s ?p ?o .
     }
 }""" ;
-      sp:where (
-          [
-            rdf:type sp:Service ;
-            sp:elements (
-                [
-                  sp:object [
-                      sp:varName "o" ;
-                    ] ;
-                  sp:predicate [
-                      sp:varName "p" ;
-                    ] ;
-                  sp:subject [
-                      sp:varName "s" ;
-                    ] ;
-                ]
-              ) ;
-            sp:serviceURI [
-                sp:varName "sampleServiceUri" ;
-              ] ;
-          ]
-        ) ;
     ] ;
   sml:replace "true"^^xsd:boolean ;
   rdfs:label "Create sample triples" ;
