@@ -14,7 +14,7 @@ import org.apache.jena.query.QuerySolution;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
-import org.topbraid.spin.model.Construct;
+import cz.cvut.spipes.spin.model.Construct;
 import cz.cvut.spipes.spin.vocabulary.SP;
 
 import java.util.Comparator;

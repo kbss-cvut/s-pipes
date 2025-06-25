@@ -16,7 +16,7 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.topbraid.spin.model.Construct;
+import cz.cvut.spipes.spin.model.Construct;
 import cz.cvut.spipes.spin.vocabulary.SP;
 
 import java.util.Comparator;

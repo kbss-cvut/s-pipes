@@ -12,7 +12,7 @@ import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.topbraid.spin.model.Command;
+import cz.cvut.spipes.spin.model.Command;
 import cz.cvut.spipes.spin.vocabulary.SP;
 
 import java.io.IOException;
@@ -59,7 +59,7 @@ public class SPipesUtil {
             if(Command.class.isAssignableFrom(c) && c.isInterface())
                 classes.add(c);
         });
-        scanner.processClasses("org.topbraid.spin.model");
+        scanner.processClasses("cz.cvut.spipes.spin.model");
         superClasses = new HashSet<>();
 
         // calculate superclasses
