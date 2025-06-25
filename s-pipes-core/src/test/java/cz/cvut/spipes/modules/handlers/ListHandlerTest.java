@@ -1,23 +1,19 @@
 package cz.cvut.spipes.modules.handlers;
 
 import cz.cvut.spipes.engine.ExecutionContext;
-import cz.cvut.spipes.exception.ScriptRuntimeErrorException;
-import org.apache.jena.query.QuerySolution;
 import org.apache.jena.rdf.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
-import org.topbraid.spin.model.SPINFactory;
-import org.topbraid.spin.util.SPINExpressions;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.MockitoAnnotations;
 
 import java.lang.reflect.Field;
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.List;
 
-import org.mockito.Mockito;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class ListHandlerTest {

@@ -8,6 +8,7 @@ import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.engine.VariablesBinding;
 import cz.cvut.spipes.exception.ValidationConstraintFailedException;
+import cz.cvut.spipes.spin.vocabulary.SP;
 import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.QueryUtils;
 import cz.cvut.spipes.util.SPipesUtil;
@@ -25,8 +26,6 @@ import org.topbraid.spin.model.Ask;
 import org.topbraid.spin.model.Construct;
 import org.topbraid.spin.model.SPINFactory;
 import org.topbraid.spin.model.Select;
-import org.topbraid.spin.util.SPINExpressions;
-import cz.cvut.spipes.spin.vocabulary.SP;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -40,6 +39,7 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.joining;
 
+// TODO - commit in 184-refactor-out-spin-functions
 /**
  * The `AbstractModule` class serves as a foundational abstract class for defining
  * modules executed in a processing pipeline. Each module is responsible for
@@ -438,23 +438,8 @@ public abstract class AbstractModule implements Module {
             .collect(Collectors.toList());
     }
 
-    protected RDFNode getEffectiveValue(@NotNull Property valueProperty) {
-        RDFNode valueNode = Optional.of(resource)
-            .map(r -> r.getProperty(valueProperty))
-            .map(Statement::getObject)
-            .orElse(null);
-        if (SPINExpressions.isExpression(valueNode)) {
-            Resource expr = (Resource) SPINFactory.asExpression(valueNode);
-            QuerySolution bindings = executionContext.getVariablesBinding().asQuerySolution();
-            RDFNode node = SPINExpressions.evaluate(expr, resource.getModel(), bindings); //TODO resource.getModel() should be part o context
-            if (node == null) {
-                log.error("SPIN expression {} for bindings {} evaluated to null.", expr, bindings);
-            }
-            return node;
-        } else {
-            return valueNode;
-        }
-    }
+    // TODO - is getEffectiveValue needed? It is used only in unused private method ImproveSPOWithMarginalsModule.getEffectiveStringValue
+    //  and in AbstractModuleTest.getEffectiveValueReturnsComputedValue
 
     /**
      * Helper method to creates output execution context considering isReplace flag
