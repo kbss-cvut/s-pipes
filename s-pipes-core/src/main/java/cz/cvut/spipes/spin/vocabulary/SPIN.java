@@ -1,5 +1,7 @@
 package cz.cvut.spipes.spin.vocabulary;
 
+import cz.cvut.spipes.util.JenaUtils;
+import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
@@ -154,4 +156,17 @@ public class SPIN {
     public final static Resource _this = ResourceFactory.createResource(NS + "_this");
 
 
+    static {
+        // Force initialization
+        SP.getURI();
+    }
+
+    private static Model model;
+
+    public static synchronized Model getModel() {
+        if(model == null) {
+            model = JenaUtils.getModel("/etc/spin.rdf", BASE_URI);
+        }
+        return model;
+    }
 }

@@ -1,7 +1,10 @@
 package cz.cvut.spipes.spin.vocabulary;
 
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.vocabulary.RDF;
 
 /**
  * Vocabulary for http://spinrdf.org/spr
@@ -52,4 +55,14 @@ public class SPR {
     public final static Resource rowCountFunction = ResourceFactory.createResource(NS + "rowCountFunction");
 
     public final static Resource union = ResourceFactory.createResource(NS + "union");
+
+
+    public static String getURI() {
+        return NS;
+    }
+
+
+    public static boolean exists(Model model) {
+        return model.contains(SPR.Table, RDF.type, (RDFNode)null);
+    }
 }

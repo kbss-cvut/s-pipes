@@ -9,6 +9,7 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFWriter;
 import org.apache.jena.riot.RIOT;
+import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.jetbrains.annotations.NotNull;
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -159,5 +161,15 @@ public class JenaUtils {
             .lang(Lang.TTL)
             .set(RIOT.multilineLiterals, true)
             .output(outputStream);
+    }
+
+    public static Model getModel(String resource, String ontologyIRI) {
+        Model model = ModelFactory.createDefaultModel();
+        InputStream is = resource == null
+                ? null
+                : JenaUtils.class.getResourceAsStream(resource);
+        return is == null
+                ? model.read(ontologyIRI)
+                : model.read(is, null, FileUtils.langTurtle);
     }
 }
