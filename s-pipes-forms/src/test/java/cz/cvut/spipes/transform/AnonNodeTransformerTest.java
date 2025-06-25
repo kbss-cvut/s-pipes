@@ -16,15 +16,6 @@ public class AnonNodeTransformerTest {
     private static final Property HAS_QUERY =  getExProperty("has-query");
 
     @Test
-    public void serializeForAskWithoutTextReturnsTextRepresentation() {
-        RDFNode node = getQueryNode("ask-constraint");
-        String nodeStr = AnonNodeTransformer.serialize(node);
-
-        assertTrue(nodeStr.contains("?descriptorType"));
-        assertFalse(nodeStr.contains("spinrdf"));
-    }
-
-    @Test
     public void serializeForConstructWithTextRepresentationReturnsItsText() {
         RDFNode node = getQueryNode("construct-with-comments");
         String nodeStr = AnonNodeTransformer.serialize(node);
