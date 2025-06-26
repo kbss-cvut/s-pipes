@@ -8,8 +8,7 @@ import cz.cvut.spipes.spin.vocabulary.SP;
 import cz.cvut.spipes.spin.vocabulary.SPL;
 import cz.cvut.spipes.spin.vocabulary.SPR;
 import org.apache.jena.query.DatasetFactory;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.*;
 import org.apache.jena.sparql.engine.binding.Binding;
 import org.apache.jena.sparql.engine.binding.BindingFactory;
 import org.apache.jena.sparql.expr.Expr;
@@ -57,6 +56,23 @@ public class SPINUtils {
 
     public static boolean isExpression(RDFNode node){
         return node != null && node.isAnon() && node.asResource().hasProperty(RDF.type, SP.Expression);
+    }
+
+    /**
+     * Evaluates the expression of the <code>property</code> value of the <code>resource</code> using bindings in the
+     * executionContext.
+     *
+     * @param resource
+     * @param property
+     * @param executionContext
+     * @return
+     */
+    public static RDFNode getEffectiveValue(Resource resource, Property property, ExecutionContext executionContext) {
+        RDFNode valueNode = Optional.of(resource)
+                .map(r -> r.getProperty(property))
+                .map(Statement::getObject)
+                .orElse(null);
+        return SPINUtils.evaluate(valueNode, executionContext);
     }
 
     public static RDFNode evaluate(RDFNode constantOrExpression, ExecutionContext context) {

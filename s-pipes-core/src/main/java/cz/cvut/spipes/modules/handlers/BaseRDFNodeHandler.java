@@ -2,7 +2,6 @@ package cz.cvut.spipes.modules.handlers;
 
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.exception.ScriptRuntimeErrorException;
-import org.apache.jena.query.QuerySolution;
 import cz.cvut.spipes.util.SPINUtils;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
@@ -38,11 +37,7 @@ abstract public class BaseRDFNodeHandler<T> extends Handler<T> {
      *         be the direct node value or the result of evaluating an RDF expression.
      */
     public RDFNode getEffectiveValue(Property property) {
-        RDFNode valueNode = Optional.of(resource)
-                .map(r -> r.getProperty(property))
-                .map(Statement::getObject)
-                .orElse(null);
-        return SPINUtils.evaluate(valueNode, executionContext);
+        return SPINUtils.getEffectiveValue(resource, property, executionContext);
     }
 
     /**
