@@ -54,7 +54,7 @@ CONSTRUCT {
 WHERE {
     ?s ?p ?o .
 # comment2: issue no. 1 -- datatype(?str) returning <xsd_string>
-    FILTER(! kbss-genf:matches-relative-iri(?o, \"xsd_string\"))
+    FILTER(! kbss-genf:matches-relative-iri(?o, "xsd_string"))
 }""" ] ;
 .
 

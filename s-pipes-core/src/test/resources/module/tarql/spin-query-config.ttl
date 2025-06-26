@@ -41,13 +41,13 @@ tarql-module:CreateSampleTriples
           ]
         ) ;
       sp:text """CONSTRUCT {
-    ?ECCAIRSEventID rdfs:label \"example\" . 
-    ?URI rdfs:label \"some uri\" .   
-    ?URI2 rdfs:label \"some uri2\" .   
+    ?ECCAIRSEventID rdfs:label "example" .
+    ?URI rdfs:label "some uri" .
+    ?URI2 rdfs:label "some uri2" .
 }
 WHERE {
     BIND (URI(CONCAT('http://companies/', STR(?ROWNUM))) AS ?URI)
-    BIND (URI(CONCAT('http://companies/', ?ECCAIRSEventID, \"---\",STR(?ROWNUM))) AS ?URI2)
+    BIND (URI(CONCAT('http://companies/', ?ECCAIRSEventID, "---",STR(?ROWNUM))) AS ?URI2)
 }""" ;
       sp:where (
           [

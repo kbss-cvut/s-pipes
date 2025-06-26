@@ -31,8 +31,8 @@ apply-construct:CreateSampleTriples
           ]
         ) ;
       sp:text """CONSTRUCT {
-    <http://example.org> rdfs:label \"example\" . 
-   <http://example.org> rdfs:label \"sample\" .     
+    <http://example.org> rdfs:label "example" .
+   <http://example.org> rdfs:label "sample" .
 }
 WHERE {
     
