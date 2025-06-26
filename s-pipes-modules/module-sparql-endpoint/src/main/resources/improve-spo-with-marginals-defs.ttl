@@ -729,7 +729,7 @@ WHERE {
          GROUP BY ?p ?sType ?oType
          }
       }
-        BIND(IRI(CONCAT(\"http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/di-\",MD5(CONCAT(str(?p),str(?sType),str(?oType),?executionId)))) as ?di) .
+        BIND(IRI(CONCAT("http://onto.fel.cvut.cz/ontologies/dataset-descriptor/s-p-o-summary/di-",MD5(CONCAT(str(?p),str(?sType),str(?oType),?executionId)))) as ?di) .
 }""" ;
       sp:where (
           (
