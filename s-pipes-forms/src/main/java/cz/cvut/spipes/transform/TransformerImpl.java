@@ -17,8 +17,8 @@ import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.topbraid.spin.arq.ARQ2SPIN;
-import org.topbraid.spin.vocabulary.SPIN;
-import org.topbraid.spin.vocabulary.SPL;
+import cz.cvut.spipes.spin.vocabulary.SPIN;
+import cz.cvut.spipes.spin.vocabulary.SPL;
 
 import java.io.ByteArrayOutputStream;
 import java.net.URI;

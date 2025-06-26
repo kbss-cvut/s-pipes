@@ -13,7 +13,7 @@ import org.apache.jena.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.topbraid.spin.model.Command;
-import org.topbraid.spin.vocabulary.SP;
+import cz.cvut.spipes.spin.vocabulary.SP;
 
 import java.io.IOException;
 import java.net.URL;
