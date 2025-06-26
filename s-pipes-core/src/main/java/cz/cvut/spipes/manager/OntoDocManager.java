@@ -2,6 +2,7 @@ package cz.cvut.spipes.manager;
 
 import cz.cvut.spipes.config.CompatibilityConfig;
 import cz.cvut.spipes.util.JenaUtils;
+import cz.cvut.spipes.util.SPipesUtil;
 import cz.cvut.spipes.util.SparqlMotionUtils;
 import org.apache.jena.atlas.web.HttpException;
 import org.apache.jena.ontology.OntDocumentManager;
@@ -16,14 +17,16 @@ import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.topbraid.spin.system.SPINModuleRegistry;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.nio.file.*;
+import java.nio.file.DirectoryIteratorException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Instant;
 import java.util.*;
@@ -383,17 +386,8 @@ public class OntoDocManager implements OntologyDocumentManager {
         log.warn("WORKAROUND -- Applying a workaround to register all SPIN modules ..."); // TODO remove this workaround
         Model model = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
         model.add(OntoDocManager.allLoadedFilesModel);
-        SPINModuleRegistry.get().reset();
-//        if (!SPINModuleRegistry.get().getFunctions().isEmpty()) {
-//            LOG.error("SPIN registry was not cleared.");
-//        }
-        SPINModuleRegistry.get().init();
-        SPINModuleRegistry.get().registerAll(model, null);
+        SPipesUtil.resetFunctions(model);
         clearSPINRelevantModel();
-//        OntModel model = ModelFactory.createOntologyModel();
-//        model.add(OntoDocManager.allLoadedFilesModel);
-//        SPINModuleRegistry.get().registerAll(model, null);
-
     }
     class OntologyReadFailureHandler implements OntDocumentManager.ReadFailureHandler {
         @Override

@@ -17,7 +17,6 @@ import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.topbraid.spin.arq.ARQ2SPIN;
-import org.topbraid.spin.system.SPINModuleRegistry;
 import org.topbraid.spin.vocabulary.SPIN;
 import org.topbraid.spin.vocabulary.SPL;
 
@@ -29,11 +28,6 @@ import java.util.stream.Collectors;
 import static cz.cvut.spipes.transform.SPipesUtil.isSPipesTerm;
 
 public class TransformerImpl implements Transformer {
-
-
-    public TransformerImpl() {
-        SPINModuleRegistry.get().init();
-    }
 
     @Override
     public Question script2Form(Resource module, Resource moduleType) {
