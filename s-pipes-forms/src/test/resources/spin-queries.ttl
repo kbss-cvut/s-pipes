@@ -11,42 +11,10 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix ex: <http://example.org/> .
 
-ex:ask-constraint
-  ex:has-query [
-      rdf:type sp:Ask ;
-      sp:where (
-          [
-            rdf:type sp:Filter ;
-            sp:expression [
-                rdf:type sp:not ;
-                sp:arg1 [
-                    rdf:type sp:bound ;
-                    sp:arg1 [
-                        sp:varName "descriptorType" ;
-                      ] ;
-                  ] ;
-              ] ;
-          ]
-        ) ;
-    ] ;
-.
 
 ex:construct-with-comments
   ex:has-query [
       rdf:type sp:Construct ;
-      sp:templates (
-          [
-            sp:object [
-                sp:varName "o" ;
-              ] ;
-            sp:predicate [
-                sp:varName "p" ;
-              ] ;
-            sp:subject [
-                sp:varName "s" ;
-              ] ;
-          ]
-        ) ;
       sp:text """# comment1: output triples that does not pose an issue
 CONSTRUCT {
     ?s ?p ?o .

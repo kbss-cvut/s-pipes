@@ -2,13 +2,12 @@ package cz.cvut.spipes.transform;
 
 import cz.cvut.sforms.Vocabulary;
 import cz.cvut.sforms.model.Question;
-import cz.cvut.spipes.util.QueryUtils;
+import cz.cvut.spipes.spin.vocabulary.SP;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
-import org.apache.jena.rdf.model.*;
-import org.apache.jena.shared.PrefixMapping;
-import org.apache.jena.shared.impl.PrefixMappingImpl;
-import org.topbraid.spin.arq.ARQFactory;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
 
 import java.util.Map;
 import java.util.Optional;
@@ -17,18 +16,12 @@ public class AnonNodeTransformer {
 
     public static String serialize(RDFNode node) {
         Resource r = node.asResource();
-        Property text = ResourceFactory.createProperty(Vocabulary.s_p_text);
 
-        if (r.getProperty(text) != null) {
-            return r.getProperty(text).getLiteral().getString();
-        }
-        Class commandCls = Optional.ofNullable(SPipesUtil.getSPinCommandType(r))
-                 .map(p -> p.getClazz())
-                 .filter(c -> r.canAs(c)).orElse(null);
-        if(commandCls != null)
-            return getFromQuery(r, commandCls);
+        if (r.getProperty(SP.text) != null)
+            return r.getProperty(SP.text).getObject().toString();
 
-        return ARQFactory.get().createExpressionString(r);
+        // TODO - return "" or null when node is null?
+        return Optional.ofNullable(node).map(RDFNode::toString).orElse("");
     }
 
     public static Query parse(Question q, Model m) {
@@ -47,12 +40,4 @@ public class AnonNodeTransformer {
         return QueryFactory.create(b.toString());
     }
 
-    private static <T extends org.topbraid.spin.model.Query> String getFromQuery(Resource r, Class<T> resClass) {
-        Query q = QueryUtils.createQuery(r.as(resClass));
-        Model m = r.getModel();
-        PrefixMapping mapping = new PrefixMappingImpl();
-        mapping.setNsPrefixes(m.getNsPrefixMap());
-        q.setPrefixMapping(mapping);
-        return q.serialize().replaceAll("(?m)^PREFIX.*\n", "").trim();
-    }
 }

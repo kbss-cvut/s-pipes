@@ -16,7 +16,6 @@ import org.apache.jena.util.ResourceUtils;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
-import org.topbraid.spin.arq.ARQ2SPIN;
 import cz.cvut.spipes.spin.vocabulary.SPIN;
 import cz.cvut.spipes.spin.vocabulary.SPL;
 
@@ -211,9 +210,9 @@ public class TransformerImpl implements Transformer {
                             .anyMatch(a -> !DigestUtils.sha1Hex(a.getTextValue()).equals(a.getHash()) && !DigestUtils.sha1Hex(a.getCodeValue().toString()).equals(a.getHash()))) {
                             throw new ConcurrentModificationException("TTL and form can not be edited at the same time");
                         }
+                        // TODO - keep to parse query in answer. If there is a syntax error an exception is thrown
                         Query query = AnonNodeTransformer.parse(q, inputScript);
-                        org.topbraid.spin.model.Query spinQuery = ARQ2SPIN.parseQuery(query.serialize(), inputScript);
-                        changingModel.add(spinQuery.getModel());
+                        changingModel.add(inputScript);
                         changingModel.add(
                                 ResourceFactory.createResource(uri),
                                 ResourceFactory.createProperty(Vocabulary.s_p_text),
