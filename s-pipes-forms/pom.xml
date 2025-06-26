@@ -29,6 +29,13 @@
             <version>${project.parent.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.ledsoft</groupId>
+            <artifactId>jopa-spring-boot-loader</artifactId>
+            <version>0.0.1</version>
+            <scope>compile</scope>
+        </dependency>
+
 
         <dependency>
             <groupId>com.intellij</groupId>
