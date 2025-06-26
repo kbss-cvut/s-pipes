@@ -11,6 +11,7 @@ import cz.cvut.spipes.exception.ValidationConstraintFailedException;
 import cz.cvut.spipes.spin.vocabulary.SP;
 import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.QueryUtils;
+import cz.cvut.spipes.util.SPINUtils;
 import cz.cvut.spipes.util.SPipesUtil;
 import org.apache.jena.atlas.lib.NotImplemented;
 import org.apache.jena.ontology.OntModel;
@@ -39,7 +40,6 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.joining;
 
-// TODO - commit in 184-refactor-out-spin-functions
 /**
  * The `AbstractModule` class serves as a foundational abstract class for defining
  * modules executed in a processing pipeline. Each module is responsible for
@@ -438,8 +438,9 @@ public abstract class AbstractModule implements Module {
             .collect(Collectors.toList());
     }
 
-    // TODO - is getEffectiveValue needed? It is used only in unused private method ImproveSPOWithMarginalsModule.getEffectiveStringValue
-    //  and in AbstractModuleTest.getEffectiveValueReturnsComputedValue
+    protected RDFNode getEffectiveValue(@NotNull Property valueProperty) {
+        return SPINUtils.getEffectiveValue(resource, valueProperty, executionContext);
+    }
 
     /**
      * Helper method to creates output execution context considering isReplace flag
