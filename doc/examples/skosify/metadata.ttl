@@ -32,12 +32,8 @@ sk-meta:bind-prefered-label-property
   a sml:BindWithConstant ;
   sm:next sk-meta:construct-labels ;
   sm:outputVariable "prefLabelProperty" ;
-  sml:value [
-      a sp:coalesce ;
-      sp:arg1 [
-          sp:varName "prefLabelProperty" ;
-        ] ;
-      sp:arg2 rdfs:label ;
+  sml:value [ a sp:Expression ;
+              sp:text """coalesce(?prefLabelProperty, rdfs:label)""" ;
     ] ;
   rdfs:label "Bind preferred label property" ;
 .

@@ -4,7 +4,7 @@ import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.registry.StreamResource;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
-import org.topbraid.spin.model.Select;
+import cz.cvut.spipes.spin.model.Select;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

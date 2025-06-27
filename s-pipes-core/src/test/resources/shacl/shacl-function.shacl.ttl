@@ -30,7 +30,7 @@ kbss-shaclf:create-sparql-service-url
   sh:returnType  xsd:anyURI ;
   sh:select """SELECT ?serviceUrl
 WHERE {
-    BIND (IRI(CONCAT(str($arg1), \"?default-graph-uri=\", ENCODE_FOR_URI(str($arg2)))) AS ?serviceUrl) .
+    BIND (IRI(CONCAT(str($arg1), "?default-graph-uri=", ENCODE_FOR_URI(str($arg2)))) AS ?serviceUrl) .
 }""" ;
   sh:parameter [
       # TODO would it work with <arg1> and a @base declaration instead of kbss-shaclf:arg1? Can it be  spl:predicate sp:arg1?

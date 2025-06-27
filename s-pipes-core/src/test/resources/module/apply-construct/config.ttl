@@ -17,26 +17,10 @@ apply-construct:CreateSampleTriples
   sm:nodeY 155 ;
   sml:constructQuery [
       rdf:type sp:Construct ;
-      sp:templates (
-          [
-            sp:object "example" ;
-            sp:predicate rdfs:label ;
-            sp:subject <http://example.org> ;
-          ]
-          [
-            sp:object "sample" ;
-            sp:predicate rdfs:label ;
-            sp:subject <http://example.org> ;
-          ]
-        ) ;
       sp:text """CONSTRUCT {
-    <http://example.org> rdfs:label \"example\" . 
-   <http://example.org> rdfs:label \"sample\" .     
-}
-WHERE {
-    
-}""" ;
-      sp:where () ;
+    <http://example.org> rdfs:label "example" .
+   <http://example.org> rdfs:label "sample" .
+} WHERE {}""" ;
     ] ;
   sml:replace "true"^^xsd:boolean ;
   rdfs:label "Create sample triples" ;

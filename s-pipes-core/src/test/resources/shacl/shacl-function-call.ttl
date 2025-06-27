@@ -24,7 +24,8 @@ kbss-shaclf:bind-with-expression-exmaple
   a sml:BindWithConstant ;
 #  sm:next <...> ;
   sm:outputVariable "sparqlServiceUrl" ;
-  sml:value [ sp:expression "kbss-shaclf:create-sparql-service-url(?sparqlEndpoint, ?defaultGraphUri)"; ] ;
+  sml:value [ a sp:Expression ;
+              sp:text "kbss-shaclf:create-sparql-service-url(?sparqlEndpoint, ?defaultGraphUri)"; ] ;
 .
 # TODO - alternative representation to be used with NodeExpressionFactory.get().create(call),
 #[

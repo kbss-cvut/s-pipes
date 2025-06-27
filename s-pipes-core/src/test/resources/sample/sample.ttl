@@ -23,13 +23,8 @@ sample:bind-greeting
   sm:nodeX 289 ;
   sm:nodeY 209 ;
   sm:outputVariable "greetingMessage" ;
-  sml:value [
-      rdf:type sp:concat ;
-      sp:arg1 "Hello " ;
-      sp:arg2 [
-          sp:varName "name" ;
-        ] ;
-    ] ;
+  sml:value [ a sp:Expression ;
+              sp:text """concat("Hello ", ?name)""" ;] ;
   rdfs:label "bind-greeting" ;
 .
 sample:bind-name
@@ -47,13 +42,8 @@ sample:bind-greeting-2
   sm:nodeX 289 ;
   sm:nodeY 209 ;
   sm:outputVariable "greetingMessage" ;
-  sml:value [
-      rdf:type sp:concat ;
-      sp:arg1 "Hello " ;
-      sp:arg2 [
-          sp:varName "name" ;
-        ] ;
-    ] ;
+  sml:value [ a sp:Expression ;
+              sp:text """concat("Hello ", ?name)""" ;] ;
   rdfs:label "bind-greeting" ;
 .
 

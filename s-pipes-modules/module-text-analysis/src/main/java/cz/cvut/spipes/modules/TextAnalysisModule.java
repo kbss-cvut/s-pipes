@@ -22,7 +22,7 @@ import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.topbraid.spin.model.Select;
+import cz.cvut.spipes.spin.model.Select;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -2,18 +2,14 @@ package cz.cvut.spipes.modules.handlers;
 
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.exception.ScriptRuntimeErrorException;
-import org.apache.jena.query.QuerySolution;
+import cz.cvut.spipes.util.SPINUtils;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
-import org.topbraid.spin.model.SPINFactory;
-import org.topbraid.spin.util.SPINExpressions;
+
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class ListHandler extends Handler<List<?>> {
@@ -49,15 +45,7 @@ public class ListHandler extends Handler<List<?>> {
         return resource.listProperties((Property) property)
                 .toList().stream()
                 .map(Statement::getObject)
-                .map(x -> {
-                    if (SPINExpressions.isExpression(x)) {
-                        Resource expr = (Resource) SPINFactory.asExpression(x);
-                        QuerySolution bindings = executionContext.getVariablesBinding().asQuerySolution();
-                        return SPINExpressions.evaluate(expr, resource.getModel(), bindings);
-                    } else {
-                        return x;
-                    }
-                })
+                .map(x -> SPINUtils.evaluate(x, executionContext))
                 .map(x -> {
                     try {
                         return handler.getRDFNodeValue(x);

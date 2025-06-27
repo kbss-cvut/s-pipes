@@ -21,7 +21,7 @@ import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
-import org.topbraid.spin.vocabulary.SP;
+import cz.cvut.spipes.spin.vocabulary.SP;
 
 import java.util.List;
 import java.util.stream.Collectors;

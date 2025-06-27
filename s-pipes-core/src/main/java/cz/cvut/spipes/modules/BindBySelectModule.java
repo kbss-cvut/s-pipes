@@ -9,7 +9,7 @@ import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.topbraid.spin.model.Select;
+import cz.cvut.spipes.spin.model.Select;
 
 public class BindBySelectModule extends AnnotatedAbstractModule {
 

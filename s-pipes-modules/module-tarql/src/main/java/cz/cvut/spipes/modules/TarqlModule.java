@@ -17,7 +17,7 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.util.FileUtils;
 import org.deri.tarql.tarql;
-import org.topbraid.spin.model.Construct;
+import cz.cvut.spipes.spin.model.Construct;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -49,11 +49,6 @@ public class TarqlModule extends AnnotatedAbstractModule {
 
     @Parameter(iri = SML.sourceFilePath, comment = "Source CSV file.")
     private String sourceFilePath;
-
-    public TarqlModule() {
-        //SPINModuleRegistry.get().init(); // TODO move elsewhere
-    }
-
 
     @Override
     public ExecutionContext executeSelf() {

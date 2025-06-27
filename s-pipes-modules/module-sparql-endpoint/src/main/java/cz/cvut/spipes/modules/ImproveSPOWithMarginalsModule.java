@@ -383,15 +383,4 @@ public class ImproveSPOWithMarginalsModule extends AnnotatedAbstractModule {
     public void loadManualConfiguration() {
         super.loadManualConfiguration();
     }
-
-    private @NotNull
-    String getEffectiveStringValue(String propertyUrl) {
-        RDFNode value = getEffectiveValue(ResourceFactory.createProperty(propertyUrl));
-        if (value == null) {
-            throw new RuntimeException(
-                String.format("Module's parameter '%s' returned value 'null' which is not allowed.", propertyUrl)
-            );
-        }
-        return getEffectiveValue(ResourceFactory.createProperty(propertyUrl)).asLiteral().toString();
-    }
 }

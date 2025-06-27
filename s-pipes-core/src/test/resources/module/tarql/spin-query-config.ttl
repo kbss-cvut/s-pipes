@@ -17,83 +17,16 @@ tarql-module:CreateSampleTriples
   sm:nodeY 155 ;
   sml:constructQuery [
       rdf:type sp:Construct ;
-      sp:templates (
-          [
-            sp:object "example" ;
-            sp:predicate rdfs:label ;
-            sp:subject [
-                sp:varName "ECCAIRSEventID" ;
-              ] ;
-          ]
-          [
-            sp:object "some uri" ;
-            sp:predicate rdfs:label ;
-            sp:subject [
-                sp:varName "URI" ;
-              ] ;
-          ]
-          [
-            sp:object "some uri2" ;
-            sp:predicate rdfs:label ;
-            sp:subject [
-                sp:varName "URI2" ;
-              ] ;
-          ]
-        ) ;
       sp:text """CONSTRUCT {
-    ?ECCAIRSEventID rdfs:label \"example\" . 
-    ?URI rdfs:label \"some uri\" .   
-    ?URI2 rdfs:label \"some uri2\" .   
+    ?ECCAIRSEventID rdfs:label "example" .
+    ?URI rdfs:label "some uri" .
+    ?URI2 rdfs:label "some uri2" .
 }
 WHERE {
     BIND (URI(CONCAT('http://companies/', STR(?ROWNUM))) AS ?URI)
-    BIND (URI(CONCAT('http://companies/', ?ECCAIRSEventID, \"---\",STR(?ROWNUM))) AS ?URI2)
+    BIND (URI(CONCAT('http://companies/', ?ECCAIRSEventID, "---",STR(?ROWNUM))) AS ?URI2)
 }""" ;
-      sp:where (
-          [
-            rdf:type sp:Bind ;
-            sp:expression [
-                rdf:type sp:uri ;
-                sp:arg1 [
-                    rdf:type sp:concat ;
-                    sp:arg1 "http://companies/" ;
-                    sp:arg2 [
-                        rdf:type sp:str ;
-                        sp:arg1 [
-                            sp:varName "ROWNUM" ;
-                          ] ;
-                      ] ;
-                  ] ;
-              ] ;
-            sp:variable [
-                sp:varName "URI" ;
-              ] ;
-          ]
-          [
-            rdf:type sp:Bind ;
-            sp:expression [
-                rdf:type sp:uri ;
-                sp:arg1 [
-                    rdf:type sp:concat ;
-                    sp:arg1 "http://companies/" ;
-                    sp:arg2 [
-                        sp:varName "ECCAIRSEventID" ;
-                      ] ;
-                    sp:arg3 "---" ;
-                    sp:arg4 [
-                        rdf:type sp:str ;
-                        sp:arg1 [
-                            sp:varName "ROWNUM" ;
-                          ] ;
-                      ] ;
-                  ] ;
-              ] ;
-            sp:variable [
-                sp:varName "URI2" ;
-              ] ;
-          ]
-        ) ;
-    ] ;
+  ] ;
   sml:replace "true"^^xsd:boolean ;
   sml:sourceFilePath "/home/blcha/projects/kbss/git/s-pipes/s-pipes-core/src/test/resources/tarql-module/table.csv" ;
   rdfs:label "Create sample triples" ;

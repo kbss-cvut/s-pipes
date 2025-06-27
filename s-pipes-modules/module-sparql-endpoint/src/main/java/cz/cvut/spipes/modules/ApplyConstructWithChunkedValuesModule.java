@@ -11,7 +11,7 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.jetbrains.annotations.NotNull;
-import org.topbraid.spin.model.Select;
+import cz.cvut.spipes.spin.model.Select;
 
 import java.util.Objects;
 

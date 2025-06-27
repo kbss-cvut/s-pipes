@@ -4,6 +4,7 @@ import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 
+// TODO - delete?
 public class SPL {
 
     /**
