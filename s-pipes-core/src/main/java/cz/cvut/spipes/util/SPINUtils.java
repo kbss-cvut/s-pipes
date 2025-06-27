@@ -1,7 +1,6 @@
 package cz.cvut.spipes.util;
 
 import cz.cvut.spipes.constants.SM;
-import cz.cvut.spipes.constants.SMF;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.VariablesBinding;
 import cz.cvut.spipes.spin.vocabulary.SP;
@@ -34,7 +33,6 @@ public class SPINUtils {
         add(SPL.NS);
         add(SPR.NS);
         add(SM.uri);
-        add(SMF.uri);
         add("http://www.w3.org/2005/xpath-functions#");
     }};
 
