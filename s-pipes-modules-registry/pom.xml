@@ -19,7 +19,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>cz.cvut.spipes.modules</groupId>
+            <groupId>cz.cvut.kbss</groupId>
             <artifactId>s-pipes-modules-text-analysis</artifactId>
             <version>${project.parent.version}</version>
         </dependency>

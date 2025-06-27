@@ -35,7 +35,6 @@
             <artifactId>s-pipes-modules-registry</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-
         <!-- Commandline parameters processing -->
         <dependency>
             <groupId>args4j</groupId>
