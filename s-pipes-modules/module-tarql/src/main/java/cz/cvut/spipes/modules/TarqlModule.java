@@ -17,7 +17,7 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.util.FileUtils;
 import org.deri.tarql.tarql;
-import org.topbraid.spin.model.Construct;
+import cz.cvut.spipes.spin.model.Construct;
 
 import java.io.*;
 import java.nio.charset.Charset;

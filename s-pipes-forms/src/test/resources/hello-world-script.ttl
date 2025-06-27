@@ -3,7 +3,6 @@
 @prefix fn:    <http://www.w3.org/2005/xpath-functions#> .
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix smf:   <http://topbraid.org/sparqlmotionfunctions#> .
 @prefix spif:  <http://spinrdf.org/spif#> .
 @prefix sml:   <http://topbraid.org/sparqlmotionlib#> .
 @prefix arg:   <http://spinrdf.org/arg#> .

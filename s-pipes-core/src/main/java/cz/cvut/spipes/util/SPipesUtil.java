@@ -1,9 +1,9 @@
 package cz.cvut.spipes.util;
 
+import cz.cvut.spipes.spin.vocabulary.SP;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.sparql.function.FunctionRegistry;
 import org.topbraid.shacl.arq.SHACLFunctions;
-import org.topbraid.spin.vocabulary.SP;
 
 import java.util.*;
 

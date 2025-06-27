@@ -23,7 +23,7 @@ import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.RDF;
-import org.topbraid.spin.model.Construct;
+import cz.cvut.spipes.spin.model.Construct;
 import cz.cvut.spipes.spin.vocabulary.SP;
 
 import java.io.IOException;

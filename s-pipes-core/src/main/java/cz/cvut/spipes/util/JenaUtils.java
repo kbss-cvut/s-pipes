@@ -1,6 +1,7 @@
 package cz.cvut.spipes.util;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.compose.MultiUnion;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -9,6 +10,7 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFWriter;
 import org.apache.jena.riot.RIOT;
+import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.jetbrains.annotations.NotNull;
@@ -17,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -160,4 +163,38 @@ public class JenaUtils {
             .set(RIOT.multilineLiterals, true)
             .output(outputStream);
     }
+
+    /**
+     * Hotfix for default namespace bug in Jena: default namespace of an import is returned when <code>model</code>
+     * does not declare it.
+     *
+     * @param model the Model to operate on
+     * @param prefix the prefix to get the URI of
+     * @return the URI of prefix
+     */
+    public static String getNsPrefixURI(Model model, String prefix) {
+        if ("".equals(prefix) && model.getGraph() instanceof MultiUnion) {
+            Graph baseGraph = ((MultiUnion)model.getGraph()).getBaseGraph();
+            if(baseGraph != null) {
+                return baseGraph.getPrefixMapping().getNsPrefixURI(prefix);
+            }
+            else {
+                return model.getNsPrefixURI(prefix);
+            }
+        }
+        else {
+            return model.getNsPrefixURI(prefix);
+        }
+    }
+
+    public static Model getModel(String resource, String ontologyIRI) {
+        Model model = ModelFactory.createDefaultModel();
+        InputStream is = resource == null
+                ? null
+                : JenaUtils.class.getResourceAsStream(resource);
+        return is == null
+            ? model.read(ontologyIRI)
+            : model.read(is, null, FileUtils.langTurtle);
+    }
+
 }
