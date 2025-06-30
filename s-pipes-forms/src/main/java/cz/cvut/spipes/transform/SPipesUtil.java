@@ -2,8 +2,9 @@ package cz.cvut.spipes.transform;
 
 import cz.cvut.kbss.jopa.loaders.ClasspathScanner;
 import cz.cvut.kbss.jopa.loaders.DefaultClasspathScanner;
-import cz.cvut.sforms.util.SPipesFormsClassPathScanner;
 import cz.cvut.spipes.constants.SM;
+import cz.cvut.spipes.spin.model.Command;
+import cz.cvut.spipes.spin.vocabulary.SP;
 import org.apache.jena.rdf.model.InfModel;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -12,8 +13,6 @@ import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import cz.cvut.spipes.spin.model.Command;
-import cz.cvut.spipes.spin.vocabulary.SP;
 
 import java.io.IOException;
 import java.net.URL;
@@ -54,7 +53,7 @@ public class SPipesUtil {
 
         // Find command related classes
 
-        ClasspathScanner scanner = new SPipesFormsClassPathScanner();
+        ClasspathScanner scanner = new DefaultClasspathScanner();
         scanner.addListener(c -> {
             if(Command.class.isAssignableFrom(c) && c.isInterface())
                 classes.add(c);
