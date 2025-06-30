@@ -369,13 +369,16 @@ public class TabularModule extends AnnotatedAbstractModule {
         int cellsNum = 1;
         for (Region region : regions) {
             int firstCellInRegionNum = cellsNum;
+            URI firstCellInRegion = null;
             for (int i = region.getFirstRow(); i <= region.getLastRow(); i++) {
                 for (int j = region.getFirstColumn(); j <= region.getLastColumn(); j++) {
                     Cell cell = new Cell(sourceResource.getUri() + "#cell" + cellsNum);
                     cell.setRow(tableSchema.createAboutUrl(i));
-                    cell.setColumn(outputColumns.get(j).getUri().toString());
+                    cell.setColumn(outputColumns.get(j).getUri());
                     if (cellsNum != firstCellInRegionNum) {
-                        cell.setSameValueAsCell(sourceResource.getUri() + "#cell" + firstCellInRegionNum);
+                        if(firstCellInRegion == null)
+                            firstCellInRegion = URI.create(sourceResource.getUri() + "#cell" + firstCellInRegionNum);
+                        cell.setSameValueAsCell(firstCellInRegion);
                     }
                     em.merge(cell);
                     cellsNum++;
@@ -429,7 +432,7 @@ public class TabularModule extends AnnotatedAbstractModule {
     }
 
     private Statement createRowResource(String cellValue, int rowNumber, Column column) {
-        Resource rowResource = ResourceFactory.createResource(tableSchema.createAboutUrl(rowNumber));
+        Resource rowResource = ResourceFactory.createResource(tableSchema.createAboutUrlStr(rowNumber));
 
         return ResourceFactory.createStatement(
                 rowResource,

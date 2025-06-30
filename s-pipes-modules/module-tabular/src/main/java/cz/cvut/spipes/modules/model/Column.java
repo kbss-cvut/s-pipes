@@ -6,6 +6,7 @@ import cz.cvut.spipes.constants.KBSS_CSVW;
 import cz.cvut.spipes.modules.util.TabularModuleUtils;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
@@ -43,7 +44,7 @@ public class Column extends AbstractEntity {
     private String title;
 
     @OWLAnnotationProperty(iri = KBSS_CSVW.propertyUri)
-    private String property;
+    private URI property;
 
     @OWLAnnotationProperty(iri = CSVW.requiredUri)
     private Boolean required;
@@ -134,18 +135,18 @@ public class Column extends AbstractEntity {
         this.suppressOutput = suppressOutput;
     }
 
-    public String getProperty() {
+    public URI getProperty() {
         return property;
     }
 
     public void setProperty(String dataPrefix, String sourceResourceUri, Column schemaColumn) throws UnsupportedEncodingException {
         String propertyValue = getPropertyUrl(dataPrefix, sourceResourceUri, schemaColumn);
-        tabularModuleUtils.setVariable(this.property, propertyValue, value -> this.property = value, "property");
+        tabularModuleUtils.setVariable(this.property, URI.create(propertyValue), value -> this.property = value, "property");
         tabularModuleUtils.setVariable(this.propertyUrl, propertyValue, value -> this.propertyUrl = value, "propertyUrl");
     }
 
     public void setProperty(String property){
-        this.property = property;
+        this.property = URI.create(property);
         this.propertyUrl = property;
     }
 
@@ -156,7 +157,7 @@ public class Column extends AbstractEntity {
                 return schemaColumn.getPropertyUrl();
             }
             if (schemaColumn.getProperty() != null){
-                return schemaColumn.getProperty();
+                return schemaColumn.getProperty().toString();
             }
         }
         if (dataPrefix != null && !dataPrefix.isEmpty()) {

@@ -4,29 +4,29 @@
             <http://www.w3.org/ns/csvw#row>
                     [ a       <http://www.w3.org/ns/csvw#Row> ;
                       <http://www.w3.org/ns/csvw#describes>
-                              "http://test-file#row-4" ;
+                              <http://test-file#row-4> ;
                       <http://www.w3.org/ns/csvw#rownum>
                                "3"^^<http://www.w3.org/2001/XMLSchema#int> ;
                       <http://www.w3.org/ns/csvw#url>
-                              "http://test-file#row=4"
+                              <http://test-file#row=4>
                     ] ;
             <http://www.w3.org/ns/csvw#row>
                     [ a       <http://www.w3.org/ns/csvw#Row> ;
                       <http://www.w3.org/ns/csvw#describes>
-                              "http://test-file#row-3" ;
+                              <http://test-file#row-3> ;
                       <http://www.w3.org/ns/csvw#rownum>
                                "2"^^<http://www.w3.org/2001/XMLSchema#int> ;
                       <http://www.w3.org/ns/csvw#url>
-                              "http://test-file#row=3"
+                              <http://test-file#row=3>
                     ] ;
             <http://www.w3.org/ns/csvw#row>
                     [ a       <http://www.w3.org/ns/csvw#Row> ;
                       <http://www.w3.org/ns/csvw#describes>
-                              "http://test-file#row-2" ;
+                              <http://test-file#row-2> ;
                       <http://www.w3.org/ns/csvw#rownum>
                                "1"^^<http://www.w3.org/2001/XMLSchema#int> ;
                       <http://www.w3.org/ns/csvw#url>
-                              "http://test-file#row=2"
+                              <http://test-file#row=2>
                     ] ;
             <http://www.w3.org/ns/csvw#tableSchema>
                     [ a       <http://www.w3.org/ns/csvw#TableSchema> ;
@@ -42,7 +42,7 @@
                               )
                     ] ;
             <http://www.w3.org/ns/csvw#url>
-                    "http://test-file"
+                    <http://test-file>
           ]
 ] .
 
@@ -52,7 +52,7 @@ _:b0    a       <http://www.w3.org/ns/csvw#Column> ;
         <http://www.w3.org/ns/csvw#propertyUrl>
                 "http://onto.fel.cvut.cz/data/longitude" ;
          <https://onto.fel.cvut.cz/ontologies/extension/csvw/property>
-                "http://onto.fel.cvut.cz/data/longitude" ;
+                <http://onto.fel.cvut.cz/data/longitude> ;
         <http://www.w3.org/ns/csvw#title>
                 "longitude" .
 
@@ -62,7 +62,7 @@ _:b1    a       <http://www.w3.org/ns/csvw#Column> ;
         <http://www.w3.org/ns/csvw#propertyUrl>
                 "http://onto.fel.cvut.cz/data/latitude" ;
         <https://onto.fel.cvut.cz/ontologies/extension/csvw/property>
-                "http://onto.fel.cvut.cz/data/latitude" ;
+                <http://onto.fel.cvut.cz/data/latitude> ;
         <http://www.w3.org/ns/csvw#title>
                 "latitude" .
 
@@ -72,7 +72,7 @@ _:b2    a       <http://www.w3.org/ns/csvw#Column> ;
         <http://www.w3.org/ns/csvw#propertyUrl>
                 "http://onto.fel.cvut.cz/data/name" ;
         <https://onto.fel.cvut.cz/ontologies/extension/csvw/property>
-                "http://onto.fel.cvut.cz/data/name" ;
+                <http://onto.fel.cvut.cz/data/name> ;
         <http://www.w3.org/ns/csvw#title>
                 "name" .
 
@@ -82,7 +82,7 @@ _:b3    a       <http://www.w3.org/ns/csvw#Column> ;
         <http://www.w3.org/ns/csvw#propertyUrl>
                 "http://onto.fel.cvut.cz/data/countryCode" ;
         <https://onto.fel.cvut.cz/ontologies/extension/csvw/property>
-                "http://onto.fel.cvut.cz/data/countryCode" ;
+                <http://onto.fel.cvut.cz/data/countryCode> ;
         <http://www.w3.org/ns/csvw#title>
                 "countryCode" .
 
