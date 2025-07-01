@@ -136,7 +136,7 @@ public class SUTimeModuleNew extends AnnotatedAbstractModule {
 
         log.debug("Extracting temporal information from model of size {}", m.size());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        List<ReifiedStatement> temporalAnnotationStmts = new LinkedList<>();
+        List<Resource> temporalAnnotationStmts = new LinkedList<>();
         m.listStatements()
             .filterDrop(st -> !st.getObject().isLiteral())
             .forEachRemaining(
@@ -148,7 +148,7 @@ public class SUTimeModuleNew extends AnnotatedAbstractModule {
 
                         if (!singleStDates.isEmpty()) {
                             Model mm = ModelFactory.createDefaultModel();
-                            ReifiedStatement reifiedSt = mm.createReifiedStatement(st);
+                            Resource reifiedSt = JenaUtils.createReifiedStatement(st);
 
                             for (AnnforModel s : singleStDates) {
 
