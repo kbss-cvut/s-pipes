@@ -3,14 +3,12 @@ package cz.cvut.spipes.util;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.compose.MultiUnion;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.*;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFWriter;
 import org.apache.jena.riot.RIOT;
 import org.apache.jena.util.FileUtils;
+import org.apache.jena.util.iterator.ExtendedIterator;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.jetbrains.annotations.NotNull;
@@ -197,4 +195,51 @@ public class JenaUtils {
             : model.read(is, null, FileUtils.langTurtle);
     }
 
+
+    /**
+     * HOTFIX - for model.listReifiedStatements()
+     *
+     * @param m
+     * @return iterator of resources which have the RDF.object property
+     */
+    public static ExtendedIterator<Resource> listStatementSubjectOfReifiedStatements(Model m){
+        return m.listResourcesWithProperty(RDF.object).filterKeep(r -> r.hasProperty(RDF.subject) && r.hasProperty(RDF.predicate));
+    }
+
+    /**
+     * HOTFIX - adding reified statement resource to model as statement
+     *
+     * @param m
+     * @return iterator of resources which have the RDF.object property
+     */
+    public static void addStatement(Model m, org.apache.jena.rdf.model.Resource rs){
+        m.add(rs.getPropertyResourceValue(RDF.subject), rs.getPropertyResourceValue(RDF.predicate).as(Property.class), rs.getProperty(RDF.object).getObject());
+    }
+
+    /**
+     * HOTFIX - add the reified statement of <code>st</code> to the model to the <code>st</code>
+     * @param st
+     * @return the resource representing the statement
+     */
+    public static Resource createReifiedStatement(Statement st) {
+        return createReifiedStatement(st.getModel(),st);
+    }
+
+    /**
+     * HOTFIX - add the reified statement of <code>st</code> to the <code>m</code>.
+     * @param st
+     * @return the resource representing the statement
+     */
+    public static Resource createReifiedStatement(Model m, Statement st) {
+
+        m.add(st);
+
+        Resource stR = m.createResource();
+        stR
+                .addProperty(RDF.type, RDF.Statement)
+                .addProperty(RDF.subject, st.getSubject())
+                .addProperty(RDF.predicate, st.getPredicate())
+                .addProperty(RDF.object, st.getObject());
+        return stR;
+    }
 }

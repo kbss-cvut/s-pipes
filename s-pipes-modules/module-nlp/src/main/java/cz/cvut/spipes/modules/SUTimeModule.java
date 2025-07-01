@@ -6,6 +6,7 @@ import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.sutime.AnnforModel;
 import cz.cvut.spipes.sutime.DescriptorModel;
+import cz.cvut.spipes.util.JenaUtils;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.*;
@@ -61,14 +62,14 @@ public class SUTimeModule extends AnnotatedAbstractModule {
         AnnotationPipeline pipeline = loadPipeline();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        List<ReifiedStatement> temporalAnnotationStmts = new LinkedList<>();
+        List<Resource> temporalAnnotationStmts = new LinkedList<>();
         m.listStatements()
             .filterDrop(st -> !st.getObject().isLiteral())
             .toList().forEach(
             st -> {
                 String objectStr = st.getObject().asLiteral().getLexicalForm();
 
-                ReifiedStatement reifiedSt = m.createReifiedStatement(st);
+                Resource reifiedSt = JenaUtils.createReifiedStatement(st);
                 try {
                     ArrayList<AnnforModel> singleStDates = temporalAnalysis(pipeline, objectStr);
                     for(AnnforModel s:singleStDates){
