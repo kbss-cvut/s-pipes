@@ -6,12 +6,14 @@ import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.exception.ModuleConfigurationInconsistentException;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
 import cz.cvut.spipes.util.CoreConfigProperies;
+import cz.cvut.spipes.util.JenaUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.DatasetFactory;
-import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.*;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFLanguages;
+import org.apache.jena.vocabulary.RDF;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
@@ -32,6 +34,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @SPipesModule(label = "deploy", comment =
@@ -204,13 +207,13 @@ public class Rdf4jDeployModule extends AnnotatedAbstractModule {
 
     static Dataset createDatasetFromAnnotatedModel(@NotNull Model model) {
         Dataset dataset = DatasetFactory.create();
-        model.listReifiedStatements().forEachRemaining(
+        JenaUtils.listStatementSubjectOfReifiedStatements(model).forEachRemaining(
             rs -> {
                 rs.listProperties(KBSS_MODULE.JENA.is_part_of_graph)
                     .mapWith( gs -> gs.getObject().toString())
                         .forEachRemaining(
                             u ->  {
-                                dataset.getNamedModel(u).add(rs.getStatement());
+                                JenaUtils.addStatement(dataset.getNamedModel(u), rs);
                             }
                         );
             }

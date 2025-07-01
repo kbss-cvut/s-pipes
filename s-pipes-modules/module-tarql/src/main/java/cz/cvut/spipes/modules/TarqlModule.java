@@ -10,7 +10,6 @@ import cz.cvut.spipes.registry.StreamResource;
 import cz.cvut.spipes.registry.StreamResourceRegistry;
 import cz.cvut.spipes.util.QueryUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.jena.ext.com.google.common.io.Files;
 import org.apache.jena.query.Query;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -21,10 +20,11 @@ import cz.cvut.spipes.spin.model.Construct;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
-import java.util.stream.Collectors;
 
 // TODO merge with ModuleTarql functionality
 @Slf4j
@@ -78,7 +78,7 @@ public class TarqlModule extends AnnotatedAbstractModule {
 
             try {
                 File tabularDataFile = File.createTempFile("output", ".tabular.txt");
-                Files.write(res.getContent(), tabularDataFile);
+                Files.write(tabularDataFile.toPath(), res.getContent());
                 tabularDataFilePath = tabularDataFile.getAbsolutePath();
             } catch (IOException e) {
                 throw new RuntimeException("Could not write tabular data stream to temporary file: {}", e);
@@ -100,8 +100,7 @@ public class TarqlModule extends AnnotatedAbstractModule {
                 final File queryFile = File.createTempFile("query", ".tarql");
                 final String queryString = query.toString();
                 //final String queryString = query.toString().replaceAll("\\?__FN__", "\"" + ontologyIRI + "\"");
-                Files.append(query.toString(), queryFile, Charset.defaultCharset());
-                //java.nio.file.Files.write(Paths.get(queryFile.toURI()), queryString.getBytes());
+                Files.writeString(queryFile.toPath(), query.toString(), Charset.defaultCharset(), StandardOpenOption.APPEND );
 
                 // execute tarql query.sparql table.csv
                 final File outputFile = File.createTempFile("output", ".ttl");

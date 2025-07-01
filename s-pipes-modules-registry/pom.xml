@@ -28,11 +28,11 @@
             <artifactId>s-pipes-modules-tabular</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-        <dependency>
-            <groupId>cz.cvut.kbss</groupId>
-            <artifactId>s-pipes-modules-tarql</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>cz.cvut.kbss</groupId>-->
+<!--            <artifactId>s-pipes-modules-tarql</artifactId>-->
+<!--            <version>${project.parent.version}</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>cz.cvut.kbss</groupId>
             <artifactId>s-pipes-modules-identity</artifactId>
