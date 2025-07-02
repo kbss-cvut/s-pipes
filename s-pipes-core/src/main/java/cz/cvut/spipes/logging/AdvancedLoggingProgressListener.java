@@ -55,8 +55,12 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
     private static final Map<String, Object> metadataMap = new HashMap<>();
     private static final Map<String, EntityManager> entityManagerMap = new HashMap<>();
     private static final Map<Long, Path> logDir = new HashMap<>();
+    private static final String P_HAS_PART =
+        Vocabulary.ONTOLOGY_IRI_DATASET_DESCRIPTOR + "/has-part";
+    private static final String P_HAS_NEXT =
+        Vocabulary.ONTOLOGY_IRI_DATASET_DESCRIPTOR + "/has-next";
     private static final String P_HAS_INPUT_BINDDING =
-        Vocabulary.ONTOLOGY_IRI_dataset_descriptor + "/has-input-binding";
+        Vocabulary.ONTOLOGY_IRI_DATASET_DESCRIPTOR + "/has-input-binding";
     private static final String LOCAL_NAME = "advanced-logging-progress-listener";
     private static final String PREFIX_IRI = SPIPES.uri + LOCAL_NAME + "/";
     static final Property P_RDF4J_SERVER_URL = getParameter("p-rdf4j-server-url");

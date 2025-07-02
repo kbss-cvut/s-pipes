@@ -5,19 +5,19 @@
         <relativePath>../s-pipes-parent</relativePath>
         <groupId>cz.cvut.kbss</groupId>
         <artifactId>s-pipes-parent</artifactId>
-        <version>0.5.0</version>
+        <version>0.6.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
 
-    <version>0.5.0</version>
+    <version>0.6.0</version>
     <artifactId>s-pipes-debug</artifactId>
     <description>Module for debugging of s-pipes</description>
     <name>SPipes Interface - Debug</name>
     <packaging>jar</packaging>
 
     <properties>
-        <org.mapstruct.version>1.5.3.Final</org.mapstruct.version>
+        <org.mapstruct.version>1.6.3</org.mapstruct.version>
     </properties>
 
     <repositories>
@@ -61,17 +61,6 @@
         <dependency>
             <groupId>com.github.ledsoft</groupId>
             <artifactId>jopa-spring-transaction</artifactId>
-            <version>0.1.2</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-tx</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-tx</artifactId>
         </dependency>
 
         <!--  Other  -->
@@ -115,9 +104,7 @@
         <dependency>
             <groupId>com.github.ledsoft</groupId>
             <artifactId>jopa-spring-boot-loader</artifactId>
-            <version>0.0.1</version>
         </dependency>
-
         <!-- Test Dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

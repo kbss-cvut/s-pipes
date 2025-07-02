@@ -15,8 +15,8 @@ public class TabularModuleUtils {
      * @param variableSetter The setter of the column/tableSchema variable
      * @param variableName The name of the column/tableSchema variable we want to set
      */
-    public void setVariable(String schemaBasedValue, String dataBasedValue,
-                                   UnaryOperator<String> variableSetter, String variableName) {
+    public <T> void setVariable(T schemaBasedValue, T dataBasedValue,
+                                   UnaryOperator<T> variableSetter, String variableName) {
         if (schemaBasedValue != null){
             checkVariable(schemaBasedValue, dataBasedValue, variableName);
         }else {
@@ -24,7 +24,7 @@ public class TabularModuleUtils {
         }
     }
 
-    private void checkVariable(String schemaBasedValue, String dataBasedValue, String variableName) {
+    private <T> void checkVariable(T schemaBasedValue, T dataBasedValue, String variableName) {
         if (!schemaBasedValue.equals(dataBasedValue)) {
             throw new NoMatchException(
                     String.format("Schema field '%s' with value '%s' does not match value '%s' from the input data ",
