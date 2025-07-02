@@ -18,14 +18,16 @@
             <groupId>cz.cvut.kbss</groupId>
             <artifactId>s-pipes-core</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.eclipse.rdf4j</groupId>
-            <artifactId>rdf4j-repository-sail</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.rdf4j</groupId>
-            <artifactId>rdf4j-sail-spin</artifactId>
-        </dependency>
+<!-- Do we need spin sail? I do not see where it is used?
+If we need constraint validation we can try using SHACL ( org.eclipse.rdf4j-rdf4j-shacl-5.0.3) instead of SPIN, see https://rdf4j.org/documentation/programming/spin/ -->
+<!--        <dependency>-->
+<!--            <groupId>org.eclipse.rdf4j</groupId>-->
+<!--            <artifactId>rdf4j-repository-sail</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.eclipse.rdf4j</groupId>-->
+<!--            <artifactId>rdf4j-sail-spin</artifactId>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>eu.trentorise.opendata</groupId>
             <artifactId>jackan</artifactId>

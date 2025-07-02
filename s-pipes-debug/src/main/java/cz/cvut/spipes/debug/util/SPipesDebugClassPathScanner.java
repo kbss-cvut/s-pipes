@@ -1,7 +1,6 @@
 package cz.cvut.spipes.debug.util;
 
 import com.github.ledsoft.jopa.loader.BootAwareClasspathScanner;
-import cz.cvut.kbss.jopa.loaders.DefaultClasspathScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,12 +19,12 @@ public class SPipesDebugClassPathScanner extends BootAwareClasspathScanner {
             if (visited.contains(url)) {
                 continue;
             }
-            visited.add(url);
+            visited.add(url.toString());
             LOG.trace("Processing classpath element {}", url);
             if (isJar(url.toString())) {
                 processJarFile(createJarFile(url));
             } else {
-                processDirectory(new File(getUrlAsUri(url).getPath()), scanPath);
+                processDirectory(new File(url.getPath()), scanPath);
             }
         }
     }

@@ -13,6 +13,7 @@ import org.apache.jena.util.ResourceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -228,7 +229,11 @@ public class TableSchema extends AbstractEntity {
         }else LOG.error(msg);
     }
 
-    public String createAboutUrl(int rowNumber) {
+    public URI createAboutUrl(int rowNumber) {
+        return URI.create(createAboutUrlStr(rowNumber));
+    }
+
+    public String createAboutUrlStr(int rowNumber) {
         String columnAboutUrlStr = aboutUrl;
         if (columnAboutUrlStr == null) columnAboutUrlStr = getAboutUrl();
         columnAboutUrlStr = columnAboutUrlStr.replace(
