@@ -1,5 +1,6 @@
 package cz.cvut.spipes.transform;
 
+import com.github.ledsoft.jopa.loader.BootAwareClasspathScanner;
 import cz.cvut.kbss.jopa.loaders.ClasspathScanner;
 import cz.cvut.kbss.jopa.loaders.DefaultClasspathScanner;
 import cz.cvut.spipes.constants.SM;
@@ -53,7 +54,7 @@ public class SPipesUtil {
 
         // Find command related classes
 
-        ClasspathScanner scanner = new DefaultClasspathScanner();
+        ClasspathScanner scanner = new BootAwareClasspathScanner();
         scanner.addListener(c -> {
             if(Command.class.isAssignableFrom(c) && c.isInterface())
                 classes.add(c);

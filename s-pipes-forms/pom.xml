@@ -59,6 +59,11 @@
             <artifactId>commons-codec</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.ledsoft</groupId>
+            <artifactId>jopa-spring-boot-loader</artifactId>
+        </dependency>
+
         <!-- Jena -->
         <dependency>
             <groupId>org.apache.jena</groupId>

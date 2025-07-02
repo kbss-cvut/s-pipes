@@ -18,14 +18,13 @@ package cz.cvut.spipes.debug.persistance;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.github.ledsoft.jopa.loader.BootAwareClasspathScanner;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 
-import cz.cvut.spipes.debug.util.SPipesDebugClassPathScanner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 
 import cz.cvut.kbss.jopa.Persistence;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
@@ -82,7 +81,7 @@ public class PersistenceFactory {
         final Map<String, String> properties = new HashMap<>(PARAMS);
         properties.put(JOPAPersistenceProperties.ONTOLOGY_PHYSICAL_URI_KEY, repositoryUrl);
         properties.put(JOPAPersistenceProperties.DATA_SOURCE_CLASS, propertyResolver.getProperty(DRIVER_PROPERTY));
-        properties.put(JOPAPersistenceProperties.CLASSPATH_SCANNER_CLASS, SPipesDebugClassPathScanner.class.getName());
+        properties.put(JOPAPersistenceProperties.CLASSPATH_SCANNER_CLASS, BootAwareClasspathScanner.class.getName());
         this.emf = Persistence.createEntityManagerFactory("debug", properties);
     }
 
