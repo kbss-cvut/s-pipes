@@ -27,6 +27,8 @@
         <com.fasterxml.jackson.version>2.14.0</com.fasterxml.jackson.version>
         <org.eclipse.rdf4j.version>5.0.3</org.eclipse.rdf4j.version>
         <cz.cvut.kbss.jopa.version>2.2.0</cz.cvut.kbss.jopa.version>
+        <cz.cvut.kbss.jopa.spring.tx.version>0.4.0</cz.cvut.kbss.jopa.spring.tx.version>
+
         <org.junit.jupiter.version>5.9.2</org.junit.jupiter.version>
         <org.mockito.version>5.0.0</org.mockito.version>
         <commons.io.version>2.7</commons.io.version>
@@ -162,6 +164,12 @@
                 <groupId>cz.cvut.kbss.jopa</groupId>
                 <artifactId>ontodriver-jena</artifactId>
                 <version>${cz.cvut.kbss.jopa.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.ledsoft</groupId>
+                <artifactId>jopa-spring-transaction</artifactId>
+                <version>${cz.cvut.kbss.jopa.spring.tx.version}</version>
             </dependency>
 
             <!-- Spring Boot -->

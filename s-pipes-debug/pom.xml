@@ -61,7 +61,6 @@
         <dependency>
             <groupId>com.github.ledsoft</groupId>
             <artifactId>jopa-spring-transaction</artifactId>
-            <version>0.4.0</version>
         </dependency>
 
         <!--  Other  -->
