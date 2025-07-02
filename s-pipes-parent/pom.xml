@@ -165,11 +165,15 @@
                 <artifactId>ontodriver-jena</artifactId>
                 <version>${cz.cvut.kbss.jopa.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>com.github.ledsoft</groupId>
                 <artifactId>jopa-spring-transaction</artifactId>
                 <version>${cz.cvut.kbss.jopa.spring.tx.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.ledsoft</groupId>
+                <artifactId>jopa-spring-boot-loader</artifactId>
+                <version>0.0.1</version>
             </dependency>
 
             <!-- Spring Boot -->
