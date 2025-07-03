@@ -11,8 +11,12 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.sparql.core.Var;
-import org.apache.jena.sparql.engine.binding.BindingFactory;
-import org.apache.jena.sparql.engine.binding.BindingMap;
+import org.apache.jena.sparql.engine.binding.BindingBuilder;
+import org.apache.jena.sparql.expr.Expr;
+import org.apache.jena.sparql.expr.NodeValue;
+import org.apache.jena.sparql.function.FunctionEnv;
+import org.apache.jena.sparql.function.FunctionEnvBase;
+import org.apache.jena.sparql.util.ExprUtils;
 import org.apache.jena.util.FileUtils;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
@@ -88,13 +92,13 @@ public class SHACLIntegrationTest {
                 .next();
 
         // evaluate expression
-        BindingMap bindings = BindingFactory.create();
+        BindingBuilder bb = BindingBuilder.create();
         String repositoryUrl = "http://repository.org";
         String graphId = "http://graphid.org";
-        bindings.add(Var.alloc("sparqlEndpoint"), NodeFactory.createLiteral(repositoryUrl));
-        bindings.add(Var.alloc("defaultGraphUri"), NodeFactory.createLiteral(graphId));
+        bb.add(Var.alloc("sparqlEndpoint"), NodeFactory.createLiteralString(repositoryUrl));
+        bb.add(Var.alloc("defaultGraphUri"), NodeFactory.createLiteralString(graphId));
 
-        RDFNode nodeValue = SPINUtils.evaluate(call, bindings);
+        RDFNode nodeValue = SPINUtils.evaluate(call, bb.build());
 
         assertEquals(nodeValue.asNode().toString(), constructServiceUrl(repositoryUrl, graphId));
     }

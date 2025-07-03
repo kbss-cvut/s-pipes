@@ -3,24 +3,21 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
-
-import java.nio.charset.StandardCharsets;
-import java.time.Instant;
-import java.util.Calendar;
-
 import cz.cvut.spipes.modules.annotations.SPipesModule;
 import org.apache.commons.io.IOUtils;
 import org.apache.jena.query.ParameterizedSparqlString;
-import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.sparql.exec.http.QueryExecutionHTTP;
+import org.apache.jena.sparql.exec.http.QueryExecutionHTTPBuilder;
 import org.apache.jena.vocabulary.RDF;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.util.Calendar;
 
 @SPipesModule(label = "sparqlEndpointDatasetExplorer-v1", comment = "TODO")
 public class SparqlEndpointDatasetExplorerModule extends AnnotatedAbstractModule {
@@ -61,11 +58,13 @@ public class SparqlEndpointDatasetExplorerModule extends AnnotatedAbstractModule
             model.add(iAccess, pHasUrl, ResourceFactory.createResource(propSparqlEndpointUrl));
             model.add(iAccess, pHasTime, ResourceFactory.createTypedLiteral(
                 Calendar.getInstance()));
-            try {
-                final Query query = strSparql.asQuery();
-                final QueryExecution qexec =
-                    QueryExecutionFactory.sparqlService(propSparqlEndpointUrl, query);
-                qexec.setTimeout(propConnectionTimeout, propQueryTimeout);
+
+
+            // TODO - check in git history that timeout(propConnectionTimeout) is proper replacement for previous call of setTimeout(propConnectionTimeout, propQueryTimeout)?
+            QueryExecutionHTTPBuilder builder = QueryExecutionHTTP.service(propSparqlEndpointUrl);
+
+            builder.query(strSparql.toString()).timeout(propConnectionTimeout);
+            try (final QueryExecution qexec = builder.build()) {
                 model.add(qexec.execConstruct());
             } catch (Exception e) {
                 model.add(iAccess,

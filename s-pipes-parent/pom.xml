@@ -13,13 +13,13 @@
 
     <artifactId>s-pipes-parent</artifactId>
     <name>SPipes Parent</name>
-    <version>0.6.0</version>
+    <version>0.7.0</version>
     <packaging>pom</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jdk.version>17</jdk.version>
-        <org.apache.jena>3.17.0</org.apache.jena>
+        <org.apache.jena>5.2.0</org.apache.jena>
         <org.springframework.security.version>6.2.8</org.springframework.security.version>
         <org.springframework.boot.version>3.4.2</org.springframework.boot.version>
         <!-- Should be in sync with Spring Boot version -->
@@ -96,6 +96,11 @@
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
+                <version>4.5.13</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient-cache</artifactId>
                 <version>4.5.13</version>
             </dependency>
             <dependency>

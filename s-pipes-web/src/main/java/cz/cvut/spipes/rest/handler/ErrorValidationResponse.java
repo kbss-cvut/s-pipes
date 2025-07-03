@@ -44,7 +44,7 @@ public class ErrorValidationResponse {
 
         // Convert the model to expanded JSON-LD (otherwise framing does not work)
         StringWriter compactWriter = new StringWriter();
-        RDFDataMgr.write(compactWriter, getModel(), RDFFormat.JSONLD_EXPAND_FLAT);
+        RDFDataMgr.write(compactWriter, getModel(), RDFFormat.JSONLD_FLAT);
         String expandedJsonLD = compactWriter.toString();
         Object expandedJsonObject = JsonUtils.fromString(expandedJsonLD);
 

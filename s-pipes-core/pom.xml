@@ -9,7 +9,7 @@
         <relativePath>../s-pipes-parent</relativePath>
         <groupId>cz.cvut.kbss</groupId>
         <artifactId>s-pipes-parent</artifactId>
-        <version>0.6.0</version>
+        <version>0.7.0</version>
     </parent>
 
     <name>SPipes Core</name>
@@ -79,7 +79,7 @@
         <dependency>
             <groupId>org.topbraid</groupId>
             <artifactId>shacl</artifactId>
-            <version>1.0.1</version>
+            <version>1.4.4</version>
             <exclusions> <!-- TODO update jena libs and remove exclusions -->
                 <exclusion>
                     <groupId>org.apache.jena</groupId>

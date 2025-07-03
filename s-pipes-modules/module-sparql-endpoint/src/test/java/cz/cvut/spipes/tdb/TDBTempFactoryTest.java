@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.tdb.store.GraphTDB;
+import org.apache.jena.tdb1.store.GraphTDB;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

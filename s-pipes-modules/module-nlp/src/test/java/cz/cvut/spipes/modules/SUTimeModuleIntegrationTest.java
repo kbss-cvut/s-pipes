@@ -3,6 +3,7 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.sparql.exec.http.QueryExecutionHTTP;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -41,7 +42,7 @@ public class SUTimeModuleIntegrationTest {
     private Model getModel(String endpointUrl, String namedGraphUri) {
         String query = "CONSTRUCT {?s ?p ?o } FROM { GRAPH <" + namedGraphUri + "> { ?s ?p ?o } }";
 
-        return QueryExecutionFactory.sparqlService(endpointUrl, query).execConstruct();
+        return QueryExecutionHTTP.service(endpointUrl, query).execConstruct();
     }
 
     private void deployTemporalExtraction(String inputEndpointUrl, String namedGraphUri, String outputSesameServerUrl, String outputRepositoryName) {

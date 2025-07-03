@@ -77,7 +77,7 @@ public class SPINUtils {
         return evaluate(constantOrExpression, Optional.ofNullable(context)
                 .map(ExecutionContext::getVariablesBinding)
                 .map(VariablesBinding::asBinding)
-                .orElse(BindingFactory.create()));
+                .orElse(BindingFactory.empty()));
     }
 
     public static RDFNode evaluate(RDFNode constantOrExpression, Binding bindings) {

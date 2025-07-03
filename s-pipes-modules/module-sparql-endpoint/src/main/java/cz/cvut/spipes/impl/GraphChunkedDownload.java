@@ -1,8 +1,8 @@
 package cz.cvut.spipes.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.sparql.exec.http.QueryExecutionHTTP;
 
 
 @Slf4j
@@ -57,7 +57,10 @@ public abstract class GraphChunkedDownload {
      * @return
      */
     protected Model executeQuery(String query) {
-        return QueryExecutionFactory.sparqlService(endpointUrl, query).execConstruct();
+        // According to docs QueryExecutionHTTP is AutoCloseable and models from returned construct are valid after close
+        try(QueryExecutionHTTP qe = QueryExecutionHTTP.service(endpointUrl, query)) {
+            return qe.execConstruct();
+        }
     }
 
     public String getNamedGraphId() {

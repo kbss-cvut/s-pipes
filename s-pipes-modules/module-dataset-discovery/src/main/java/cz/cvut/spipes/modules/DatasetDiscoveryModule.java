@@ -3,18 +3,9 @@ package cz.cvut.spipes.modules;
 import cz.cvut.spipes.Vocabulary;
 import cz.cvut.spipes.constants.KBSS_MODULE;
 import cz.cvut.spipes.engine.ExecutionContext;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TimeZone;
-
 import cz.cvut.spipes.modules.annotations.SPipesModule;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.Syntax;
@@ -22,10 +13,17 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.sparql.exec.http.QueryExecutionHTTP;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.RDF;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TimeZone;
 
 @Slf4j
 @SPipesModule(label = "dataset discovery v1", comment =
@@ -43,13 +41,14 @@ public class DatasetDiscoveryModule extends AnnotatedAbstractModule {
 
         org.apache.jena.query.Query query = QueryFactory.create();
         QueryFactory.parse(query, s, "", Syntax.syntaxSPARQL_11);
-        QueryExecution qexec = QueryExecutionFactory.sparqlService(endpoint, query);
-        ResultSet r = qexec.execSelect();
-        r.forEachRemaining(querySolution -> {
-            if (querySolution.contains("g")) {
-                datasets.add(querySolution.get("g").asResource().getURI());
-            }
-        });
+        try(QueryExecution qexec = QueryExecutionHTTP.service(endpoint, query)) {
+            ResultSet r = qexec.execSelect();
+            r.forEachRemaining(querySolution -> {
+                if (querySolution.contains("g")) {
+                    datasets.add(querySolution.get("g").asResource().getURI());
+                }
+            });
+        }
 
         return datasets;
     }

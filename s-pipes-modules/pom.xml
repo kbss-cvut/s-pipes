@@ -6,7 +6,7 @@
     <parent>
         <artifactId>s-pipes-parent</artifactId>
         <groupId>cz.cvut.kbss</groupId>
-        <version>0.6.0</version>
+        <version>0.7.0</version>
         <relativePath>../s-pipes-parent/pom.xml</relativePath>
     </parent>
 
@@ -26,7 +26,7 @@
         <module>module-security</module>
         <module>module-sparql-endpoint</module>
         <module>module-tabular</module>
-        <module>module-tarql</module>
+<!--        <module>module-tarql</module>-->
         <module>module-text-analysis</module>
     </modules>
 

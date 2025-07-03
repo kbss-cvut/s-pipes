@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.tdb.TDBFactory;
+import org.apache.jena.tdb1.TDB1Factory;
 
 @Slf4j
 public class TDBTempFactory {
@@ -28,7 +28,7 @@ public class TDBTempFactory {
         finalizePhantomModels();
         Path tempDir = getTempDir();
         log.debug("Creating temporary TDB dataset at directory {}.", tempDir);
-        Dataset ds = TDBFactory.createDataset(tempDir.toString());
+        Dataset ds = TDB1Factory.createDataset(tempDir.toString());
         Model outModel = ds.getNamedModel(getRandomModelUri());
         setUpFinalization(outModel);
         return ds.getNamedModel(getRandomModelUri());

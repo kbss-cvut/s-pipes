@@ -8,12 +8,12 @@
         <relativePath>../s-pipes-parent</relativePath>
         <groupId>cz.cvut.kbss</groupId>
         <artifactId>s-pipes-parent</artifactId>
-        <version>0.6.0</version>
+        <version>0.7.0</version>
     </parent>
 
     <name>SPipes Interface - Web</name>
     <artifactId>s-pipes-web</artifactId>
-    <version>0.6.0</version>
+    <version>0.7.0</version>
     <packaging>war</packaging>
 
     <repositories>
@@ -44,6 +44,10 @@
                     <artifactId>log4j-slf4j2-impl</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient-cache</artifactId>
         </dependency>
 
         <!-- SPipes core -->
