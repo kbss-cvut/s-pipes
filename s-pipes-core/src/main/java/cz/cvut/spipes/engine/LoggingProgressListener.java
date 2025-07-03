@@ -18,6 +18,11 @@ public class LoggingProgressListener implements ProgressListener {
     }
 
     @Override
+    public void pipelineExecutionFailed(long pipelineExecutionId) {
+        LOG.debug("pipelineExecutionFailed - pipelineExecutionId: {}", pipelineExecutionId);
+    }
+
+    @Override
     public void moduleExecutionStarted(long pipelineExecutionId, String moduleExecutionId, Module outputModule, ExecutionContext inputContext, String predecessorModuleExecutionId) {
         LOG.debug("moduleExecutionStarted - pipelineExecutionId: {}, moduleExecutionId: {}, inputContext: {}, predecessorModuleExecutionId: {}", pipelineExecutionId,
             moduleExecutionId, inputContext, predecessorModuleExecutionId);
