@@ -60,7 +60,7 @@ public class SparqlEndpointDatasetExplorerModule extends AnnotatedAbstractModule
                 Calendar.getInstance()));
 
 
-            // TODO - is timeout(propConnectionTimeout) proper replacement for setTimeout(propConnectionTimeout, propQueryTimeout)?
+            // TODO - check in git history that timeout(propConnectionTimeout) is proper replacement for previous call of setTimeout(propConnectionTimeout, propQueryTimeout)?
             QueryExecutionHTTPBuilder builder = QueryExecutionHTTP.service(propSparqlEndpointUrl);
 
             builder.query(strSparql.toString()).timeout(propConnectionTimeout);
