@@ -115,6 +115,34 @@ public class SemanticLoggingProgressListener implements ProgressListener {
         }
     }
 
+    @Override
+    public void pipelineExecutionFailed(final long pipelineExecutionId) {
+        final EntityManager em = entityManagerMap.get(getPipelineExecutionIri(pipelineExecutionId));
+        synchronized (em) {
+            if (em.isOpen()) {
+                final TurtleWriterFactory factory = new TurtleWriterFactory();
+                try (FileOutputStream fos = new FileOutputStream(
+                        Files.createFile(getDir(pipelineExecutionId).resolve("log.ttl")).toFile())) {
+                    final RDFWriter writer = factory.getWriter(fos);
+                    writer.startRDF();
+                    RepositoryConnection con = em.unwrap(SailRepository.class).getConnection();
+                    final ValueFactory f = con.getValueFactory();
+                    final RepositoryResult<Statement> res = con
+                            .getStatements(null, null, null, true, f.createIRI(getPipelineExecutionIri(pipelineExecutionId)));
+                    while (res.hasNext()) {
+                        writer.handleStatement(res.next());
+                    }
+                    writer.endRDF();
+                } catch (IOException e) {
+                    log.error("Error during failed pipeline execution logging.", e);
+                }
+                entityManagerMap.remove(em);
+                em.close();
+                logDir.remove(pipelineExecutionId);
+            }
+        }
+    }
+
     @Override public void moduleExecutionStarted(final long pipelineExecutionId, final String moduleExecutionId,
                                                  final Module outputModule,
                                                  final ExecutionContext inputContext,

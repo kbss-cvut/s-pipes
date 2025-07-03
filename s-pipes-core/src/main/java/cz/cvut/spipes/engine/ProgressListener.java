@@ -25,6 +25,8 @@ public interface ProgressListener {
      */
     void pipelineExecutionFinished(long pipelineExecutionId);
 
+    void pipelineExecutionFailed(long pipelineExecutionId);
+
     /**
      * Triggers when execution of a module within a pipeline starts.
      *
