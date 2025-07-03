@@ -3,6 +3,7 @@ package cz.cvut.spipes.modules.model;
 import cz.cvut.kbss.jopa.model.annotations.*;
 import cz.cvut.spipes.constants.CSVW;
 
+import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,7 +15,7 @@ public class Table extends AbstractEntity{
     private TableSchema tableSchema;
 
     @OWLAnnotationProperty(iri = CSVW.URL)
-    private String url;
+    private URI url;
 
     @OWLObjectProperty(iri = CSVW.rowUri, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Row> rows = new HashSet<>();
@@ -38,11 +39,15 @@ public class Table extends AbstractEntity{
         this.rows = rows;
     }
 
-    public String getUrl() {
+    public URI getUrl() {
         return url;
     }
 
     public void setUrl(String url) {
+        setUrl(URI.create(url));
+    }
+
+    public void setUrl(URI url) {
         this.url = url;
     }
 

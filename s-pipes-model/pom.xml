@@ -9,12 +9,12 @@
         <relativePath>../s-pipes-parent</relativePath>
         <groupId>cz.cvut.kbss</groupId>
         <artifactId>s-pipes-parent</artifactId>
-        <version>0.5.0</version>
+        <version>0.6.0</version>
     </parent>
 
     <name>SPipes Model</name>
     <artifactId>s-pipes-model</artifactId>
-    <version>0.5.0</version>
+    <version>0.6.0</version>
     <packaging>jar</packaging>
 
     <dependencies>
@@ -56,45 +56,6 @@
                     <properties-type>object</properties-type>
                     <vocabulary-only>true</vocabulary-only>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>aspectj-maven-plugin</artifactId>
-                <configuration>
-                    <complianceLevel>${jdk.version}</complianceLevel>
-                    <source>${jdk.version}</source>
-                    <target>${jdk.version}</target>
-                    <showWeaveInfo>true</showWeaveInfo>
-                    <aspectLibraries>
-                        <aspectLibrary>
-                            <groupId>cz.cvut.kbss.jopa</groupId>
-                            <artifactId>jopa-impl</artifactId>
-                        </aspectLibrary>
-                    </aspectLibraries>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.aspectj</groupId>
-                        <artifactId>aspectjtools</artifactId>
-                        <version>${org.aspectj.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.aspectj</groupId>
-                        <artifactId>aspectjrt</artifactId>
-                        <version>${org.aspectj.version}</version>
-                    </dependency>
-                </dependencies>
-                <executions>
-                    <execution>
-                        <phase>process-classes</phase>
-                        <goals>
-                            <goal>compile</goal>
-                            <!-- use this goal to weave all your main classes -->
-                            <goal>test-compile</goal>
-                            <!-- use this goal to weave all your test classes -->
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

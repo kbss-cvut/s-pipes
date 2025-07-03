@@ -25,13 +25,13 @@ public class Cell extends AbstractEntity{
     private String name;
 
     @OWLAnnotationProperty(iri = KBSS_CSVW.isPartOfRow)
-    private String row;
+    private URI row;
 
     @OWLAnnotationProperty(iri = KBSS_CSVW.isPartOfColumn)
-    private String column;
+    private URI column;
 
     @OWLAnnotationProperty(iri = KBSS_CSVW.sameValueAsUri)
-    private String sameValueAsCell;
+    private URI sameValueAsCell;
 
     private final transient TabularModuleUtils tabularModuleUtils = new TabularModuleUtils();
 
@@ -43,27 +43,27 @@ public class Cell extends AbstractEntity{
         this.name = name;
     }
 
-    public String getSameValueAsCell() {
+    public URI getSameValueAsCell() {
         return sameValueAsCell;
     }
 
-    public void setSameValueAsCell(String sameValueAsCell) {
+    public void setSameValueAsCell(URI sameValueAsCell) {
         this.sameValueAsCell = sameValueAsCell;
     }
 
-    public void setRow(String row) {
+    public void setRow(URI row) {
         tabularModuleUtils.setVariable(this.row, row, value -> this.row = value, "rowName");
     }
 
-    public String getRow() {
+    public URI getRow() {
         return row;
     }
 
-    public void setColumn(String column) {
+    public void setColumn(URI column) {
         tabularModuleUtils.setVariable(this.column, column, value -> this.column = value, "columnName");
     }
 
-    public String getColumn() {
+    public URI getColumn() {
         return column;
     }
 

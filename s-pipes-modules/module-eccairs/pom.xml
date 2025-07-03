@@ -5,7 +5,7 @@
     <parent>
         <artifactId>s-pipes-modules</artifactId>
         <groupId>cz.cvut.kbss</groupId>
-        <version>0.5.0</version>
+        <version>0.6.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -35,7 +35,7 @@
         <dependency>
             <groupId>cz.cvut.inbas.eccairs</groupId>
             <artifactId>e5xml</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>0.0.10</version>
         </dependency>
         <dependency>
             <groupId>org.openrdf.sesame</groupId>

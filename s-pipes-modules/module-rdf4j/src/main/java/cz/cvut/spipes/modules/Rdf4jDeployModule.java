@@ -135,7 +135,7 @@ public class Rdf4jDeployModule extends AnnotatedAbstractModule {
                 return ExecutionContextFactory.createContext(executionContext.getDefaultModel());
             }
 
-            repository.initialize();
+            repository.init();
             connection = repository.getConnection();
 
             connection.begin();

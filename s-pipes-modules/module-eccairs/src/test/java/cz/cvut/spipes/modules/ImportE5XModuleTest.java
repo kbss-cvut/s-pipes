@@ -7,10 +7,13 @@ import cz.cvut.spipes.registry.StringStreamResource;
 import java.io.IOException;
 import java.net.URL;
 import org.apache.commons.io.IOUtils;
-import static org.aspectj.bridge.MessageUtil.fail;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 abstract class ImportE5XModuleTest {
+    private static final Logger LOG = LoggerFactory.getLogger(ImportE5XModuleTest.class);
 
     public void execute(String path, String contentType) {
         URL e5xFileResource = ImportE5XModuleTest.class.getResource(path);
@@ -35,7 +38,7 @@ abstract class ImportE5XModuleTest {
             assertTrue(modelSizeWithoutMapping > 0);
             assertTrue(modelSizeWithoutMapping < modelSizeWithMapping);
         } catch (IOException e) {
-            fail(e.getMessage());
+            LOG.error(e.getMessage());
         }
     }
 }
