@@ -13,7 +13,7 @@
 
     <artifactId>s-pipes-parent</artifactId>
     <name>SPipes Parent</name>
-    <version>0.6.0</version>
+    <version>0.7.0</version>
     <packaging>pom</packaging>
 
     <properties>
