@@ -1,5 +1,6 @@
 package cz.cvut.spipes.engine;
 
+import cz.cvut.spipes.logging.AdvancedLoggingProgressListener;
 import cz.cvut.spipes.modules.Module;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -26,10 +27,23 @@ class ExecutionEngineImpl implements ExecutionEngine {
         log.info("Executing script {} with context {}.", module.getResource(), inputContext.toSimpleString());
         final long pipelineExecutionId = Instant.now().toEpochMilli()*1000+(i++);
 
-        fire((l) -> {l.pipelineExecutionStarted(pipelineExecutionId); return null;});
-        ExecutionContext outputContext = _executePipeline(pipelineExecutionId, module, inputContext, null);
-        fire((l) -> {l.pipelineExecutionFinished(pipelineExecutionId); return null;});
-        return outputContext;
+        String functionName = module.getFunctionName();
+        String scriptPath = module.getScriptPath();
+        fire((l) -> {l.pipelineExecutionStarted(pipelineExecutionId, functionName, scriptPath); return null;});
+        try {
+            ExecutionContext outputContext = _executePipeline(pipelineExecutionId, module, inputContext, null);
+            fire((l) -> {l.pipelineExecutionFinished(pipelineExecutionId); return null;});
+            return outputContext;
+        } catch (Exception e) {
+            log.error("Pipeline execution failed", e);
+            fire((l) -> {
+                if (l instanceof AdvancedLoggingProgressListener) {
+                    ((AdvancedLoggingProgressListener) l).pipelineExecutionFailed(pipelineExecutionId);
+                }
+                return null;
+            });
+            throw e;
+        }
     }
 
     private void fire(final Function<ProgressListener,Void> function) {

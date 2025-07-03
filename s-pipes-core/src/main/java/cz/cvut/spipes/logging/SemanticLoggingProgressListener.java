@@ -68,7 +68,7 @@ public class SemanticLoggingProgressListener implements ProgressListener {
     public SemanticLoggingProgressListener(Resource configResource) {
     }
 
-    @Override public void pipelineExecutionStarted(final long pipelineExecutionId) {
+    @Override public void pipelineExecutionStarted(final long pipelineExecutionId, final String functionName, final String scriptPath) {
         Thing pipelineExecution = new Thing();
         pipelineExecution.setId(getPipelineExecutionIri(pipelineExecutionId));
         pipelineExecution.setTypes(Collections.singleton(Vocabulary.s_c_pipeline_execution));
