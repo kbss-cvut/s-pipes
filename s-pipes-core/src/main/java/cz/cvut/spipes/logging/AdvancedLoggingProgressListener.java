@@ -103,7 +103,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
     }
 
     @Override
-    public void pipelineExecutionStarted(final long pipelineExecutionId) {
+    public void pipelineExecutionStarted(final long pipelineExecutionId, String functionName, String scriptPath) {
         PipelineExecution pipelineExecution = new PipelineExecution();
         pipelineExecution.setId(getPipelineExecutionIri(pipelineExecutionId));
         pipelineExecution.setTypes(Collections.singleton(Vocabulary.s_c_transformation));
@@ -115,7 +115,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
 
         final EntityManager metadataEM = getMetadataEmf().createEntityManager();
         synchronized (metadataEM) {
-            persistPipelineExecutionStarted(metadataEM, pipelineExecutionId, pipelineExecution);
+            persistPipelineExecutionStarted(metadataEM, pipelineExecutionId, pipelineExecution, functionName, scriptPath);
             entityManagerMap.put(pipelineExecution.getId(), metadataEM);
         }
 
@@ -126,13 +126,16 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
 //        entityManagerMap.put(pipelineExecution.getId(), em);
     }
 
-    private void persistPipelineExecutionStarted(final EntityManager em, long pipelineExecutionId, Thing pipelineExecution) {
+    private void persistPipelineExecutionStarted(final EntityManager em, long pipelineExecutionId, Thing pipelineExecution, final String functionName, final String scriptPath) {
         em.getTransaction().begin();
 
         // new
         Date startDate = new Date();
         addProperty(pipelineExecution, SPIPES.has_pipeline_execution_start_date, startDate);
         addProperty(pipelineExecution, SPIPES.has_pipeline_execution_start_date_unix, startDate.getTime());
+        addProperty(pipelineExecution, SPIPES.has_executed_function_name, functionName);
+        ((PipelineExecution) pipelineExecution).setHas_executed_function_name(functionName); // TODO remove this setter when addProperty will correctly set the value
+        addProperty(pipelineExecution, SPIPES.has_executed_function_script_path, scriptPath);
 
         if (pipelineExecutionGroupId != null) {
             addProperty(pipelineExecution, PIPELINE_EXECUTION_GROUP_ID, pipelineExecutionGroupId);
@@ -188,8 +191,28 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_finish_date, finishDate);
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_finish_date_unix, finishDate.getTime());
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_duration, computeDuration(startDate, finishDate));
+            pipelineExecution.setHas_pipeline_name(pipelineName); // TODO remove this setter when addProperty will correctly set the value
             addProperty(pipelineExecution, SPIPES.has_pipeline_name, pipelineName);
+            addProperty(pipelineExecution, SPIPES.has_pipeline_execution_status, "FINISHED");
 //            addScript(pipelineExecution, scriptManager.getScriptByContextId(pipelineName));
+            em.getTransaction().commit();
+            em.close();
+        }
+    }
+
+    private void persistPipelineExecutionFailed(final EntityManager em, final long pipelineExecutionId) {
+        if (em.isOpen()) {
+            log.debug("Saving metadata about failed pipeline execution {}.", pipelineExecutionId);
+            em.getTransaction().begin();
+
+            String pipelineExecutionIri = getPipelineExecutionIri(pipelineExecutionId);
+            final EntityDescriptor pd = new EntityDescriptor(URI.create(pipelineExecutionIri));
+            final PipelineExecution pipelineExecution =
+                    em.find(PipelineExecution.class, pipelineExecutionIri, pd);
+
+            String pipelineName = metadataMap.get(SPIPES.has_pipeline_name.toString()).toString();
+            addProperty(pipelineExecution, SPIPES.has_pipeline_name, pipelineName);
+            addProperty(pipelineExecution, SPIPES.has_pipeline_execution_status, "FAILED");
             em.getTransaction().commit();
             em.close();
         }
@@ -215,6 +238,16 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
 
         synchronized (em) {
             persistPipelineExecutionFinished(em, pipelineExecutionId);
+            entityManagerMap.remove(em);
+            executionMap.remove(getPipelineExecutionIri(pipelineExecutionId));
+        }
+    }
+
+    public void pipelineExecutionFailed(final long pipelineExecutionId) {
+        final EntityManager em = entityManagerMap.get(getPipelineExecutionIri(pipelineExecutionId));
+
+        synchronized (em) {
+            persistPipelineExecutionFailed(em, pipelineExecutionId);
             entityManagerMap.remove(em);
             executionMap.remove(getPipelineExecutionIri(pipelineExecutionId));
         }

@@ -484,6 +484,26 @@ public abstract class AbstractModule implements Module {
         }).collect(Collectors.toList());
     }
 
+    private String functionName;
+
+    public void setFunctionName(String functionName) {
+        this.functionName = functionName;
+    }
+
+    public String getFunctionName() {
+        return functionName;
+    }
+
+    private String scriptPath;
+
+    public void setScriptPath(String scriptPath) {
+        this.scriptPath = scriptPath;
+    }
+
+    public String getScriptPath() {
+        return scriptPath;
+    }
+
 //    @Override
 //    public String toString() {
 //        String resourceId = (resource  != null) ? ( " (" + resource.getId() + ")") : "";

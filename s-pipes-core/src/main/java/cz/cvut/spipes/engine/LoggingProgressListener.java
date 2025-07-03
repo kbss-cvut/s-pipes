@@ -8,7 +8,7 @@ public class LoggingProgressListener implements ProgressListener {
     private static final Logger LOG = LoggerFactory.getLogger(LoggingProgressListener.class);
 
     @Override
-    public void pipelineExecutionStarted(long pipelineExecutionId) {
+    public void pipelineExecutionStarted(long pipelineExecutionId, final String functionName, final String scriptPath) {
         LOG.debug("pipelineExecutionStarted - pipelineExecutionId: {}", pipelineExecutionId);
     }
 
