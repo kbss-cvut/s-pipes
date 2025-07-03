@@ -5,12 +5,12 @@
         <relativePath>../s-pipes-parent</relativePath>
         <groupId>cz.cvut.kbss</groupId>
         <artifactId>s-pipes-parent</artifactId>
-        <version>0.6.0</version>
+        <version>0.7.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
 
-    <version>0.6.0</version>
+    <version>0.7.0</version>
     <artifactId>s-pipes-debug</artifactId>
     <description>Module for debugging of s-pipes</description>
     <name>SPipes Interface - Debug</name>

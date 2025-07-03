@@ -4,7 +4,7 @@
     <parent>
         <groupId>cz.cvut.kbss</groupId>
         <artifactId>s-pipes-modules</artifactId>
-        <version>0.6.0</version>
+        <version>0.7.0</version>
     </parent>
     <artifactId>s-pipes-modules-rdfstream</artifactId>
     <name>SPipes Modules - RDF Stream</name>

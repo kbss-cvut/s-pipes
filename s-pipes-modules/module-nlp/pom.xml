@@ -5,7 +5,7 @@
     <parent>
         <artifactId>s-pipes-modules</artifactId>
         <groupId>cz.cvut.kbss</groupId>
-        <version>0.6.0</version>
+        <version>0.7.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -21,7 +21,7 @@
         <dependency> <!-- TODO extract to separate lib -->
             <groupId>cz.cvut.kbss</groupId>
             <artifactId>s-pipes-modules-sparql-endpoint</artifactId>
-            <version>0.6.0</version>
+            <version>0.7.0</version>
         </dependency>
         <!--<dependency>-->
             <!--<groupId>org.ocpsoft.prettytime</groupId>-->
@@ -59,7 +59,7 @@
         <dependency>
             <groupId>cz.cvut.kbss</groupId>
             <artifactId>s-pipes-modules-rdf4j</artifactId>
-            <version>0.6.0</version>
+            <version>0.7.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
