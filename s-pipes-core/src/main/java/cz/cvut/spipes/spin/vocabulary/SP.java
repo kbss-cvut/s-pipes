@@ -1,8 +1,24 @@
 package cz.cvut.spipes.spin.vocabulary;
 
-import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.ResourceFactory;
+import cz.cvut.spipes.spin.model.Ask;
+import cz.cvut.spipes.spin.model.Construct;
+import cz.cvut.spipes.spin.model.Describe;
+import cz.cvut.spipes.spin.model.Select;
+import cz.cvut.spipes.spin.model.impl.AskImpl;
+import cz.cvut.spipes.spin.model.impl.ConstructImpl;
+import cz.cvut.spipes.spin.model.impl.DescribeImpl;
+import cz.cvut.spipes.spin.model.impl.SelectImpl;
+import cz.cvut.spipes.spin.model.update.*;
+import cz.cvut.spipes.spin.model.update.impl.*;
+import cz.cvut.spipes.spin.util.SPINEnhancedNodeFactory;
+import cz.cvut.spipes.util.JenaUtils;
+import org.apache.jena.enhanced.BuiltinPersonalities;
+import org.apache.jena.enhanced.Personality;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.util.FileUtils;
+import org.topbraid.shacl.model.SHFactory;
+
+import java.io.InputStream;
 
 /**
  * Derived from org.topbraid.shacl 1.0.1
@@ -253,6 +269,47 @@ public class SP {
     public final static Resource sub = ResourceFactory.createResource(NS + "sub");
 
     public final static Resource unaryMinus = ResourceFactory.createResource(NS + "unaryMinus");
+
+    static {
+        SP.init(BuiltinPersonalities.model);
+    }
+
+    private static Model model;
+
+    public static synchronized Model getModel() {
+        if(model == null) {
+            model = JenaUtils.getModel("/etc/sp.rdf", BASE_URI);
+        }
+        return model;
+    }
+
+
+    @SuppressWarnings("deprecation")
+    private static void init(Personality<RDFNode> p) {
+        p.add(Ask.class, new SPINEnhancedNodeFactory(Ask.asNode(), AskImpl.class));
+        p.add(Clear.class, new SPINEnhancedNodeFactory(Clear.asNode(), ClearImpl.class));
+        p.add(Construct.class, new SPINEnhancedNodeFactory(Construct.asNode(), ConstructImpl.class));
+        p.add(Create.class, new SPINEnhancedNodeFactory(Create.asNode(), CreateImpl.class));
+        p.add(DeleteData.class, new SPINEnhancedNodeFactory(DeleteData.asNode(), DeleteDataImpl.class));
+        p.add(DeleteWhere.class, new SPINEnhancedNodeFactory(DeleteWhere.asNode(), DeleteWhereImpl.class));
+        p.add(Describe.class, new SPINEnhancedNodeFactory(Describe.asNode(), DescribeImpl.class));
+        p.add(Drop.class, new SPINEnhancedNodeFactory(Drop.asNode(), DropImpl.class));
+        p.add(Insert.class, new SPINEnhancedNodeFactory(Insert.asNode(), InsertImpl.class));
+        p.add(InsertData.class, new SPINEnhancedNodeFactory(InsertData.asNode(), InsertDataImpl.class));
+        p.add(Load.class, new SPINEnhancedNodeFactory(Load.asNode(), LoadImpl.class));
+        p.add(Modify.class, new SPINEnhancedNodeFactory(Modify.asNode(), ModifyImpl.class));
+        p.add(Select.class, new SPINEnhancedNodeFactory(Select.asNode(), SelectImpl.class));
+
+        // Also make sure SHACL is started up
+        new SHFactory();
+    }
+
+
+
+    public static String getURI() {
+        return NS;
+    }
+
 
 
 }

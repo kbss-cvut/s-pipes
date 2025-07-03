@@ -1,18 +1,22 @@
 package cz.cvut.spipes.util;
 
 
+import cz.cvut.spipes.spin.util.ExtraPrefixes;
+import cz.cvut.spipes.spin.vocabulary.SP;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.sparql.mgt.Explain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.topbraid.spin.arq.ARQFactory;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class QueryUtils {
 
@@ -179,16 +183,48 @@ public class QueryUtils {
         return null;
     }
 
-    public static Query createQuery(org.topbraid.spin.model.Query spinQuery) {
+    /**
+     * Parse a spinQuery resource into ARQ Query instance.
+     * @param spinQuery
+     * @return
+     */
+    public static Query createQuery(cz.cvut.spipes.spin.model.Query spinQuery) {
+        String queryString = sparqlPrefixDeclarations(spinQuery.getModel(), true) +
+                spinQuery.getString(SP.text);
         try {
-            return ARQFactory.get().createQuery(spinQuery);
+            return QueryFactory.create(queryString);
         } catch (QueryParseException e) {
-            String query = ARQFactory.get().createCommandString(spinQuery);
-            log.error("Parse error [1] occurred in query [2].\n[1] ERROR:\n{}\n[2] QUERY:\n{}", e.getMessage(), query);
+            log.error("Parse error [1] occurred in query [2].\n[1] ERROR:\n{}\n[2] QUERY:\n{}", e.getMessage(), queryString);
             throw e;
         }
     }
 
+    // Based on ARQFactory.createPrefixDeclarations
+    public static String sparqlPrefixDeclarations(Model model, boolean includeExtraPrefixes) {
+        StringBuffer queryString = new StringBuffer();
+        Stream.concat(
+                Stream.of(Pair.of("", JenaUtils.getNsPrefixURI(model, ""))),// default namespace
+                Stream.of(
+                        (includeExtraPrefixes // extra namspaces if included
+                                ? ExtraPrefixes.getExtraPrefixes().entrySet().stream()
+                                        .filter(e -> model.getNsPrefixURI(e.getKey()) == null && e.getValue() != null)
+                                : Stream.<Map.Entry<String,String>>of()
+                        ), // model namespaces
+                        model.getNsPrefixMap().entrySet().stream()
+                ).flatMap(s -> s)
+        ).forEach(e -> {
+            queryString.append("PREFIX ");
+            queryString.append(e.getKey());
+            queryString.append(": <");
+            queryString.append(e.getValue());
+            queryString.append(">\n");
+        });
+
+        return queryString.toString();
+    }
+
+
+    // TODO - refactor to use sparqlPrefixDeclarations
     public static String getQueryWithModelPrefixes(String query, Model model) {
         return  model.getNsPrefixMap().entrySet().stream()
             .map(e -> "PREFIX " + e.getKey() + ": <" + e.getValue() + ">")

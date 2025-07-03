@@ -26,8 +26,8 @@ import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
-import org.topbraid.spin.vocabulary.SPIN;
-import org.topbraid.spin.vocabulary.SPL;
+import cz.cvut.spipes.spin.vocabulary.SPIN;
+import cz.cvut.spipes.spin.vocabulary.SPL;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

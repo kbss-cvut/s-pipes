@@ -16,10 +16,8 @@ import org.apache.jena.util.ResourceUtils;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
-import org.topbraid.spin.arq.ARQ2SPIN;
-import org.topbraid.spin.system.SPINModuleRegistry;
-import org.topbraid.spin.vocabulary.SPIN;
-import org.topbraid.spin.vocabulary.SPL;
+import cz.cvut.spipes.spin.vocabulary.SPIN;
+import cz.cvut.spipes.spin.vocabulary.SPL;
 
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
@@ -29,11 +27,6 @@ import java.util.stream.Collectors;
 import static cz.cvut.spipes.transform.SPipesUtil.isSPipesTerm;
 
 public class TransformerImpl implements Transformer {
-
-
-    public TransformerImpl() {
-        SPINModuleRegistry.get().init();
-    }
 
     @Override
     public Question script2Form(Resource module, Resource moduleType) {
@@ -217,9 +210,9 @@ public class TransformerImpl implements Transformer {
                             .anyMatch(a -> !DigestUtils.sha1Hex(a.getTextValue()).equals(a.getHash()) && !DigestUtils.sha1Hex(a.getCodeValue().toString()).equals(a.getHash()))) {
                             throw new ConcurrentModificationException("TTL and form can not be edited at the same time");
                         }
+                        // TODO - keep to parse query in answer. If there is a syntax error an exception is thrown
                         Query query = AnonNodeTransformer.parse(q, inputScript);
-                        org.topbraid.spin.model.Query spinQuery = ARQ2SPIN.parseQuery(query.serialize(), inputScript);
-                        changingModel.add(spinQuery.getModel());
+                        changingModel.add(inputScript);
                         changingModel.add(
                                 ResourceFactory.createResource(uri),
                                 ResourceFactory.createProperty(Vocabulary.s_p_text),

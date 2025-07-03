@@ -11,30 +11,26 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 abstract:config
-  rdf:type owl:Ontology ;
-  owl:imports <http://onto.fel.cvut.cz/ontologies/s-pipes> ;
-  owl:imports <http://onto.fel.cvut.cz/ontologies/s-pipes-lib> ;
+    rdf:type owl:Ontology ;
+    owl:imports <http://onto.fel.cvut.cz/ontologies/s-pipes> ;
+    owl:imports <http://onto.fel.cvut.cz/ontologies/s-pipes-lib> ;
 .
 sml:bind-greeting
-  rdf:type sml:BindWithConstant ;
-  sm:nodeX 289 ;
-  sm:nodeY 209 ;
-  sm:outputVariable "greetingMessage" ;
-  sml:value [
-      rdf:type sp:concat ;
-      sp:arg1 "Hello " ;
-      sp:arg2 [
-          sp:varName "name" ;
-        ] ;
-    ] ;
-  rdfs:label "bind-greeting" ;
+    rdf:type sml:BindWithConstant ;
+    sm:nodeX 289 ;
+    sm:nodeY 209 ;
+    sm:outputVariable "greetingMessage" ;
+    sml:value [ a sp:Expression ;
+                sp:text """concat("Hello ", ?name)""" ;
+             ] ;
+    rdfs:label "bind-greeting" ;
 .
 sml:bind-name
-  rdf:type sml:BindWithConstant ;
-  sm:next sml:bind-greeting ;
-  sm:nodeX 291 ;
-  sm:nodeY 43 ;
-  sm:outputVariable "name" ;
-  sml:value "James" ;
-  rdfs:label "Bind name" ;
+    rdf:type sml:BindWithConstant ;
+    sm:next sml:bind-greeting ;
+    sm:nodeX 291 ;
+    sm:nodeY 43 ;
+    sm:outputVariable "name" ;
+    sml:value "James" ;
+    rdfs:label "Bind name" ;
 .

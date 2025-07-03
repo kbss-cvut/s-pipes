@@ -8,24 +8,23 @@ import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.engine.VariablesBinding;
 import cz.cvut.spipes.exception.ValidationConstraintFailedException;
+import cz.cvut.spipes.spin.model.Ask;
+import cz.cvut.spipes.spin.model.Construct;
+import cz.cvut.spipes.spin.model.SPINFactory;
+import cz.cvut.spipes.spin.model.Select;
 import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.QueryUtils;
+import cz.cvut.spipes.util.SPINUtils;
+import cz.cvut.spipes.util.SPipesUtil;
 import org.apache.jena.atlas.lib.NotImplemented;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.util.FileUtils;
-import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.topbraid.spin.model.Ask;
-import org.topbraid.spin.model.Construct;
-import org.topbraid.spin.model.SPINFactory;
-import org.topbraid.spin.model.Select;
-import org.topbraid.spin.util.SPINExpressions;
-import org.topbraid.spin.vocabulary.SP;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -66,6 +65,10 @@ public abstract class AbstractModule implements Module {
     // load each properties
     // valiadation of required parameter
     // ?? validation of shape of input graph
+    // TODO move elsewhere?
+    static {
+        SPipesUtil.init(); // initialize system functoins
+    }
 
 
     abstract ExecutionContext executeSelf();
@@ -278,7 +281,7 @@ public abstract class AbstractModule implements Module {
 
         //      set up variable bindings
         for (Resource queryRes : constraintQueries) {
-            org.topbraid.spin.model.Query spinQuery = SPINFactory.asQuery(queryRes);
+            cz.cvut.spipes.spin.model.Query spinQuery = SPINFactory.asQuery(queryRes);
 
             // TODO template call
 //            if (spinQuery == null) {
@@ -328,7 +331,14 @@ public abstract class AbstractModule implements Module {
 
     }
 
-    protected String getQueryComment(org.topbraid.spin.model.Query query) {
+    /**
+     * Returns the query comment associated with the <code>query</code> resource argument. This is either the string
+     * associated with <code>query</code> rdfs:comment or if not present the first comment line found in the query string.
+     * If neither is present, the method returns the uri of the query resource.
+     * @param query
+     * @return
+     */
+    protected String getQueryComment(cz.cvut.spipes.spin.model.Query query) {
         if (query.getComment() != null) {
             return query.getComment();
         }
@@ -342,21 +352,6 @@ public abstract class AbstractModule implements Module {
 //        }
         return query.getURI();
     }
-
-    private org.topbraid.spin.model.Query getQuery(Resource queryResource) {
-        if (queryResource.hasProperty(RDF.type, SP.Ask)) {
-            return queryResource.as(Ask.class);
-        }
-        if (queryResource.hasProperty(RDF.type, SP.Construct)) {
-            return queryResource.as(Construct.class);
-        }
-        if (queryResource.hasProperty(RDF.type, SP.Select)) {
-            return queryResource.as(Select.class);
-        }
-
-        throw new IllegalStateException("Unknown query resource type -- " + queryResource.getPropertyResourceValue(RDF.type));
-    }
-
 
     RDFNode getPropertyValue(Property property) {
         final Statement s = resource.getProperty(property);
@@ -434,21 +429,7 @@ public abstract class AbstractModule implements Module {
     }
 
     protected RDFNode getEffectiveValue(@NotNull Property valueProperty) {
-        RDFNode valueNode = Optional.of(resource)
-            .map(r -> r.getProperty(valueProperty))
-            .map(Statement::getObject)
-            .orElse(null);
-        if (SPINExpressions.isExpression(valueNode)) {
-            Resource expr = (Resource) SPINFactory.asExpression(valueNode);
-            QuerySolution bindings = executionContext.getVariablesBinding().asQuerySolution();
-            RDFNode node = SPINExpressions.evaluate(expr, resource.getModel(), bindings); //TODO resource.getModel() should be part o context
-            if (node == null) {
-                log.error("SPIN expression {} for bindings {} evaluated to null.", expr, bindings);
-            }
-            return node;
-        } else {
-            return valueNode;
-        }
+        return SPINUtils.getEffectiveValue(resource, valueProperty, executionContext);
     }
 
     /**
@@ -487,8 +468,8 @@ public abstract class AbstractModule implements Module {
 
     private List<Resource> sortConstraintQueries(List<Resource> constraintQueries) {
         return constraintQueries.stream().sorted((resource1, resource2) -> {
-            org.topbraid.spin.model.Query spinQuery1 = SPINFactory.asQuery(resource1);
-            org.topbraid.spin.model.Query spinQuery2 = SPINFactory.asQuery(resource2);
+            cz.cvut.spipes.spin.model.Query spinQuery1 = SPINFactory.asQuery(resource1);
+            cz.cvut.spipes.spin.model.Query spinQuery2 = SPINFactory.asQuery(resource2);
 
             return spinQuery1.toString().compareTo(spinQuery2.toString());
         }).collect(Collectors.toList());

@@ -1,15 +1,14 @@
 package cz.cvut.spipes.modules.handlers;
 
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
-
 import cz.cvut.spipes.engine.ExecutionContext;
+import cz.cvut.spipes.engine.VariablesBinding;
 import org.apache.jena.rdf.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
-import org.topbraid.spin.util.SPINExpressions;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class BaseRDFNodeHandlerTest {
 
@@ -25,28 +24,26 @@ public class BaseRDFNodeHandlerTest {
         mockExecutionContext = mock(ExecutionContext.class);
         mockSetter = mock(Setter.class);
         mockProperty = mock(Property.class);
-        handler = Mockito.spy(new BaseRDFNodeHandler<String>(mockResource, mockExecutionContext, mockSetter) {
+        handler = new BaseRDFNodeHandler<String>(mockResource, mockExecutionContext, mockSetter){
             @Override
             String getRDFNodeValue(RDFNode node) throws Exception {
                 return node.asLiteral().getString();
             }
-        });
+        };
     }
 
     @Test
     void testGetEffectiveValueWithString() {
-        try(MockedStatic<SPINExpressions> mockedStatic = mockStatic(SPINExpressions.class)){
             var model = ModelFactory.createDefaultModel();
 
             RDFNode mockNode = model.createLiteral("test");
             Statement mockStatement = mock(Statement.class);
             when(mockResource.getProperty(mockProperty)).thenReturn(mockStatement);
+            when(mockExecutionContext.getVariablesBinding()).thenReturn(new VariablesBinding());
             when(mockStatement.getObject()).thenReturn(mockNode);
-            mockedStatic.when(() -> SPINExpressions.isExpression(mockNode)).thenReturn(false);
 
-            RDFNode result =handler.getEffectiveValue(mockProperty);
+            RDFNode result = handler.getEffectiveValue(mockProperty);
             assertEquals(mockNode, result);
-        }
     }
 
     @Test
