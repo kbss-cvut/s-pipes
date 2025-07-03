@@ -28,7 +28,6 @@ import cz.cvut.spipes.spin.vocabulary.SP;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -148,7 +147,7 @@ public class SUTimeModuleNew extends AnnotatedAbstractModule {
 
                         if (!singleStDates.isEmpty()) {
                             Model mm = ModelFactory.createDefaultModel();
-                            Resource reifiedSt = JenaUtils.createReifiedStatement(st);
+                            Resource reifiedSt = JenaUtils.addReifiedStatement(st);
 
                             for (AnnforModel s : singleStDates) {
 

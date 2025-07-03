@@ -13,7 +13,6 @@ import org.apache.jena.query.DatasetFactory;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFLanguages;
-import org.apache.jena.vocabulary.RDF;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
@@ -34,7 +33,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @SPipesModule(label = "deploy", comment =
@@ -213,7 +211,7 @@ public class Rdf4jDeployModule extends AnnotatedAbstractModule {
                     .mapWith( gs -> gs.getObject().toString())
                         .forEachRemaining(
                             u ->  {
-                                JenaUtils.addStatement(dataset.getNamedModel(u), rs);
+                                JenaUtils.addStatementRepresentedByResource(dataset.getNamedModel(u), rs);
                             }
                         );
             }

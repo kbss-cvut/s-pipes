@@ -23,11 +23,8 @@ import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.RDF;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @Slf4j
 @SPipesModule(label = "temporal v0.1", comment = "Annotate temporal expressions in literals in input model.")
@@ -69,7 +66,7 @@ public class SUTimeModule extends AnnotatedAbstractModule {
             st -> {
                 String objectStr = st.getObject().asLiteral().getLexicalForm();
 
-                Resource reifiedSt = JenaUtils.createReifiedStatement(st);
+                Resource reifiedSt = JenaUtils.addReifiedStatement(st);
                 try {
                     ArrayList<AnnforModel> singleStDates = temporalAnalysis(pipeline, objectStr);
                     for(AnnforModel s:singleStDates){

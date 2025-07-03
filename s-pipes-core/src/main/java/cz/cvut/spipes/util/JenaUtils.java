@@ -195,24 +195,25 @@ public class JenaUtils {
             : model.read(is, null, FileUtils.langTurtle);
     }
 
-
+    // TODO - Deside if reified statements should be supported or replaced with something else, e.g. RDF-star. Based on
+    //  the decision retain or rewrite HOTFIX methods and their usage. Delete "HOTFIX" from comments.
     /**
      * HOTFIX - for model.listReifiedStatements()
      *
      * @param m
-     * @return iterator of resources which have the RDF.object property
+     * @return iterator of resources which have the RDF.subject, RDF.predicate and RDF.object properties
      */
     public static ExtendedIterator<Resource> listStatementSubjectOfReifiedStatements(Model m){
         return m.listResourcesWithProperty(RDF.object).filterKeep(r -> r.hasProperty(RDF.subject) && r.hasProperty(RDF.predicate));
     }
 
     /**
-     * HOTFIX - adding reified statement resource to model as statement
+     * HOTFIX - adding reified statement represented by <code>rs</code> resource to model as statement
      *
      * @param m
      * @return iterator of resources which have the RDF.object property
      */
-    public static void addStatement(Model m, org.apache.jena.rdf.model.Resource rs){
+    public static void addStatementRepresentedByResource(Model m, org.apache.jena.rdf.model.Resource rs){
         m.add(rs.getPropertyResourceValue(RDF.subject), rs.getPropertyResourceValue(RDF.predicate).as(Property.class), rs.getProperty(RDF.object).getObject());
     }
 
@@ -221,8 +222,8 @@ public class JenaUtils {
      * @param st
      * @return the resource representing the statement
      */
-    public static Resource createReifiedStatement(Statement st) {
-        return createReifiedStatement(st.getModel(),st);
+    public static Resource addReifiedStatement(Statement st) {
+        return addReifiedStatement(st.getModel(),st);
     }
 
     /**
@@ -230,7 +231,7 @@ public class JenaUtils {
      * @param st
      * @return the resource representing the statement
      */
-    public static Resource createReifiedStatement(Model m, Statement st) {
+    public static Resource addReifiedStatement(Model m, Statement st) {
 
         m.add(st);
 
