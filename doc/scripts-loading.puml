@@ -1,0 +1,58 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+'
+'note right of OntologyDocumentManager: Singleton instance
+
+== Initialization ==
+
+
+SPipesServiceController -> ... : (indirect call)
+participant OntologyDocumentManager <<singleton>>
+... -> OntologyDocumentManager: registerDocuments(scriptPaths)
+
+loop for each file in scriptPaths.getAllFiles()
+    OntologyDocumentManager -> OntologyDocumentManager: model = loadModel(file)
+    OntologyDocumentManager -> AllLoadedFilesModel: addModel(model)
+    OntologyDocumentManager -> Jena : "alternativeLocation"(baseIri, filePath ) -- Jena ontDocumentManager.addAltEntry(baseIri, filePath)
+end
+
+... -> SPipesScriptManager: init
+SPipesScriptManager -> SPipesScriptManager: registerFunctions = scriptsRepository.getFunctions(scriptPaths)
+SPipesScriptManager -> SPipesScriptManager: registerModules = scriptsRepository.getModules(scriptPaths)
+SPipesScriptManager -> OntologyDocumentManager : registerAllSPINModules -- registers SHACL SPARQL functions
+
+' TODO we want use FileManager of OntDocManager to share cache between calls
+
+
+
+
+
+== Service call ==
+
+alt  contextsLoader.data.keepUpdated = true
+    SPipesServiceController -> ... : (indirect call)
+    participant OntologyDocumentManager <<singleton>>
+    ... -> OntologyDocumentManager: registerDocuments(scriptPaths)
+
+    loop for each file in scriptPaths.getAllFiles()
+        OntologyDocumentManager -> OntologyDocumentManager: model = loadModel(file)
+        OntologyDocumentManager -> AllLoadedFilesModel: addModel(model)
+        OntologyDocumentManager -> Jena : "alternativeLocation"(baseIri, filePath ) -- Jena ontDocumentManager.addAltEntry(baseIri, filePath)
+    end
+
+    ... -> SPipesScriptManager: reloadScripts
+    SPipesScriptManager -> SPipesScriptManager: registerFunctions = scriptsRepository.getFunctions(scriptPaths)
+    SPipesScriptManager -> SPipesScriptManager: registerModules = scriptsRepository.getModules(scriptPaths)
+    SPipesScriptManager -> OntologyDocumentManager : registerAllSPINModules -- registers SHACL SPARQL functions
+
+
+else otherwise
+    SPipesServiceController --> : do not load anything
+end
+
+
+
+@enduml
