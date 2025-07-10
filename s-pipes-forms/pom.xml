@@ -76,13 +76,7 @@
         <dependency>
             <groupId>org.topbraid</groupId>
             <artifactId>shacl</artifactId>
-            <version>1.0.1</version>
-            <exclusions> <!-- TODO update jena libs and remove exclusions -->
-                <exclusion>
-                    <groupId>org.apache.jena</groupId>
-                    <artifactId>jena-arq</artifactId>
-                </exclusion>
-            </exclusions>
+            <version>1.4.4</version>
         </dependency>
 
         <!-- Testing -->
