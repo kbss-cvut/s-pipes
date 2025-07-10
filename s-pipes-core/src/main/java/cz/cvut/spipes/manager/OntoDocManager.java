@@ -116,6 +116,13 @@ public class OntoDocManager implements OntologyDocumentManager {
                     ontDocumentManager.addAltEntry(e.getKey(), e.getValue());
                 }
         );
+    }
+
+    @Override
+    public void registerDocuments(Iterable<Path> fileOrDirectoryPath) {
+        fileOrDirectoryPath.forEach(
+                this::registerDocuments
+        );
         lastTime = Instant.now();
     }
 
