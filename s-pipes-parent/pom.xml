@@ -20,6 +20,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jdk.version>17</jdk.version>
         <org.apache.jena>5.2.0</org.apache.jena>
+        <org.topbraid.shacl>1.4.4</org.topbraid.shacl>
         <org.springframework.security.version>6.2.8</org.springframework.security.version>
         <org.springframework.boot.version>3.4.2</org.springframework.boot.version>
         <!-- Should be in sync with Spring Boot version -->
@@ -54,6 +55,12 @@
                 <groupId>org.apache.jena</groupId>
                 <artifactId>jena-cmds</artifactId>
                 <version>${org.apache.jena}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.topbraid</groupId>
+                <artifactId>shacl</artifactId>
+                <version>${org.topbraid.shacl}</version>
             </dependency>
 
             <!-- Rdf4j -->
