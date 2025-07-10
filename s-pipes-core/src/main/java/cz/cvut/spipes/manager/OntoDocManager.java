@@ -1,6 +1,7 @@
 package cz.cvut.spipes.manager;
 
 import cz.cvut.spipes.config.CompatibilityConfig;
+import cz.cvut.spipes.manager.factory.ContextLoaderHelper;
 import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.SPipesUtil;
 import cz.cvut.spipes.util.SparqlMotionUtils;
@@ -87,6 +88,8 @@ public class OntoDocManager implements OntologyDocumentManager {
     public static OntologyDocumentManager getInstance() {
         if (sInstance == null) {
             sInstance = new OntoDocManager(OntDocumentManager.getInstance());
+            // TODO - not tested!!!
+            OntDocumentManager.getInstance().getFileManager().setModelCaching(ContextLoaderHelper.isKeepUpdated());
         }
         return sInstance;
     }
@@ -134,6 +137,34 @@ public class OntoDocManager implements OntologyDocumentManager {
     @Override
     public OntModel getOntology(String uri) {
         return ontDocumentManager.getOntology(uri, OntModelSpec.OWL_MEM);
+    }
+
+
+    /**
+     * Cache is implemented by OntDocumentManager.getInstance().getFileManager(). Additionally, jena may store models in
+     * OntModelSpec.OWL_MEM.getBaseModelMaker and OntModelSpec.OWL_MEM.getImportModelMaker. Specifically, the
+     * ImportModelMaker stores imports and it is necessary to clear
+     * (TODO - it is necessary if FileManager is not set for caching. Verify that this holds when FileManager is set for caching.
+     * @param path
+     */
+    protected static void clearCachedModel(Path path){
+        LocationMapper lm  = OntDocumentManager.getInstance().getFileManager().getLocationMapper();
+        Iterator<String> altEntries = lm.listAltEntries();
+        String pathString = path.toString();
+        while(altEntries.hasNext()){
+            String uri = altEntries.next();
+            if(!Optional.ofNullable(lm.getAltEntry(uri)).map(s -> s.equals(pathString)).orElse(false))
+                continue;
+            clearCachedModel(uri);
+        }
+    }
+
+    protected static void clearCachedModel(String uri){
+        OntDocumentManager.getInstance().getFileManager().removeCacheModel(uri);
+        if(OntModelSpec.OWL_MEM.getImportModelMaker().hasModel(uri))
+            OntModelSpec.OWL_MEM.getImportModelMaker().removeModel(uri);
+        if(OntModelSpec.OWL_MEM.getBaseModelMaker().hasModel(uri))
+            OntModelSpec.OWL_MEM.getBaseModelMaker().removeModel(uri);
     }
 
     @Override
@@ -193,6 +224,8 @@ public class OntoDocManager implements OntologyDocumentManager {
                             log.debug("Skipping unmodified file: {}", file.toUri());
                             return;
                         }
+
+                        clearCachedModel(file);
                         String lang = FileUtils.guessLang(file.getFileName().toString());
 
                         log.info("Loading model from {} ...", file.toUri());
