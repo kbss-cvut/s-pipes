@@ -42,9 +42,7 @@ public class ContextLoaderHelper {
      */
     public static List<String> registerGlobalScripts(OntologyDocumentManager ontDocManager) {
         List<Path> scriptPaths = ContextsConfig.getScriptPaths();
-        scriptPaths.forEach(
-                ontDocManager::registerDocuments
-        );
+        ontDocManager.registerDocuments(scriptPaths);
 
         LocationMapper locMapper = ontDocManager.getOntDocumentManager().getFileManager().getLocationMapper();
 

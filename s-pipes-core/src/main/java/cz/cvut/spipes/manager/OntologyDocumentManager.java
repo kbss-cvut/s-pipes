@@ -25,6 +25,7 @@ public interface OntologyDocumentManager {
      * @param fileOrDirectoryPath File or directory path to register. If directory, it is recursively crawled.
      */
     void registerDocuments(Path fileOrDirectoryPath);
+    void registerDocuments(Iterable<Path> fileOrDirectoryPath);
 
 
     Set<String> getRegisteredOntologyUris();
