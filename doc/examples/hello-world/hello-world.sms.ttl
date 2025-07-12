@@ -15,7 +15,6 @@
 @prefix spin: <http://spinrdf.org/spin#> .
 @prefix spl: <http://spinrdf.org/spl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix sh: <http://www.w3.org/ns/shacl#> .
 
 <http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1>
   a owl:Ontology ;
@@ -66,18 +65,20 @@ CONSTRUCT {
   a sm:Function ;
   sm:returnModule :express-greeting_Return ;
   rdfs:comment "This function constructs a hello world message for a person given their first and last name." ;
-  sh:parameter [
-      sh:path :firstName ;
-      sh:datatype xsd:string ;
-      sh:description "The first name of the greeted person." ;
-      sh:minCount 1 ;
-    ] ;
-  sh:parameter [
-      sh:path :lastName ;
-      sh:datatype xsd:string ;
-      sh:description "The last name of the greeted person." ;
-      sh:minCount 1 ;
-    ] ;
+  spin:constraint [
+    rdf:type spl:Argument ;
+    spl:predicate :firstName ;
+    spl:optional "false"^^xsd:boolean ;
+    rdfs:label "first name" ;
+    rdfs:comment "The first name of the greeted person" ;
+  ] ;
+  spin:constraint [
+    rdf:type spl:Argument ;
+    spl:predicate :lastName ;
+    spl:optional "false"^^xsd:boolean ;
+    rdfs:label "last name" ;
+    rdfs:comment "The last name of the greeted person" ;
+  ] ;
 .
 :express-greeting_Return
   a sml:ReturnRDF ;
