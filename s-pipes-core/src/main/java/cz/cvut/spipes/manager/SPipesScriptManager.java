@@ -36,15 +36,15 @@ public class SPipesScriptManager {
     private Set<String> globalScripts;
     ///private final Map<String, OntModel> globalScriptsMap = new LinkedHashMap<>();
     private final ScriptCollectionRepository scriptsRepository;
-    private ResourceRegistry functionRegistry;
+    private ResourceRegistry pipelineFunctionRegistry;
     private ResourceRegistry moduleRegistry;
     private final OntologyDocumentManager ontoDocManager;
 
     private void registerAll(OntologyDocumentManager ontoDocManager, Collection<String> globalScripts) {
-        List<Resource> functions = scriptsRepository.getFunctions(globalScripts);
+        List<Resource> pipelineFunctions = scriptsRepository.getPipelineFunctions(globalScripts);
         List<Resource> modules = scriptsRepository.getModules(globalScripts);
 
-        functionRegistry = new JenaResourceRegistry(functions);
+        pipelineFunctionRegistry = new JenaResourceRegistry(pipelineFunctions);
         moduleRegistry = new JenaResourceRegistry(modules);
 
         OntoDocManager.registerAllSPINModules();
@@ -94,8 +94,8 @@ public class SPipesScriptManager {
     public Module loadFunction(String functionId) {
 
         // TODO interface to return URI+Context would be more appropriate (jena*.Resource ?)
-        String resourceUri = functionRegistry.getResourceUri(functionId);
-        String resourceContextUri = functionRegistry.getContexts(resourceUri).iterator().next();
+        String resourceUri = pipelineFunctionRegistry.getResourceUri(functionId);
+        String resourceContextUri = pipelineFunctionRegistry.getContexts(resourceUri).iterator().next();
         Resource functionRes = scriptsRepository.getResource(resourceUri, resourceContextUri);
 
         Resource returnModuleRes = getReturnModule(functionRes);

@@ -1,14 +1,14 @@
 package cz.cvut.spipes.repository;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.Resource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -22,7 +22,13 @@ public interface ScriptCollectionRepository extends Repository {
 
     @NotNull List<Resource> getModuleTypes(@Nullable Collection<String> contexts);
 
-    @NotNull List<Resource> getFunctions(@Nullable Collection<String> contexts);
+    /**
+     * Returns all functions which are attached to a return module.
+     * @param contexts List of contexts to search in.
+     * @return List of resources representing functions.
+     * @throws UnsupportedOperationException if contexts is null.
+     */
+    @NotNull List<Resource> getPipelineFunctions(@Nullable Collection<String> contexts);
 
     Resource getResource(@NotNull String resourceUri, String context);
 

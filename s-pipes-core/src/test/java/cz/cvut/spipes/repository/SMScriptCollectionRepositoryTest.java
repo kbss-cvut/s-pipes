@@ -51,13 +51,13 @@ public class SMScriptCollectionRepositoryTest {
     }
 
     @Test
-    public void getFunctions() throws Exception {
+    public void getPipelineFunctions() throws Exception {
 
         //given
         given(ontoDocManager.getOntology(sampleOntologyUri)).willReturn(getSampleOntology());
 
         //when
-        List<Resource> functions = scriptCollectionRepository.getFunctions(Collections.singleton(sampleOntologyUri));
+        List<Resource> functions = scriptCollectionRepository.getPipelineFunctions(Collections.singleton(sampleOntologyUri));
 
         //then
         assertEquals(functions.size(), 2);

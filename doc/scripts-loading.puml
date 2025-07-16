@@ -6,6 +6,10 @@ autonumber
 '
 'note right of OntologyDocumentManager: Singleton instance
 
+' TODO
+'    - PipelineFunction, RDFFunction, JavaFunction
+'    - ???JenaFunction, SPipesSystemFunction (ARQ funkce, Jena java functions, SHACL functions), SPipesWorkspaceFunction
+
 == Initialization ==
 
 
@@ -14,20 +18,21 @@ participant OntologyDocumentManager <<singleton>>
 ... -> OntologyDocumentManager: registerDocuments(scriptPaths)
 
 loop for each file in scriptPaths.getAllFiles()
-    OntologyDocumentManager -> OntologyDocumentManager: model = loadModel(file)
-    OntologyDocumentManager -> AllLoadedFilesModel: addModel(model)
+    OntologyDocumentManager -> OntologyDocumentManager: <b>allLoadedFilesModel</b>.add(loadModel(file))
     OntologyDocumentManager -> Jena : "alternativeLocation"(baseIri, filePath ) -- Jena ontDocumentManager.addAltEntry(baseIri, filePath)
 end
 
 ... -> SPipesScriptManager: init
-SPipesScriptManager -> SPipesScriptManager: registerFunctions = scriptsRepository.getFunctions(scriptPaths)
-SPipesScriptManager -> SPipesScriptManager: registerModules = scriptsRepository.getModules(scriptPaths)
+SPipesScriptManager -> SPipesScriptManager: pipelineFunctionRegistry <= scriptsRepository.getPipelineFunctions(scriptPaths)
+SPipesScriptManager -> SPipesScriptManager: moduleRegistry <= scriptsRepository.getModules(scriptPaths)
 SPipesScriptManager -> OntologyDocumentManager : registerAllSPINModules -- registers SHACL SPARQL functions
 
+participant SPipesUtil <<singleton>>
+OntologyDocumentManager -> SPipesUtil: resetFunctions(<b>allLoadedFilesModel</b>)
+SPipesUtil -> SPipesUtil: loadSystemFunctions()
+
+
 ' TODO we want use FileManager of OntDocManager to share cache between calls
-
-
-
 
 
 == Service call ==
@@ -38,16 +43,18 @@ alt  contextsLoader.data.keepUpdated = true
     ... -> OntologyDocumentManager: registerDocuments(scriptPaths)
 
     loop for each file in scriptPaths.getAllFiles()
-        OntologyDocumentManager -> OntologyDocumentManager: model = loadModel(file)
-        OntologyDocumentManager -> AllLoadedFilesModel: addModel(model)
-        OntologyDocumentManager -> Jena : "alternativeLocation"(baseIri, filePath ) -- Jena ontDocumentManager.addAltEntry(baseIri, filePath)
+            alt file.lastModified > now
+                OntologyDocumentManager -> OntologyDocumentManager: <b>allLoadedFilesModel</b>.add(loadModel(file))
+                OntologyDocumentManager -> Jena : "alternativeLocation"(baseIri, filePath ) -- Jena ontDocumentManager.addAltEntry(baseIri, filePath)
+            end
     end
 
     ... -> SPipesScriptManager: reloadScripts
-    SPipesScriptManager -> SPipesScriptManager: registerFunctions = scriptsRepository.getFunctions(scriptPaths)
-    SPipesScriptManager -> SPipesScriptManager: registerModules = scriptsRepository.getModules(scriptPaths)
+    SPipesScriptManager -> SPipesScriptManager: pipelineFunctionRegistry <= scriptsRepository.getPipelineFunctions(scriptPaths)
+    SPipesScriptManager -> SPipesScriptManager: moduleRegistry <= scriptsRepository.getModules(scriptPaths)
     SPipesScriptManager -> OntologyDocumentManager : registerAllSPINModules -- registers SHACL SPARQL functions
 
+    OntologyDocumentManager -> SPipesUtil: resetFunctions(<b>allLoadedFilesModel</b>)
 
 else otherwise
     SPipesServiceController --> : do not load anything
