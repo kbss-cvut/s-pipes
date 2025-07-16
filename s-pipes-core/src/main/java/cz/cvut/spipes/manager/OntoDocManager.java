@@ -1,7 +1,6 @@
 package cz.cvut.spipes.manager;
 
 import cz.cvut.spipes.config.CompatibilityConfig;
-import cz.cvut.spipes.manager.factory.ContextLoaderHelper;
 import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.SPipesUtil;
 import cz.cvut.spipes.util.SparqlMotionUtils;
@@ -90,8 +89,7 @@ public class OntoDocManager implements OntologyDocumentManager {
     public static OntologyDocumentManager getInstance() {
         if (sInstance == null) {
             sInstance = new OntoDocManager(OntDocumentManager.getInstance());
-            // TODO - not tested!!!
-            OntDocumentManager.getInstance().getFileManager().setModelCaching(ContextLoaderHelper.isKeepUpdated());
+            OntDocumentManager.getInstance().getFileManager().setModelCaching(true);
         }
         return sInstance;
     }
