@@ -8,6 +8,7 @@ import org.apache.jena.atlas.web.HttpException;
 import org.apache.jena.ontology.OntDocumentManager;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
+import org.apache.jena.ontology.models.ModelMaker;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.util.FileManager;
@@ -69,6 +70,7 @@ public class OntoDocManager implements OntologyDocumentManager {
     static OntoDocManager sInstance;
     static String[] SUPPORTED_FILE_EXTENSIONS = {"n3", "nt", "ttl", "rdf", "owl"}; //TODO json-ld
 
+    public static OntModelSpec ONT_MODEL_SPEC = OntModelSpec.OWL_MEM;
 
     private OntoDocManager() {
         this(new OntDocumentManager());
@@ -136,7 +138,7 @@ public class OntoDocManager implements OntologyDocumentManager {
 
     @Override
     public OntModel getOntology(String uri) {
-        return ontDocumentManager.getOntology(uri, OntModelSpec.OWL_MEM);
+        return ontDocumentManager.getOntology(uri, ONT_MODEL_SPEC);
     }
 
 
@@ -159,11 +161,25 @@ public class OntoDocManager implements OntologyDocumentManager {
     }
 
     protected static void clearCachedModel(String uri){
-        OntDocumentManager.getInstance().getFileManager().removeCacheModel(uri);
-        if(OntModelSpec.OWL_MEM.getImportModelMaker().hasModel(uri))
-            OntModelSpec.OWL_MEM.getImportModelMaker().removeModel(uri);
-        if(OntModelSpec.OWL_MEM.getBaseModelMaker().hasModel(uri))
-            OntModelSpec.OWL_MEM.getBaseModelMaker().removeModel(uri);
+        if(OntDocumentManager.getInstance().getFileManager().hasCachedModel(uri))
+            OntDocumentManager.getInstance().getFileManager().removeCacheModel(uri);
+        boolean cachedImportChanged = clearCache(uri, ONT_MODEL_SPEC);
+        if(cachedImportChanged)
+            dirtyModels.add(uri);
+    }
+
+    private static boolean clearCache(String uri, OntModelSpec ontModelSpec) {
+        List<ModelMaker> modelMakers = Stream.of(ontModelSpec.getBaseModelMaker(), ontModelSpec.getImportModelMaker())
+                .filter(m -> m.hasModel(uri)).toList();
+        modelMakers.forEach(m -> m.removeModel(uri));
+        return !modelMakers.isEmpty();
+    }
+
+    private static void clearCache(OntModelSpec ontModelSpec){
+        Stream.of(ontModelSpec.getBaseModelMaker(), ontModelSpec.getImportModelMaker())
+                .forEach(
+                        m -> m.listModels().forEachRemaining(m::removeModel)
+                );
     }
 
     @Override
@@ -177,6 +193,7 @@ public class OntoDocManager implements OntologyDocumentManager {
     @Override
     public void reset() {
         getOntDocumentManager().reset();
+        clearCache(ONT_MODEL_SPEC);
     }
 
     public OntDocumentManager getOntDocumentManager() {
@@ -313,7 +330,7 @@ public class OntoDocManager implements OntologyDocumentManager {
     }
 
     public static OntModel loadOntModel(InputStream inputStream) {
-        OntModel ontModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
+        OntModel ontModel = ModelFactory.createOntologyModel(ONT_MODEL_SPEC);
 
         OntDocumentManager dm = OntDocumentManager.getInstance();
         dm.setFileManager(FileManager.get());
