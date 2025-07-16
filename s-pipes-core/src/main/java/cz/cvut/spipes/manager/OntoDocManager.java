@@ -246,7 +246,7 @@ public class OntoDocManager implements OntologyDocumentManager {
      * @param directoryOrFilePath File or directory to by searched recursively for models.
      * @return Mapping filePath to model.
      */
-    public static Map<String, Model> getAllFile2Model(Path directoryOrFilePath) {
+    public synchronized static Map<String, Model> getAllFile2Model(Path directoryOrFilePath) {
         Map<String, Model> file2Model = new HashMap<>();
 
         try (Stream<Path> stream = Files.walk(directoryOrFilePath)) {
