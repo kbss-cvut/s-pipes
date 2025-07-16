@@ -1,0 +1,65 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+'
+'note right of OntologyDocumentManager: Singleton instance
+
+' TODO
+'    - PipelineFunction, RDFFunction, JavaFunction
+'    - ???JenaFunction, SPipesSystemFunction (ARQ funkce, Jena java functions, SHACL functions), SPipesWorkspaceFunction
+
+== Initialization ==
+
+
+SPipesServiceController -> ... : (indirect call)
+participant OntologyDocumentManager <<singleton>>
+... -> OntologyDocumentManager: registerDocuments(scriptPaths)
+
+loop for each file in scriptPaths.getAllFiles()
+    OntologyDocumentManager -> OntologyDocumentManager: <b>allLoadedFilesModel</b>.add(loadModel(file))
+    OntologyDocumentManager -> Jena : "alternativeLocation"(baseIri, filePath ) -- Jena ontDocumentManager.addAltEntry(baseIri, filePath)
+end
+
+... -> SPipesScriptManager: init
+SPipesScriptManager -> SPipesScriptManager: pipelineFunctionRegistry <= scriptsRepository.getPipelineFunctions(scriptPaths)
+SPipesScriptManager -> SPipesScriptManager: moduleRegistry <= scriptsRepository.getModules(scriptPaths)
+SPipesScriptManager -> OntologyDocumentManager : registerAllSPINModules -- registers SHACL SPARQL functions
+
+participant SPipesUtil <<singleton>>
+OntologyDocumentManager -> SPipesUtil: resetFunctions(<b>allLoadedFilesModel</b>)
+SPipesUtil -> SPipesUtil: loadSystemFunctions()
+
+
+' TODO we want use FileManager of OntDocManager to share cache between calls
+
+
+== Service call ==
+
+alt  contextsLoader.data.keepUpdated = true
+    SPipesServiceController -> ... : (indirect call)
+    participant OntologyDocumentManager <<singleton>>
+    ... -> OntologyDocumentManager: registerDocuments(scriptPaths)
+
+    loop for each file in scriptPaths.getAllFiles()
+            alt file.lastModified > now
+                OntologyDocumentManager -> OntologyDocumentManager: <b>allLoadedFilesModel</b>.add(loadModel(file))
+                OntologyDocumentManager -> Jena : "alternativeLocation"(baseIri, filePath ) -- Jena ontDocumentManager.addAltEntry(baseIri, filePath)
+            end
+    end
+
+    ... -> SPipesScriptManager: reloadScripts
+    SPipesScriptManager -> SPipesScriptManager: pipelineFunctionRegistry <= scriptsRepository.getPipelineFunctions(scriptPaths)
+    SPipesScriptManager -> SPipesScriptManager: moduleRegistry <= scriptsRepository.getModules(scriptPaths)
+    SPipesScriptManager -> OntologyDocumentManager : registerAllSPINModules -- registers SHACL SPARQL functions
+
+    OntologyDocumentManager -> SPipesUtil: resetFunctions(<b>allLoadedFilesModel</b>)
+
+else otherwise
+    SPipesServiceController --> : do not load anything
+end
+
+
+
+@enduml

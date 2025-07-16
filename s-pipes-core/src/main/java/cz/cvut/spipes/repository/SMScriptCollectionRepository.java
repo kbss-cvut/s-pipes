@@ -55,7 +55,7 @@ public class SMScriptCollectionRepository implements ScriptCollectionRepository 
     }
 
     @Override
-    public @NotNull List<Resource> getFunctions(@Nullable Collection<String> contexts) {
+    public @NotNull List<Resource> getPipelineFunctions(@Nullable Collection<String> contexts) {
         if (contexts == null) {
             throw new UnsupportedOperationException();
         }
