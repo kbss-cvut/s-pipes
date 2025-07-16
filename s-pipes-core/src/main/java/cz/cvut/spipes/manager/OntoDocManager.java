@@ -69,6 +69,7 @@ public class OntoDocManager implements OntologyDocumentManager {
     static String[] SUPPORTED_FILE_EXTENSIONS = {"n3", "nt", "ttl", "rdf", "owl"}; //TODO json-ld
 
     public static OntModelSpec ONT_MODEL_SPEC = OntModelSpec.OWL_MEM;
+    public static Set<String> dirtyModels = new HashSet<>();
 
     private OntoDocManager() {
         this(new OntDocumentManager());
@@ -136,7 +137,29 @@ public class OntoDocManager implements OntologyDocumentManager {
 
     @Override
     public OntModel getOntology(String uri) {
-        return ontDocumentManager.getOntology(uri, ONT_MODEL_SPEC);
+        return loadDirtyModels(ontDocumentManager.getOntology(uri, ONT_MODEL_SPEC));
+    }
+
+    /**
+     * Reloads imports of dirty models
+     *
+     * @implNote TODO - update subgraphs (imports) in ontModel according to changes in dirty models imports
+     * @param ontModel
+     * @return
+     */
+    protected synchronized OntModel loadDirtyModels(OntModel ontModel){
+        Set<String> reloadedModels = new HashSet<>();
+        for(String dirtyModel : dirtyModels){
+            if (!ontModel.hasLoadedImport(dirtyModel))
+                continue;
+            ontModel.removeLoadedImport(dirtyModel);
+            reloadedModels.add(dirtyModel);
+        }
+        if(!reloadedModels.isEmpty()){
+            ontModel.loadImports();
+            dirtyModels.removeAll(reloadedModels);
+        }
+        return ontModel;
     }
 
 
