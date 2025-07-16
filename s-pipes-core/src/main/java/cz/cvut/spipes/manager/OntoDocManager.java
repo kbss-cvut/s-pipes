@@ -141,14 +141,13 @@ public class OntoDocManager implements OntologyDocumentManager {
     /**
      * Cache is implemented by OntDocumentManager.getInstance().getFileManager(). Additionally, jena may store models in
      * OntModelSpec.OWL_MEM.getBaseModelMaker and OntModelSpec.OWL_MEM.getImportModelMaker. Specifically, the
-     * ImportModelMaker stores imports and it is necessary to clear
-     * (TODO - it is necessary if FileManager is not set for caching. Verify that this holds when FileManager is set for caching.
-     * @param path
+     * ImportModelMaker stores imports and it is necessary to clear.
+     * @param filePath
      */
-    protected static void clearCachedModel(Path path){
+    protected static void clearCachedModel(Path filePath){
         LocationMapper lm  = OntDocumentManager.getInstance().getFileManager().getLocationMapper();
         Iterator<String> altEntries = lm.listAltEntries();
-        String pathString = path.toString();
+        String pathString = filePath.toString();
         while(altEntries.hasNext()){
             String uri = altEntries.next();
             if(!Optional.ofNullable(lm.getAltEntry(uri)).map(s -> s.equals(pathString)).orElse(false))
