@@ -8,12 +8,12 @@ More information about the mapping can be found in [mapping scripts to forms](#m
 
 ## Development
 
-## Mapping scripts to forms
+### Mapping scripts to forms
 
 Different parts of scripts are mapped to forms represented by [SForms model](https://github.com/kbss-cvut/s-forms-model) 
 that can be viewed by [SForms library](https://github.com/kbss-cvut/s-forms).
 
-### Module configuration form
+#### Module configuration form
 
 Module configuration is mapped to its form as shown in the following figure: 
 ![mapping module configuration](./doc/mapping-scripts-to-forms.png)
