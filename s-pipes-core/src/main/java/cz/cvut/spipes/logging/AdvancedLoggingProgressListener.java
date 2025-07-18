@@ -134,7 +134,6 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
         addProperty(pipelineExecution, SPIPES.has_pipeline_execution_start_date, startDate);
         addProperty(pipelineExecution, SPIPES.has_pipeline_execution_start_date_unix, startDate.getTime());
         addProperty(pipelineExecution, SPIPES.has_executed_function_name, functionName);
-        ((PipelineExecution) pipelineExecution).setHas_executed_function_name(functionName); // TODO remove this setter when addProperty will correctly set the value
         addProperty(pipelineExecution, SPIPES.has_executed_function_script_path, scriptPath);
 
         if (pipelineExecutionGroupId != null) {
@@ -191,7 +190,6 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_finish_date, finishDate);
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_finish_date_unix, finishDate.getTime());
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_duration, computeDuration(startDate, finishDate));
-            pipelineExecution.setHas_pipeline_name(pipelineName); // TODO remove this setter when addProperty will correctly set the value
             addProperty(pipelineExecution, SPIPES.has_pipeline_name, pipelineName);
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_status, "FINISHED");
 //            addScript(pipelineExecution, scriptManager.getScriptByContextId(pipelineName));
