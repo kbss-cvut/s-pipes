@@ -200,7 +200,6 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
 
     private void persistPipelineExecutionFailed(final EntityManager em, final long pipelineExecutionId) {
         if (em.isOpen()) {
-            log.debug("Saving metadata about failed pipeline execution {}.", pipelineExecutionId);
             em.getTransaction().begin();
 
             String pipelineExecutionIri = getPipelineExecutionIri(pipelineExecutionId);
