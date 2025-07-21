@@ -116,6 +116,8 @@ public class Vocabulary {
     public final static String s_p_has_retrieval_date = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-retrieval-date";
     public final static String s_p_name = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/name";
     public final static String s_p_are_same = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison/are-same";
+    public final static String s_p_failed_pipeline_execution = "http://onto.fel.cvut.cz/ontologies/s-pipes/failed-pipeline-execution";
+    public final static String s_p_finished_pipeline_execution = "http://onto.fel.cvut.cz/ontologies/s-pipes/finished-pipeline-execution";
     public final static String s_p_has_duration = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-duration";
     public final static String s_p_has_execution_finish_date = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-execution-finish-date";
     public final static String s_p_has_execution_start_date = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-execution-start-date";
