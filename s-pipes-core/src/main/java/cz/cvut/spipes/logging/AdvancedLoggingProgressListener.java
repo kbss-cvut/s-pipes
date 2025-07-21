@@ -191,7 +191,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_finish_date_unix, finishDate.getTime());
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_duration, computeDuration(startDate, finishDate));
             addProperty(pipelineExecution, SPIPES.has_pipeline_name, pipelineName);
-            addProperty(pipelineExecution, SPIPES.has_pipeline_execution_status, "FINISHED");
+            addProperty(pipelineExecution, SPIPES.has_pipeline_execution_status, Vocabulary.s_p_finished_pipeline_execution);
 //            addScript(pipelineExecution, scriptManager.getScriptByContextId(pipelineName));
             em.getTransaction().commit();
             em.close();
@@ -210,7 +210,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
 
             String pipelineName = metadataMap.get(SPIPES.has_pipeline_name.toString()).toString();
             addProperty(pipelineExecution, SPIPES.has_pipeline_name, pipelineName);
-            addProperty(pipelineExecution, SPIPES.has_pipeline_execution_status, "FAILED");
+            addProperty(pipelineExecution, SPIPES.has_pipeline_execution_status, Vocabulary.s_p_failed_pipeline_execution);
             em.getTransaction().commit();
             em.close();
         }
