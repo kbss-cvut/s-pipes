@@ -13,6 +13,7 @@ All terms defined in this section refer to SPipes terminology:
 - *Function* -- Pointer to a reusable part of a *pipeline* with constraints on input of the execution. It points to a *module* that should be executed. The output of the *module* is the output of the function.  
 - *Engine* -- Executes transformations of input data according to a *pipeline*.
 
+![SPipes Terminology](./doc/images/s-pipes-terminology.svg).
 
 ## SPipes Features
 
