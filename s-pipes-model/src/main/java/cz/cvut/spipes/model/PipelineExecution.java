@@ -79,11 +79,11 @@ public class PipelineExecution extends Thing {
     @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-pipeline-execution-status")
     protected String has_pipeline_execution_status;
 
-    @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-pipeline-name")
-    protected String has_pipeline_name;
+    @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-script")
+    protected String has_script;
 
-    @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-executed-function-name")
-    protected String has_executed_function_name;
+    @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-executed-function")
+    protected String has_executed_function;
 
     @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-executed-function-script-path")
     protected String has_executed_function_script_path;
@@ -186,20 +186,20 @@ public class PipelineExecution extends Thing {
         this.has_pipeline_execution_finish_date = has_pipeline_execution_finish_date;
     }
 
-    public String getHas_pipeline_name() {
-        return has_pipeline_name;
+    public String getHas_script() {
+        return has_script;
     }
 
-    public void setHas_pipeline_name(String has_pipeline_name) {
-        this.has_pipeline_name = has_pipeline_name;
+    public void setHas_script(String has_script) {
+        this.has_script = has_script;
     }
 
-    public String getHas_executed_function_name() {
-        return has_executed_function_name;
+    public String getHas_executed_function() {
+        return has_executed_function;
     }
 
-    public void setHas_executed_function_name(String has_executed_function_name) {
-        this.has_executed_function_name = has_executed_function_name;
+    public void setHas_executed_function(String has_executed_function) {
+        this.has_executed_function = has_executed_function;
     }
 
     public String getHas_executed_function_script_path() {
