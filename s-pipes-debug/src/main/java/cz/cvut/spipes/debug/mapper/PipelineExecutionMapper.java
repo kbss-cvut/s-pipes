@@ -12,8 +12,8 @@ public interface PipelineExecutionMapper {
     @Mapping(source = "has_part", target = "has_module_executions")
     @Mapping(source = "has_pipeline_execution_finish_date", target = "has_pipeline_execution_finish_date")
     @Mapping(source = "has_pipeline_execution_status", target = "has_pipeline_execution_status")
-    @Mapping(source = "has_pipeline_name", target = "has_pipeline_name")
-    @Mapping(source = "has_executed_function_name", target = "has_executed_function_name")
+    @Mapping(source = "has_script", target = "has_script")
+    @Mapping(source = "has_executed_function", target = "has_executed_function")
     @Mapping(source = "has_executed_function_script_path", target = "has_executed_function_script_path")
     PipelineExecutionDto toDto(PipelineExecution pipelineExecution);
 }

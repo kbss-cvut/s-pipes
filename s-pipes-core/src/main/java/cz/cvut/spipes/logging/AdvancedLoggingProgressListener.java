@@ -133,7 +133,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
         Date startDate = new Date();
         addProperty(pipelineExecution, SPIPES.has_pipeline_execution_start_date, startDate);
         addProperty(pipelineExecution, SPIPES.has_pipeline_execution_start_date_unix, startDate.getTime());
-        addProperty(pipelineExecution, SPIPES.has_executed_function_name, functionName);
+        addProperty(pipelineExecution, SPIPES.has_executed_function, functionName);
         addProperty(pipelineExecution, SPIPES.has_executed_function_script_path, scriptPath);
 
         if (pipelineExecutionGroupId != null) {
@@ -184,13 +184,13 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
             final PipelineExecution pipelineExecution =
                     em.find(PipelineExecution.class, pipelineExecutionIri, pd);
 
-            String pipelineName = metadataMap.get(SPIPES.has_pipeline_name.toString()).toString();
+            String pipelineName = metadataMap.get(SPIPES.has_script.toString()).toString();
             // new
             Date startDate = pipelineExecution.getHas_pipepline_execution_date();
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_finish_date, finishDate);
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_finish_date_unix, finishDate.getTime());
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_duration, computeDuration(startDate, finishDate));
-            addProperty(pipelineExecution, SPIPES.has_pipeline_name, pipelineName);
+            addProperty(pipelineExecution, SPIPES.has_script, pipelineName);
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_status, Vocabulary.s_p_finished_pipeline_execution);
 //            addScript(pipelineExecution, scriptManager.getScriptByContextId(pipelineName));
             em.getTransaction().commit();
@@ -207,8 +207,8 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
             final PipelineExecution pipelineExecution =
                     em.find(PipelineExecution.class, pipelineExecutionIri, pd);
 
-            String pipelineName = metadataMap.get(SPIPES.has_pipeline_name.toString()).toString();
-            addProperty(pipelineExecution, SPIPES.has_pipeline_name, pipelineName);
+            String pipelineName = metadataMap.get(SPIPES.has_script.toString()).toString();
+            addProperty(pipelineExecution, SPIPES.has_script, pipelineName);
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_status, Vocabulary.s_p_failed_pipeline_execution);
             em.getTransaction().commit();
             em.close();
@@ -344,9 +344,9 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
                 addProperty(moduleExecution, SPIPES.has_module_execution_duration, computeDuration(startDate, finishDate));
                 addProperty(moduleExecution, SPIPES.has_output_model_triple_count, module.getOutputContext().getDefaultModel().size());
                 addContentProperty(moduleExecution, module.getOutputContext(), "output");
-                addProperty(moduleExecution, SPIPES.has_pipeline_name, module.getResource().toString().replaceAll("\\/[^.]*$", ""));
-                if(!metadataMap.containsKey(SPIPES.has_pipeline_name.toString())){
-                    metadataMap.put(SPIPES.has_pipeline_name.toString(), module.getResource().toString().replaceAll("\\/[^.]*$", ""));
+                addProperty(moduleExecution, SPIPES.has_script, module.getResource().toString().replaceAll("\\/[^.]*$", ""));
+                if(!metadataMap.containsKey(SPIPES.has_script.toString())){
+                    metadataMap.put(SPIPES.has_script.toString(), module.getResource().toString().replaceAll("\\/[^.]*$", ""));
                 }
 
                 // input binding

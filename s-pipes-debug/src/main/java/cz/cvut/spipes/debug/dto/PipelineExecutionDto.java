@@ -50,24 +50,24 @@ public class PipelineExecutionDto extends ExecutionThing {
         this.has_pipeline_execution_status = has_pipeline_execution_status;
     }
 
-    private String has_pipeline_name;
+    private String has_script;
 
-    public String getHas_pipeline_name() {
-        return has_pipeline_name;
+    public String getHas_script() {
+        return has_script;
     }
 
-    public void setHas_pipeline_name(String has_pipeline_name) {
-        this.has_pipeline_name = has_pipeline_name;
+    public void setHas_script(String has_script) {
+        this.has_script = has_script;
     }
 
-    private String has_executed_function_name;
+    private String has_executed_function;
 
-    public String getHas_executed_function_name() {
-        return has_executed_function_name;
+    public String getHas_executed_function() {
+        return has_executed_function;
     }
 
-    public void setHas_executed_function_name(String has_executed_function_name) {
-        this.has_executed_function_name = has_executed_function_name;
+    public void setHas_executed_function(String has_executed_function) {
+        this.has_executed_function = has_executed_function;
     }
 
     private String has_executed_function_script_path;
