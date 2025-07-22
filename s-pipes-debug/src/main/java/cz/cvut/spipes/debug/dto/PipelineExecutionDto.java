@@ -1,5 +1,6 @@
 package cz.cvut.spipes.debug.dto;
 
+import java.net.URI;
 import java.util.Date;
 import java.util.List;
 
@@ -50,13 +51,13 @@ public class PipelineExecutionDto extends ExecutionThing {
         this.has_pipeline_execution_status = has_pipeline_execution_status;
     }
 
-    private String has_script;
+    private URI has_script;
 
-    public String getHas_script() {
+    public URI getHas_script() {
         return has_script;
     }
 
-    public void setHas_script(String has_script) {
+    public void setHas_script(URI has_script) {
         this.has_script = has_script;
     }
 

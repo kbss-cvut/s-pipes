@@ -40,6 +40,7 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -184,15 +185,20 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
             final PipelineExecution pipelineExecution =
                     em.find(PipelineExecution.class, pipelineExecutionIri, pd);
 
-            String pipelineName = metadataMap.get(SPIPES.has_script.toString()).toString();
+            try {
+                URI script = new URI(metadataMap.get(SPIPES.has_script.toString()).toString());
+                addProperty(pipelineExecution, SPIPES.has_script, script);
+            } catch (URISyntaxException e) {
+                log.error("Invalid script URI in metadata map: {}", metadataMap.get(SPIPES.has_script.toString()), e);
+                throw new IllegalStateException("Invalid script URI in metadata map", e);
+            }
             // new
             Date startDate = pipelineExecution.getHas_pipepline_execution_date();
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_finish_date, finishDate);
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_finish_date_unix, finishDate.getTime());
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_duration, computeDuration(startDate, finishDate));
-            addProperty(pipelineExecution, SPIPES.has_script, pipelineName);
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_status, Vocabulary.s_p_finished_pipeline_execution);
-//            addScript(pipelineExecution, scriptManager.getScriptByContextId(pipelineName));
+//            addScript(pipelineExecution, scriptManager.getScriptByContextId(script));
             em.getTransaction().commit();
             em.close();
         }
@@ -207,8 +213,13 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
             final PipelineExecution pipelineExecution =
                     em.find(PipelineExecution.class, pipelineExecutionIri, pd);
 
-            String pipelineName = metadataMap.get(SPIPES.has_script.toString()).toString();
-            addProperty(pipelineExecution, SPIPES.has_script, pipelineName);
+            try {
+                URI script = new URI(metadataMap.get(SPIPES.has_script.toString()).toString());
+                addProperty(pipelineExecution, SPIPES.has_script, script);
+            } catch (URISyntaxException e) {
+                log.error("Invalid script URI in metadata map: {}", metadataMap.get(SPIPES.has_script.toString()), e);
+                throw new IllegalStateException("Invalid script URI in metadata map", e);
+            }
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_status, Vocabulary.s_p_failed_pipeline_execution);
             em.getTransaction().commit();
             em.close();

@@ -1,5 +1,6 @@
 package cz.cvut.spipes.model;
 
+import java.net.URI;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
@@ -79,8 +80,8 @@ public class PipelineExecution extends Thing {
     @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-pipeline-execution-status")
     protected String has_pipeline_execution_status;
 
-    @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-script")
-    protected String has_script;
+    @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-script")
+    protected URI has_script;
 
     @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-executed-function")
     protected String has_executed_function;
@@ -186,11 +187,11 @@ public class PipelineExecution extends Thing {
         this.has_pipeline_execution_finish_date = has_pipeline_execution_finish_date;
     }
 
-    public String getHas_script() {
+    public URI getHas_script() {
         return has_script;
     }
 
-    public void setHas_script(String has_script) {
+    public void setHas_script(URI has_script) {
         this.has_script = has_script;
     }
 
