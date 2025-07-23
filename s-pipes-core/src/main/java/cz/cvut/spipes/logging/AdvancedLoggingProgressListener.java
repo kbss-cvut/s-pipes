@@ -185,13 +185,8 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
             final PipelineExecution pipelineExecution =
                     em.find(PipelineExecution.class, pipelineExecutionIri, pd);
 
-            try {
-                URI script = new URI(metadataMap.get(SPIPES.has_script.toString()).toString());
-                addProperty(pipelineExecution, SPIPES.has_script, script);
-            } catch (URISyntaxException e) {
-                log.error("Invalid script URI in metadata map: {}", metadataMap.get(SPIPES.has_script.toString()), e);
-                throw new IllegalStateException("Invalid script URI in metadata map", e);
-            }
+            URI script = getURIFromMetadataMap(SPIPES.has_script);
+            addProperty(pipelineExecution, SPIPES.has_script, script);
             // new
             Date startDate = pipelineExecution.getHas_pipepline_execution_date();
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_finish_date, finishDate);
@@ -212,14 +207,8 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
             final EntityDescriptor pd = new EntityDescriptor(URI.create(pipelineExecutionIri));
             final PipelineExecution pipelineExecution =
                     em.find(PipelineExecution.class, pipelineExecutionIri, pd);
-
-            try {
-                URI script = new URI(metadataMap.get(SPIPES.has_script.toString()).toString());
-                addProperty(pipelineExecution, SPIPES.has_script, script);
-            } catch (URISyntaxException e) {
-                log.error("Invalid script URI in metadata map: {}", metadataMap.get(SPIPES.has_script.toString()), e);
-                throw new IllegalStateException("Invalid script URI in metadata map", e);
-            }
+            URI script = getURIFromMetadataMap(SPIPES.has_script);
+            addProperty(pipelineExecution, SPIPES.has_script, script);
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_status, Vocabulary.s_p_failed_pipeline_execution);
             em.getTransaction().commit();
             em.close();
@@ -608,5 +597,18 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
         }
     }
 
-
+    private URI getURIFromMetadataMap(Property property){
+        URI uri;
+        try {
+            if (!metadataMap.containsKey(property.toString())) {
+                throw new IllegalStateException("Metadata map does not contain property: " + property);
+            }
+            uri = new URI(metadataMap.get(property.toString()).toString());
+            return uri;
+        } catch (NullPointerException e) {
+            throw new IllegalStateException("Metadata map is null or does not contain property: " + property, e);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
