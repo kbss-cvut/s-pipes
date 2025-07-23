@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,7 +27,7 @@ public class OntoDocManagerTest {
 
         int initialEntriesCount = getLocationMapperEntriesCount(ontoDocManager);
 
-        ontoDocManager.registerDocuments(managerDirPath.resolve("recursive-discovery"));
+        ontoDocManager.registerDocuments(Arrays.asList(managerDirPath.resolve("recursive-discovery")));
 
         assertEquals(initialEntriesCount + 5, getLocationMapperEntriesCount(ontoDocManager));
     }
