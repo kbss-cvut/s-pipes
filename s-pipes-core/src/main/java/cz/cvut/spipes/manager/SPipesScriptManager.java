@@ -146,8 +146,8 @@ public class SPipesScriptManager {
      * @return the location of the file containing the function identified by <code>functionId</code>
      */
     public String getFunctionLocation(final String functionId) {
-        String resourceUri = functionRegistry.getResourceUri(functionId);
-        String resourceContextUri = functionRegistry.getContexts(resourceUri).iterator().next();
+        String resourceUri = pipelineFunctionRegistry.getResourceUri(functionId);
+        String resourceContextUri = pipelineFunctionRegistry.getContexts(resourceUri).iterator().next();
         return getLocation(resourceContextUri);
     }
 
