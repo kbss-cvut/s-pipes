@@ -9,8 +9,7 @@ import org.apache.jena.ontology.OntDocumentManager;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.ontology.models.ModelMaker;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.*;
 import org.apache.jena.util.FileManager;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.util.LocationMapper;
@@ -125,6 +124,7 @@ public class OntoDocManager implements OntologyDocumentManager {
         fileOrDirectoryPath.forEach(
                 this::registerDocuments
         );
+        clearOntModelsImportingDirtyModel();
         lastTime = Instant.now();
     }
 
@@ -137,31 +137,8 @@ public class OntoDocManager implements OntologyDocumentManager {
 
     @Override
     public OntModel getOntology(String uri) {
-        return loadDirtyModels(ontDocumentManager.getOntology(uri, ONT_MODEL_SPEC));
+        return ontDocumentManager.getOntology(uri, ONT_MODEL_SPEC);
     }
-
-    /**
-     * Reloads imports of dirty models
-     *
-     * @implNote TODO - update subgraphs (imports) in ontModel according to changes in dirty models imports
-     * @param ontModel
-     * @return
-     */
-    protected synchronized OntModel loadDirtyModels(OntModel ontModel){
-        Set<String> reloadedModels = new HashSet<>();
-        for(String dirtyModel : dirtyModels){
-            if (!ontModel.hasLoadedImport(dirtyModel))
-                continue;
-            ontModel.removeLoadedImport(dirtyModel);
-            reloadedModels.add(dirtyModel);
-        }
-        if(!reloadedModels.isEmpty()){
-            ontModel.loadImports();
-            dirtyModels.removeAll(reloadedModels);
-        }
-        return ontModel;
-    }
-
 
     /**
      * Cache is implemented by OntDocumentManager.getInstance().getFileManager(). Additionally, jena may store models in
@@ -178,6 +155,28 @@ public class OntoDocManager implements OntologyDocumentManager {
             if(!Optional.ofNullable(lm.getAltEntry(uri)).map(s -> s.equals(pathString)).orElse(false))
                 continue;
             clearCachedModel(uri);
+        }
+    }
+
+    protected void clearOntModelsImportingDirtyModel(){
+        Iterator<String> iriIter = ontDocumentManager.getFileManager().getLocationMapper().listAltEntries();
+        Stack<String> iris = new Stack<>();
+        iriIter.forEachRemaining(iris::push);
+
+        while(!iris.isEmpty()) {
+            String iri = iris.pop();
+
+            if(ontDocumentManager.getFileManager().hasCachedModel(iri)){
+                Model m = ontDocumentManager.getFileManager().getFromCache(iri);
+                if(m instanceof OntModel) {
+                     ((OntModel)m).listImportedOntologyURIs(true).stream()
+                             .filter(dirtyModels::contains)
+                             .findAny()
+                             .ifPresent(i -> ontDocumentManager.getFileManager().removeCacheModel(iri));
+                } else {
+                    // do nothing - assumes that non OntModel models do not have imports.
+                }
+            }
         }
     }
 
@@ -199,7 +198,7 @@ public class OntoDocManager implements OntologyDocumentManager {
     private static void clearCache(OntModelSpec ontModelSpec){
         Stream.of(ontModelSpec.getBaseModelMaker(), ontModelSpec.getImportModelMaker())
                 .forEach(
-                        m -> m.listModels().forEachRemaining(m::removeModel)
+                        m -> m.listModels().toList().forEach(m::removeModel)
                 );
     }
 
