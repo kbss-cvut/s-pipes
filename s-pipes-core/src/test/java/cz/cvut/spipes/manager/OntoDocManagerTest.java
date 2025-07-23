@@ -31,7 +31,7 @@ public class OntoDocManagerTest {
 
         int initialEntriesCount = getLocationMapperEntriesCount(ontoDocManager);
 
-        ontoDocManager.registerDocuments(managerDirPath.resolve("recursive-discovery"));
+        ontoDocManager.registerDocuments(Arrays.asList(managerDirPath.resolve("recursive-discovery")));
 
         assertEquals(initialEntriesCount + 5, getLocationMapperEntriesCount(ontoDocManager));
     }
