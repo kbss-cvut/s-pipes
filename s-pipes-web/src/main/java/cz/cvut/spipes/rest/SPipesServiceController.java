@@ -80,53 +80,59 @@ public class SPipesServiceController {
     Module with same IRI can be defined in many scripts within the workspace, thus to execute the module, it is
     necessary to find out/resolve the script (i.e. context from which module configuration is taken)
     in which the module will be executed.<br/><br/>
+
     <strong>Use-cases:</strong><br/>
-    There are 2 types of use-cases (UCs) for this endpoint. The first types are used to execute a pipeline ending
-    with execution of the module, while second types are used to execute only the module itself, without any pipeline.<br/><br/>
-    <strong>Execution of a pipeline:</strong>
+
     <ul>
-      <li><strong>UC-1.1:</strong> run to the module within the script -- this is used e.g. by SPipes editor to run pipeline to the
-      provided module. In order to identify script (i.e. context from which module definition is taken) in which
-      the module should be executed the script URI must be provided by the parameter or there must be only one
-      script containing the module within whole workspace.
+      <li>
+        <strong>Execution of a pipeline:</strong>
         <ul>
-          <li>Note that this use-case depends on workspace (<code>contexts.scriptPaths</code> property) as it loads
-          the configuration of the module from the script of the workspace.</li>
-        </ul>
-      </li>
-    </ul>
-    <strong>Execution of a module:</strong>
-    <ul>
-      <li><strong>UC-2.1:</strong> rerun module with previous inputs -- this is used e.g. in links within SPipes log file.
-      If configuration property <code>execution.environment=development</code> is set, the log file contains generated links
-      to rerun execution of the module with previous inputs. Thus pipeline itself is not executed,
-      but the input execution context for the module is constructed from previous execution of the module within
-      the pipeline.
-        <ul>
-          <li>Note that this use-case for <code>contextsLoader.data.keepUpdated</code>:
+          <li><strong>UC-1.1:</strong> run to the module within the script -- this is used e.g. by SPipes editor to run pipeline to the
+          provided module. In order to identify script (i.e. context from which module definition is taken) in which
+          the module should be executed the script URI must be provided by the parameter or there must be only one
+          script containing the module within whole workspace.
             <ul>
-              <li><strong>true:</strong> depends on workspace (<code>contexts.scriptPaths</code> property) as it loads current configuration of
-              the module from the script of the workspace.</li>
-              <li><strong>false:</strong> does not depend on workspace as it loads configuration of the module from provided request
-              parameter <code>_pConfigURL</code> or from the default configuration URL.</li>
+              <li>Note that this use-case depends on workspace (<code>contexts.scriptPaths</code> property) as it loads
+              the configuration of the module from the script of the workspace.</li>
             </ul>
           </li>
         </ul>
       </li>
-      <li><strong>UC-2.2:</strong> execute existing module configuration with additional parameters -- this allows to execute concrete
-      configuration of the module and in addition provide additional parameters to the module. Unless the module
-      occurs only in one script of the workspace, the script URI must be provided by the parameter.
+      <li>
+        <strong>Execution of a module:</strong>
         <ul>
-          <li>Note that this use-case depends on workspace (<code>contexts.scriptPaths</code> property) as it loads
-          the configuration of the module from the script of the workspace.</li>
-        </ul>
-      </li>
-      <li><strong>UC-2.3:</strong> execute module type with provided configuration -- this is used when user wants to execute module type
-      with provided configuration. The configuration of the module is provided in RDF model referenced by <code>_pConfigURL</code>
-      parameter, which typically defines new (fresh) module uri of the module type.
-        <ul>
-          <li>Note that this use-case does not depend on workspace (<code>contexts.scriptPaths</code> property) as it loads
-          whole configuration of the module from model provided by the request parameter <code>_pConfigURL</code>.</li>
+          <li><strong>UC-2.1:</strong> rerun module with previous inputs -- this is used e.g. in links within SPipes log file.
+          If configuration property <code>execution.environment=development</code> is set, the log file contains generated links
+          to rerun execution of the module with previous inputs. Thus pipeline itself is not executed,
+          but the input execution context for the module is constructed from previous execution of the module within
+          the pipeline.
+            <ul>
+              <li>Note that this use-case for <code>contextsLoader.data.keepUpdated</code>:
+                <ul>
+                  <li><strong>true:</strong> depends on workspace (<code>contexts.scriptPaths</code> property) as it loads current configuration of
+                  the module from the script of the workspace.</li>
+                  <li><strong>false:</strong> does not depend on workspace as it loads configuration of the module from provided request
+                  parameter <code>_pConfigURL</code> or from the default configuration URL.</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li><strong>UC-2.2:</strong> execute existing module configuration with additional parameters -- this allows to execute concrete
+          configuration of the module and in addition provide additional parameters to the module. Unless the module
+          occurs only in one script of the workspace, the script URI must be provided by the parameter.
+            <ul>
+              <li>Note that this use-case depends on workspace (<code>contexts.scriptPaths</code> property) as it loads
+              the configuration of the module from the script of the workspace.</li>
+            </ul>
+          </li>
+          <li><strong>UC-2.3:</strong> execute module type with provided configuration -- this is used when user wants to execute module type
+          with provided configuration. The configuration of the module is provided in RDF model referenced by <code>_pConfigURL</code>
+          parameter, which typically defines new (fresh) module uri of the module type.
+            <ul>
+              <li>Note that this use-case does not depend on workspace (<code>contexts.scriptPaths</code> property) as it loads
+              whole configuration of the module from model provided by the request parameter <code>_pConfigURL</code>.</li>
+            </ul>
+          </li>
         </ul>
       </li>
     </ul>
