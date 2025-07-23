@@ -13,15 +13,15 @@ import java.io.File;
 import java.io.IOException;
 
 @SPipesModule(label = "Persist model to files in workspace", comment = """
-        Use <code>FileSinkModule</code> module to save files in a directory relative to the root script's directory. The module passes the input execution
+        Use <code>FileSinkModule</code> module to save files in a directory relative to the script's directory. The module passes the input execution
         context downstream, i.e. to the next module in the pipeline.
         <p>
         Parameters:
         <ul>
         <li>
-        <code>outputDirectory</code> - path relative to root script file, default is ".".  In an Execution contexts the\s
-        root script file is the file defining the executed function or single module, see
-        <code>AbstractModule.getRootScriptFile</code>.
+        <code>outputDirectory</code> - path relative to script file, default is ".".  In an Execution contexts the\s
+        script file is the file defining the executed function or single module, see
+        <code>AbstractModule.getScriptFile</code>.
         </li>
         <li>
         <code>selectQuery</code> - sparql select query generating files. The query must have two variables
@@ -29,7 +29,7 @@ import java.io.IOException;
         <li>
         <code>fileName</code> - should return path relative to <code>outputDirectory</code> where the file will be saved.
         </li>
-        <li><code>content</code> - should return the contents of the file to saved at <code>fileName</code></li>
+        <li><code>content</code> - should return the content of the file to be saved at <code>fileName</code></li>
         </ul>
         </li>
         </ul>
@@ -78,7 +78,7 @@ public class FileSinkModule extends AnnotatedAbstractModule {
     @Override
     public ExecutionContext executeSelf() {
 
-        File root = computeOutputDirectory();
+        File scriptDir = computeOutputDirectory();
                 
         Query query = QueryUtils.createQuery(selectQuery);
         QuerySolution inputBindings = executionContext.getVariablesBinding().asQuerySolution();
@@ -88,7 +88,7 @@ public class FileSinkModule extends AnnotatedAbstractModule {
                 QuerySolution qs = rs.next();
                 String fileName = qs.get(FILE_NAME_VAR).toString();
                 String content = qs.get(FILE_CONTENT_VAR).toString();
-                File f = new File(root, fileName);
+                File f = new File(scriptDir, fileName);
                 try {
                     IOUtil.writeString(content, f);
                 } catch (IOException e) {
@@ -101,27 +101,16 @@ public class FileSinkModule extends AnnotatedAbstractModule {
     }
 
     protected File computeOutputDirectory(){
-        File rootFile = getRootScriptFile();
+        File scriptFile = getScriptFile();
 
         if(outputDirectory == null)
-            return rootFile.getParentFile();
+            return scriptFile.getParentFile();
 
         File outputDirectoryFile = new File(outputDirectory);
         return outputDirectoryFile.isAbsolute() 
                 ? outputDirectoryFile
-                : new File(rootFile.getParentFile(), outputDirectory);
+                : new File(scriptFile.getParentFile(), outputDirectory);
     }
-    
-//    protected String getContextDirectory(){
-//        SPipesScriptManager scriptManager = ScriptManagerFactory.getSingletonSPipesScriptManager();
-//
-//        executionContext.getVariablesBinding().getNode("_pId");
-////        Binding b = BindingFactory.binding(Var.alloc("currentModule"), resource.asNode());
-////        QueryExecutionFactory.create("""
-////                ?currentModule sm:next :transform-data_Return
-////                ?function sm:returnModule
-////                """, resource.getModel()).setInitialBinding(b);
-//    }
 
 
     public String getOutputDirectory() {
