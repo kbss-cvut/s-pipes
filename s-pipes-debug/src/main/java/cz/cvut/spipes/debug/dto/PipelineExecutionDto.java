@@ -41,13 +41,13 @@ public class PipelineExecutionDto extends ExecutionThing {
         this.has_pipepline_execution_date = has_pipepline_execution_date;
     }
 
-    private String has_pipeline_execution_status;
+    private URI has_pipeline_execution_status;
 
-    public String getHas_pipeline_execution_status() {
+    public URI getHas_pipeline_execution_status() {
         return has_pipeline_execution_status;
     }
 
-    public void setHas_pipeline_execution_status(String has_pipeline_execution_status) {
+    public void setHas_pipeline_execution_status(URI has_pipeline_execution_status) {
         this.has_pipeline_execution_status = has_pipeline_execution_status;
     }
 
@@ -61,13 +61,13 @@ public class PipelineExecutionDto extends ExecutionThing {
         this.has_script = has_script;
     }
 
-    private String has_executed_function;
+    private URI has_executed_function;
 
-    public String getHas_executed_function() {
+    public URI getHas_executed_function() {
         return has_executed_function;
     }
 
-    public void setHas_executed_function(String has_executed_function) {
+    public void setHas_executed_function(URI has_executed_function) {
         this.has_executed_function = has_executed_function;
     }
 
