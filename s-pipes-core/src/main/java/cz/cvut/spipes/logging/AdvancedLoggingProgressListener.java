@@ -134,7 +134,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
         Date startDate = new Date();
         addProperty(pipelineExecution, SPIPES.has_pipeline_execution_start_date, startDate);
         addProperty(pipelineExecution, SPIPES.has_pipeline_execution_start_date_unix, startDate.getTime());
-        addProperty(pipelineExecution, SPIPES.has_executed_function, functionName);
+        addProperty(pipelineExecution, SPIPES.has_executed_function, URI.create(functionName));
         addProperty(pipelineExecution, SPIPES.has_executed_function_script_path, scriptPath);
 
         if (pipelineExecutionGroupId != null) {
@@ -191,7 +191,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_finish_date, finishDate);
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_finish_date_unix, finishDate.getTime());
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_duration, computeDuration(startDate, finishDate));
-            addProperty(pipelineExecution, SPIPES.has_pipeline_execution_status, Vocabulary.s_p_finished_pipeline_execution);
+            addProperty(pipelineExecution, SPIPES.has_pipeline_execution_status, URI.create(Vocabulary.s_p_finished_pipeline_execution));
 //            addScript(pipelineExecution, scriptManager.getScriptByContextId(script));
             em.getTransaction().commit();
             em.close();
@@ -207,7 +207,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
             final PipelineExecution pipelineExecution =
                     em.find(PipelineExecution.class, pipelineExecutionIri, pd);
             addProperty(pipelineExecution, SPIPES.has_script, getURIFromMetadataMap(SPIPES.has_script));
-            addProperty(pipelineExecution, SPIPES.has_pipeline_execution_status, Vocabulary.s_p_failed_pipeline_execution);
+            addProperty(pipelineExecution, SPIPES.has_pipeline_execution_status, URI.create(Vocabulary.s_p_failed_pipeline_execution));
             em.getTransaction().commit();
             em.close();
         }
@@ -343,9 +343,9 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
                 addProperty(moduleExecution, SPIPES.has_output_model_triple_count, module.getOutputContext().getDefaultModel().size());
                 addContentProperty(moduleExecution, module.getOutputContext(), "output");
                 String script = module.getResource().toString().replaceAll("\\/[^.]*$", "");
-                addProperty(moduleExecution, SPIPES.has_script, script);
+                addProperty(moduleExecution, SPIPES.has_script, URI.create(script));
                 if(!metadataMap.containsKey(SPIPES.has_script.toString())){
-                    metadataMap.put(SPIPES.has_script.toString(), script);
+                    metadataMap.put(SPIPES.has_script.toString(), URI.create(script));
                 }
 
                 // input binding
@@ -602,12 +602,10 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
             if (!metadataMap.containsKey(property.toString())) {
                 throw new IllegalStateException("Metadata map does not contain property: " + property);
             }
-            uri = new URI(metadataMap.get(property.toString()).toString());
+            uri = URI.create((metadataMap.get(property.toString()).toString()));
             return uri;
         } catch (NullPointerException e) {
             throw new IllegalStateException("Metadata map is null or does not contain property: " + property, e);
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
         }
     }
 }

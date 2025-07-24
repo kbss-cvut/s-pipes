@@ -77,14 +77,14 @@ public class PipelineExecution extends Thing {
     @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-pipeline-execution-finish-date", fetch = FetchType.EAGER)
     protected Date has_pipeline_execution_finish_date;
 
-    @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-pipeline-execution-status")
-    protected String has_pipeline_execution_status;
+    @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-pipeline-execution-status")
+    protected URI has_pipeline_execution_status;
 
     @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-script")
     protected URI has_script;
 
-    @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-executed-function")
-    protected String has_executed_function;
+    @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-executed-function")
+    protected URI has_executed_function;
 
     @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-executed-function-script-path")
     protected String has_executed_function_script_path;
@@ -195,11 +195,11 @@ public class PipelineExecution extends Thing {
         this.has_script = has_script;
     }
 
-    public String getHas_executed_function() {
+    public URI getHas_executed_function() {
         return has_executed_function;
     }
 
-    public void setHas_executed_function(String has_executed_function) {
+    public void setHas_executed_function(URI has_executed_function) {
         this.has_executed_function = has_executed_function;
     }
 
@@ -211,11 +211,11 @@ public class PipelineExecution extends Thing {
         this.has_executed_function_script_path = has_executed_function_script_path;
     }
 
-    public String getHas_pipeline_execution_status() {
+    public URI getHas_pipeline_execution_status() {
         return has_pipeline_execution_status;
     }
 
-    public void setHas_pipeline_execution_status(String status) {
+    public void setHas_pipeline_execution_status(URI status) {
         this.has_pipeline_execution_status = status;
     }
 
