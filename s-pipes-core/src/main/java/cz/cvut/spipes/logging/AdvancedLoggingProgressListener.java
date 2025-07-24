@@ -185,8 +185,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
             final PipelineExecution pipelineExecution =
                     em.find(PipelineExecution.class, pipelineExecutionIri, pd);
 
-            URI script = getURIFromMetadataMap(SPIPES.has_script);
-            addProperty(pipelineExecution, SPIPES.has_script, script);
+            addProperty(pipelineExecution, SPIPES.has_script, getURIFromMetadataMap(SPIPES.has_script));
             // new
             Date startDate = pipelineExecution.getHas_pipepline_execution_date();
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_finish_date, finishDate);
@@ -207,8 +206,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
             final EntityDescriptor pd = new EntityDescriptor(URI.create(pipelineExecutionIri));
             final PipelineExecution pipelineExecution =
                     em.find(PipelineExecution.class, pipelineExecutionIri, pd);
-            URI script = getURIFromMetadataMap(SPIPES.has_script);
-            addProperty(pipelineExecution, SPIPES.has_script, script);
+            addProperty(pipelineExecution, SPIPES.has_script, getURIFromMetadataMap(SPIPES.has_script));
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_status, Vocabulary.s_p_failed_pipeline_execution);
             em.getTransaction().commit();
             em.close();
@@ -344,9 +342,10 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
                 addProperty(moduleExecution, SPIPES.has_module_execution_duration, computeDuration(startDate, finishDate));
                 addProperty(moduleExecution, SPIPES.has_output_model_triple_count, module.getOutputContext().getDefaultModel().size());
                 addContentProperty(moduleExecution, module.getOutputContext(), "output");
-                addProperty(moduleExecution, SPIPES.has_script, module.getResource().toString().replaceAll("\\/[^.]*$", ""));
+                String script = module.getResource().toString().replaceAll("\\/[^.]*$", "");
+                addProperty(moduleExecution, SPIPES.has_script, script);
                 if(!metadataMap.containsKey(SPIPES.has_script.toString())){
-                    metadataMap.put(SPIPES.has_script.toString(), module.getResource().toString().replaceAll("\\/[^.]*$", ""));
+                    metadataMap.put(SPIPES.has_script.toString(), script);
                 }
 
                 // input binding
