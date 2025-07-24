@@ -77,7 +77,7 @@ public class PipelineExecution extends Thing {
     @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-pipeline-execution-finish-date", fetch = FetchType.EAGER)
     protected Date has_pipeline_execution_finish_date;
 
-    @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-pipeline-execution-status")
+    @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-pipeline-execution-status")
     protected URI has_pipeline_execution_status;
 
     @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-script")

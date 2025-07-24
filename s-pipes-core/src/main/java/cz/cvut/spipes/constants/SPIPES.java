@@ -43,7 +43,6 @@ public class SPIPES {
     public static final Property has_output_content = property("has-output-content");
     public static final Property has_script = property("has-script");
 
-    public static final Property has_pipeline_execution_status = property("has-pipeline-execution-status");
     public static final Property has_executed_function = property("has-executed-function");
     public static final Property has_executed_function_script_path = property("has-executed-function-script-path");
 }
