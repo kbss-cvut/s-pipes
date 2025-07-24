@@ -1,5 +1,6 @@
 package cz.cvut.spipes.model;
 
+import java.net.URI;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
@@ -72,6 +73,21 @@ public class PipelineExecution extends Thing {
 
     @OWLDataProperty(iri = Vocabulary.s_p_has_pipeline_execution_start_date, fetch = FetchType.EAGER)
     protected Date has_pipepline_execution_date;
+
+    @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-pipeline-execution-finish-date", fetch = FetchType.EAGER)
+    protected Date has_pipeline_execution_finish_date;
+
+    @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-pipeline-execution-status")
+    protected URI has_pipeline_execution_status;
+
+    @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-script")
+    protected URI has_script;
+
+    @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-executed-function")
+    protected URI has_executed_function;
+
+    @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-executed-function-script-path")
+    protected String has_executed_function_script_path;
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_module_id, fetch = FetchType.EAGER)
     protected String has_module_id;
@@ -163,6 +179,45 @@ public class PipelineExecution extends Thing {
         this.has_pipepline_execution_date = has_pipepline_execution_date;
     }
 
+    public Date getHas_pipeline_execution_finish_date() {
+        return has_pipeline_execution_finish_date;
+    }
+
+    public void setHas_pipeline_execution_finish_date(Date has_pipeline_execution_finish_date) {
+        this.has_pipeline_execution_finish_date = has_pipeline_execution_finish_date;
+    }
+
+    public URI getHas_script() {
+        return has_script;
+    }
+
+    public void setHas_script(URI has_script) {
+        this.has_script = has_script;
+    }
+
+    public URI getHas_executed_function() {
+        return has_executed_function;
+    }
+
+    public void setHas_executed_function(URI has_executed_function) {
+        this.has_executed_function = has_executed_function;
+    }
+
+    public String getHas_executed_function_script_path() {
+        return has_executed_function_script_path;
+    }
+
+    public void setHas_executed_function_script_path(String has_executed_function_script_path) {
+        this.has_executed_function_script_path = has_executed_function_script_path;
+    }
+
+    public URI getHas_pipeline_execution_status() {
+        return has_pipeline_execution_status;
+    }
+
+    public void setHas_pipeline_execution_status(URI status) {
+        this.has_pipeline_execution_status = status;
+    }
 
     public String getHas_module_id() {
         return has_module_id;
