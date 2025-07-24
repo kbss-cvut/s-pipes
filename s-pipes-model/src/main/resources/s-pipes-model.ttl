@@ -107,13 +107,13 @@ s-pipes:has-related-resource rdf:type owl:ObjectProperty ;
                                                                                      rdfs:range xsd:boolean ;
                                                                                      rdfs:label "Are same" .
 
-###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/finished-pipeline-execution
+###  http://onto.fel.cvut.cz/ontologies/s-pipes/finished-pipeline-execution
 s-pipes:finished-pipeline-execution rdf:type owl:Class ;
                      rdfs:domain ddo:pipeline-execution ;
                      rdfs:subClassOf s-pipes:pipeline-execution ;
                      rdfs:label "Pipeline execution that finished successfully" .
 
-###  http://onto.fel.cvut.cz/ontologies/dataset-descriptor/failed-pipeline-execution
+###  http://onto.fel.cvut.cz/ontologies/s-pipes/failed-pipeline-execution
 s-pipes:failed-pipeline-execution rdf:type owl:Class ;
                      rdfs:domain ddo:pipeline-execution ;
                      rdfs:subClassOf s-pipes:pipeline-execution ;
