@@ -101,7 +101,7 @@ public class FileSinkModule extends AnnotatedAbstractModule {
     }
 
     protected File computeOutputDirectory(){
-        File scriptFile = getScriptFile();
+        File scriptFile = executionContext.getScriptFile();
 
         if(outputDirectory == null)
             return scriptFile.getParentFile();
