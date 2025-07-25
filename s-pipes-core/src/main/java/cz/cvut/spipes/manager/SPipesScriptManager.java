@@ -75,20 +75,10 @@ public class SPipesScriptManager {
             throw new UnsupportedOperationException();
         }
 
-        String resourceUri;
-        String resourceContextUri;
-
-        // find existing module
-        if (contextUri == null) {
-            resourceUri = moduleRegistry.getResourceUri(moduleId);
-            resourceContextUri = moduleRegistry.getContexts(moduleId).iterator().next();
-        } else {
-            resourceUri = moduleRegistry.getResourceUri(moduleId, contextUri);
-            resourceContextUri = contextUri;
-        }
+        String resourceContextUri = getModuleLocation(moduleId, contextUri);
 
         // TODO check moduleTypeUri
-
+        String resourceUri = moduleRegistry.getResourceUri(moduleId);
         return PipelineFactory.loadModule(scriptsRepository.getResource(resourceUri, resourceContextUri));
     }
 
@@ -133,6 +123,17 @@ public class SPipesScriptManager {
         String resourceContextUri;
         // find existing module
         if (contextUri == null) {
+            Set<String> iris = moduleRegistry.getContexts(moduleId);
+            if(iris.isEmpty()){
+                throw new ResourceNotFoundException("Cannot find script for module with id \"%s\"".formatted(moduleId));
+            }
+            if(iris.size() > 1){
+                throw new ResourceNotUniqueException((
+                        "Cannot find location of module with id \"%s\", module found in multiple scripts. " +
+                                "Set scriptUri parameter to locate module in a specific script."
+                ).formatted(moduleId));
+            }
+
             resourceContextUri = moduleRegistry.getContexts(moduleId).iterator().next();
         } else {
             resourceContextUri = contextUri;
