@@ -29,7 +29,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -202,6 +204,7 @@ public class SPipesServiceController {
         File outputBindingPath = extractOutputBindingPath(parameters);
         Model configModel = extractConfigurationModel(parameters);
         ExecutionContext inputExecutionContext = extractInputExecutionContext(inputDataModel, parameters);
+        inputExecutionContext.setScriptUri(scriptManager.getFunctionLocation(id));
 
         ExecutionEngine engine = createExecutionEngine(configModel);
 
@@ -228,14 +231,19 @@ public class SPipesServiceController {
         String id = extractId(parameters);
 
         File outputBindingPath = extractOutputBindingPath(parameters);
-        Model configModel = extractConfigurationModel(parameters);
         ExecutionContext inputExecutionContext = extractInputExecutionContext(inputDataModel, parameters);
+        String scriptUri = Optional.ofNullable(inputExecutionContext.getScriptUri())
+                .map( s ->  scriptManager.getModuleLocation(id, s))
+                .orElseGet(() -> inputExecutionContext.getValue(ReservedParams.P_CONFIG_URL));
+        inputExecutionContext.setScriptUri(scriptUri);
+
+        Model configModel = extractConfigurationModel(parameters);
 
         ExecutionEngine engine = createExecutionEngine(configModel);
         ContextLoaderHelper.updateContextsIfNecessary(scriptManager);
         Module module = null;
         if (isKeepUpdated()) {
-            module = scriptManager.loadModule(id, null, null);
+            module = scriptManager.loadModule(id, null, inputExecutionContext.getScriptUri());
         } else {
             module = PipelineFactory.loadModule(configModel.createResource(id));
         }

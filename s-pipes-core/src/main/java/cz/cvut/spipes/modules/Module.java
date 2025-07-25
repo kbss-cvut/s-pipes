@@ -4,6 +4,7 @@ import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.VariablesBinding;
 import org.apache.jena.rdf.model.Resource;
 
+import java.io.File;
 import java.util.List;
 
 /**
