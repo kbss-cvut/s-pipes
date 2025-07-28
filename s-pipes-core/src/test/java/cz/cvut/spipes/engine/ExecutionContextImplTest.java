@@ -22,7 +22,10 @@ class ExecutionContextImplTest {
         List<File> requiredFiles = requiredResources.stream()
                 .map(this::resourcePathAsFile)
                 .toList();
-        List<String> requiredFilesStr = requiredFiles.stream().map(f -> f.toString().replaceAll("\\\\", "/")).toList();
+        List<String> requiredFilesStr = requiredFiles.stream()
+                .map(f -> f.toString().replaceFirst("^([^/\\\\])", "/$1")) // windows prepend forward slash
+                .map(s -> s.replaceAll("\\\\","/")) // windows repelace '\'  with '/'. Test works without this.
+                .toList();
         List<String> uris = Arrays.asList(
                 "http://onto.fel.cvut.cz/ontologies/s-pipes/test/pipeline-config",
                 "http://onto.fel.cvut.cz/ontologies/test/sample/config"
@@ -58,10 +61,10 @@ class ExecutionContextImplTest {
         test(uris.get(1), scriptPaths, 1); // ontology iri
         test(requiredFilesStr.get(0), scriptPaths, 1); // absolute path
         test(requiredFilesStr.get(1), scriptPaths, 1); // absolute path
-        test("file:/" + requiredFilesStr.get(0), scriptPaths, 1); // absolute path
-        test("file:/" + requiredFilesStr.get(1), scriptPaths, 1); // absolute path
-        test("file:///" + requiredFilesStr.get(0), scriptPaths, 1); // absolute path
-        test("file:///" + requiredFilesStr.get(1), scriptPaths, 1); // absolute path
+        test("file:" + requiredFilesStr.get(0), scriptPaths, 1); // absolute path
+        test("file:" + requiredFilesStr.get(1), scriptPaths, 1); // absolute path
+        test("file://" + requiredFilesStr.get(0), scriptPaths, 1); // absolute path
+        test("file://" + requiredFilesStr.get(1), scriptPaths, 1); // absolute path
         test(localPaths.get(0), scriptPaths, 1); // relative path
         test(localPaths.get(1), scriptPaths, 1); // relative path
         test("./" + localPaths.get(0), scriptPaths, 1); // relative path

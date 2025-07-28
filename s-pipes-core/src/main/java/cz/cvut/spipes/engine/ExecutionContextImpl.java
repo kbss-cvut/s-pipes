@@ -128,9 +128,9 @@ class ExecutionContextImpl implements ExecutionContext {
         // TODO - make it work with prefixed uris
 
         String path = OntDocumentManager.getInstance().doAltURLMapping(uriStr);
-        File f = new File(path);
-        if (f.exists())
-            return Arrays.asList(f);
+        Optional<File> f = Optional.ofNullable(path).map(File::new).filter(File::exists);
+        if (f.isPresent())
+            return Arrays.asList(f.get());
 
         //2. handle case where uriStr is a file uri
         URI uri = URI.create(path);
