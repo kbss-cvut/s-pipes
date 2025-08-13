@@ -104,7 +104,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
     }
 
     @Override
-    public void pipelineExecutionStarted(final long pipelineExecutionId, String functionName, String scriptPath) {
+    public void pipelineExecutionStarted(final long pipelineExecutionId, String functionName, String scriptPath, String script) {
         PipelineExecution pipelineExecution = new PipelineExecution();
         pipelineExecution.setId(getPipelineExecutionIri(pipelineExecutionId));
         pipelineExecution.setTypes(Collections.singleton(Vocabulary.s_c_transformation));
@@ -114,9 +114,14 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
         pipelineExecutionDir.toFile().mkdir();
         logDir.put(pipelineExecutionId, pipelineExecutionDir);
 
+        metadataMap.clear();
+        metadataMap.put(SPIPES.has_executed_function.toString(), URI.create(functionName));
+        metadataMap.put(SPIPES.has_executed_function_script_path.toString(), scriptPath);
+        metadataMap.put(SPIPES.has_script.toString(), URI.create(script));
+
         final EntityManager metadataEM = getMetadataEmf().createEntityManager();
         synchronized (metadataEM) {
-            persistPipelineExecutionStarted(metadataEM, pipelineExecutionId, pipelineExecution, functionName, scriptPath);
+            persistPipelineExecutionStarted(metadataEM, pipelineExecutionId, pipelineExecution);
             entityManagerMap.put(pipelineExecution.getId(), metadataEM);
         }
 
@@ -127,16 +132,15 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
 //        entityManagerMap.put(pipelineExecution.getId(), em);
     }
 
-    private void persistPipelineExecutionStarted(final EntityManager em, long pipelineExecutionId, Thing pipelineExecution, final String functionName, final String scriptPath) {
+    private void persistPipelineExecutionStarted(final EntityManager em, long pipelineExecutionId, Thing pipelineExecution) {
         em.getTransaction().begin();
 
         // new
         Date startDate = new Date();
         addProperty(pipelineExecution, SPIPES.has_pipeline_execution_start_date, startDate);
         addProperty(pipelineExecution, SPIPES.has_pipeline_execution_start_date_unix, startDate.getTime());
-        addProperty(pipelineExecution, SPIPES.has_executed_function, URI.create(functionName));
-        addProperty(pipelineExecution, SPIPES.has_executed_function_script_path, scriptPath);
-
+        addProperty(pipelineExecution, SPIPES.has_executed_function, getURIFromMetadataMap(SPIPES.has_executed_function));
+        addProperty(pipelineExecution, SPIPES.has_executed_function_script_path, metadataMap.get(SPIPES.has_executed_function_script_path.toString()));
         if (pipelineExecutionGroupId != null) {
             addProperty(pipelineExecution, PIPELINE_EXECUTION_GROUP_ID, pipelineExecutionGroupId);
         }
