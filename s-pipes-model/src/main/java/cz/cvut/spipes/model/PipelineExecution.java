@@ -241,7 +241,7 @@ public class PipelineExecution extends Thing {
     }
 
 
-    public void setHas_rdf4j_output(SourceDatasetSnapshot has_rdf4j_output) {
+    public void setHas_rdf4j_output(TargetDatasetSnapshot has_rdf4j_output) {
         this.has_rdf4j_output = has_rdf4j_output;
     }
 
