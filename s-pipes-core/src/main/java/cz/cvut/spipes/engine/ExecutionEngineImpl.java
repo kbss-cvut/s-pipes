@@ -28,7 +28,8 @@ class ExecutionEngineImpl implements ExecutionEngine {
 
         String functionName = module.getFunctionName();
         String scriptPath = module.getScriptPath();
-        fire((l) -> {l.pipelineExecutionStarted(pipelineExecutionId, functionName, scriptPath); return null;});
+        String script = module.getResource().toString().replaceAll("\\/[^.]*$", "");
+        fire((l) -> {l.pipelineExecutionStarted(pipelineExecutionId, functionName, scriptPath, script); return null;});
         try {
             ExecutionContext outputContext = _executePipeline(pipelineExecutionId, module, inputContext, null);
             fire((l) -> {l.pipelineExecutionFinished(pipelineExecutionId); return null;});
