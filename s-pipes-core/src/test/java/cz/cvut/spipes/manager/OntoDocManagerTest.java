@@ -1,21 +1,25 @@
 package cz.cvut.spipes.manager;
 
 import cz.cvut.spipes.TestConstants;
+import org.apache.jena.ontology.OntClass;
 import org.apache.jena.ontology.OntDocumentManager;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.util.LocationMapper;
+import org.apache.jena.util.ResourceUtils;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class OntoDocManagerTest {
-
 
     static Path managerDirPath = TestConstants.TEST_RESOURCES_DIR_PATH.resolve("manager").toAbsolutePath();
 
@@ -99,6 +103,68 @@ public class OntoDocManagerTest {
         assertTrue(loadedClassNames.contains("DirectImportTestClass"));
         assertTrue(loadedClassNames.contains("IndirectImportTestClass"));
         assertEquals(3, loadedClassNames.size());
+    }
+
+    @Test //TODO move to a "jena experiment project"
+    public void jenaOntDocumentManagerLoadsDocumentChanges() throws IOException {
+
+        OntDocumentManager docManager = OntDocumentManager.getInstance();
+        String testOntologyPrefix = "http://onto.fel.cvut.cz/ontologies/test/";
+
+        Path sourceDirPath = managerDirPath.resolve("file-update");
+        List<String> ontologyNames = Arrays.asList(
+            "directly-imported",
+            "indirectly-imported",
+            "loading-test"
+        );
+
+        String loadingTestOntologyUri = testOntologyPrefix + "loading-test-ontology";
+        String indirectlyImportedOntologyUri = testOntologyPrefix + "indirectly-imported-ontology";
+
+        ontologyNames.forEach( on -> {
+            docManager.addAltEntry(
+                testOntologyPrefix + on + "-ontology",
+                String.valueOf(sourceDirPath.resolve(on + ".ttl").toUri().toURL())
+            );
+        });
+
+        OntModel model = docManager.getOntology(loadingTestOntologyUri, OntModelSpec.OWL_MEM);
+
+        assertTrue(containClassWithLocalName(model, "directly-imported-class"));
+        assertTrue(containClassWithLocalName(model,"indirectly-imported-class"));
+        assertTrue(containClassWithLocalName(model,"loading-test-class"));
+
+        assertEquals(3, getOntologyClassesLocalNames(model).size());
+
+        OntModel indirectlyImportedModel = docManager.getOntology(indirectlyImportedOntologyUri, OntModelSpec.OWL_MEM);
+
+        OntClass resource = indirectlyImportedModel
+            .listClasses()
+            .filterKeep(r -> r.isResource() && r.asResource().getLocalName().equals("indirectly-imported-class"))
+            .next();
+        ResourceUtils.renameResource(resource, resource.getNameSpace() + "new-indirectly-imported-class");
+
+        // check locally modified model
+        assertFalse(containClassWithLocalName(indirectlyImportedModel,"indirectly-imported-class"));
+        assertTrue(containClassWithLocalName(indirectlyImportedModel,"new-indirectly-imported-class"));
+        assertEquals(1, getOntologyClassesLocalNames(indirectlyImportedModel).size());
+
+        // update the model globally
+        docManager.getFileManager().addCacheModel(indirectlyImportedOntologyUri, indirectlyImportedModel);
+
+        // check new model is updated
+        assertTrue(containClassWithLocalName(model, "directly-imported-class"));
+        assertTrue(containClassWithLocalName(model,"new-indirectly-imported-class"));
+        assertTrue(containClassWithLocalName(model,"loading-test-class"));
+        assertEquals(3, getOntologyClassesLocalNames(model).size());
+    }
+
+    private List<String> getOntologyClassesLocalNames(OntModel model) {
+        return model.listClasses().mapWith(c -> c.asResource().getLocalName()).toList();
+    }
+
+    private boolean containClassWithLocalName(OntModel model, String localName) {
+        return getOntologyClassesLocalNames(model).contains(localName);
     }
 
 
