@@ -18,10 +18,7 @@
     <packaging>jar</packaging>
 
     <dependencies>
-        <dependency>
-            <groupId>cz.cvut.kbss.jopa</groupId>
-            <artifactId>jopa-impl</artifactId>
-        </dependency>
+
     </dependencies>
 
     <build>
