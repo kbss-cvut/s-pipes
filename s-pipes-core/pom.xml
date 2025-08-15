@@ -122,7 +122,7 @@
             <!-- TODO used only to load modules from classpath, replace it by OSGI/Jigsaw -->
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
-            <version>0.9.10</version>
+            <version>0.10.2</version>
         </dependency>
 
         <dependency>
