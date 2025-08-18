@@ -18,11 +18,6 @@
             <groupId>cz.cvut.kbss</groupId>
             <artifactId>s-pipes-core</artifactId>
         </dependency>
-        <dependency> <!-- TODO extract to separate lib -->
-            <groupId>cz.cvut.kbss</groupId>
-            <artifactId>s-pipes-modules-sparql-endpoint</artifactId>
-            <version>0.7.0</version>
-        </dependency>
         <!--<dependency>-->
             <!--<groupId>org.ocpsoft.prettytime</groupId>-->
             <!--<artifactId>prettytime-nlp</artifactId>-->
@@ -32,11 +27,6 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>xml-apis</groupId>
-            <artifactId>xml-apis</artifactId>
-            <version>1.4.01</version>
         </dependency>
         <dependency>
             <!-- Fix error "Could not create JAXB context using the current threads context classloader."
@@ -86,4 +76,22 @@
             </snapshots>
         </repository>
     </repositories>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <ignoredDependencies>
+                        <ignoredDependency>org.projectlombok:lombok</ignoredDependency>
+                        <ignoredDependency>com.sun.xml.bind:jaxb-osgi</ignoredDependency>
+                        <ignoredDependency>edu.stanford.nlp:stanford-corenlp</ignoredDependency>
+                    </ignoredDependencies>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>
