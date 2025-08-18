@@ -11,10 +11,6 @@
     <packaging>jar</packaging>
     
     <dependencies>
-        <dependency>
-            <groupId>cz.cvut.kbss</groupId>
-            <artifactId>s-pipes-core</artifactId>
-        </dependency>
     </dependencies>
     
 </project>
