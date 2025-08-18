@@ -11,6 +11,19 @@
     <packaging>jar</packaging>
     
     <dependencies>
+        <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>jena-arq</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>jena-base</artifactId>
+            <version>${org.apache.jena}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>jena-core</artifactId>
+        </dependency>
     </dependencies>
     
 </project>
