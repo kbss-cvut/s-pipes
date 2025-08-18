@@ -24,10 +24,5 @@
             <artifactId>junit-jupiter-api</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-            <version>${org.springframework.boot.version}</version>
-        </dependency>
     </dependencies>
 </project>
