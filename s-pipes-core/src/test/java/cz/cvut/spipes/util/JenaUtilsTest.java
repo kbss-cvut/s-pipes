@@ -7,13 +7,18 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.util.FileUtils;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class JenaUtilsTest {
 
@@ -172,4 +177,37 @@ public class JenaUtilsTest {
         );
         return prefixMapModel;
     }
+
+    @Test
+    void writeScriptPreservesFormatting() throws IOException {
+        var inUrl = getClass().getResource("/util/format_test_input.ttl");
+        assertNotNull(inUrl, "format_test_input.ttl not found");
+
+        var outUrl = getClass().getResource("/util/format_test_output.ttl");
+        assertNotNull(outUrl, "format_test_output.ttl not found");
+
+        var model = ModelFactory.createDefaultModel();
+        try (var input = inUrl.openStream()) {
+            model.read(input, inUrl.toExternalForm(), "TURTLE");
+        }
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        JenaUtils.writeScript(baos, model);
+        String actualOutput = baos.toString(StandardCharsets.UTF_8);
+
+        String expectedOutput;
+        try (var original = outUrl.openStream()) {
+            expectedOutput = new String(original.readAllBytes(), StandardCharsets.UTF_8);
+        }
+
+        var expectedLines = List.of(expectedOutput.split("\\R", -1));
+        var actualLines   = List.of(actualOutput.split("\\R", -1));
+
+        var expectedPatterns = expectedLines.stream()
+                .map(Pattern::quote)
+                .toList();
+
+        assertLinesMatch(expectedPatterns, actualLines);
+    }
+
 }
