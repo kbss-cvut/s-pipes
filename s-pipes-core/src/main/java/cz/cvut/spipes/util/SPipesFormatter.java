@@ -1,75 +1,61 @@
 package cz.cvut.spipes.util;
 
-import org.apache.jena.datatypes.xsd.XSDDatatype;
-import org.apache.jena.rdf.model.*;
+import org.apache.jena.graph.Node;
+import org.apache.jena.graph.Triple;
+import org.apache.jena.rdf.model.Model;
 import org.apache.jena.vocabulary.RDF;
-import org.jetbrains.annotations.NotNull;
+import org.apache.jena.atlas.io.AWriter;
 
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class SPipesFormatter {
 
-    private static final Comparator<Property> PREDICATE_ORDER = (p1, p2) -> {
-        if (p1.equals(p2)) return 0;
-        if (RDF.type.equals(p1)) return -1;
-        if (RDF.type.equals(p2)) return 1;
-        return p1.getURI().compareTo(p2.getURI());
-    };
-
     private final Model model;
     private final Map<String, String> ns;
-    private final Map<Resource, Map<Property, List<RDFNode>>> subjectMap = new LinkedHashMap<>();
-
-    private final Map<Resource, Integer> inDegree = new HashMap<>();
-    private final Map<Resource, String> bnodeLabels = new LinkedHashMap<>();
+    private final Map<Node, Map<Node, List<Node>>> subjectMap = new LinkedHashMap<>();
+    private final Map<String, Integer> inDegree = new HashMap<>();
+    private final Map<String, String> bnodeLabels = new LinkedHashMap<>();
     private int bCounter = 0;
+
+    private final SPipesNodeFormatter nodeFormatter;
 
     public SPipesFormatter(Model model) {
         this.model = model;
         this.ns = model.getNsPrefixMap();
+        this.nodeFormatter = new SPipesNodeFormatter(model, ns, inDegree, bnodeLabels, bCounter);
         buildSubjectMap();
-    }
-
-    public void writeTo(OutputStream outputStream) {
-        var writer = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8), false);
-        writePrefixes(writer);
-        writeTriples(writer);
-        writer.flush();
+        for (Node subj : subjectMap.keySet())
+            if (subj.isBlank() && inDegreeOf(subj) > 1) bnodeLabels.put(subj.getBlankNodeLabel(), "_:b" + (bCounter++));
     }
 
     private void buildSubjectMap() {
-        StmtIterator stmtIter = model.listStatements();
-        while (stmtIter.hasNext()) {
-            Statement stmt = stmtIter.nextStatement();
-            Resource subj = stmt.getSubject();
-            Property pred = stmt.getPredicate();
-            RDFNode obj = stmt.getObject();
-
-            subjectMap
-                    .computeIfAbsent(subj, k -> new LinkedHashMap<>())
-                    .computeIfAbsent(pred, k -> new ArrayList<>())
-                    .add(obj);
-
-            if (obj.isAnon()) {
-                Resource br = obj.asResource();
-                inDegree.merge(br, 1, Integer::sum);
-            }
-        }
-        for (Resource subj : subjectMap.keySet()) {
-            if (subj.isAnon() && inDegreeOf(subj) > 1) {
-                allocLabel(subj);
-            }
+        Iterator<Triple> it = model.getGraph().find();
+        while (it.hasNext()) {
+            Triple t = it.next();
+            Node s = t.getSubject(), p = t.getPredicate(), o = t.getObject();
+            subjectMap.computeIfAbsent(s, k -> new LinkedHashMap<>())
+                    .computeIfAbsent(p, k -> new ArrayList<>()).add(o);
+            if (o.isBlank()) inDegree.merge(o.getBlankNodeLabel(), 1, Integer::sum);
         }
     }
 
-    private void writePrefixes(PrintWriter writer) {
-        List<String> priority = List.of("owl", "rdf", "rdfs", "skos", "sm", "sml", "sp", "spin", "xsd");
+    private int inDegreeOf(Node n) { return n.isBlank() ? inDegree.getOrDefault(n.getBlankNodeLabel(), 0) : 0; }
+    private boolean hasLabel(Node n) { return n.isBlank() && bnodeLabels.containsKey(n.getBlankNodeLabel()); }
 
+    public void writeTo(OutputStream out) {
+        PrintWriter pw = new PrintWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8), false);
+        AWriter aw = new SimpleAWriter(pw);
+        writePrefixes(aw);
+        writeTriples(aw);
+        aw.flush();
+    }
+
+    private void writePrefixes(AWriter w) {
+        List<String> priority = List.of("owl", "rdf", "rdfs", "skos", "sm", "sml", "sp", "spin", "xsd");
         Comparator<Map.Entry<String, String>> prefixComparator = (e1, e2) -> {
             if (e1.getKey().isEmpty() && !e2.getKey().isEmpty()) return -1;
             if (!e1.getKey().isEmpty() && e2.getKey().isEmpty()) return 1;
@@ -83,176 +69,40 @@ public class SPipesFormatter {
 
         ns.entrySet().stream()
                 .sorted(prefixComparator)
-                .forEach(e -> writer.printf("@prefix %s: <%s> .%n", e.getKey(), e.getValue()));
+                .forEach(e -> w.print(String.format("@prefix %s: <%s> .%n", e.getKey(), e.getValue())));
 
-        writer.println();
+        w.println();
     }
 
+    private final Comparator<Node> PRED_ORDER = (p1,p2)->{
+        if(p1.equals(p2)) return 0;
+        if(RDF.type.asNode().equals(p1)) return -1;
+        if(RDF.type.asNode().equals(p2)) return 1;
+        return (p1.isURI()?p1.getURI():p1.toString()).compareTo(p2.isURI()?p2.getURI():p2.toString());
+    };
 
-    private void writeTriples(PrintWriter writer) {
-        List<Resource> subjects = getSubjects();
-
-        for (Resource subject : subjects) {
-            if (subject.isAnon() && !hasLabel(subject) && inDegreeOf(subject) >= 1) {
-                continue;
-            }
-            if (subject.isAnon() && !hasLabel(subject) && inDegreeOf(subject) == 0) {
-                writer.println(formatBNodeAsPropertyList(subject, new HashSet<>()));
-                continue;
-            }
-
-            writer.println(formatNode(subject));
-
-            Map<Property, List<RDFNode>> predMap = new TreeMap<>(PREDICATE_ORDER);
-            predMap.putAll(subjectMap.get(subject));
-
-            if (predMap.isEmpty()) {
-                writer.println("    .\n");
-                continue;
-            }
-
-            List<Map.Entry<Property, List<RDFNode>>> predEntries = new ArrayList<>(predMap.entrySet());
-            for (Map.Entry<Property, List<RDFNode>> predEntry : predEntries) {
-                String predStr = RDF.type.equals(predEntry.getKey()) ? "a" : formatNode(predEntry.getKey());
-
-                List<String> objStrs = predEntry.getValue().stream()
-                        .map(this::formatNode)
-                        .toList();
-
-                for (String objStr : objStrs) {
-                    writer.println("    " + predStr + " " + objStr + " ;");
-                }
-            }
-
-            writer.println("    .");
-        }
-    }
-
-    @NotNull
-    private List<Resource> getSubjects() {
-        List<Resource> subjects = new ArrayList<>(subjectMap.keySet());
-        subjects.sort((a, b) -> {
-            int ca = a.isURIResource() ? 0 : (hasLabel(a) ? 1 : 2);
-            int cb = b.isURIResource() ? 0 : (hasLabel(b) ? 1 : 2);
-            if (ca != cb) return Integer.compare(ca, cb);
-            if (a.isURIResource() && b.isURIResource()) return a.getURI().compareTo(b.getURI());
-            if (hasLabel(a) && hasLabel(b)) return getLabel(a).compareTo(getLabel(b));
+    private void writeTriples(AWriter w) {
+        List<Node> subjects = new ArrayList<>(subjectMap.keySet());
+        subjects.sort((a,b)->{
+            int ca=a.isURI()?0:hasLabel(a)?1:2, cb=b.isURI()?0:hasLabel(b)?1:2;
+            if(ca!=cb) return Integer.compare(ca, cb);
+            if(a.isURI() && b.isURI()) return a.getURI().compareTo(b.getURI());
+            if(hasLabel(a)&&hasLabel(b)) return bnodeLabels.get(a.getBlankNodeLabel())
+                    .compareTo(bnodeLabels.get(b.getBlankNodeLabel()));
             return 0;
         });
-        return subjects;
-    }
-
-    private String formatNode(RDFNode node) {
-        if (node.isLiteral()) {
-            return formatLiteral(node.asLiteral());
-        } else if (node.isAnon()) {
-            Resource br = node.asResource();
-            if (hasLabel(br)) return getLabel(br);
-            return formatBNodeAsPropertyList(br, new HashSet<>());
-        } else if (node.isURIResource()) {
-            return formatURI(node.asResource());
-        } else {
-            return node.toString();
-        }
-    }
-
-    private String formatURI(Resource res) {
-        String uri = res.getURI();
-        for (var e : ns.entrySet()) {
-            if (uri.startsWith(e.getValue())) {
-                return e.getKey() + ":" + uri.substring(e.getValue().length());
+        for(Node subject : subjects){
+            if(subject.isBlank() && !hasLabel(subject) && inDegreeOf(subject)>=1) continue;
+            nodeFormatter.format(w, subject); w.println();
+            Map<Node,List<Node>> predMap = new TreeMap<>(PRED_ORDER);
+            predMap.putAll(subjectMap.getOrDefault(subject, Collections.emptyMap()));
+            if(predMap.isEmpty()){w.println("    .\n"); continue;}
+            for(Map.Entry<Node,List<Node>> e:predMap.entrySet()){
+                Node pred=e.getKey(); boolean isA = RDF.type.asNode().equals(pred);
+                w.print("    "); if(isA) w.print("a "); else nodeFormatter.format(w,pred); w.print(isA?"":" ");
+                for(Node obj:e.getValue()){ nodeFormatter.formatNodeWithPath(w,obj,new HashSet<>()); w.println(" ;"); w.print("    "); }
             }
+            w.println("    .\n");
         }
-        return "<" + uri + ">";
     }
-
-    private String formatLiteral(Literal lit) {
-        String value = lit.getString();
-        boolean multiline = value.contains("\n") || value.contains("\r");
-        String escaped = escapeString(value, multiline);
-        String lex = multiline ? "\"\"\"" + escaped + "\"\"\"" : "\"" + escaped + "\"";
-
-        String lang = lit.getLanguage();
-        if (lang != null && !lang.isEmpty()) {
-            return lex + "@" + lang;
-        }
-
-        String dt = lit.getDatatypeURI();
-        if (dt != null && !dt.equals(XSDDatatype.XSDstring.getURI())) {
-            return lex + "^^" + formatURI(ResourceFactory.createResource(dt));
-        }
-
-        return lex;
-    }
-
-    private String escapeString(String s, boolean multiline) {
-        StringBuilder b = new StringBuilder();
-        for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            switch (c) {
-                case '\\': b.append("\\\\"); break;
-                case '"':
-                    if (!multiline) {
-                        b.append("\\\"");
-                    } else {
-                        if (i + 2 < s.length() && s.charAt(i+1) == '"' && s.charAt(i+2) == '"') {
-                            b.append("\\\"\\\"\\\"");
-                            i += 2;
-                        } else {
-                            b.append('"');
-                        }
-                    }
-                    break;
-                case '\n': b.append(multiline ? "\n" : "\\n"); break;
-                case '\r': b.append(multiline ? "\r" : "\\r"); break;
-                case '\t': b.append("\\t"); break;
-                case '\b': b.append("\\b"); break;
-                case '\f': b.append("\\f"); break;
-                default:
-                    if (c < 0x20) b.append(String.format("\\u%04X", (int) c));
-                    else b.append(c);
-            }
-        }
-        return b.toString();
-    }
-
-    private String formatBNodeAsPropertyList(Resource blank, Set<Resource> path) {
-        if (hasLabel(blank)) return getLabel(blank);
-        if (!path.add(blank)) return allocLabel(blank);
-
-        List<Statement> props = model.listStatements(blank, null, (RDFNode) null).toList();
-        if (props.isEmpty()) return "[]";
-
-        props.sort(Comparator
-                .comparing(Statement::getPredicate, PREDICATE_ORDER)
-                .thenComparing(s -> formatNode(s.getObject())));
-
-        StringBuilder builder = new StringBuilder("[ ");
-        for (Statement stmt : props) {
-            String predStr = stmt.getPredicate().equals(RDF.type) ? "a" : formatNode(stmt.getPredicate());
-            String objStr = formatNodeWithPath(stmt.getObject(), path);
-            builder.append(predStr).append(" ").append(objStr).append(" ; ");
-        }
-        builder.append("]");
-        path.remove(blank);
-        return builder.toString();
-    }
-
-    private String formatNodeWithPath(RDFNode node, Set<Resource> path) {
-        if (node.isAnon()) {
-            Resource br = node.asResource();
-            if (hasLabel(br)) return getLabel(br);
-            if (inDegreeOf(br) <= 1) return formatBNodeAsPropertyList(br, path);
-            return allocLabel(br);
-        }
-        return formatNode(node);
-    }
-
-    private int inDegreeOf(Resource r) { return inDegree.getOrDefault(r, 0); }
-    private boolean hasLabel(Resource r) { return bnodeLabels.containsKey(r); }
-    private String getLabel(Resource r) { return bnodeLabels.get(r); }
-    private String allocLabel(Resource r) {
-        return bnodeLabels.computeIfAbsent(r, k -> "_:b" + (bCounter++));
-    }
-
 }

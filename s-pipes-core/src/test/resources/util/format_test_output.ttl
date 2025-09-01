@@ -11,20 +11,23 @@
 
 ex:Alice
     a foaf:Person ;
-    foaf:mbox <mailto:alice@example.com> ;
-    foaf:name """Alice
+        foaf:mbox <mailto:alice@example.com> ;
+        foaf:name """Alice
     with ""
     multi"line""
     text""" ;
-    .
+        .
+
 <http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1>
     a owl:Ontology ;
-    owl:imports <http://onto.fel.cvut.cz/ontologies/s-pipes-lib> ;
-    .
+        owl:imports <http://onto.fel.cvut.cz/ontologies/s-pipes-lib> ;
+        .
+
 :bind-firstname
     a sml:BindWithConstant ;
-    sm:next :construct-greeding ;
-    sm:outputVariable "personNamee" ;
-    sml:value [ a sp:Expression ; sp:text "?firstName" ; ] ;
-    rdfs:label "Bind person name" ;
-    .
+        sm:next :construct-greeding ;
+        sm:outputVariable "personNamee" ;
+        sml:value [ a sp:Expression ; sp:text "?firstName" ; ] ;
+        rdfs:label "Bind person name" ;
+        .
+
