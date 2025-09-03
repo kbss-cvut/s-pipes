@@ -69,17 +69,17 @@ public class SHACLIntegrationTest {
 
         Query query = QueryFactory.create(queryString);
 
-        QueryExecution qexec = QueryExecutionFactory.create(query, model);
-        ResultSet results = qexec.execSelect();
+        try (QueryExecution qexec = QueryExecutionFactory.create(query, model)) {
+            ResultSet results = qexec.execSelect();
 
-        assertTrue(results.hasNext(), "No results found");
+            assertTrue(results.hasNext(), "No results found");
 
-        QuerySolution soln = results.nextSolution();
-        assertEquals(
-            soln.getResource("sparqlServiceUrl").getURI(),
-            constructServiceUrl(repositoryUrl, graphId)
-        );
-
+            QuerySolution soln = results.nextSolution();
+            assertEquals(
+                    soln.getResource("sparqlServiceUrl").getURI(),
+                    constructServiceUrl(repositoryUrl, graphId)
+            );
+        }
     }
 
     @Test

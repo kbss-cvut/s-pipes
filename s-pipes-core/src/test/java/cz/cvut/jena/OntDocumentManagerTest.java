@@ -4,7 +4,6 @@ package cz.cvut.jena;
 import org.apache.jena.ontology.OntDocumentManager;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
-import org.apache.jena.rdf.model.Model;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -18,13 +17,10 @@ public class OntDocumentManagerTest {
     public void getOntologyTriggersReadFailureHandler() {
         OntDocumentManager docManager = OntDocumentManager.getInstance();
         final boolean[] readFailureHandlerIsTriggered = {false};
-        OntDocumentManager.ReadFailureHandler handler = new OntDocumentManager.ReadFailureHandler() {
-            @Override
-            public void handleFailedRead(String url, Model model, Exception e) {
-                log.info("- url: " + url);
-                log.info("- model: " + model);
-                readFailureHandlerIsTriggered[0] = true;
-            }
+        OntDocumentManager.ReadFailureHandler handler = (url, model, e) -> {
+            log.info("- url: {}", url);
+            log.info("- model: {}", model);
+            readFailureHandlerIsTriggered[0] = true;
         };
         docManager.setReadFailureHandler(handler);
         Assertions.assertFalse(readFailureHandlerIsTriggered[0]);
