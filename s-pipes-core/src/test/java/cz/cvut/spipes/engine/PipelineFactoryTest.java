@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class PipelineFactoryTest {
 
     @Test
-    public void loadPipelines() throws Exception {
+    public void loadPipelines() {
 
         JenaTestUtils.mapLocalSPipesDefinitionFiles();
         OntModel ontModel = JenaTestUtils.loadOntologyClosureFromResources("/pipeline/config.ttl");

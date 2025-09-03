@@ -5,9 +5,7 @@ import org.apache.jena.rdf.model.ModelFactory;
 
 public class ExecutionContextFactory {
 
-    /**
-     * @return
-     */
+
     public static ExecutionContext createEmptyContext() {
         ExecutionContextImpl context = new ExecutionContextImpl();
         context.setDefaultModel(ModelFactory.createDefaultModel());
