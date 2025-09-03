@@ -11,10 +11,10 @@ public class SPIPES {
      */
     public static final String uri = "http://onto.fel.cvut.cz/ontologies/s-pipes/";
 
-    protected static final org.apache.jena.rdf.model.Resource resource(String local )
+    protected static org.apache.jena.rdf.model.Resource resource(String local)
     { return ResourceFactory.createResource( uri + local ); }
 
-    protected static final Property property(String local )
+    protected static Property property(String local)
     { return ResourceFactory.createProperty( uri, local ); }
 
     public static final Resource ProgressListener = resource("progress-listener");
