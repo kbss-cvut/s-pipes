@@ -3,13 +3,11 @@ package cz.cvut.spipes.function.spif;
 import cz.cvut.spipes.constants.SPIF;
 import cz.cvut.spipes.exception.ParseException;
 import cz.cvut.spipes.function.ValueFunction;
-import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.graph.Node;
 import org.apache.jena.rdf.model.LiteralRequiredException;
 import org.apache.jena.sparql.expr.NodeValue;
 import org.apache.jena.sparql.function.FunctionBase3;
-import org.apache.jena.sparql.function.FunctionEnv;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -34,7 +32,7 @@ public class ParseDate extends FunctionBase3 implements ValueFunction {
     /**
      * @param text The input string.
      * @param pattern The template of the input string.
-     * @param patternLanguage The code of the language (e.g. \"de\" for German) to use for parsing. May be <code>null</code>.
+     * @param patternLanguage The code of the language (e.g. \"de\" for German) to use it for parsing. May be <code>null</code>.
      * @return NodeValue with parsed date/time/datetime.
      */
     @Override
@@ -81,12 +79,11 @@ public class ParseDate extends FunctionBase3 implements ValueFunction {
         formatter = formatter.withLocale(new Locale(patternLanguageValue));
 
         LocalDate ld = LocalDate.parse(textValue,formatter);
-        LocalDate localeDate = LocalDate.of(ld.getYear(),ld.getMonthValue(),ld.getDayOfMonth());
         DateTimeFormatter localeFormat = DateTimeFormatter
                 .ofLocalizedDate(FormatStyle.SHORT)
                 .withLocale( new Locale(patternLanguageValue));
 
-        String localeString = localeDate.format(localeFormat);
+        String localeString = ld.format(localeFormat);
 
         if(!textValue.contains(localeString)){
             throw new IllegalArgumentException("Pattern does not corresponds to the pattern language.");
@@ -105,7 +102,7 @@ public class ParseDate extends FunctionBase3 implements ValueFunction {
         return NodeValue.makeNode(
                 date,
                 null,
-                ((RDFDatatype) type).getURI()
+                type.getURI()
         );
     }
 }
