@@ -1,10 +1,10 @@
 package cz.cvut.spipes.config;
 
-import cz.cvut.spipes.util.CoreConfigProperies;
+import cz.cvut.spipes.util.CoreConfigProperties;
 
 public class CompatibilityConfig {
 
     public static boolean isLoadSparqlMotionFiles() {
-        return Boolean.parseBoolean(CoreConfigProperies.get("compatibility.loadSparqlMotionFiles", "false"));
+        return Boolean.parseBoolean(CoreConfigProperties.get("compatibility.loadSparqlMotionFiles", "false"));
     }
 }
