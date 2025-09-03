@@ -5,20 +5,24 @@ import org.apache.jena.enhanced.EnhNode;
 import org.apache.jena.enhanced.Implementation;
 import org.apache.jena.graph.Node;
 import org.apache.jena.vocabulary.RDF;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 
 public class SPINEnhancedNodeFactory extends Implementation {
     private final Node type;
-    private Constructor enhNodeConstructor;
+    private Constructor<?> enhNodeConstructor;
 
-    public SPINEnhancedNodeFactory(Node type, Class implClass) {
+    private static final Logger log = LoggerFactory.getLogger(SPINEnhancedNodeFactory.class);
+
+    public SPINEnhancedNodeFactory(Node type, Class<?> implClass) {
         this.type = type;
         try {
             enhNodeConstructor = implClass.getConstructor(Node.class, EnhGraph.class);
         }
         catch (Throwable t) {
-            t.printStackTrace();
+            log.error(t.getMessage(), t);
         }
     }
 
@@ -28,7 +32,7 @@ public class SPINEnhancedNodeFactory extends Implementation {
             return (EnhNode) enhNodeConstructor.newInstance(node, eg);
         }
         catch (Throwable t) {
-            t.printStackTrace();
+            log.error(t.getMessage(), t);
             return null;
         }
     }
