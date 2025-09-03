@@ -26,6 +26,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Objects;
 
 import static cz.cvut.spipes.test.JenaTestUtils.assertIsomorphic;
 import static org.mockito.BDDMockito.given;
@@ -62,9 +63,7 @@ class RetrievePrefixesModuleTest {
     @Test
     void executeSelfReturnPrefixes() throws URISyntaxException {
         given(ontoDocManager.getRegisteredOntologyUris()).willReturn(uri2ontModel.keySet());
-        uri2ontModel.forEach((key, value) -> {
-            doReturn(value).when(ontoDocManager).getOntology(key);
-        });
+        uri2ontModel.forEach((key, value) -> doReturn(value).when(ontoDocManager).getOntology(key));
 
         ExecutionContext inputExecutionContext = ExecutionContextFactory.createEmptyContext();
 
@@ -98,7 +97,7 @@ class RetrievePrefixesModuleTest {
         OntModel ontModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
 
         OntDocumentManager dm = OntDocumentManager.getInstance();
-        dm.setFileManager(FileManager.get());
+        dm.setFileManager(FileManager.getInternal());
 
         ontModel.read(inputStream, null, FileUtils.langTurtle);
         dm.loadImports(ontModel);
@@ -107,6 +106,6 @@ class RetrievePrefixesModuleTest {
 
 
     public Path getFilePath(String fileName) throws URISyntaxException {
-        return Paths.get(getClass().getResource("/" + fileName).toURI());
+        return Paths.get(Objects.requireNonNull(getClass().getResource("/" + fileName)).toURI());
     }
 }

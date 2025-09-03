@@ -20,7 +20,7 @@ public class BindWithConstantModule extends AnnotatedAbstractModule  {
     RDFNode value;
 
     @Parameter(iri = SML.replace)
-    private boolean isReplace = false;
+    private final boolean isReplace = false;
 
     @Override
     public ExecutionContext executeSelf() {
