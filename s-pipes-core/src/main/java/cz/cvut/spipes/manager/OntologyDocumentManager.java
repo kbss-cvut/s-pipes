@@ -13,13 +13,13 @@ public interface OntologyDocumentManager {
     /**
      * Returns list of all supported file extension that this document manager can load.
      *
-     * @return
+     * @return List of supported file extensions (e.g. "ttl", "rdf", "owl", ...).
      */
     List<String> getSupportedFileExtensions();
 
     /**
      * Registers ontology documents from a file system path.
-     * If directory is provided, it is recursively crawled for files with supported file extensions.
+     * If a directory is provided, it is recursively crawled for files with supported file extensions.
      * Supported file extensions are returned by <code>getSupportedFileExtensions()</code>.
      *
      * @param fileOrDirectoryPath File or directory path to register. If directory, it is recursively crawled.

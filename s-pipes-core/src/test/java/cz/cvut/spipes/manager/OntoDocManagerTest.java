@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class OntoDocManagerTest {
 
 
-    static Path managerDirPath = TestConstants.TEST_RESOURCES_DIR_PATH.resolve("manager").toAbsolutePath();
+    static final Path managerDirPath = TestConstants.TEST_RESOURCES_DIR_PATH.resolve("manager").toAbsolutePath();
 
     @Test
     public void registerDocumentsProcessDirectoryRecursively()  {
@@ -35,7 +35,7 @@ public class OntoDocManagerTest {
     @Test
     public void registerDocumentsForAllSupportedFormats()  {
 
-        OntologyDocumentManager ontoDocManager = null;
+        OntologyDocumentManager ontoDocManager;
 
         List<String> supportedFileExtensions = OntoDocManager.getInstance().getSupportedFileExtensions();
 
@@ -109,7 +109,7 @@ public class OntoDocManagerTest {
 
     private int getLocationMapperEntriesCount(LocationMapper locationMapper) {
         final int[] entriesCount = {0};
-        locationMapper.listAltEntries().forEachRemaining(e -> { entriesCount[0]++; } );
+        locationMapper.listAltEntries().forEachRemaining(e -> entriesCount[0]++);
 
         return entriesCount[0];
     }
