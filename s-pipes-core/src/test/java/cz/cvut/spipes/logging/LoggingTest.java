@@ -43,8 +43,8 @@ public class LoggingTest {
 
     @Test public void testThreadConcurrence() {
         final ExecutorService s = Executors.newFixedThreadPool(2);
-        s.submit(() -> logNoOp3());
-        s.submit(() -> logNoOp3());
+        s.submit(this::logNoOp3);
+        s.submit(this::logNoOp3);
         s.shutdown();
         try {
             s.awaitTermination(1, TimeUnit.MINUTES);
