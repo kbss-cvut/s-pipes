@@ -25,7 +25,7 @@ public class ImportRDFFromWorkspaceModuleTest {
 
     @Test
     @Disabled
-    public void executeSelfWithBaseUriAndIgnoredImports() throws Exception {
+    public void executeSelfWithBaseUriAndIgnoredImports() {
 
         Model sampleModel = OntologyGenerator.getSampleModel();
 
@@ -50,7 +50,7 @@ public class ImportRDFFromWorkspaceModuleTest {
 
     @Test
     @Disabled
-    public void executeSelfWithInvalidBaseUriThrowsException() throws Exception {
+    public void executeSelfWithInvalidBaseUriThrowsException() {
 
         Model sampleModel = OntologyGenerator.getSampleModel();
 
