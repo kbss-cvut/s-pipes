@@ -28,13 +28,14 @@ public class JenaIntegrationTest {
 
         Query query = QueryFactory.create(queryString);
 
-        QueryExecution qexec = QueryExecutionFactory.create(query, model);
-        ResultSet results = qexec.execSelect();
+        try (QueryExecution qexec = QueryExecutionFactory.create(query, model)) {
+            ResultSet results = qexec.execSelect();
 
-        assertTrue(results.hasNext(), "No results found");
+            assertTrue(results.hasNext(), "No results found");
 
-        QuerySolution soln = results.nextSolution();
-        assertEquals(soln.getLiteral("nextDay").getString(), "2022-01-02");
+            QuerySolution soln = results.nextSolution();
+            assertEquals("2022-01-02", soln.getLiteral("nextDay").getString());
+        }
     }
 
 }
