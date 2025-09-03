@@ -40,9 +40,7 @@ class URLHandlerTest {
 
         RDFNode node = ResourceFactory.createPlainLiteral("invalid-url");
 
-        assertThrows(MalformedURLException.class, () -> {
-            urlHandler.getRDFNodeValue(node);
-        });
+        assertThrows(MalformedURLException.class, () -> urlHandler.getRDFNodeValue(node));
     }
 
     @Test
@@ -50,8 +48,6 @@ class URLHandlerTest {
 
         RDFNode node = null;
 
-        assertThrows(NullPointerException.class, () -> {
-            urlHandler.getRDFNodeValue(node);
-        });
+        assertThrows(NullPointerException.class, () -> urlHandler.getRDFNodeValue(node));
     }
 }

@@ -24,9 +24,9 @@ public class BaseRDFNodeHandlerTest {
         mockExecutionContext = mock(ExecutionContext.class);
         mockSetter = mock(Setter.class);
         mockProperty = mock(Property.class);
-        handler = new BaseRDFNodeHandler<String>(mockResource, mockExecutionContext, mockSetter){
+        handler = new BaseRDFNodeHandler<>(mockResource, mockExecutionContext, mockSetter) {
             @Override
-            String getRDFNodeValue(RDFNode node) throws Exception {
+            String getRDFNodeValue(RDFNode node) {
                 return node.asLiteral().getString();
             }
         };

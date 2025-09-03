@@ -22,7 +22,7 @@ import java.util.*;
  * The `HandlerRegistry` initializes and registers handlers for common data types,
  * and it provides a mechanism to register custom handlers as needed.
  *
- * <p>The registry is thread-safe, ensuring consistent behavior in multi-threaded environments.
+ * <p>The registry is thread-safe, ensuring consistent behavior in multithreaded environments.
  *
  * <p>Usage example:
  * <pre>
@@ -35,7 +35,7 @@ import java.util.*;
 public class HandlerRegistry {
 
     private static HandlerRegistry instance;
-    private final Map<Class, HandlerFactory> handlers =  Collections.synchronizedMap(new HashMap<>());
+    private final Map<Class<?>, HandlerFactory> handlers =  Collections.synchronizedMap(new HashMap<>());
 
     public synchronized static HandlerRegistry getInstance() {
         if (instance == null) {
@@ -65,7 +65,7 @@ public class HandlerRegistry {
         registerHandler(StreamResource.class, StreamResourceHandler.class);
     }
 
-    public synchronized Handler getHandler(Class clazz, Resource resource, ExecutionContext context, Setter setter) {
+    public synchronized Handler getHandler(Class<?> clazz, Resource resource, ExecutionContext context, Setter<?> setter) {
         HandlerFactory handlerFactory = handlers.get(clazz);
         if (handlerFactory == null) {
             throw new RuntimeException("No handler for " + clazz);
@@ -74,7 +74,7 @@ public class HandlerRegistry {
     }
 
 
-    private static Constructor<? extends Handler> getConstructor(Class<? extends Handler> handler){
+    private static Constructor<? extends Handler<?>> getConstructor(Class<? extends Handler<?>> handler){
         try {
             return handler.getConstructor(Resource.class, ExecutionContext.class, Setter.class);
         } catch (NoSuchMethodException e) {
@@ -82,7 +82,7 @@ public class HandlerRegistry {
         }
     }
 
-    public synchronized void registerHandler(Class valueType, Class<? extends Handler> handlerClass) {
+    public synchronized void registerHandler(Class<?> valueType, Class<? extends Handler<?>> handlerClass) {
         handlers.put(valueType, new DefaultConstructorHandlerFactory(handlerClass));
     }
 
@@ -91,23 +91,31 @@ public class HandlerRegistry {
      * The `HandlerFactory` interface defines a factory for creating handler instances.
      */
     public interface HandlerFactory{
-        Handler<?> getHandler(Resource resource, ExecutionContext executionContext, Setter setter);
+        Handler<?> getHandler(Resource resource, ExecutionContext executionContext, Setter<?> setter);
     }
 
     /**
      * The `DefaultConstructorHandlerFactory` is a factory class that uses a constructor
      * to create handler instances. It implements the `HandlerFactory` interface.
      */
-    private class DefaultConstructorHandlerFactory implements HandlerFactory {
+    private static class DefaultConstructorHandlerFactory implements HandlerFactory {
 
-        private final Constructor<? extends Handler> constructor;
+        private final Constructor<? extends Handler<?>> constructor;
 
-        public DefaultConstructorHandlerFactory(Class type) {
+        public DefaultConstructorHandlerFactory(Class<? extends Handler<?>> type) {
             this.constructor = getConstructor(type);
         }
 
+        private static Constructor<? extends Handler<?>> getConstructor(Class<? extends Handler<?>> type) {
+            try {
+                return type.getConstructor(Resource.class, ExecutionContext.class, Setter.class);
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException("Expected constructor (Resource, ExecutionContext, Setter) in " + type, e);
+            }
+        }
+
         @Override
-        public Handler<?> getHandler(Resource resource, ExecutionContext executionContext, Setter setter) {
+        public Handler<?> getHandler(Resource resource, ExecutionContext executionContext, Setter<?> setter) {
             try {
                 return constructor.newInstance(resource, executionContext, setter);
             } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
@@ -115,5 +123,6 @@ public class HandlerRegistry {
             }
         }
     }
+
 
 }

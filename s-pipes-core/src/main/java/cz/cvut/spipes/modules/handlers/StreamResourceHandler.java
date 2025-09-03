@@ -14,7 +14,7 @@ public class StreamResourceHandler extends BaseRDFNodeHandler<StreamResource> {
     }
 
     @Override
-    StreamResource getRDFNodeValue(RDFNode node) throws Exception {
+    StreamResource getRDFNodeValue(RDFNode node) {
         StreamResource res = StreamResourceRegistry.getInstance().getResourceByUrl(node.asLiteral().toString());
 
         if (res == null) {

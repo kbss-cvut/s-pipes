@@ -8,7 +8,7 @@ import org.apache.jena.rdf.model.Resource;
 /**
  * Abstract class for handler that is responsible to load native Java value
  * from its RDF representation and set this value using provided {@link Setter}.
- *
+ * <p>
  * The class is initialized with:
  * - {@link Resource} and {@link ExecutionContext} which provides partial context from which RDF value can be extracted
  * - {@link Setter} which is used to set native Java value into exactly one Java field

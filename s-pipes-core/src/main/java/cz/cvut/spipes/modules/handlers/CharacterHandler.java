@@ -11,7 +11,7 @@ public class CharacterHandler extends BaseRDFNodeHandler<Character>  {
     }
 
     @Override
-    Character getRDFNodeValue(RDFNode node) throws Exception {
+    Character getRDFNodeValue(RDFNode node) {
         return node.asLiteral().getChar();
     }
 }
