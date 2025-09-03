@@ -7,8 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 
 public class ExecUtils {
@@ -18,7 +17,7 @@ public class ExecUtils {
         File tempFile = Files.createTempFile("execution-", ".txt").toFile();
 
         //tempFile.deleteOnExit();
-        log.trace("Using temporary file for input stream " + tempFile.getAbsolutePath());
+        log.trace("Using temporary file for input stream {}", tempFile.getAbsolutePath());
         try (FileOutputStream out = new FileOutputStream(tempFile)) {
             IOUtils.copy(in, out);
         }
@@ -30,10 +29,10 @@ public class ExecUtils {
         try {
             tempFile = Files.createTempFile("execution-", ".txt").toFile();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
 
-        log.trace("Using temporary file for output stream " + tempFile.getAbsolutePath());
+        log.trace("Using temporary file for output stream {}", Objects.requireNonNull(tempFile).getAbsolutePath());
         return tempFile;
     }
 
@@ -66,16 +65,13 @@ public class ExecUtils {
     }
 
     //TODO remove
-    public static InputStream execProgramWithoutExeption(String[] programCall, InputStream inputStream) {
-        String programCallStr = "\"" + Arrays.asList(programCall).stream().collect(Collectors.joining(" ")) + "\"" ;
-        log.debug("Executing -- " + programCallStr);
+    public static void execProgramWithoutException(String[] programCall, InputStream inputStream) {
+        String programCallStr = "\"" + String.join(" ", programCall) + "\"" ;
+        log.debug("Executing -- {}", programCallStr);
         try {
-            return execProgram(programCall, inputStream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            execProgram(programCall, inputStream);
+        } catch (IOException | InterruptedException e) {
+            log.error(e.getMessage(), e);
         }
-        return null;
     }
 }
