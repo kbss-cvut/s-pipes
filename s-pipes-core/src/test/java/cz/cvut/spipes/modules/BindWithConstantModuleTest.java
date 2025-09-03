@@ -41,12 +41,12 @@ public class BindWithConstantModuleTest extends AbstractCoreModuleTestHelper {
     }
 
     @Test
-    public void executeWithBindedValue() throws Exception {
+    public void executeWithBindedValue() {
 
         OntModel ontModel = getConfigOntModel();
 
         List<Module> moduleList = PipelineFactory.loadPipelines(ontModel);
-        assertEquals(moduleList.size(), 1, "Bad number of output modules");
+        assertEquals(1, moduleList.size(), "Bad number of output modules");
 
         Module module = moduleList.get(0);
 

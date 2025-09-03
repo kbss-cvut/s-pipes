@@ -11,11 +11,11 @@ import org.junit.jupiter.api.Test;
 
 public class TarqlModuleTest {
 
-    String TARQL_MODULE_DIR = "module/tarql";
+    final String TARQL_MODULE_DIR = "module/tarql";
 
     @Disabled
     @Test
-    public void execute() throws Exception {
+    public void execute() {
 
         ExecutionEngine e = ExecutionEngineFactory.createEngine();
 
