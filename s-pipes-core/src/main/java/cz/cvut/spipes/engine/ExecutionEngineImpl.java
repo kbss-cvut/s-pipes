@@ -53,7 +53,7 @@ class ExecutionEngineImpl implements ExecutionEngine {
             return module.getOutputContext();
         }
 
-        // module has no predeccesor
+        // module has no predecessor
         if (module.getInputModules().isEmpty()) {
             fire((l) -> {l.moduleExecutionStarted(pipelineExecutionId, moduleExecutionId, module, context, predecessorId); return null;});
 
@@ -62,7 +62,7 @@ class ExecutionEngineImpl implements ExecutionEngine {
             } else {
                 module.setInputContext(context);
 
-                log.info(" ##### " + module.getLabel());
+                log.info(" ##### {}", module.getLabel());
                 if (log.isTraceEnabled()) {
                     log.trace("Using input context {}", context.toTruncatedSimpleString()); //TODO redundant code -> merge
                 }
@@ -80,7 +80,7 @@ class ExecutionEngineImpl implements ExecutionEngine {
                 .collect(Collectors.toMap(Module::getResource, mod -> this._executePipeline(pipelineExecutionId, mod, context, moduleExecutionId)));
 
 
-        log.info(" ##### " + module.getLabel());
+        log.info(" ##### {}", module.getLabel());
         ExecutionContext mergedContext = mergeContexts(resource2ContextMap);
         if (log.isTraceEnabled()) {
             log.trace("Using input merged context {}", mergedContext.toTruncatedSimpleString());
@@ -114,21 +114,18 @@ class ExecutionEngineImpl implements ExecutionEngine {
         VariablesBinding variablesBinding = new VariablesBinding();
 
 
-        resource2ContextMap.entrySet().stream().forEach(e -> {
-
-            Resource modRes = e.getKey();
-            ExecutionContext context = e.getValue();
+        resource2ContextMap.forEach((modRes, context) -> {
 
             // merge models
             newModel.add(context.getDefaultModel());
 
             // merge variable bindings
-            VariablesBinding b = e.getValue().getVariablesBinding();
+            VariablesBinding b = context.getVariablesBinding();
 
             VariablesBinding conflictingBinding = variablesBinding.extendConsistently(b);
 
-            if (! conflictingBinding.isEmpty()) {
-                log.warn("Module {} has conflicting variables binding {} with sibling modules ocurring in pipeline. ", modRes, context);
+            if (!conflictingBinding.isEmpty()) {
+                log.warn("Module {} has conflicting variables binding {} with sibling modules occurring in pipeline. ", modRes, context);
             }
         });
 

@@ -9,7 +9,6 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.engine.binding.Binding;
 import org.apache.jena.sparql.engine.binding.BindingBuilder;
-import org.apache.jena.sparql.engine.binding.BindingFactory;
 import org.apache.jena.vocabulary.RDF;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -27,7 +26,7 @@ public class VariablesBinding {
 
     private static final Logger log = LoggerFactory.getLogger(VariablesBinding.class);
     private static final int MAX_TRUNCATED_VALUE_SIZE = 300;
-    QuerySolutionMap binding = new QuerySolutionMap();
+    final QuerySolutionMap binding = new QuerySolutionMap();
 
     public VariablesBinding() {
     }
@@ -63,8 +62,6 @@ public class VariablesBinding {
     }
 
     public Binding asBinding() {
-        if(binding == null)
-            return BindingFactory.empty();
         BindingBuilder bb = BindingBuilder.create();
         binding.varNames().forEachRemaining(v -> bb.add(Var.alloc(v), binding.get(v).asNode()));
         return bb.build();
@@ -106,8 +103,8 @@ public class VariablesBinding {
     }
 
     /**
-     * Returns new variables binding from this variables binding restricted to listed variables.
-     * @param varNames Names of variables that should be copied from this variables binding.
+     * Returns new variables binding from these variables binding restricted to listed variables.
+     * @param varNames Names of variables that should be copied from these variables binding.
      * @return new variables binding
      */
     public VariablesBinding restrictTo(@NotNull List<String> varNames) {
@@ -125,7 +122,7 @@ public class VariablesBinding {
     }
 
     /**
-     * Returns new variables binding from this variables binding restricted to listed variables.
+     * Returns new variables binding from these variables binding restricted to listed variables.
      * @param varNames Names of variables that should be copied to the new binding.
      * @return new variables binding
      */
