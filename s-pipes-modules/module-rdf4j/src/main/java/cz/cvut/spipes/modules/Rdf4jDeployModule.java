@@ -5,7 +5,7 @@ import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.engine.ExecutionContextFactory;
 import cz.cvut.spipes.exception.ModuleConfigurationInconsistentException;
 import cz.cvut.spipes.modules.annotations.SPipesModule;
-import cz.cvut.spipes.util.CoreConfigProperies;
+import cz.cvut.spipes.util.CoreConfigProperties;
 import cz.cvut.spipes.util.JenaUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.query.Dataset;
@@ -244,7 +244,7 @@ public class Rdf4jDeployModule extends AnnotatedAbstractModule {
         if (variableName == null) {
             return null;
         }
-        return CoreConfigProperies.getConfigurationVariable(variableName);
+        return CoreConfigProperties.getConfigurationVariable(variableName);
     }
 
     private boolean isRdf4jContextIRIDefined() {

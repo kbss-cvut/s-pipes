@@ -7,15 +7,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class CoreConfigProperies {
+public class CoreConfigProperties {
     private static final String CONFIG_FILE = "config-core.properties";
     private static final java.util.Properties prop = new java.util.Properties();
-    private static final Logger log = LoggerFactory.getLogger(CoreConfigProperies.class);
+    private static final Logger log = LoggerFactory.getLogger(CoreConfigProperties.class);
     private static final String variableAssignmentPrefix = "variable.assignment";
 
     static {
         try {
-            InputStream is = CoreConfigProperies.class.getClassLoader().getResourceAsStream("config-core.properties");
+            InputStream is = CoreConfigProperties.class.getClassLoader().getResourceAsStream("config-core.properties");
             if (is != null) {
                 prop.load(is);
                 prop.keySet().forEach(k -> {
@@ -35,7 +35,7 @@ public class CoreConfigProperies {
                 throw new FileNotFoundException("Property file '" + CONFIG_FILE + "' not found in the classpath");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 
