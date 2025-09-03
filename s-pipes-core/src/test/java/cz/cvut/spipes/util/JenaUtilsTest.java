@@ -20,7 +20,7 @@ public class JenaUtilsTest {
     private static final String HASH_FILE_PREFIX = "hash-example-";
 
     @Test
-    public void computeHash() throws Exception {
+    public void computeHash() {
 
         String[] exampleIds = {"1", "2", "3", "4"};
 
@@ -47,7 +47,7 @@ public class JenaUtilsTest {
     }
 
     @Test
-    public void getQueryWithModelPrefixesReturnsAllPrefixesFromQuery() throws Exception {
+    public void getQueryWithModelPrefixesReturnsAllPrefixesFromQuery() {
         Model m = ModelFactory.createDefaultModel();
 
         Map<String, String> prefixMapQuery = createExampleQueryPrefixMap();
@@ -78,7 +78,7 @@ public class JenaUtilsTest {
     }
 
     @Test
-    public void getQueryWithModelPrefixesReturnsAllPrefixesFromModel() throws Exception {
+    public void getQueryWithModelPrefixesReturnsAllPrefixesFromModel() {
         Model m = ModelFactory.createDefaultModel();
 
         Map<String, String> prefixMapModel = createExampleModelPrefixMap();
@@ -109,7 +109,7 @@ public class JenaUtilsTest {
     }
 
     @Test
-    public void getQueryWithModelPrefixesReturnsAllPrefixesFromQueryAndModel() throws Exception {
+    public void getQueryWithModelPrefixesReturnsAllPrefixesFromQueryAndModel() {
         Model m = ModelFactory.createDefaultModel();
 
         Map<String, String> prefixMapQuery = createExampleQueryPrefixMap();

@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,7 @@ public class JenaPipelineUtils {
 
     public static boolean isModule(Resource res) {
 
-        return res.listProperties(RDF.type).filterKeep(
+        return !res.listProperties(RDF.type).filterKeep(
                 st -> {
                     if (!st.getObject().isResource()) {
                         return false;
@@ -34,51 +35,51 @@ public class JenaPipelineUtils {
                     Resource objRes = st.getObject().asResource();
                     return objRes.hasProperty(RDF.type, SM.JENA.Module);
                 }
-        ).toList().size() > 0;
+        ).toList().isEmpty();
     }
 
 
     public static Map<Resource, Resource> getAllModulesWithTypes(Model config) {
-
         Query query = QueryFactory.create(loadResource("/query/get-all-sm-modules.sparql"));
-        QueryExecution queryExecution = QueryExecutionFactory.create(query, config);
-
         Map<Resource, Resource> module2moduleTypeMap = new HashMap<>();
 
-        queryExecution.execSelect().forEachRemaining(
-                qs -> {
-                    Resource module = qs.get("module").asResource();
-                    Resource moduleType = qs.get("moduleType").asResource();
-                    Resource previous = module2moduleTypeMap.put(module, moduleType);
-                    if (previous != null) {
-                        log.error("Module {} has colliding module types -- {}, {}. Ignoring type {}.", module, previous, moduleType, previous);
-                    }
+        try (QueryExecution queryExecution = QueryExecutionFactory.create(query, config)) {
+            queryExecution.execSelect().forEachRemaining(qs -> {
+                Resource module = qs.get("module").asResource();
+                Resource moduleType = qs.get("moduleType").asResource();
+                Resource previous = module2moduleTypeMap.put(module, moduleType);
+                if (previous != null) {
+                    log.error("Module {} has colliding module types -- {}, {}. Ignoring type {}.",
+                            module, previous, moduleType, previous);
                 }
-                    );
+            });
+        }
+
         return module2moduleTypeMap;
     }
 
     public static Map<Resource, Resource> getAllFunctionsWithReturnModules(Model config) {
         Query query = QueryFactory.create(loadResource("/query/get-all-sm-functions.sparql"));
-        QueryExecution queryExecution = QueryExecutionFactory.create(query, config);
 
         Map<Resource, Resource> function2retModuleMap = new HashMap<>();
 
-        queryExecution.execSelect().forEachRemaining(
-                qs -> {
-                    Resource module = qs.get("function").asResource();
-                    if (qs.get("returnModule") == null) {
-                        //TODO cleaner workaround for -- ?function = <http://topbraid.org/sparqlmotion#Functions> )
-                        return;
-                    }
-                    Resource moduleType = qs.get("returnModule").asResource();
-                    log.debug("Registering function {} to return module {}.", module, moduleType);
-                    Resource previous = function2retModuleMap.put(module, moduleType);
-                    if (previous != null) {
-                        log.error("Function {} has colliding return modules -- {}, {}. Ignoring type {}.", module, previous, moduleType, previous);
-                    }
+        try (QueryExecution queryExecution = QueryExecutionFactory.create(query, config)) {
+            queryExecution.execSelect().forEachRemaining(qs -> {
+                Resource module = qs.get("function").asResource();
+                if (qs.get("returnModule") == null) {
+                    // TODO cleaner workaround for -- ?function = <http://topbraid.org/sparqlmotion#Functions> )
+                    return;
                 }
-        );
+                Resource moduleType = qs.get("returnModule").asResource();
+                log.debug("Registering function {} to return module {}.", module, moduleType);
+                Resource previous = function2retModuleMap.put(module, moduleType);
+                if (previous != null) {
+                    log.error("Function {} has colliding return modules -- {}, {}. Ignoring type {}.",
+                            module, previous, moduleType, previous);
+                }
+            });
+        }
+
         return function2retModuleMap;
     }
 
@@ -110,7 +111,7 @@ public class JenaPipelineUtils {
             if (is == null) {
                 throw new IllegalArgumentException("Resource with path " + path + " not found.");
             }
-            return IOUtils.toString(is);
+            return IOUtils.toString(is, StandardCharsets.UTF_8);
         } catch (IOException e) {
            throw new IllegalArgumentException("Resource with path " + path + " could not be open.", e);
         }

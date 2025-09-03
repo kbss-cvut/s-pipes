@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @SPipesModule(label = "external schemex", comment = "Compute schemex using external script for a specified sourceFilePath.")
 public class ExternalSchemExModule extends AnnotatedAbstractModule {
@@ -39,7 +38,7 @@ public class ExternalSchemExModule extends AnnotatedAbstractModule {
             outputDir.toString()
         };
 
-        ExecUtils.execProgramWithoutExeption(programCall, null);
+        ExecUtils.execProgramWithoutException(programCall, null);
 
         InputStream is = null;
         return ExecutionContextFactory.createContext(
