@@ -4,7 +4,6 @@ import cz.cvut.spipes.modules.Module;
 import cz.cvut.spipes.util.RDFNodeUtils;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -117,9 +116,7 @@ public class ValidationConstraintFailedException extends SPipesException {
     private void buildSeparator(StringBuilder tableBuilder, Map<String, Integer> columnWidths) {
         StringBuilder separator = new StringBuilder("+");
         for (int width : columnWidths.values()) {
-            for (int i = 0; i < width + 2; i++) {
-                separator.append("-");
-            }
+            separator.append("-".repeat(Math.max(0, width + 2)));
             separator.append("+");
         }
         tableBuilder.append(separator).append(System.lineSeparator());
