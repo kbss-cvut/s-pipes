@@ -2,7 +2,7 @@ package cz.cvut.spipes.modules.handlers;
 
 import java.lang.reflect.Field;
 
-public class FieldSetter extends Setter {
+public class FieldSetter<T> extends Setter<T> {
 
 
     public FieldSetter(Field f, Object bean) {

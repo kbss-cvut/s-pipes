@@ -11,11 +11,11 @@ class FieldSetterTest {
 
     private TestBean testBean;
     private Field testField;
-    private FieldSetter fieldSetter;
+    private FieldSetter<?> fieldSetter;
 
     public static class TestBean {
         public String publicField;
-        private String privateField;
+        private final String privateField;
 
         public TestBean(String privateField) {
             this.privateField = privateField;
@@ -26,7 +26,7 @@ class FieldSetterTest {
     void setUp() throws NoSuchFieldException {
         testBean = new TestBean("initialValue");
         testField = TestBean.class.getField("publicField");
-        fieldSetter = new FieldSetter(testField, testBean);
+        fieldSetter = new FieldSetter<>(testField, testBean);
     }
 
     @Test
@@ -40,7 +40,7 @@ class FieldSetterTest {
     void testSetValueOnPrivateField() throws NoSuchFieldException {
         Field privateField = TestBean.class.getDeclaredField("privateField");
         privateField.setAccessible(true);
-        FieldSetter privateFieldSetter = new FieldSetter(privateField, testBean);
+        FieldSetter<?> privateFieldSetter = new FieldSetter<>(privateField, testBean);
 
         privateFieldSetter.addValue("newPrivateValue");
 
@@ -50,7 +50,7 @@ class FieldSetterTest {
     @Test
     void testSetValueOnPrivateFieldWhenInitiallyNotAccessible() throws NoSuchFieldException {
         Field privateField = TestBean.class.getDeclaredField("privateField");
-        FieldSetter privateFieldSetter = new FieldSetter(privateField, testBean);
+        FieldSetter<?> privateFieldSetter = new FieldSetter<>(privateField, testBean);
 
         privateFieldSetter.addValue("newPrivateValue");
 
@@ -62,11 +62,9 @@ class FieldSetterTest {
     void testSetValueToFieldWithDifferentType() throws NoSuchFieldException {
         Field intField = TestBean.class.getDeclaredField("privateField");
         intField.setAccessible(true);
-        FieldSetter intFieldSetter = new FieldSetter(intField, testBean);
+        FieldSetter<?> intFieldSetter = new FieldSetter<>(intField, testBean);
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            intFieldSetter.addValue(123);
-        });
+        assertThrows(IllegalArgumentException.class, () -> intFieldSetter.addValue(123));
     }
 }
 
