@@ -27,11 +27,10 @@ public class SMScriptCollectionRepositoryTest {
     @InjectMocks
     SMScriptCollectionRepository scriptCollectionRepository;
 
-    final OntModel sampleOntology = getSampleOntology();
     final String sampleOntologyUri = JenaUtils.getBaseUri(getSampleOntology());
 
     @Test
-    public void getModules() throws Exception {
+    public void getModules() {
 
         //given
         given(ontoDocManager.getOntology(sampleOntologyUri)).willReturn(getSampleOntology());
@@ -40,18 +39,12 @@ public class SMScriptCollectionRepositoryTest {
         List<Resource> modules = scriptCollectionRepository.getModules(Collections.singleton(sampleOntologyUri));
 
         //then
-        assertEquals(modules.size(), 3);
+        assertEquals(3, modules.size());
         // TODO better matching by junit5 or assertThat(modules, CoreMatcher.*);
     }
 
-    @Disabled
     @Test
-    public void getModuleTypes() throws Exception {
-
-    }
-
-    @Test
-    public void getPipelineFunctions() throws Exception {
+    public void getPipelineFunctions() {
 
         //given
         given(ontoDocManager.getOntology(sampleOntologyUri)).willReturn(getSampleOntology());
@@ -60,13 +53,13 @@ public class SMScriptCollectionRepositoryTest {
         List<Resource> functions = scriptCollectionRepository.getPipelineFunctions(Collections.singleton(sampleOntologyUri));
 
         //then
-        assertEquals(functions.size(), 2);
+        assertEquals(2, functions.size());
 
     }
 
     @Disabled
     @Test
-    public void getResource() throws Exception {
+    public void getResource() {
 
         //given
         given(ontoDocManager.getOntology(sampleOntologyUri)).willReturn(getSampleOntology());
@@ -78,12 +71,6 @@ public class SMScriptCollectionRepositoryTest {
 
         //then
         assertEquals(sampleResource, resource);
-    }
-
-    @Disabled
-    @Test
-    public void getAlternativeEntityIds() throws Exception {        // get all baseIRIs
-
     }
 
     private OntModel getSampleOntology() {
