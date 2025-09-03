@@ -60,8 +60,8 @@ public class JenaUtils {
 
 
     /**
-     * Compute hash of an dataset considering semantics of RDF,
-     * i.e. hashes of two RDF models are same iff RDF models are isomorphic.
+     * Compute hash of a dataset considering the semantics of RDF,
+     * i.e., hashes of two RDF models are same iff RDF models are isomorphic.
      * <p>
      * TODO this does not implement correct algorithm (different graphs might return same hash),
      * although should suffice in many real cases. See  http://aidanhogan.com/skolem/ to find more reliable algorithm.
@@ -73,9 +73,7 @@ public class JenaUtils {
         StringBuilder modelMetadataBuff = new StringBuilder();
 
         Comparator<? super Resource> uriComparator =
-            (r1, r2) -> {
-                return r1.getURI().compareTo(r2.getURI());
-            };
+                Comparator.comparing(Resource::getURI);
 
         long statementsSize = model.size();
         List<Resource> subjectResources = new ArrayList<>(
@@ -105,7 +103,7 @@ public class JenaUtils {
     public static Model createUnion(Model... model) {
         Model outputModel = ModelFactory.createDefaultModel();
         Stream.of(model).forEach(
-            m -> outputModel.add(m)
+                outputModel::add
         );
         return outputModel;
     }
@@ -113,10 +111,10 @@ public class JenaUtils {
     public static void saveModelToTemporaryFile(@NotNull Model model) {
         try {
             Path file = Files.createTempFile("model-output-", ".ttl");
-            log.debug("Saving model to temporary file " + file.toString() + " ...");
+            log.debug("Saving model to temporary file {} ...", file.toString());
             JenaUtils.write(Files.newOutputStream(file.toFile().toPath()), model);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
 
     }
@@ -195,7 +193,7 @@ public class JenaUtils {
             : model.read(is, null, FileUtils.langTurtle);
     }
 
-    // TODO - Deside if reified statements should be supported or replaced with something else, e.g. RDF-star. Based on
+    // TODO - Decide if reified statements should be supported or replaced with something else, e.g. RDF-star. Based on
     //  the decision retain or rewrite HOTFIX methods and their usage. Delete "HOTFIX" from comments.
     /**
      * HOTFIX - for model.listReifiedStatements()
@@ -208,7 +206,7 @@ public class JenaUtils {
     }
 
     /**
-     * HOTFIX - adding reified statement represented by <code>rs</code> resource to model as statement
+     * HOTFIX - adding a reified statement represented by <code>rs</code> resource to model as statement
      *
      * @param m
      * @return iterator of resources which have the RDF.object property
