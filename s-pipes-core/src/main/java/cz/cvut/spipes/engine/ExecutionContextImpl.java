@@ -74,7 +74,7 @@ class ExecutionContextImpl implements ExecutionContext {
 
     @Override
     public String getId() {
-        return getValue(ID_PARAM);
+        return getValue(P_ID);
     }
 
     @Override

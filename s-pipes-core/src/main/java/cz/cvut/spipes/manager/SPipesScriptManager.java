@@ -129,9 +129,9 @@ public class SPipesScriptManager {
             }
             if(iris.size() > 1){
                 throw new ResourceNotUniqueException((
-                        "Cannot find location of module with id \"%s\", module found in multiple scripts. " +
-                                "Set scriptUri parameter to locate module in a specific script."
-                ).formatted(moduleId));
+                        "Cannot find location of module with id \"%s\", module found in multiple scripts: \"%s\"." +
+                                "Set `_pScriptURI` parameter to locate module in a specific script. "
+                ).formatted(moduleId, iris));
             }
 
             resourceContextUri = moduleRegistry.getContexts(moduleId).iterator().next();
