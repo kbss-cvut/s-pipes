@@ -46,6 +46,7 @@ public class OntoDocManagerTest {
     public void setup(){
         OntoDocManager.setReloadFiles(false);
         OntoDocManager.getInstance().reset();
+        SPipesUtil.resetFunctions();
     }
 
     @Test
