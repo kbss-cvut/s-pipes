@@ -415,24 +415,6 @@ public class OntoDocManager implements OntologyDocumentManager {
     }
 
     /**
-     * Get the file corresponding to the value of the argument <code>scriptUri</code>
-     * @see OntoDocManager#getScriptFiles(String, List) how <code>scriptUri</code> is mapped to a file
-     *
-     * @param scriptUri
-     * @return
-     */
-    public static File getScriptFile(String scriptUri){
-        List<File> files = getScriptFiles(scriptUri, ContextsConfig.getScriptPaths().stream().map(Path::toString).toList());
-        if(files.isEmpty())
-            throw new IllegalStateException("Cannot find script file for scriptUri=<%s>.".formatted(scriptUri));
-        if(files.size() > 1 )
-            throw new IllegalStateException("There are multiple script files found for scriptUri=<%s>.".formatted(scriptUri));
-
-        return files.get(0);
-    }
-
-
-    /**
      * Returns a list of files within one or more locations with prefix in scriptPaths corresponding to the <code>uriStr</code>.
      * Searching for files associated with <code>uriStr</code> is done in the following order:
      *

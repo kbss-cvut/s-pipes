@@ -1,18 +1,14 @@
 package cz.cvut.spipes.engine;
 
+import cz.cvut.spipes.config.ContextsConfig;
 import cz.cvut.spipes.manager.OntoDocManager;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URI;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 class ExecutionContextImpl implements ExecutionContext {
 
@@ -90,11 +86,17 @@ class ExecutionContextImpl implements ExecutionContext {
 
     /**
      * Get the file corresponding to the value returned by <code>{@link #getScriptUri()}</code>
-     * @see OntoDocManager#getScriptFile(String)
+     * @see OntoDocManager#getScriptFiles(String, List) how scriptUri mapped to a file
      * @return
      */
     @Override
     public File getScriptFile(){
-        return OntoDocManager.getScriptFile(getScriptUri());
+        List<File> files = OntoDocManager.getScriptFiles(getScriptUri(), ContextsConfig.getScriptPaths().stream().map(Path::toString).toList());
+        if(files.isEmpty())
+            throw new IllegalStateException("Cannot find script file module with id=%s and scriptUri=<%s>.".formatted(getId(), getScriptUri()));
+        if(files.size() > 1 )
+            throw new IllegalStateException("There are multiple script files found for module with id %s and scriptUri=<%s>.".formatted(getId(), getScriptUri()));
+
+        return files.get(0);
     }
 }
