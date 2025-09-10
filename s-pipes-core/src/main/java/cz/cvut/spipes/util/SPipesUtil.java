@@ -70,15 +70,6 @@ public class SPipesUtil {
     }
 
     /**
-     * Reset only the functions declared in <code>model</code>. Only shacl rdf functions are loaded.
-     * @param model
-     */
-    public static void resetFunctions(Model model){
-        unregisterNonSystemFunctions();
-        SHACLFunctions.registerFunctions(model);
-    }
-
-    /**
      * Reset registered functions to system functions (only jena and shacl functions).
      */
     public static void resetFunctions(){
