@@ -59,8 +59,9 @@ public class OntoDocManager implements OntologyDocumentManager {
     private static Instant lastTime = Instant.now();
     private static boolean reloadFiles = false;
 
-    // TODO remove !!!!!!! this is workaround for registering SPIN related things.
-    private static Model allLoadedFilesModel = ModelFactory.createDefaultModel();
+    private static Map<String, Model> allChangedFiles = new HashMap<>();
+    private static Set<Path> removedFiles = new HashSet<>();
+    private static Set<Path> managedFiles;
 
 
     OntDocumentManager ontDocumentManager;
@@ -72,7 +73,7 @@ public class OntoDocManager implements OntologyDocumentManager {
 
     private OntoDocManager() {
         this(new OntDocumentManager());
-        clearSPINRelevantModel();
+        clearShaclRelevantModel();
     }
 
     OntoDocManager(OntDocumentManager ontDocumentManager) {
@@ -247,6 +248,7 @@ public class OntoDocManager implements OntologyDocumentManager {
      */
     public synchronized static Map<String, Model> getAllFile2Model(Path directoryOrFilePath) {
         Map<String, Model> file2Model = new HashMap<>();
+        Set<Path> availableFiles = new HashSet<>();
 
         try (Stream<Path> stream = Files.walk(directoryOrFilePath)) {
             stream
@@ -256,6 +258,7 @@ public class OntoDocManager implements OntologyDocumentManager {
                         return isFileNameSupported(fileName);
                     })
                     .forEach(file -> {
+                        availableFiles.add(file.toAbsolutePath());
                         if (reloadFiles && !wasModified(file)) {
                             log.debug("Skipping unmodified file: {}", file.toUri());
                             return;
@@ -280,6 +283,19 @@ public class OntoDocManager implements OntologyDocumentManager {
             // In this snippet, it can only be thrown by newDirectoryStream.
             log.error("Could not load ontologies from directory {} -- {} .", directoryOrFilePath, e);
         }
+
+        // remove deleted files from cache
+        if(reloadFiles){
+            removedFiles = new HashSet<>();
+            if(managedFiles != null) {
+                removedFiles.addAll(managedFiles);
+                removedFiles.removeAll(availableFiles);
+            }
+
+            for(Path removedFile : removedFiles)
+                clearCachedModel(removedFile);
+            managedFiles = availableFiles;
+        }
         return file2Model;
     }
 
@@ -297,14 +313,15 @@ public class OntoDocManager implements OntologyDocumentManager {
 //                    ) {
             //LOG.debug("Adding library ... " + baseURI);
 //                if (fileName.endsWith("spin-function.spin.ttl")) {
-            allLoadedFilesModel.add(model);
+            allChangedFiles.put(fileName, model);
 //                }
 //            }
         }
     }
 
-    private static void clearSPINRelevantModel() {
-        allLoadedFilesModel = ModelFactory.createDefaultModel();
+    private static void clearShaclRelevantModel() {
+        allChangedFiles.clear();
+        removedFiles.clear();
     }
 
     /**
@@ -457,11 +474,18 @@ public class OntoDocManager implements OntologyDocumentManager {
     }
 
     public static void registerAllSPINModules() {
-        log.warn("WORKAROUND -- Applying a workaround to register all SPIN modules ..."); // TODO remove this workaround
-        Model model = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
-        model.add(OntoDocManager.allLoadedFilesModel);
-        SPipesUtil.resetFunctions(model);
-        clearSPINRelevantModel();
+        log.warn("WORKAROUND -- Applying a workaround to register all SHACL modules ...");
+
+        Map ontModleMap = new HashMap();
+
+        allChangedFiles.forEach((p,m) -> ontModleMap.put(
+                p,
+                !(m instanceof OntModel)
+                        ? ModelFactory.createOntologyModel(ONT_MODEL_SPEC, m)
+                        : m
+        ));
+        SPipesUtil.resetFunctions(ontModleMap, removedFiles);
+        clearShaclRelevantModel();
     }
     class OntologyReadFailureHandler implements OntDocumentManager.ReadFailureHandler {
         @Override
