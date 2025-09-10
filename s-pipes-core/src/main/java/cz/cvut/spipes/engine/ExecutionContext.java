@@ -61,12 +61,6 @@ public interface ExecutionContext {
     String getScriptUri();
 
     /**
-     * Bind <code>_pScriptURI</code> to the value of <code>scriptUri</code> in this execution context's variablesBindings.
-     * @param scriptUri
-     */
-    void setScriptUri(String scriptUri);
-
-    /**
      * Get the file corresponding to the value returned by <code>{@link #getScriptUri()}</code>
      * @return
      */

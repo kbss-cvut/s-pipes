@@ -47,6 +47,13 @@ class ExecutionContextImpl implements ExecutionContext {
         this.variablesBinding = variablesBinding;
     }
 
+    public void setScriptUri(String scriptUri) {
+        getVariablesBinding().add(
+                ExecutionContext.P_SCRIPT_URI,
+                getDefaultModel().createResource(scriptUri)
+        );
+    }
+
     private String getSimpleString(boolean truncate) {
 
         String sb = "Context " + this.hashCode() + "[ \n" +
@@ -80,15 +87,6 @@ class ExecutionContextImpl implements ExecutionContext {
     public String getScriptUri() {
         return getValue(P_SCRIPT_URI);
     }
-
-    @Override
-    public void setScriptUri(String scriptUri) {
-        getVariablesBinding().add(
-                ExecutionContext.P_SCRIPT_URI,
-                getDefaultModel().createResource(scriptUri)
-        );
-    }
-
 
     /**
      * Get the file corresponding to the value returned by <code>{@link #getScriptUri()}</code>
