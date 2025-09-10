@@ -4,12 +4,17 @@ import cz.cvut.spipes.spin.vocabulary.SP;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.sparql.function.FunctionRegistry;
 import org.topbraid.shacl.arq.SHACLFunctions;
+import org.topbraid.shacl.validation.sparql.SPARQLSubstitutions;
 
 import java.util.*;
 
 public class SPipesUtil {
 
     private final static Set<String> systemFunctions = Collections.synchronizedSet(loadSystemFunctions());
+
+    static {
+        SPARQLSubstitutions.useGraphPrefixes = true;
+    }
 
     private static Set<String> loadSystemFunctions(){
         Set<String> systemFunctions  = new HashSet<>();

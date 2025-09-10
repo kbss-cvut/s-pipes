@@ -12,13 +12,9 @@ import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.engine.binding.BindingBuilder;
-import org.apache.jena.sparql.expr.Expr;
-import org.apache.jena.sparql.expr.NodeValue;
-import org.apache.jena.sparql.function.FunctionEnv;
-import org.apache.jena.sparql.function.FunctionEnvBase;
-import org.apache.jena.sparql.util.ExprUtils;
 import org.apache.jena.util.FileUtils;
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.topbraid.shacl.arq.SHACLFunctions;
 
@@ -30,6 +26,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SHACLIntegrationTest {
+
+    @BeforeAll
+    public static void init(){
+        SPipesUtil.init();
+    }
 
     @Test
     public void executeCustomSHACLRDFFunctionWithinQuery() {
@@ -68,6 +69,44 @@ public class SHACLIntegrationTest {
             constructServiceUrl(repositoryUrl, graphId)
         );
 
+    }
+
+    @Test
+    public void loadAndExecuteShaclFunctionWithPrefix(){
+        // load custom function definition from RDF
+        Model funcDefModel = getCustomSHACLRDFFunctionModel();
+
+        // register custom function
+        SHACLFunctions.registerFunctions(funcDefModel);
+
+        String firstName = "John";
+        String lastName = "Smith";
+
+        String queryString = String.format("""
+            PREFIX kbss-shaclf: <http://onto.fel.cvut.cz/ontologies/lib/shacl-function/>
+            SELECT ?greetingMessage
+            WHERE {
+            BIND(kbss-shaclf:construct-greeting-message(
+                "%s",
+                "%s"
+            ) AS ?greetingMessage)
+            }
+        """, firstName, lastName);
+
+        Model model = ModelFactory.createDefaultModel();
+
+        Query query = QueryFactory.create(queryString);
+
+        QueryExecution qexec = QueryExecutionFactory.create(query, model);
+        ResultSet results = qexec.execSelect();
+
+        assertTrue(results.hasNext(), "No results found");
+
+        QuerySolution soln = results.nextSolution();
+        assertEquals(
+                soln.getLiteral("greetingMessage").getString(),
+                constructGreetingMessage(firstName, lastName)
+        );
     }
 
     @Test
@@ -119,5 +158,10 @@ public class SHACLIntegrationTest {
     @NotNull
     private String constructServiceUrl(String repositoryUrl, String graphId) {
         return String.format("%s?default-graph-uri=%s", repositoryUrl, URLEncoder.encode(graphId, StandardCharsets.UTF_8));
+    }
+
+    @NotNull
+    private String constructGreetingMessage(String firstName, String lastName) {
+        return String.format("Hello %s %s!", firstName, lastName);
     }
 }

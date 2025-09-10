@@ -30,7 +30,7 @@ kbss-shaclf:create-sparql-service-url
   sh:returnType  xsd:anyURI ;
   sh:select """SELECT ?serviceUrl
 WHERE {
-    BIND (IRI(CONCAT(str($arg1), "?default-graph-uri=", ENCODE_FOR_URI(str($arg2)))) AS ?serviceUrl) .
+    BIND (IRI(CONCAT(str(?arg1), "?default-graph-uri=", ENCODE_FOR_URI(str(?arg2)))) AS ?serviceUrl) .
 }""" ;
   sh:parameter [
       # TODO would it work with <arg1> and a @base declaration instead of kbss-shaclf:arg1? Can it be  spl:predicate sp:arg1?
@@ -45,4 +45,47 @@ WHERE {
     ] ;
   rdfs:comment "Construct sparql service url from ?sparqlEndpointUrl and ?namedGraphURI."@en ;
   sh:prefixes kbss-shaclf: ; # TODO - is this needed to add prefixes to the query?
+.
+
+
+kbss-shaclf:construct-full-name
+    rdf:type sh:SPARQLFunction ;
+    rdfs:label "create-sparql-service-url" ;
+    sh:returnType  xsd:anyURI ;
+    sh:select """SELECT ?fullName
+WHERE {
+    BIND (concat(?arg1, " ", ?arg2) AS ?fullName) .
+}""" ;
+    sh:parameter [
+                 sh:path kbss-shaclf:arg1 ;
+#      sh:datatype xsd:string ;
+                 sh:description "first name."@en ;
+             ] ;
+    sh:parameter  [
+                 sh:path kbss-shaclf:arg2 ;
+#      sh:datatype xsd:string ;
+                 sh:description "last name."@en ;
+             ] ;
+    rdfs:comment "Construct full name string by concatenating arg1 (first name) and arg2 (last name) ."@en ;
+.
+
+kbss-shaclf:construct-greeting-message
+    rdf:type sh:SPARQLFunction ;
+    rdfs:label "create-sparql-service-url" ;
+    sh:returnType  xsd:anyURI ;
+    sh:select """SELECT ?greetingMessage
+WHERE {
+    BIND (concat("Hello ", kbss-shaclf:construct-full-name(?arg1, ?arg2), "!") AS ?greetingMessage) .
+}""" ;
+    sh:parameter [
+                 sh:path kbss-shaclf:arg1 ;
+#      sh:datatype xsd:string ;
+                 sh:description "first name."@en ;
+             ] ;
+    sh:parameter  [
+                 sh:path kbss-shaclf:arg2 ;
+#      sh:datatype xsd:string ;
+                 sh:description "last name."@en ;
+             ] ;
+    rdfs:comment "Construct full name string by concatenating arg1 (first name) and arg2 (last name) ."@en ;
 .
