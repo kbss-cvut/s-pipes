@@ -23,9 +23,4 @@ public class ReservedParams {
      * after execution of module finishes.
      */
     public static final String P_OUTPUT_BINDING_URL = "_pOutputBindingURL";
-
-    /**
-     * Context URI - the URI of the context script under which the module identified by P_ID is configured
-     */
-    public static final String P_CONTEXT_URI = "_pContextURI";
 }

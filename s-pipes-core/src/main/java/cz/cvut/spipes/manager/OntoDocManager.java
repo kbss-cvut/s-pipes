@@ -1,7 +1,6 @@
 package cz.cvut.spipes.manager;
 
 import cz.cvut.spipes.config.CompatibilityConfig;
-import cz.cvut.spipes.config.ContextsConfig;
 import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.SPipesUtil;
 import cz.cvut.spipes.util.SparqlMotionUtils;
