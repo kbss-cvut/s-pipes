@@ -271,7 +271,7 @@ public class OntoDocManager implements OntologyDocumentManager {
                         Model model = loadModel(file, lang);
 
                         if (model != null) {
-                            OntoDocManager.addSPINRelevantModel(file.toAbsolutePath().toString(), model);
+                            OntoDocManager.addSHACLRelevantModel(file.toAbsolutePath().toString(), model);
                             file2Model.put(file.toString(), model);
                             log.debug("Successfully loaded model from {}.", file.toUri());
                         } else {
@@ -300,7 +300,7 @@ public class OntoDocManager implements OntologyDocumentManager {
     }
 
     // TODO remove this method !!!
-    private static void addSPINRelevantModel(String fileName, Model model) {
+    private static void addSHACLRelevantModel(String fileName, Model model) {
         String baseURI = JenaUtils.getBaseUri(model);
 
         if (baseURI != null) {
@@ -473,7 +473,14 @@ public class OntoDocManager implements OntologyDocumentManager {
         return model.listResourcesWithProperty(RDF.type, OWL.Ontology).nextResource().toString();
     }
 
-    public static void registerAllSPINModules() {
+    /**
+     * Updates registered shacl functions (i.e., functions which can be used in sparql queries spipes modules and shacl
+     * functions) based updated workspace (i.e. updated added and removed files in the workspace).
+     * <p>
+     * This method is designed to be called after {@link OntoDocManager#registerDocuments(Iterable)} ( or more specifically
+     * {@link OntoDocManager#getAllFile2Model(Path)}) which identifies updated, added and deleted files in the workspace.
+     */
+    public static void updateSHACLFunctionsFromUpdatedWorkspace() {
         log.warn("WORKAROUND -- Applying a workaround to register all SHACL modules ...");
 
         Map ontModleMap = new HashMap();

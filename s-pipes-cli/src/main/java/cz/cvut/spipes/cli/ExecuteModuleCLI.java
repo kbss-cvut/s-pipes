@@ -123,7 +123,7 @@ public class ExecuteModuleCLI {
         // ----- load modules and functions
         log.debug("Loading  scripts ...");
         SPipesScriptManager scriptManager = scriptManager = createSPipesScriptManager();
-        OntoDocManager.registerAllSPINModules();
+        OntoDocManager.updateSHACLFunctionsFromUpdatedWorkspace();
 
         // ----- load input bindings
         VariablesBinding inputVariablesBinding = new VariablesBinding();
