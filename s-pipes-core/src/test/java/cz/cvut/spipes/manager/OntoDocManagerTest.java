@@ -68,7 +68,7 @@ public class OntoDocManagerTest {
      * @throws Exception
      */
     @Test
-    public void testOntoDocManager_registerDocuments_CacheAndItsUpdateBasedOnReloadFilesValue() throws Exception {
+    public void registerDocumentsWithReloadFilesFalseOntologyCacheIsUnchanged_WithReloadFilesTrueOntologyCacheIsCorrectlyUpdated() throws Exception {
         // setup - create 2 ontology files where one is a script and imports the other.
         Workspace ws = build(2, "ontModelsNotReloadedWhenKeepUpdatedIsFalse", onts -> {
             onts.get(0).addImport(onts.get(1));
@@ -157,7 +157,7 @@ public class OntoDocManagerTest {
      * @throws Exception
      */
     @Test
-    public void testOntoDocManager_registerDocuments_CacheAndItsUpdateBasedOnReloadFilesValue_updatingIntermediateImportedModelsImports() throws Exception {
+    public void registerDocuments_CacheAndItsUpdateBasedOnReloadFilesValue_updatingIntermediateImportedModelsImports() throws Exception {
         // setup - create 4 ontologies where o1 is a script and imports o2 and o2 imports o3. o4 is not yet imported.
         Workspace ws = build(4, "updatingIntermediateImportedModelsImports", onts -> {
             onts.get(0).addImport(onts.get(1));
