@@ -1,6 +1,7 @@
 package cz.cvut.spipes.manager;
 
 import cz.cvut.spipes.TestConstants;
+import cz.cvut.spipes.util.SPipesUtil;
 import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.ontology.OntDocumentManager;
@@ -11,13 +12,13 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.util.FileUtils;
 import org.apache.jena.util.LocationMapper;
+import org.apache.jena.util.ResourceUtils;
 import org.apache.jena.vocabulary.OWL2;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -34,6 +35,12 @@ public class OntoDocManagerTest {
 
 
     static Path managerDirPath = TestConstants.TEST_RESOURCES_DIR_PATH.resolve("manager").toAbsolutePath();
+    protected static File managerDir;
+
+    @BeforeAll
+    public static void init() throws URISyntaxException {
+        managerDir = new File(OntoDocManagerTest.class.getClassLoader().getResource("manager").toURI());
+    }
 
     @BeforeEach
     public void setup(){
@@ -228,6 +235,110 @@ public class OntoDocManagerTest {
 
         assertTrue(o1ModelAfterChange.listStatements(o2, OWL2.imports, o3).toList().isEmpty());
         assertFalse(o1ModelAfterChange.contains(o2, OWL2.imports, o3));
+    }
+
+
+    @Test
+    public void registerAllShaclFunctionsUpdatesShaclFunctionsCorrectly() throws Exception {
+        String ontologyIRI = "http://onto.fel.cvut.cz/ontologies/lib/shacl-function";
+        String ontology2IRI = ontologyIRI + "-new";
+
+        String function1IRI = "http://onto.fel.cvut.cz/ontologies/lib/shacl-function/create-sparql-service-url";
+        String function2IRI = "http://onto.fel.cvut.cz/ontologies/lib/shacl-function/construct-full-name";
+        String function3IRI = "http://onto.fel.cvut.cz/ontologies/lib/shacl-function/construct-greeting-message";
+
+        OntModel mFull= ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
+        final String funcDefIs = this.getClass().getResource("/shacl/shacl-function.shacl.ttl").toString();
+        mFull.read(funcDefIs, null, FileUtils.langTurtle);
+        Ontology onto = mFull.getOntology(ontologyIRI);
+
+        OntModel mF1 = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
+        mF1.add(mFull.getBaseModel().listStatements());
+        mF1.setNsPrefixes(mF1.getNsPrefixMap());
+        mF1.remove(mFull.getResource(function2IRI).listProperties());
+        mF1.remove(mFull.getResource(function3IRI).listProperties());
+        ResourceUtils.renameResource(mF1.getOntology(ontologyIRI), ontology2IRI).toString();
+        Ontology onto2 = mF1.getOntology(ontology2IRI);
+
+
+        OntModel mF2 = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
+        mF2.add(mFull.getBaseModel().listStatements());
+        mF2.setNsPrefixes(mFull.getNsPrefixMap());
+        mF2.remove(mFull.getResource(function1IRI).listProperties());
+
+
+
+        File rootDir = makeDir("cache-registerDocumentsUpdatesShaclFunctionsCorrectly");
+
+        OntoDocManager.setReloadFiles(true);
+        OntoDocManager ontoDocManager = (OntoDocManager) OntoDocManager.getInstance();
+
+
+        // VERIFY scenario 1 - no files in workspace, verify there are no non-system functions registered.
+        ontoDocManager.registerDocuments(Arrays.asList(rootDir.toPath()));
+        OntoDocManager.registerAllSPINModules();
+        assertTrue(SPipesUtil.getNonSystemFunctions().isEmpty(), "There are registered non system functions \n %s".formatted(
+                SPipesUtil.getNonSystemFunctions().stream().map("<%s>"::formatted).collect(Collectors.joining("\n"))
+        ));
+
+
+        // VERIFY scenario 2 - update ontology adding three functions, verify the three new functions are registered
+        File f1 = file(rootDir, onto, "");
+        f1.deleteOnExit();
+        write(f1, mFull.getOntology(ontologyIRI));
+        ontoDocManager.registerDocuments(Arrays.asList(rootDir.toPath()));
+        OntoDocManager.registerAllSPINModules();
+        assertEquals(
+                Stream.of(function1IRI, function2IRI, function3IRI).collect(Collectors.toSet()),
+                new HashSet<>(SPipesUtil.getNonSystemFunctions()),
+                "Actually registered functions do no correspond to registered functions"
+        );
+
+        // VERIFY scenario 3 - remove function1 from the ontology, verify that deleted function is no longer registered
+        write(f1, mF2.getOntology(ontologyIRI));
+        ontoDocManager.registerDocuments(Arrays.asList(rootDir.toPath()));
+        OntoDocManager.registerAllSPINModules();
+        assertEquals(
+                Stream.of(function2IRI, function3IRI).collect(Collectors.toSet()),
+                new HashSet<>(SPipesUtil.getNonSystemFunctions()),
+                "Actually registered functions not same as expected registered functions"
+        );
+
+        // VERIFY scenario 4 - add new ontology2 with function 1, verify that there are 3 registered functions
+        File f2 = file(rootDir, onto2, "");
+        write(f2, onto2);
+        ontoDocManager.registerDocuments(Arrays.asList(rootDir.toPath()));
+        OntoDocManager.registerAllSPINModules();
+        assertEquals(
+                Stream.of(function1IRI, function2IRI, function3IRI).collect(Collectors.toSet()),
+                new HashSet<>(SPipesUtil.getNonSystemFunctions()),
+                "Actually registered functions not same as expected registered functions"
+        );
+
+        // VERIFY scenario 5 - delete ontology2 file and move function1 to ontology, verify that there are three registered functions
+        f2.delete();
+        write(f1, mFull.getOntology(ontologyIRI));
+        ontoDocManager.registerDocuments(Arrays.asList(rootDir.toPath()));
+        OntoDocManager.registerAllSPINModules();
+        assertEquals(
+                Stream.of(function1IRI, function2IRI, function3IRI).collect(Collectors.toSet()),
+                new HashSet<>(SPipesUtil.getNonSystemFunctions()),
+                "Actually registered functions not same as expected registered functions"
+        );
+
+        // VERIFY scenario 6 - rename ontology 1 file and remove function 1, verify a that there are two registered functions
+        File renamed_f1 = file(rootDir, onto, "-renamed");
+        renamed_f1.deleteOnExit();
+        boolean renamed = f1.renameTo(renamed_f1);
+        assertTrue(renamed, "Could not rename file");
+        write(f1, mF2.getOntology(ontologyIRI));
+        ontoDocManager.registerDocuments(Arrays.asList(rootDir.toPath()));
+        OntoDocManager.registerAllSPINModules();
+        assertEquals(
+                Stream.of(function2IRI, function3IRI).collect(Collectors.toSet()),
+                new HashSet<>(SPipesUtil.getNonSystemFunctions()),
+                "Actually registered functions not same as expected registered functions"
+        );
     }
 
     @Disabled //TODO does not work in jenkins if project dir contains " "
@@ -480,6 +591,13 @@ public class OntoDocManagerTest {
         return sw.toString();
     }
 
+    private static File makeDir(String dirName) {
+        File rootDir = new File(managerDir, dirName);
+        rootDir.mkdir();
+        rootDir.deleteOnExit();
+        return rootDir;
+    }
+
     private static File file(File dir, Ontology onto, String postFix){
         return new File(dir, onto.getLocalName() + postFix +".ttl");
     }
@@ -513,10 +631,7 @@ public class OntoDocManagerTest {
 
         customizer.accept(onts);
 
-        File managerDir = new File(OntoDocManagerTest.class.getClassLoader().getResource("manager").toURI());
-        File rootDir = new File(managerDir, "cache-"+ dirId);
-        rootDir.mkdir();
-        rootDir.deleteOnExit();
+        File rootDir = makeDir("cache-"+ dirId);
 
         Map<Ontology,File> ont2File = new HashMap<>();
         ont2File.put(onts.get(0), file(rootDir, onts.get(0), ".sms"));
