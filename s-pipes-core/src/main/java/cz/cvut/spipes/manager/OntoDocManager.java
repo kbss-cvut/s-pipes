@@ -178,7 +178,7 @@ public class OntoDocManager implements OntologyDocumentManager {
                      ((OntModel)m).listImportedOntologyURIs(true).stream()
                              .filter(dirtyModels::contains)
                              .findAny()
-                             .ifPresent(i -> ontDocumentManager.getFileManager().removeCacheModel(iri));
+                             .ifPresent(i -> clearCachedModel(iri));
                 } else {
                     // do nothing - assumes that non OntModel models do not have imports.
                 }
