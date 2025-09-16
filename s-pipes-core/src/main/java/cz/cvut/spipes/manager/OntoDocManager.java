@@ -151,10 +151,15 @@ public class OntoDocManager implements OntologyDocumentManager {
         LocationMapper lm  = OntDocumentManager.getInstance().getFileManager().getLocationMapper();
         Iterator<String> altEntries = lm.listAltEntries();
         String pathString = filePath.toString();
+        Set<String> urisToClear =  new HashSet<>();
         while(altEntries.hasNext()){
             String uri = altEntries.next();
             if(!Optional.ofNullable(lm.getAltEntry(uri)).map(s -> s.equals(pathString)).orElse(false))
                 continue;
+            urisToClear.add(uri);
+        }
+        for(String uri : urisToClear) {
+            lm.removeAltEntry(uri);
             clearCachedModel(uri);
         }
     }
