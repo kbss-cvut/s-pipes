@@ -254,6 +254,7 @@ public class OntoDocManager implements OntologyDocumentManager {
     public synchronized static Map<String, Model> getAllFile2Model(Path directoryOrFilePath) {
         Map<String, Model> file2Model = new HashMap<>();
         Set<Path> availableFiles = new HashSet<>();
+        Set<Path> updatePaths = new HashSet<>();
 
         try (Stream<Path> stream = Files.walk(directoryOrFilePath)) {
             stream
@@ -263,25 +264,12 @@ public class OntoDocManager implements OntologyDocumentManager {
                         return isFileNameSupported(fileName);
                     })
                     .forEach(file -> {
-                        availableFiles.add(file.toAbsolutePath());
+                        availableFiles.add(file.toAbsolutePath()); // could contain renamed files which were not modified since the last cache update
                         if (reloadFiles && !wasModified(file)) {
                             log.debug("Skipping unmodified file: {}", file.toUri());
                             return;
                         }
-
-                        clearCachedModel(file);
-                        String lang = FileUtils.guessLang(file.getFileName().toString());
-
-                        log.info("Loading model from {} ...", file.toUri());
-                        Model model = loadModel(file, lang);
-
-                        if (model != null) {
-                            OntoDocManager.addSHACLRelevantModel(file.toAbsolutePath().toString(), model);
-                            file2Model.put(file.toString(), model);
-                            log.debug("Successfully loaded model from {}.", file.toUri());
-                        } else {
-                            log.warn("Failed to load model from {}", file.toUri());
-                        }
+                        updatePaths.add(file); // contains only updated files including renamed updated files
                     });
         } catch (IOException | DirectoryIteratorException e) {
             // IOException can never be thrown by the iteration.
@@ -290,16 +278,37 @@ public class OntoDocManager implements OntologyDocumentManager {
         }
 
         // remove deleted files from cache
-        if(reloadFiles){
-            removedFiles = new HashSet<>();
-            if(managedFiles != null) {
-                removedFiles.addAll(managedFiles);
-                removedFiles.removeAll(availableFiles);
-            }
+        removedFiles = new HashSet<>();
+        if(managedFiles != null) {
+            removedFiles.addAll(managedFiles);
+            removedFiles.removeAll(availableFiles);
+        }
 
-            for(Path removedFile : removedFiles)
-                clearCachedModel(removedFile);
-            managedFiles = availableFiles;
+        for(Path removedFile : removedFiles)
+            clearCachedModel(removedFile);
+        for(Path updatedPath : updatePaths)
+            clearCachedModel(updatedPath);
+
+        // add renamed but not updated files to updatedPaths
+        // TODO - optimize processing renamed but not updated files, e.g. cache should not be cleared as the model did not change. Update path mappings, e.g. ontology iri to path, functions registered under path
+        Set<Path> renamedFiles = new HashSet<>(availableFiles);
+        renamedFiles.removeAll(Optional.ofNullable(managedFiles).orElse(Collections.emptySet()));
+        updatePaths.addAll(renamedFiles);
+        managedFiles = availableFiles;
+
+        // reload new, updated and renamed files
+        for(Path path : updatePaths){
+            String lang = FileUtils.guessLang(path.getFileName().toString());
+
+            log.info("Loading model from {} ...", path.toUri());
+            Model model = loadModel(path, lang);
+            if (model != null) {
+                OntoDocManager.addSHACLRelevantModel(path.toAbsolutePath().toString(), model);
+                file2Model.put(path.toString(), model);
+                log.debug("Successfully loaded model from {}.", path.toUri());
+            } else {
+                log.warn("Failed to load model from {}", path.toUri());
+            }
         }
         return file2Model;
     }
