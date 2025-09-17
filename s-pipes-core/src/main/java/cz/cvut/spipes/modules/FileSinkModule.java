@@ -8,6 +8,8 @@ import cz.cvut.spipes.util.QueryUtils;
 import org.apache.jena.query.*;
 import org.eclipse.rdf4j.common.io.IOUtil;
 import cz.cvut.spipes.spin.model.Select;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,6 +43,8 @@ import java.io.IOException;
         </table>
         """)
 public class FileSinkModule extends AnnotatedAbstractModule {
+
+    private static final Logger log = LoggerFactory.getLogger(FileSinkModule.class);
 
     static final String FILE_NAME_VAR = "fileName"; // 1
     static final String FILE_CONTENT_VAR = "content"; // 2
@@ -91,7 +95,7 @@ The select query to retrieve file names with their related file contents. The qu
                 try {
                     IOUtil.writeString(content, f);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.warn("Cannot not write content to file \"{}\"", f.getPath(), e);
                 }
             }
         }
