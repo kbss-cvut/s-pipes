@@ -267,7 +267,7 @@ public class OntoDocManager implements OntologyDocumentManager {
      * @param directoryOrFilePath File or directory to by searched recursively for models.
      * @return Mapping filePath to model.
      */
-    public synchronized static Map<String, Model> getAllFile2Model(Path directoryOrFilePath) {
+    synchronized static Map<String, Model> getAllFile2Model(Path directoryOrFilePath) {
         Map<String, Model> file2Model = new HashMap<>();
         Set<Path> availableFiles = new HashSet<>();
         Set<Path> updatePaths = new HashSet<>();
@@ -460,12 +460,12 @@ public class OntoDocManager implements OntologyDocumentManager {
         }
     }
 
-
+    // TODO - not used method. Should we delete?
     public static void loadAllBaseIrisFromResourceDir(String resourceDirPath) {
         loadAllBaseIrisFromDir(getPathFromResource(resourceDirPath));
     }
 
-
+    // TODO - not used method. Should we delete?
     public static void loadAllBaseIrisFromDir(Path directoryPath) {
 
         OntDocumentManager dm = OntDocumentManager.getInstance();
