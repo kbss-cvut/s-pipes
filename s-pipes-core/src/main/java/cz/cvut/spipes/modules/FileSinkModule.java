@@ -18,12 +18,14 @@ import java.io.IOException;
         <p>
         <b>Example of usage:</b>
         <p>
-        Consider the <code>FileSinkModule</code> being used in the pipeline of a `hello world` pipeline defined in
-        "<code>$SCRIPT_PATH$/</code>hello-world.sms.ttl". With the configuration described below, execution of
-        `execute-greeting` function would create a file at "<code>$SCRIPT_PATH$/</code>target/greeting.html" with the
-        content "<code>&lthtml&gt&ltbody&gt&lth1&gtHello world&lth1&gt&lt/body&gt&lt/html&gt</code>"
+        Consider an extension of the `hello world` pipeline defined in
+        "<code>$SCRIPT_PATH$/</code>hello-world.sms.ttl" where the <code>FileSinkModule</code> is inserted between
+        modules <code>construct-greeting</code> and <code>express-greeting_Return</code> with configuration as shown below.
+        When executed, the `execute-greeting` function would create a file at
+        "<code>$SCRIPT_PATH$/</code>target/greeting.html" with the content
+        "<code>&lthtml&gt&ltbody&gt&lth1&gtHello world&lth1&gt&lt/body&gt&lt/html&gt</code>"
         <p>
-        Configuration:
+        FileSinkModule Configuration:
         
         <table>
         <style></style>
@@ -58,7 +60,7 @@ public class FileSinkModule extends AnnotatedAbstractModule {
             <ul>
             <br/><br/>
             `scriptDirectory` is the containing directory of the script file, i.e. the file defining the executed
-            function or single module identified by the value of the `_pId` variable in the variable bindings in the 
+            function or single module identified by the value of the `_pId` variable in the variable bindings in the
             execution contexts.
             """)
     private String outputDirectory;
