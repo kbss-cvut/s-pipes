@@ -70,6 +70,8 @@ public class OntoDocManagerTest {
      * <ol>
      * <li> Verify that if an ontology file and its import are changed, cached models of the ontology and its import
      * are properly updated.
+     * <li> Verify that if an ontology file is renamed, a logically identical model to the one from the renamed file is
+     * in the cache and ontology iri is mapped to the renamed file path.
      * <li> Verify that if an imported ontology file is changed, its cached model is properly updated.
      * </ol>
      * </ol>
@@ -129,7 +131,34 @@ public class OntoDocManagerTest {
 
         assertChanged(o2ImportedBeforeChange, o2ImportedAfterChange, "o2Imported");
 
-        // VERIFY scenario 2.2 - cached model o1 is reloaded if it is not changed directly when its import o2's file is
+        // VERIFY scenario 2.2 - cached model o1 is logically equivalent, ontology iri is mapped to the renamed file path
+        File fo1Renamed = file(rootDir, o1, "-renamed.sms");
+        fo1Renamed.deleteOnExit();
+        File fo1 = ws.ont2File.get(o1);
+
+        boolean renamed = fo1.renameTo(fo1Renamed);
+        assertTrue(renamed, "Could not rename file \"%s\" -> \"%s\"".formatted(fo1.getPath(), fo1Renamed.getPath()));
+        OntModel o1CachedBeforeRename = ontoDocManager.getOntology(o1.getURI());
+
+        ontoDocManager.registerDocuments(Arrays.asList(rootDir.toPath()));
+
+        OntModel o1CachedAfterRename = ontoDocManager.getOntology(o1.getURI());
+        assertNotNull(
+                o1CachedAfterRename,
+                "Cache is missing model for <%s> after renaming file \"%s\" -> \"%s\" and reloading cache."
+                        .formatted(o1.getURI(), fo1.getPath(), fo1Renamed.getPath())
+        );
+        assertTrue(
+                o1CachedBeforeRename.difference(o1CachedAfterRename).isEmpty(),
+                () -> "Model cached under iri <%s> is different after renaming file \"%s\" -> \"%s\" and reloading cache. Difference is: \n%s"
+                        .formatted(o1.getURI(), fo1.getPath(), fo1Renamed.getPath(), difference(o1CachedBeforeRename, o1CachedAfterRename, "o1"))
+        );
+
+        String mappedFile = ontoDocManager.getOntDocumentManager().getFileManager().getLocationMapper().getAltEntry(o1.getURI());
+        assertEquals(fo1Renamed.getPath(), mappedFile, "IRI <%s> is mapped to the wrong file.");
+
+
+        // VERIFY scenario 2.3 - cached model o1 is reloaded if it is not changed directly when its import o2's file is
         // changed, and reloadFiles is true
         o1ModelBeforeChange = o1ModelAfterChange;
         o2ImportedBeforeChange = o2ImportedAfterChange;
@@ -331,8 +360,8 @@ public class OntoDocManagerTest {
         File renamed_f1 = file(rootDir, onto, "-renamed");
         renamed_f1.deleteOnExit();
         boolean renamed = f1.renameTo(renamed_f1);
-        assertTrue(renamed, "Could not rename file");
-        write(f1, mF2.getOntology(ontologyIRI));
+        assertTrue(renamed, "Could not rename file \"%s\" -> \"%s\"".formatted(f1.getPath(), renamed_f1.getPath()));
+        write(renamed_f1, mF2.getOntology(ontologyIRI));
         ontoDocManager.registerDocuments(Arrays.asList(rootDir.toPath()));
         OntoDocManager.updateSHACLFunctionsFromUpdatedWorkspace();
         assertEquals(
