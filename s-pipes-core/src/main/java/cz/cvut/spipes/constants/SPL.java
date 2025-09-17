@@ -12,10 +12,10 @@ public class SPL {
      */
     private static final String uri = "http://spinrdf.org/spl#";
 
-    protected static final Resource resource(String local )
+    protected static Resource resource(String local)
     { return ResourceFactory.createResource( uri + local ); }
 
-    protected static final Property property(String local )
+    protected static Property property(String local)
     { return ResourceFactory.createProperty( uri, local ); }
 
     public static final Resource tarql = resource("Argument");

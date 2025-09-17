@@ -20,13 +20,13 @@ import org.jetbrains.annotations.NotNull;
  */
 public class JenaResourceRegistry implements  ResourceRegistry {
 
-    Map<String, Set<String>> local2fullNamesMap = new HashMap<>();
-    Map<String, Set<String>> fullName2ContextsMap = new HashMap<>();
-    Map<String, Map<String, String>> context2PrefixMappingMap = new HashMap<>();
+    final Map<String, Set<String>> local2fullNamesMap = new HashMap<>();
+    final Map<String, Set<String>> fullName2ContextsMap = new HashMap<>();
+    final Map<String, Map<String, String>> context2PrefixMappingMap = new HashMap<>();
 
     public JenaResourceRegistry(List<Resource> resourceList) {
 
-        resourceList.stream()
+        resourceList
                 .forEach(res -> {
                     String resUri = res.getURI();
                     String localName = res.getLocalName();
@@ -53,6 +53,7 @@ public class JenaResourceRegistry implements  ResourceRegistry {
         return Collections.unmodifiableSet(context2PrefixMappingMap.keySet());
     }
 
+    @NotNull
     @Override
     public Set<String> getContexts(String entityId) {
 

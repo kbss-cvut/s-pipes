@@ -4,9 +4,9 @@ import cz.cvut.spipes.engine.PipelineFactory;
 import org.apache.jena.ontology.OntModel;
 
 /**
- * This is helper class to write tests that load configuration of modules from ttl file
+ * This is a helper class to write tests that load configuration of modules from ttl file
  * that is organized in directory `test/resources/module/${moduleName}/`.
- *
+ * <p>
  * See more information in {@link AbstractModuleTestHelper}.
  */
 public abstract class AbstractCoreModuleTestHelper extends AbstractModuleTestHelper {

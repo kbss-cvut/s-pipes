@@ -124,5 +124,5 @@ public abstract class AnnotatedAbstractModule extends AbstractModule {
      */
     public void loadManualConfiguration(){
         // Default implementation: no manual configuration
-    };
+    }
 }

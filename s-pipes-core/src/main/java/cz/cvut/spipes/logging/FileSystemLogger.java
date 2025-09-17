@@ -1,6 +1,8 @@
 package cz.cvut.spipes.logging;
 
 import cz.cvut.spipes.util.TempFileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,11 +12,14 @@ class FileSystemLogger {
 
     private static Path root;
 
+    private static final Logger log =
+            LoggerFactory.getLogger(FileSystemLogger.class);
+
     static {
         try {
             root = Files.createTempDirectory(TempFileUtils.createTimestampFileName("-s-pipes-log-"));
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 

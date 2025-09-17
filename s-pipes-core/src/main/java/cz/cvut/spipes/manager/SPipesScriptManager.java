@@ -22,10 +22,10 @@ import java.util.Set;
 
 /**
  * Registers resources to contexts.
- *
+ * <p>
  * resource -> location
  * alternative id -> location
- *
+ * <p>
  * TODO resource registry
  *
  */
@@ -52,7 +52,7 @@ public class SPipesScriptManager {
     }
 
     public void reloadScripts(Collection<String> globalScript) {
-        this.globalScripts = new HashSet<String>(globalScript);
+        this.globalScripts = new HashSet<>(globalScript);
         registerAll(ontoDocManager, this.globalScripts);
     }
 
@@ -98,7 +98,7 @@ public class SPipesScriptManager {
     }
 
 
-    //TODO !!!! shold not be implemented here
+    //TODO !!!! should not be implemented here
     private Resource getReturnModule(Resource functionResource) {
         return JenaPipelineUtils.getAllFunctionsWithReturnModules(functionResource.getModel()).get(functionResource);
     }

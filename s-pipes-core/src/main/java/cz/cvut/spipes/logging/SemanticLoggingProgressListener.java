@@ -106,7 +106,7 @@ public class SemanticLoggingProgressListener implements ProgressListener {
                     }
                     writer.endRDF();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.error(e.getMessage());
                 }
                 entityManagerMap.remove(em);
                 em.close();
@@ -181,7 +181,7 @@ public class SemanticLoggingProgressListener implements ProgressListener {
     }
 
     private String saveModelToFile(Path dir, String fileName, Model model) {
-        File file = null;
+        File file;
         try {
             file =
                 Files.createFile(dir.resolve(TempFileUtils.createTimestampFileName(fileName))).toFile();

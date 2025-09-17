@@ -32,8 +32,6 @@ import java.util.stream.Stream;
 
 //import static cz.cvut.spipes.manager.OntologyDocumentManagerImpl.isFileNameSupported;
 
-/**
- */
 //  TODO
 //        JenaUtil.addTransitiveSubjects()
 //        JenaUtil.getAllInstances(cls)
@@ -49,8 +47,8 @@ import java.util.stream.Stream;
 //            OntDocumentManager.getInstance().addModel(uri, model);
 
 /**
- * manages mapping file --> ontology IRI
- * caches the files
+ * manages a mapping file --> ontology IRI
+ * caches files
  * manages prefixes
  **/
 public class OntoDocManager implements OntologyDocumentManager {
@@ -63,9 +61,9 @@ public class OntoDocManager implements OntologyDocumentManager {
     private static Model allLoadedFilesModel = ModelFactory.createDefaultModel();
 
 
-    OntDocumentManager ontDocumentManager;
+    final OntDocumentManager ontDocumentManager;
     static OntoDocManager sInstance;
-    static String[] SUPPORTED_FILE_EXTENSIONS = {"n3", "nt", "ttl", "rdf", "owl"}; //TODO json-ld
+    static final String[] SUPPORTED_FILE_EXTENSIONS = {"n3", "nt", "ttl", "rdf", "owl"}; //TODO json-ld
 
 
     private OntoDocManager() {
@@ -76,7 +74,7 @@ public class OntoDocManager implements OntologyDocumentManager {
     OntoDocManager(OntDocumentManager ontDocumentManager) {
         this.ontDocumentManager = ontDocumentManager;
         ontDocumentManager.setReadFailureHandler(new OntologyReadFailureHandler());
-        ontDocumentManager.setFileManager(FileManager.get());
+        ontDocumentManager.setFileManager(FileManager.getInternal());
         if (! CompatibilityConfig.isLoadSparqlMotionFiles()) {
             SparqlMotionUtils.SM_ONTOLOGIES.forEach(
                 ontDocumentManager::addIgnoreImport
@@ -110,10 +108,7 @@ public class OntoDocManager implements OntologyDocumentManager {
         Map<String, String> file2baseIRI = getAllBaseIris(directoryOrFilePath);
 
         // load it to document manager
-        file2baseIRI.entrySet().forEach(e -> {
-                    ontDocumentManager.addAltEntry(e.getKey(), e.getValue());
-                }
-        );
+        file2baseIRI.forEach(ontDocumentManager::addAltEntry);
     }
 
     @Override
@@ -166,7 +161,7 @@ public class OntoDocManager implements OntologyDocumentManager {
             attr = Files.readAttributes(fileName, BasicFileAttributes.class);
             return attr.lastModifiedTime().toInstant().isAfter(lastTime);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return false;
     }
@@ -175,7 +170,7 @@ public class OntoDocManager implements OntologyDocumentManager {
      * Returns mapping filePath --> model for all files recursively defined by <code>directoryOrFilePath</code>.
      * If <code>this.reloadFiles=true</code>, it ignores files that are older than <code>this.lastTime</code>.
      *
-     * @param directoryOrFilePath File or directory to by searched recursively for models.
+     * @param directoryOrFilePath File or directory to be searched recursively for models.
      * @return Mapping filePath to model.
      */
     public static Map<String, Model> getAllFile2Model(Path directoryOrFilePath) {
@@ -243,21 +238,19 @@ public class OntoDocManager implements OntologyDocumentManager {
      * BaseUri is uri of the ontology defined in the model loaded from the file.
      * If <code>this.reloadFiles=true</code>, it ignores files that are older than <code>this.lastTime</code>.
      *
-     * @param directoryOrFilePath File or directory to by searched recursively for models.
+     * @param directoryOrFilePath File or directory to be searched recursively for models.
      * @return Mapping filePath to baseURI.
      */
     static Map<String, String> getAllBaseIris(Path directoryOrFilePath) {
 
         Map<String, String> baseUri2file = new HashMap<>();
 
-        getAllFile2Model(directoryOrFilePath).entrySet().forEach(e -> {
-            String file = e.getKey();
-            Model model = e.getValue();
+        getAllFile2Model(directoryOrFilePath).forEach((file, model) -> {
 
             String baseURI = JenaUtils.getBaseUri(model);
 
             if (baseURI == null) {
-                log.info("Ignoring file \"" + file + "\" as it does not contain baseURI.");
+                log.info("Ignoring file \"{}\" as it does not contain baseURI.", file);
                 return;
             }
             baseUri2file.put(baseURI, file);
@@ -284,7 +277,7 @@ public class OntoDocManager implements OntologyDocumentManager {
         OntModel ontModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
 
         OntDocumentManager dm = OntDocumentManager.getInstance();
-        dm.setFileManager(FileManager.get());
+        dm.setFileManager(FileManager.getInternal());
 
         dm.addIgnoreImport("http://onto.fel.cvut.cz/ontologies/aviation/eccairs-form-static-0.2");
         //LocationMapper lm= FileManager.get().getLocationMapper();
@@ -333,7 +326,7 @@ public class OntoDocManager implements OntologyDocumentManager {
     public static Path getPathFromResource(String resourcePath) {
         //TODO toto nefunguje
         try {
-            return Paths.get(OntoDocManager.class.getResource(resourcePath).toURI());
+            return Paths.get(Objects.requireNonNull(OntoDocManager.class.getResource(resourcePath)).toURI());
         } catch (URISyntaxException e) {
             throw new RuntimeException("Could not resolve path " + resourcePath + " in resources : ", e);
         }
@@ -348,12 +341,10 @@ public class OntoDocManager implements OntologyDocumentManager {
     public static void loadAllBaseIrisFromDir(Path directoryPath) {
 
         OntDocumentManager dm = OntDocumentManager.getInstance();
-        dm.setFileManager(FileManager.get());
-        LocationMapper lm = FileManager.get().getLocationMapper();
+        dm.setFileManager(FileManager.getInternal());
+        LocationMapper lm = FileManager.getInternal().getLocationMapper();
 
-        getAllFile2Model(directoryPath).entrySet().forEach(e -> {
-            Model model = e.getValue();
-            String file = e.getKey();
+        getAllFile2Model(directoryPath).forEach((file, model) -> {
 
             String baseURI = model.listResourcesWithProperty(RDF.type, OWL.Ontology).nextResource().toString();
 
@@ -394,7 +385,7 @@ public class OntoDocManager implements OntologyDocumentManager {
         SPipesUtil.resetFunctions(model);
         clearSPINRelevantModel();
     }
-    class OntologyReadFailureHandler implements OntDocumentManager.ReadFailureHandler {
+    static class OntologyReadFailureHandler implements OntDocumentManager.ReadFailureHandler {
         @Override
         public void handleFailedRead(String url, Model model, Exception e) {
 

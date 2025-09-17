@@ -17,7 +17,7 @@ public class VariableBindingUtils {
      * Returns new variables binding from provided variables binding restricted to listed variables.
      * @param variablesBinding Variables binding from which values are copied.
      * @param varNames Names of variables that should be copied to the new binding.
-     * @throws IllegalStateException If the provided variables binding does not contain a variable with the given name.
+     * @throws IllegalStateException If the provided variables binding do not contain a variable with the given name.
      * @return new variables binding
      */
     public static VariablesBinding restrict(VariablesBinding variablesBinding, String... varNames) {
@@ -37,7 +37,7 @@ public class VariableBindingUtils {
      * If the bindings contain conflicting values for the same variable, a warning is logged.
      *
      * @param targetVariablesBinding Binding being extended.
-     * @param extendingVariablesBindingURL Url from which binding is loaded and used to extend the target binding.
+     * @param extendingVariablesBindingURL Url, from which binding is loaded and used to extend the target binding.
      * @throws IOException If the binding cannot be loaded from the provided URL.
      */
     public static void extendBindingFromURL(VariablesBinding targetVariablesBinding, URL extendingVariablesBindingURL) throws IOException {

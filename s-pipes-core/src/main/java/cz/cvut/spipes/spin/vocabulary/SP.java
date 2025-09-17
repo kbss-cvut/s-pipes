@@ -15,10 +15,7 @@ import cz.cvut.spipes.util.JenaUtils;
 import org.apache.jena.enhanced.BuiltinPersonalities;
 import org.apache.jena.enhanced.Personality;
 import org.apache.jena.rdf.model.*;
-import org.apache.jena.util.FileUtils;
 import org.topbraid.shacl.model.SHFactory;
-
-import java.io.InputStream;
 
 /**
  * Derived from org.topbraid.shacl 1.0.1

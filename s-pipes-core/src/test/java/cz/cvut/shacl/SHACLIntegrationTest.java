@@ -12,11 +12,6 @@ import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.engine.binding.BindingBuilder;
-import org.apache.jena.sparql.expr.Expr;
-import org.apache.jena.sparql.expr.NodeValue;
-import org.apache.jena.sparql.function.FunctionEnv;
-import org.apache.jena.sparql.function.FunctionEnvBase;
-import org.apache.jena.sparql.util.ExprUtils;
 import org.apache.jena.util.FileUtils;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
@@ -57,17 +52,17 @@ public class SHACLIntegrationTest {
 
         Query query = QueryFactory.create(queryString);
 
-        QueryExecution qexec = QueryExecutionFactory.create(query, model);
-        ResultSet results = qexec.execSelect();
+        try (QueryExecution qexec = QueryExecutionFactory.create(query, model)) {
+            ResultSet results = qexec.execSelect();
 
-        assertTrue(results.hasNext(), "No results found");
+            assertTrue(results.hasNext(), "No results found");
 
-        QuerySolution soln = results.nextSolution();
-        assertEquals(
-            soln.getResource("sparqlServiceUrl").getURI(),
-            constructServiceUrl(repositoryUrl, graphId)
-        );
-
+            QuerySolution soln = results.nextSolution();
+            assertEquals(
+                    soln.getResource("sparqlServiceUrl").getURI(),
+                    constructServiceUrl(repositoryUrl, graphId)
+            );
+        }
     }
 
     @Test
