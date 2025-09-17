@@ -329,7 +329,6 @@ public class OntoDocManager implements OntologyDocumentManager {
         return file2Model;
     }
 
-    // TODO remove this method !!!
     private static void addSHACLRelevantModel(String fileName, Model model) {
         String baseURI = JenaUtils.getBaseUri(model);
 
@@ -524,6 +523,7 @@ public class OntoDocManager implements OntologyDocumentManager {
         SPipesUtil.resetFunctions(ontModleMap, removedFiles);
         clearShaclRelevantModel();
     }
+
     class OntologyReadFailureHandler implements OntDocumentManager.ReadFailureHandler {
         @Override
         public void handleFailedRead(String url, Model model, Exception e) {
