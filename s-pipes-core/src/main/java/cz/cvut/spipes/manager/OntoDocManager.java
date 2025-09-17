@@ -18,10 +18,8 @@ import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.DirectoryIteratorException;
 import java.nio.file.Files;
@@ -413,5 +411,62 @@ public class OntoDocManager implements OntologyDocumentManager {
 
     public static void setReloadFiles(boolean reloadFiles) {
         OntoDocManager.reloadFiles = reloadFiles;
+    }
+
+    /**
+     * Returns a list of files within one or more locations with prefix in scriptPaths corresponding to the <code>uriStr</code>.
+     * Searching for files associated with <code>uriStr</code> is done in the following order:
+     *
+     * <ol>
+     * <li/> <code>uriStr</code> is in LocationMapper of OntDocumentManager - found mapped file is returned if exists in the file system.
+     * <li/> <code>uriStr</code> is an absolute file uri - return if it exists in the file system.
+     * <li/> <code>uriStr</code> is a relative path - return files with <code>path = root + uriStr</code>
+     * where <code>root</code> is in <code>scriptPaths</code> and the file exists in the file system.
+     * </ol>
+     *
+     * @param uriStr ontology uri, file uri or relative path
+     * @param scriptPaths root paths to search for relative paths in. This is typically ContextsConfig.getScriptPaths()
+     * @return List of files mapped to the uriStr
+     */
+    public static List<File> getScriptFiles(String uriStr, List<String> scriptPaths) {
+        //1. Handle uriStr is an ontology iri
+        // TODO - make it work with prefixed uris
+
+        String path = OntDocumentManager.getInstance().doAltURLMapping(uriStr);
+        Optional<File> f = Optional.ofNullable(path).map(File::new).filter(File::exists);
+        if (f.isPresent())
+            return Arrays.asList(f.get());
+
+        //2. handle case where uriStr is a file uri
+        URI uri = URI.create(path);
+
+        if(uri.getScheme() != null && !uri.getScheme().equalsIgnoreCase("file") )
+            return Collections.EMPTY_LIST;
+
+
+        if(uri.getScheme() == null) {
+            if(!uriStr.startsWith("[^/]") && !uriStr.matches("^[a-zA-Z]+:.*$")) {
+                // search if relative uriStr is in any of the scriptPaths,
+                // relative uri is one without a scheme starting with "./", "../" or path component.
+                return scriptPaths.stream()
+                        .distinct()
+                        .map(p -> cannonicalFile(p, uriStr))
+                        .distinct()
+                        .filter(File::exists).toList();
+            }
+
+            // absolute path
+            return Stream.of(new File(uriStr)).filter(File::exists).toList();
+        }
+        return Stream.of(new File(uri)).filter(File::exists).toList();
+    }
+
+    private static File cannonicalFile(String root, String relPath){
+        String normalizedRoot = root.replaceFirst("([^/\\\\])$", "$1/");
+        try{
+            return new File(normalizedRoot, relPath).getCanonicalFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

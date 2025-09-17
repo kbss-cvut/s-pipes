@@ -29,9 +29,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 import static cz.cvut.spipes.manager.factory.ContextLoaderHelper.isKeepUpdated;
@@ -201,7 +204,8 @@ public class SPipesServiceController {
 
         File outputBindingPath = extractOutputBindingPath(parameters);
         Model configModel = extractConfigurationModel(parameters);
-        ExecutionContext inputExecutionContext = extractInputExecutionContext(inputDataModel, parameters);
+        ExecutionContext inputExecutionContext = extractInputExecutionContext(
+                inputDataModel, parameters, ExecutionContextFactory::createFunctionContext);
 
         ExecutionEngine engine = createExecutionEngine(configModel);
 
@@ -228,14 +232,16 @@ public class SPipesServiceController {
         String id = extractId(parameters);
 
         File outputBindingPath = extractOutputBindingPath(parameters);
+        ExecutionContext inputExecutionContext = extractInputExecutionContext(inputDataModel, parameters,
+                (m, b) -> ExecutionContextFactory.createModuleContext(m, b, ReservedParams.P_CONFIG_URL));
+
         Model configModel = extractConfigurationModel(parameters);
-        ExecutionContext inputExecutionContext = extractInputExecutionContext(inputDataModel, parameters);
 
         ExecutionEngine engine = createExecutionEngine(configModel);
         ContextLoaderHelper.updateContextsIfNecessary(scriptManager);
         Module module = null;
         if (isKeepUpdated()) {
-            module = scriptManager.loadModule(id, null, null);
+            module = scriptManager.loadModule(id, null, inputExecutionContext.getScriptUri());
         } else {
             module = PipelineFactory.loadModule(configModel.createResource(id));
         }
@@ -252,7 +258,9 @@ public class SPipesServiceController {
         return outputExecutionContext.getDefaultModel();
     }
 
-    private ExecutionContext extractInputExecutionContext(final Model inputDataModel, final MultiValueMap<String, String> parameters) {
+    private ExecutionContext extractInputExecutionContext(final Model inputDataModel,
+                                                          final MultiValueMap<String, String> parameters,
+                                                          BiFunction<Model, VariablesBinding, ExecutionContext> executionContextFactory) {
         ServiceParametersHelper paramHelper = new ServiceParametersHelper(parameters);
 
         // FILE WHERE TO GET INPUT GRAPH
@@ -287,7 +295,7 @@ public class SPipesServiceController {
             .map(url -> JenaUtils.createUnion(inputDataModel, loadModelFromUrl(url.toString())))
             .orElse(inputDataModel);
 
-        return ExecutionContextFactory.createContext(unionModel, inputVariablesBinding);
+        return executionContextFactory.apply(unionModel, inputVariablesBinding);
     }
 
     private File extractOutputBindingPath(final MultiValueMap<String, String> parameters) {

@@ -12,6 +12,7 @@ import cz.cvut.spipes.spin.model.Ask;
 import cz.cvut.spipes.spin.model.Construct;
 import cz.cvut.spipes.spin.model.SPINFactory;
 import cz.cvut.spipes.spin.model.Select;
+import cz.cvut.spipes.manager.factory.ScriptManagerFactory;
 import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.QueryUtils;
 import cz.cvut.spipes.util.SPINUtils;
