@@ -420,6 +420,12 @@ public class OntoDocManager implements OntologyDocumentManager {
         }
     }
 
+    /**
+     * Reads model directly from file bypassing cache.
+     * @param path
+     * @param lang
+     * @return
+     */
     public static Model loadModel(Path path, String lang) {
         try {
             return ModelFactory.createDefaultModel().read(new FileInputStream(path.toFile()), null, lang);
