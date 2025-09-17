@@ -28,6 +28,7 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Instant;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 //import static cz.cvut.spipes.manager.OntologyDocumentManagerImpl.isFileNameSupported;
@@ -220,6 +221,21 @@ public class OntoDocManager implements OntologyDocumentManager {
     public void reset() {
         getOntDocumentManager().reset();
         clearCache(ONT_MODEL_SPEC);
+        resetIriToManagedFileMappings(getOntDocumentManager());
+    }
+
+    private static void resetIriToManagedFileMappings(OntDocumentManager ontDocumentManager){
+        if(managedFiles == null)
+            return;
+        Set<String> managedPaths = managedFiles.stream().map(p -> p.toString()).collect(Collectors.toSet());
+        Map<String, String> mappedPaths = new HashMap<>();
+        LocationMapper lm = ontDocumentManager.getFileManager().getLocationMapper();
+        ontDocumentManager.getFileManager().getLocationMapper().listAltEntries()
+                .forEachRemaining(i -> mappedPaths.put(lm.getAltEntry(i), i));
+
+        mappedPaths.entrySet().stream()
+                .filter(e -> managedPaths.contains(e.getKey()))
+                .forEach(e -> lm.removeAltEntry(e.getValue()));
     }
 
     public OntDocumentManager getOntDocumentManager() {
