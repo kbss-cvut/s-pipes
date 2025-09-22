@@ -306,7 +306,7 @@ public class OntoDocManagerTest {
 
         // VERIFY scenario 1 - no files in workspace, verify there are no non-system functions registered.
         ontoDocManager.registerDocuments(Arrays.asList(rootDir.toPath()));
-        OntoDocManager.updateSHACLFunctionsFromUpdatedWorkspace();
+
         assertTrue(SPipesUtil.getNonSystemFunctions().isEmpty(), "There are registered non system functions \n %s".formatted(
                 SPipesUtil.getNonSystemFunctions().stream().map("<%s>"::formatted).collect(Collectors.joining("\n"))
         ));
@@ -317,7 +317,6 @@ public class OntoDocManagerTest {
         f1.deleteOnExit();
         write(f1, mFull.getOntology(ontologyIRI));
         ontoDocManager.registerDocuments(Arrays.asList(rootDir.toPath()));
-        OntoDocManager.updateSHACLFunctionsFromUpdatedWorkspace();
         assertEquals(
                 Stream.of(function1IRI, function2IRI, function3IRI).collect(Collectors.toSet()),
                 new HashSet<>(SPipesUtil.getNonSystemFunctions()),
@@ -327,7 +326,6 @@ public class OntoDocManagerTest {
         // VERIFY scenario 3 - remove function1 from the ontology, verify that deleted function is no longer registered
         write(f1, mF2.getOntology(ontologyIRI));
         ontoDocManager.registerDocuments(Arrays.asList(rootDir.toPath()));
-        OntoDocManager.updateSHACLFunctionsFromUpdatedWorkspace();
         assertEquals(
                 Stream.of(function2IRI, function3IRI).collect(Collectors.toSet()),
                 new HashSet<>(SPipesUtil.getNonSystemFunctions()),
@@ -338,7 +336,6 @@ public class OntoDocManagerTest {
         File f2 = file(rootDir, onto2, "");
         write(f2, onto2);
         ontoDocManager.registerDocuments(Arrays.asList(rootDir.toPath()));
-        OntoDocManager.updateSHACLFunctionsFromUpdatedWorkspace();
         assertEquals(
                 Stream.of(function1IRI, function2IRI, function3IRI).collect(Collectors.toSet()),
                 new HashSet<>(SPipesUtil.getNonSystemFunctions()),
@@ -349,7 +346,6 @@ public class OntoDocManagerTest {
         f2.delete();
         write(f1, mFull.getOntology(ontologyIRI));
         ontoDocManager.registerDocuments(Arrays.asList(rootDir.toPath()));
-        OntoDocManager.updateSHACLFunctionsFromUpdatedWorkspace();
         assertEquals(
                 Stream.of(function1IRI, function2IRI, function3IRI).collect(Collectors.toSet()),
                 new HashSet<>(SPipesUtil.getNonSystemFunctions()),
@@ -363,7 +359,6 @@ public class OntoDocManagerTest {
         assertTrue(renamed, "Could not rename file \"%s\" -> \"%s\"".formatted(f1.getPath(), renamed_f1.getPath()));
         write(renamed_f1, mF2.getOntology(ontologyIRI));
         ontoDocManager.registerDocuments(Arrays.asList(rootDir.toPath()));
-        OntoDocManager.updateSHACLFunctionsFromUpdatedWorkspace();
         assertEquals(
                 Stream.of(function2IRI, function3IRI).collect(Collectors.toSet()),
                 new HashSet<>(SPipesUtil.getNonSystemFunctions()),

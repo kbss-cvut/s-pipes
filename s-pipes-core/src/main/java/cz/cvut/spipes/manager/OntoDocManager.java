@@ -516,25 +516,24 @@ public class OntoDocManager implements OntologyDocumentManager {
     }
 
     /**
-     * Updates registered shacl functions (i.e., functions which can be used in sparql queries spipes modules and shacl
+     * Updates registered SHACL functions (i.e., functions which can be used in sparql queries SPipes modules and shacl
      * functions) based updated workspace (i.e. updated added and removed files in the workspace).
      * <p>
-     * This method is designed to be called after {@link OntoDocManager#registerDocuments(Iterable)} ( or more specifically
-     * {@link OntoDocManager#getAllFile2Model(Path)}) which identifies updated, added and deleted files in the workspace.
+     * This method at the end of the processing of {@link OntoDocManager#registerDocuments(Iterable)} when updated, added
+     * and deleted files in the workspace are identified.
      */
-    public static void updateSHACLFunctionsFromUpdatedWorkspace() {
+    static void updateSHACLFunctionsFromUpdatedWorkspace(Map<String, Model> file2Model, Set<Path> removedFiles) {
         log.warn("WORKAROUND -- Applying a workaround to register all SHACL modules ...");
 
         Map ontModleMap = new HashMap();
 
-        allChangedFiles.forEach((p,m) -> ontModleMap.put(
+        file2Model.forEach((p,m) -> ontModleMap.put(
                 p,
                 !(m instanceof OntModel)
                         ? ModelFactory.createOntologyModel(ONT_MODEL_SPEC, m)
                         : m
         ));
         SPipesUtil.resetFunctions(ontModleMap, removedFiles);
-        clearShaclRelevantModel();
     }
 
     class OntologyReadFailureHandler implements OntDocumentManager.ReadFailureHandler {

@@ -47,8 +47,6 @@ public class SPipesScriptManager {
 
         pipelineFunctionRegistry = new JenaResourceRegistry(pipelineFunctions);
         moduleRegistry = new JenaResourceRegistry(modules);
-
-        OntoDocManager.updateSHACLFunctionsFromUpdatedWorkspace();
     }
 
     public void reloadScripts(Collection<String> globalScript) {
