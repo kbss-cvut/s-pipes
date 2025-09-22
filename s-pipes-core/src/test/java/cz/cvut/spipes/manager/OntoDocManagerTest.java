@@ -385,7 +385,7 @@ public class OntoDocManagerTest {
 
             assertEquals(0, getLocationMapperEntriesCount(ontoDocManager));
 
-            ontoDocManager.registerDocuments(managerDirPath.resolve("supported-formats").resolve("loading-test." + ext));
+            ontoDocManager.registerDocuments(Arrays.asList(managerDirPath.resolve("supported-formats").resolve("loading-test." + ext)));
             OntModel model = ontoDocManager.getOntDocumentManager().getOntology(
                   "http://onto.fel.cvut.cz/ontologies/test/loading-test",
                   OntModelSpec.OWL_MEM);
@@ -402,7 +402,7 @@ public class OntoDocManagerTest {
 
         OntologyDocumentManager ontoDocManager = OntoDocManager.getInstance();
 
-        ontoDocManager.registerDocuments(managerDirPath.resolve("import-closure"));
+        ontoDocManager.registerDocuments(Arrays.asList(managerDirPath.resolve("import-closure")));
 
         OntModel model = ontoDocManager.getOntDocumentManager().getOntology("http://onto.fel.cvut.cz/ontologies/test/loading-test", OntModelSpec.OWL_MEM);
 

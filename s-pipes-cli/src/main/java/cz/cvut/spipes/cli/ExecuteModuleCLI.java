@@ -287,9 +287,7 @@ public class ExecuteModuleCLI {
 
     // TODO merge with same method from ContextLoaderHelper !!!!!!!
     public static List<String> registerGlobalScripts(OntologyDocumentManager ontDocManager, List<Path> scriptPaths) {
-        scriptPaths.forEach(
-                ontDocManager::registerDocuments
-        );
+        ontDocManager.registerDocuments(scriptPaths);
 
         LocationMapper locMapper = ontDocManager.getOntDocumentManager().getFileManager().getLocationMapper();
 

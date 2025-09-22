@@ -102,8 +102,7 @@ public class OntoDocManager implements OntologyDocumentManager {
         return Arrays.asList(SUPPORTED_FILE_EXTENSIONS);
     }
 
-    @Override
-    public void registerDocuments(Path directoryOrFilePath) {
+    protected void registerDocuments(Path directoryOrFilePath) {
 
         if (Files.isDirectory(directoryOrFilePath) && Files.isSymbolicLink(directoryOrFilePath)) {
             log.error("Cannot register documents from directory {}. Directories that are symbolic links " +
@@ -121,6 +120,14 @@ public class OntoDocManager implements OntologyDocumentManager {
         );
     }
 
+    /**
+     * Replaces any previous ontology IRI to file mappings, cached models and loaded SHACL functions with the ones
+     * discovered by recursively searching the path entries in the argument <code>fileOrDirectoryPath</code> for files
+     * with supported file extensions, see {@link OntoDocManager#getSupportedFileExtensions()}. If {@link OntoDocManager#reloadFiles}
+     * is true only removed, updated and new paths are processed, otherwise all paths are processed.
+     *
+     * @param fileOrDirectoryPath File or directory path to register. If directory, it is recursively crawled.
+     */
     @Override
     public void registerDocuments(Iterable<Path> fileOrDirectoryPath) {
         fileOrDirectoryPath.forEach(
