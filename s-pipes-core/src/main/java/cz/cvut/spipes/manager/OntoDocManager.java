@@ -347,10 +347,6 @@ public class OntoDocManager implements OntologyDocumentManager {
             removedFiles.removeAll(availableFiles);
         }
 
-        clearCachedModel(removedFiles, updatePaths);
-
-        clearOntModelsImportingDirtyModel(ontDocumentManager);
-
         // add renamed but not updated files to updatedPaths
         // TODO - optimize processing renamed but not updated files, e.g. cache should not be cleared as the model did not change. Update path mappings, e.g. ontology iri to path, functions registered under path
         Set<Path> newOrRenamedFiles = new HashSet<>(availableFiles);
@@ -360,8 +356,10 @@ public class OntoDocManager implements OntologyDocumentManager {
         Set<Path> updatedNewOrRenamedPaths = new HashSet<>(updatePaths);
         updatedNewOrRenamedPaths.addAll(newOrRenamedFiles);
         // reload new, updated and renamed files
-
         Map<String, Model> file2Model = loadModels(updatedNewOrRenamedPaths);
+
+        clearCachedModel(removedFiles, updatePaths);
+        clearOntModelsImportingDirtyModel(ontDocumentManager);
 
         // get all baseIRIs
         Map<String, String> file2baseIRI = getAllBaseIris(file2Model);
@@ -378,18 +376,23 @@ public class OntoDocManager implements OntologyDocumentManager {
         OntoDocManager.updateSHACLFunctionsFromUpdatedWorkspace(file2Model, removedFiles);
     }
 
+    /**
+     *
+     * @param modelPaths
+     * @return a file to model map, contains only entries where the model could be loaded from the file path.
+     */
     private static Map<String, Model> loadModels(Set<Path> modelPaths){
         Map<String, Model> file2Model = new HashMap<>();
         for(Path path : modelPaths){
             String lang = FileUtils.guessLang(path.getFileName().toString());
 
             log.info("Loading model from {} ...", path.toUri());
-            Model model = loadModel(path, lang);
-            if (model != null) {
-                file2Model.put(path.toString(), model);
+            try{
+                Model model = loadModel(path, lang);
                 log.debug("Successfully loaded model from {}.", path.toUri());
-            } else {
-                log.warn("Failed to load model from {}", path.toUri());
+                file2Model.put(path.toString(), model);
+            }catch (Exception e){
+                log.warn("Failed to load model from {}", path.toUri(), e);
             }
         }
         return file2Model;
