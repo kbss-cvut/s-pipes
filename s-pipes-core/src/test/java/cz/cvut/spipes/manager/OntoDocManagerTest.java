@@ -100,7 +100,7 @@ public class OntoDocManagerTest {
         ws.addUpdate(o2, triple(o2, RDFS.comment, "o2 changed"));
 
 
-        // When reloadFiles is false this method is called only during initialization
+        // When keepUpdated is false this method is called only during initialization
 //        ontoDocManager.registerDocuments(Arrays.asList(rootDir.toPath()));
 
         OntModel o1ModelAfterChange = ontoDocManager.getOntology(o1.getURI());

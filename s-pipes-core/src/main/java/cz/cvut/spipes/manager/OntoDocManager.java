@@ -31,10 +31,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-//import static cz.cvut.spipes.manager.OntologyDocumentManagerImpl.isFileNameSupported;
-
-/**
- */
 //  TODO
 //        JenaUtil.addTransitiveSubjects()
 //        JenaUtil.getAllInstances(cls)
@@ -53,6 +49,29 @@ import java.util.stream.Stream;
  * manages mapping file --> ontology IRI
  * caches the files
  * manages prefixes
+ *
+ * This implementation of {@link OntologyDocumentManager} is based on jena's {@link OntDocumentManager} which supports
+ * model caching and IRI to file mapping.
+ * <p/>
+ * {@link OntoDocManager#registerDocuments(Iterable)} resets the ontology IRI to file path mapping to ontology IRIs
+ * discovered in file paths walking dirs and files in Iterable argument. <code>getOntology</code> and <code>getModel</code>
+ * methods will return models read from filesystem only if the IRI was found as an ontology IRI in one of the files
+ * found in one of the root paths/files in the iterable argument of last call to {@link OntoDocManager#registerDocuments(Iterable)}.
+ *
+ * <p/>
+ * If {@link OntoDocManager#reloadFiles} is false
+ * all file paths are processed, e.g., files are scanned for ontology IRIs and mapped to file paths.
+ *
+ * <p/>
+ * If {@link OntoDocManager#reloadFiles} is true, <code>getOntology</code> and <code>getModel</code> caches returned
+ * models. {@link OntoDocManager#registerDocuments(Iterable)} cache and IRI to file path is updated only for removed,
+ * updated and new file.
+ *
+ * <p/>
+ *
+ * This implementation also maintains loaded SHACL functions.
+ *
+ *
  **/
 public class OntoDocManager implements OntologyDocumentManager {
 
@@ -60,9 +79,12 @@ public class OntoDocManager implements OntologyDocumentManager {
     private static Instant lastTime = Instant.now();
     private static boolean reloadFiles = false;
 
-    private static Map<String, Model> allChangedFiles = new HashMap<>();
-    private static Set<Path> removedFiles = new HashSet<>();
     private static Set<Path> managedFiles;
+
+    private static Set<Path> availableFiles;
+    private static Set<Path> updatePaths;
+
+    private static Set<String> dirtyModels;
 
 
     OntDocumentManager ontDocumentManager;
@@ -70,11 +92,9 @@ public class OntoDocManager implements OntologyDocumentManager {
     static String[] SUPPORTED_FILE_EXTENSIONS = {"n3", "nt", "ttl", "rdf", "owl"}; //TODO json-ld
 
     public static OntModelSpec ONT_MODEL_SPEC = OntModelSpec.OWL_MEM;
-    public static Set<String> dirtyModels = new HashSet<>();
 
     private OntoDocManager() {
         this(new OntDocumentManager());
-        clearShaclRelevantModel();
     }
 
     OntoDocManager(OntDocumentManager ontDocumentManager) {
@@ -110,14 +130,7 @@ public class OntoDocManager implements OntologyDocumentManager {
             throw new IllegalArgumentException("Symbolic link directories in 'scripts.contextPaths' variable are not supported: " + directoryOrFilePath);
         }
 
-        // get all baseIRIs
-        Map<String, String> file2baseIRI = getAllBaseIris(directoryOrFilePath);
-
-        // load it to document manager
-        file2baseIRI.entrySet().forEach(e -> {
-                    ontDocumentManager.addAltEntry(e.getKey(), e.getValue());
-                }
-        );
+        findAvailableAndUpdatedPaths(directoryOrFilePath);
     }
 
     /**
@@ -130,10 +143,17 @@ public class OntoDocManager implements OntologyDocumentManager {
      */
     @Override
     public void registerDocuments(Iterable<Path> fileOrDirectoryPath) {
+        availableFiles = new HashSet<>();
+        updatePaths = new HashSet<>();
+        dirtyModels = new HashSet<>();
+
         fileOrDirectoryPath.forEach(
                 this::registerDocuments
         );
-        clearOntModelsImportingDirtyModel();
+
+        resetCache(managedFiles, availableFiles, updatePaths);
+
+        managedFiles = availableFiles;
         lastTime = Instant.now();
     }
 
@@ -149,30 +169,53 @@ public class OntoDocManager implements OntologyDocumentManager {
         return ontDocumentManager.getOntology(uri, ONT_MODEL_SPEC);
     }
 
+    
     /**
+     * Extracts file2iri map from LocationManager associated with the {@link OntDocumentManager}
+     * @return
+     */
+    protected static Map<String,String> file2iri(){
+        LocationMapper lm  = OntDocumentManager.getInstance().getFileManager().getLocationMapper();
+        Map<String, String> file2iri = new HashMap<>();
+        Iterator<String> altEntries = lm.listAltEntries();
+        while(altEntries.hasNext()) {
+            String uri = altEntries.next();
+            String file = lm.getAltEntry(uri);
+            if(file == null) {
+                log.warn("Iri <{}> is without file mapping or mapped to null", uri);
+                continue;
+            }
+            String oldUri = file2iri.put(file, uri);
+            if(oldUri != null && !oldUri.equals(uri))  
+                log.warn("Multiple URIs, e.g. <{}> and <{}>, are mapped to the same file\"{}\". Considering only mapping of uri <{}>", oldUri, uri, file, uri);
+            
+        }
+        return file2iri;
+    }
+
+    /**
+     * For each file path in the <code>filePath</code> argument, clears cached models and iri to file path mappings in the OntDocumentManager.
+     * <p>
      * Cache is implemented by OntDocumentManager.getInstance().getFileManager(). Additionally, jena may store models in
      * OntModelSpec.OWL_MEM.getBaseModelMaker and OntModelSpec.OWL_MEM.getImportModelMaker. Specifically, the
      * ImportModelMaker stores imports and it is necessary to clear.
-     * @param filePath
+     * @param filePaths
      */
-    protected static void clearCachedModel(Path filePath){
+    protected static void clearCachedModel(Collection<Path> ... filePaths){
+        Map<String, String> file2iri = file2iri();
         LocationMapper lm  = OntDocumentManager.getInstance().getFileManager().getLocationMapper();
-        Iterator<String> altEntries = lm.listAltEntries();
-        String pathString = filePath.toString();
-        Set<String> urisToClear =  new HashSet<>();
-        while(altEntries.hasNext()){
-            String uri = altEntries.next();
-            if(!Optional.ofNullable(lm.getAltEntry(uri)).map(s -> s.equals(pathString)).orElse(false))
-                continue;
-            urisToClear.add(uri);
-        }
-        for(String uri : urisToClear) {
-            lm.removeAltEntry(uri);
-            clearCachedModel(uri);
+
+        for(Path filePath : Arrays.stream(filePaths).sequential().flatMap(Collection::stream).toList()){
+            String pathString = filePath.toString();
+            String uriToClear = Optional.ofNullable(file2iri.get(pathString)).orElse(null);
+            if(uriToClear != null) {
+                lm.removeAltEntry(uriToClear);
+                clearCachedModel(uriToClear);
+            }
         }
     }
 
-    protected void clearOntModelsImportingDirtyModel(){
+    protected static void clearOntModelsImportingDirtyModel(OntDocumentManager ontDocumentManager){
         Iterator<String> iriIter = ontDocumentManager.getFileManager().getLocationMapper().listAltEntries();
         Stack<String> iris = new Stack<>();
         iriIter.forEachRemaining(iris::push);
@@ -235,10 +278,8 @@ public class OntoDocManager implements OntologyDocumentManager {
         if(managedFiles == null)
             return;
         Set<String> managedPaths = managedFiles.stream().map(p -> p.toString()).collect(Collectors.toSet());
-        Map<String, String> mappedPaths = new HashMap<>();
+        Map<String, String> mappedPaths = file2iri();
         LocationMapper lm = ontDocumentManager.getFileManager().getLocationMapper();
-        ontDocumentManager.getFileManager().getLocationMapper().listAltEntries()
-                .forEachRemaining(i -> mappedPaths.put(lm.getAltEntry(i), i));
 
         mappedPaths.entrySet().stream()
                 .filter(e -> managedPaths.contains(e.getKey()))
@@ -274,19 +315,14 @@ public class OntoDocManager implements OntologyDocumentManager {
      * @param directoryOrFilePath File or directory to by searched recursively for models.
      * @return Mapping filePath to model.
      */
-    synchronized static Map<String, Model> getAllFile2Model(Path directoryOrFilePath) {
-        Map<String, Model> file2Model = new HashMap<>();
-        Set<Path> availableFiles = new HashSet<>();
-        Set<Path> updatePaths = new HashSet<>();
-
+    synchronized static void findAvailableAndUpdatedPaths(Path directoryOrFilePath) {
         try (Stream<Path> stream = Files.walk(directoryOrFilePath)) {
             stream
                     .filter(Files::isRegularFile)
                     .filter(f -> {
                         String fileName = f.getFileName().toString();
                         return isFileNameSupported(fileName);
-                    })
-                    .forEach(file -> {
+                    })                    .forEach(file -> {
                         availableFiles.add(file.toAbsolutePath()); // could contain renamed files which were not modified since the last cache update
                         if (reloadFiles && !wasModified(file)) {
                             log.debug("Skipping unmodified file: {}", file.toUri());
@@ -294,39 +330,62 @@ public class OntoDocManager implements OntologyDocumentManager {
                         }
                         updatePaths.add(file); // contains only updated files including renamed updated files
                     });
+
         } catch (IOException | DirectoryIteratorException e) {
             // IOException can never be thrown by the iteration.
             // In this snippet, it can only be thrown by newDirectoryStream.
             log.error("Could not load ontologies from directory {} -- {} .", directoryOrFilePath, e);
         }
+    }
 
+    static void resetCache(Set<Path> managedFiles, Set<Path> availableFiles, Set<Path> updatePaths){
+        OntDocumentManager ontDocumentManager = OntoDocManager.getInstance().getOntDocumentManager();
+        Set<Path> removedFiles = new HashSet<>();
         // remove deleted files from cache
-        removedFiles = new HashSet<>();
         if(managedFiles != null) {
             removedFiles.addAll(managedFiles);
             removedFiles.removeAll(availableFiles);
         }
 
-        for(Path removedFile : removedFiles)
-            clearCachedModel(removedFile);
-        for(Path updatedPath : updatePaths)
-            clearCachedModel(updatedPath);
+        clearCachedModel(removedFiles, updatePaths);
+
+        clearOntModelsImportingDirtyModel(ontDocumentManager);
 
         // add renamed but not updated files to updatedPaths
         // TODO - optimize processing renamed but not updated files, e.g. cache should not be cleared as the model did not change. Update path mappings, e.g. ontology iri to path, functions registered under path
-        Set<Path> renamedFiles = new HashSet<>(availableFiles);
-        renamedFiles.removeAll(Optional.ofNullable(managedFiles).orElse(Collections.emptySet()));
-        updatePaths.addAll(renamedFiles);
-        managedFiles = availableFiles;
+        Set<Path> newOrRenamedFiles = new HashSet<>(availableFiles);
+        newOrRenamedFiles.removeAll(Optional.ofNullable(managedFiles).orElse(Collections.emptySet()));
 
+
+        Set<Path> updatedNewOrRenamedPaths = new HashSet<>(updatePaths);
+        updatedNewOrRenamedPaths.addAll(newOrRenamedFiles);
         // reload new, updated and renamed files
-        for(Path path : updatePaths){
+
+        Map<String, Model> file2Model = loadModels(updatedNewOrRenamedPaths);
+
+        // get all baseIRIs
+        Map<String, String> file2baseIRI = getAllBaseIris(file2Model);
+
+
+        // load it to document manager
+        file2baseIRI.entrySet().forEach(e -> {
+            ontDocumentManager.addAltEntry(e.getKey(), e.getValue());
+            }
+        );
+
+        // TODO - move this method and call. For example, implement event listener SPipesUtils which will listen for
+        //  reset events.
+        OntoDocManager.updateSHACLFunctionsFromUpdatedWorkspace(file2Model, removedFiles);
+    }
+
+    private static Map<String, Model> loadModels(Set<Path> modelPaths){
+        Map<String, Model> file2Model = new HashMap<>();
+        for(Path path : modelPaths){
             String lang = FileUtils.guessLang(path.getFileName().toString());
 
             log.info("Loading model from {} ...", path.toUri());
             Model model = loadModel(path, lang);
             if (model != null) {
-                OntoDocManager.addSHACLRelevantModel(path.toAbsolutePath().toString(), model);
                 file2Model.put(path.toString(), model);
                 log.debug("Successfully loaded model from {}.", path.toUri());
             } else {
@@ -336,43 +395,18 @@ public class OntoDocManager implements OntologyDocumentManager {
         return file2Model;
     }
 
-    private static void addSHACLRelevantModel(String fileName, Model model) {
-        String baseURI = JenaUtils.getBaseUri(model);
-
-        if (baseURI != null) {
-//            if (baseURI.contains("spin")
-//                    || baseURI.contains("w3.org")
-//                    || baseURI.contains("topbraid")
-//                    || baseURI.contains("ontologies.lib")
-//                    || baseURI.contains("function")
-//                    || baseURI.contains("lib")
-//                    ) {
-            //LOG.debug("Adding library ... " + baseURI);
-//                if (fileName.endsWith("spin-function.spin.ttl")) {
-            allChangedFiles.put(fileName, model);
-//                }
-//            }
-        }
-    }
-
-    private static void clearShaclRelevantModel() {
-        allChangedFiles.clear();
-        removedFiles.clear();
-    }
 
     /**
-     * Returns mapping filePath --> baseUri for all files recursively defined by <code>directoryOrFilePath</code>.
+     * Returns mapping filePath --> baseUri for all (file, model) pairs in the <code>file2Model</code> input argument
      * BaseUri is uri of the ontology defined in the model loaded from the file.
      * If <code>this.reloadFiles=true</code>, it ignores files that are older than <code>this.lastTime</code>.
      *
-     * @param directoryOrFilePath File or directory to by searched recursively for models.
+     * @param file2Model File to model map
      * @return Mapping filePath to baseURI.
      */
-    static Map<String, String> getAllBaseIris(Path directoryOrFilePath) {
-
+    static Map<String, String> getAllBaseIris(Map<String, Model> file2Model) {
         Map<String, String> baseUri2file = new HashMap<>();
-
-        getAllFile2Model(directoryOrFilePath).entrySet().forEach(e -> {
+        file2Model.entrySet().forEach(e -> {
             String file = e.getKey();
             Model model = e.getValue();
 
@@ -383,7 +417,6 @@ public class OntoDocManager implements OntologyDocumentManager {
                 return;
             }
             baseUri2file.put(baseURI, file);
-
         });
 
         return baseUri2file;
@@ -466,42 +499,6 @@ public class OntoDocManager implements OntologyDocumentManager {
             throw new RuntimeException("Could not resolve path " + resourcePath + " in resources : ", e);
         }
     }
-
-    // TODO - not used method. Should we delete?
-    public static void loadAllBaseIrisFromResourceDir(String resourceDirPath) {
-        loadAllBaseIrisFromDir(getPathFromResource(resourceDirPath));
-    }
-
-    // TODO - not used method. Should we delete?
-    public static void loadAllBaseIrisFromDir(Path directoryPath) {
-
-        OntDocumentManager dm = OntDocumentManager.getInstance();
-        dm.setFileManager(FileManager.get());
-        LocationMapper lm = FileManager.get().getLocationMapper();
-
-        getAllFile2Model(directoryPath).entrySet().forEach(e -> {
-            Model model = e.getValue();
-            String file = e.getKey();
-
-            String baseURI = model.listResourcesWithProperty(RDF.type, OWL.Ontology).nextResource().toString();
-
-            dm.getFileManager().addCacheModel(baseURI, model);
-
-        });
-
-//        getAllBaseIris(directoryPath).entrySet().stream().forEach(
-//                e -> {
-//                    String baseUri = e.getKey();
-//                    String filePath = e.getValue();
-//
-//                    LOG.info("Loading mapping {} -> {}.", baseUri, filePath);
-//                    lm.addAltPrefix(baseUri, filePath);
-//                }
-//        );
-//
-//        dm.getFileManager().setLocationMapper(lm);
-    }
-
 
     public static FileManager getFileManager() {
         return OntDocumentManager.getInstance().getFileManager();
