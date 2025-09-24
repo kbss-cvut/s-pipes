@@ -204,13 +204,13 @@ public class SPipesServiceController {
 
         File outputBindingPath = extractOutputBindingPath(parameters);
         Model configModel = extractConfigurationModel(parameters);
+        ContextLoaderHelper.updateContextsIfNecessary(scriptManager);
         ExecutionContext inputExecutionContext = extractInputExecutionContext(
                 inputDataModel, parameters, ExecutionContextFactory::createFunctionContext);
 
         ExecutionEngine engine = createExecutionEngine(configModel);
 
         // EXECUTE PIPELINE
-        ContextLoaderHelper.updateContextsIfNecessary(scriptManager);
         Module module = scriptManager.loadFunction(id);
 
         if (module == null) {
@@ -232,13 +232,13 @@ public class SPipesServiceController {
         String id = extractId(parameters);
 
         File outputBindingPath = extractOutputBindingPath(parameters);
+        ContextLoaderHelper.updateContextsIfNecessary(scriptManager);
         ExecutionContext inputExecutionContext = extractInputExecutionContext(inputDataModel, parameters,
                 (m, b) -> ExecutionContextFactory.createModuleContext(m, b, ReservedParams.P_CONFIG_URL));
 
         Model configModel = extractConfigurationModel(parameters);
 
         ExecutionEngine engine = createExecutionEngine(configModel);
-        ContextLoaderHelper.updateContextsIfNecessary(scriptManager);
         Module module = null;
         if (isKeepUpdated()) {
             module = scriptManager.loadModule(id, null, inputExecutionContext.getScriptUri());
