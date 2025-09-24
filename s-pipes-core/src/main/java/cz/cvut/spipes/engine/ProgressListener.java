@@ -16,7 +16,7 @@ public interface ProgressListener {
      *
      * @param pipelineExecutionId execution id of the pipeline
      */
-    void pipelineExecutionStarted(long pipelineExecutionId);
+    void pipelineExecutionStarted(long pipelineExecutionId, final String functionName, final String scriptPath, final String script);
 
     /**
      * Triggers when execution of a pipeline finishes.
@@ -24,6 +24,8 @@ public interface ProgressListener {
      * @param pipelineExecutionId execution id of the pipeline
      */
     void pipelineExecutionFinished(long pipelineExecutionId);
+
+    void pipelineExecutionFailed(long pipelineExecutionId);
 
     /**
      * Triggers when execution of a module within a pipeline starts.
