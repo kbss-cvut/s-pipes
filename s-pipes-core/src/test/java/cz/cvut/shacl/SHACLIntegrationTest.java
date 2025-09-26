@@ -12,24 +12,36 @@ import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.engine.binding.BindingBuilder;
-import org.apache.jena.sparql.expr.Expr;
-import org.apache.jena.sparql.expr.NodeValue;
-import org.apache.jena.sparql.function.FunctionEnv;
-import org.apache.jena.sparql.function.FunctionEnvBase;
-import org.apache.jena.sparql.util.ExprUtils;
 import org.apache.jena.util.FileUtils;
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.topbraid.shacl.arq.SHACLFunctions;
 
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SHACLIntegrationTest {
+
+    private static final String SHACL_RDF_FUNCTION_MODEL_FILE = "/shacl/shacl-function.shacl.ttl";
+
+    @BeforeAll
+    public static void init(){
+        SPipesUtil.init();
+    }
+
+    @AfterEach
+    public void cleanUp(){
+        SPipesUtil.resetFunctions();
+    }
 
     @Test
     public void executeCustomSHACLRDFFunctionWithinQuery() {
@@ -37,7 +49,7 @@ public class SHACLIntegrationTest {
         Model funcDefModel = getCustomSHACLRDFFunctionModel();
 
         // register custom function
-        SHACLFunctions.registerFunctions(funcDefModel);
+        registerFunctions(funcDefModel);
 
         String repositoryUrl = "http://repository.org";
         String graphId = "http://graphid.org";
@@ -71,12 +83,50 @@ public class SHACLIntegrationTest {
     }
 
     @Test
+    public void loadAndExecuteShaclFunctionWithPrefix(){
+        // load custom function definition from RDF
+        Model funcDefModel = getCustomSHACLRDFFunctionModel();
+
+        // register custom function
+        SHACLFunctions.registerFunctions(funcDefModel);
+
+        String firstName = "John";
+        String lastName = "Smith";
+
+        String queryString = String.format("""
+            PREFIX kbss-shaclf: <http://onto.fel.cvut.cz/ontologies/lib/shacl-function/>
+            SELECT ?greetingMessage
+            WHERE {
+            BIND(kbss-shaclf:construct-greeting-message(
+                "%s",
+                "%s"
+            ) AS ?greetingMessage)
+            }
+        """, firstName, lastName);
+
+        Model model = ModelFactory.createDefaultModel();
+
+        Query query = QueryFactory.create(queryString);
+
+        QueryExecution qexec = QueryExecutionFactory.create(query, model);
+        ResultSet results = qexec.execSelect();
+
+        assertTrue(results.hasNext(), "No results found");
+
+        QuerySolution soln = results.nextSolution();
+        assertEquals(
+                soln.getLiteral("greetingMessage").getString(),
+                constructGreetingMessage(firstName, lastName)
+        );
+    }
+
+    @Test
     public void executeExpressionWithCustomSHACLRDFFunction()  {
         // load custom function definition from RDF
         Model funcDefModel = getCustomSHACLRDFFunctionModel();
 
         // register custom function
-        SPipesUtil.resetFunctions(funcDefModel);
+        registerFunctions(funcDefModel);
 
         // load custom function call
         Model funcCallModel = ModelFactory.createDefaultModel();
@@ -103,13 +153,20 @@ public class SHACLIntegrationTest {
         assertEquals(nodeValue.asNode().toString(), constructServiceUrl(repositoryUrl, graphId));
     }
 
+    private void registerFunctions(Model functionModel){
+        Map<String, Model> changeMap = new HashMap<>();
+        changeMap.put(SHACL_RDF_FUNCTION_MODEL_FILE, functionModel);
+        // register custom function
+        SPipesUtil.resetFunctions(changeMap, Collections.EMPTY_SET);
+    }
+
     @NotNull
     private Model getCustomSHACLRDFFunctionModel() {
         // load custom function definition
         Model funcDefModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
         // Model funcDefModel = ModelFactory.createDefaultModel(); // TODO this does not work
 
-        final InputStream funcDefIs = this.getClass().getResourceAsStream("/shacl/shacl-function.shacl.ttl");
+        final InputStream funcDefIs = this.getClass().getResourceAsStream(SHACL_RDF_FUNCTION_MODEL_FILE);
 
         funcDefModel.read(funcDefIs, null, FileUtils.langTurtle);
 
@@ -119,5 +176,10 @@ public class SHACLIntegrationTest {
     @NotNull
     private String constructServiceUrl(String repositoryUrl, String graphId) {
         return String.format("%s?default-graph-uri=%s", repositoryUrl, URLEncoder.encode(graphId, StandardCharsets.UTF_8));
+    }
+
+    @NotNull
+    private String constructGreetingMessage(String firstName, String lastName) {
+        return String.format("Hello %s %s!", firstName, lastName);
     }
 }

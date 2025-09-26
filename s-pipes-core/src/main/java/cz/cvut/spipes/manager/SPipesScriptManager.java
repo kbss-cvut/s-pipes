@@ -47,8 +47,6 @@ public class SPipesScriptManager {
 
         pipelineFunctionRegistry = new JenaResourceRegistry(pipelineFunctions);
         moduleRegistry = new JenaResourceRegistry(modules);
-
-        OntoDocManager.registerAllSPINModules();
     }
 
     public void reloadScripts(Collection<String> globalScript) {

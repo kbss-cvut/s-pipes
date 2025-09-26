@@ -18,13 +18,11 @@ public interface OntologyDocumentManager {
     List<String> getSupportedFileExtensions();
 
     /**
-     * Registers ontology documents from a file system path.
-     * If directory is provided, it is recursively crawled for files with supported file extensions.
-     * Supported file extensions are returned by <code>getSupportedFileExtensions()</code>.
+     * Registers path entries in the <code>fileOrDirectoryPath</code> as places where to look for ontology documents by
+     * ontology IRIs.
      *
      * @param fileOrDirectoryPath File or directory path to register. If directory, it is recursively crawled.
      */
-    void registerDocuments(Path fileOrDirectoryPath);
     void registerDocuments(Iterable<Path> fileOrDirectoryPath);
 
 

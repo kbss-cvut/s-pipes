@@ -122,8 +122,7 @@ public class ExecuteModuleCLI {
 
         // ----- load modules and functions
         log.debug("Loading  scripts ...");
-        SPipesScriptManager scriptManager = scriptManager = createSPipesScriptManager();
-        OntoDocManager.registerAllSPINModules();
+        SPipesScriptManager scriptManager = createSPipesScriptManager();
 
         // ----- load input bindings
         VariablesBinding inputVariablesBinding = new VariablesBinding();
@@ -287,9 +286,7 @@ public class ExecuteModuleCLI {
 
     // TODO merge with same method from ContextLoaderHelper !!!!!!!
     public static List<String> registerGlobalScripts(OntologyDocumentManager ontDocManager, List<Path> scriptPaths) {
-        scriptPaths.forEach(
-                ontDocManager::registerDocuments
-        );
+        ontDocManager.registerDocuments(scriptPaths);
 
         LocationMapper locMapper = ontDocManager.getOntDocumentManager().getFileManager().getLocationMapper();
 
