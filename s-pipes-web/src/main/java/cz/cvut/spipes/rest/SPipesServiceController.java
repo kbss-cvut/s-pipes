@@ -212,6 +212,12 @@ public class SPipesServiceController {
 
         // EXECUTE PIPELINE
         Module module = scriptManager.loadFunction(id);
+        module.setFunctionName(id);
+
+        String scriptPath = extractScriptPath(parameters);
+        if (scriptPath != null) {
+            module.setScriptPath(scriptPath);
+        }
 
         if (module == null) {
             throw new SPipesServiceException("Cannot load return module for a function with id=" + id);
@@ -247,6 +253,11 @@ public class SPipesServiceController {
         }
         if (module == null) {
             throw new SPipesServiceException("Cannot load module with id=" + id);
+        }
+
+        String scriptPath = extractScriptPath(parameters);
+        if (scriptPath != null) {
+            module.setScriptPath(scriptPath);
         }
         ExecutionContext outputExecutionContext = engine.executePipeline(module, inputExecutionContext);
 
@@ -329,6 +340,16 @@ public class SPipesServiceController {
         logParam(ReservedParams.P_ID, id);
 
         return id;
+    }
+
+    private String extractScriptPath(final MultiValueMap<String, String> parameters) {
+        if (parameters.containsKey("_pScriptPath")) {
+            List<String> values = parameters.get("_pScriptPath");
+            if (values != null && !values.isEmpty()) {
+                return values.get(0);
+            }
+        }
+        return null;
     }
 
     private Model extractConfigurationModel(final MultiValueMap<String, String> parameters) {
