@@ -5,10 +5,17 @@ import cz.cvut.spipes.function.spif.ParseDate;
 import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.graph.NodeFactory;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.LiteralRequiredException;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.sparql.expr.NodeValue;
+import org.apache.jena.sparql.function.FunctionRegistry;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -201,6 +208,39 @@ public class ParseDateTest {
                 LiteralRequiredException.class,
                 () -> parseDate.exec(text, pattern, null)
         );
+    }
+
+    @Test
+    public void execCalledWithTwoArguments_() {
+        ParseDate parseDate = new ParseDate();
+        NodeValue text = createLiteral("1/19/2016");
+        NodeValue pattern = createLiteral("M/d/yyyy");
+
+        NodeValue expectedDate = getDateNode("2016-01-19");
+        NodeValue actualDate = parseDate.exec(Arrays.asList(text, pattern));
+        assertEquals(expectedDate, actualDate);
+    }
+
+    @Test
+    public void execCalledWithNullInSparqlQuery() {
+//        PipelineFactory.getModuleTypes(); // register all ARQ functions and module types on classpath
+
+        // simple registration of ParseDate function
+        ParseDate parseDate = new ParseDate();
+        FunctionRegistry.get().put(parseDate.getTypeURI(), ParseDate.class);
+
+        String queryString = """
+                PREFIX spif: <http://spinrdf.org/spif#>
+                SELECT (spif:parseDate("1/19/2016", "M/d/yyyy") as ?date) {}
+                """;
+        Model model = ModelFactory.createDefaultModel();
+
+        Literal expectedDate = model.createTypedLiteral("2016-01-19", XSDDatatype.XSDdate);
+        Literal actualValue;
+        try (QueryExecution qe = QueryExecutionFactory.create(queryString, model)) {
+            actualValue = qe.execSelect().next().getLiteral("date");
+        }
+        assertEquals(expectedDate, actualValue);
     }
 
 
