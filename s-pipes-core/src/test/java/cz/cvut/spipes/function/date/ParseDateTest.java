@@ -222,10 +222,8 @@ public class ParseDateTest {
     }
 
     @Test
-    public void execCalledWithNullInSparqlQuery() {
-//        PipelineFactory.getModuleTypes(); // register all ARQ functions and module types on classpath
-
-        // simple registration of ParseDate function
+    public void execReturnsDateWhenCalledWithTwoArgumentsInSparqlQuery() {
+        // register of ParseDate function
         ParseDate parseDate = new ParseDate();
         FunctionRegistry.get().put(parseDate.getTypeURI(), ParseDate.class);
 
