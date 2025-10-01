@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ParseDateTest {
 
     @Test
-    public void execReturnsDate_ItalianLocale() {
+    public void execReturnsDateWhenLocaleIsItalian() {
         ParseDate parseDate = new ParseDate();
 
         NodeValue text = createLiteral("02/11/21");
@@ -35,7 +35,7 @@ public class ParseDateTest {
     }
 
     @Test
-    public void execReturnsDate_EnglishLocale() {
+    public void execReturnsDateWhenPatternLanguageIsEnglish() {
         ParseDate parseDate = new ParseDate();
         NodeValue text = createLiteral("9/21/10");
         NodeValue pattern = createLiteral("M/dd/yy");
@@ -47,7 +47,7 @@ public class ParseDateTest {
     }
 
     @Test
-    public void execReturnsDate_FrenchLocale() {
+    public void execReturnsDateWhenPatternLanguageIsFrench() {
         ParseDate parseDate = new ParseDate();
         NodeValue text = createLiteral("19/12/2016");
         NodeValue pattern = createLiteral("dd/MM/yyyy");
@@ -59,7 +59,7 @@ public class ParseDateTest {
     }
 
     @Test
-    public void execReturnsTime_WithSeconds() {
+    public void execReturnsTimeWhenPatternWithSeconds() {
         ParseDate parseDate = new ParseDate();
         NodeValue text = createLiteral("09:10:10");
         NodeValue pattern = createLiteral("HH:m:s");
@@ -70,7 +70,7 @@ public class ParseDateTest {
     }
 
     @Test
-    public void execReturnsTime_WithoutSeconds() {
+    public void execReturnsTimeWhenPatternWithoutSeconds() {
         ParseDate parseDate = new ParseDate();
         NodeValue text = createLiteral("23:59");
         NodeValue pattern = createLiteral("HH:m");
@@ -82,7 +82,7 @@ public class ParseDateTest {
     }
 
     @Test
-    public void execReturnsTime_OnlyHours() {
+    public void execReturnsTimeWhenPatternInOnlyHours() {
         ParseDate parseDate = new ParseDate();
         NodeValue text = createLiteral("15");
         NodeValue pattern = createLiteral("HH");
@@ -95,7 +95,7 @@ public class ParseDateTest {
 
 
     @Test
-    public void execReturnsDateTime_FrenchLocale() {
+    public void execReturnsDateTimeWhenPatternLanguageIsFrench() {
         ParseDate parseDate = new ParseDate();
         NodeValue text = createLiteral("19/12/2016 12:08:56");
         NodeValue pattern = createLiteral("dd/MM/yyyy HH:mm:ss");
@@ -108,7 +108,7 @@ public class ParseDateTest {
     }
 
     @Test
-    public void execReturnsDateTime_complexPattern() {
+    public void execReturnsDateTimeWhenPatternIsComplex() {
         ParseDate parseDate = new ParseDate();
         NodeValue text = createLiteral("2001.07.04 at 12:08:56 PDT");
         NodeValue pattern = createLiteral("yyyy.MM.dd 'at' HH:mm:ss z");
@@ -120,7 +120,7 @@ public class ParseDateTest {
     }
 
     @Test
-    public void execReturnsDateTime_nullPatternLanguage() {
+    public void execReturnsDateTimeWhenPatternLanguageIsNull() {
         ParseDate parseDate = new ParseDate();
         NodeValue text = createLiteral("2022.01.01 23:59:59");
         NodeValue pattern = createLiteral("yyyy.MM.dd HH:mm:ss");
@@ -132,7 +132,7 @@ public class ParseDateTest {
     }
 
     @Test
-    public void execReturnsTime_afterMidnight() {
+    public void execReturnsTimeWhenTextIsAfterMidnight() {
         ParseDate parseDate = new ParseDate();
         NodeValue text = createLiteral("00:35");
         NodeValue pattern = createLiteral("HH:mm");
@@ -145,7 +145,7 @@ public class ParseDateTest {
 
 
     @Test
-    public void execThrowsException_badInput() {
+    public void execThrowsExceptionTextIsBadInput() {
         ParseDate parseDate = new ParseDate();
         NodeValue text = createLiteral("Lorem Ipsum");
         NodeValue pattern = createLiteral("yyyy.MM.dd");
@@ -154,7 +154,7 @@ public class ParseDateTest {
     }
 
     @Test
-    public void execThrowsException_nullInputText() {
+    public void execThrowsExceptionWhenTextIsNull() {
         ParseDate parseDate = new ParseDate();
         NodeValue pattern = createLiteral("yyyy.MM.dd");
         NodeValue result = parseDate.exec(null, pattern, null);
@@ -163,7 +163,7 @@ public class ParseDateTest {
     }
 
     @Test
-    public void execThrowsException_nullPattern() {
+    public void execThrowsExceptionWhenPatternIsNull() {
         ParseDate parseDate = new ParseDate();
         NodeValue text = createLiteral("21/10/2013");
 
@@ -172,7 +172,7 @@ public class ParseDateTest {
     }
 
     @Test
-    public void execThrowsException_badPatternLanguage() {
+    public void execThrowsExceptionWhenPatternNotCompliantWithPatternLanguage() {
         ParseDate parseDate = new ParseDate();
         NodeValue text = createLiteral("19/12/2016");
         NodeValue pattern = createLiteral("dd/MM/yyyy");
@@ -188,7 +188,7 @@ public class ParseDateTest {
     }
 
     @Test
-    public void execReturnsDate_uriNode() {
+    public void execThrowsExceptionWhenPatternIsUriNode() {
         ParseDate parseDate = new ParseDate();
         NodeValue text = createLiteral("19/12/2016");
         NodeValue pattern = createURI("htttp://example.org/person");
@@ -199,7 +199,7 @@ public class ParseDateTest {
     }
 
     @Test
-    public void execReturnsDate_blankNode() {
+    public void execThrowsExceptionWhenTextIsBlankNode() {
         ParseDate parseDate = new ParseDate();
         NodeValue text = createBlankNode("blank node");
         NodeValue pattern = createLiteral("dd/MM/yy");
@@ -211,7 +211,7 @@ public class ParseDateTest {
     }
 
     @Test
-    public void execCalledWithTwoArguments_() {
+    public void execReturnsDateWhenCalledWithTwoArguments() {
         ParseDate parseDate = new ParseDate();
         NodeValue text = createLiteral("1/19/2016");
         NodeValue pattern = createLiteral("M/d/yyyy");
