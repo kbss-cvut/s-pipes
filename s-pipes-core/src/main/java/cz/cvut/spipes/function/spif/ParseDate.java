@@ -3,26 +3,32 @@ package cz.cvut.spipes.function.spif;
 import cz.cvut.spipes.constants.SPIF;
 import cz.cvut.spipes.exception.ParseException;
 import cz.cvut.spipes.function.ValueFunction;
+import org.apache.jena.atlas.lib.Lib;
 import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.graph.Node;
+import org.apache.jena.query.QueryBuildException;
 import org.apache.jena.rdf.model.LiteralRequiredException;
+import org.apache.jena.sparql.ARQInternalErrorException;
+import org.apache.jena.sparql.expr.ExprEvalException;
+import org.apache.jena.sparql.expr.ExprList;
 import org.apache.jena.sparql.expr.NodeValue;
-import org.apache.jena.sparql.function.FunctionBase3;
-import org.apache.jena.sparql.function.FunctionEnv;
+import org.apache.jena.sparql.function.FunctionBase;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 
 /**
  * Converts a string in a semi-structured format into a xsd:date, xsd:dateTime or xsd:time literal.
  * The input string must be in a given template format, e.g. \"dd.MM.yyyy\" for strings such as 4.2.2022."
  */
-public class ParseDate extends FunctionBase3 implements ValueFunction {
+public class ParseDate extends FunctionBase implements ValueFunction {
 
     private static final String TYPE_IRI = SPIF.uri + "parseDate";
 
@@ -31,13 +37,30 @@ public class ParseDate extends FunctionBase3 implements ValueFunction {
         return TYPE_IRI;
     }
 
+    @Override
+    public void checkBuild(String uri, ExprList args) {
+        if ( args.size() < 2 || args.size() > 3)
+            throw new QueryBuildException("Function '" + Lib.className(this) + "' takes two or three arguments");
+    }
+
+    @Override
+    public final NodeValue exec(List<NodeValue> args) {
+        if ( args == null )
+            throw new ARQInternalErrorException(Lib.className(this) + ": Null args list");
+        if ( args.size() < 2 || args.size() > 3 )
+            throw new ExprEvalException(Lib.className(this) + ": Wrong number of arguments: Wanted 2 + 1 optional, got " + args.size());
+        NodeValue v1 = args.get(0);
+        NodeValue v2 = args.get(1);
+        NodeValue v3 = args.size() == 3 ?  args.get(2) : null;
+        return exec(v1, v2, v3);
+    }
+
     /**
      * @param text The input string.
      * @param pattern The template of the input string.
      * @param patternLanguage The code of the language (e.g. \"de\" for German) to use for parsing. May be <code>null</code>.
      * @return NodeValue with parsed date/time/datetime.
      */
-    @Override
     public NodeValue exec(NodeValue text, NodeValue pattern, NodeValue patternLanguage) {
         if(text == null || pattern == null){
             return null;
