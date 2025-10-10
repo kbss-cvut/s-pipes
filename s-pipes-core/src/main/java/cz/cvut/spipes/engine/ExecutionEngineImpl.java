@@ -26,8 +26,8 @@ class ExecutionEngineImpl implements ExecutionEngine {
         log.info("Executing script {} with context {}.", module.getResource(), inputContext.toSimpleString());
         final long pipelineExecutionId = Instant.now().toEpochMilli()*1000+(i++);
 
-        String functionName = module.getFunctionName();
-        String scriptPath = module.getScriptPath();
+        String functionName = inputContext.getId();
+        String scriptPath = inputContext.getScriptFile().toString();
         String script = module.getResource().toString().replaceAll("\\/[^.]*$", "");
         fire((l) -> {l.pipelineExecutionStarted(pipelineExecutionId, functionName, scriptPath, script); return null;});
         try {
