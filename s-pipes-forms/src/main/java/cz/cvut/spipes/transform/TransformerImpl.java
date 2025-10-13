@@ -6,27 +6,31 @@ import cz.cvut.sforms.model.Answer;
 import cz.cvut.sforms.model.PrefixDefinition;
 import cz.cvut.sforms.model.Question;
 import cz.cvut.sforms.util.FormUtils;
+import cz.cvut.spipes.spin.vocabulary.SPIN;
+import cz.cvut.spipes.spin.vocabulary.SPL;
 import cz.cvut.spipes.util.JenaUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.jena.ontology.OntModel;
-import org.apache.jena.query.Query;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.rdf.model.impl.PropertyImpl;
 import org.apache.jena.util.ResourceUtils;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
-import cz.cvut.spipes.spin.vocabulary.SPIN;
-import cz.cvut.spipes.spin.vocabulary.SPL;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static cz.cvut.spipes.transform.SPipesUtil.isSPipesTerm;
 
 public class TransformerImpl implements Transformer {
+
+    private static final Logger log = LoggerFactory.getLogger(TransformerImpl.class);
 
     @Override
     public Question script2Form(Resource module, Resource moduleType) {
