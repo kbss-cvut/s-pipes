@@ -9,15 +9,14 @@ import cz.cvut.sforms.util.FormUtils;
 import cz.cvut.spipes.util.JenaUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.jena.ontology.OntModel;
-import org.apache.jena.query.Query;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.rdf.model.impl.PropertyImpl;
 import org.apache.jena.util.ResourceUtils;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
-import cz.cvut.spipes.spin.vocabulary.SPIN;
-import cz.cvut.spipes.spin.vocabulary.SPL;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
@@ -28,9 +27,10 @@ import static cz.cvut.spipes.transform.SPipesUtil.isSPipesTerm;
 
 public class TransformerImpl implements Transformer {
 
+    private final Logger LOG = LoggerFactory.getLogger(TransformerImpl.class);
+
     @Override
     public Question script2Form(Resource module, Resource moduleType) {
-
         if (!URI.create(module.getURI()).isAbsolute()) {
             throw new IllegalArgumentException("Module uri '" + module.getURI() + "' is not absolute.");
         }
@@ -67,6 +67,7 @@ public class TransformerImpl implements Transformer {
 
         Map<OriginPair<URI, URI>, Statement> origin2st = getOrigin2StatementMap(module);
 
+        LOG.info("Creating new form.");
         for (Map.Entry<OriginPair<URI, URI>, Statement> e : origin2st.entrySet()) {
             OriginPair<URI, URI> key = e.getKey();
             Statement st = e.getValue();
@@ -149,7 +150,7 @@ public class TransformerImpl implements Transformer {
         Answer ttlA = new Answer();
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-        JenaUtils.write(System.out, ModelFactory.createDefaultModel().add(module.listProperties()));
+        JenaUtils.writeScript(os, ModelFactory.createDefaultModel().add(module.listProperties()));
         String ttlStr = os.toString();
         ttlA.setTextValue(ttlStr);
         ttlA.setHash(DigestUtils.sha1Hex(ttlStr));
@@ -177,6 +178,7 @@ public class TransformerImpl implements Transformer {
 
         Map<String, Model> changed = new HashMap<>();
 
+        LOG.info("origin: " + form.getOrigin().toString());
         Resource module = inputScript.getResource(form.getOrigin().toString());
 
         Question uriQ = findUriQ(form);
@@ -193,7 +195,8 @@ public class TransformerImpl implements Transformer {
 
         if (module.listProperties().hasNext()) {
             Map<OriginPair<URI, URI>, Statement> questionStatements = getOrigin2StatementMap(module); // Created answer origin is different from the actual one
-            findRegularQ(form).forEach(q -> {
+            findRegularQ(form).forEach((q) -> {
+                LOG.info("QUESTION: " + q.toString());
                 OriginPair<URI, URI> originPair = new OriginPair<>(q.getOrigin(), getAnswer(q).map(Answer::getOrigin).orElse(null));
                 Statement s = questionStatements.get(originPair);
                 if (s != null) {
@@ -204,42 +207,50 @@ public class TransformerImpl implements Transformer {
                     }
                     final Model changingModel = changed.get(uri);
 
-                    changingModel.remove(s);
-                    if (isSupportedAnon(q)) {
-                        if (q.getAnswers().stream()
-                            .anyMatch(a -> !DigestUtils.sha1Hex(a.getTextValue()).equals(a.getHash()) && !DigestUtils.sha1Hex(a.getCodeValue().toString()).equals(a.getHash()))) {
-                            throw new ConcurrentModificationException("TTL and form can not be edited at the same time");
-                        }
-                        // TODO - keep to parse query in answer. If there is a syntax error an exception is thrown
-                        Query query = AnonNodeTransformer.parse(q, inputScript);
-                        changingModel.add(inputScript);
-                        changingModel.add(
-                                ResourceFactory.createResource(uri),
-                                ResourceFactory.createProperty(Vocabulary.s_p_sp_text),
-                                ResourceFactory.createStringLiteral(q.getAnswers().iterator().next().getTextValue().replaceAll("\\n", "\n"))
-                        );
-                    } else {
-                        if (q.getAnswers().stream()
-                            .anyMatch(a -> !DigestUtils.sha1Hex(a.getTextValue()).equals(a.getHash()) && (a.getCodeValue() == null || !DigestUtils.sha1Hex(a.getCodeValue().toString()).equals(a.getHash()))) &&
-                            ttlChanged) {
-                            throw new ConcurrentModificationException("TTL and form can not be edited at the same time");
-                        }
-                        RDFNode answerNode = getAnswerNode(getAnswer(q).orElse(null));
-                        if (answerNode != null) {
-                            changingModel.add(s.getSubject(), s.getPredicate(), answerNode);
+                    LOG.info("STATEMENT: " + s);
+                    RDFNode answerNode = getAnswerNode(getAnswer(q).orElse(null));
+                    if (answerNode != null) {
+                        if (s.getObject().isAnon()){
+                            Statement an = s.getObject().asResource().listProperties().next();
+                            LOG.info("ANON STATEMENT: " + an);
+                            changingModel.remove(an);
+                            changingModel.add(an.getSubject(), an.getPredicate(), answerNode);
+                        } else{
+                            changingModel.remove(s);
+                            //handle only value - should handle other types
+                            if(q.getLabel().equals("http://topbraid.org/sparqlmotionlib#value")){
+                                Resource subject = m.createResource(newUri.toString());
+                                Property predicate = m.createProperty("http://topbraid.org/sparqlmotionlib#value");
+                                Resource object = m.createResource();
+                                m.add(subject, predicate, object);
+                                m.add(object, new PropertyImpl("http://spinrdf.org/sp#varName"), answerNode);
+                            } else if(q.getLabel().equals("http://topbraid.org/sparqlmotionlib#constructQuery")){
+                                Resource subject = m.createResource(newUri.toString());
+                                Property predicate = m.createProperty("http://topbraid.org/sparqlmotionlib#constructQuery");
+                                Resource object = m.createResource();
+                                m.add(subject, predicate, object);
+                                m.add(object, new PropertyImpl("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), ResourceFactory.createResource("http://spinrdf.org/sp#Construct"));
+                                m.add(object, new PropertyImpl("http://spinrdf.org/sp#text"), answerNode);
+                            } else {
+                                changingModel.add(s.getSubject(), s.getPredicate(), answerNode);
+                            }
                         }
                     }
+                } else {
+                    Model m = inputScript;
+                    RDFNode answerNode = getAnswerNode(getAnswer(q).orElse(null));
+                    handleFormUpdate(answerNode, inputScript, q, newUri);
+                    changed.put(((OntModel) inputScript).getBaseModel().listStatements(null, RDF.type, OWL.Ontology).next().getSubject().getURI(), m);
                 }
             });
         } else {
-            Model m = ModelFactory.createDefaultModel().add(inputScript);
+            Model m = inputScript;
             m.add(m.getResource(newUri.toString()), RDF.type, m.getResource(moduleType));
-            m.add(m.getResource(newUri.toString()), RDF.type, m.getResource(Vocabulary.s_c_Modules));
-            findRegularQ(form).forEach(q -> {
+            m.add(m.getResource(newUri.toString()), RDF.type, m.getResource(cz.cvut.sforms.Vocabulary.s_c_Modules));
+            findRegularQ(form).forEach((q) -> {
+                LOG.info("QUESTION_NEW: " + q.toString());
                 RDFNode answerNode = getAnswerNode(getAnswer(q).orElse(null));
-                if (answerNode != null) {
-                    m.add(m.getResource(newUri.toString()), new PropertyImpl(q.getOrigin().toString()), answerNode);
-                }
+                handleFormUpdate(answerNode, m, q, newUri);
             });
             changed.put(((OntModel) inputScript).getBaseModel().listStatements(null, RDF.type, OWL.Ontology).next().getSubject().getURI(), m);
         }
@@ -256,6 +267,29 @@ public class TransformerImpl implements Transformer {
         ResourceUtils.renameResource(module, newUri.toString());
 
         return changed;
+    }
+
+    private void handleFormUpdate(RDFNode answerNode, Model m, Question q, URI newUri){
+        LOG.info("answerNode: " + answerNode);
+        if (answerNode != null) {
+            LOG.info("answerNode: " + answerNode.toString());
+            if(q.getLabel().equals("http://topbraid.org/sparqlmotionlib#value")){
+                Resource subject = m.createResource(newUri.toString());
+                Property predicate = m.createProperty("http://topbraid.org/sparqlmotionlib#value");
+                Resource object = m.createResource();
+                m.add(subject, predicate, object);
+                m.add(object, new PropertyImpl("http://spinrdf.org/sp#varName"), answerNode);
+            }else if(q.getLabel().equals("http://topbraid.org/sparqlmotionlib#constructQuery")){
+                Resource subject = m.createResource(newUri.toString());
+                Property predicate = m.createProperty("http://topbraid.org/sparqlmotionlib#constructQuery");
+                Resource object = m.createResource();
+                m.add(subject, predicate, object);
+                m.add(object, new PropertyImpl("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), ResourceFactory.createResource("http://spinrdf.org/sp#Construct"));
+                m.add(object, new PropertyImpl("http://spinrdf.org/sp#text"), answerNode);
+            }else {
+                m.add(m.getResource(newUri.toString()), new PropertyImpl(q.getOrigin().toString()), answerNode);
+            }
+        }
     }
 
     @Override
@@ -294,17 +328,25 @@ public class TransformerImpl implements Transformer {
 
         subQuestions.add(functionQ);
 
-        for (Statement st : function.listProperties(SPIN.constraint).toList().stream().map(s -> s.getObject().asResource().listProperties(SPL.predicate).nextStatement()).collect(Collectors.toList())) {
+        Property parameterProp = function.getModel().createProperty("http://www.w3.org/ns/shacl#parameter");
+        Property pathProp = function.getModel().createProperty("http://www.w3.org/ns/shacl#path");
 
-            Question q = createQuestion(st.getObject().asResource());
+        StmtIterator parameters = function.listProperties(parameterProp);
+        while (parameters.hasNext()) {
+            Resource constraint = parameters.nextStatement().getResource();
+            Statement st = constraint.getProperty(pathProp);
+
+            Question q = new Question();
+            initializeQuestionUri(q);
+            q.setLabel(st.getResource().getLocalName());
             q.setProperties(extractQuestionMetadata(st));
-
             q.setPrecedingQuestions(Collections.singleton(functionQ));
             subQuestions.add(q);
         }
 
         wizardStepQ.setSubQuestions(new HashSet<>(subQuestions));
         formRootQ.setSubQuestions(Collections.singleton(wizardStepQ));
+
         return formRootQ;
     }
 
@@ -463,17 +505,6 @@ public class TransformerImpl implements Transformer {
         public String toString() {
             return "<" + q.toString() + ", " + a.toString() + ">";
         }
-    }
-
-    private boolean isSupportedAnon(Question q) {
-        if (q.getProperties().containsKey(Vocabulary.s_p_has_answer_value_type)) {
-            Set<String> types = q.getProperties().get(Vocabulary.s_p_has_answer_value_type);
-            return types.contains(Vocabulary.s_c_sp_Ask) ||
-                    types.contains(Vocabulary.s_c_sp_Construct) ||
-                    types.contains(Vocabulary.s_c_sp_Describe) ||
-                    types.contains(Vocabulary.s_c_sp_Select);
-        }
-        return false;
     }
 
     Model extractModel(Statement st) {
