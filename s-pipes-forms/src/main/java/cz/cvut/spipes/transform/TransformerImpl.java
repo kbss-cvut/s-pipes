@@ -11,8 +11,8 @@ import cz.cvut.spipes.spin.vocabulary.SPL;
 import cz.cvut.spipes.util.JenaUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.jena.ontology.OntModel;
+import org.apache.jena.query.Query;
 import org.apache.jena.rdf.model.*;
-import org.apache.jena.rdf.model.impl.PropertyImpl;
 import org.apache.jena.util.ResourceUtils;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
@@ -153,8 +153,8 @@ public class TransformerImpl implements Transformer {
         Answer ttlA = new Answer();
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-        JenaUtils.write(System.out, ModelFactory.createDefaultModel().add(module.listProperties()));
-        String ttlStr = os.toString();
+        JenaUtils.writeScript(os, ModelFactory.createDefaultModel().add(module.listProperties()));
+        String ttlStr = os.toString(StandardCharsets.UTF_8);
         ttlA.setTextValue(ttlStr);
         ttlA.setHash(DigestUtils.sha1Hex(ttlStr));
 
@@ -200,6 +200,7 @@ public class TransformerImpl implements Transformer {
             findRegularQ(form).forEach(q -> {
                 OriginPair<URI, URI> originPair = new OriginPair<>(q.getOrigin(), getAnswer(q).map(Answer::getOrigin).orElse(null));
                 Statement s = questionStatements.get(originPair);
+
                 if (s != null) {
                     final Model m = extractModel(s);
                     final String uri = ((OntModel) inputScript).getBaseModel().listStatements(null, RDF.type, OWL.Ontology).next().getSubject().getURI();
@@ -242,7 +243,11 @@ public class TransformerImpl implements Transformer {
             findRegularQ(form).forEach(q -> {
                 RDFNode answerNode = getAnswerNode(getAnswer(q).orElse(null));
                 if (answerNode != null) {
-                    m.add(m.getResource(newUri.toString()), new PropertyImpl(q.getOrigin().toString()), answerNode);
+                    m.add(
+                        m.getResource(newUri.toString()),
+                        ResourceFactory.createProperty(q.getOrigin().toString()),
+                        answerNode
+                    );
                 }
             });
             changed.put(((OntModel) inputScript).getBaseModel().listStatements(null, RDF.type, OWL.Ontology).next().getSubject().getURI(), m);
@@ -309,6 +314,7 @@ public class TransformerImpl implements Transformer {
 
         wizardStepQ.setSubQuestions(new HashSet<>(subQuestions));
         formRootQ.setSubQuestions(Collections.singleton(wizardStepQ));
+
         return formRootQ;
     }
 
