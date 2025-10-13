@@ -6,27 +6,31 @@ import cz.cvut.sforms.model.Answer;
 import cz.cvut.sforms.model.PrefixDefinition;
 import cz.cvut.sforms.model.Question;
 import cz.cvut.sforms.util.FormUtils;
+import cz.cvut.spipes.spin.vocabulary.SPIN;
+import cz.cvut.spipes.spin.vocabulary.SPL;
 import cz.cvut.spipes.util.JenaUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.query.Query;
 import org.apache.jena.rdf.model.*;
-import org.apache.jena.rdf.model.impl.PropertyImpl;
 import org.apache.jena.util.ResourceUtils;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
-import cz.cvut.spipes.spin.vocabulary.SPIN;
-import cz.cvut.spipes.spin.vocabulary.SPL;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static cz.cvut.spipes.transform.SPipesUtil.isSPipesTerm;
 
 public class TransformerImpl implements Transformer {
+
+    private static final Logger log = LoggerFactory.getLogger(TransformerImpl.class);
 
     @Override
     public Question script2Form(Resource module, Resource moduleType) {
@@ -81,11 +85,11 @@ public class TransformerImpl implements Transformer {
             if (st.getObject().isAnon() && SPipesUtil.getSPinCommandType(st.getObject().asResource()) != null) {
                 subQ.setLayoutClass(Collections.singleton("sparql"));
                 subQ.getProperties().put(
-                        Vocabulary.s_p_has_answer_value_type,
-                        Collections.singleton(SPipesUtil.getSPinCommandType(st.getObject().asResource()).getResource().getURI())
+                    Vocabulary.s_p_has_answer_value_type,
+                    Collections.singleton(SPipesUtil.getSPinCommandType(st.getObject().asResource()).getResource().getURI())
                 );
                 subQ.setDeclaredPrefix(p.getModel().getNsPrefixMap().entrySet().stream().map(
-                        prefix -> new PrefixDefinition(prefix.getKey(), prefix.getValue())).collect(Collectors.toSet())
+                    prefix -> new PrefixDefinition(prefix.getKey(), prefix.getValue())).collect(Collectors.toSet())
                 );
             }
 
@@ -103,7 +107,7 @@ public class TransformerImpl implements Transformer {
         }
 
         List<Statement> typeDefinitionStatements = moduleType.listProperties().filterKeep(
-                st -> st.getPredicate().hasURI(SFormsVocabularyJena.s_p_constraint.getURI())).toList();
+            st -> st.getPredicate().hasURI(SFormsVocabularyJena.s_p_constraint.getURI())).toList();
         for (Statement st : typeDefinitionStatements) {
             Resource p = st.getObject().asResource().getPropertyResourceValue(SFormsVocabularyJena.s_p_predicate_A);
 
@@ -136,10 +140,10 @@ public class TransformerImpl implements Transformer {
             lQ = labelQ;
         lQ.setPrecedingQuestions(Collections.singleton(idQ));
         subQuestions.stream()
-                .filter(q -> q != lQ)
-                .filter(q -> q != idQ)
-                .forEach(
-                        q -> q.setPrecedingQuestions(Collections.singleton(lQ)));
+            .filter(q -> q != lQ)
+            .filter(q -> q != idQ)
+            .forEach(
+                q -> q.setPrecedingQuestions(Collections.singleton(lQ)));
 
         subQuestions.add(idQ);
 
@@ -149,8 +153,8 @@ public class TransformerImpl implements Transformer {
         Answer ttlA = new Answer();
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-        JenaUtils.write(System.out, ModelFactory.createDefaultModel().add(module.listProperties()));
-        String ttlStr = os.toString();
+        JenaUtils.writeScript(os, ModelFactory.createDefaultModel().add(module.listProperties()));
+        String ttlStr = os.toString(StandardCharsets.UTF_8);
         ttlA.setTextValue(ttlStr);
         ttlA.setHash(DigestUtils.sha1Hex(ttlStr));
 
@@ -185,17 +189,18 @@ public class TransformerImpl implements Transformer {
         Optional<Model> ttlModel = getTTLModel(form);
 
         boolean ttlChanged = form.getSubQuestions().stream()
-                .flatMap(q -> q.getSubQuestions().stream())
-                .filter(q -> q.getLayoutClass().stream().anyMatch(s -> s.equals("ttl")))
-                .findFirst()
-                .map(q -> q.getAnswers().stream().anyMatch(a -> !DigestUtils.sha1Hex(a.getTextValue()).equals(a.getHash())))
-                .orElse(false);
+            .flatMap(q -> q.getSubQuestions().stream())
+            .filter(q -> q.getLayoutClass().stream().anyMatch(s -> s.equals("ttl")))
+            .findFirst()
+            .map(q -> q.getAnswers().stream().anyMatch(a -> !DigestUtils.sha1Hex(a.getTextValue()).equals(a.getHash())))
+            .orElse(false);
 
         if (module.listProperties().hasNext()) {
             Map<OriginPair<URI, URI>, Statement> questionStatements = getOrigin2StatementMap(module); // Created answer origin is different from the actual one
             findRegularQ(form).forEach(q -> {
                 OriginPair<URI, URI> originPair = new OriginPair<>(q.getOrigin(), getAnswer(q).map(Answer::getOrigin).orElse(null));
                 Statement s = questionStatements.get(originPair);
+
                 if (s != null) {
                     final Model m = extractModel(s);
                     final String uri = ((OntModel) inputScript).getBaseModel().listStatements(null, RDF.type, OWL.Ontology).next().getSubject().getURI();
@@ -214,9 +219,9 @@ public class TransformerImpl implements Transformer {
                         Query query = AnonNodeTransformer.parse(q, inputScript);
                         changingModel.add(inputScript);
                         changingModel.add(
-                                ResourceFactory.createResource(uri),
-                                ResourceFactory.createProperty(Vocabulary.s_p_sp_text),
-                                ResourceFactory.createStringLiteral(q.getAnswers().iterator().next().getTextValue().replaceAll("\\n", "\n"))
+                            ResourceFactory.createResource(uri),
+                            ResourceFactory.createProperty(Vocabulary.s_p_sp_text),
+                            ResourceFactory.createStringLiteral(q.getAnswers().iterator().next().getTextValue().replaceAll("\\n", "\n"))
                         );
                     } else {
                         if (q.getAnswers().stream()
@@ -238,7 +243,11 @@ public class TransformerImpl implements Transformer {
             findRegularQ(form).forEach(q -> {
                 RDFNode answerNode = getAnswerNode(getAnswer(q).orElse(null));
                 if (answerNode != null) {
-                    m.add(m.getResource(newUri.toString()), new PropertyImpl(q.getOrigin().toString()), answerNode);
+                    m.add(
+                        m.getResource(newUri.toString()),
+                        ResourceFactory.createProperty(q.getOrigin().toString()),
+                        answerNode
+                    );
                 }
             });
             changed.put(((OntModel) inputScript).getBaseModel().listStatements(null, RDF.type, OWL.Ontology).next().getSubject().getURI(), m);
@@ -305,14 +314,15 @@ public class TransformerImpl implements Transformer {
 
         wizardStepQ.setSubQuestions(new HashSet<>(subQuestions));
         formRootQ.setSubQuestions(Collections.singleton(wizardStepQ));
+
         return formRootQ;
     }
 
     private Question findUriQ(Question root) {
         Optional<Question> uriQ =
-                FormUtils.flatten(root).stream()
-                        .filter(q -> q.getOrigin() != null)
-                        .filter(q -> RDFS.Resource.getURI().equals(q.getOrigin().toString())).findFirst();
+            FormUtils.flatten(root).stream()
+                .filter(q -> q.getOrigin() != null)
+                .filter(q -> RDFS.Resource.getURI().equals(q.getOrigin().toString())).findFirst();
         if (uriQ.isPresent())
             return uriQ.get();
         throw new IllegalArgumentException("Root question has no subquestion that maps to URI");
@@ -320,17 +330,17 @@ public class TransformerImpl implements Transformer {
 
     private Set<Question> findRegularQ(Question root) {
         return FormUtils.flatten(root).stream()
-                .filter(q -> q.getSubQuestions() == null || q.getSubQuestions().isEmpty())
-                .filter(q -> q.getOrigin() != null)
-                .filter(q -> !RDFS.Resource.getURI().equals(q.getOrigin().toString()))
-                .collect(Collectors.toSet());
+            .filter(q -> q.getSubQuestions() == null || q.getSubQuestions().isEmpty())
+            .filter(q -> q.getOrigin() != null)
+            .filter(q -> !RDFS.Resource.getURI().equals(q.getOrigin().toString()))
+            .collect(Collectors.toSet());
     }
 
     private Optional<Model> getTTLModel(Question root) {
         Optional<Question> ttl = root.getSubQuestions().stream()
-                .filter(q -> q.getLayoutClass().contains("TTL"))
-                .map(q -> q.getSubQuestions().iterator().next())
-                .findFirst();
+            .filter(q -> q.getLayoutClass().contains("TTL"))
+            .map(q -> q.getSubQuestions().iterator().next())
+            .findFirst();
         return ttl.map(q -> {
             Model m = ModelFactory.createDefaultModel();
             m.read(q.getAnswers().iterator().next().getTextValue());
@@ -377,9 +387,9 @@ public class TransformerImpl implements Transformer {
 
     private Map<OriginPair<URI, URI>, Statement> getOrigin2StatementMap(Resource module) {
         return module.listProperties()
-                .filterDrop(st -> isSPipesTerm(st.getPredicate()))
-                .toList().stream()
-                .collect(Collectors.toMap(st -> new OriginPair<>(createQuestionOrigin(st), createAnswerOrigin(st)), st -> st));
+            .filterDrop(st -> isSPipesTerm(st.getPredicate()))
+            .toList().stream()
+            .collect(Collectors.toMap(st -> new OriginPair<>(createQuestionOrigin(st), createAnswerOrigin(st)), st -> st));
     }
 
     private URI toUri(Resource resource) {
@@ -393,9 +403,9 @@ public class TransformerImpl implements Transformer {
     private URI createAnswerOrigin(Statement statement) {
         if (!statement.getObject().isAnon())
             return URI.create(SFormsVocabularyJena.s_c_answer_origin.toString() +
-                    "/" + createMd5Hash(statement.getObject().toString()));
+                "/" + createMd5Hash(statement.getObject().toString()));
         return URI.create(SFormsVocabularyJena.s_c_answer_origin.toString() +
-                "/" + createMd5Hash(AnonNodeTransformer.serialize(statement.getObject())));
+            "/" + createMd5Hash(AnonNodeTransformer.serialize(statement.getObject())));
     }
 
     private String createMd5Hash(String text) {
@@ -469,9 +479,9 @@ public class TransformerImpl implements Transformer {
         if (q.getProperties().containsKey(Vocabulary.s_p_has_answer_value_type)) {
             Set<String> types = q.getProperties().get(Vocabulary.s_p_has_answer_value_type);
             return types.contains(Vocabulary.s_c_sp_Ask) ||
-                    types.contains(Vocabulary.s_c_sp_Construct) ||
-                    types.contains(Vocabulary.s_c_sp_Describe) ||
-                    types.contains(Vocabulary.s_c_sp_Select);
+                types.contains(Vocabulary.s_c_sp_Construct) ||
+                types.contains(Vocabulary.s_c_sp_Describe) ||
+                types.contains(Vocabulary.s_c_sp_Select);
         }
         return false;
     }
