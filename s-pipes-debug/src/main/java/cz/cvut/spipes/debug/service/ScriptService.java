@@ -6,7 +6,6 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import org.apache.catalina.Pipeline;
 import org.springframework.stereotype.Service;
 
 import cz.cvut.spipes.debug.exception.NotFoundException;
