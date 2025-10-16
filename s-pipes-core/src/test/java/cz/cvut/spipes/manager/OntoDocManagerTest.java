@@ -18,12 +18,20 @@ import org.apache.jena.util.ResourceUtils;
 import org.apache.jena.vocabulary.OWL2;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.net.URISyntaxException;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.FileTime;
+import java.time.Instant;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -32,7 +40,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class OntoDocManagerTest {
-
+    private static final Logger log = LoggerFactory.getLogger(OntoDocManagerTest.class);
 
     static Path managerDirPath = TestConstants.TEST_RESOURCES_DIR_PATH.resolve("manager").toAbsolutePath();
     protected static File managerDir;
@@ -633,10 +641,24 @@ public class OntoDocManagerTest {
     }
 
     private static void write(File file, Ontology onto) throws IOException {
+        Instant justBefore = Instant.now();
         try (Writer w = new FileWriter(file, false)) {
             onto.getModel().write(w, "ttl");
         }
+        setLastModifiedTimeAfterBefore(file, justBefore);
         file.deleteOnExit();
+    }
+
+    /**
+     * Make sure that the file's last modified time is after Instant.now
+     * @param file
+     * @throws IOException
+     */
+    private static void setLastModifiedTimeAfterBefore(File file, Instant before) throws IOException {
+        if(before.isBefore(Files.getLastModifiedTime(file.toPath()).toInstant()))
+            return;
+        log.warn("Adjusting last modified time of file \"{}\"", file);
+        Files.setLastModifiedTime(file.toPath(), FileTime.from(Instant.now()));
     }
 
     private static Ontology createOntology(String id) {
