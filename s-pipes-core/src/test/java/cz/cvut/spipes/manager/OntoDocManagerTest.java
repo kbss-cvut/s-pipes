@@ -649,15 +649,31 @@ public class OntoDocManagerTest {
         file.deleteOnExit();
     }
 
-    /**
-     * Make sure that the file's last modified time is after Instant.now
-     * @param file
-     * @throws IOException
-     */
+/**
+ * Ensures that the file's last modified time is strictly after the given Instant.
+ * <p>
+ * Some filesystems have coarse timestamp resolution (e.g. 1s), or their clocks may be slightly
+ * out of sync with the system clock used by {@link Instant#now()}. As a result, the file's
+ * modification time may appear to be earlier than the current JVM time even though it was
+ * just written. This method corrects that by setting the file's last modified time to now
+ * if needed.
+ *
+ * @param file   the file whose last modified time should be checked
+ * @param before the reference time; the file's last modified time should be after this instant
+ * @throws IOException if reading or updating the file's attributes fails
+ */
     private static void setLastModifiedTimeAfterBefore(File file, Instant before) throws IOException {
-        if(before.isBefore(Files.getLastModifiedTime(file.toPath()).toInstant()))
+        Instant fileTime = Files.getLastModifiedTime(file.toPath()).toInstant();
+        if(before.isBefore(fileTime))
             return;
-        log.warn("Adjusting last modified time of file \"{}\"", file);
+        log.debug(
+    "Adjusting last modified time of file \"{}\": filesystem reports modified at {} which is not after reference time {}. "
+    + "This can happen due to filesystem timestamp granularity or slight clock skew.",
+    file.getAbsolutePath(),
+    fileTime,
+    before
+);
+
         Files.setLastModifiedTime(file.toPath(), FileTime.from(Instant.now()));
     }
 
