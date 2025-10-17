@@ -19,7 +19,7 @@ public class BindBySelectModule extends AnnotatedAbstractModule {
     private Select selectQuery;
 
     @Parameter(iri = SML.replace)
-    private final boolean isReplace = false;
+    private boolean isReplace = false;
 
     @Override
     public ExecutionContext executeSelf() {
@@ -66,5 +66,13 @@ public class BindBySelectModule extends AnnotatedAbstractModule {
 
     public void setSelectQuery(Select selectQuery) {
         this.selectQuery = selectQuery;
+    }
+
+    public boolean isReplace() {
+        return isReplace;
+    }
+
+    public void setReplace(boolean replace) {
+        isReplace = replace;
     }
 }
