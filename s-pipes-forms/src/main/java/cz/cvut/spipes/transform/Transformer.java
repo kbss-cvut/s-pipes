@@ -55,6 +55,39 @@ public interface Transformer {
      * RDF resource of the function.
      * </p>
      *
+     <p><b>Example:</b><br>
+     * Given a function definition:
+     * <pre>{@code
+     * :execute-greeting a sm:Function ;
+     *   sh:parameter [ sh:path :firstName ; sh:datatype xsd:string ] ;
+     *   sh:parameter [ sh:path :lastName  ; sh:datatype xsd:string ] .
+     * }</pre>
+     *
+     * The resulting form will contain:
+     *
+     * <pre>{@code
+     * Question () {
+     *   answers=[Answer{text=<UUID>}],
+     *   subQuestions=[
+     *     Question (Function call) {
+     *       subQuestions=[
+     *         Question (URI) { answers=[Answer{text=http://.../execute-greeting}] },
+     *         Question (lastName),
+     *         Question (firstName)
+     *       ]
+     *     }
+     *   ]
+     * }
+     * }</pre>
+     *
+     * <ul>
+     *   <li>A root question with a generated execution ID.</li>
+     *   <li>A wizard-step labeled "Function call".</li>
+     *   <li>A sub-question "URI" with the function's URI as its answer.</li>
+     *   <li>Sub-questions "firstName" and "lastName" for user input.</li>
+     * </ul>
+     * </p>
+     *
      * @param script   the RDF model containing the function definition
      * @param function the RDF resource representing the function
      * @return a root {@link Question} representing the function call form
