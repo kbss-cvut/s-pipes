@@ -20,7 +20,7 @@ public class BindWithConstantModule extends AnnotatedAbstractModule  {
     RDFNode value;
 
     @Parameter(iri = SML.replace)
-    private final boolean isReplace = false;
+    private boolean isReplace = false;
 
     @Override
     public ExecutionContext executeSelf() {
@@ -56,5 +56,13 @@ public class BindWithConstantModule extends AnnotatedAbstractModule  {
 
     public void setValue(RDFNode value) {
         this.value = value;
+    }
+
+    public boolean isReplace() {
+        return isReplace;
+    }
+
+    public void setReplace(boolean replace) {
+        isReplace = replace;
     }
 }
