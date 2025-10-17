@@ -33,17 +33,17 @@ public class ApplyConstructModuleTest extends AbstractCoreModuleTestHelper {
         module.setInputContext(ExecutionContextFactory.createContext(createSimpleModel()));
         module.loadConfiguration();
 
-        ExecutionContext newContext = null;
+        ExecutionContext newContext;
 
         // isReplace = true
         module.setReplace(true);
         newContext = module.executeSelf();
-        assertEquals(newContext.getDefaultModel().listStatements().toList().size(), 2);
+        assertEquals(2, newContext.getDefaultModel().listStatements().toList().size());
 
         // isReplace = true
         module.setReplace(false);
         newContext = module.executeSelf();
-        assertEquals(newContext.getDefaultModel().listStatements().toList().size(), 3);
+        assertEquals(3, newContext.getDefaultModel().listStatements().toList().size());
 
         //newContext.getDefaultModel().write(System.out, FileUtils.langTurtle);
     }
@@ -56,17 +56,17 @@ public class ApplyConstructModuleTest extends AbstractCoreModuleTestHelper {
         module.setInputContext(ExecutionContextFactory.createContext(createSimpleModel()));
         module.loadConfiguration();
 
-        ExecutionContext newContext = null;
+        ExecutionContext newContext;
 
         // isReplace = true
         module.setReplace(true);
         newContext = module.executeSelf();
-        assertEquals(newContext.getDefaultModel().listStatements().toList().size(), 2);
+        assertEquals(2, newContext.getDefaultModel().listStatements().toList().size());
 
         // isReplace = true
         module.setReplace(false);
         newContext = module.executeSelf();
-        assertEquals(newContext.getDefaultModel().listStatements().toList().size(), 3);
+        assertEquals(3, newContext.getDefaultModel().listStatements().toList().size());
 
         //newContext.getDefaultModel().write(System.out, FileUtils.langTurtle);
     }
@@ -77,7 +77,7 @@ public class ApplyConstructModuleTest extends AbstractCoreModuleTestHelper {
         ApplyConstructModule module = (ApplyConstructModule) getRootModule("remote-query.ttl");
 
 
-        ExecutionContext newContext = null;
+        ExecutionContext newContext;
 
         VariablesBinding variablesBinding = new VariablesBinding(
                 "sampleServiceUri",
@@ -90,7 +90,7 @@ public class ApplyConstructModuleTest extends AbstractCoreModuleTestHelper {
         // isReplace = true
         module.setReplace(true);
         newContext = module.executeSelf();
-        assertEquals(newContext.getDefaultModel().listStatements().toList().size(), 54);
+        assertEquals(54, newContext.getDefaultModel().listStatements().toList().size());
     }
 
     @Test

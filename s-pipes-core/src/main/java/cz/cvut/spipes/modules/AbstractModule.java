@@ -64,11 +64,11 @@ public abstract class AbstractModule implements Module {
 
 
     // load each properties
-    // valiadation of required parameter
+    // validation of required parameter
     // ?? validation of shape of input graph
     // TODO move elsewhere?
     static {
-        SPipesUtil.init(); // initialize system functoins
+        SPipesUtil.init(); // initialize system functions
     }
 
 
@@ -193,11 +193,11 @@ public abstract class AbstractModule implements Module {
     }
 
     private String saveModelToTemporaryFile(RDFModelWriter rdfModelWriter, Model model, String filePrefix) {
-        File tempFile = null;
+        File tempFile;
         try {
             tempFile = Files.createTempFile(filePrefix, ".ttl").toFile();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
             return null;
         }
         try (OutputStream tempFileIs = new FileOutputStream(tempFile)) {
@@ -205,7 +205,7 @@ public abstract class AbstractModule implements Module {
 
             return tempFile.getAbsolutePath();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
             return null;
         }
     }
@@ -228,12 +228,7 @@ public abstract class AbstractModule implements Module {
 
     protected String saveFullModelToTemporaryFile(OntModel model) {
         return saveModelToTemporaryFile(
-            new RDFModelWriter() {
-                @Override
-                public void write(OutputStream outputStream, Model model) {
-                    ((OntModel) model).writeAll(outputStream, FileUtils.langTurtle);
-                }
-            },
+                (outputStream, model1) -> ((OntModel) model1).writeAll(outputStream, FileUtils.langTurtle),
             model,
             "full-model-output-"
         );
@@ -277,7 +272,7 @@ public abstract class AbstractModule implements Module {
 
     private void checkConstraints(Model model, QuerySolution bindings, List<Resource> constraintQueries) {
 
-        // sort queries based on order specified by comments within query
+        // sort queries based on order specified by comments within a query
         constraintQueries = sortConstraintQueries(constraintQueries);
 
         //      set up variable bindings
@@ -289,44 +284,49 @@ public abstract class AbstractModule implements Module {
 //                TemplateCall templateCall = SPINFactory.asTemplateCall(queryRes);
 //            }
 
-            Query query = QueryUtils.createQuery(spinQuery);
+            Query query = QueryUtils.createQuery(Objects.requireNonNull(spinQuery));
 
-            QueryExecution execution = QueryExecutionFactory.create(query, model, bindings);
+            try (QueryExecution execution = QueryExecution
+                    .model(model)
+                    .query(query)
+                    .substitution(bindings)
+                    .build()) {
 
-            boolean constraintViolated;
-            List<Map<String,RDFNode>> evidences = new ArrayList<>();
-            if (spinQuery instanceof Ask) {
-                constraintViolated = execution.execAsk();
-            } else if (spinQuery instanceof Select) { //TODO implement
-                ResultSet rs = execution.execSelect();
-                constraintViolated = rs.hasNext();
-                if(constraintViolated){
-
-                    for(int i = 0; i < ExecutionConfig.getEvidenceNumber() && rs.hasNext(); i++){
-                        QuerySolution solution = rs.next() ;
-                        Map<String, RDFNode> evidenceMap = new LinkedHashMap<>();
-                        for (String varName : rs.getResultVars()) {
-                            RDFNode value = solution.get(varName);
-                            evidenceMap.put(varName, value);
+                boolean constraintViolated;
+                List<Map<String, RDFNode>> evidences = new ArrayList<>();
+                if (spinQuery instanceof Ask) {
+                    constraintViolated = execution.execAsk();
+                } else if (spinQuery instanceof Select) {
+                    ResultSet rs = execution.execSelect();
+                    constraintViolated = rs.hasNext();
+                    if (constraintViolated) {
+                        for (int i = 0; i < ExecutionConfig.getEvidenceNumber() && rs.hasNext(); i++) {
+                            QuerySolution solution = rs.next();
+                            Map<String, RDFNode> evidenceMap = new LinkedHashMap<>();
+                            for (String varName : rs.getResultVars()) {
+                                RDFNode value = solution.get(varName);
+                                evidenceMap.put(varName, value);
+                            }
+                            evidences.add(evidenceMap);
                         }
-                        evidences.add(evidenceMap);
                     }
+                } else if (spinQuery instanceof Construct) {
+                    throw new NotImplemented("Constraints for objects " + query + " not implemented.");
+                } else {
+                    throw new NotImplemented("Constraints for objects " + query + " not implemented.");
                 }
-            } else if (spinQuery instanceof Construct) {
-                throw new NotImplemented("Constraints for objects " + query + " not implemented.");
-            } else {
-                throw new NotImplemented("Constraints for objects " + query + " not implemented.");
-            }
-            if (constraintViolated) {
-                String mainErrorMsg =  getQueryComment(spinQuery);
-                String failedQueryMsg = spinQuery.toString();
-                var exception = new ValidationConstraintFailedException(this, mainErrorMsg, failedQueryMsg, evidences);
-                log.error(exception.toString());
-                if (ExecutionConfig.isExitOnError()) {
-                    throw exception;
+
+                if (constraintViolated) {
+                    String mainErrorMsg = getQueryComment(spinQuery);
+                    String failedQueryMsg = spinQuery.toString();
+                    var exception = new ValidationConstraintFailedException(this, mainErrorMsg, failedQueryMsg, evidences);
+                    log.error(exception.toString());
+                    if (ExecutionConfig.isExitOnError()) {
+                        throw exception;
+                    }
+                } else {
+                    log.debug("Constraint validated for exception \"{}\".", getQueryComment(spinQuery));
                 }
-            } else {
-                log.debug("Constraint validated for exception \"{}\".", getQueryComment(spinQuery));
             }
         }
 
@@ -336,8 +336,8 @@ public abstract class AbstractModule implements Module {
      * Returns the query comment associated with the <code>query</code> resource argument. This is either the string
      * associated with <code>query</code> rdfs:comment or if not present the first comment line found in the query string.
      * If neither is present, the method returns the uri of the query resource.
-     * @param query
-     * @return
+     * @param query the query resource
+     * @return the query comment or the uri of the query resource
      */
     protected String getQueryComment(cz.cvut.spipes.spin.model.Query query) {
         if (query.getComment() != null) {
@@ -435,10 +435,10 @@ public abstract class AbstractModule implements Module {
 
     /**
      * Helper method to creates output execution context considering isReplace flag
-     * indicating if newly computed model should replace input model of the module
+     * indicating if a newly computed model should replace an input model of the module
      * or be appended to it.
-     * @param isReplace if true replace input model otherwise append to it.
-     * @param computedModel model to be reflected in final output of this module.
+     * @param isReplace if true, replace an input model, otherwise append to it.
+     * @param computedModel model to be reflected in the final output of this module.
      * @return Output execution context to be returned by this module.
      */
     protected ExecutionContext createOutputContext(boolean isReplace, Model computedModel) {
@@ -449,10 +449,10 @@ public abstract class AbstractModule implements Module {
 
     /**
      * Helper method to creates output model considering isReplace flag
-     * indicating if newly computed model should replace input model of the module
+     * indicating if a newly computed model should replace an input model of the module
      * or be appended to it.
-     * @param isReplace if true replace input model otherwise append to it.
-     * @param computedModel model to be reflected in final output of this module.
+     * @param isReplace if true, replace an input model otherwise append to it.
+     * @param computedModel model to be reflected in the final output of this module.
      * @return Output model to be returned by this module.
      */
     protected Model createOutputModel(boolean isReplace, Model computedModel) {
@@ -472,7 +472,7 @@ public abstract class AbstractModule implements Module {
             cz.cvut.spipes.spin.model.Query spinQuery1 = SPINFactory.asQuery(resource1);
             cz.cvut.spipes.spin.model.Query spinQuery2 = SPINFactory.asQuery(resource2);
 
-            return spinQuery1.toString().compareTo(spinQuery2.toString());
+            return Objects.requireNonNull(spinQuery1).toString().compareTo(Objects.requireNonNull(spinQuery2).toString());
         }).collect(Collectors.toList());
     }
 

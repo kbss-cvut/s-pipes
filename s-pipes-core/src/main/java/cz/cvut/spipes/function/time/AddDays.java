@@ -8,19 +8,23 @@ import org.apache.jena.datatypes.xsd.impl.XSDBaseStringType;
 import org.apache.jena.datatypes.xsd.impl.XSDDateType;
 import org.apache.jena.sparql.expr.NodeValue;
 import org.apache.jena.sparql.function.FunctionBase2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Optional;
 
 /**
- * Extend specified `date` by number of `days`. Return typed literal with same datatype.
- * Currently, supports only xsd:date datatype.
+ * Extend the specified `date` by number of `days`. Return typed literal with the same datatype.
+ * Currently, it supports only xsd:date datatype.
  */
 public class AddDays extends FunctionBase2 implements ValueFunction {
 
 
     private static final String TYPE_IRI = KBSS_TIMEF.uri + "add-days";
+
+    private static final Logger log = LoggerFactory.getLogger(AddDays.class);
 
     @Override
     public String getTypeURI() {
@@ -40,6 +44,7 @@ public class AddDays extends FunctionBase2 implements ValueFunction {
                 return NodeValue.makeNode(newDate, datatype);
             }
         } catch (DateTimeParseException e){
+            log.warn("Cannot parse date: {}", date.asNode().getLiteral().getValue().toString());
         }
 
         return null;

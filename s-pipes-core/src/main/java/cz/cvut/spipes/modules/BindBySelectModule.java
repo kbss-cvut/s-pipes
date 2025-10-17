@@ -28,28 +28,31 @@ public class BindBySelectModule extends AnnotatedAbstractModule {
 
         QuerySolution inputBindings = executionContext.getVariablesBinding().asQuerySolution();
 
-        QueryExecution execution = QueryExecutionFactory.create(query, executionContext.getDefaultModel(), inputBindings);
+        try (QueryExecution execution = QueryExecution
+                .model(executionContext.getDefaultModel())
+                .query(query)
+                .substitution(inputBindings)
+                .build()) {
+            ResultSet resultSet = execution.execSelect();
 
-        ResultSet resultSet = execution.execSelect();
+            VariablesBinding variablesBinding = new VariablesBinding();
 
-        VariablesBinding variablesBinding = new VariablesBinding();
+            if (!resultSet.hasNext()) {
+                log.debug("\"{}\" query did not return any values.", getLabel());
+            } else {
+                QuerySolution qs = resultSet.next();
+                variablesBinding = new VariablesBinding(qs);
 
-        if (!resultSet.hasNext()) {
-            log.debug("\"{}\" query did not return any values.", getLabel());
-        } else {
-            QuerySolution qs = resultSet.next();
-
-            variablesBinding = new VariablesBinding(qs);
-
-            if (resultSet.hasNext()) {
-                log.warn("\"{}\" query did not return unique value.  If it is correct, the query should be restricted by additional statement (e.g. \"LIMIT 1\"). Returning binding {}, ignoring binding {}", getLabel(), variablesBinding.asQuerySolution(), resultSet.next());
+                if (resultSet.hasNext()) {
+                    log.warn("\"{}\" query did not return unique value. If it is correct, the query should be restricted by additional statement (e.g. \"LIMIT 1\"). Returning binding {}, ignoring binding {}", getLabel(), variablesBinding.asQuerySolution(), resultSet.next());
+                }
             }
-        }
 
-        return ExecutionContextFactory.createContext(
-            this.createOutputModel(isReplace, ModelFactory.createDefaultModel()),
-            variablesBinding
-        );
+            return ExecutionContextFactory.createContext(
+                    this.createOutputModel(isReplace, ModelFactory.createDefaultModel()),
+                    variablesBinding
+            );
+        }
     }
 
     @Override
@@ -63,5 +66,13 @@ public class BindBySelectModule extends AnnotatedAbstractModule {
 
     public void setSelectQuery(Select selectQuery) {
         this.selectQuery = selectQuery;
+    }
+
+    public boolean isReplace() {
+        return isReplace;
+    }
+
+    public void setReplace(boolean replace) {
+        isReplace = replace;
     }
 }

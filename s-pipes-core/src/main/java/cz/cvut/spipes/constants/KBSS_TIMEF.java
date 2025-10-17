@@ -10,6 +10,6 @@ public class KBSS_TIMEF {
      */
     public static final String uri = "http://onto.fel.cvut.cz/ontologies/lib/function/time/";
 
-    protected static final Property property(String local )
+    protected static Property property(String local)
     { return ResourceFactory.createProperty( uri, local ); }
 }

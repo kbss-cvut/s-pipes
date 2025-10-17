@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -46,7 +44,7 @@ public class ImportFileFromURLModuleTest {
 //                .andExpect(method(HttpMethod.GET))
 //                .andRespond(withSuccess("{}", MediaType.APPLICATION_JSON));
 //        mockServer.verify();
-    //@Disabled //TODO mockServer works mostlikely only through Spring API not with URL.connection
+    //@Disabled //TODO mockServer works most likely only through Spring API not with URL.connection
     @Test
     public void executeWithTargetFilePath() throws Exception {
 
@@ -85,9 +83,7 @@ public class ImportFileFromURLModuleTest {
         m.setInputContext(ExecutionContextFactory.createEmptyContext());
 
         //TODO specific exception
-        assertThrows(RuntimeException.class, () -> {
-            m.executeSelf();
-        });
+        assertThrows(RuntimeException.class, m::executeSelf);
     }
 
     private ImportFileFromURLModule createModuleWithSampleUrl() {
@@ -106,7 +102,7 @@ public class ImportFileFromURLModuleTest {
     }
 
     private String getFileContent(Path file) throws IOException {
-        return new String (Files.readAllBytes(file), StandardCharsets.UTF_8);
+        return Files.readString(file);
     }
 
 }

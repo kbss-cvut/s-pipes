@@ -74,5 +74,5 @@ public interface ExecutionContext {
 
     // TODO named graphs ? -- in merge rather having multiple graphs (for debugging)
     // TODO variable binding supporting stream etc .. ?
-    // TODO prefixe map ??
+    // TODO prefix map ??
 }

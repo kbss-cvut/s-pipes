@@ -19,10 +19,9 @@ public class RDF4JPersistenceFactory {
 
     public static @NotNull
     EntityManagerFactory getEntityManagerFactory(String persistenceUnitName, String rdf4jServerUrl, String repositoryName) {
-        final Map<String, String> props = new HashMap<>();
 
         String rdf4jRepositoryUrl = rdf4jServerUrl + "/repositories/" + repositoryName;
-        props.putAll(getInitialParams());
+        final Map<String, String> props = new HashMap<>(getInitialParams());
         props.put(JOPAPersistenceProperties.ONTOLOGY_PHYSICAL_URI_KEY, rdf4jRepositoryUrl );
         return Persistence.createEntityManagerFactory(persistenceUnitName, props);
     }

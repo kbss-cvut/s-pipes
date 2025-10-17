@@ -23,9 +23,9 @@ public class QueryUtils {
     private static final Logger log = LoggerFactory.getLogger(QueryUtils.class);
 
     /**
-     * Returns new query by substituting marker within given query with given value.
+     * Returns new query by substituting marker within a given query with given value.
      * Marker must be in syntax #${MARKER_NAME}.
-     * For example for marker with name "VALUES" query can look like following one :
+     * For example, for marker with name "VALUES" query can look like the following one:
      * SELECT * {
      * #${VALUES}
      * }
@@ -68,7 +68,7 @@ public class QueryUtils {
 
     private static String getValuesClauseValues(ResultSet resultSet, int rowsCount) {
 
-        StringBuffer valuesBuffer = new StringBuffer();
+        StringBuilder valuesBuffer = new StringBuilder();
 
         while (resultSet.hasNext() && rowsCount > 0) {
             rowsCount--;
@@ -87,7 +87,7 @@ public class QueryUtils {
     }
 
     /**
-     * Executes construct query and if it fails executes it with additional debugging information.
+     * Executes construct query and if it fails, executes it with additional debugging information.
      * @param query
      * @param model
      * @param bindings
@@ -104,10 +104,10 @@ public class QueryUtils {
 
 
     /**
-     * Executes construct query and if it fails executes it with additional debugging information.
+     * Executes construct query and if it fails, executes it with additional debugging information.
      * @param query Query to be executed.
      * @param inputModel Model that is queried.
-     * @param bindings Input binding used wihin the query.
+     * @param bindings Input binding used within the query.
      * @param outputModel Model where the output of the query will be stored.
      * @return
      */
@@ -121,7 +121,7 @@ public class QueryUtils {
     }
 
     /**
-     * Executes select query and if it fails executes it with additional debugging information.
+     * Executes select query and if it fails, executes it with additional debugging information.
      * @param query
      * @param model
      * @param bindings
@@ -136,25 +136,44 @@ public class QueryUtils {
         );
     }
 
-    private static <T >T execQuery(QueryExecutor<T>  queryExecutor, Query query, Model model, QuerySolution bindings) {
-        try {
-            return execQuery(
-                queryExecutor,
-                QueryExecutionFactory.create(query, model, bindings),
-                false);
+    private static <T> T execQuery(QueryExecutor<T> queryExecutor,
+                                   Query query,
+                                   Model model,
+                                   QuerySolution bindings) {
+        Dataset dataset = DatasetFactory.create(model);
+
+        try (QueryExecution qexec = QueryExecution.dataset(dataset)
+                .query(query)
+                .initialBinding(bindings)
+                .build()) {
+            return execQuery(queryExecutor, qexec, false);
         } catch (RuntimeException ex) {
-            log.error("Failed execution of query [1] for binding [2], due to exception [3]. " +
-                    "The query [1] will be executed again with detailed logging turned on. " +
-                    "\n\t - query [1]: \"\n{}\n\"" +
-                    "\n\t - binding [2]: \"\n{}\n\"" +
-                    "\n\t - exception [3]: \"\n{}\n\""
-                , query, bindings, getStackTrace(ex));
+            log.error("""
+                        Failed execution of query [1] for binding [2], due to exception [3]. \
+                        The query [1] will be executed again with detailed logging turned on. \
+                        
+                        \t - query [1]: "
+                        {}
+                        "\
+                        
+                        \t - binding [2]: "
+                        {}
+                        "\
+                        
+                        \t - exception [3]: "
+                        {}
+                        \""""
+                    , query, bindings, getStackTrace(ex));
         }
+
         log.error("Executing query [1] again to diagnose the cause ...");
-        return execQuery(
-            queryExecutor,
-            QueryExecutionFactory.create(query, model, bindings),
-            true);
+
+        try (QueryExecution qexec = QueryExecution.dataset(dataset)
+                .query(query)
+                .initialBinding(bindings)
+                .build()) {
+            return execQuery(queryExecutor, qexec, true);
+        }
     }
 
     private static <T> T execQuery(QueryExecutor<T>  queryExecutor, QueryExecution execution, boolean isDebugEnabled) {
@@ -205,7 +224,7 @@ public class QueryUtils {
         Stream.concat(
                 Stream.of(Pair.of("", JenaUtils.getNsPrefixURI(model, ""))),// default namespace
                 Stream.of(
-                        (includeExtraPrefixes // extra namspaces if included
+                        (includeExtraPrefixes // extra namespaces if included
                                 ? ExtraPrefixes.getExtraPrefixes().entrySet().stream()
                                         .filter(e -> model.getNsPrefixURI(e.getKey()) == null && e.getValue() != null)
                                 : Stream.<Map.Entry<String,String>>of()

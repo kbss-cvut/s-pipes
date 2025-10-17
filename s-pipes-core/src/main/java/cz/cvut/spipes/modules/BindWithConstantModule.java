@@ -57,4 +57,12 @@ public class BindWithConstantModule extends AnnotatedAbstractModule  {
     public void setValue(RDFNode value) {
         this.value = value;
     }
+
+    public boolean isReplace() {
+        return isReplace;
+    }
+
+    public void setReplace(boolean replace) {
+        isReplace = replace;
+    }
 }

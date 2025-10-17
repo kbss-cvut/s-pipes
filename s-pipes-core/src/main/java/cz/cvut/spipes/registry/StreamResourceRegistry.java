@@ -76,7 +76,7 @@ public class StreamResourceRegistry {
             log.trace("Clearing {} resources from resource map: {}", keys.size(), keys);
         }
         keys.forEach(
-            k -> id2resourcesMap.remove(k)
+                id2resourcesMap::remove
         );
     }
 }

@@ -10,14 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URL;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Know nothing about alternative entity ids -- e.g. prefixed-names, local-names.
+ * Know nothing about alternative entity ids -- e.g., prefixed-names, local-names.
  * <p>
  */
 public class SMScriptCollectionRepository implements ScriptCollectionRepository {
@@ -51,7 +48,7 @@ public class SMScriptCollectionRepository implements ScriptCollectionRepository 
         if (contexts == null) {
             throw new UnsupportedOperationException();
         }
-        return null;
+        return Collections.emptyList();
     }
 
     @Override
@@ -106,7 +103,7 @@ public class SMScriptCollectionRepository implements ScriptCollectionRepository 
 
 
     1) get modules -- > IDs + context
-    2) get funcitons
+    2) get functions
 
 
 
