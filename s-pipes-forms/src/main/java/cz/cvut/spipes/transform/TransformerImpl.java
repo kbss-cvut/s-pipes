@@ -203,7 +203,7 @@ public class TransformerImpl implements Transformer {
 
                 if (s != null) {
                     final Model m = extractModel(s);
-                    final String uri = ((OntModel) inputScript).getBaseModel().listStatements(null, RDF.type, OWL.Ontology).next().getSubject().getURI();
+                    final String uri = getOntologyUri(inputScript);
                     if (!changed.containsKey(uri)) {
                         changed.put(uri, ModelFactory.createDefaultModel().add(m instanceof OntModel ? ((OntModel) m).getBaseModel() : m));
                     }
@@ -250,13 +250,13 @@ public class TransformerImpl implements Transformer {
                     );
                 }
             });
-            changed.put(((OntModel) inputScript).getBaseModel().listStatements(null, RDF.type, OWL.Ontology).next().getSubject().getURI(), m);
+            changed.put(getOntologyUri(inputScript), m);
         }
 
         if (ttlChanged) {
             ttlModel.map(m ->
                 changed.put(
-                    m.listStatements(null, RDF.type, OWL.Ontology).next().getSubject().getURI(),
+                    getOntologyUri(m),
                     m
                 )
             );
@@ -440,7 +440,7 @@ public class TransformerImpl implements Transformer {
         if (st.getPredicate().hasProperty(RDFS.range))
             p.put(Vocabulary.s_p_has_answer_value_type, Collections.singleton(st.getPredicate().getProperty(RDFS.range).getObject().asResource().getURI()));
         Model m = extractModel(st);
-        p.put(Vocabulary.s_p_has_origin_context, Collections.singleton(m.listStatements(null, RDF.type, OWL.Ontology).next().getSubject().getURI()));
+        p.put(Vocabulary.s_p_has_origin_context, Collections.singleton(getOntologyUri(m)));
         return p;
     }
 
@@ -503,5 +503,10 @@ public class TransformerImpl implements Transformer {
         } else
             return Optional.of(m);
         return Optional.empty();
+    }
+
+    private String getOntologyUri(Model model) {
+        Model queriedModel = model instanceof OntModel ? ((OntModel) model).getBaseModel() : model;
+        return queriedModel.listStatements(null, RDF.type, OWL.Ontology).next().getSubject().getURI();
     }
 }
