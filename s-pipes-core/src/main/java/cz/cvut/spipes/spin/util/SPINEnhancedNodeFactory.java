@@ -12,11 +12,11 @@ import java.lang.reflect.Constructor;
 
 public class SPINEnhancedNodeFactory extends Implementation {
     private final Node type;
-    private Constructor<?> enhNodeConstructor;
+    private Constructor<? extends EnhNode> enhNodeConstructor;
 
     private static final Logger log = LoggerFactory.getLogger(SPINEnhancedNodeFactory.class);
 
-    public SPINEnhancedNodeFactory(Node type, Class<?> implClass) {
+    public SPINEnhancedNodeFactory(Node type, Class<? extends EnhNode> implClass) {
         this.type = type;
         try {
             enhNodeConstructor = implClass.getConstructor(Node.class, EnhGraph.class);
@@ -29,7 +29,7 @@ public class SPINEnhancedNodeFactory extends Implementation {
     @Override
     public EnhNode wrap(Node node, EnhGraph eg) {
         try {
-            return (EnhNode) enhNodeConstructor.newInstance(node, eg);
+            return enhNodeConstructor.newInstance(node, eg);
         }
         catch (Throwable t) {
             log.error(t.getMessage(), t);
