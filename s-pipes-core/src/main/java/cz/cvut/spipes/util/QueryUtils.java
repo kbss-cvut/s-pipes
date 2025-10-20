@@ -149,8 +149,8 @@ public class QueryUtils {
             return execQuery(queryExecutor, qexec, false);
         } catch (RuntimeException ex) {
             log.error("""
-                        Failed execution of query [1] for binding [2], due to exception [3]. \
-                        The query [1] will be executed again with detailed logging turned on. \
+                        Failed execution of query [1] for binding [2], due to exception [3]. 
+                        The query [1] will be executed again with detailed logging turned on. 
                         
                         \t - query [1]: "
                         {}
