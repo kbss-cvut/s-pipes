@@ -154,15 +154,16 @@ public class QueryUtils {
                         
                         \t - query [1]: "
                         {}
-                        "\
+                        "
                         
                         \t - binding [2]: "
                         {}
-                        "\
+                        "
                         
                         \t - exception [3]: "
                         {}
-                        \""""
+                        "
+                        """
                     , query, bindings, getStackTrace(ex));
         }
 
