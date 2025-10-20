@@ -43,6 +43,12 @@ public class SMScriptCollectionRepositoryTest {
         // TODO better matching by junit5 or assertThat(modules, CoreMatcher.*);
     }
 
+    @Disabled
+    @Test
+    public void getModuleTypes() throws Exception {
+
+    }
+
     @Test
     public void getPipelineFunctions() {
 
@@ -71,6 +77,12 @@ public class SMScriptCollectionRepositoryTest {
 
         //then
         assertEquals(sampleResource, resource);
+    }
+
+    @Disabled
+    @Test
+    public void getAlternativeEntityIds() throws Exception {        // get all baseIRIs
+
     }
 
     private OntModel getSampleOntology() {
