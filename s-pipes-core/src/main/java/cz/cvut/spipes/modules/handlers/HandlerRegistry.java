@@ -35,7 +35,7 @@ import java.util.*;
 public class HandlerRegistry {
 
     private static HandlerRegistry instance;
-    private final Map<Class<?>, HandlerFactory> handlers =  Collections.synchronizedMap(new HashMap<>());
+    private final Map<Class<?>, HandlerFactory<?>> handlers =  Collections.synchronizedMap(new HashMap<>());
 
     public synchronized static HandlerRegistry getInstance() {
         if (instance == null) {
@@ -74,11 +74,11 @@ public class HandlerRegistry {
     }
 
 
-    private static Constructor<? extends Handler<?>> getConstructor(Class<? extends Handler<?>> handler){
+    private static <T extends Handler<?>> Constructor<T> getConstructor(Class<T> handlerClass) {
         try {
-            return handler.getConstructor(Resource.class, ExecutionContext.class, Setter.class);
+            return handlerClass.getConstructor(Resource.class, ExecutionContext.class, Setter.class);
         } catch (NoSuchMethodException e) {
-            throw new IllegalArgumentException("No suitable constructor found for handler " + handler);
+            throw new IllegalArgumentException("No suitable constructor found for handler " + handlerClass, e);
         }
     }
 
@@ -90,39 +90,29 @@ public class HandlerRegistry {
     /**
      * The `HandlerFactory` interface defines a factory for creating handler instances.
      */
-    public interface HandlerFactory{
-        Handler<?> getHandler(Resource resource, ExecutionContext executionContext, Setter<?> setter);
+    public interface HandlerFactory<T> {
+        Handler<T> getHandler(Resource resource, ExecutionContext context, Setter<T> setter);
     }
 
     /**
      * The `DefaultConstructorHandlerFactory` is a factory class that uses a constructor
      * to create handler instances. It implements the `HandlerFactory` interface.
      */
-    private static class DefaultConstructorHandlerFactory implements HandlerFactory {
+    private static class DefaultConstructorHandlerFactory<T> implements HandlerFactory<T> {
+        private final Constructor<? extends Handler<T>> constructor;
 
-        private final Constructor<? extends Handler<?>> constructor;
-
-        public DefaultConstructorHandlerFactory(Class<? extends Handler<?>> type) {
+        public DefaultConstructorHandlerFactory(Class<? extends Handler<T>> type) {
             this.constructor = getConstructor(type);
         }
 
-        private static Constructor<? extends Handler<?>> getConstructor(Class<? extends Handler<?>> type) {
-            try {
-                return type.getConstructor(Resource.class, ExecutionContext.class, Setter.class);
-            } catch (NoSuchMethodException e) {
-                throw new RuntimeException("Expected constructor (Resource, ExecutionContext, Setter) in " + type, e);
-            }
-        }
-
         @Override
-        public Handler<?> getHandler(Resource resource, ExecutionContext executionContext, Setter<?> setter) {
+        public Handler<T> getHandler(Resource resource, ExecutionContext context, Setter<T> setter) {
             try {
-                return constructor.newInstance(resource, executionContext, setter);
-            } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
+                return constructor.newInstance(resource, context, setter);
+            } catch (ReflectiveOperationException e) {
                 throw new RuntimeException(e);
             }
         }
     }
-
 
 }

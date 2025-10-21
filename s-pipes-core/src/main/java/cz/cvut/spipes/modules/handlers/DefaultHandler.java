@@ -11,7 +11,7 @@ import org.apache.jena.rdf.model.Resource;
  **/
 public class DefaultHandler<T> extends Handler<T> {
 
-    private final Handler<?> typeHandler;
+    private final Handler<T> typeHandler;
 
     public DefaultHandler(Resource resource, ExecutionContext executionContext, Setter<? super T> setter) {
         super(resource, executionContext, setter);

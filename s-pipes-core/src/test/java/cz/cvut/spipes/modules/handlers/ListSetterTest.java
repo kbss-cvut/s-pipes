@@ -14,7 +14,7 @@ class ListSetterTest {
 
     private TestBean testBean;
     private Field testField;
-    private ListSetter<?> listSetter;
+    private ListSetter listSetter;
 
     public static class TestBean {
         public List<Object> values;
@@ -24,7 +24,7 @@ class ListSetterTest {
     void setUp() throws NoSuchFieldException {
         testBean = new TestBean();
         testField = TestBean.class.getField("values");
-        listSetter = new ListSetter<>(testField, testBean);
+        listSetter = new ListSetter(testField, testBean);
     }
 
     @Test

@@ -3,7 +3,7 @@ package cz.cvut.spipes.modules.handlers;
 import java.lang.reflect.Field;
 import java.util.List;
 
-public class ListSetter<T> extends Setter<T>{
+public class ListSetter extends Setter<Object>{
 
     public ListSetter(Field f, Object bean) {
         super(f, bean);
