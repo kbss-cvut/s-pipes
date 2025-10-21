@@ -9,7 +9,7 @@ public class FieldSetter<T> extends Setter<T> {
         super(f, bean);
     }
 
-    public void addValue(Object value) {
+    public void addValue(T value) {
         try {
             f.set(bean,value);
         } catch (IllegalAccessException ex) {
