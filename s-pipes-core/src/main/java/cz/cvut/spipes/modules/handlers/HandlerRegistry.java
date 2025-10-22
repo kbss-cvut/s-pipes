@@ -2,15 +2,17 @@ package cz.cvut.spipes.modules.handlers;
 
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.registry.StreamResource;
+import cz.cvut.spipes.spin.model.Select;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
-import cz.cvut.spipes.spin.model.Select;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -73,8 +75,7 @@ public class HandlerRegistry {
         return handlerFactory.getHandler(resource, context, setter);
     }
 
-
-    private static <T extends Handler<?>> Constructor<T> getConstructor(Class<T> handlerClass) {
+    private static <H extends Handler<?>> Constructor<H> getConstructor(Class<H> handlerClass) {
         try {
             return handlerClass.getConstructor(Resource.class, ExecutionContext.class, Setter.class);
         } catch (NoSuchMethodException e) {
@@ -90,23 +91,23 @@ public class HandlerRegistry {
     /**
      * The `HandlerFactory` interface defines a factory for creating handler instances.
      */
-    public interface HandlerFactory<T> {
-        Handler<T> getHandler(Resource resource, ExecutionContext context, Setter<T> setter);
+    public interface HandlerFactory<V> {
+        Handler<V> getHandler(Resource resource, ExecutionContext context, Setter<V> setter);
     }
 
     /**
      * The `DefaultConstructorHandlerFactory` is a factory class that uses a constructor
      * to create handler instances. It implements the `HandlerFactory` interface.
      */
-    private static class DefaultConstructorHandlerFactory<T> implements HandlerFactory<T> {
-        private final Constructor<? extends Handler<T>> constructor;
+    private static class DefaultConstructorHandlerFactory<V> implements HandlerFactory<V> {
+        private final Constructor<? extends Handler<V>> constructor;
 
-        public DefaultConstructorHandlerFactory(Class<? extends Handler<T>> type) {
+        public DefaultConstructorHandlerFactory(Class<? extends Handler<V>> type) {
             this.constructor = getConstructor(type);
         }
 
         @Override
-        public Handler<T> getHandler(Resource resource, ExecutionContext context, Setter<T> setter) {
+        public Handler<V> getHandler(Resource resource, ExecutionContext context, Setter<V> setter) {
             try {
                 return constructor.newInstance(resource, context, setter);
             } catch (ReflectiveOperationException e) {

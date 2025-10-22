@@ -15,11 +15,11 @@ import java.util.Optional;
  * This class provides a common implementation for handling RDF nodes and setting their values
  * to fields of a specified type.
  *
- * @param <T> The type of the value that this handler converts RDF nodes to.
+ * @param <V> The type of the value that this handler converts RDF nodes to.
  */
-abstract public class BaseRDFNodeHandler<T> extends Handler<T> {
+abstract public class BaseRDFNodeHandler<V> extends Handler<V> {
 
-    public BaseRDFNodeHandler(Resource resource, ExecutionContext executionContext, Setter<? super T> setter) {
+    public BaseRDFNodeHandler(Resource resource, ExecutionContext executionContext, Setter<? super V> setter) {
         super(resource, executionContext, setter);
     }
 
@@ -46,7 +46,7 @@ abstract public class BaseRDFNodeHandler<T> extends Handler<T> {
      * @param node The RDF node to convert.
      * @return The converted value of type {@code T}.
      */
-    abstract T getRDFNodeValue(RDFNode node);
+    abstract V getRDFNodeValue(RDFNode node);
 
     /**
      * Checks if the given property is assigned a value in the current resource.
