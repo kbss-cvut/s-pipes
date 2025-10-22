@@ -104,11 +104,8 @@ public class SPipesNodeFormatter {
         w.print(" ; ");
     }
 
-    protected static final Comparator<Node> PRED_ORDER = (p1, p2) -> {
-        //rdf:type ("a") always comes first, then lexicographical order
-        if (p1.equals(p2)) return 0;
-        if (RDF.type.asNode().equals(p1)) return -1;
-        if (RDF.type.asNode().equals(p2)) return 1;
-        return p1.toString().compareTo(p2.toString());
-    };
+    //rdf:type ("a") always comes first, then lexicographical order
+    protected static final Comparator<Node> PRED_ORDER =
+            Comparator.<Node>comparingInt(p -> RDF.type.asNode().equals(p) ? 0 : 1)
+                    .thenComparing((Node n) -> n.toString());
 }

@@ -6,7 +6,7 @@ import org.apache.jena.graph.Triple;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.riot.system.PrefixMap;
 import org.apache.jena.riot.system.PrefixMapFactory;
-import org.apache.jena.riot.system.RiotLib;
+import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.atlas.io.AWriter;
 
@@ -61,7 +61,7 @@ public class SPipesFormatter {
             PrefixMap prefixMap = PrefixMapFactory.createForOutput();
             ns.forEach(prefixMap::add);
 
-            RiotLib.writePrefixes(aw, prefixMap);
+            writePrefixes(aw, prefixMap);
             aw.println();
 
             writeTriples(aw);
@@ -81,23 +81,36 @@ public class SPipesFormatter {
             Map<Node, List<Node>> predMap = new TreeMap<>(SPipesNodeFormatter.PRED_ORDER);
             predMap.putAll(subjectMap.getOrDefault(subject, Collections.emptyMap()));
 
-            if (predMap.isEmpty()) {
-                w.println("    .\n");
-                continue;
+            if (!predMap.isEmpty()) {
+                writePredicates(w, predMap);
             }
-
-            writePredicates(w, predMap);
             w.println("    .\n");
         }
     }
 
+    private enum NodeCategory {
+        ONTOLOGY, URI, LABELED_BNODE, OTHER
+    }
+
+    private NodeCategory category(Node n) {
+        Map<Node, List<Node>> preds = subjectMap.get(n);
+        if (preds != null && preds.getOrDefault(RDF.type.asNode(), List.of())
+                .contains(OWL.Ontology.asNode())) {
+            return NodeCategory.ONTOLOGY;
+        }
+        if (n.isURI()) return NodeCategory.URI;
+        if (hasLabel(n)) return NodeCategory.LABELED_BNODE;
+        return NodeCategory.OTHER;
+    }
+
+    // URIs first, then labeled bnodes, then other bnodes
+    private final Comparator<Node> SUBJECT_COMPARATOR =
+            Comparator.comparing(this::category)
+                    .thenComparing(n -> n.isURI() ? n.getURI() : "")
+                    .thenComparing(n -> hasLabel(n) ? bnodeLabels.get(n.getBlankNodeLabel()) : "");
+
     private List<Node> sortSubjects(List<Node> subjects) {
-        // URIs first, then labeled bnodes, then other bnodes
-        subjects.sort(
-                Comparator.<Node>comparingInt(n -> n.isURI() ? 0 : hasLabel(n) ? 1 : 2)
-                        .thenComparing(n -> n.isURI() ? n.getURI() : "")
-                        .thenComparing(n -> hasLabel(n) ? bnodeLabels.get(n.getBlankNodeLabel()) : "")
-        );
+        subjects.sort(SUBJECT_COMPARATOR);
         return subjects;
     }
 

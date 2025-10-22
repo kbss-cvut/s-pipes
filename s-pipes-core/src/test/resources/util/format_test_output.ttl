@@ -9,6 +9,11 @@ PREFIX sml:  <http://topbraid.org/sparqlmotionlib#>
 PREFIX sp:   <http://spinrdf.org/sp#>
 PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
 
+<http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1>
+    a owl:Ontology ;
+    owl:imports <http://onto.fel.cvut.cz/ontologies/s-pipes-lib> ;
+    .
+
 ex:Alice
     a foaf:Person ;
     foaf:mbox <mailto:alice@example.com> ;
@@ -16,11 +21,6 @@ ex:Alice
     with ""
     multi"line""
     text""" ;
-    .
-
-<http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1>
-    a owl:Ontology ;
-    owl:imports <http://onto.fel.cvut.cz/ontologies/s-pipes-lib> ;
     .
 
 :bind-firstname
