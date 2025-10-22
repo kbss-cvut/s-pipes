@@ -24,7 +24,7 @@ public class RDFNodeHandlerTest {
     }
 
     @Test
-    public void testGetRDFNodeValue() {
+    public void getRDFNodeValue() {
         RDFNode mockNode = mock(RDFNode.class);
         RDFNode result = rdfNodeHandler.getRDFNodeValue(mockNode);
         assertEquals(mockNode, result);

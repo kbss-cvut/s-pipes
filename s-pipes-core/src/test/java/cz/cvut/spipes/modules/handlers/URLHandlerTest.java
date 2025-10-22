@@ -26,7 +26,7 @@ class URLHandlerTest {
     }
 
     @Test
-    void testGetRDFNodeValue_ValidURL() throws MalformedURLException {
+    void getRDFNodeValueWhenValidURL() throws MalformedURLException {
 
         RDFNode node = ResourceFactory.createPlainLiteral("http://example.com");
 
@@ -36,7 +36,7 @@ class URLHandlerTest {
     }
 
     @Test
-    void testGetRDFNodeValue_InvalidURL() {
+    void getRDFNodeValueWhenInvalidURLThrowsRuntimeError() {
 
         RDFNode node = ResourceFactory.createPlainLiteral("invalid-url");
 
@@ -44,7 +44,7 @@ class URLHandlerTest {
     }
 
     @Test
-    void testGetRDFNodeValue_NullNode() {
+    void getRDFNodeValueWhenNullNodeThrowsNullPointerException() {
 
         RDFNode node = null;
 

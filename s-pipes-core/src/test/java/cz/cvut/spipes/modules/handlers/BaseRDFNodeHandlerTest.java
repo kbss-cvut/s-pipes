@@ -33,7 +33,7 @@ public class BaseRDFNodeHandlerTest {
     }
 
     @Test
-    void testGetEffectiveValueWithString() {
+    void getEffectiveValueWithString() {
             var model = ModelFactory.createDefaultModel();
 
             RDFNode mockNode = model.createLiteral("test");
@@ -47,7 +47,7 @@ public class BaseRDFNodeHandlerTest {
     }
 
     @Test
-    void testHasParameterValueAssignment_Assigned() {
+    void hasParameterValueAssignment_Assigned() {
         Statement mockStatement = mock(Statement.class);
         when(mockResource.getProperty(mockProperty)).thenReturn(mockStatement);
 
@@ -57,7 +57,7 @@ public class BaseRDFNodeHandlerTest {
     }
 
     @Test
-    void testHasParameterValueAssignment_NotAssigned() {
+    void hasParameterValueAssignment_NotAssigned() {
         when(mockResource.getProperty(mockProperty)).thenReturn(null);
 
         boolean result = handler.hasParameterValueAssignment(mockProperty);

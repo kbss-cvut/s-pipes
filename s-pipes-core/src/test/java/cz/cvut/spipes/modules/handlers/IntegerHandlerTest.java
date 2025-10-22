@@ -24,7 +24,7 @@ public class IntegerHandlerTest {
     }
 
     @Test
-    void testGetRDFNodeValue() {
+    void getRDFNodeValue() {
         RDFNode rdfNode = ResourceFactory.createTypedLiteral(42);
 
         Integer result = integerHandler.getRDFNodeValue(rdfNode);

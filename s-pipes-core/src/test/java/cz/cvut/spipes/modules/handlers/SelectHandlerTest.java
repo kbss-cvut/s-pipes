@@ -27,7 +27,7 @@ public class SelectHandlerTest {
     }
 
     @Test
-    public void testGetRDFNodeValue() {
+    public void getRDFNodeValue() {
         RDFNode mockNode = mock(RDFNode.class);
         Resource mockResource = mock(Resource.class);
         Select mockSelect = mock(Select.class);

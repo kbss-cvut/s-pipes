@@ -29,7 +29,7 @@ public class PathHandlerTest {
     }
 
     @Test
-    public void testGetRDFNodeValue() {
+    public void getRDFNodeValue() {
         RDFNode mockNode = mock(RDFNode.class);
         when(mockNode.toString()).thenReturn("/example/path/to/file");
 

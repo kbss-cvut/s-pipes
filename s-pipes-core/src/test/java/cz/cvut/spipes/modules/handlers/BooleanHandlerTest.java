@@ -24,14 +24,14 @@ public class BooleanHandlerTest {
     }
 
     @Test
-    void testGetRDFNodeValueTrue() {
+    void getRDFNodeValueWhenTrue() {
         RDFNode rdfNode = ResourceFactory.createTypedLiteral(true);
         Boolean result = booleanHandler.getRDFNodeValue(rdfNode);
         assertTrue(result);
     }
 
     @Test
-    void testGetRDFNodeValueFalse() {
+    void getRDFNodeValueWhenFalse() {
         RDFNode rdfNode = ResourceFactory.createTypedLiteral(false);
         Boolean result = booleanHandler.getRDFNodeValue(rdfNode);
         assertFalse(result);

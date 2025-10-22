@@ -25,7 +25,7 @@ public class StringHandlerTest {
     }
 
     @Test
-    public void testGetRDFNodeValue() {
+    public void getRDFNodeValue() {
         RDFNode mockNode = mock(RDFNode.class);
         String expectedString = "testString";
         when(mockNode.toString()).thenReturn(expectedString);

@@ -49,7 +49,7 @@ public class ListHandlerTest {
     }
 
     @Test
-    public void testGetStringListByProperty_withValidData() throws Exception {
+    public void getRDFNodeListByPropertyWhenValidData() throws Exception {
         try (MockedStatic<HandlerRegistry> mockedStatic = mockStatic(HandlerRegistry.class)) {
             // Mock field
             Field field = SampleClass.class.getDeclaredField("listField");

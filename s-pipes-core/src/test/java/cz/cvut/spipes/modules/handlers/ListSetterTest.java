@@ -28,7 +28,7 @@ class ListSetterTest {
     }
 
     @Test
-    void testAddValueWhenListIsNull() {
+    void addValueWhenInitialValueIsNull() {
         assertNull(testBean.values);
 
         listSetter.addValue("testValue");
@@ -39,7 +39,7 @@ class ListSetterTest {
     }
 
     @Test
-    void testAddValueWhenListIsAlreadyInitialized() {
+    void addValueWhenInitialValueIsEmptyList() {
         testBean.values = new ArrayList<>();
 
         listSetter.addValue("testValue");
@@ -49,7 +49,7 @@ class ListSetterTest {
     }
 
     @Test
-    void testAddListOfValues() {
+    void addValueWhenInitialListContainsValues() {
         List<Object> valuesToAdd = Arrays.asList("value1", "value2", "value3");
 
         listSetter.addValue(valuesToAdd);
@@ -60,7 +60,7 @@ class ListSetterTest {
     }
 
     @Test
-    void testAddValueWhenListIsNullAndValueIsList() {
+    void addValueWhenInitialValueIsNullAndNextValueIsList() {
         List<Object> valuesToAdd = Arrays.asList("value1", "value2");
 
         listSetter.addValue(valuesToAdd);
@@ -72,7 +72,7 @@ class ListSetterTest {
     }
 
     @Test
-    void testAddSingleValueToExistingList() {
+    void addValueWhenInitialValueIsListAndNextValueIsSingleObject() {
         testBean.values = new ArrayList<>();
         testBean.values.add("initialValue");
 
@@ -83,7 +83,7 @@ class ListSetterTest {
     }
 
     @Test
-    void testAddListToExistingList() {
+    void addValueWhenInitialValueIsListAndNextValueIsList() {
         testBean.values = new ArrayList<>();
         testBean.values.add("initialValue");
 
