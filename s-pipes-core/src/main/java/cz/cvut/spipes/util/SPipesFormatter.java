@@ -84,7 +84,7 @@ public class SPipesFormatter {
             if (!predMap.isEmpty()) {
                 writePredicates(w, predMap);
             }
-            w.println("    .\n");
+            w.println(".\n");
         }
     }
 
