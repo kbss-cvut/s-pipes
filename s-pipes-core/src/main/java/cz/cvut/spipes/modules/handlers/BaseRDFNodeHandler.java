@@ -46,7 +46,7 @@ abstract public class BaseRDFNodeHandler<T> extends Handler<T> {
      * @param node The RDF node to convert.
      * @return The converted value of type {@code T}.
      */
-    abstract T getRDFNodeValue(RDFNode node) throws Exception;
+    abstract T getRDFNodeValue(RDFNode node);
 
     /**
      * Checks if the given property is assigned a value in the current resource.

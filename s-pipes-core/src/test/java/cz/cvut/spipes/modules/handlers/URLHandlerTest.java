@@ -40,7 +40,7 @@ class URLHandlerTest {
 
         RDFNode node = ResourceFactory.createPlainLiteral("invalid-url");
 
-        assertThrows(MalformedURLException.class, () -> urlHandler.getRDFNodeValue(node));
+        assertThrows(IllegalArgumentException.class, () -> urlHandler.getRDFNodeValue(node));
     }
 
     @Test
