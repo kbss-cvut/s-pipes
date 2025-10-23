@@ -20,7 +20,7 @@ public class ListHandler extends Handler<List<?>> {
 
     @Override
     public void setValueByProperty(Property property) {
-        setter.addValue(getRDFNodeListByProperty(property));
+        setter.setValue(getRDFNodeListByProperty(property));
     }
 
     Class<?> getClazz() {

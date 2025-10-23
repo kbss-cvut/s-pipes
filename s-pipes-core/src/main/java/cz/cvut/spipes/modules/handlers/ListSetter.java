@@ -10,7 +10,7 @@ public class ListSetter extends Setter<Object>{
     }
 
     @Override
-    public void addValue(Object value) {
+    public void setValue(Object value) {
         try {
             List<Object> list = (List<Object>) f.get(bean);
 

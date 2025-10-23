@@ -71,9 +71,9 @@ abstract public class BaseRDFNodeHandler<V> extends Handler<V> {
         if (hasParameterValueAssignment(property)) {
             try {
                 if(node != null){
-                    setter.addValue(getRDFNodeValue(node));
+                    setter.setValue(getRDFNodeValue(node));
                 }else{
-                    setter.addValue(null);
+                    setter.setValue(null);
                 }
 
             } catch (Exception ex) {

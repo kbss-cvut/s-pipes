@@ -40,7 +40,7 @@ public abstract class AnnotatedAbstractModule extends AbstractModule {
      *
      * <p>For each annotated field:
      * <ul>
-     *   <li>A {@link Setter} is selected based on the field's type (e.g., {@link FieldSetter} for regular fields, {@link ListSetter} for lists).</li>
+     *   <li>A {@link Setter} is selected based on the field's type (e.g., {@link SingleValueSetter} for regular fields, {@link ListSetter} for lists).</li>
      *   <li>The {@link HandlerRegistry} retrieves a matching {@link Handler} for the field's type,
      *       which is responsible for setting the value of the field based on its {@link Parameter#iri()}.</li>
      *   <li>If the field specifies a custom handler (via {@link Parameter#handler()}), an instance of the custom handler is created using its
@@ -90,7 +90,7 @@ public abstract class AnnotatedAbstractModule extends AbstractModule {
                 if (f.getType() == List.class) {
                     setter = new ListSetter(f, this);
                 } else {
-                    setter = new FieldSetter(f, this);
+                    setter = new SingleValueSetter(f, this);
                 }
                 Class<?> handlerClazz = p.handler();
 
