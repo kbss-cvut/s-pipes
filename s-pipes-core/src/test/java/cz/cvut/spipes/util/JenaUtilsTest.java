@@ -180,34 +180,29 @@ public class JenaUtilsTest {
 
     @Test
     void writeScriptPreservesFormatting() throws IOException {
-        var inUrl = getClass().getResource("/util/format_test_input.ttl");
-        assertNotNull(inUrl, "format_test_input.ttl not found");
-
-        var outUrl = getClass().getResource("/util/format_test_output.ttl");
-        assertNotNull(outUrl, "format_test_output.ttl not found");
-
         var model = ModelFactory.createDefaultModel();
-        try (var input = inUrl.openStream()) {
-            model.read(input, inUrl.toExternalForm(), "TURTLE");
+        try (var in = getClass().getResourceAsStream("/util/format_test_input.ttl")) {
+            assertNotNull(in);
+            model.read(in, null, "TURTLE");
         }
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        JenaUtils.writeScript(baos, model);
-        String actualOutput = baos.toString(StandardCharsets.UTF_8);
+        var expected = readUtf8("/util/format_test_output.ttl");
+        var actual   = writeToString(model);
 
-        String expectedOutput;
-        try (var original = outUrl.openStream()) {
-            expectedOutput = new String(original.readAllBytes(), StandardCharsets.UTF_8);
-        }
-
-        var expectedLines = List.of(expectedOutput.split("\\R", -1));
-        var actualLines   = List.of(actualOutput.split("\\R", -1));
-
-        var expectedPatterns = expectedLines.stream()
-                .map(Pattern::quote)
-                .toList();
-
-        assertLinesMatch(expectedPatterns, actualLines);
+        assertEquals(expected, actual);
     }
 
+    private String writeToString(Model model) throws IOException {
+        try (var baos = new ByteArrayOutputStream()) {
+            JenaUtils.writeScript(baos, model);
+            return baos.toString(StandardCharsets.UTF_8);
+        }
+    }
+
+    private String readUtf8(String path) throws IOException {
+        try (var in = getClass().getResourceAsStream(path)) {
+            assertNotNull(in, path + " not found");
+            return new String(in.readAllBytes(), StandardCharsets.UTF_8);
+        }
+    }
 }

@@ -1,29 +1,25 @@
-@prefix ex:   <http://example.com/> .
-@prefix :     <http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1/> .
-@prefix foaf: <http://xmlns.com/foaf/0.1/> .
-@prefix sml:  <http://topbraid.org/sparqlmotionlib#> .
-@prefix sm:   <http://topbraid.org/sparqlmotion#> .
-@prefix sp:   <http://spinrdf.org/sp#> .
+PREFIX :    <http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1/>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
 @prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix owl:  <http://www.w3.org/2002/07/owl#> .
-@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
-
-ex:Alice
-    foaf:name """Alice
-    with ""
-    multi"line""
-    text""" ;
-    foaf:mbox <mailto:alice@example.com> ;
-    rdf:type foaf:Person .
-
+PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sm:  <http://topbraid.org/sparqlmotion#>
+PREFIX sml: <http://topbraid.org/sparqlmotionlib#>
+PREFIX sp:  <http://spinrdf.org/sp#>
+:construct-greeting
+    sm:next :express-greeting_Return ;
+    sml:constructQuery [ a sp:Construct ; sp:text """
+          PREFIX : <http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1/>
+          CONSTRUCT {
+          ?person :is-greeted-by-message ?greetingMessage .
+          } WHERE {
+          BIND(iri(concat(str(:), ?personId)) as ?person)
+          BIND(concat("Hello ", ?personName, ".") as ?greetingMessage)
+          }
+      """ ; ] ;
+    sml:replace true ;
+    rdfs:label "Construct greeting" ;
+    rdf:type sml:ApplyConstruct ;
+.
 <http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1>
     a owl:Ontology ;
-    owl:imports <http://onto.fel.cvut.cz/ontologies/s-pipes-lib> .
-
-:bind-firstname
-    a sml:BindWithConstant ;
-    rdfs:label "Bind person name" ;
-    sm:next :construct-greeding ;
-    sm:outputVariable "personNamee" ;
-    sml:value [ a sp:Expression ; sp:text "?firstName" ] .
+.
