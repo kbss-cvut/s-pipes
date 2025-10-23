@@ -117,20 +117,21 @@ public class SPipesFormatter {
     private void writePredicates(AWriter w, Map<Node, List<Node>> predMap) {
         for (Map.Entry<Node, List<Node>> e : predMap.entrySet()) {
             Node pred = e.getKey();
-            boolean isRDFType = RDF.type.asNode().equals(pred);
 
             w.print("    ");
-            if (isRDFType) {
-                w.print("a ");
-            } else {
-                nodeFormatter.formatNode(w, pred, null);
-                w.print(" ");
-            }
+            nodeFormatter.formatPredicate(w, pred);
+            w.print(" ");
 
-            for (Node obj : e.getValue()) {
-                nodeFormatter.formatNode(w, obj, new HashSet<>());
-                w.println(" ;");
+            Iterator<Node> it = e.getValue().iterator();
+            while (it.hasNext()) {
+                nodeFormatter.formatNode(w, it.next(), new HashSet<>());
+                if (it.hasNext()) {
+                    w.print(" ,\n    ");
+                } else {
+                    w.print(" ;");
+                }
             }
+            w.println();
         }
     }
 }

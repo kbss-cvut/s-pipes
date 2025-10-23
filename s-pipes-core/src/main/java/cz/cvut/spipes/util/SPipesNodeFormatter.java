@@ -91,15 +91,19 @@ public class SPipesNodeFormatter {
         Node p = t.getPredicate();
         Node o = t.getObject();
 
-        if (p.equals(RDF.type.asNode())) {
-            w.print("a");
-        } else {
-            delegate.format(w, p);
-        }
+        formatPredicate(w, p);
 
         w.print(" ");
         formatNode(w, o, path);
         w.print(" ; ");
+    }
+
+    public void formatPredicate(AWriter w, Node predicate) {
+        if (predicate.equals(RDF.type.asNode())) {
+            w.print("a");
+        } else {
+            delegate.format(w, predicate);
+        }
     }
 
     //rdf:type ("a") always comes first, then lexicographical order
