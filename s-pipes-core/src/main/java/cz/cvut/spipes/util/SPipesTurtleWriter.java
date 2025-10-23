@@ -2,8 +2,6 @@ package cz.cvut.spipes.util;
 
 import org.apache.commons.io.output.WriterOutputStream;
 import org.apache.jena.graph.Graph;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RiotException;
 import org.apache.jena.riot.WriterGraphRIOT;
@@ -19,8 +17,7 @@ public class SPipesTurtleWriter implements WriterGraphRIOT {
 
     @Override
     public void write(OutputStream out, Graph graph, PrefixMap prefixMap, String baseURI, Context context) {
-        Model model = ModelFactory.createModelForGraph(graph);
-        SPipesFormatter formatter = new SPipesFormatter(model, prefixMap);
+        SPipesFormatter formatter = new SPipesFormatter(graph, prefixMap);
         formatter.writeTo(out);
         try {
             out.flush();

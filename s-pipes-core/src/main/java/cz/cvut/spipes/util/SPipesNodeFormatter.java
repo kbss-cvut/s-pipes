@@ -1,9 +1,9 @@
 package cz.cvut.spipes.util;
 
+import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.atlas.io.AWriter;
-import org.apache.jena.rdf.model.Model;
 import org.apache.jena.riot.out.NodeFormatterTTL;
 import org.apache.jena.riot.system.PrefixMap;
 import org.apache.jena.riot.system.PrefixMapStd;
@@ -14,17 +14,15 @@ import java.util.*;
 public class SPipesNodeFormatter {
 
     final NodeFormatterTTL delegate;
-    private final Model model;
-    private final Map<String,String> ns;
+    private final Graph graph;
     private final Map<String,Integer> inDegree;
     private final Map<String,String> bnodeLabels;
 
-    public SPipesNodeFormatter(Model model,
+    public SPipesNodeFormatter(Graph graph,
                                Map<String,String> ns,
-                              Map<String, Integer> inDegree,
-                              Map<String, String> bnodeLabels) {
-        this.model = model;
-        this.ns = ns;
+                               Map<String, Integer> inDegree,
+                               Map<String, String> bnodeLabels) {
+        this.graph = graph;
         this.inDegree = inDegree;
         this.bnodeLabels = bnodeLabels;
         PrefixMap prefixMap = new PrefixMapStd();
@@ -73,7 +71,7 @@ public class SPipesNodeFormatter {
             return;
         }
 
-        List<Triple> props = model.getGraph().find(blank, Node.ANY, Node.ANY).toList();
+        List<Triple> props = graph.find(blank, Node.ANY, Node.ANY).toList();
 
         if (props.isEmpty()) {
             w.print("[]");

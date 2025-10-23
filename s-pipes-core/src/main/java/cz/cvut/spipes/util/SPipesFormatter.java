@@ -1,9 +1,9 @@
 package cz.cvut.spipes.util;
 
 import org.apache.jena.atlas.io.IndentedWriter;
+import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.Triple;
-import org.apache.jena.rdf.model.Model;
 import org.apache.jena.riot.system.PrefixMap;
 import org.apache.jena.riot.system.PrefixMapFactory;
 import org.apache.jena.vocabulary.OWL;
@@ -17,7 +17,7 @@ import static org.apache.jena.riot.system.RiotLib.writePrefixes;
 
 public class SPipesFormatter {
 
-    private final Model model;
+    private final Graph graph;
     private final Map<String, String> ns;
     private final Map<Node, Map<Node, List<Node>>> subjectMap = new LinkedHashMap<>();
     private final Map<String, Integer> inDegree = new HashMap<>();
@@ -26,10 +26,10 @@ public class SPipesFormatter {
 
     private final SPipesNodeFormatter nodeFormatter;
 
-    public SPipesFormatter(Model model, PrefixMap prefixMap) {
-        this.model = model;
+    public SPipesFormatter(Graph graph, PrefixMap prefixMap) {
+        this.graph = graph;
         this.ns = new LinkedHashMap<>(prefixMap.getMapping());
-        this.nodeFormatter = new SPipesNodeFormatter(model, ns, inDegree, bnodeLabels);
+        this.nodeFormatter = new SPipesNodeFormatter(graph, ns, inDegree, bnodeLabels);
         buildSubjectMap();
         assignBNodeLabels();
     }
@@ -43,7 +43,7 @@ public class SPipesFormatter {
     }
 
     private void buildSubjectMap() {
-        Iterator<Triple> it = model.getGraph().find();
+        Iterator<Triple> it = graph.find();
         while (it.hasNext()) {
             Triple t = it.next();
             Node s = t.getSubject(), p = t.getPredicate(), o = t.getObject();
