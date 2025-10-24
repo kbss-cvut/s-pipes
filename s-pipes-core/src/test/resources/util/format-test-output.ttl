@@ -10,6 +10,7 @@ PREFIX sp:   <http://spinrdf.org/sp#>
 
 <http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1>
     a owl:Ontology ;
+    owl:imports <http://onto.fel.cvut.cz/ontologies/s-pipes-lib> ;
 .
 
 ex:Alice
@@ -24,7 +25,7 @@ ex:Bob
 :construct-greeting
     a sml:ApplyConstruct ;
     sm:next :express-greeting_Return ;
-    sml:constructQuery [ a sp:Construct ; sp:text """
+    sml:constructQuery [ a sp:Construct ; sp:text '''
           PREFIX : <http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1/>
           CONSTRUCT {
           ?person :is-greeted-by-message ?greetingMessage .
@@ -32,7 +33,7 @@ ex:Bob
           BIND(iri(concat(str(:), ?personId)) as ?person)
           BIND(concat("Hello ", ?personName, ".") as ?greetingMessage)
           }
-      """ ; ] ;
+      ''' ; ] ;
     sml:replace true ;
     rdfs:label "Construct greeting" ;
 .

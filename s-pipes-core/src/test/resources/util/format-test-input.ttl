@@ -24,6 +24,7 @@ PREFIX foaf:  <http://xmlns.com/foaf/0.1/>
 .
 <http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1>
     a owl:Ontology ;
+    owl:imports <http://onto.fel.cvut.cz/ontologies/s-pipes-lib> ;
 .
 
 ex:Alice foaf:knows _:x .

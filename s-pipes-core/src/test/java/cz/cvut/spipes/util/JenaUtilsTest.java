@@ -181,12 +181,13 @@ public class JenaUtilsTest {
     @Test
     void writeScriptPreservesFormatting() throws IOException {
         var model = ModelFactory.createDefaultModel();
-        try (var in = getClass().getResourceAsStream("/util/format_test_input.ttl")) {
+        try (var in = getClass().getResourceAsStream("/util/format-test-input.ttl")) {
             assertNotNull(in);
             model.read(in, null, "TURTLE");
         }
 
-        var expected = readUtf8("/util/format_test_output.ttl");
+        // We can't compare the output with the same input file, because of how blank nodes are serialised.
+        var expected = readUtf8("/util/format-test-output.ttl");
         var actual   = writeToString(model);
 
         assertEquals(expected, actual);
