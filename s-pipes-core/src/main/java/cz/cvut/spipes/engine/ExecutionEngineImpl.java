@@ -26,10 +26,27 @@ class ExecutionEngineImpl implements ExecutionEngine {
         log.info("Executing script {} with context {}.", module.getResource(), inputContext.toSimpleString());
         final long pipelineExecutionId = Instant.now().toEpochMilli()*1000+(i++);
 
-        fire((l) -> {l.pipelineExecutionStarted(pipelineExecutionId); return null;});
-        ExecutionContext outputContext = _executePipeline(pipelineExecutionId, module, inputContext, null);
-        fire((l) -> {l.pipelineExecutionFinished(pipelineExecutionId); return null;});
-        return outputContext;
+        String functionName = inputContext.getId();
+        String scriptPath;
+        if (inputContext.getValue(ExecutionContext.P_SCRIPT_URI) != null) {
+            scriptPath = inputContext.getScriptFile().toString();
+        } else {
+            scriptPath = module.getScriptPath();
+        }
+        String script = module.getResource().toString().replaceAll("\\/[^.]*$", "");
+        fire((l) -> {l.pipelineExecutionStarted(pipelineExecutionId, functionName, scriptPath, script); return null;});
+        try {
+            ExecutionContext outputContext = _executePipeline(pipelineExecutionId, module, inputContext, null);
+            fire((l) -> {l.pipelineExecutionFinished(pipelineExecutionId); return null;});
+            return outputContext;
+        } catch (Exception e) {
+            log.error("Pipeline execution failed", e);
+            fire((l) -> {
+                l.pipelineExecutionFailed(pipelineExecutionId);
+                return null;
+            });
+            throw e;
+        }
     }
 
     private void fire(final Function<ProgressListener,Void> function) {
