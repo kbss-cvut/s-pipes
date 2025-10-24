@@ -15,6 +15,11 @@ import java.util.*;
 
 import static org.apache.jena.riot.system.RiotLib.writePrefixes;
 
+/**
+ * Formats an RDF graph into Turtle syntax with custom structure and blank node handling.
+ * Controls subject ordering, predicate sorting, and punctuation.
+ * Uses {@link SPipesNodeFormatterTTL} for node-level formatting.
+ */
 public class SPipesFormatter {
 
     private final Graph graph;
@@ -34,6 +39,10 @@ public class SPipesFormatter {
         assignBNodeLabels();
     }
 
+    /**
+     * Assigns stable labels to blank nodes that are referenced more than once.
+     * Labels are stored in {@code bnodeLabels} as {@code _:b0}, {@code _:b1}, etc.
+     */
     private void assignBNodeLabels() {
         for (Node subj : subjectMap.keySet()) {
             if (subj.isBlank() && inDegreeOf(subj) > 1) {
@@ -42,6 +51,10 @@ public class SPipesFormatter {
         }
     }
 
+    /**
+     * Builds a nested map of triples: {@code subject → predicate → list of objects}.
+     * Also tracks in-degree of blank nodes (how often they appear as objects).
+     */
     private void buildSubjectMap() {
         Iterator<Triple> it = graph.find();
         while (it.hasNext()) {
@@ -56,6 +69,12 @@ public class SPipesFormatter {
     private int inDegreeOf(Node n) { return n.isBlank() ? inDegree.getOrDefault(n.getBlankNodeLabel(), 0) : 0; }
     private boolean hasLabel(Node n) { return n.isBlank() && bnodeLabels.containsKey(n.getBlankNodeLabel()); }
 
+    /**
+     * Entry point for serialising the graph to Turtle.
+     * Writes prefix declarations and serialises all triples.
+     *
+     * @param out the output stream to write to
+     */
     public void writeTo(OutputStream out) {
         try(IndentedWriter aw = new IndentedWriter(out)){
             PrefixMap prefixMap = PrefixMapFactory.createForOutput();
@@ -69,6 +88,14 @@ public class SPipesFormatter {
         }
     }
 
+    /**
+     * Serializes all triples in the graph.
+     * Subjects are sorted using {@code SUBJECT_COMPARATOR}.
+     * Skips blank nodes that are referenced elsewhere and not labelled.
+     * Each subject block ends with {@code .} and a newline.
+     *
+     * @param w the writer to output to
+     */
     private void writeTriples(AWriter w) {
         List<Node> subjects = sortSubjects(new ArrayList<>(subjectMap.keySet()));
 
@@ -88,10 +115,23 @@ public class SPipesFormatter {
         }
     }
 
+    /**
+     * Defines categories for sorting subjects:
+     * - {@code ONTOLOGY}: subjects typed as {@code owl:Ontology}
+     * - {@code URI}: subjects with URIs
+     * - {@code LABELED_BNODE}: blank nodes with assigned labels
+     * - {@code OTHER}: all other blank nodes
+     */
     private enum NodeCategory {
         ONTOLOGY, URI, LABELED_BNODE, OTHER
     }
 
+    /**
+     * Determines the {@link NodeCategory} of a node for sorting purposes.
+     *
+     * @param n the node to categorise
+     * @return the category of the node
+     */
     private NodeCategory category(Node n) {
         Map<Node, List<Node>> preds = subjectMap.get(n);
         if (preds != null && preds.getOrDefault(RDF.type.asNode(), List.of())
@@ -103,17 +143,36 @@ public class SPipesFormatter {
         return NodeCategory.OTHER;
     }
 
-    // URIs first, then labeled bnodes, then other bnodes
+    // URIs first, then labelled bnodes, then other bnodes
     private final Comparator<Node> SUBJECT_COMPARATOR =
             Comparator.comparing(this::category)
                     .thenComparing(n -> n.isURI() ? n.getURI() : "")
                     .thenComparing(n -> hasLabel(n) ? bnodeLabels.get(n.getBlankNodeLabel()) : "");
 
+    /**
+     * Sorts subjects using {@code SUBJECT_COMPARATOR}, which prioritizes:
+     * - Ontologies
+     * - URIs
+     * - Labelled blank nodes
+     * - Other blank nodes
+     *
+     * @param subjects the list of subjects to sort
+     * @return the sorted list
+     */
     private List<Node> sortSubjects(List<Node> subjects) {
         subjects.sort(SUBJECT_COMPARATOR);
         return subjects;
     }
 
+    /**
+     * Serializes all predicate–object pairs for a given subject.
+     * Predicates are sorted using {@code PRED_ORDER}.
+     * Uses {@link SPipesNodeFormatterTTL#formatPredicate} to format predicates.
+     * Objects are separated by commas ({@code ,}), predicates by semicolons ({@code ;}).
+     *
+     * @param w the writer to output to
+     * @param predMap the predicate–object map for the subject
+     */
     private void writePredicates(AWriter w, Map<Node, List<Node>> predMap) {
         for (Map.Entry<Node, List<Node>> e : predMap.entrySet()) {
             Node pred = e.getKey();

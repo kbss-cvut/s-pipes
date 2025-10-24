@@ -18,6 +18,11 @@ public class SPipesNodeFormatterTTL {
     private final Map<String,Integer> inDegree;
     private final Map<String,String> bnodeLabels;
 
+    /**
+     * Formats individual RDF nodes for Turtle output.
+     * Handles blank nodes with custom logic for inlining and labelling.
+     * Delegates to Jena's NodeFormatterTTL_Multiline when appropriate.
+     */
     public SPipesNodeFormatterTTL(Graph graph,
                                   Map<String,String> ns,
                                   Map<String, Integer> inDegree,
@@ -30,6 +35,15 @@ public class SPipesNodeFormatterTTL {
         this.delegate = new NodeFormatterTTL_MultiLine(null, prefixMap);
     }
 
+    /**
+     * Entry point for formatting any RDF node.
+     * Delegates to specific formatting methods based on node type.
+     * For non-blank nodes, formatting is delegated to NodeFormatterTTL_Multiline.
+     *
+     * @param w the writer to output to
+     * @param node the RDF node to format
+     * @param path used to detect cycles when formatting blank nodes
+     */
     public void formatNode(AWriter w, Node node, Set<Node> path) {
         if (node.isBlank()) {
             formatBNode(w, node, path);
@@ -38,7 +52,18 @@ public class SPipesNodeFormatterTTL {
         }
     }
 
-    private void formatBlank(AWriter w, Node node, Set<Node> path) {
+    /**
+     * Formats a blank node either inline or with a stable label.
+     * If the node has a label in {@code bnodeLabels}, prints it directly.
+     * Otherwise, checks its in-degree:
+     * - If ≤ 1, expands inline as a Turtle property list.
+     * - If > 1, assigns a label like {@code _:bX} to preserve identity.
+     *
+     * @param w the writer to output to
+     * @param node the blank node to format
+     * @param path used to detect cycles
+     */
+    private void formatBNode(AWriter w, Node node, Set<Node> path) {
         String label = node.getBlankNodeLabel();
 
         if (bnodeLabels.containsKey(label)) {
@@ -53,6 +78,14 @@ public class SPipesNodeFormatterTTL {
         }
     }
 
+    /**
+     * Expands a blank node inline using Turtle's {@code [ ... ]} syntax.
+     * Formats all predicate–object pairs inside the node.
+     *
+     * @param w the writer to output to
+     * @param blank the blank node to expand
+     * @param path used to detect cycles
+     */
     private void formatBNodeAsPropertyList(AWriter w, Node blank, Set<Node> path) {
         if (!path.add(blank)) {
             w.print("_:" + blank.getBlankNodeLabel());
@@ -75,6 +108,15 @@ public class SPipesNodeFormatterTTL {
         path.remove(blank);
     }
 
+    /**
+     * Prints a single predicate–object pair inside a property list.
+     * If the predicate is {@code rdf:type}, prints {@code a}.
+     * Otherwise, delegates formatting to NodeFormatterTTL_Multiline.
+     *
+     * @param w the writer to output to
+     * @param t the predicate–object pair to print
+     * @param path used to detect cycles
+     */
     private void printProperty(AWriter w, Triple t, Set<Node> path) {
         Node p = t.getPredicate();
         Node o = t.getObject();
@@ -86,7 +128,15 @@ public class SPipesNodeFormatterTTL {
         w.print(" ; ");
     }
 
-    public void formatPredicate(AWriter w, Node predicate) {
+    /**
+     * Formats a predicate node.
+     * If the predicate is {@code rdf:type}, prints {@code a}.
+     * Otherwise, delegates formatting to NodeFormatterTTL_Multiline.
+     *
+     * @param w the writer to output to
+     * @param predicate the predicate node to format
+     */
+    protected void formatPredicate(AWriter w, Node predicate) {
         if (predicate.equals(RDF.type.asNode())) {
             w.print("a");
         } else {
