@@ -4,7 +4,7 @@ import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.atlas.io.AWriter;
-import org.apache.jena.riot.out.NodeFormatterTTL;
+import org.apache.jena.riot.out.NodeFormatterTTL_MultiLine;
 import org.apache.jena.riot.system.PrefixMap;
 import org.apache.jena.riot.system.PrefixMapStd;
 import org.apache.jena.vocabulary.RDF;
@@ -13,7 +13,7 @@ import java.util.*;
 
 public class SPipesNodeFormatter {
 
-    final NodeFormatterTTL delegate;
+    final NodeFormatterTTL_MultiLine delegate;
     private final Graph graph;
     private final Map<String,Integer> inDegree;
     private final Map<String,String> bnodeLabels;
@@ -27,14 +27,12 @@ public class SPipesNodeFormatter {
         this.bnodeLabels = bnodeLabels;
         PrefixMap prefixMap = new PrefixMapStd();
         ns.forEach(prefixMap::add);
-        this.delegate = new NodeFormatterTTL(null, prefixMap);
+        this.delegate = new NodeFormatterTTL_MultiLine(null, prefixMap);
     }
 
     public void formatNode(AWriter w, Node node, Set<Node> path) {
         if (node.isBlank()) {
-            formatBlank(w, node, path);
-        } else if (node.isLiteral()) {
-            formatLiteral(w, node);
+            formatBNode(w, node, path);
         } else {
             delegate.format(w, node);
         }
