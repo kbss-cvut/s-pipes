@@ -2,14 +2,14 @@ package cz.cvut.spipes.modules.handlers;
 
 import java.lang.reflect.Field;
 
-public class FieldSetter extends Setter {
+public class SingleValueSetter<T> extends Setter<T> {
 
 
-    public FieldSetter(Field f, Object bean) {
+    public SingleValueSetter(Field f, Object bean) {
         super(f, bean);
     }
 
-    public void addValue(Object value) {
+    public void setValue(T value) {
         try {
             f.set(bean,value);
         } catch (IllegalAccessException ex) {

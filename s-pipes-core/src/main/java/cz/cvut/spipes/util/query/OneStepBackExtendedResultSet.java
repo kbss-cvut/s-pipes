@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 
 /**
  * ResultSet that extends the original result set by adding bindings from the previous query solution.
- * The previous query solution is available under the same variable name with suffix "__previous".
+ * The previous query solution is available under the same variable name with the suffix "__previous".
  *
  * <p>Example use:</p>
  * <pre>
@@ -49,7 +49,7 @@ public class OneStepBackExtendedResultSet implements ResultSet  {
                     "The result set already contains a variable with suffix " + PREVIOUS_BINDING_SUFFIX
                 );
             });
-        List<String> joinedList = new ArrayList<String>();
+        List<String> joinedList = new ArrayList<>();
         joinedList.addAll(originalResultVars);
         joinedList.addAll(originalResultVars.stream()
             .map(v -> v + PREVIOUS_BINDING_SUFFIX)

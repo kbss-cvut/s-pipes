@@ -1,7 +1,5 @@
 package cz.cvut.spipes.util;
 
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import cz.cvut.spipes.engine.VariablesBinding;
 import org.junit.jupiter.api.AfterEach;
@@ -21,19 +19,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class VariableBindingUtilsTest {
 
-    private String testData = """
+    private final String testData = """
             PREFIX : <http://onto.fel.cvut.cz/ontologies/s-pipes/query_solution_1740574722036/>
             PREFIX s-pipes: <http://onto.fel.cvut.cz/ontologies/s-pipes/>
             
-            :personId 
+            :personId
                s-pipes:has_bound_variable "personId" ;
                s-pipes:has_bound_value "robert-plant" ;
-            .                
+            .
             :personName
               s-pipes:has_bound_variable "personName" ;
               s-pipes:has_bound_value "Robert Plant" ;
             .
-                            
+            
             <http://onto.fel.cvut.cz/ontologies/s-pipes/query_solution_1740574722036>
               a s-pipes:query_solution ;
               s-pipes:has_binding :personId, :personName .
@@ -44,13 +42,10 @@ class VariableBindingUtilsTest {
     @BeforeEach
     void setup() throws IOException {
         server = HttpServer.create(new InetSocketAddress(0), 0);
-        server.createContext("/test.ttl", new HttpHandler() {
-            @Override
-            public void handle(HttpExchange exchange) throws IOException {
-                exchange.sendResponseHeaders(200, testData.getBytes().length);
-                exchange.getResponseBody().write(testData.getBytes());
-                exchange.close();
-            }
+        server.createContext("/test.ttl", exchange -> {
+            exchange.sendResponseHeaders(200, testData.getBytes().length);
+            exchange.getResponseBody().write(testData.getBytes());
+            exchange.close();
         });
         server.setExecutor(Executors.newCachedThreadPool());
         server.start();

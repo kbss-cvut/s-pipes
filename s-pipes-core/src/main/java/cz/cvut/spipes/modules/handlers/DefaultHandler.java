@@ -9,11 +9,11 @@ import org.apache.jena.rdf.model.Resource;
  * It delegates the handling responsibility to the {@link Handler} class registered for the field type
  * within the {@link HandlerRegistry}.
  **/
-public class DefaultHandler extends Handler {
+public class DefaultHandler<T> extends Handler<T> {
 
-    private Handler<?> typeHandler;
+    private final Handler<T> typeHandler;
 
-    public DefaultHandler(Resource resource, ExecutionContext executionContext, Setter setter) {
+    public DefaultHandler(Resource resource, ExecutionContext executionContext, Setter<? super T> setter) {
         super(resource, executionContext, setter);
 
         HandlerRegistry handlerRegistry = HandlerRegistry.getInstance();

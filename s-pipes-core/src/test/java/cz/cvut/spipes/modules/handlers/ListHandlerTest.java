@@ -2,6 +2,7 @@ package cz.cvut.spipes.modules.handlers;
 
 import cz.cvut.spipes.engine.ExecutionContext;
 import org.apache.jena.rdf.model.*;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -30,6 +31,7 @@ public class ListHandlerTest {
     @InjectMocks
     private ListHandler listHandler;
 
+    private AutoCloseable mocks;
 
     static class SampleClass {
         List<String> listField;
@@ -38,11 +40,16 @@ public class ListHandlerTest {
     @BeforeEach
     void setUp() {
         // Initializes the mocks and injects them into the @InjectMocks field
-        MockitoAnnotations.openMocks(this);
+        mocks = MockitoAnnotations.openMocks(this);
+    }
+
+    @AfterEach
+    void tearDown() throws Exception {
+        mocks.close();
     }
 
     @Test
-    public void testGetStringListByProperty_withValidData() throws Exception {
+    public void getRDFNodeListByPropertyWhenValidData() throws Exception {
         try (MockedStatic<HandlerRegistry> mockedStatic = mockStatic(HandlerRegistry.class)) {
             // Mock field
             Field field = SampleClass.class.getDeclaredField("listField");
@@ -69,7 +76,6 @@ public class ListHandlerTest {
             HandlerRegistry mockRegistry = mock(HandlerRegistry.class);
 
             // Use raw type for mocking Handler
-            @SuppressWarnings("unchecked")
             BaseRDFNodeHandler<String> mockHandler = mock(StringHandler.class);
 
 

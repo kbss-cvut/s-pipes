@@ -15,29 +15,29 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Module returns prefix mappings of all loaded scripts.
- * Individual mappings are represented by following graph pattern:
+ * Individual mappings are represented by the following graph pattern:
  *
  * @prefix ja: <http://jena.hpl.hp.com/2005/11/Assembler#> .
- *
+ * <p>
  * ?ontology ja:prefixMapping 
  *      [ a ja:SinglePrefixMapping ;
  *          ja:namespace ?namespaceIRI ;
  *          ja:prefix ?prefix ]
  * .
- *
- * As an example let's assume we loaded only one script:
+ * <p>
+ * As an example, let's assume we loaded only one script:
  *
  * @prefix : <http://example.org/> .
  * @prefix owl: <http://www.w3.org/2002/07/owl#> .
- *
+ * <p>
  * :my-ontology a owl:Ontology .
- *
+ * <p>
  *
  * The output of this module for the example script would be:
  *
  * @prefix : <http://example.org/> .
  * @prefix ja: <http://jena.hpl.hp.com/2005/11/Assembler#> .
- *
+ * <p>
  * :my-ontology ja:prefixMapping 
  *      [ a ja:SinglePrefixMapping ;
  *          ja:namespace "http://example.org/" ;
@@ -94,4 +94,13 @@ public class RetrievePrefixesModule extends AnnotatedAbstractModule {
     void setOntologyDocumentManager(OntologyDocumentManager ontologyDocumentManager) {
         this.ontologyDocumentManager = ontologyDocumentManager;
     }
+
+    public boolean isReplace() {
+        return isReplace;
+    }
+
+    public void setReplace(boolean replace) {
+        isReplace = replace;
+    }
+
 }

@@ -3,14 +3,14 @@ package cz.cvut.spipes.modules.handlers;
 import java.lang.reflect.Field;
 import java.util.List;
 
-public class ListSetter extends Setter{
+public class ListSetter extends Setter<Object>{
 
     public ListSetter(Field f, Object bean) {
         super(f, bean);
     }
 
     @Override
-    public void addValue(Object value) {
+    public void setValue(Object value) {
         try {
             List<Object> list = (List<Object>) f.get(bean);
 

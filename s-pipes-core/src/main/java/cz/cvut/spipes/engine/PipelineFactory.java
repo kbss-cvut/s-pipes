@@ -21,20 +21,18 @@ import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class PipelineFactory {
 
     private static final Logger log = LoggerFactory.getLogger(PipelineFactory.class);
 
-    // TODO inheritence not involved, not static context
-    static Map<Resource, Class<? extends Module>> moduleTypes = new HashMap<>();
+    // TODO inheritance not involved, not static context
+    static final Map<Resource, Class<? extends Module>> moduleTypes = new HashMap<>();
 
     //TODO move to ModuleRegistry
     static {
@@ -75,7 +73,7 @@ public class PipelineFactory {
 
         List<Class<? extends Module>> moduleClasses = reflections.getSubTypesOf(Module.class).stream().filter(
                 c -> !Modifier.isAbstract(c.getModifiers())
-        ).collect(Collectors.toList());
+        ).toList();
 
         moduleClasses.forEach(
                 mClass -> {
@@ -96,7 +94,7 @@ public class PipelineFactory {
 
         List<Class<? extends ARQFunction>> functionClasses = reflections.getSubTypesOf(ARQFunction.class).stream().filter(
             c -> !Modifier.isAbstract(c.getModifiers())
-        ).collect(Collectors.toList());
+        ).toList();
 
         functionClasses.forEach(
             fClass -> {
@@ -124,13 +122,13 @@ public class PipelineFactory {
     // TODO not very effective
     public static Module loadPipeline(@NotNull Resource resource) {
         return loadPipelines(resource.getModel()).stream().filter(m -> {
-            //TODO does not work on annonymous node
+            //TODO does not work on anonymous node
             return resource.getURI().equals(m.getResource().getURI());
         }).findAny().orElse(null);
     }
 
     /**
-     * @param configModel
+     * @param configModel configuration model containing pipeline definition
      * @return List of output modules.
      */
     public static List<Module> loadPipelines(@NotNull Model configModel) {
@@ -139,7 +137,7 @@ public class PipelineFactory {
 
         Set<Module> inputModulesSet = res2ModuleMap.values().stream().flatMap(m -> m.getInputModules().stream()).collect(Collectors.toSet());
 
-        List<Module> outputModulesList = res2ModuleMap.values().stream().collect(Collectors.toList());
+        List<Module> outputModulesList = new ArrayList<>(res2ModuleMap.values());
         outputModulesList.removeAll(inputModulesSet);
 
         return outputModulesList;
@@ -151,37 +149,31 @@ public class PipelineFactory {
         Map<Resource, Module> res2ModuleMap = new HashMap<>();
 
         JenaPipelineUtils.getAllModulesWithTypes(configModel)
-                .entrySet()
-                .forEach(e -> {
-                    Module m = loadModule(e.getKey(), e.getValue());
+                .forEach((key, value) -> {
+                    Module m = loadModule(key, value);
                     if (m != null) {
-                        res2ModuleMap.put(e.getKey(), m);
+                        res2ModuleMap.put(key, m);
                     }
                 });
         //      .collect(Collectors.toMap(Map.Entry::getKey, e -> loadModule(e.getKey(), e.getValue())));
 
 
         // set appropriate links //TODO problem 2 files reusing module inconsistently ? do i need to solve it ?
-        res2ModuleMap.entrySet()
-                .forEach(e -> {
-                    Resource res = e.getKey();
+        res2ModuleMap.forEach((res, value) -> {
 
-                    // set up input modules
-                    res.listProperties(SM.JENA.next).toList().stream()
-                            .map(st -> {
-                                Module m = res2ModuleMap.get(st.getObject().asResource());
-                                if (m == null) {
-                                    log.error("Ignoring statement {}. The object of the triple must have rdf:type {}.", st, SM.Module);
-                                }
-                                return m;
-                            }).filter(m -> (m != null)).forEach(
-                            m -> {
-
-                                m.getInputModules().add(e.getValue());
-                            }
+            // set up input modules
+            res.listProperties(SM.JENA.next).toList().stream()
+                    .map(st -> {
+                        Module m = res2ModuleMap.get(st.getObject().asResource());
+                        if (m == null) {
+                            log.error("Ignoring statement {}. The object of the triple must have rdf:type {}.", st, SM.Module);
+                        }
+                        return m;
+                    }).filter(Objects::nonNull).forEach(
+                            m -> m.getInputModules().add(value)
                     );
 
-                });
+        });
 
         return res2ModuleMap;
     }
@@ -195,12 +187,12 @@ public class PipelineFactory {
             return null;
         }
 
-        Module module = null;
+        Module module;
 
         try {
-            module = moduleClass.newInstance();
+            module = moduleClass.getDeclaredConstructor().newInstance();
             module.setConfigurationResource(moduleRes);
-        } catch (InstantiationException | IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             throw new IllegalArgumentException("Could not instantiate module of type " + moduleTypeRes, e);
         }
 
@@ -209,16 +201,16 @@ public class PipelineFactory {
 
     public static Module instantiateModule(Class<? extends Module> moduleClass) {
         try {
-            return moduleClass.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
+            return moduleClass.getDeclaredConstructor().newInstance();
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             throw new IllegalArgumentException("Could not instantiate module of type " +  moduleClass);
         }
     }
 
     public static ARQFunction instantiateFunction(Class<? extends ARQFunction> functionClass) {
         try {
-            return functionClass.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
+            return functionClass.getDeclaredConstructor().newInstance();
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             throw new IllegalArgumentException("Could not instantiate function of type " +  functionClass);
         }
     }
@@ -232,7 +224,7 @@ public class PipelineFactory {
             configModel.read(new FileInputStream(configFilePath.toFile()), null, FileUtils.langTurtle);
             return PipelineFactory.loadModule(configModel.createResource(moduleResourceUri));
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            log.error("Loading of module failed.", e);
             throw new RuntimeException("Loading of module failed.");
         }
     }

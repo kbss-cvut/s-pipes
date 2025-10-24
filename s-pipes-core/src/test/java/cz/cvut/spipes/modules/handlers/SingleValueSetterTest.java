@@ -7,15 +7,14 @@ import java.lang.reflect.Field;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class FieldSetterTest {
+class SingleValueSetterTest {
 
     private TestBean testBean;
     private Field testField;
-    private FieldSetter fieldSetter;
 
     public static class TestBean {
         public String publicField;
-        private String privateField;
+        private final String privateField;
 
         public TestBean(String privateField) {
             this.privateField = privateField;
@@ -26,47 +25,44 @@ class FieldSetterTest {
     void setUp() throws NoSuchFieldException {
         testBean = new TestBean("initialValue");
         testField = TestBean.class.getField("publicField");
-        fieldSetter = new FieldSetter(testField, testBean);
     }
 
     @Test
-    void testSetValueOnPublicField() {
-        fieldSetter.addValue("newValue");
+    void setValueWhenPublicField() {
+        SingleValueSetter<String> publicSingleValueSetter = new SingleValueSetter<>(testField, testBean);
+        publicSingleValueSetter.setValue("newValue");
 
         assertEquals("newValue", testBean.publicField);
     }
 
     @Test
-    void testSetValueOnPrivateField() throws NoSuchFieldException {
+    void setValueWhenPrivateField() throws NoSuchFieldException {
         Field privateField = TestBean.class.getDeclaredField("privateField");
         privateField.setAccessible(true);
-        FieldSetter privateFieldSetter = new FieldSetter(privateField, testBean);
+        SingleValueSetter<String> privateSingleValueSetter = new SingleValueSetter<>(privateField, testBean);
 
-        privateFieldSetter.addValue("newPrivateValue");
+        privateSingleValueSetter.setValue("newPrivateValue");
 
         assertEquals("newPrivateValue", testBean.privateField);
     }
 
     @Test
-    void testSetValueOnPrivateFieldWhenInitiallyNotAccessible() throws NoSuchFieldException {
+    void setValueWhenPrivateFieldWhenInitiallyNotAccessible() throws NoSuchFieldException {
         Field privateField = TestBean.class.getDeclaredField("privateField");
-        FieldSetter privateFieldSetter = new FieldSetter(privateField, testBean);
+        SingleValueSetter<String> privateSingleValueSetter = new SingleValueSetter<>(privateField, testBean);
 
-        privateFieldSetter.addValue("newPrivateValue");
+        privateSingleValueSetter.setValue("newPrivateValue");
 
         assertEquals("newPrivateValue", testBean.privateField);
     }
 
 
     @Test
-    void testSetValueToFieldWithDifferentType() throws NoSuchFieldException {
+    void setValueWhenFieldWithDifferentTypeThrowsException() throws NoSuchFieldException {
         Field intField = TestBean.class.getDeclaredField("privateField");
         intField.setAccessible(true);
-        FieldSetter intFieldSetter = new FieldSetter(intField, testBean);
+        SingleValueSetter<Integer> intSingleValueSetter = new SingleValueSetter<>(intField, testBean);
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            intFieldSetter.addValue(123);
-        });
+        assertThrows(IllegalArgumentException.class, () -> intSingleValueSetter.setValue(123));
     }
 }
-

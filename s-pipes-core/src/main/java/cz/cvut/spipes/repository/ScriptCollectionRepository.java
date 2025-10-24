@@ -23,10 +23,10 @@ public interface ScriptCollectionRepository extends Repository {
     @NotNull List<Resource> getModuleTypes(@Nullable Collection<String> contexts);
 
     /**
-     * Returns all functions which are attached to a return module.
+     * Returns all functions that are attached to a return module.
      * @param contexts List of contexts to search in.
      * @return List of resources representing functions.
-     * @throws UnsupportedOperationException if contexts is null.
+     * @throws UnsupportedOperationException if contexts are null.
      */
     @NotNull List<Resource> getPipelineFunctions(@Nullable Collection<String> contexts);
 

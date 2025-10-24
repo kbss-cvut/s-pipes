@@ -8,20 +8,20 @@ import org.apache.jena.rdf.model.Resource;
 /**
  * Abstract class for handler that is responsible to load native Java value
  * from its RDF representation and set this value using provided {@link Setter}.
- *
+ * <p>
  * The class is initialized with:
  * - {@link Resource} and {@link ExecutionContext} which provides partial context from which RDF value can be extracted
  * - {@link Setter} which is used to set native Java value into exactly one Java field
  *
- * @param <T> the type of native Java value being handled
+ * @param <V> the type of native Java value being handled
  */
-abstract public class Handler<T> {
+abstract public class Handler<V> {
 
     protected final Resource resource;
     protected final ExecutionContext executionContext;
-    protected final Setter<? super T> setter;
+    protected final Setter<? super V> setter;
 
-    public Handler(Resource resource, ExecutionContext executionContext, Setter<? super T> setter) {
+    public Handler(Resource resource, ExecutionContext executionContext, Setter<? super V> setter) {
         this.resource = resource;
         this.executionContext = executionContext;
         this.setter = setter;

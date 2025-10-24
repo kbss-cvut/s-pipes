@@ -20,7 +20,7 @@ public class AbstractModuleTest extends AbstractCoreModuleTestHelper {
     }
 
     @Test
-    public void getEffectiveValueReturnsComputedValue() throws Exception {
+    public void getEffectiveValueReturnsComputedValue() {
         Module module = PipelineFactory.loadPipelines(getConfigOntModel()).get(0);
 
         assertEquals(BindWithConstantModule.class, module.getClass(), "Incorrect module loaded.");
@@ -51,6 +51,4 @@ public class AbstractModuleTest extends AbstractCoreModuleTestHelper {
     public void throwNoValidationExceptionIfValidationConstrainFailsAndExitOnErrorIsFalse() {
 
     }
-
-
 }

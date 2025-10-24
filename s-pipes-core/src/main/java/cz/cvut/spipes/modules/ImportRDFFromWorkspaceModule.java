@@ -7,13 +7,10 @@ import cz.cvut.spipes.exception.ContextNotFoundException;
 import cz.cvut.spipes.manager.OntoDocManager;
 import cz.cvut.spipes.manager.OntologyDocumentManager;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.RDFNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Optional;
 
 public class ImportRDFFromWorkspaceModule extends AnnotatedAbstractModule {
 
@@ -62,7 +59,7 @@ public class ImportRDFFromWorkspaceModule extends AnnotatedAbstractModule {
 
     @Override
     public String getTypeURI() {
-        return SML.ImportRDFFromWorkspace.toString();
+        return SML.ImportRDFFromWorkspace;
     }
 
     @Override

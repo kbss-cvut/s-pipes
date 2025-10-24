@@ -2,12 +2,10 @@ package cz.cvut.spipes.modules.handlers;
 
 import cz.cvut.spipes.engine.ExecutionContext;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -31,7 +29,7 @@ public class PathHandlerTest {
     }
 
     @Test
-    public void testGetRDFNodeValue() {
+    public void getRDFNodeValue() {
         RDFNode mockNode = mock(RDFNode.class);
         when(mockNode.toString()).thenReturn("/example/path/to/file");
 

@@ -8,9 +8,7 @@ import java.util.Optional;
 
 public class ExecutionContextFactory {
 
-    /**
-     * @return
-     */
+
     public static ExecutionContext createEmptyContext() {
         ExecutionContextImpl context = new ExecutionContextImpl();
         context.setDefaultModel(ModelFactory.createDefaultModel());

@@ -1,12 +1,9 @@
 package cz.cvut.spipes.modules.handlers;
 
 import cz.cvut.spipes.engine.ExecutionContext;
-import cz.cvut.spipes.exception.ScriptRuntimeErrorException;
 import org.apache.jena.rdf.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -27,14 +24,14 @@ public class BooleanHandlerTest {
     }
 
     @Test
-    void testGetRDFNodeValueTrue() {
+    void getRDFNodeValueWhenTrue() {
         RDFNode rdfNode = ResourceFactory.createTypedLiteral(true);
         Boolean result = booleanHandler.getRDFNodeValue(rdfNode);
         assertTrue(result);
     }
 
     @Test
-    void testGetRDFNodeValueFalse() {
+    void getRDFNodeValueWhenFalse() {
         RDFNode rdfNode = ResourceFactory.createTypedLiteral(false);
         Boolean result = booleanHandler.getRDFNodeValue(rdfNode);
         assertFalse(result);

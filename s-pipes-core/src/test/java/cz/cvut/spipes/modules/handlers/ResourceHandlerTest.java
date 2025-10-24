@@ -25,7 +25,7 @@ public class ResourceHandlerTest {
     }
 
     @Test
-    public void testGetRDFNodeValue() {
+    public void getRDFNodeValue() {
         RDFNode mockNode = mock(RDFNode.class);
         Resource mockResource = ModelFactory.createDefaultModel().createResource("http://example.org/resource");
         when(mockNode.asResource()).thenReturn(mockResource);

@@ -29,11 +29,11 @@ public abstract class Setter<T>{
     }
 
     /**
-     * Adds the specified value to the field.
+     * Sets the specified value to the field.
      *
-     * @param value the value to be added to the field
+     * @param value the value to be set to the field
      */
-    abstract void addValue(T value);
+    abstract void setValue(T value);
 
     Field getField(){
         return f;

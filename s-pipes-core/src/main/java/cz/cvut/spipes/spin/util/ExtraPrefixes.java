@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ExtraPrefixes {
-    private static Map<String,String> map = new HashMap<String,String>();
+    private static final Map<String,String> map = new HashMap<>();
 
     static {
         map.put("afn", "http://jena.hpl.hp.com/ARQ/function#");

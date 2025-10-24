@@ -59,7 +59,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
         Vocabulary.ONTOLOGY_IRI_DATASET_DESCRIPTOR + "/has-part";
     private static final String P_HAS_NEXT =
         Vocabulary.ONTOLOGY_IRI_DATASET_DESCRIPTOR + "/has-next";
-    private static final String P_HAS_INPUT_BINDDING =
+    private static final String P_HAS_INPUT_BINDING =
         Vocabulary.ONTOLOGY_IRI_DATASET_DESCRIPTOR + "/has-input-binding";
     private static final String LOCAL_NAME = "advanced-logging-progress-listener";
     private static final String PREFIX_IRI = SPIPES.uri + LOCAL_NAME + "/";
@@ -163,7 +163,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
                 }
                 writer.endRDF();
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Error while trying to persist pipeline execution finished", e);
             }
             entityManagerMap.remove(em);
             em.close();
@@ -326,7 +326,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
                 );
                 addProperty(
                     moduleExecution,
-                    ResourceFactory.createProperty(P_HAS_INPUT_BINDDING),
+                    ResourceFactory.createProperty(P_HAS_INPUT_BINDING),
                     URI.create(inputBindings.getId())
                 );
 
@@ -349,9 +349,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
     }
 
     private void mergeAll(EntityManager em, EntityDescriptor pd, Thing... thing) {
-        Arrays.stream(thing).forEach(t -> {
-            em.merge(t, pd);
-        });
+        Arrays.stream(thing).forEach(t -> em.merge(t, pd));
     }
 
     private void writeRawData(EntityManager em, URI contextUri, Model model) {
@@ -533,10 +531,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
         if (!thing.getProperties().containsKey(property.toString())) {
             return false;
         }
-        if (thing.getProperties().get(property.toString()).isEmpty()) {
-            return false;
-        }
-        return true;
+        return !thing.getProperties().get(property.toString()).isEmpty();
     }
 
     private Object getSingletonPropertyValue(@NotNull Thing thing, @NotNull Property property) {

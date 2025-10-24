@@ -12,7 +12,7 @@ public class ModeHandler extends BaseRDFNodeHandler<Mode>  {
     }
 
     @Override
-    Mode getRDFNodeValue(RDFNode node) throws Exception {
+    Mode getRDFNodeValue(RDFNode node) {
         return Mode.fromResource(node.asResource());
     }
 }

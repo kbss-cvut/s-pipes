@@ -4,7 +4,7 @@ import cz.cvut.spipes.modules.Module;
 
 /**
  * Progress listener applicable to pipeline executions.
- *
+ * <p>
  * Following variables are defined within interface:
  * pipelineExecutionId -- is unique id whose identity is defined by event of execution of a pipeline.
  * moduleExecutionId -- is unique id whose identity is defined by pipeline execution, module's instance and input context of the module.
@@ -35,7 +35,7 @@ public interface ProgressListener {
      * @param predecessorModuleExecutionId execution id of a module that triggered execution
      *                                    of this module. This module will be executed before
      *                                     its predecessor module as the predecessor module might
-     *                                     use output of this module.
+     *                                      use the output of this module.
      */
     void moduleExecutionStarted(long pipelineExecutionId, String moduleExecutionId, Module outputModule, ExecutionContext inputContext, String predecessorModuleExecutionId);
 

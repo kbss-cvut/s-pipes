@@ -1,7 +1,7 @@
 package cz.cvut.spipes.exception;
 
 /**
- * Indicate that SPipes Module was incorrectly configured.
+ * Indicate that the SPipes Module was incorrectly configured.
  */
 public class ModuleConfigurationInconsistentException extends SPipesException {
 

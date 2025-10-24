@@ -6,7 +6,6 @@ import cz.cvut.spipes.util.SPINUtils;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.Statement;
 
 import java.util.Optional;
 
@@ -16,17 +15,17 @@ import java.util.Optional;
  * This class provides a common implementation for handling RDF nodes and setting their values
  * to fields of a specified type.
  *
- * @param <T> The type of the value that this handler converts RDF nodes to.
+ * @param <V> The type of the value that this handler converts RDF nodes to.
  */
-abstract public class BaseRDFNodeHandler<T> extends Handler<T> {
+abstract public class BaseRDFNodeHandler<V> extends Handler<V> {
 
-    public BaseRDFNodeHandler(Resource resource, ExecutionContext executionContext, Setter<? super T> setter) {
+    public BaseRDFNodeHandler(Resource resource, ExecutionContext executionContext, Setter<? super V> setter) {
         super(resource, executionContext, setter);
     }
 
     /**
      * Retrieves the effective RDF node value for a given property from the current resource.
-     *
+     * <p>
      * This method first attempts to retrieve the RDF node associated with the specified property from
      * the current resource. If the retrieved node is an RDF expression, it evaluates the expression
      * using the current execution context and variable bindings. If the node is not an expression, it
@@ -47,11 +46,11 @@ abstract public class BaseRDFNodeHandler<T> extends Handler<T> {
      * @param node The RDF node to convert.
      * @return The converted value of type {@code T}.
      */
-    abstract T getRDFNodeValue(RDFNode node) throws Exception;
+    abstract V getRDFNodeValue(RDFNode node);
 
     /**
      * Checks if the given property is assigned a value in the current resource.
-     *
+     * <p>
      * This method verifies whether the current resource has an RDF property assignment for the specified
      * property. It returns {@code true} if the resource has a value for the property, and {@code false}
      * otherwise. This is useful for determining if there is an existing value before attempting to
@@ -72,9 +71,9 @@ abstract public class BaseRDFNodeHandler<T> extends Handler<T> {
         if (hasParameterValueAssignment(property)) {
             try {
                 if(node != null){
-                    setter.addValue(getRDFNodeValue(node));
+                    setter.setValue(getRDFNodeValue(node));
                 }else{
-                    setter.addValue(null);
+                    setter.setValue(null);
                 }
 
             } catch (Exception ex) {

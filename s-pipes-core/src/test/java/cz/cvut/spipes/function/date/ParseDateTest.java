@@ -2,7 +2,6 @@ package cz.cvut.spipes.function.date;
 
 import cz.cvut.spipes.exception.ParseException;
 import cz.cvut.spipes.function.spif.ParseDate;
-import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.query.QueryExecution;
@@ -191,7 +190,7 @@ public class ParseDateTest {
     public void execThrowsExceptionWhenPatternIsUriNode() {
         ParseDate parseDate = new ParseDate();
         NodeValue text = createLiteral("19/12/2016");
-        NodeValue pattern = createURI("htttp://example.org/person");
+        NodeValue pattern = createURI("http://example.org/person");
 
         assertThrows(LiteralRequiredException.class,
                 () -> parseDate.exec(text, pattern, null)
@@ -256,7 +255,7 @@ public class ParseDateTest {
         return NodeValue.makeNode(
                 text,
                 null,
-                ((RDFDatatype) type).getURI()
+                type.getURI()
         );
     }
 

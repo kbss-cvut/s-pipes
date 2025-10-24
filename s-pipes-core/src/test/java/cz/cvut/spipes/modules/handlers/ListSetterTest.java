@@ -28,10 +28,10 @@ class ListSetterTest {
     }
 
     @Test
-    void testAddValueWhenListIsNull() {
+    void setValueWhenInitialValueIsNull() {
         assertNull(testBean.values);
 
-        listSetter.addValue("testValue");
+        listSetter.setValue("testValue");
 
         assertNotNull(testBean.values);
         assertEquals(1, testBean.values.size());
@@ -39,20 +39,20 @@ class ListSetterTest {
     }
 
     @Test
-    void testAddValueWhenListIsAlreadyInitialized() {
+    void setValueWhenInitialValueIsEmptyList() {
         testBean.values = new ArrayList<>();
 
-        listSetter.addValue("testValue");
+        listSetter.setValue("testValue");
 
         assertEquals(1, testBean.values.size());
         assertEquals("testValue", testBean.values.get(0));
     }
 
     @Test
-    void testAddListOfValues() {
+    void setValueWhenInitialListContainsValues() {
         List<Object> valuesToAdd = Arrays.asList("value1", "value2", "value3");
 
-        listSetter.addValue(valuesToAdd);
+        listSetter.setValue(valuesToAdd);
 
         assertNotNull(testBean.values);
         assertEquals(3, testBean.values.size());
@@ -60,10 +60,10 @@ class ListSetterTest {
     }
 
     @Test
-    void testAddValueWhenListIsNullAndValueIsList() {
+    void setValueWhenInitialValueIsNullAndNextValueIsList() {
         List<Object> valuesToAdd = Arrays.asList("value1", "value2");
 
-        listSetter.addValue(valuesToAdd);
+        listSetter.setValue(valuesToAdd);
 
         assertNotNull(testBean.values);
         assertEquals(2, testBean.values.size());
@@ -72,23 +72,23 @@ class ListSetterTest {
     }
 
     @Test
-    void testAddSingleValueToExistingList() {
+    void setValueWhenInitialValueIsListAndNextValueIsSingleObject() {
         testBean.values = new ArrayList<>();
         testBean.values.add("initialValue");
 
-        listSetter.addValue("newValue");
+        listSetter.setValue("newValue");
 
         assertEquals(1, testBean.values.size());
         assertEquals("newValue", testBean.values.get(0));
     }
 
     @Test
-    void testAddListToExistingList() {
+    void setValueWhenInitialValueIsListAndNextValueIsList() {
         testBean.values = new ArrayList<>();
         testBean.values.add("initialValue");
 
         List<Object> valuesToAdd = Arrays.asList("newValue1", "newValue2");
-        listSetter.addValue(valuesToAdd);
+        listSetter.setValue(valuesToAdd);
 
         assertEquals(2, testBean.values.size());
         assertEquals("newValue1", testBean.values.get(0));

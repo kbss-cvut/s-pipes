@@ -1,14 +1,9 @@
 package cz.cvut.spipes.exception;
 
-/**
- * Exception thrown when a resource is not found.
- *
- */
-
 import java.util.Set;
 
 /**
- *
+ * Exception thrown when a resource is not found.
  */
 public class ResourceNotFoundException extends SPipesException {
 

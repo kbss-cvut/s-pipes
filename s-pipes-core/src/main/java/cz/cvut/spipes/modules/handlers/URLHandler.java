@@ -12,8 +12,12 @@ public class URLHandler extends BaseRDFNodeHandler<URL>{
     }
 
     @Override
-    URL getRDFNodeValue(RDFNode node) throws MalformedURLException {
-        return new URL(node.toString());
+    URL getRDFNodeValue(RDFNode node) {
+        try {
+            return new URL(node.toString());
+        } catch (MalformedURLException e) {
+            throw new IllegalArgumentException("Invalid RDFNode URL: " + node, e);
+        }
     }
 
 }

@@ -42,14 +42,14 @@ public class ApplyConstructModule extends AnnotatedAbstractModule {
     private boolean parseText = false;
 
     /**
-     * Maximal number of iterations of the whole rule set. 0 means 0 iterations. The actual number of iterations can be smaller,
-     * if no new inferences are generated any more.
+     * Maximal number of iterations of the whole rule set. 0 means 0 iterations. The actual number of iterations can be smaller
+     * if no new inferences are generated anymore.
      * <p>
      * iterationCount = 1:
      * - the whole rule set is executed only once.
      * iterationCount > 1:
      * - the whole rule set is executed at most "iterationCount" times.
-     * - in each iteration, queries are evaluated on the model merged from the default model and the result of previous iteration
+     * - in each iteration, queries are evaluated on the model merged from the default model and the result of the previous iteration
      * <p>
      * Within each iteration, all queries are evaluated on the same model.
      */

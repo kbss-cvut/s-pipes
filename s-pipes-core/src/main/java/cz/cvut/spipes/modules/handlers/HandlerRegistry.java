@@ -2,15 +2,17 @@ package cz.cvut.spipes.modules.handlers;
 
 import cz.cvut.spipes.engine.ExecutionContext;
 import cz.cvut.spipes.registry.StreamResource;
+import cz.cvut.spipes.spin.model.Select;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
-import cz.cvut.spipes.spin.model.Select;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -22,7 +24,7 @@ import java.util.*;
  * The `HandlerRegistry` initializes and registers handlers for common data types,
  * and it provides a mechanism to register custom handlers as needed.
  *
- * <p>The registry is thread-safe, ensuring consistent behavior in multi-threaded environments.
+ * <p>The registry is thread-safe, ensuring consistent behavior in multithreaded environments.
  *
  * <p>Usage example:
  * <pre>
@@ -35,7 +37,7 @@ import java.util.*;
 public class HandlerRegistry {
 
     private static HandlerRegistry instance;
-    private final Map<Class, HandlerFactory> handlers =  Collections.synchronizedMap(new HashMap<>());
+    private final Map<Class<?>, HandlerFactory<?>> handlers =  Collections.synchronizedMap(new HashMap<>());
 
     public synchronized static HandlerRegistry getInstance() {
         if (instance == null) {
@@ -65,7 +67,7 @@ public class HandlerRegistry {
         registerHandler(StreamResource.class, StreamResourceHandler.class);
     }
 
-    public synchronized Handler getHandler(Class clazz, Resource resource, ExecutionContext context, Setter setter) {
+    public synchronized Handler getHandler(Class<?> clazz, Resource resource, ExecutionContext context, Setter<?> setter) {
         HandlerFactory handlerFactory = handlers.get(clazz);
         if (handlerFactory == null) {
             throw new RuntimeException("No handler for " + clazz);
@@ -73,16 +75,15 @@ public class HandlerRegistry {
         return handlerFactory.getHandler(resource, context, setter);
     }
 
-
-    private static Constructor<? extends Handler> getConstructor(Class<? extends Handler> handler){
+    private static <H extends Handler<?>> Constructor<H> getConstructor(Class<H> handlerClass) {
         try {
-            return handler.getConstructor(Resource.class, ExecutionContext.class, Setter.class);
+            return handlerClass.getConstructor(Resource.class, ExecutionContext.class, Setter.class);
         } catch (NoSuchMethodException e) {
-            throw new IllegalArgumentException("No suitable constructor found for handler " + handler);
+            throw new IllegalArgumentException("No suitable constructor found for handler " + handlerClass, e);
         }
     }
 
-    public synchronized void registerHandler(Class valueType, Class<? extends Handler> handlerClass) {
+    public synchronized void registerHandler(Class<?> valueType, Class<? extends Handler<?>> handlerClass) {
         handlers.put(valueType, new DefaultConstructorHandlerFactory(handlerClass));
     }
 
@@ -90,27 +91,26 @@ public class HandlerRegistry {
     /**
      * The `HandlerFactory` interface defines a factory for creating handler instances.
      */
-    public interface HandlerFactory{
-        Handler<?> getHandler(Resource resource, ExecutionContext executionContext, Setter setter);
+    public interface HandlerFactory<V> {
+        Handler<V> getHandler(Resource resource, ExecutionContext context, Setter<V> setter);
     }
 
     /**
      * The `DefaultConstructorHandlerFactory` is a factory class that uses a constructor
      * to create handler instances. It implements the `HandlerFactory` interface.
      */
-    private class DefaultConstructorHandlerFactory implements HandlerFactory {
+    private static class DefaultConstructorHandlerFactory<V> implements HandlerFactory<V> {
+        private final Constructor<? extends Handler<V>> constructor;
 
-        private final Constructor<? extends Handler> constructor;
-
-        public DefaultConstructorHandlerFactory(Class type) {
+        public DefaultConstructorHandlerFactory(Class<? extends Handler<V>> type) {
             this.constructor = getConstructor(type);
         }
 
         @Override
-        public Handler<?> getHandler(Resource resource, ExecutionContext executionContext, Setter setter) {
+        public Handler<V> getHandler(Resource resource, ExecutionContext context, Setter<V> setter) {
             try {
-                return constructor.newInstance(resource, executionContext, setter);
-            } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
+                return constructor.newInstance(resource, context, setter);
+            } catch (ReflectiveOperationException e) {
                 throw new RuntimeException(e);
             }
         }

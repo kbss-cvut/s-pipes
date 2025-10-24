@@ -35,7 +35,7 @@ public class ImportFileFromURLModule extends AnnotatedAbstractModule {
     @Override
     public ExecutionContext executeSelf() {
 
-        Path computedTargetFilePath = null;
+        Path computedTargetFilePath;
 
         log.debug("Importing file from url {}.", url);
         try (InputStream inputStream = url.openStream()) {
@@ -51,7 +51,7 @@ public class ImportFileFromURLModule extends AnnotatedAbstractModule {
             throw new RuntimeException(e);
         }
 
-        if ((targetResourceVariable == null) || (targetResourceVariable.equals(""))) {
+        if ((targetResourceVariable == null) || (targetResourceVariable.isEmpty())) {
             return ExecutionContextFactory.createEmptyContext();
         }
 

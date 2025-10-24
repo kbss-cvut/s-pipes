@@ -10,6 +10,6 @@ public class SPIF {
      */
     public static final String uri = "http://spinrdf.org/spif#";
 
-    protected static final Property property(String local )
+    protected static Property property(String local)
     { return ResourceFactory.createProperty( uri, local ); }
 }

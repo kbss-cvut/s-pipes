@@ -25,7 +25,7 @@ public class SPINUtils {
         SPipesUtil.init();
     }
 
-    private static final Set<String> COMMON_PREFIXES = new HashSet<String>() {{
+    private static final Set<String> COMMON_PREFIXES = new HashSet<>() {{
         add("http://jena.hpl.hp.com/ARQ/function#");
         add(SP.NS);
         add("http://spinrdf.org/spif#");
