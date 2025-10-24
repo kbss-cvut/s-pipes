@@ -83,14 +83,14 @@ public class SPipesFormatter {
      * Also tracks in-degree of blank nodes (how often they appear as objects).
      */
     private void buildSubjectMap() {
-        Iterator<Triple> it = graph.find();
-        while (it.hasNext()) {
-            Triple t = it.next();
-            Node s = t.getSubject(), p = t.getPredicate(), o = t.getObject();
-            subjectMap.computeIfAbsent(s, k -> new LinkedHashMap<>())
+        graph.stream().forEach(
+            t -> {
+                Node s = t.getSubject(), p = t.getPredicate(), o = t.getObject();
+                subjectMap.computeIfAbsent(s, k -> new LinkedHashMap<>())
                     .computeIfAbsent(p, k -> new ArrayList<>()).add(o);
-            if (o.isBlank()) inDegree.merge(o.getBlankNodeLabel(), 1, Integer::sum);
-        }
+                if (o.isBlank()) inDegree.merge(o.getBlankNodeLabel(), 1, Integer::sum);
+            }
+        );
     }
 
     private int inDegreeOf(Node n) { return n.isBlank() ? inDegree.getOrDefault(n.getBlankNodeLabel(), 0) : 0; }
