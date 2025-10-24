@@ -1,14 +1,15 @@
 package cz.cvut.spipes.util;
 
+import cz.cvut.spipes.constants.SM;
+import org.apache.jena.atlas.io.AWriter;
 import org.apache.jena.atlas.io.IndentedWriter;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.Node;
-import org.apache.jena.graph.Triple;
+import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.riot.system.PrefixMap;
 import org.apache.jena.riot.system.PrefixMapFactory;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
-import org.apache.jena.atlas.io.AWriter;
 
 import java.io.OutputStream;
 import java.util.*;
@@ -55,6 +56,8 @@ public class SPipesFormatter {
     private final Map<String, Integer> inDegree = new HashMap<>();
     private final Map<String, String> bnodeLabels = new LinkedHashMap<>();
     private int bCounter = 0;
+    private final Node smNext = NodeFactory.createURI(SM.next);
+    private final Set<Node> modules = new HashSet<>();
 
     private final SPipesNodeFormatterTTL nodeFormatter;
 
@@ -88,6 +91,10 @@ public class SPipesFormatter {
                 Node s = t.getSubject(), p = t.getPredicate(), o = t.getObject();
                 subjectMap.computeIfAbsent(s, k -> new LinkedHashMap<>())
                     .computeIfAbsent(p, k -> new ArrayList<>()).add(o);
+                if (t.getPredicate().equals(smNext)) {
+                    modules.add(t.getSubject());
+                    modules.add(t.getObject());
+                }
                 if (o.isBlank()) inDegree.merge(o.getBlankNodeLabel(), 1, Integer::sum);
             }
         );
