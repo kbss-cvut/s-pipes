@@ -53,16 +53,6 @@ public class SPipesNodeFormatter {
         }
     }
 
-    private void formatLiteral(AWriter w, Node node) {
-        String lex = node.getLiteralLexicalForm();
-        if (lex.contains("\n")) {
-            w.print("\"\"\"" + lex + "\"\"\"");
-        } else {
-            delegate.format(w, node);
-        }
-    }
-
-
     private void formatBNodeAsPropertyList(AWriter w, Node blank, Set<Node> path) {
         if (!path.add(blank)) {
             w.print("_:" + blank.getBlankNodeLabel());
