@@ -1,0 +1,44 @@
+PREFIX :     <http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1/>
+PREFIX ex:   <http://ex.org/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX owl:  <http://www.w3.org/2002/07/owl#>
+PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sm:   <http://topbraid.org/sparqlmotion#>
+PREFIX sml:  <http://topbraid.org/sparqlmotionlib#>
+PREFIX sp:   <http://spinrdf.org/sp#>
+
+<http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1>
+    a owl:Ontology ;
+    owl:imports <http://onto.fel.cvut.cz/ontologies/s-pipes-lib> ;
+.
+
+ex:Alice
+    foaf:knows [ foaf:name "Daniel" ; ] ,
+    _:b0 ;
+.
+
+ex:Bob
+    foaf:knows _:b0 ;
+.
+
+:construct-greeting
+    a sml:ApplyConstruct ;
+    sm:next :express-greeting_Return ;
+    sml:constructQuery [ a sp:Construct ; sp:text '''
+          PREFIX : <http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1/>
+          CONSTRUCT {
+          ?person :is-greeted-by-message ?greetingMessage .
+          } WHERE {
+          BIND(iri(concat(str(:), ?personId)) as ?person)
+          BIND(concat("Hello ", ?personName, ".") as ?greetingMessage)
+          }
+      ''' ; ] ;
+    sml:replace true ;
+    rdfs:label "Construct greeting" ;
+.
+
+_:b0
+    foaf:name "Charlie" ;
+.
+

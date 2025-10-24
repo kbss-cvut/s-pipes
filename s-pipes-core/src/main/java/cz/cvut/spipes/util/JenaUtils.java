@@ -4,9 +4,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.compose.MultiUnion;
 import org.apache.jena.rdf.model.*;
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFWriter;
-import org.apache.jena.riot.RIOT;
+import org.apache.jena.riot.*;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.util.iterator.ExtendedIterator;
 import org.apache.jena.vocabulary.OWL;
@@ -15,15 +13,10 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class JenaUtils {
@@ -152,12 +145,11 @@ public class JenaUtils {
      * @param outputStream output stream to write data to
      * @param model rdf data to write
      */
-    public static void writeScript(OutputStream outputStream, Model model){
+    public static void writeScript(OutputStream outputStream, Model model) {
         RDFWriter.create()
-            .source(model)
-            .lang(Lang.TTL)
-            .set(RIOT.multilineLiterals, true)
-            .output(outputStream);
+                .format(new RDFFormat(CustomLangs.SPIPES_TURTLE))
+                .source(model)
+                .output(outputStream);
     }
 
     /**
