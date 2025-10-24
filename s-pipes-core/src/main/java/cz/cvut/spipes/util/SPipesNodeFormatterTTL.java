@@ -144,7 +144,7 @@ public class SPipesNodeFormatterTTL {
         }
     }
 
-    //rdf:type ("a") always comes first, then lexicographical order
+    // Comparator where rdf:type ("a") always comes first, then lexicographical order
     protected static final Comparator<Node> PRED_ORDER =
             Comparator.<Node>comparingInt(p -> RDF.type.asNode().equals(p) ? 0 : 1)
                     .thenComparing((Node n) -> n.toString());

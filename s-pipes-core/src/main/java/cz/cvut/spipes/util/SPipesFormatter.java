@@ -19,6 +19,33 @@ import static org.apache.jena.riot.system.RiotLib.writePrefixes;
  * Formats an RDF graph into Turtle syntax with custom structure and blank node handling.
  * Controls subject ordering, predicate sorting, and punctuation.
  * Uses {@link SPipesNodeFormatterTTL} for node-level formatting.
+ *
+ * <h3>Formatting Rules:</h3>
+ * <ul>
+ *   <li>Subject blocks end with {@code .} on a separate line (see {@link #writeTriples})</li>
+ *   <li>Subject order: ontology, URIs, blank nodes (see {@link #sortSubjects})</li>
+ *   <li>Type declaration using {@code a} comes first in each subject block
+ *       (see {@link SPipesNodeFormatterTTL#PRED_ORDER})</li>
+ *   <li>Multiline literals are formatted by default using {@code """}.
+ *       If the string contains {@code "} but not {@code '}, then {@code '''} is used instead
+ *       (see {@link org.apache.jena.riot.out.NodeFormatterTTL_MultiLine})</li>
+ * </ul>
+ *
+ * <h3>Example TTL Output:</h3>
+ * <pre>
+ * :construct-greeting
+ *     a sml:ApplyConstruct ;
+ *     sm:next :express-greeting_Return ;
+ *     sml:constructQuery [ a sp:Construct ; sp:text '''
+ *           CONSTRUCT {
+ *             &lt;http://example.com/person1&gt; :is-greeted-by-message ?greetingMessage .
+ *           } WHERE {
+ *             BIND(concat("Hello world") as ?greetingMessage)
+ *           }
+ *       ''' ; ] ;
+ *     sml:replace true ;
+ * .
+ * </pre>
  */
 public class SPipesFormatter {
 
