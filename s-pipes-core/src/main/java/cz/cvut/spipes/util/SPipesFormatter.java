@@ -24,12 +24,12 @@ public class SPipesFormatter {
     private final Map<String, String> bnodeLabels = new LinkedHashMap<>();
     private int bCounter = 0;
 
-    private final SPipesNodeFormatter nodeFormatter;
+    private final SPipesNodeFormatterTTL nodeFormatter;
 
     public SPipesFormatter(Graph graph, PrefixMap prefixMap) {
         this.graph = graph;
         this.ns = new LinkedHashMap<>(prefixMap.getMapping());
-        this.nodeFormatter = new SPipesNodeFormatter(graph, ns, inDegree, bnodeLabels);
+        this.nodeFormatter = new SPipesNodeFormatterTTL(graph, ns, inDegree, bnodeLabels);
         buildSubjectMap();
         assignBNodeLabels();
     }
@@ -78,7 +78,7 @@ public class SPipesFormatter {
             nodeFormatter.formatNode(w, subject, null);
             w.println();
 
-            Map<Node, List<Node>> predMap = new TreeMap<>(SPipesNodeFormatter.PRED_ORDER);
+            Map<Node, List<Node>> predMap = new TreeMap<>(SPipesNodeFormatterTTL.PRED_ORDER);
             predMap.putAll(subjectMap.getOrDefault(subject, Collections.emptyMap()));
 
             if (!predMap.isEmpty()) {

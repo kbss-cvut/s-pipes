@@ -11,17 +11,17 @@ import org.apache.jena.vocabulary.RDF;
 
 import java.util.*;
 
-public class SPipesNodeFormatter {
+public class SPipesNodeFormatterTTL {
 
     final NodeFormatterTTL_MultiLine delegate;
     private final Graph graph;
     private final Map<String,Integer> inDegree;
     private final Map<String,String> bnodeLabels;
 
-    public SPipesNodeFormatter(Graph graph,
-                               Map<String,String> ns,
-                               Map<String, Integer> inDegree,
-                               Map<String, String> bnodeLabels) {
+    public SPipesNodeFormatterTTL(Graph graph,
+                                  Map<String,String> ns,
+                                  Map<String, Integer> inDegree,
+                                  Map<String, String> bnodeLabels) {
         this.graph = graph;
         this.inDegree = inDegree;
         this.bnodeLabels = bnodeLabels;
