@@ -29,6 +29,21 @@ class SPipesFormatterTest {
         assertEquals(expected, actual);
     }
 
+    @Test
+    void writeScriptRespectsDependencies() throws IOException {
+        var model = ModelFactory.createDefaultModel();
+        try (var in = getClass().getResourceAsStream("/SPipesFormatter/sm-next-test-input.ttl")) {
+            assertNotNull(in);
+            model.read(in, null, "TURTLE");
+        }
+
+        // We can't compare the output with the same input file, because of how blank nodes are serialised.
+        var expected = readUtf8("/SPipesFormatter/sm-next-test-output.ttl");
+        var actual   = writeToString(model);
+
+        assertEquals(expected, actual);
+    }
+
     private String writeToString(Model model) throws IOException {
         try (var baos = new ByteArrayOutputStream()) {
             JenaUtils.writeScript(baos, model);
