@@ -14,6 +14,7 @@ import org.apache.jena.vocabulary.RDF;
 import java.io.OutputStream;
 import java.util.*;
 
+import static cz.cvut.spipes.SPipesFormatter.SPipesNodeFormatterTTL.hasLabel;
 import static org.apache.jena.riot.system.RiotLib.writePrefixes;
 
 /**
@@ -101,7 +102,6 @@ public class SPipesFormatter {
     }
 
     private int inDegreeOf(Node n) { return n.isBlank() ? inDegree.getOrDefault(n.getBlankNodeLabel(), 0) : 0; }
-    private boolean hasLabel(Node n) { return n.isBlank() && bnodeLabels.containsKey(n.getBlankNodeLabel()); }
 
     /**
      * Entry point for serialising the graph to Turtle.
@@ -134,13 +134,17 @@ public class SPipesFormatter {
         List<Node> subjects = sortSubjects(new ArrayList<>(subjectMap.keySet()));
 
         for (Node subject : subjects) {
-            if (subject.isBlank() && !hasLabel(subject) && inDegreeOf(subject) >= 1) continue;
+            if (subject.isBlank() && !hasLabel(subject, bnodeLabels) && inDegreeOf(subject) >= 1) continue;
 
             nodeFormatter.formatNode(w, subject, null);
             w.println();
 
             Map<Node, List<Node>> predMap = new TreeMap<>(SPipesNodeFormatterTTL.PRED_ORDER);
             predMap.putAll(subjectMap.getOrDefault(subject, Collections.emptyMap()));
+
+            for (Map.Entry<Node, List<Node>> entry : predMap.entrySet()) {
+                entry.getValue().sort(SPipesNodeFormatterTTL.OBJECT_COMPARATOR);
+            }
 
             if (!predMap.isEmpty()) {
                 writePredicates(w, predMap);
@@ -173,7 +177,7 @@ public class SPipesFormatter {
             return NodeCategory.ONTOLOGY;
         }
         if (n.isURI()) return NodeCategory.URI;
-        if (hasLabel(n)) return NodeCategory.LABELED_BNODE;
+        if (hasLabel(n, bnodeLabels)) return NodeCategory.LABELED_BNODE;
         return NodeCategory.OTHER;
     }
 
@@ -181,7 +185,7 @@ public class SPipesFormatter {
     private final Comparator<Node> SUBJECT_COMPARATOR =
             Comparator.comparing(this::category)
                     .thenComparing(n -> n.isURI() ? n.getURI() : "")
-                    .thenComparing(n -> hasLabel(n) ? bnodeLabels.get(n.getBlankNodeLabel()) : "");
+                    .thenComparing(n -> hasLabel(n, bnodeLabels) ? bnodeLabels.get(n.getBlankNodeLabel()) : "");
 
     /**
      * Sorts subjects using {@code SUBJECT_COMPARATOR}, which prioritizes:
@@ -227,4 +231,5 @@ public class SPipesFormatter {
             w.println();
         }
     }
+
 }

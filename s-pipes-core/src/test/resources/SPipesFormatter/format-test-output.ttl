@@ -14,8 +14,8 @@ PREFIX sp:   <http://spinrdf.org/sp#>
 .
 
 ex:Alice
-    foaf:knows [ foaf:name "Daniel" ; ] ,
-    _:b0 ;
+    foaf:knows _:b0 ,
+    [ foaf:name "Daniel" ; ] ;
 .
 
 ex:Bob
