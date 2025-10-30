@@ -1,4 +1,4 @@
-package cz.cvut.spipes.util;
+package cz.cvut.spipes.SPipesFormatter;
 
 import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.Node;

@@ -1,4 +1,4 @@
-package cz.cvut.spipes.util;
+package cz.cvut.spipes.SPipesFormatter;
 
 import cz.cvut.spipes.constants.SM;
 import org.apache.jena.atlas.io.AWriter;
