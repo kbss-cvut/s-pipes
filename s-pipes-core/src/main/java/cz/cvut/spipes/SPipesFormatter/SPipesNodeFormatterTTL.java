@@ -1,4 +1,4 @@
-package cz.cvut.spipes.util;
+package cz.cvut.spipes.SPipesFormatter;
 
 import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.Node;
@@ -16,7 +16,7 @@ public class SPipesNodeFormatterTTL {
     final NodeFormatterTTL_MultiLine delegate;
     private final Graph graph;
     private final Map<String,Integer> inDegree;
-    private final Map<String,String> bnodeLabels;
+    private static Map<String,String> bnodeLabels;
 
     /**
      * Formats individual RDF nodes for Turtle output.
@@ -34,6 +34,8 @@ public class SPipesNodeFormatterTTL {
         ns.forEach(prefixMap::add);
         this.delegate = new NodeFormatterTTL_MultiLine(null, prefixMap);
     }
+
+    protected static boolean hasLabel(Node n, Map<String, String> bnodeLabels) { return n.isBlank() && bnodeLabels.containsKey(n.getBlankNodeLabel()); }
 
     /**
      * Entry point for formatting any RDF node.
@@ -102,7 +104,9 @@ public class SPipesNodeFormatterTTL {
 
         w.print("[ ");
         props.stream()
-                .sorted(Comparator.comparing(Triple::getPredicate, PRED_ORDER))
+                .sorted(Comparator
+                        .comparing(Triple::getPredicate, PRED_ORDER)
+                        .thenComparing(t -> t.getObject().toString()))
                 .forEach(t -> printProperty(w, t, path));
         w.print("]");
         path.remove(blank);
@@ -148,4 +152,20 @@ public class SPipesNodeFormatterTTL {
     protected static final Comparator<Node> PRED_ORDER =
             Comparator.<Node>comparingInt(p -> RDF.type.asNode().equals(p) ? 0 : 1)
                     .thenComparing((Node n) -> n.toString());
+
+
+    protected static final Comparator<Node> OBJECT_COMPARATOR =
+            Comparator.<Node>comparingInt(n -> {
+                if (n.isURI()) return 0;
+                if (n.isLiteral()) return 1;
+                if (hasLabel(n, bnodeLabels)) return 2;
+                if (n.isBlank()) return 3;
+                return 4;
+            }).thenComparing(n -> {
+                if (n.isURI()) return n.getURI();
+                if (n.isLiteral()) return n.getLiteralLexicalForm();
+                if (hasLabel(n, bnodeLabels)) return bnodeLabels.get(n.getBlankNodeLabel());
+                if (n.isBlank()) return n.getBlankNodeLabel();
+                return "";
+            });
 }

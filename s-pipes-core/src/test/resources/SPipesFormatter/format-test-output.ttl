@@ -13,15 +13,6 @@ PREFIX sp:   <http://spinrdf.org/sp#>
     owl:imports <http://onto.fel.cvut.cz/ontologies/s-pipes-lib> ;
 .
 
-ex:Alice
-    foaf:knows [ foaf:name "Daniel" ; ] ,
-    _:b0 ;
-.
-
-ex:Bob
-    foaf:knows _:b0 ;
-.
-
 :construct-greeting
     a sml:ApplyConstruct ;
     sm:next :express-greeting_Return ;
@@ -36,6 +27,15 @@ ex:Bob
       ''' ; ] ;
     sml:replace true ;
     rdfs:label "Construct greeting" ;
+.
+
+ex:Alice
+    foaf:knows _:b0 ,
+    [ foaf:name "Daniel" ; ] ;
+.
+
+ex:Bob
+    foaf:knows _:b0 ;
 .
 
 _:b0

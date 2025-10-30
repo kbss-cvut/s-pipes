@@ -1,4 +1,4 @@
-package cz.cvut.spipes.util;
+package cz.cvut.spipes.SPipesFormatter;
 
 import org.apache.commons.io.output.WriterOutputStream;
 import org.apache.jena.graph.Graph;
