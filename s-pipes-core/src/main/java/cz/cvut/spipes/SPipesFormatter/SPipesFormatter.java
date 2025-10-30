@@ -59,6 +59,8 @@ public class SPipesFormatter {
     private int bCounter = 0;
     private final Node smNext = NodeFactory.createURI(SM.next);
     private final Set<Node> modules = new HashSet<>();
+    private final Map<Node, List<Node>> edges = new HashMap<>();
+    private final Map<Node, Integer> topoIndex = new HashMap<>();
 
     private final SPipesNodeFormatterTTL nodeFormatter;
 
@@ -68,6 +70,10 @@ public class SPipesFormatter {
         this.nodeFormatter = new SPipesNodeFormatterTTL(graph, ns, inDegree, bnodeLabels);
         buildSubjectMap();
         assignBNodeLabels();
+        List<Node> topoOrder = new SPipesExecutionOrder(edges).compute();
+        for (int i = 0; i < topoOrder.size(); i++) {
+            topoIndex.put(topoOrder.get(i), i);
+        }
     }
 
     /**
@@ -95,6 +101,7 @@ public class SPipesFormatter {
                 if (t.getPredicate().equals(smNext)) {
                     modules.add(t.getSubject());
                     modules.add(t.getObject());
+                    edges.computeIfAbsent(s, k -> new ArrayList<>()).add(o);
                 }
                 if (o.isBlank()) inDegree.merge(o.getBlankNodeLabel(), 1, Integer::sum);
             }
@@ -181,26 +188,52 @@ public class SPipesFormatter {
         return NodeCategory.OTHER;
     }
 
-    // URIs first, then labelled bnodes, then other bnodes
-    private final Comparator<Node> SUBJECT_COMPARATOR =
-            Comparator.comparing(this::category)
-                    .thenComparing(n -> n.isURI() ? n.getURI() : "")
-                    .thenComparing(n -> hasLabel(n, bnodeLabels) ? bnodeLabels.get(n.getBlankNodeLabel()) : "");
-
     /**
      * Sorts subjects using {@code SUBJECT_COMPARATOR}, which prioritizes:
-     * - Ontologies
-     * - URIs
-     * - Labelled blank nodes
-     * - Other blank nodes
-     *
+     * - Priority (ontology &lt; URI &lt; labelled bnode &lt; other)
+     * - Topological index (for modules)
+     * - Category
+     * - URI lexicographically
+     * - Label lexicographically
      * @param subjects the list of subjects to sort
      * @return the sorted list
      */
     private List<Node> sortSubjects(List<Node> subjects) {
-        subjects.sort(SUBJECT_COMPARATOR);
+        subjects.sort(SUBJECT_COMPARATOR());
         return subjects;
     }
+
+    private record SubjectRank(int priority, int topo, NodeCategory category, String uri, String label) {}
+
+    private SubjectRank rank(Node n) {
+        return new SubjectRank(
+                category(n) == NodeCategory.ONTOLOGY ? 0 : topoIndex.containsKey(n) ? 1 : 2,
+                topoIndex.getOrDefault(n, Integer.MAX_VALUE),
+                category(n),
+                uriOrEmpty(n),
+                labelOrEmpty(n)
+        );
+    }
+
+
+    private Comparator<Node> SUBJECT_COMPARATOR() {
+        return Comparator.comparing(this::rank,
+                Comparator.comparingInt(SubjectRank::priority)
+                        .thenComparingInt(SubjectRank::topo)
+                        .thenComparing(SubjectRank::category)
+                        .thenComparing(SubjectRank::uri)
+                        .thenComparing(SubjectRank::label)
+        );
+    }
+
+    private String uriOrEmpty(Node n) {
+        return n.isURI() ? n.getURI() : "";
+    }
+
+    private String labelOrEmpty(Node n) {
+        return hasLabel(n, bnodeLabels) ? bnodeLabels.get(n.getBlankNodeLabel()) : "";
+    }
+
 
     /**
      * Serializes all predicate–object pairs for a given subject.
