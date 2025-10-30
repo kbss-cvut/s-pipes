@@ -17,13 +17,13 @@ class SPipesFormatterTest {
     @Test
     void writeScriptPreservesFormatting() throws IOException {
         var model = ModelFactory.createDefaultModel();
-        try (var in = getClass().getResourceAsStream("/util/format-test-input.ttl")) {
+        try (var in = getClass().getResourceAsStream("/SPipesFormatter/format-test-input.ttl")) {
             assertNotNull(in);
             model.read(in, null, "TURTLE");
         }
 
         // We can't compare the output with the same input file, because of how blank nodes are serialised.
-        var expected = readUtf8("/util/format-test-output.ttl");
+        var expected = readUtf8("/SPipesFormatter/format-test-output.ttl");
         var actual   = writeToString(model);
 
         assertEquals(expected, actual);
