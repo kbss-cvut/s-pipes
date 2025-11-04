@@ -40,4 +40,10 @@ public class ExecutionConfig {
     public static String getDevelopmentServiceUrl() {
         return CoreConfigProperties.get("execution.developmentServiceUrl", "http://localhost:8080/s-pipes/");
     }
+
+    public static boolean isInDevelopmentPrettyPrintScripts() {
+        return Boolean.parseBoolean(CoreConfigProperties.get(
+            "execution.development.prettyPrintScripts",
+            "false"));
+    }
 }
