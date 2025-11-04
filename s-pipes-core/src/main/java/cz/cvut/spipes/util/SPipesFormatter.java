@@ -129,7 +129,7 @@ public class SPipesFormatter {
         for (Node subject : subjects) {
             if (subject.isBlank() && !hasLabel(subject) && inDegreeOf(subject) >= 1) continue;
 
-            nodeFormatter.formatNode(w, subject, null);
+            nodeFormatter.formatNode(w, subject, new HashSet<>());
             w.println();
 
             Map<Node, List<Node>> predMap = new TreeMap<>(SPipesNodeFormatterTTL.PRED_ORDER);
