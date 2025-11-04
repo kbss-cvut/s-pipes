@@ -12,14 +12,16 @@ import cz.cvut.spipes.spin.model.Ask;
 import cz.cvut.spipes.spin.model.Construct;
 import cz.cvut.spipes.spin.model.SPINFactory;
 import cz.cvut.spipes.spin.model.Select;
-import cz.cvut.spipes.manager.factory.ScriptManagerFactory;
 import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.QueryUtils;
 import cz.cvut.spipes.util.SPINUtils;
 import cz.cvut.spipes.util.SPipesUtil;
 import org.apache.jena.atlas.lib.NotImplemented;
 import org.apache.jena.ontology.OntModel;
-import org.apache.jena.query.*;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QuerySolution;
+import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.vocabulary.RDFS;
@@ -219,10 +221,15 @@ public abstract class AbstractModule implements Module {
     }
 
     protected String saveScriptToTemporaryFile(Model model) {
+        RDFModelWriter writer =
+            ExecutionConfig.isInDevelopmentPrettyPrintScripts() ?
+                JenaUtils::writeScript :
+                JenaUtils::write;
+
         return saveModelToTemporaryFile(
-            JenaUtils::writeScript,
+            writer,
             model,
-            "model-output-"
+            "script-output-"
         );
     }
 
