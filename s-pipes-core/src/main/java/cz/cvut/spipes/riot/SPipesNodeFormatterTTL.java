@@ -139,15 +139,18 @@ public class SPipesNodeFormatterTTL {
             return;
         }
 
-        w.print("[ ");
-        graph.find(blank, Node.ANY, Node.ANY)
-                .toList()
-                .stream()
-                .sorted(Comparator
-                        .comparing(Triple::getPredicate, PRED_ORDER)
-                        .thenComparing(t -> t.getObject().toString()))
-                .forEach(t -> printProperty(w, t, path));
-        w.print("]");
+        List<Triple> triples = graph.find(blank, Node.ANY, Node.ANY).toList();
+        if (triples.isEmpty()) {
+            w.print("[]");
+        } else {
+            w.print("[ ");
+            triples.stream()
+                    .sorted(Comparator
+                            .comparing(Triple::getPredicate, PRED_ORDER)
+                            .thenComparing(t -> t.getObject().toString()))
+                    .forEach(t -> printProperty(w, t, path));
+            w.print("]");
+        }
         path.remove(blank);
     }
     /**
