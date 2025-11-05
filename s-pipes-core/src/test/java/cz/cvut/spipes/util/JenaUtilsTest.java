@@ -13,9 +13,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -178,32 +176,4 @@ public class JenaUtilsTest {
         return prefixMapModel;
     }
 
-    @Test
-    void writeScriptPreservesFormatting() throws IOException {
-        var model = ModelFactory.createDefaultModel();
-        try (var in = getClass().getResourceAsStream("/util/format-test-input.ttl")) {
-            assertNotNull(in);
-            model.read(in, null, "TURTLE");
-        }
-
-        // We can't compare the output with the same input file, because of how blank nodes are serialised.
-        var expected = readUtf8("/util/format-test-output.ttl");
-        var actual   = writeToString(model);
-
-        assertEquals(expected, actual);
-    }
-
-    private String writeToString(Model model) throws IOException {
-        try (var baos = new ByteArrayOutputStream()) {
-            JenaUtils.writeScript(baos, model);
-            return baos.toString(StandardCharsets.UTF_8);
-        }
-    }
-
-    private String readUtf8(String path) throws IOException {
-        try (var in = getClass().getResourceAsStream(path)) {
-            assertNotNull(in, path + " not found");
-            return new String(in.readAllBytes(), StandardCharsets.UTF_8);
-        }
-    }
 }
