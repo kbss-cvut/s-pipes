@@ -1,8 +1,8 @@
 package cz.cvut.spipes.riot;
 
-import cz.cvut.spipes.util.JenaUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.system.PrefixMapFactory;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -45,7 +45,8 @@ class SPipesFormatterTest {
 
     private String writeToString(Model model) throws IOException {
         try (var baos = new ByteArrayOutputStream()) {
-            JenaUtils.writeScript(baos, model);
+            SPipesTurtleWriter writer = new SPipesTurtleWriter();
+            writer.write(baos, model.getGraph(), PrefixMapFactory.create(model.getGraph().getPrefixMapping()), null, null);
             return baos.toString(StandardCharsets.UTF_8);
         }
     }
