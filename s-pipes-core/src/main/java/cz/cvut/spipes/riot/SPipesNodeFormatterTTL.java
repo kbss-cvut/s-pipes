@@ -13,7 +13,8 @@ public class SPipesNodeFormatterTTL {
     final NodeFormatterTTL_MultiLine delegate;
     private final Graph graph;
     private final Map<String,Integer> inDegree;
-    private Map<String,String> bnodeLabels;
+    private final Map<String,String> bnodeLabels;
+    protected final Comparator<Node> OBJECT_COMPARATOR;
 
     /**
      * Creates a formatter for RDF nodes in Turtle syntax with custom handling
@@ -39,6 +40,48 @@ public class SPipesNodeFormatterTTL {
         PrefixMap prefixMap = new PrefixMapStd();
         ns.forEach(prefixMap::add);
         this.delegate = new NodeFormatterTTL_MultiLine(null, prefixMap);
+
+        /*
+          Comparator for RDF {@link Node} objects used when ordering object positions
+          in Turtle serialisation.
+
+          <p>The comparison is performed in two stages:</p>
+          <ol>
+            <li>By node type, in the following priority:
+                <ul>
+                  <li>URIs (rank 0)</li>
+                  <li>Literals (rank 1)</li>
+                  <li>Blank nodes with assigned labels (rank 2)</li>
+                  <li>Unlabeled blank nodes (rank 3)</li>
+                  <li>Other node types (rank 4)</li>
+                </ul>
+            </li>
+            <li>Within the same category, nodes are ordered lexicographically by:
+                <ul>
+                  <li>URI string for URIs</li>
+                  <li>Lexical form for literals</li>
+                  <li>Assigned label for labeled blank nodes</li>
+                  <li>Internal blank node identifier for unlabeled blank nodes</li>
+                </ul>
+            </li>
+          </ol>
+
+          <p>This ensures stable and human-readable ordering of objects in Turtle output,
+          especially when blank nodes are involved.</p>
+         */
+        this.OBJECT_COMPARATOR = Comparator.<Node>comparingInt(n -> {
+            if (n.isURI()) return 0;
+            if (n.isLiteral()) return 1;
+            if (hasLabel(n, this.bnodeLabels)) return 2;
+            if (n.isBlank()) return 3;
+            return 4;
+        }).thenComparing(n -> {
+            if (n.isURI()) return n.getURI();
+            if (n.isLiteral()) return n.getLiteralLexicalForm();
+            if (hasLabel(n, this.bnodeLabels)) return this.bnodeLabels.get(n.getBlankNodeLabel());
+            if (n.isBlank()) return n.getBlankNodeLabel();
+            return "";
+        });
     }
 
     protected boolean hasLabel(Node n, Map<String, String> bnodeLabels) { return n.isBlank() && bnodeLabels.containsKey(n.getBlankNodeLabel()); }
@@ -145,47 +188,4 @@ public class SPipesNodeFormatterTTL {
             Comparator.<Node>comparingInt(p -> RDF.type.asNode().equals(p) ? 0 : 1)
                     .thenComparing((Node n) -> n.toString());
 
-
-    /**
-     * Comparator for RDF {@link Node} objects used when ordering object positions
-     * in Turtle serialisation.
-     *
-     * <p>The comparison is performed in two stages:</p>
-     * <ol>
-     *   <li>By node type, in the following priority:
-     *       <ul>
-     *         <li>URIs (rank 0)</li>
-     *         <li>Literals (rank 1)</li>
-     *         <li>Blank nodes with assigned labels (rank 2)</li>
-     *         <li>Unlabeled blank nodes (rank 3)</li>
-     *         <li>Other node types (rank 4)</li>
-     *       </ul>
-     *   </li>
-     *   <li>Within the same category, nodes are ordered lexicographically by:
-     *       <ul>
-     *         <li>URI string for URIs</li>
-     *         <li>Lexical form for literals</li>
-     *         <li>Assigned label for labeled blank nodes</li>
-     *         <li>Internal blank node identifier for unlabeled blank nodes</li>
-     *       </ul>
-     *   </li>
-     * </ol>
-     *
-     * <p>This ensures stable and human-readable ordering of objects in Turtle output,
-     * especially when blank nodes are involved.</p>
-     */
-    protected final Comparator<Node> OBJECT_COMPARATOR =
-            Comparator.<Node>comparingInt(n -> {
-                if (n.isURI()) return 0;
-                if (n.isLiteral()) return 1;
-                if (hasLabel(n, bnodeLabels)) return 2;
-                if (n.isBlank()) return 3;
-                return 4;
-            }).thenComparing(n -> {
-                if (n.isURI()) return n.getURI();
-                if (n.isLiteral()) return n.getLiteralLexicalForm();
-                if (hasLabel(n, bnodeLabels)) return bnodeLabels.get(n.getBlankNodeLabel());
-                if (n.isBlank()) return n.getBlankNodeLabel();
-                return "";
-            });
 }

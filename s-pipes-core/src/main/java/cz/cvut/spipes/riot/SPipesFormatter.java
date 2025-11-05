@@ -197,7 +197,7 @@ public class SPipesFormatter {
      * @return the sorted list
      */
     private List<Node> sortSubjects(List<Node> subjects) {
-        subjects.sort(SUBJECT_COMPARATOR());
+        subjects.sort(getSubjectComparator());
         return subjects;
     }
 
@@ -214,7 +214,7 @@ public class SPipesFormatter {
     }
 
 
-    private Comparator<Node> SUBJECT_COMPARATOR() {
+    private Comparator<Node> getSubjectComparator() {
         return Comparator.comparing(this::rank,
                 Comparator.comparingInt(SubjectRank::priority)
                         .thenComparingInt(SubjectRank::topo)
