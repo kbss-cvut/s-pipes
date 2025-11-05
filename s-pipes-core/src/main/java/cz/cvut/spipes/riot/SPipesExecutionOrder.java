@@ -45,7 +45,7 @@ public class SPipesExecutionOrder {
         this.edges = edges;
     }
 
-    protected List<Node> compute() {
+    List<Node> compute() {
         Map<Node, Integer> indegree = computeIndegree();
         Queue<QueueEntry> q = indegree.entrySet().stream()
                 .filter(e -> e.getValue() == 0)

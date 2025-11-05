@@ -14,7 +14,7 @@ public class SPipesNodeFormatterTTL {
     private final Graph graph;
     private final Map<String,Integer> inDegree;
     private final Map<String,String> bnodeLabels;
-    protected final Comparator<Node> OBJECT_COMPARATOR;
+    final Comparator<Node> OBJECT_COMPARATOR;
 
     /**
      * Creates a formatter for RDF nodes in Turtle syntax with custom handling
@@ -84,7 +84,7 @@ public class SPipesNodeFormatterTTL {
         });
     }
 
-    protected boolean hasLabel(Node n, Map<String, String> bnodeLabels) { return n.isBlank() && bnodeLabels.containsKey(n.getBlankNodeLabel()); }
+    boolean hasLabel(Node n, Map<String, String> bnodeLabels) { return n.isBlank() && bnodeLabels.containsKey(n.getBlankNodeLabel()); }
 
     /**
      * Entry point for formatting any RDF node.
@@ -175,7 +175,7 @@ public class SPipesNodeFormatterTTL {
      * @param w the writer to output to
      * @param predicate the predicate node to format
      */
-    protected void formatPredicate(AWriter w, Node predicate) {
+    void formatPredicate(AWriter w, Node predicate) {
         if (predicate.equals(RDF.type.asNode())) {
             w.print("a");
         } else {
@@ -184,7 +184,7 @@ public class SPipesNodeFormatterTTL {
     }
 
     // Comparator where rdf:type ("a") always comes first, then lexicographical order
-    protected final Comparator<Node> PRED_ORDER =
+    final Comparator<Node> PRED_ORDER =
             Comparator.<Node>comparingInt(p -> RDF.type.asNode().equals(p) ? 0 : 1)
                     .thenComparing((Node n) -> n.toString());
 
