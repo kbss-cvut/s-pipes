@@ -14,6 +14,7 @@ import org.apache.jena.vocabulary.RDF;
 import java.io.OutputStream;
 import java.util.*;
 import static org.apache.jena.riot.system.RiotLib.writePrefixes;
+
 /**
  * Formats an RDF graph into Turtle syntax with custom structure and blank node handling.
  * Controls subject ordering, predicate sorting, and punctuation.
@@ -22,7 +23,14 @@ import static org.apache.jena.riot.system.RiotLib.writePrefixes;
  * <h3>Formatting Rules:</h3>
  * <ul>
  *   <li>Subject blocks end with {@code .} on a separate line (see {@link #writeTriples})</li>
- *   <li>Subject order: ontology, URIs, blank nodes (see {@link #sortSubjects})</li>
+ *   <li>Subject order:
+ *     <ol>
+ *       <li>Ontology nodes (e.g. {@code owl:Ontology})</li>
+ *       <li>Modules sorted by execution order, computed via topological sort over {@code sm:next} dependencies</li>
+ *       <li>Other URIs and blank nodes, sorted by category and lexicographic order</li>
+ *     </ol>
+ *     (see {@link #sortSubjects})
+ *   </li>
  *   <li>Type declaration using {@code a} comes first in each subject block
  *       (see {@link SPipesNodeFormatterTTL#PRED_ORDER})</li>
  *   <li>Multiline literals are formatted by default using {@code """}.
