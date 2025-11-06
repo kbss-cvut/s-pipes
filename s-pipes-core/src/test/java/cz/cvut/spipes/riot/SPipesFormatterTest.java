@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class SPipesFormatterTest {
 
     @Test
-    void writeScriptPreservesFormatting() throws IOException {
+    void writeToPreservesFormatting() throws IOException {
         var model = ModelFactory.createDefaultModel();
         try (var in = getClass().getResourceAsStream("/riot/format-test-input.ttl")) {
             assertNotNull(in);
@@ -30,7 +30,7 @@ class SPipesFormatterTest {
     }
 
     @Test
-    void writeScriptRespectsDependencies() throws IOException {
+    void writeToRespectsDependencies() throws IOException {
         var model = ModelFactory.createDefaultModel();
         try (var in = getClass().getResourceAsStream("/riot/sm-next-test.ttl")) {
             assertNotNull(in);
@@ -45,8 +45,9 @@ class SPipesFormatterTest {
 
     private String writeToString(Model model) throws IOException {
         try (var baos = new ByteArrayOutputStream()) {
-            SPipesTurtleWriter writer = new SPipesTurtleWriter();
-            writer.write(baos, model.getGraph(), PrefixMapFactory.create(model.getGraph().getPrefixMapping()), null, null);
+            SPipesFormatter formatter = new SPipesFormatter(model.getGraph(), PrefixMapFactory.create(model.getGraph().getPrefixMapping()));
+            formatter.writeTo(baos);
+            baos.flush();
             return baos.toString(StandardCharsets.UTF_8);
         }
     }
