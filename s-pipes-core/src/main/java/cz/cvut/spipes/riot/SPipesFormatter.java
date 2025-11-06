@@ -26,7 +26,7 @@ import static org.apache.jena.riot.system.RiotLib.writePrefixes;
  *   <li>Subject order:
  *     <ol>
  *       <li>Ontology nodes (e.g. {@code owl:Ontology})</li>
- *       <li>Modules sorted by execution order, computed via topological sort over {@code sm:next} dependencies</li>
+ *       <li>Modules sorted by execution order, computed via topological sort over {@code sm:next} dependencies. For more information on the algorithm see {@link SPipesExecutionOrder}</li>
  *       <li>Other URIs and blank nodes, sorted by category and lexicographic order</li>
  *     </ol>
  *     (see {@link #sortSubjects})
@@ -150,7 +150,7 @@ public class SPipesFormatter {
             predMap.putAll(subjectMap.getOrDefault(subject, Collections.emptyMap()));
 
             for (Map.Entry<Node, List<Node>> entry : predMap.entrySet()) {
-                entry.getValue().sort(nodeFormatter.OBJECT_COMPARATOR);
+                entry.getValue().sort(nodeFormatter.getObjectComparator());
             }
 
             if (!predMap.isEmpty()) {
