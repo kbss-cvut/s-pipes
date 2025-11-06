@@ -1,18 +1,18 @@
-package cz.cvut.spipes.util;
+package cz.cvut.spipes.riot;
 
+import cz.cvut.spipes.constants.SM;
+import org.apache.jena.atlas.io.AWriter;
 import org.apache.jena.atlas.io.IndentedWriter;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.Node;
-import org.apache.jena.graph.Triple;
+import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.riot.system.PrefixMap;
 import org.apache.jena.riot.system.PrefixMapFactory;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
-import org.apache.jena.atlas.io.AWriter;
 
 import java.io.OutputStream;
 import java.util.*;
-
 import static org.apache.jena.riot.system.RiotLib.writePrefixes;
 
 /**
@@ -23,7 +23,14 @@ import static org.apache.jena.riot.system.RiotLib.writePrefixes;
  * <h3>Formatting Rules:</h3>
  * <ul>
  *   <li>Subject blocks end with {@code .} on a separate line (see {@link #writeTriples})</li>
- *   <li>Subject order: ontology, URIs, blank nodes (see {@link #sortSubjects})</li>
+ *   <li>Subject order:
+ *     <ol>
+ *       <li>Ontology nodes (e.g. {@code owl:Ontology})</li>
+ *       <li>Modules sorted by execution order, computed via topological sort over {@code sm:next} dependencies. For more information on the algorithm see {@link SPipesExecutionOrder}</li>
+ *       <li>Other URIs and blank nodes, sorted by category and lexicographic order</li>
+ *     </ol>
+ *     (see {@link #sortSubjects})
+ *   </li>
  *   <li>Type declaration using {@code a} comes first in each subject block
  *       (see {@link SPipesNodeFormatterTTL#PRED_ORDER})</li>
  *   <li>Multiline literals are formatted by default using {@code """}.
@@ -48,22 +55,29 @@ import static org.apache.jena.riot.system.RiotLib.writePrefixes;
  * </pre>
  */
 public class SPipesFormatter {
-
     private final Graph graph;
     private final Map<String, String> ns;
     private final Map<Node, Map<Node, List<Node>>> subjectMap = new LinkedHashMap<>();
     private final Map<String, Integer> inDegree = new HashMap<>();
     private final Map<String, String> bnodeLabels = new LinkedHashMap<>();
     private int bCounter = 0;
+    private final Node smNext = NodeFactory.createURI(SM.next);
+    private final Set<Node> modules = new HashSet<>();
+    private final Map<Node, List<Node>> edges = new HashMap<>();
+    private final Map<Node, Integer> topoIndex = new HashMap<>();
 
     private final SPipesNodeFormatterTTL nodeFormatter;
 
     public SPipesFormatter(Graph graph, PrefixMap prefixMap) {
         this.graph = graph;
         this.ns = new LinkedHashMap<>(prefixMap.getMapping());
-        this.nodeFormatter = new SPipesNodeFormatterTTL(graph, ns, inDegree, bnodeLabels);
         buildSubjectMap();
         assignBNodeLabels();
+        this.nodeFormatter = new SPipesNodeFormatterTTL(graph, ns, inDegree, bnodeLabels);
+        List<Node> topoOrder = new SPipesExecutionOrder(edges).compute();
+        for (int i = 0; i < topoOrder.size(); i++) {
+            topoIndex.put(topoOrder.get(i), i);
+        }
     }
 
     /**
@@ -77,24 +91,27 @@ public class SPipesFormatter {
             }
         }
     }
-
     /**
      * Builds a nested map of triples: {@code subject → predicate → list of objects}.
      * Also tracks in-degree of blank nodes (how often they appear as objects).
      */
     private void buildSubjectMap() {
-        Iterator<Triple> it = graph.find();
-        while (it.hasNext()) {
-            Triple t = it.next();
-            Node s = t.getSubject(), p = t.getPredicate(), o = t.getObject();
-            subjectMap.computeIfAbsent(s, k -> new LinkedHashMap<>())
-                    .computeIfAbsent(p, k -> new ArrayList<>()).add(o);
-            if (o.isBlank()) inDegree.merge(o.getBlankNodeLabel(), 1, Integer::sum);
-        }
+        graph.stream().forEach(
+                t -> {
+                    Node s = t.getSubject(), p = t.getPredicate(), o = t.getObject();
+                    subjectMap.computeIfAbsent(s, k -> new LinkedHashMap<>())
+                            .computeIfAbsent(p, k -> new ArrayList<>()).add(o);
+                    if (t.getPredicate().equals(smNext)) {
+                        modules.add(t.getSubject());
+                        modules.add(t.getObject());
+                        edges.computeIfAbsent(s, k -> new ArrayList<>()).add(o);
+                    }
+                    if (o.isBlank()) inDegree.merge(o.getBlankNodeLabel(), 1, Integer::sum);
+                }
+        );
     }
 
     private int inDegreeOf(Node n) { return n.isBlank() ? inDegree.getOrDefault(n.getBlankNodeLabel(), 0) : 0; }
-    private boolean hasLabel(Node n) { return n.isBlank() && bnodeLabels.containsKey(n.getBlankNodeLabel()); }
 
     /**
      * Entry point for serialising the graph to Turtle.
@@ -106,15 +123,12 @@ public class SPipesFormatter {
         try(IndentedWriter aw = new IndentedWriter(out)){
             PrefixMap prefixMap = PrefixMapFactory.createForOutput();
             ns.forEach(prefixMap::add);
-
             writePrefixes(aw, prefixMap);
             aw.println();
-
             writeTriples(aw);
             aw.flush();
         }
     }
-
     /**
      * Serializes all triples in the graph.
      * Subjects are sorted using {@code SUBJECT_COMPARATOR}.
@@ -127,13 +141,17 @@ public class SPipesFormatter {
         List<Node> subjects = sortSubjects(new ArrayList<>(subjectMap.keySet()));
 
         for (Node subject : subjects) {
-            if (subject.isBlank() && !hasLabel(subject) && inDegreeOf(subject) >= 1) continue;
+            if (subject.isBlank() && !nodeFormatter.hasLabel(subject, bnodeLabels) && inDegreeOf(subject) >= 1) continue;
 
             nodeFormatter.formatNode(w, subject, new HashSet<>());
             w.println();
 
-            Map<Node, List<Node>> predMap = new TreeMap<>(SPipesNodeFormatterTTL.PRED_ORDER);
+            Map<Node, List<Node>> predMap = new TreeMap<>(nodeFormatter.PRED_ORDER);
             predMap.putAll(subjectMap.getOrDefault(subject, Collections.emptyMap()));
+
+            for (Map.Entry<Node, List<Node>> entry : predMap.entrySet()) {
+                entry.getValue().sort(nodeFormatter.getObjectComparator());
+            }
 
             if (!predMap.isEmpty()) {
                 writePredicates(w, predMap);
@@ -141,7 +159,6 @@ public class SPipesFormatter {
             w.println(".\n");
         }
     }
-
     /**
      * Defines categories for sorting subjects:
      * - {@code ONTOLOGY}: subjects typed as {@code owl:Ontology}
@@ -152,7 +169,6 @@ public class SPipesFormatter {
     private enum NodeCategory {
         ONTOLOGY, URI, LABELED_BNODE, OTHER
     }
-
     /**
      * Determines the {@link NodeCategory} of a node for sorting purposes.
      *
@@ -166,30 +182,56 @@ public class SPipesFormatter {
             return NodeCategory.ONTOLOGY;
         }
         if (n.isURI()) return NodeCategory.URI;
-        if (hasLabel(n)) return NodeCategory.LABELED_BNODE;
+        if (nodeFormatter.hasLabel(n, bnodeLabels)) return NodeCategory.LABELED_BNODE;
         return NodeCategory.OTHER;
     }
 
-    // URIs first, then labelled bnodes, then other bnodes
-    private final Comparator<Node> SUBJECT_COMPARATOR =
-            Comparator.comparing(this::category)
-                    .thenComparing(n -> n.isURI() ? n.getURI() : "")
-                    .thenComparing(n -> hasLabel(n) ? bnodeLabels.get(n.getBlankNodeLabel()) : "");
-
     /**
      * Sorts subjects using {@code SUBJECT_COMPARATOR}, which prioritizes:
-     * - Ontologies
-     * - URIs
-     * - Labelled blank nodes
-     * - Other blank nodes
-     *
+     * - Priority (ontology &lt; URI &lt; labelled bnode &lt; other)
+     * - Topological index (for modules)
+     * - Category
+     * - URI lexicographically
+     * - Label lexicographically
      * @param subjects the list of subjects to sort
      * @return the sorted list
      */
     private List<Node> sortSubjects(List<Node> subjects) {
-        subjects.sort(SUBJECT_COMPARATOR);
+        subjects.sort(getSubjectComparator());
         return subjects;
     }
+
+    private record SubjectRank(int priority, int topo, NodeCategory category, String uri, String label) {}
+
+    private SubjectRank rank(Node n) {
+        return new SubjectRank(
+                category(n) == NodeCategory.ONTOLOGY ? 0 : topoIndex.containsKey(n) ? 1 : 2,
+                topoIndex.getOrDefault(n, Integer.MAX_VALUE),
+                category(n),
+                uriOrEmpty(n),
+                labelOrEmpty(n)
+        );
+    }
+
+
+    private Comparator<Node> getSubjectComparator() {
+        return Comparator.comparing(this::rank,
+                Comparator.comparingInt(SubjectRank::priority)
+                        .thenComparingInt(SubjectRank::topo)
+                        .thenComparing(SubjectRank::category)
+                        .thenComparing(SubjectRank::uri)
+                        .thenComparing(SubjectRank::label)
+        );
+    }
+
+    private String uriOrEmpty(Node n) {
+        return n.isURI() ? n.getURI() : "";
+    }
+
+    private String labelOrEmpty(Node n) {
+        return nodeFormatter.hasLabel(n, bnodeLabels) ? bnodeLabels.get(n.getBlankNodeLabel()) : "";
+    }
+
 
     /**
      * Serializes all predicate–object pairs for a given subject.
@@ -203,11 +245,9 @@ public class SPipesFormatter {
     private void writePredicates(AWriter w, Map<Node, List<Node>> predMap) {
         for (Map.Entry<Node, List<Node>> e : predMap.entrySet()) {
             Node pred = e.getKey();
-
             w.print("    ");
             nodeFormatter.formatPredicate(w, pred);
             w.print(" ");
-
             Iterator<Node> it = e.getValue().iterator();
             while (it.hasNext()) {
                 nodeFormatter.formatNode(w, it.next(), new HashSet<>());
@@ -220,4 +260,5 @@ public class SPipesFormatter {
             w.println();
         }
     }
+
 }

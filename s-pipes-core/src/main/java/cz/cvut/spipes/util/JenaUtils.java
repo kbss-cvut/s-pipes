@@ -1,5 +1,6 @@
 package cz.cvut.spipes.util;
 
+import cz.cvut.spipes.riot.CustomLangs;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.compose.MultiUnion;
