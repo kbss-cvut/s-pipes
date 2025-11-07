@@ -12,6 +12,7 @@ import cz.cvut.spipes.spin.model.Ask;
 import cz.cvut.spipes.spin.model.Construct;
 import cz.cvut.spipes.spin.model.SPINFactory;
 import cz.cvut.spipes.spin.model.Select;
+import cz.cvut.spipes.spin.vocabulary.SP;
 import cz.cvut.spipes.util.JenaUtils;
 import cz.cvut.spipes.util.QueryUtils;
 import cz.cvut.spipes.util.SPINUtils;
@@ -350,7 +351,7 @@ public abstract class AbstractModule implements Module {
         if (query.getComment() != null) {
             return query.getComment();
         }
-        String comment = QueryUtils.getQueryComment(query.toString());
+        String comment = QueryUtils.getQueryComment(query.getString(SP.text));
         if (comment != null) {
             return comment;
         }
