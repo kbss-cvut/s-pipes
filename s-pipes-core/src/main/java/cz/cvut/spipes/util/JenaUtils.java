@@ -1,11 +1,15 @@
 package cz.cvut.spipes.util;
 
 import cz.cvut.spipes.riot.CustomLangs;
+import cz.cvut.spipes.riot.SPipesFormatter;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.compose.MultiUnion;
 import org.apache.jena.rdf.model.*;
-import org.apache.jena.riot.*;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFFormat;
+import org.apache.jena.riot.RDFWriter;
+import org.apache.jena.riot.system.PrefixMapFactory;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.util.iterator.ExtendedIterator;
 import org.apache.jena.vocabulary.OWL;
@@ -14,10 +18,15 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class JenaUtils {
@@ -152,6 +161,11 @@ public class JenaUtils {
                 .format(new RDFFormat(CustomLangs.SPIPES_TURTLE))
                 .source(model)
                 .output(outputStream);
+    }
+
+    public static SPipesFormatter getScriptFormatter(Model model) {
+        Graph graph = model.getGraph();
+        return new SPipesFormatter(graph, PrefixMapFactory.create(graph.getPrefixMapping()));
     }
 
     /**
