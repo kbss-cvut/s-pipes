@@ -145,6 +145,7 @@ public class JenaUtils {
      *
      * @param outputStream output stream to write data to
      * @param model rdf data to write
+     * @throws IllegalArgumentException if model is not valid SPipes script
      */
     public static void writeScript(OutputStream outputStream, Model model) {
         RDFWriter.create()
