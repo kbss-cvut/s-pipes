@@ -9,8 +9,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class SPipesFormatterTest {
 
@@ -41,6 +40,16 @@ class SPipesFormatterTest {
         var actual   = writeToString(model);
 
         assertEquals(expected, actual);
+    }
+
+    @Test
+    void writeToWithCycleInDependenciesThrowsIllegalStateException() throws IOException {
+        var model = ModelFactory.createDefaultModel();
+        try (var in = getClass().getResourceAsStream("/riot/sm-next-with-cycle-test.ttl")) {
+            assertNotNull(in);
+            model.read(in, null, "TURTLE");
+        }
+        assertThrows(IllegalStateException.class, () -> writeToString(model));
     }
 
     private String writeToString(Model model) throws IOException {
