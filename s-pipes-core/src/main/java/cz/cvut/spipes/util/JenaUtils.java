@@ -18,10 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -161,6 +158,22 @@ public class JenaUtils {
                 .format(new RDFFormat(CustomLangs.SPIPES_TURTLE))
                 .source(model)
                 .output(outputStream);
+    }
+
+    /**
+     * Common method to write SPipes scripts to specified output stream.
+     * To write generic rdf data use {@link #write(OutputStream, Model)} instead.
+     *
+     * @param scriptPath path to write data to
+     * @param model rdf data to write
+     * @throws IllegalArgumentException if model is not valid SPipes script
+     * @throws IOException if writing fails
+     */
+    public static void writeScript(String scriptPath, Model model) throws IOException {
+        SPipesFormatter formatter = getScriptFormatter(model);
+        try (OutputStream os = new FileOutputStream(scriptPath)) {
+            formatter.writeTo(os);
+        }
     }
 
     public static SPipesFormatter getScriptFormatter(Model model) {
