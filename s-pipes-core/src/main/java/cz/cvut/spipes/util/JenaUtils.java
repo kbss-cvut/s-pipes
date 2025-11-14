@@ -161,7 +161,9 @@ public class JenaUtils {
     }
 
     /**
-     * Common method to write SPipes scripts to specified output stream.
+     * Common method to write SPipes scripts to specified file using {@link Path}.
+     * Preferred over {@link #writeScript(OutputStream, Model)} for modifying <b>existing</b>
+     * SPipes scripts as it avoids file truncation if the model is invalid.
      * To write generic rdf data use {@link #write(OutputStream, Model)} instead.
      *
      * @param scriptPath path to write data to
