@@ -169,9 +169,9 @@ public class JenaUtils {
      * @throws IllegalArgumentException if model is not valid SPipes script
      * @throws IOException if writing fails
      */
-    public static void writeScript(String scriptPath, Model model) throws IOException {
+    public static void writeScript(Path scriptPath, Model model) throws IOException {
         SPipesFormatter formatter = getScriptFormatter(model);
-        try (OutputStream os = new FileOutputStream(scriptPath)) {
+        try (OutputStream os = Files.newOutputStream(scriptPath)) {
             formatter.writeTo(os);
         }
     }
