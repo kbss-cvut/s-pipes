@@ -1,11 +1,15 @@
 package cz.cvut.spipes.util;
 
 import cz.cvut.spipes.riot.CustomLangs;
+import cz.cvut.spipes.riot.SPipesFormatter;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.compose.MultiUnion;
 import org.apache.jena.rdf.model.*;
-import org.apache.jena.riot.*;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFFormat;
+import org.apache.jena.riot.RDFWriter;
+import org.apache.jena.riot.system.PrefixMapFactory;
 import org.apache.jena.util.FileUtils;
 import org.apache.jena.util.iterator.ExtendedIterator;
 import org.apache.jena.vocabulary.OWL;
@@ -17,7 +21,9 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class JenaUtils {
@@ -152,6 +158,29 @@ public class JenaUtils {
                 .format(new RDFFormat(CustomLangs.SPIPES_TURTLE))
                 .source(model)
                 .output(outputStream);
+    }
+
+    /**
+     * Common method to write SPipes scripts to specified file using {@link Path}.
+     * Preferred over {@link #writeScript(OutputStream, Model)} for modifying <b>existing</b>
+     * SPipes scripts as it avoids file truncation if the model is invalid.
+     * To write generic rdf data use {@link #write(OutputStream, Model)} instead.
+     *
+     * @param scriptPath path to write data to
+     * @param model rdf data to write
+     * @throws IllegalArgumentException if model is not valid SPipes script
+     * @throws IOException if writing fails
+     */
+    public static void writeScript(Path scriptPath, Model model) throws IOException {
+        SPipesFormatter formatter = getScriptFormatter(model);
+        try (OutputStream os = Files.newOutputStream(scriptPath)) {
+            formatter.writeTo(os);
+        }
+    }
+
+    public static SPipesFormatter getScriptFormatter(Model model) {
+        Graph graph = model.getGraph();
+        return new SPipesFormatter(graph, PrefixMapFactory.create(graph.getPrefixMapping()));
     }
 
     /**
