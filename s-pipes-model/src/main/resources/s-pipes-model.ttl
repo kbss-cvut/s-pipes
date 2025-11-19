@@ -96,6 +96,15 @@ s-pipes:has-related-resource rdf:type owl:ObjectProperty ;
                              rdfs:range s-pipes:related-resource ;
                              rdfs:label "has related resource" .
 
+###  http://onto.fel.cvut.cz/ontologies/s-pipes/has-script
+s-pipes:has-script rdf:type owl:ObjectProperty ;
+                   rdfs:domain ddo:pipeline-execution ;
+                   rdfs:label "has script" .
+
+###  http://onto.fel.cvut.cz/ontologies/s-pipes/has-function
+s-pipes:has-function rdf:type owl:ObjectProperty ;
+                      rdfs:domain ddo:pipeline-execution ;
+                      rdfs:label "has function" .
 
 #################################################################
 #    Data properties
@@ -116,6 +125,12 @@ ddo:finished-pipeline-execution rdf:type owl:Class ;
 ddo:failed-pipeline-execution rdf:type owl:Class ;
                      rdfs:subClassOf ddo:pipeline-execution ;
                      rdfs:label "Pipeline execution that finished with error" .
+
+###  http://onto.fel.cvut.cz/ontologies/s-pipes/has-script-path
+s-pipes:has-script-path rdf:type owl:DatatypeProperty ;
+                        rdfs:domain ddo:pipeline-execution ;
+                        rdfs:range xsd:string ;
+                        rdfs:label "has script path" .
 
 ###  http://onto.fel.cvut.cz/ontologies/s-pipes/has-duration
 s-pipes:has-duration rdf:type owl:DatatypeProperty ;
@@ -179,6 +194,11 @@ s-pipes:has-pipeline-execution-start-date rdf:type owl:DatatypeProperty ;
                                           rdfs:range xsd:string ;
                                           rdfs:label "has pipeline execution start date" .
 
+ ###  http://onto.fel.cvut.cz/ontologies/s-pipes/has-pipeline-execution-finish-date
+ s-pipes:has-pipeline-execution-finish-date rdf:type owl:DatatypeProperty ;
+                                           rdfs:domain ddo:pipeline-execution ;
+                                           rdfs:range xsd:string ;
+                                           rdfs:label "has pipeline execution finish date" .
 
 ###  http://onto.fel.cvut.cz/ontologies/s-pipes/name
 s-pipes:name rdf:type owl:DatatypeProperty ;

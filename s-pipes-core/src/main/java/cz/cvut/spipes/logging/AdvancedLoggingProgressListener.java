@@ -40,7 +40,6 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -191,7 +190,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
 
             addProperty(pipelineExecution, SPIPES.has_script, getURIFromMetadataMap(SPIPES.has_script));
             // new
-            Date startDate = pipelineExecution.getHas_pipepline_execution_date();
+            Date startDate = pipelineExecution.getHas_pipepline_execution_start_date();
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_finish_date, finishDate);
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_finish_date_unix, finishDate.getTime());
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_duration, computeDuration(startDate, finishDate));
