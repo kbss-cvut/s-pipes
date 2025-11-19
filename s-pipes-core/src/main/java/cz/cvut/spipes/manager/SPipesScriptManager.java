@@ -15,6 +15,7 @@ import org.apache.jena.rdf.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -147,7 +148,9 @@ public class SPipesScriptManager {
     public String getFunctionLocation(final String functionId) {
         String resourceUri = pipelineFunctionRegistry.getResourceUri(functionId);
         String resourceContextUri = pipelineFunctionRegistry.getContexts(resourceUri).iterator().next();
-        return getLocation(resourceContextUri);
+        String location = getLocation(resourceContextUri);
+
+        return Paths.get(location).toUri().toString();
     }
 
     /**
