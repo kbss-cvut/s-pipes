@@ -396,15 +396,6 @@ public class SPipesServiceController {
         return id;
     }
 
-    private String extractScriptPath(final MultiValueMap<String, String> parameters) {
-        if (parameters.containsKey("_pScriptPath")) {
-            List<String> values = parameters.get("_pScriptPath");
-            if (values != null && !values.isEmpty()) {
-                return values.get(0);
-            }
-        }
-        return null;
-    }
 
     private Model extractConfigurationModel(final MultiValueMap<String, String> parameters) {
         ServiceParametersHelper paramHelper = new ServiceParametersHelper(parameters);
