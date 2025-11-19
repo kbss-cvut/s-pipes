@@ -77,9 +77,6 @@ public class PipelineExecution extends Thing {
     @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-pipeline-execution-finish-date", fetch = FetchType.EAGER)
     protected Date has_pipeline_execution_finish_date;
 
-    @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-pipeline-execution-status")
-    protected URI has_pipeline_execution_status;
-
     @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-script")
     protected URI has_script;
 
@@ -209,14 +206,6 @@ public class PipelineExecution extends Thing {
 
     public void setHas_executed_function_script_path(String has_executed_function_script_path) {
         this.has_executed_function_script_path = has_executed_function_script_path;
-    }
-
-    public URI getHas_pipeline_execution_status() {
-        return has_pipeline_execution_status;
-    }
-
-    public void setHas_pipeline_execution_status(URI status) {
-        this.has_pipeline_execution_status = status;
     }
 
     public String getHas_module_id() {

@@ -313,11 +313,6 @@ public class SPipesServiceController {
         if (module == null) {
             throw new SPipesServiceException("Cannot load module with id=" + id);
         }
-
-        String scriptPath = extractScriptPath(parameters);
-        if (scriptPath != null) {
-            module.setScriptPath(scriptPath);
-        }
         ExecutionContext outputExecutionContext = engine.executePipeline(module, inputExecutionContext);
 
         if (outputBindingPath != null) {

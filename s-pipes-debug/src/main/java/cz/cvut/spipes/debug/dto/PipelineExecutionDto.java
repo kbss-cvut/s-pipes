@@ -41,16 +41,6 @@ public class PipelineExecutionDto extends ExecutionThing {
         this.has_pipepline_execution_date = has_pipepline_execution_date;
     }
 
-    private URI has_pipeline_execution_status;
-
-    public URI getHas_pipeline_execution_status() {
-        return has_pipeline_execution_status;
-    }
-
-    public void setHas_pipeline_execution_status(URI has_pipeline_execution_status) {
-        this.has_pipeline_execution_status = has_pipeline_execution_status;
-    }
-
     private URI has_script;
 
     public URI getHas_script() {
