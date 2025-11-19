@@ -277,12 +277,6 @@ public class SPipesServiceController {
 
         // EXECUTE PIPELINE
         Module module = scriptManager.loadFunction(id);
-        module.setFunctionName(id);
-
-        String scriptPath = extractScriptPath(parameters);
-        if (scriptPath != null) {
-            module.setScriptPath(scriptPath);
-        }
 
         if (module == null) {
             throw new SPipesServiceException("Cannot load return module for a function with id=" + id);

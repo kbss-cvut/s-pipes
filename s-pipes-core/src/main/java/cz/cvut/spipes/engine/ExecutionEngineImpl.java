@@ -28,10 +28,10 @@ class ExecutionEngineImpl implements ExecutionEngine {
 
         String functionName = inputContext.getId();
         String scriptPath;
-        if (inputContext.getValue(ExecutionContext.P_SCRIPT_URI) != null) {
+        if (inputContext.getScriptUri() != null) {
             scriptPath = inputContext.getScriptFile().toString();
         } else {
-            scriptPath = module.getScriptPath();
+            scriptPath = "not defined";
         }
         String script = module.getResource().toString().replaceAll("\\/[^.]*$", "");
         fire((l) -> {l.pipelineExecutionStarted(pipelineExecutionId, functionName, scriptPath, script); return null;});

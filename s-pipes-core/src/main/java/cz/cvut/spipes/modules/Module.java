@@ -54,12 +54,4 @@ public interface Module {
 
     // TODO should not be here !!!! but rather generalized
     void addOutputBindings(VariablesBinding variablesBinding);
-
-    void setFunctionName (String functionName);
-
-    String getFunctionName();
-
-    void setScriptPath (String functionName);
-
-    String getScriptPath();
 }
