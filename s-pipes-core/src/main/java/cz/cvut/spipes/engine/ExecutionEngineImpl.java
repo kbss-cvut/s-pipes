@@ -7,6 +7,7 @@ import org.apache.jena.rdf.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Map;
@@ -26,15 +27,17 @@ class ExecutionEngineImpl implements ExecutionEngine {
         log.info("Executing script {} with context {}.", module.getResource(), inputContext.toSimpleString());
         final long pipelineExecutionId = Instant.now().toEpochMilli()*1000+(i++);
 
-        String functionName = inputContext.getId();
+        String function = inputContext.getId();
         String scriptPath;
         if (inputContext.getScriptUri() != null) {
             scriptPath = inputContext.getScriptFile().toString();
         } else {
             scriptPath = "not defined";
         }
-        String script = module.getResource().toString().replaceAll("\\/[^.]*$", "");
-        fire((l) -> {l.pipelineExecutionStarted(pipelineExecutionId, functionName, scriptPath, script); return null;});
+
+        String script = new File(module.getResource().getURI()).getParent();
+
+        fire((l) -> {l.pipelineExecutionStarted(pipelineExecutionId, function, scriptPath, script); return null;});
         try {
             ExecutionContext outputContext = _executePipeline(pipelineExecutionId, module, inputContext, null);
             fire((l) -> {l.pipelineExecutionFinished(pipelineExecutionId); return null;});

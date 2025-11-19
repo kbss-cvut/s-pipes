@@ -80,11 +80,11 @@ public class PipelineExecution extends Thing {
     @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-script")
     protected URI has_script;
 
-    @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-executed-function")
-    protected URI has_executed_function;
+    @OWLObjectProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-function")
+    protected URI has_function;
 
-    @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-executed-function-script-path")
-    protected String has_executed_function_script_path;
+    @OWLDataProperty(iri = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-script-path")
+    protected String has_script_path;
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_module_id, fetch = FetchType.EAGER)
     protected String has_module_id;
@@ -192,20 +192,20 @@ public class PipelineExecution extends Thing {
         this.has_script = has_script;
     }
 
-    public URI getHas_executed_function() {
-        return has_executed_function;
+    public URI getHas_function() {
+        return has_function;
     }
 
-    public void setHas_executed_function(URI has_executed_function) {
-        this.has_executed_function = has_executed_function;
+    public void setHas_function(URI has_function) {
+        this.has_function = has_function;
     }
 
-    public String getHas_executed_function_script_path() {
-        return has_executed_function_script_path;
+    public String getHas_script_path() {
+        return has_script_path;
     }
 
-    public void setHas_executed_function_script_path(String has_executed_function_script_path) {
-        this.has_executed_function_script_path = has_executed_function_script_path;
+    public void setHas_script_path(String has_script_path) {
+        this.has_script_path = has_script_path;
     }
 
     public String getHas_module_id() {
