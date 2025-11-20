@@ -9,7 +9,7 @@ public class LoggingProgressListener implements ProgressListener {
 
     @Override
     public void pipelineExecutionStarted(long pipelineExecutionId, final String function, final String scriptPath, final String script) {
-        LOG.debug("pipelineExecutionStarted - pipelineExecutionId: {}", pipelineExecutionId);
+        LOG.debug("pipelineExecutionStarted - pipelineExecutionId: {}, function: {}, scriptPath: {}, script: {}", pipelineExecutionId, function, scriptPath, script);
     }
 
     @Override

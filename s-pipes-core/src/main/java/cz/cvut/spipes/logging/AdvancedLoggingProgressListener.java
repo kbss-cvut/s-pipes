@@ -194,7 +194,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_finish_date, finishDate);
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_finish_date_unix, finishDate.getTime());
             addProperty(pipelineExecution, SPIPES.has_pipeline_execution_duration, computeDuration(startDate, finishDate));
-            pipelineExecution.setTypes(Collections.singleton(Vocabulary.s_c_finished_pipeline_execution));
+            pipelineExecution.addTypes(Collections.singleton(Vocabulary.s_c_finished_pipeline_execution));
 //            addScript(pipelineExecution, scriptManager.getScriptByContextId(script));
             em.getTransaction().commit();
             em.close();
@@ -210,7 +210,7 @@ public class AdvancedLoggingProgressListener implements ProgressListener {
             final PipelineExecution pipelineExecution =
                     em.find(PipelineExecution.class, pipelineExecutionIri, pd);
             addProperty(pipelineExecution, SPIPES.has_script, getURIFromMetadataMap(SPIPES.has_script));
-            pipelineExecution.setTypes(Collections.singleton(Vocabulary.s_c_failed_pipeline_execution));
+            pipelineExecution.addTypes(Collections.singleton(Vocabulary.s_c_failed_pipeline_execution));
             em.getTransaction().commit();
             em.close();
         }

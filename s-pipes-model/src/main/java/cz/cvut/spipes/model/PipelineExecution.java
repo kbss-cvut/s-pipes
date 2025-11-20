@@ -106,6 +106,10 @@ public class PipelineExecution extends Thing {
         this.types = types;
     }
 
+    public void addTypes(Set<String> types) {
+        this.types.addAll(types);
+    }
+
     public Set<String> getTypes() {
         return types;
     }
