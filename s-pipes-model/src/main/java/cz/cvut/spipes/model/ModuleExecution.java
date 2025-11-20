@@ -51,12 +51,12 @@ public class ModuleExecution extends Thing {
     @OWLObjectProperty(iri = Vocabulary.s_p_has_rdf4j_output, fetch = FetchType.EAGER)
     @ParticipationConstraints(
             @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_target_dataset_snapshot, max = 1))
-    protected Thing has_rdf4j_output;
+    protected TargetDatasetSnapshot has_rdf4j_output;
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_rdf4j_input, fetch = FetchType.EAGER)
     @ParticipationConstraints(
             @ParticipationConstraint(owlObjectIRI = Vocabulary.s_c_source_dataset_snapshot, max = 1))
-    protected Thing has_rdf4j_input;
+    protected SourceDatasetSnapshot has_rdf4j_input;
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_next, fetch = FetchType.EAGER)
     @ParticipationConstraints(
@@ -184,16 +184,16 @@ public class ModuleExecution extends Thing {
         this.output_triple_count = output_triple_count;
     }
 
-    public Thing getHas_rdf4j_output() {
+    public TargetDatasetSnapshot getHas_rdf4j_output() {
         return has_rdf4j_output;
     }
 
 
-    public void setHas_rdf4j_output(SourceDatasetSnapshot has_rdf4j_output) {
+    public void setHas_rdf4j_output(TargetDatasetSnapshot has_rdf4j_output) {
         this.has_rdf4j_output = has_rdf4j_output;
     }
 
-    public Thing getHas_rdf4j_input() {
+    public SourceDatasetSnapshot getHas_rdf4j_input() {
         return has_rdf4j_input;
     }
 
@@ -238,11 +238,4 @@ public class ModuleExecution extends Thing {
         this.executed_in = executed_in;
     }
 
-    public void setHas_rdf4j_output(Thing has_rdf4j_output) {
-        this.has_rdf4j_output = has_rdf4j_output;
-    }
-
-    public void setHas_rdf4j_input(Thing has_rdf4j_input) {
-        this.has_rdf4j_input = has_rdf4j_input;
-    }
 }
