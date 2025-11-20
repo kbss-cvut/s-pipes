@@ -30,9 +30,9 @@ class ExecutionEngineImpl implements ExecutionEngine {
         String function = inputContext.getId();
         String scriptPath;
         if (inputContext.getScriptUri() != null) {
-            scriptPath = inputContext.getScriptFile().toString();
+            scriptPath = inputContext.getScriptUri();
         } else {
-            scriptPath = "not defined";
+            scriptPath = null;
         }
 
         String script = new File(module.getResource().getURI()).getParent();

@@ -148,18 +148,17 @@ public class SPipesScriptManager {
     public String getFunctionLocation(final String functionId) {
         String resourceUri = pipelineFunctionRegistry.getResourceUri(functionId);
         String resourceContextUri = pipelineFunctionRegistry.getContexts(resourceUri).iterator().next();
-        String location = getLocation(resourceContextUri);
-
-        return Paths.get(location).toUri().toString();
+        return getLocation(resourceContextUri);
     }
 
     /**
      * @implNote Based on jena's OntDocumentManager.
      * @param ontologyIRI
-     * @return file path at which <code>ontologyIRI</code> is loaded
+     * @return an absolute URI string at which <code>ontologyIRI</code> is loaded
      */
     public String getLocation(String ontologyIRI) {
-        return OntDocumentManager.getInstance().doAltURLMapping(ontologyIRI);
+        String scriptPath = OntDocumentManager.getInstance().getFileManager().mapURI(ontologyIRI);
+        return Paths.get(scriptPath).toUri().toString();
     }
     // id -> contexts
     // function id-s
