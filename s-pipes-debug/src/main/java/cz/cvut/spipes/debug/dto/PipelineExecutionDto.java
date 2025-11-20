@@ -11,7 +11,7 @@ import java.util.List;
 public class PipelineExecutionDto extends ExecutionThing {
 
     @OWLDataProperty(iri = Vocabulary.s_p_has_execution_start_date)
-    private Date has_pipepline_execution_date;
+    private Date has_pipepline_execution_start_date;
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_module_execution)
     @ParticipationConstraints({
@@ -31,8 +31,8 @@ public class PipelineExecutionDto extends ExecutionThing {
     @OWLDataProperty(iri = Vocabulary.s_p_has_script_path)
     private String has_script_path;
 
-    public Date getHas_pipepline_execution_date() {
-        return has_pipepline_execution_date;
+    public Date getHas_pipepline_execution_start_date() {
+        return has_pipepline_execution_start_date;
     }
 
     public Date getHas_pipeline_execution_finish_date() {
@@ -43,8 +43,8 @@ public class PipelineExecutionDto extends ExecutionThing {
         this.has_pipeline_execution_finish_date = has_pipeline_execution_finish_date;
     }
 
-    public void setHas_pipepline_execution_date(Date has_pipepline_execution_date) {
-        this.has_pipepline_execution_date = has_pipepline_execution_date;
+    public void setHas_pipepline_execution_start_date(Date has_pipepline_execution_start_date) {
+        this.has_pipepline_execution_start_date = has_pipepline_execution_start_date;
     }
     public URI getHas_script() {
         return has_script;
