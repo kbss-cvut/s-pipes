@@ -40,6 +40,15 @@ Detail steps are:
 - remove `rdfs:comment` if it is sibling property of `rdf:type` with value `sp:Ask`, `sp:Select` or `sp:Construct`
 - sp:text should have SPARQL string literal equivalent to the removed sp:where and sp:templates triples.
 
+> **Migration Script**: A Python script is available at `doc/migration/0.5.0/migrate-spin-blocks.py` to automate this process. 
+> 
+> **Known Issue**: The script does not handle comments containing `"""` (triple quotes) correctly. Manual review is required for such cases.
+> 
+> Usage:
+> ```bash
+> ./doc/migration/0.5.0/migrate-spin-blocks.py input.ttl [output.ttl]
+> ```
+
 **Example from hello-world.sms.ttl:**
 ```turtle
 :construct-greeting
