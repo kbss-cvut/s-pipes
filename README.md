@@ -30,6 +30,7 @@ SPipes loads pipelines by recursive traversal of configured directories, searchi
 The following educational resources are available:
 - [Example scripts](./doc/examples/examples.md) explains script construction, execution, debugging, constraint violation and many other features 
 of SPipes together with specific modules.
+- [Scripting Best Practices](./doc/scripting-best-practices.md) provides guidelines for writing maintainable and efficient SPipes scripts.
 - [Hands-on tutorial for debugging executions](./s-pipes-debug/doc/hands-on-tutorial/hands-on-tutorial.md) explains how to analyze executions of pipelines and module w.r.t. input/output triples and variables and how to compare different executions of same pipeline/module.
 
 ## Structure of Maven Submodules
