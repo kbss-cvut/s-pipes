@@ -10,11 +10,13 @@ import org.apache.jena.riot.system.PrefixMapStd;
 import org.apache.jena.vocabulary.RDF;
 import java.util.*;
 public class SPipesNodeFormatterTTL {
+    private static final int INDENT_STEP = 4;
     final NodeFormatterTTL_MultiLine delegate;
     private final Graph graph;
     private final Map<String,Integer> inDegree;
     private final Map<String,String> bnodeLabels;
     private final Comparator<Node> objectComparator;
+    private int indentLevel = 0;
 
     /**
      * Creates a formatter for RDF nodes in Turtle syntax with custom handling
@@ -115,12 +117,20 @@ public class SPipesNodeFormatterTTL {
         if (triples.isEmpty()) {
             w.print("[]");
         } else {
-            w.print("[ ");
-            triples.stream()
+            w.print("[\n");
+            indentLevel++;
+            List<Triple> sorted = triples.stream()
                     .sorted(Comparator
                             .comparing(Triple::getPredicate, PRED_ORDER)
                             .thenComparing(t -> t.getObject().toString()))
-                    .forEach(t -> printProperty(w, t, path));
+                    .toList();
+            for (Triple t : sorted) {
+                printIndent(w);
+                printProperty(w, t, path);
+                w.print("\n");
+            }
+            indentLevel--;
+            printIndent(w);
             w.print("]");
         }
         path.remove(blank);
@@ -140,7 +150,15 @@ public class SPipesNodeFormatterTTL {
         formatPredicate(w, p);
         w.print(" ");
         formatNode(w, o, path);
-        w.print(" ; ");
+        w.print(" ;");
+    }
+
+    void setIndentLevel(int level) {
+        this.indentLevel = level;
+    }
+
+    private void printIndent(AWriter w) {
+        w.print(" ".repeat(indentLevel * INDENT_STEP));
     }
     /**
      * Formats a predicate node.

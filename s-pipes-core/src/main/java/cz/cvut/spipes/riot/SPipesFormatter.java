@@ -248,6 +248,7 @@ public class SPipesFormatter {
             w.print("    ");
             nodeFormatter.formatPredicate(w, pred);
             w.print(" ");
+            nodeFormatter.setIndentLevel(1);
             Iterator<Node> it = e.getValue().iterator();
             while (it.hasNext()) {
                 nodeFormatter.formatNode(w, it.next(), new HashSet<>());
