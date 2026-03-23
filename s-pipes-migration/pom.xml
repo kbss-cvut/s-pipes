@@ -19,6 +19,11 @@
             <groupId>args4j</groupId>
             <artifactId>args4j</artifactId>
         </dependency>
+        <dependency>
+            <groupId>cz.cvut.kbss</groupId>
+            <artifactId>s-pipes-core</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

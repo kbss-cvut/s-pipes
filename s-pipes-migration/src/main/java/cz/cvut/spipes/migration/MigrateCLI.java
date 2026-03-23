@@ -20,7 +20,6 @@ public class MigrateCLI {
             parser.parseArgument(args);
         } catch (CmdLineException ex) {
             System.err.println(ex.getMessage());
-            System.err.println("Usage: migrate FILE [FILE...]");
             parser.printUsage(System.err);
             System.exit(1);
         }
