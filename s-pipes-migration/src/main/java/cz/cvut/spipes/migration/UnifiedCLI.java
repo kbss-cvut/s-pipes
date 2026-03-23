@@ -1,0 +1,65 @@
+package cz.cvut.spipes.migration;
+
+import org.kohsuke.args4j.Argument;
+import org.kohsuke.args4j.CmdLineException;
+import org.kohsuke.args4j.CmdLineParser;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class UnifiedCLI {
+
+    @Argument(required = true, index = 0, metaVar = "SUBCOMMAND",
+        usage = "The sub-command of s-pipes-migration", handler = SubCommandOptionHandler.class)
+    private SubCommand subCommand;
+
+    public static void main(String[] args) throws NoSuchMethodException, IllegalAccessException,
+        IllegalArgumentException, InvocationTargetException {
+
+        UnifiedCLI asArgs = new UnifiedCLI();
+        CmdLineParser argParser = new CmdLineParser(asArgs);
+
+        try {
+            argParser.parseArgument(reduceToFirstParam(args));
+        } catch (CmdLineException ex) {
+            System.err.println(ex.getMessage());
+            System.err.println("$0 SUBCOMMAND");
+            argParser.printUsage(System.err);
+            System.err.println();
+            System.err.println("Available sub-commands : " + getSubCommands());
+            System.err.println();
+            System.exit(1);
+        }
+
+        Method meth = asArgs.subCommand.getAssociatedClass().getMethod("main", String[].class);
+        String[] params = shiftParams(args);
+        meth.invoke(null, (Object) params);
+    }
+
+    private static String[] shiftParams(String[] args) {
+        List<String> argsList = new ArrayList<>(Arrays.asList(args));
+        argsList.remove(0);
+        return argsList.toArray(new String[0]);
+    }
+
+    private static String[] reduceToFirstParam(String[] args) {
+        if (args.length < 1) {
+            return args;
+        }
+        return new String[]{args[0]};
+    }
+
+    private static String getSubCommands() {
+        StringBuilder rv = new StringBuilder();
+        rv.append("[");
+        for (SubCommand sc : SubCommand.values()) {
+            rv.append(sc.toString()).append(" | ");
+        }
+        rv.delete(rv.length() - 3, rv.length());
+        rv.append("]");
+        return rv.toString();
+    }
+}
