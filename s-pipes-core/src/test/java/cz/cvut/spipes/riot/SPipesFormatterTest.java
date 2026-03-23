@@ -43,6 +43,37 @@ class SPipesFormatterTest {
     }
 
     @Test
+    void writeToProducesStableOrderForSparqlQueryBlankNodes() throws IOException {
+        var model = ModelFactory.createDefaultModel();
+        try (var in = getClass().getResourceAsStream("/riot/sparql-query-bnode-order-test-input.ttl")) {
+            assertNotNull(in);
+            model.read(in, null, "TURTLE");
+        }
+
+        var expected = readUtf8("/riot/sparql-query-bnode-order-test-output.ttl");
+        var actual   = writeToString(model);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void writeToIsIdempotentForSparqlQueryBlankNodes() throws IOException {
+        var model = ModelFactory.createDefaultModel();
+        try (var in = getClass().getResourceAsStream("/riot/sparql-query-bnode-order-test-input.ttl")) {
+            assertNotNull(in);
+            model.read(in, null, "TURTLE");
+        }
+
+        var first = writeToString(model);
+
+        var model2 = ModelFactory.createDefaultModel();
+        model2.read(new java.io.ByteArrayInputStream(first.getBytes(StandardCharsets.UTF_8)), null, "TURTLE");
+        var second = writeToString(model2);
+
+        assertEquals(first, second);
+    }
+
+    @Test
     void writeToWithCycleInDependenciesThrowsIllegalStateException() throws IOException {
         var model = ModelFactory.createDefaultModel();
         try (var in = getClass().getResourceAsStream("/riot/sm-next-with-cycle-test.ttl")) {

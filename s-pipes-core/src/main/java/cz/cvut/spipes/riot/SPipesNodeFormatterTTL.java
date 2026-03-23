@@ -1,5 +1,6 @@
 package cz.cvut.spipes.riot;
 
+import cz.cvut.spipes.spin.vocabulary.SP;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.Triple;
@@ -53,7 +54,11 @@ public class SPipesNodeFormatterTTL {
             if (n.isURI()) return n.getURI();
             if (n.isLiteral()) return n.getLiteralLexicalForm();
             if (hasLabel(n, this.bnodeLabels)) return this.bnodeLabels.get(n.getBlankNodeLabel());
-            if (n.isBlank()) return n.getBlankNodeLabel();
+            if (n.isBlank()) {
+                String sparqlKey = getSparqlQuerySortKey(n);
+                if (sparqlKey != null) return sparqlKey;
+                return n.getBlankNodeLabel();
+            }
             return "";
         });
     }
@@ -176,6 +181,32 @@ public class SPipesNodeFormatterTTL {
         }
     }
 
+    /**
+     * Returns a deterministic sort key for blank nodes representing SPARQL queries.
+     * For blank nodes typed as {@code sp:Construct}, {@code sp:Ask}, or {@code sp:Select},
+     * extracts the {@code sp:text} value. If the text starts with {@code #}, the full text
+     * is used as the key; otherwise an empty string is returned so that uncommented queries
+     * sort before commented ones. Returns {@code null} for non-SPARQL-query blank nodes.
+     */
+    private String getSparqlQuerySortKey(Node n) {
+        if (!n.isBlank()) return null;
+
+        Node typeNode = RDF.type.asNode();
+        boolean isSparqlQuery =
+            graph.contains(n, typeNode, SP.Ask.asNode()) ||
+            graph.contains(n, typeNode, SP.Construct.asNode()) ||
+            graph.contains(n, typeNode, SP.Select.asNode());
+
+        if (!isSparqlQuery) return null;
+
+        Node spTextNode = SP.text.asNode();
+        Iterator<Triple> it = graph.find(n, spTextNode, Node.ANY);
+        if (!it.hasNext()) return null;
+
+        String text = it.next().getObject().getLiteralLexicalForm();
+        return text.startsWith("#") ? text : "";
+    }
+
     // Comparator where rdf:type ("a") always comes first, then lexicographical order
     final Comparator<Node> PRED_ORDER =
             Comparator.<Node>comparingInt(p -> RDF.type.asNode().equals(p) ? 0 : 1)
@@ -201,7 +232,12 @@ public class SPipesNodeFormatterTTL {
                   <li>URI string for URIs</li>
                   <li>Lexical form for literals</li>
                   <li>Assigned label for labeled blank nodes</li>
-                  <li>Internal blank node identifier for unlabeled blank nodes</li>
+                  <li>For unlabeled blank nodes typed as {@code sp:Construct}, {@code sp:Ask},
+                      or {@code sp:Select}: by their {@code sp:text} value. Texts starting
+                      with {@code #} are sorted by the full text; texts without a leading
+                      {@code #} sort first (empty key). This ensures stable ordering of
+                      SPARQL query blank nodes across parser runs.</li>
+                  <li>Other unlabeled blank nodes by internal blank node identifier</li>
                 </ul>
             </li>
           </ol>
