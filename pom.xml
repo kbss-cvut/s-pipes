@@ -21,6 +21,7 @@
         <module>s-pipes-forms</module>
         <module>s-pipes-test</module>
         <module>s-pipes-debug</module>
+        <module>s-pipes-migration</module>
     </modules>
 
     <build>
