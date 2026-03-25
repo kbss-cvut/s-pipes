@@ -1,5 +1,6 @@
 package cz.cvut.spipes.migration.cli;
 
+import cz.cvut.spipes.migration.v5.RefactorSpinFunctionsToShacl;
 import cz.cvut.spipes.migration.v5.RemoveSpinRdfQueries;
 import cz.cvut.spipes.util.JenaUtils;
 import org.apache.jena.rdf.model.Model;
@@ -68,6 +69,7 @@ public class MigrateCLI {
                 }
 
                 new RemoveSpinRdfQueries().apply(model);
+                new RefactorSpinFunctionsToShacl().apply(model);
 
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 JenaUtils.writeScript(baos, model);
