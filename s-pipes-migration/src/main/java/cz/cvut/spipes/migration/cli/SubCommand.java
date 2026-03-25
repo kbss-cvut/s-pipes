@@ -1,4 +1,4 @@
-package cz.cvut.spipes.migration;
+package cz.cvut.spipes.migration.cli;
 
 public enum SubCommand {
 

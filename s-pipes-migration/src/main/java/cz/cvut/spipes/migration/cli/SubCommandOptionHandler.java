@@ -1,4 +1,4 @@
-package cz.cvut.spipes.migration;
+package cz.cvut.spipes.migration.cli;
 
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;

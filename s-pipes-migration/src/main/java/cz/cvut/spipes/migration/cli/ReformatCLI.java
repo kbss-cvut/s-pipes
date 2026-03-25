@@ -1,4 +1,4 @@
-package cz.cvut.spipes.migration;
+package cz.cvut.spipes.migration.cli;
 
 import cz.cvut.spipes.util.JenaUtils;
 import org.apache.jena.rdf.model.Model;
