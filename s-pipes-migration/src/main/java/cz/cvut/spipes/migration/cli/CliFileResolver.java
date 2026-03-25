@@ -14,13 +14,17 @@ public class CliFileResolver {
 
     static final String S_PIPES_LIB_URI = "http://onto.fel.cvut.cz/ontologies/s-pipes-lib";
 
-    static List<File> resolveFiles(List<File> paths, boolean onlyScriptFiles) {
+    record ResolveResult(List<File> filesToProcess, List<File> skippedNonScriptFiles) {}
+
+    static ResolveResult resolveFiles(List<File> paths, boolean onlyScriptFiles) {
         OntologyDocumentManager manager = OntoDocManager.getInstance();
         manager.registerDocuments(paths.stream().map(File::toPath).map(Path::toAbsolutePath).toList());
 
         LocationMapper lm = manager.getOntDocumentManager().getFileManager().getLocationMapper();
 
-        List<File> result = new ArrayList<>();
+        List<File> filesToProcess = new ArrayList<>();
+        List<File> skippedNonScriptFiles = new ArrayList<>();
+
         for (String uri : manager.getRegisteredOntologyUris()) {
             String filePath = lm.getAltEntry(uri);
             if (filePath == null) {
@@ -36,14 +40,30 @@ public class CliFileResolver {
                 OntModel model = manager.getOntology(uri);
                 model.loadImports();
                 if (!model.listImportedOntologyURIs(true).contains(S_PIPES_LIB_URI)) {
-                    System.err.println("Skipped (not a script): " + filePath);
+                    skippedNonScriptFiles.add(file);
                     continue;
                 }
             }
 
-            result.add(file);
+            filesToProcess.add(file);
         }
 
-        return result;
+        return new ResolveResult(filesToProcess, skippedNonScriptFiles);
+    }
+
+    static void printSummary(List<File> skippedNonScriptFiles, List<File> processedFiles, String action) {
+        System.out.println();
+        if (!skippedNonScriptFiles.isEmpty()) {
+            System.out.println(skippedNonScriptFiles.size() + " files skipped as they did not import s-pipes-lib:");
+            for (File f : skippedNonScriptFiles) {
+                System.out.println("  - " + f.getAbsolutePath());
+            }
+        }
+        if (!processedFiles.isEmpty()) {
+            System.out.println(processedFiles.size() + " files " + action + ":");
+            for (File f : processedFiles) {
+                System.out.println("  - " + f.getAbsolutePath());
+            }
+        }
     }
 }

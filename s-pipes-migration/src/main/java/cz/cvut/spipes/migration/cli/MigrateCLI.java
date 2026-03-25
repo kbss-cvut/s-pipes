@@ -14,6 +14,7 @@ import org.kohsuke.args4j.spi.ExplicitBooleanOptionHandler;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MigrateCLI {
@@ -38,9 +39,10 @@ public class MigrateCLI {
             System.exit(1);
         }
 
-        List<File> files = CliFileResolver.resolveFiles(cli.paths, cli.onlyScriptFiles);
+        CliFileResolver.ResolveResult resolved = CliFileResolver.resolveFiles(cli.paths, cli.onlyScriptFiles);
+        List<File> migratedFiles = new ArrayList<>();
 
-        for (File file : files) {
+        for (File file : resolved.filesToProcess()) {
             try {
                 Model model = ModelFactory.createDefaultModel();
                 model.read(new FileInputStream(file), null, FileUtils.langTurtle);
@@ -48,10 +50,12 @@ public class MigrateCLI {
                 new RemoveSpinRdfQueries().apply(model);
 
                 JenaUtils.writeScript(file.toPath(), model);
-                System.out.println("Migrated: " + file.getAbsolutePath());
+                migratedFiles.add(file);
             } catch (IOException e) {
                 System.err.println("Failed to migrate " + file.getAbsolutePath() + ": " + e.getMessage());
             }
         }
+
+        CliFileResolver.printSummary(resolved.skippedNonScriptFiles(), migratedFiles, "migrated");
     }
 }

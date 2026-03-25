@@ -13,6 +13,7 @@ import org.kohsuke.args4j.spi.ExplicitBooleanOptionHandler;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ReformatCLI {
@@ -41,9 +42,10 @@ public class ReformatCLI {
             System.exit(1);
         }
 
-        List<File> files = CliFileResolver.resolveFiles(cli.paths, cli.onlyScriptFiles);
+        CliFileResolver.ResolveResult resolved = CliFileResolver.resolveFiles(cli.paths, cli.onlyScriptFiles);
+        List<File> reformattedFiles = new ArrayList<>();
 
-        for (File file : files) {
+        for (File file : resolved.filesToProcess()) {
             try {
                 Model originalModel = ModelFactory.createDefaultModel();
                 originalModel.read(new FileInputStream(file), null, FileUtils.langTurtle);
@@ -60,10 +62,12 @@ public class ReformatCLI {
                     }
                 }
 
-                System.out.println("Reformatted: " + file.getAbsolutePath());
+                reformattedFiles.add(file);
             } catch (IOException e) {
                 System.err.println("Failed to reformat " + file.getAbsolutePath() + ": " + e.getMessage());
             }
         }
+
+        CliFileResolver.printSummary(resolved.skippedNonScriptFiles(), reformattedFiles, "reformatted");
     }
 }
