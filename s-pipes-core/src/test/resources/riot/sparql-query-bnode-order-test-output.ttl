@@ -10,7 +10,6 @@ PREFIX sp:          <http://spinrdf.org/sp#>
     a owl:Ontology ;
 .
 
-
 :my-module
     a sml:ApplyConstruct ;
     kbss-module:has-output-graph-constraint [
