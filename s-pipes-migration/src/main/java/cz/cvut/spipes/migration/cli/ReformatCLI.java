@@ -8,6 +8,7 @@ import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
+import org.kohsuke.args4j.spi.ExplicitBooleanOptionHandler;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,11 +17,17 @@ import java.util.List;
 
 public class ReformatCLI {
 
-    @Option(name = "--check-isomorphic-output", usage = "Check that reformatted output is isomorphic with input")
+    @Option(name = "--check-isomorphic-output", handler = ExplicitBooleanOptionHandler.class,
+        usage = "Check that reformatted output is isomorphic with input")
     private boolean checkIsomorphicOutput = true;
 
-    @Argument(required = true, metaVar = "FILES", usage = "One or more files to reformat")
-    private List<File> files;
+    @Option(name = "--only-script-files", handler = ExplicitBooleanOptionHandler.class,
+        usage = "Reformat only script files, i.e. files whose owl:import closure contains s-pipes-lib. To resolve import" +
+            " closure all relevant files/directories must be specified using 'PATHS'.")
+    private boolean onlyScriptFiles = true;
+
+    @Argument(required = true, metaVar = "PATHS", usage = "One or more files or directories to reformat")
+    private List<File> paths;
 
     public static void main(String[] args) {
         ReformatCLI cli = new ReformatCLI();
@@ -34,7 +41,9 @@ public class ReformatCLI {
             System.exit(1);
         }
 
-        for (File file : cli.files) {
+        List<File> files = CliFileResolver.resolveFiles(cli.paths, cli.onlyScriptFiles);
+
+        for (File file : files) {
             try {
                 Model originalModel = ModelFactory.createDefaultModel();
                 originalModel.read(new FileInputStream(file), null, FileUtils.langTurtle);
