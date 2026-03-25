@@ -220,7 +220,7 @@ public class TransformerImpl implements Transformer {
                         changingModel.add(inputScript);
                         changingModel.add(
                             ResourceFactory.createResource(uri),
-                            ResourceFactory.createProperty(Vocabulary.s_p_sp_text),
+                            ResourceFactory.createProperty(Vocabulary.s_p_text),
                             ResourceFactory.createStringLiteral(q.getAnswers().iterator().next().getTextValue().replaceAll("\\n", "\n"))
                         );
                     } else {
@@ -478,10 +478,10 @@ public class TransformerImpl implements Transformer {
     private boolean isSupportedAnon(Question q) {
         if (q.getProperties().containsKey(Vocabulary.s_p_has_answer_value_type)) {
             Set<String> types = q.getProperties().get(Vocabulary.s_p_has_answer_value_type);
-            return types.contains(Vocabulary.s_c_sp_Ask) ||
-                types.contains(Vocabulary.s_c_sp_Construct) ||
-                types.contains(Vocabulary.s_c_sp_Describe) ||
-                types.contains(Vocabulary.s_c_sp_Select);
+            return types.contains(Vocabulary.s_c_Ask) ||
+                types.contains(Vocabulary.s_c_Construct) ||
+                types.contains(Vocabulary.s_c_Describe) ||
+                types.contains(Vocabulary.s_c_Select);
         }
         return false;
     }
