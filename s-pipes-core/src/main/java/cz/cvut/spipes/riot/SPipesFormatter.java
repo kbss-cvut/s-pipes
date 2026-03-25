@@ -33,10 +33,9 @@ import static org.apache.jena.riot.system.RiotLib.writePrefixes;
  *   </li>
  *   <li>Type declaration using {@code a} comes first in each subject block
  *       (see {@link SPipesNodeFormatterTTL#PRED_ORDER})</li>
- *   <li>When a predicate has multiple blank node objects typed as {@code sp:Construct},
- *       {@code sp:Ask}, or {@code sp:Select}, they are ordered by their {@code sp:text} value.
- *       Objects whose {@code sp:text} starts with {@code #} are sorted lexicographically
- *       by the full text; objects without a {@code #}-prefixed text come first.
+ *   <li>When a predicate has multiple blank node objects, they are ordered by their {@code sp:text} value lexicographically.
+ *       This is typically used with blank nodes typed with {@code sp:Construct}, {@code sp:Ask}, {@code sp:Select},
+ *       i.e. representing SPARQL queries.
  *       (see {@link SPipesNodeFormatterTTL#getObjectComparator()})</li>
  *   <li>Multiline literals are formatted by default using {@code """}.
  *       If the string contains {@code "} but not {@code '}, then {@code '''} is used instead
