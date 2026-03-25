@@ -51,11 +51,18 @@ public class CliFileResolver {
         return new ResolveResult(filesToProcess, skippedNonScriptFiles);
     }
 
-    static void printSummary(List<File> skippedNonScriptFiles, List<File> processedFiles, String action) {
+    static void printSummary(List<File> skippedNonScriptFiles, List<File> skippedAlreadyFormatted,
+                             List<File> processedFiles, String action) {
         System.out.println();
         if (!skippedNonScriptFiles.isEmpty()) {
-            System.out.println(skippedNonScriptFiles.size() + " files skipped as they did not import s-pipes-lib:");
+            System.out.println(skippedNonScriptFiles.size() + " files skipped as non-script files because they do not import s-pipes-lib:");
             for (File f : skippedNonScriptFiles) {
+                System.out.println("  - " + f.getAbsolutePath());
+            }
+        }
+        if (!skippedAlreadyFormatted.isEmpty()) {
+            System.out.println(skippedAlreadyFormatted.size() + " files skipped as already " + action + ":");
+            for (File f : skippedAlreadyFormatted) {
                 System.out.println("  - " + f.getAbsolutePath());
             }
         }

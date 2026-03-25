@@ -10,10 +10,14 @@ import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 import org.kohsuke.args4j.spi.ExplicitBooleanOptionHandler;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ReformatCLI {
@@ -44,17 +48,27 @@ public class ReformatCLI {
 
         CliFileResolver.ResolveResult resolved = CliFileResolver.resolveFiles(cli.paths, cli.onlyScriptFiles);
         List<File> reformattedFiles = new ArrayList<>();
+        List<File> alreadyFormattedFiles = new ArrayList<>();
 
         for (File file : resolved.filesToProcess()) {
             try {
-                Model originalModel = ModelFactory.createDefaultModel();
-                originalModel.read(new FileInputStream(file), null, FileUtils.langTurtle);
+                byte[] originalBytes = Files.readAllBytes(file.toPath());
 
-                JenaUtils.writeScript(file.toPath(), originalModel);
+                Model originalModel = ModelFactory.createDefaultModel();
+                originalModel.read(new ByteArrayInputStream(originalBytes), null, FileUtils.langTurtle);
+
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                JenaUtils.writeScript(baos, originalModel);
+                byte[] reformattedBytes = baos.toByteArray();
+
+                if (Arrays.equals(originalBytes, reformattedBytes)) {
+                    alreadyFormattedFiles.add(file);
+                    continue;
+                }
 
                 if (cli.checkIsomorphicOutput) {
                     Model rewrittenModel = ModelFactory.createDefaultModel();
-                    rewrittenModel.read(new FileInputStream(file), null, FileUtils.langTurtle);
+                    rewrittenModel.read(new ByteArrayInputStream(reformattedBytes), null, FileUtils.langTurtle);
                     if (!originalModel.isIsomorphicWith(rewrittenModel)) {
                         throw new RuntimeException(
                             "Reformatted output is not isomorphic with input for file: " + file.getAbsolutePath()
@@ -62,12 +76,14 @@ public class ReformatCLI {
                     }
                 }
 
+                Files.write(file.toPath(), reformattedBytes);
                 reformattedFiles.add(file);
             } catch (IOException e) {
                 System.err.println("Failed to reformat " + file.getAbsolutePath() + ": " + e.getMessage());
             }
         }
 
-        CliFileResolver.printSummary(resolved.skippedNonScriptFiles(), reformattedFiles, "reformatted");
+        CliFileResolver.printSummary(resolved.skippedNonScriptFiles(), alreadyFormattedFiles,
+            reformattedFiles, "reformatted");
     }
 }

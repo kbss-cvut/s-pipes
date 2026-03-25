@@ -11,10 +11,13 @@ import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 import org.kohsuke.args4j.spi.ExplicitBooleanOptionHandler;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MigrateCLI {
@@ -41,21 +44,34 @@ public class MigrateCLI {
 
         CliFileResolver.ResolveResult resolved = CliFileResolver.resolveFiles(cli.paths, cli.onlyScriptFiles);
         List<File> migratedFiles = new ArrayList<>();
+        List<File> alreadyFormattedFiles = new ArrayList<>();
 
         for (File file : resolved.filesToProcess()) {
             try {
+                byte[] originalBytes = Files.readAllBytes(file.toPath());
+
                 Model model = ModelFactory.createDefaultModel();
-                model.read(new FileInputStream(file), null, FileUtils.langTurtle);
+                model.read(new ByteArrayInputStream(originalBytes), null, FileUtils.langTurtle);
 
                 new RemoveSpinRdfQueries().apply(model);
 
-                JenaUtils.writeScript(file.toPath(), model);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                JenaUtils.writeScript(baos, model);
+                byte[] migratedBytes = baos.toByteArray();
+
+                if (Arrays.equals(originalBytes, migratedBytes)) {
+                    alreadyFormattedFiles.add(file);
+                    continue;
+                }
+
+                Files.write(file.toPath(), migratedBytes);
                 migratedFiles.add(file);
             } catch (IOException e) {
                 System.err.println("Failed to migrate " + file.getAbsolutePath() + ": " + e.getMessage());
             }
         }
 
-        CliFileResolver.printSummary(resolved.skippedNonScriptFiles(), migratedFiles, "migrated");
+        CliFileResolver.printSummary(resolved.skippedNonScriptFiles(), alreadyFormattedFiles,
+            migratedFiles, "migrated");
     }
 }
