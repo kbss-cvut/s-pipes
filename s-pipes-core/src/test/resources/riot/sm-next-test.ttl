@@ -26,8 +26,8 @@ PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
 
 :ModuleD
     a sm:Module ;
-    sm:next :ModuleB ,
-    :ModuleF ;
+    sm:next :ModuleB ;
+    sm:next :ModuleF ;
 .
 
 :ModuleB

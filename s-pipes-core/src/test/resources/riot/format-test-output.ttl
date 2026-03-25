@@ -16,7 +16,9 @@ PREFIX sp:   <http://spinrdf.org/sp#>
 :construct-greeting
     a sml:ApplyConstruct ;
     sm:next :express-greeting_Return ;
-    sml:constructQuery [ a sp:Construct ; sp:text '''
+    sml:constructQuery [
+        a sp:Construct ;
+        sp:text '''
           PREFIX : <http://onto.fel.cvut.cz/ontologies/s-pipes/hello-world-example-0.1/>
           CONSTRUCT {
           ?person :is-greeted-by-message ?greetingMessage .
@@ -24,14 +26,17 @@ PREFIX sp:   <http://spinrdf.org/sp#>
           BIND(iri(concat(str(:), ?personId)) as ?person)
           BIND(concat("Hello ", ?personName, ".") as ?greetingMessage)
           }
-      ''' ; ] ;
+      ''' ;
+    ] ;
     sml:replace true ;
     rdfs:label "Construct greeting" ;
 .
 
 ex:Alice
-    foaf:knows _:b0 ,
-    [ foaf:name "Daniel" ; ] ;
+    foaf:knows _:b0 ;
+    foaf:knows [
+        foaf:name "Daniel" ;
+    ] ;
 .
 
 ex:Bob
