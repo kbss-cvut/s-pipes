@@ -1,0 +1,45 @@
+@prefix : <http://example.org/> .
+@prefix kbss-module: <http://onto.fel.cvut.cz/ontologies/lib/module/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sm: <http://topbraid.org/sparqlmotion#> .
+@prefix sml: <http://topbraid.org/sparqlmotionlib#> .
+@prefix sp: <http://spinrdf.org/sp#> .
+
+<http://example.org/ontology>
+    a owl:Ontology .
+
+:my-module
+    a sml:ApplyConstruct ;
+    kbss-module:has-output-graph-constraint [
+        a sp:Ask ;
+        sp:text """# z - there is a question with two parents
+ASK
+WHERE {
+    ?q a :question .
+    ?p1 :has_related_question ?q .
+    ?p2 :has_related_question ?q .
+    FILTER(?p1 != ?p2)
+}""" ;
+    ] ;
+    kbss-module:has-output-graph-constraint [
+        a sp:Ask ;
+        sp:text """# a - reference to uri of a question that is not defined
+ASK
+WHERE {
+    ?x :has_related_question ?qWithoutType .
+    FILTER NOT EXISTS {
+        ?qWithoutType a :question .
+    }
+}""" ;
+    ] ;
+    kbss-module:has-output-graph-constraint [
+        a sp:Ask ;
+        sp:text """ASK
+WHERE {
+    ?q a :question .
+}""" ;
+    ] ;
+    sml:replace true ;
+    rdfs:label "My module" ;
+.
