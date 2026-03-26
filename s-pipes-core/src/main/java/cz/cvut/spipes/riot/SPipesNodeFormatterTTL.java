@@ -127,7 +127,7 @@ public class SPipesNodeFormatterTTL {
             List<Triple> sorted = triples.stream()
                     .sorted(Comparator
                             .comparing(Triple::getPredicate, PRED_ORDER)
-                            .thenComparing(t -> t.getObject().toString()))
+                            .thenComparing(Triple::getObject, objectComparator))
                     .toList();
             for (Triple t : sorted) {
                 printIndent(w);
