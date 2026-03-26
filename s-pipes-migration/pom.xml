@@ -3,7 +3,6 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
         <relativePath>../s-pipes-parent</relativePath>
         <groupId>cz.cvut.kbss</groupId>
@@ -11,64 +10,21 @@
         <version>0.7.0</version>
     </parent>
 
-    <name>SPipes Interface - Commandline</name>
-    <artifactId>s-pipes-cli</artifactId>
+    <name>SPipes Migration Tools</name>
+    <artifactId>s-pipes-migration</artifactId>
     <packaging>jar</packaging>
 
-    <repositories>
-        <repository>
-            <id>krizik</id>
-            <name>KBSS Maven 2 Repository</name>
-            <url>http://kbss.felk.cvut.cz/m2repo</url>
-            <snapshots>
-                <checksumPolicy>warn</checksumPolicy>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-        </repository>
-    </repositories>
-
     <dependencies>
-        <!-- SPipes modules -->
-        <dependency>
-            <groupId>cz.cvut.kbss</groupId>
-            <artifactId>s-pipes-modules-registry</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-        <!-- Commandline parameters processing -->
         <dependency>
             <groupId>args4j</groupId>
             <artifactId>args4j</artifactId>
-        </dependency>
-        <!-- Logging -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <!-- IO utils -->
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>cz.cvut.kbss</groupId>
             <artifactId>s-pipes-core</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
-
-
 
     <build>
         <plugins>
@@ -80,7 +36,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>cz.cvut.spipes.cli.UnifiedCLI</mainClass>
+                            <mainClass>cz.cvut.spipes.migration.cli.UnifiedCLI</mainClass>
                             <useUniqueVersions>false</useUniqueVersions>
                         </manifest>
                     </archive>

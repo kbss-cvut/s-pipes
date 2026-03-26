@@ -1,0 +1,48 @@
+package cz.cvut.spipes.migration.cli;
+
+import org.kohsuke.args4j.CmdLineException;
+import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.OptionDef;
+import org.kohsuke.args4j.spi.Messages;
+import org.kohsuke.args4j.spi.OptionHandler;
+import org.kohsuke.args4j.spi.Parameters;
+import org.kohsuke.args4j.spi.Setter;
+
+public class SubCommandOptionHandler<T extends SubCommand> extends OptionHandler<T> {
+
+    private final Class<T> enumType;
+
+    public SubCommandOptionHandler(CmdLineParser parser, OptionDef option, Setter<? super T> setter) {
+        super(parser, option, setter);
+        this.enumType = (Class<T>) SubCommand.class;
+    }
+
+    @Override
+    public int parseArguments(Parameters params) throws CmdLineException {
+        String s = params.getParameter(0);
+        T value = null;
+        for (T o : enumType.getEnumConstants())
+            if (o.toString().equalsIgnoreCase(s)) {
+                value = o;
+                break;
+            }
+
+        if (value == null)
+            throw new CmdLineException(owner, Messages.ILLEGAL_OPERAND,
+                String.format("\n\"%s\" is not a valid value for \"%s\"", s, option.toString()));
+        setter.addValue(value);
+        return 1;
+    }
+
+    @Override
+    public String getDefaultMetaVariable() {
+        StringBuilder rv = new StringBuilder();
+        rv.append("[");
+        for (T t : enumType.getEnumConstants()) {
+            rv.append(t.toString()).append(" | ");
+        }
+        rv.delete(rv.length() - 3, rv.length());
+        rv.append("]");
+        return rv.toString();
+    }
+}

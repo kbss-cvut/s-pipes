@@ -2,10 +2,6 @@
 
 # Script provides various utilities to work with semantic pipelines. 
 
-#
-# resolve symlinks
-#
-
 PRG=$0
 #DEBUG=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
 DEBUG=
@@ -22,4 +18,11 @@ done
 
 PROJECT_DIR=`dirname "$PRG"`
 
-java $DEBUG -Xmx1024m  -jar "$PROJECT_DIR"/"s-pipes-cli.jar"  "$@"
+CLI_JAR=$(find "$PROJECT_DIR"/../target -maxdepth 1 -name 's-pipes-cli-*.jar' ! -name '*-sources.jar' ! -name '*-javadoc.jar' 2>/dev/null | head -1)
+
+if [ -z "$CLI_JAR" ]; then
+    echo "Error: s-pipes-cli JAR not found in s-pipes-cli/target/. Run 'mvn package' first." >&2
+    exit 1
+fi
+
+java $DEBUG -Xmx1024m -jar "$CLI_JAR" "$@"

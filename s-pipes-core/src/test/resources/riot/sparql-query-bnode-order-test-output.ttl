@@ -14,13 +14,6 @@ PREFIX sp:          <http://spinrdf.org/sp#>
     a sml:ApplyConstruct ;
     kbss-module:has-output-graph-constraint [
         a sp:Ask ;
-        sp:text """ASK
-WHERE {
-    ?q a :question .
-}""" ;
-    ] ;
-    kbss-module:has-output-graph-constraint [
-        a sp:Ask ;
         sp:text """# a - reference to uri of a question that is not defined
 ASK
 WHERE {
@@ -39,6 +32,13 @@ WHERE {
     ?p1 :has_related_question ?q .
     ?p2 :has_related_question ?q .
     FILTER(?p1 != ?p2)
+}""" ;
+    ] ;
+    kbss-module:has-output-graph-constraint [
+        a sp:Ask ;
+        sp:text """ASK
+WHERE {
+    ?q a :question .
 }""" ;
     ] ;
     sml:replace true ;

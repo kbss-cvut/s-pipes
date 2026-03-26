@@ -1,0 +1,44 @@
+@prefix : <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/ontology>
+    a owl:Ontology .
+
+:resource1
+    a :MyClass ;
+    :hasConstraint [
+        a :Constraint ;
+        :value "zebra" ;
+    ] ;
+    :hasConstraint [
+        a :Constraint ;
+        :value "apple" ;
+    ] ;
+    :hasConstraint [
+        a :Constraint ;
+        :minValue 10 ;
+        :maxValue 100 ;
+    ] ;
+    :hasConstraint [
+        a :Constraint ;
+        :minValue 1 ;
+        :maxValue 50 ;
+    ] ;
+    :hasPart [
+        a :Part ;
+        rdfs:label "beta" ;
+        :nested [
+            a :Inner ;
+            :key "x" ;
+        ] ;
+    ] ;
+    :hasPart [
+        a :Part ;
+        rdfs:label "alpha" ;
+        :nested [
+            a :Inner ;
+            :key "y" ;
+        ] ;
+    ] ;
+.

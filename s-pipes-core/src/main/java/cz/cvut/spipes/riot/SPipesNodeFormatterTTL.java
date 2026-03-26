@@ -55,9 +55,9 @@ public class SPipesNodeFormatterTTL {
             if (n.isLiteral()) return n.getLiteralLexicalForm();
             if (hasLabel(n, this.bnodeLabels)) return this.bnodeLabels.get(n.getBlankNodeLabel());
             if (n.isBlank()) {
-                String sparqlKey = getSparqlQuerySortKey(n);
-                if (sparqlKey != null) return sparqlKey;
-                return n.getBlankNodeLabel();
+                String spinTextKey = getSpinTextSortKey(n);
+                if (spinTextKey != null) return spinTextKey;
+                return computeBlankNodeContentKey(n, new HashSet<>());
             }
             return "";
         });
@@ -182,29 +182,43 @@ public class SPipesNodeFormatterTTL {
     }
 
     /**
-     * Returns a deterministic sort key for blank nodes representing SPARQL queries.
-     * For blank nodes typed as {@code sp:Construct}, {@code sp:Ask}, or {@code sp:Select},
-     * extracts the {@code sp:text} value. If the text starts with {@code #}, the full text
-     * is used as the key; otherwise an empty string is returned so that uncommented queries
-     * sort before commented ones. Returns {@code null} for non-SPARQL-query blank nodes.
+     * Computes a deterministic sort key for a blank node based on its properties.
+     * For each triple {@code (n, pred, obj)}, creates a string from the predicate
+     * and object, sorts them lexicographically, and joins with {@code |}. Blank node
+     * objects are resolved recursively with cycle detection.
      */
-    private String getSparqlQuerySortKey(Node n) {
+    private String computeBlankNodeContentKey(Node n, Set<Node> visited) {
+        if (!visited.add(n)) return "";
+
+        List<String> parts = new ArrayList<>();
+        graph.find(n, Node.ANY, Node.ANY).forEachRemaining(t -> {
+            String pred = t.getPredicate().toString();
+            String obj;
+            if (t.getObject().isBlank()) {
+                obj = computeBlankNodeContentKey(t.getObject(), visited);
+            } else {
+                obj = t.getObject().toString();
+            }
+            parts.add(pred + " " + obj);
+        });
+        Collections.sort(parts);
+        visited.remove(n);
+        return String.join("|", parts);
+    }
+
+    /**
+     * Returns a deterministic sort key for blank nodes that have an {@code sp:text} value.
+     * Extracts and returns the {@code sp:text} lexical form for lexicographic ordering.
+     * Returns {@code null} for blank nodes without {@code sp:text}.
+     */
+    private String getSpinTextSortKey(Node n) {
         if (!n.isBlank()) return null;
-
-        Node typeNode = RDF.type.asNode();
-        boolean isSparqlQuery =
-            graph.contains(n, typeNode, SP.Ask.asNode()) ||
-            graph.contains(n, typeNode, SP.Construct.asNode()) ||
-            graph.contains(n, typeNode, SP.Select.asNode());
-
-        if (!isSparqlQuery) return null;
 
         Node spTextNode = SP.text.asNode();
         Iterator<Triple> it = graph.find(n, spTextNode, Node.ANY);
         if (!it.hasNext()) return null;
 
-        String text = it.next().getObject().getLiteralLexicalForm();
-        return text.startsWith("#") ? text : "";
+        return it.next().getObject().getLiteralLexicalForm();
     }
 
     // Comparator where rdf:type ("a") always comes first, then lexicographical order
@@ -232,11 +246,9 @@ public class SPipesNodeFormatterTTL {
                   <li>URI string for URIs</li>
                   <li>Lexical form for literals</li>
                   <li>Assigned label for labeled blank nodes</li>
-                  <li>For unlabeled blank nodes typed as {@code sp:Construct}, {@code sp:Ask},
-                      or {@code sp:Select}: by their {@code sp:text} value. Texts starting
-                      with {@code #} are sorted by the full text; texts without a leading
-                      {@code #} sort first (empty key). This ensures stable ordering of
-                      SPARQL query blank nodes across parser runs.</li>
+                  <li>For unlabeled blank nodes with an {@code sp:text} value (often typed as
+                      {@code sp:Construct}, {@code sp:Ask}, or {@code sp:Select}):
+                      sorted lexicographically by the {@code sp:text} value.</li>
                   <li>Other unlabeled blank nodes by internal blank node identifier</li>
                 </ul>
             </li>
