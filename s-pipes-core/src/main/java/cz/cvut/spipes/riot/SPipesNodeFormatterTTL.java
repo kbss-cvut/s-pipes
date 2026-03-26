@@ -9,6 +9,8 @@ import org.apache.jena.riot.out.NodeFormatterTTL_MultiLine;
 import org.apache.jena.riot.system.PrefixMap;
 import org.apache.jena.riot.system.PrefixMapStd;
 import org.apache.jena.vocabulary.RDF;
+import org.topbraid.shacl.vocabulary.SH;
+
 import java.util.*;
 public class SPipesNodeFormatterTTL {
     private static final int INDENT_STEP = 4;
@@ -221,9 +223,13 @@ public class SPipesNodeFormatterTTL {
         return it.next().getObject().getLiteralLexicalForm();
     }
 
-    // Comparator where rdf:type ("a") always comes first, then lexicographical order
+    // Comparator where rdf:type ("a") always comes first, sh:path second, then lexicographical order
     final Comparator<Node> PRED_ORDER =
-            Comparator.<Node>comparingInt(p -> RDF.type.asNode().equals(p) ? 0 : 1)
+            Comparator.<Node>comparingInt(p -> {
+                        if (RDF.type.asNode().equals(p)) return 0;
+                        if (SH.path.asNode().equals(p)) return 1;
+                        return 2;
+                    })
                     .thenComparing((Node n) -> n.toString());
 
     /**
