@@ -53,6 +53,11 @@ public class CliFileResolver {
 
     static void printSummary(List<File> skippedNonScriptFiles, List<File> skippedAlreadyFormatted,
                              List<File> processedFiles, String action) {
+        printSummary(skippedNonScriptFiles, skippedAlreadyFormatted, List.of(), processedFiles, action);
+    }
+
+    static void printSummary(List<File> skippedNonScriptFiles, List<File> skippedAlreadyFormatted,
+                             List<File> skippedNotPreformatted, List<File> processedFiles, String action) {
         System.out.println();
         if (!skippedNonScriptFiles.isEmpty()) {
             System.out.println(skippedNonScriptFiles.size() + " files skipped as non-script files because they do not import s-pipes-lib:");
@@ -66,11 +71,22 @@ public class CliFileResolver {
                 System.out.println("  - " + f.getAbsolutePath());
             }
         }
+        if (!skippedNotPreformatted.isEmpty()) {
+            System.out.println(skippedNotPreformatted.size() + " files skipped as not preformatted:");
+            for (File f : skippedNotPreformatted) {
+                System.out.println("  - " + f.getAbsolutePath());
+            }
+        }
         if (!processedFiles.isEmpty()) {
             System.out.println(processedFiles.size() + " files " + action + ":");
             for (File f : processedFiles) {
                 System.out.println("  - " + f.getAbsolutePath());
             }
+        }
+        if (!skippedNotPreformatted.isEmpty()) {
+            System.out.println();
+            System.out.println("WARNING: Some files were not migrated because they are not preformatted. " +
+                "Use 'reformat' command to preformat them first.");
         }
     }
 }

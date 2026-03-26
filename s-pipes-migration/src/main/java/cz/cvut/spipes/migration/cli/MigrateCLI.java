@@ -27,6 +27,10 @@ public class MigrateCLI {
             " closure all relevant files/directories must be specified using 'PATHS'.")
     private boolean onlyScriptFiles = true;
 
+    @Option(name = "--ensure-formatted-input", handler = ExplicitBooleanOptionHandler.class,
+        usage = "Skip files that are not preformatted. Use 'reformat' command to preformat them first.")
+    private boolean ensureFormattedInput = true;
+
     @Argument(required = true, metaVar = "PATHS", usage = "One or more files or directories to migrate")
     private List<File> paths;
 
@@ -44,7 +48,8 @@ public class MigrateCLI {
 
         CliFileResolver.ResolveResult resolved = CliFileResolver.resolveFiles(cli.paths, cli.onlyScriptFiles);
         List<File> migratedFiles = new ArrayList<>();
-        List<File> alreadyFormattedFiles = new ArrayList<>();
+        List<File> alreadyMigratedFiles = new ArrayList<>();
+        List<File> skippedNotPreformatted = new ArrayList<>();
 
         for (File file : resolved.filesToProcess()) {
             try {
@@ -53,6 +58,15 @@ public class MigrateCLI {
                 Model model = ModelFactory.createDefaultModel();
                 model.read(new ByteArrayInputStream(originalBytes), null, FileUtils.langTurtle);
 
+                if (cli.ensureFormattedInput) {
+                    ByteArrayOutputStream reformatBaos = new ByteArrayOutputStream();
+                    JenaUtils.writeScript(reformatBaos, model);
+                    if (!Arrays.equals(originalBytes, reformatBaos.toByteArray())) {
+                        skippedNotPreformatted.add(file);
+                        continue;
+                    }
+                }
+
                 new RemoveSpinRdfQueries().apply(model);
 
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -60,7 +74,7 @@ public class MigrateCLI {
                 byte[] migratedBytes = baos.toByteArray();
 
                 if (Arrays.equals(originalBytes, migratedBytes)) {
-                    alreadyFormattedFiles.add(file);
+                    alreadyMigratedFiles.add(file);
                     continue;
                 }
 
@@ -71,7 +85,7 @@ public class MigrateCLI {
             }
         }
 
-        CliFileResolver.printSummary(resolved.skippedNonScriptFiles(), alreadyFormattedFiles,
-            migratedFiles, "migrated");
+        CliFileResolver.printSummary(resolved.skippedNonScriptFiles(), alreadyMigratedFiles,
+            skippedNotPreformatted, migratedFiles, "migrated");
     }
 }
