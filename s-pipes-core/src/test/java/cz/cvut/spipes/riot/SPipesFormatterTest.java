@@ -43,7 +43,7 @@ class SPipesFormatterTest {
     }
 
     @Test
-    void writeToProducesStableOrderForSparqlQueryBlankNodes() throws IOException {
+    void writeToOrdersBlankNodesLexicographicallyBySpText() throws IOException {
         var model = ModelFactory.createDefaultModel();
         try (var in = getClass().getResourceAsStream("/riot/sparql-query-bnode-order-test-input.ttl")) {
             assertNotNull(in);
@@ -57,9 +57,19 @@ class SPipesFormatterTest {
     }
 
     @Test
-    void writeToIsIdempotentForSparqlQueryBlankNodes() throws IOException {
+    void writeToWithCycleInDependenciesThrowsIllegalStateException() throws IOException {
         var model = ModelFactory.createDefaultModel();
-        try (var in = getClass().getResourceAsStream("/riot/sparql-query-bnode-order-test-input.ttl")) {
+        try (var in = getClass().getResourceAsStream("/riot/sm-next-with-cycle-test.ttl")) {
+            assertNotNull(in);
+            model.read(in, null, "TURTLE");
+        }
+        assertThrows(IllegalStateException.class, () -> writeToString(model));
+    }
+
+    @Test
+    void writeToIsIdempotentForInlineBlankNodes() throws IOException {
+        var model = ModelFactory.createDefaultModel();
+        try (var in = getClass().getResourceAsStream("/riot/inline-bnode-idempotent-test.ttl")) {
             assertNotNull(in);
             model.read(in, null, "TURTLE");
         }
@@ -70,17 +80,7 @@ class SPipesFormatterTest {
         model2.read(new java.io.ByteArrayInputStream(first.getBytes(StandardCharsets.UTF_8)), null, "TURTLE");
         var second = writeToString(model2);
 
-        assertEquals(first, second);
-    }
-
-    @Test
-    void writeToWithCycleInDependenciesThrowsIllegalStateException() throws IOException {
-        var model = ModelFactory.createDefaultModel();
-        try (var in = getClass().getResourceAsStream("/riot/sm-next-with-cycle-test.ttl")) {
-            assertNotNull(in);
-            model.read(in, null, "TURTLE");
-        }
-        assertThrows(IllegalStateException.class, () -> writeToString(model));
+        assertEquals(first, second, "Reformat should be idempotent for files with only inline blank nodes");
     }
 
     private String writeToString(Model model) throws IOException {

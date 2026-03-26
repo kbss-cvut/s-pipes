@@ -57,7 +57,7 @@ public class SPipesNodeFormatterTTL {
             if (n.isBlank()) {
                 String spinTextKey = getSpinTextSortKey(n);
                 if (spinTextKey != null) return spinTextKey;
-                return n.getBlankNodeLabel();
+                return computeBlankNodeContentKey(n, new HashSet<>());
             }
             return "";
         });
@@ -179,6 +179,31 @@ public class SPipesNodeFormatterTTL {
         } else {
             delegate.format(w, predicate);
         }
+    }
+
+    /**
+     * Computes a deterministic sort key for a blank node based on its properties.
+     * For each triple {@code (n, pred, obj)}, creates a string from the predicate
+     * and object, sorts them lexicographically, and joins with {@code |}. Blank node
+     * objects are resolved recursively with cycle detection.
+     */
+    private String computeBlankNodeContentKey(Node n, Set<Node> visited) {
+        if (!visited.add(n)) return "";
+
+        List<String> parts = new ArrayList<>();
+        graph.find(n, Node.ANY, Node.ANY).forEachRemaining(t -> {
+            String pred = t.getPredicate().toString();
+            String obj;
+            if (t.getObject().isBlank()) {
+                obj = computeBlankNodeContentKey(t.getObject(), visited);
+            } else {
+                obj = t.getObject().toString();
+            }
+            parts.add(pred + " " + obj);
+        });
+        Collections.sort(parts);
+        visited.remove(n);
+        return String.join("|", parts);
     }
 
     /**
