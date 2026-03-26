@@ -118,19 +118,17 @@
 
 :retrieve-person
    a sm:Function ;
-   spin:constraint [
-     rdf:type spl:Argument ;
-     spl:predicate :firstName ;
-     spl:optional "false"^^xsd:boolean ;
-     rdfs:label "first name" ;
-     rdfs:comment "The first name of the validated person" ;
+   sh:parameter [
+     sh:path :firstName ;
+     sh:optional false ;
+     sh:name "first name" ;
+     sh:description "The first name of the validated person" ;
    ] ;
-   spin:constraint [
-     rdf:type spl:Argument ;
-     spl:predicate :lastName ;
-     spl:optional "false"^^xsd:boolean ;
-     rdfs:label "last name" ;
-     rdfs:comment "The last name of the validated person" ;
+   sh:parameter [
+     sh:path :lastName ;
+     sh:optional false ;
+     sh:name "last name" ;
+     sh:description "The last name of the validated person" ;
    ] ;
    sm:returnModule :retrieve-person_Return ;
    rdfs:subClassOf sm:Functions .
