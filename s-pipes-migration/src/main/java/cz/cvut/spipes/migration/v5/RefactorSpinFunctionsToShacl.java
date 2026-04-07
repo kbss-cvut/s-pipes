@@ -110,6 +110,7 @@ public class RefactorSpinFunctionsToShacl {
 
     private void refactorParameterBlankNode(Model model, Resource param) {
         model.removeAll(param, RDF.type, SPL.Argument);
+        model.removeAll(param, SPL.valueType, RDFS.Resource);
 
         replaceProperty(model, param, SPL.predicate, SH_path);
         replaceProperty(model, param, SPL.valueType, SH_datatype);
