@@ -12,6 +12,7 @@ import java.util.List;
 
 public class CliFileResolver {
 
+    static final String S_PIPES_URI = "http://onto.fel.cvut.cz/ontologies/s-pipes";
     static final String S_PIPES_LIB_URI = "http://onto.fel.cvut.cz/ontologies/s-pipes-lib";
 
     record ResolveResult(List<File> filesToProcess, List<File> skippedNonScriptFiles) {}
@@ -39,7 +40,8 @@ public class CliFileResolver {
             if (onlyScriptFiles) {
                 OntModel model = manager.getOntology(uri);
                 model.loadImports();
-                if (!model.listImportedOntologyURIs(true).contains(S_PIPES_LIB_URI)) {
+                var imports = model.listImportedOntologyURIs(true);
+                if (!imports.contains(S_PIPES_URI) && !imports.contains(S_PIPES_LIB_URI)) {
                     skippedNonScriptFiles.add(file);
                     continue;
                 }
@@ -60,7 +62,7 @@ public class CliFileResolver {
                              List<File> skippedNotPreformatted, List<File> processedFiles, String action) {
         System.out.println();
         if (!skippedNonScriptFiles.isEmpty()) {
-            System.out.println(skippedNonScriptFiles.size() + " files skipped as non-script files because they do not import s-pipes-lib:");
+            System.out.println(skippedNonScriptFiles.size() + " files skipped as non-script files because they do not import s-pipes or s-pipes-lib:");
             for (File f : skippedNonScriptFiles) {
                 System.out.println("  - " + f.getAbsolutePath());
             }
