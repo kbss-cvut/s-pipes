@@ -1,0 +1,71 @@
+@prefix : <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sp: <http://spinrdf.org/sp#> .
+@prefix spin: <http://spinrdf.org/spin#> .
+@prefix sml: <http://topbraid.org/sparqlmotionlib#> .
+
+:module1
+    a sml:ApplyConstruct ;
+    sml:constructQuery [
+        a sp:Construct ;
+        sp:text """# Build greeting
+CONSTRUCT {
+  ?s :greeted true
+} WHERE {
+  ?s a :Person
+}""" ;
+    ] ;
+    sml:replace true ;
+.
+
+:module2
+    a sml:ApplyConstruct ;
+    sml:selectQuery [
+        a sp:Select ;
+        sp:text """# Find root
+SELECT ?root
+WHERE {
+  ?root a :Root
+}""" ;
+    ] ;
+.
+
+:module3
+    a sml:ApplyConstruct ;
+    sml:askQuery [
+        a sp:Ask ;
+        sp:text """# Check existence
+ASK
+WHERE {
+  ?s a :Thing
+}""" ;
+    ] ;
+.
+
+:module4
+    a sml:ApplyConstruct ;
+    spin:body [
+        a sp:Modify ;
+        sp:text """# Replace old values
+DELETE { ?s ?p ?old }
+INSERT { ?s ?p ?new }
+WHERE {
+?s ?p ?old .
+}""" ;
+    ] ;
+.
+
+:module5
+    a sml:ApplyConstruct ;
+    sml:selectQuery [
+        a sp:Select ;
+        sp:text """
+SELECT ?qt
+WHERE {
+  ?qt a :QT
+} VALUES (?qt) {
+  (:val1)
+}""" ;
+    ] ;
+.
