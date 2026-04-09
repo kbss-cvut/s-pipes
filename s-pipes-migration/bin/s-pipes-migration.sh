@@ -30,6 +30,13 @@ if [ -z "$MIGRATION_JAR" ]; then
     echo "JAR not found, building s-pipes-migration..." >&2
     mvn -f "$MODULE_DIR"/pom.xml package -DskipTests -q || exit 1
     MIGRATION_JAR=$(find "$MODULE_DIR"/target -maxdepth 1 -name 's-pipes-migration-*.jar' ! -name '*-sources.jar' ! -name '*-javadoc.jar' 2>/dev/null | head -1)
+elif [ -f "$MODULE_DIR/../pom.xml" ] && grep -q "s-pipes" "$MODULE_DIR/../pom.xml"; then
+    NEWEST_SRC=$(find "$MODULE_DIR"/../*/src -type f -newer "$MIGRATION_JAR" 2>/dev/null | head -1)
+    if [ -n "$NEWEST_SRC" ]; then
+        echo "Sibling module sources are newer than JAR, rebuilding whole project..." >&2
+        mvn -f "$MODULE_DIR"/../pom.xml package -DskipTests -q || exit 1
+        MIGRATION_JAR=$(find "$MODULE_DIR"/target -maxdepth 1 -name 's-pipes-migration-*.jar' ! -name '*-sources.jar' ! -name '*-javadoc.jar' 2>/dev/null | head -1)
+    fi
 elif [ -d "$SRC_DIR" ]; then
     NEWEST_SRC=$(find "$SRC_DIR" -type f -newer "$MIGRATION_JAR" 2>/dev/null | head -1)
     if [ -n "$NEWEST_SRC" ]; then
