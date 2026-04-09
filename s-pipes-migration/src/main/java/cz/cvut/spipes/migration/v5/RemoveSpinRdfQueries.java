@@ -38,12 +38,34 @@ public class RemoveSpinRdfQueries {
             for (Resource subject : subjects) {
                 if (!subject.hasProperty(SP.text) && !isSubQuery(model, subject)) {
                     throw new RuntimeException(
-                        "Cannot migrate " + queryType.getLocalName() + " resource " + subject
+                        "Cannot migrate " + toPrefixedName(model, queryType) + " resource "
+                            + describeResource(model, subject)
                             + " because it does not have sp:text property."
                     );
                 }
             }
         }
+    }
+
+    private String describeResource(Model model, Resource resource) {
+        if (resource.isURIResource()) {
+            return toPrefixedName(model, resource);
+        }
+        List<Statement> refs = model.listStatements(null, null, resource).toList();
+        if (!refs.isEmpty()) {
+            Statement ref = refs.get(0);
+            return "(referenced by " + toPrefixedName(model, ref.getSubject()) + " via " + toPrefixedName(model, ref.getPredicate()) + ")";
+        }
+        return "(anonymous blank node)";
+    }
+
+    private String toPrefixedName(Model model, Resource resource) {
+        String uri = resource.getURI();
+        String qname = model.qnameFor(uri);
+        if (qname != null) {
+            return qname;
+        }
+        return "<" + uri + ">";
     }
 
     private boolean isSubQuery(Model model, Resource resource) {

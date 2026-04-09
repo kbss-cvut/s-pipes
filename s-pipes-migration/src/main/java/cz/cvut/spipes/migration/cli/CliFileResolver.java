@@ -55,12 +55,19 @@ public class CliFileResolver {
 
     static void printSummary(List<File> skippedNonScriptFiles, List<File> skippedAlreadyFormatted,
                              List<File> processedFiles, String action) {
-        printSummary(skippedNonScriptFiles, skippedAlreadyFormatted, List.of(), processedFiles, action);
+        printSummary(skippedNonScriptFiles, skippedAlreadyFormatted, List.of(), List.of(), processedFiles, action);
     }
 
     static void printSummary(List<File> skippedNonScriptFiles, List<File> skippedAlreadyFormatted,
-                             List<File> skippedNotPreformatted, List<File> processedFiles, String action) {
+                             List<File> skippedNotPreformatted, List<File> failedFiles,
+                             List<File> processedFiles, String action) {
         System.out.println();
+        if (!failedFiles.isEmpty()) {
+            System.out.println(failedFiles.size() + " files failed to be " + action + " due to error (see above):");
+            for (File f : failedFiles) {
+                System.out.println("  - " + f.getAbsolutePath());
+            }
+        }
         if (!skippedNonScriptFiles.isEmpty()) {
             System.out.println(skippedNonScriptFiles.size() + " files skipped as non-script files because they do not import s-pipes or s-pipes-lib:");
             for (File f : skippedNonScriptFiles) {

@@ -52,6 +52,7 @@ public class MigrateCLI {
         List<File> migratedFiles = new ArrayList<>();
         List<File> alreadyMigratedFiles = new ArrayList<>();
         List<File> skippedNotPreformatted = new ArrayList<>();
+        List<File> failedFiles = new ArrayList<>();
 
         for (File file : resolved.filesToProcess()) {
             try {
@@ -86,10 +87,11 @@ public class MigrateCLI {
                 migratedFiles.add(file);
             } catch (Exception e) {
                 System.err.println("Failed to migrate " + file.getAbsolutePath() + ": " + e.getMessage());
+                failedFiles.add(file);
             }
         }
 
         CliFileResolver.printSummary(resolved.skippedNonScriptFiles(), alreadyMigratedFiles,
-            skippedNotPreformatted, migratedFiles, "migrated");
+            skippedNotPreformatted, failedFiles, migratedFiles, "migrated");
     }
 }
