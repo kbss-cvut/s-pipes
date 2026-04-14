@@ -3,8 +3,19 @@
 # Script provides various utilities to migrate semantic pipelines.
 
 PRG=$0
-#DEBUG=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
 DEBUG=
+
+# Parse --debug [port] option
+if [ "$1" = "--debug" ]; then
+    shift
+    DEBUG_PORT=5005
+    if echo "$1" | grep -qE '^[0-9]+$'; then
+        DEBUG_PORT=$1
+        shift
+    fi
+    DEBUG="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:$DEBUG_PORT"
+    echo "Listening for remote debugger on port $DEBUG_PORT (suspend=y)..." >&2
+fi
 
 while [ -h "$PRG" ]; do
     ls=`ls -ld "$PRG"`
@@ -46,6 +57,15 @@ elif [ -d "$SRC_DIR" ]; then
     fi
 else
     echo "No src directory found, skipping rebuild check." >&2
+fi
+
+if [ $# -eq 0 ]; then
+    echo "Usage: $0 [--debug [port]] SUBCOMMAND ..." >&2
+    echo "" >&2
+    echo "  --debug [port]  Enable remote debugging (default port: 5005, suspend=y)" >&2
+    echo "" >&2
+    java -Xmx1024m -jar "$MIGRATION_JAR"
+    exit $?
 fi
 
 java $DEBUG -Xmx1024m -jar "$MIGRATION_JAR" "$@"
