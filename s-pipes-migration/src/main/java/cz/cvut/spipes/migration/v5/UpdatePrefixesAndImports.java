@@ -42,7 +42,9 @@ public class UpdatePrefixesAndImports {
     private void removePrefixForUnusedNamespaces(Model model, String namespace) {
         if (!isNamespaceUsed(model, namespace)) {
             String prefix = model.getNsURIPrefix(namespace);
-            model.removeNsPrefix(prefix);
+            if (prefix != null) {
+                model.removeNsPrefix(prefix);
+            }
         }
     }
 

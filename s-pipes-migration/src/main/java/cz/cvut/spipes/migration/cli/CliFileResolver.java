@@ -53,12 +53,12 @@ public class CliFileResolver {
         return new ResolveResult(filesToProcess, skippedNonScriptFiles);
     }
 
-    static void printSummary(List<File> skippedNonScriptFiles, List<File> skippedAlreadyFormatted,
+    static void printSummary(List<File> skippedNonScriptFiles, List<File> skippedAlreadyProcessed,
                              List<File> processedFiles, String action) {
-        printSummary(skippedNonScriptFiles, skippedAlreadyFormatted, List.of(), List.of(), processedFiles, action);
+        printSummary(skippedNonScriptFiles, skippedAlreadyProcessed, List.of(), List.of(), processedFiles, action);
     }
 
-    static void printSummary(List<File> skippedNonScriptFiles, List<File> skippedAlreadyFormatted,
+    static void printSummary(List<File> skippedNonScriptFiles, List<File> skippedAlreadyProcessed,
                              List<File> skippedNotPreformatted, List<File> failedFiles,
                              List<File> processedFiles, String action) {
         System.out.println();
@@ -74,9 +74,9 @@ public class CliFileResolver {
                 System.out.println("  - " + f.getAbsolutePath());
             }
         }
-        if (!skippedAlreadyFormatted.isEmpty()) {
-            System.out.println(skippedAlreadyFormatted.size() + " files skipped as already " + action + ":");
-            for (File f : skippedAlreadyFormatted) {
+        if (!skippedAlreadyProcessed.isEmpty()) {
+            System.out.println(skippedAlreadyProcessed.size() + " files skipped as already " + action + ":");
+            for (File f : skippedAlreadyProcessed) {
                 System.out.println("  - " + f.getAbsolutePath());
             }
         }
