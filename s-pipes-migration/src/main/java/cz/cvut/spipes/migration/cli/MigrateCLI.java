@@ -3,6 +3,7 @@ package cz.cvut.spipes.migration.cli;
 import cz.cvut.spipes.migration.v5.RefactorSpinExpressions;
 import cz.cvut.spipes.migration.v5.RefactorSpinFunctionsToShacl;
 import cz.cvut.spipes.migration.v5.RemoveSpinRdfQueries;
+import cz.cvut.spipes.migration.v5.ReplaceSpinFunctionCalls;
 import cz.cvut.spipes.migration.v5.UpdatePrefixesAndImports;
 import cz.cvut.spipes.util.JenaUtils;
 import org.apache.jena.rdf.model.Model;
@@ -34,7 +35,8 @@ public class MigrateCLI {
         new MigrationStep("RemoveSpinRdfQueries", m -> new RemoveSpinRdfQueries().apply(m)),
         new MigrationStep("RefactorSpinFunctionsToShacl", m -> new RefactorSpinFunctionsToShacl().apply(m)),
         new MigrationStep("RefactorSpinExpressions", m -> new RefactorSpinExpressions().apply(m)),
-        new MigrationStep("UpdatePrefixesAndImports", m -> new UpdatePrefixesAndImports().apply(m))
+        new MigrationStep("UpdatePrefixesAndImports", m -> new UpdatePrefixesAndImports().apply(m)),
+        new MigrationStep("ReplaceSpinFunctionCalls", m -> new ReplaceSpinFunctionCalls().apply(m))
     );
 
     @Option(name = "--only-script-files", handler = ExplicitBooleanOptionHandler.class,
