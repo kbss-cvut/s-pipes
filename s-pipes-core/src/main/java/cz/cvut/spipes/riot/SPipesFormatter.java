@@ -135,9 +135,19 @@ public class SPipesFormatter {
     }
     /**
      * Serializes all triples in the graph.
-     * Subjects are sorted using {@code SUBJECT_COMPARATOR}.
-     * Skips blank nodes that are referenced elsewhere and not labelled.
+     * Subjects are sorted using {@link #getSubjectComparator()}.
      * Each subject block ends with {@code .} and a newline.
+     *
+     * <p>Blank node handling depends on in-degree (number of times referenced as object):
+     * <ul>
+     *   <li>inDegree = 1 — skipped here, inlined at their reference point
+     *       by {@link SPipesNodeFormatterTTL#formatNode}</li>
+     *   <li>inDegree = 0 — written as top-level {@code [...]} by {@code formatNode()},
+     *       which already includes all predicates inline; {@link #writePredicates} is
+     *       skipped to avoid duplication</li>
+     *   <li>inDegree &gt; 1 — assigned a stable label ({@code _:bX}) by {@link #assignBNodeLabels()},
+     *       written as a named subject with predicates below</li>
+     * </ul>
      *
      * @param w the writer to output to
      */
@@ -145,20 +155,24 @@ public class SPipesFormatter {
         List<Node> subjects = sortSubjects(new ArrayList<>(subjectMap.keySet()));
 
         for (Node subject : subjects) {
-            if (subject.isBlank() && !nodeFormatter.hasLabel(subject, bnodeLabels) && inDegreeOf(subject) >= 1) continue;
+            // Skip bnodes with inDegree 1 — they are inlined at their reference point
+            if (subject.isBlank() && inDegreeOf(subject) == 1) continue;
 
             nodeFormatter.formatNode(w, subject, new HashSet<>());
             w.println();
 
-            Map<Node, List<Node>> predMap = new TreeMap<>(nodeFormatter.PRED_ORDER);
-            predMap.putAll(subjectMap.getOrDefault(subject, Collections.emptyMap()));
+            // For inDegree-0 bnodes, formatNode() already wrote all predicates inline as [...]
+            if (!subject.isBlank() || inDegreeOf(subject) > 0) {
+                Map<Node, List<Node>> predMap = new TreeMap<>(nodeFormatter.PRED_ORDER);
+                predMap.putAll(subjectMap.getOrDefault(subject, Collections.emptyMap()));
 
-            for (Map.Entry<Node, List<Node>> entry : predMap.entrySet()) {
-                entry.getValue().sort(nodeFormatter.getObjectComparator());
-            }
+                for (Map.Entry<Node, List<Node>> entry : predMap.entrySet()) {
+                    entry.getValue().sort(nodeFormatter.getObjectComparator());
+                }
 
-            if (!predMap.isEmpty()) {
-                writePredicates(w, predMap);
+                if (!predMap.isEmpty()) {
+                    writePredicates(w, predMap);
+                }
             }
             w.println(".\n");
         }
