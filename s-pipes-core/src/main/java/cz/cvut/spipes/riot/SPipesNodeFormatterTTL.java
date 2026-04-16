@@ -230,7 +230,7 @@ public class SPipesNodeFormatterTTL {
                         if (SH.path.asNode().equals(p)) return 1;
                         return 2;
                     })
-                    .thenComparing((Node n) -> n.toString());
+                    .thenComparing(p -> p.toString());
 
     /**
           Comparator for RDF {@link Node} objects used when ordering object positions
