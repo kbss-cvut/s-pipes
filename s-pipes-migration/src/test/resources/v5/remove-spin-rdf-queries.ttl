@@ -1,0 +1,157 @@
+@prefix : <http://example.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sp: <http://spinrdf.org/sp#> .
+@prefix spin: <http://spinrdf.org/spin#> .
+@prefix sml: <http://topbraid.org/sparqlmotionlib#> .
+
+:module1
+    a sml:ApplyConstruct ;
+    sml:constructQuery [
+        a sp:Construct ;
+        rdfs:comment "Build greeting" ;
+        sp:text """# Build greeting
+CONSTRUCT {
+  ?s :greeted true
+} WHERE {
+  ?s a :Person
+}""" ;
+        sp:where [
+            rdf:first [
+                sp:subject [ sp:varName "s" ] ;
+                sp:predicate rdf:type ;
+                sp:object :Person ;
+            ] ;
+            rdf:rest rdf:nil ;
+        ] ;
+        sp:templates [
+            rdf:first [
+                sp:subject [ sp:varName "s" ] ;
+                sp:predicate :greeted ;
+                sp:object true ;
+            ] ;
+            rdf:rest rdf:nil ;
+        ] ;
+    ] ;
+    sml:replace true ;
+.
+
+:module2
+    a sml:ApplyConstruct ;
+    sml:selectQuery [
+        a sp:Select ;
+        rdfs:comment "Find root" ;
+        sp:text """# Find root
+SELECT ?root
+WHERE {
+  ?root a :Root
+}""" ;
+        sp:resultVariables [
+            rdf:first [ sp:varName "root" ] ;
+            rdf:rest rdf:nil ;
+        ] ;
+        sp:where [
+            rdf:first [
+                sp:subject [ sp:varName "root" ] ;
+                sp:predicate rdf:type ;
+                sp:object :Root ;
+            ] ;
+            rdf:rest rdf:nil ;
+        ] ;
+    ] ;
+.
+
+:module3
+    a sml:ApplyConstruct ;
+    sml:askQuery [
+        a sp:Ask ;
+        rdfs:comment "Check existence" ;
+        sp:text """# Check existence
+ASK
+WHERE {
+  ?s a :Thing
+}""" ;
+        sp:where [
+            rdf:first [
+                sp:subject [ sp:varName "s" ] ;
+                sp:predicate rdf:type ;
+                sp:object :Thing ;
+            ] ;
+            rdf:rest rdf:nil ;
+        ] ;
+    ] ;
+.
+
+:module4
+    a sml:ApplyConstruct ;
+    spin:body [
+        a sp:Modify ;
+        rdfs:comment "Replace old values" ;
+        sp:text """# Replace old values
+DELETE { ?s ?p ?old }
+INSERT { ?s ?p ?new }
+WHERE {
+?s ?p ?old .
+}""" ;
+        sp:deletePattern [
+            rdf:first [
+                sp:subject [ sp:varName "s" ] ;
+                sp:predicate [ sp:varName "p" ] ;
+                sp:object [ sp:varName "old" ] ;
+            ] ;
+            rdf:rest rdf:nil ;
+        ] ;
+        sp:insertPattern [
+            rdf:first [
+                sp:subject [ sp:varName "s" ] ;
+                sp:predicate [ sp:varName "p" ] ;
+                sp:object [ sp:varName "new" ] ;
+            ] ;
+            rdf:rest rdf:nil ;
+        ] ;
+        sp:where [
+            rdf:first [
+                sp:subject [ sp:varName "s" ] ;
+                sp:predicate [ sp:varName "p" ] ;
+                sp:object [ sp:varName "old" ] ;
+            ] ;
+            rdf:rest rdf:nil ;
+        ] ;
+    ] ;
+.
+
+:module5
+    a sml:ApplyConstruct ;
+    sml:selectQuery [
+        a sp:Select ;
+        sp:text """
+SELECT ?qt
+WHERE {
+  ?qt a :QT
+} VALUES (?qt) {
+  (:val1)
+}""" ;
+        sp:values [
+            sp:bindings [
+                rdf:first [
+                    rdf:first :val1 ;
+                    rdf:rest rdf:nil ;
+                ] ;
+                rdf:rest rdf:nil ;
+            ] ;
+            sp:varNames [
+                rdf:first "qt" ;
+                rdf:rest rdf:nil ;
+            ] ;
+        ] ;
+        sp:where [
+            rdf:first [
+                sp:subject [ sp:varName "qt" ] ;
+                sp:predicate rdf:type ;
+                sp:object :QT ;
+            ] ;
+            rdf:rest rdf:nil ;
+        ] ;
+    ] ;
+.

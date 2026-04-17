@@ -12,6 +12,7 @@ import java.util.List;
 
 public class CliFileResolver {
 
+    static final String S_PIPES_URI = "http://onto.fel.cvut.cz/ontologies/s-pipes";
     static final String S_PIPES_LIB_URI = "http://onto.fel.cvut.cz/ontologies/s-pipes-lib";
 
     record ResolveResult(List<File> filesToProcess, List<File> skippedNonScriptFiles) {}
@@ -39,7 +40,8 @@ public class CliFileResolver {
             if (onlyScriptFiles) {
                 OntModel model = manager.getOntology(uri);
                 model.loadImports();
-                if (!model.listImportedOntologyURIs(true).contains(S_PIPES_LIB_URI)) {
+                var imports = model.listImportedOntologyURIs(true);
+                if (!imports.contains(S_PIPES_URI) && !imports.contains(S_PIPES_LIB_URI)) {
                     skippedNonScriptFiles.add(file);
                     continue;
                 }
@@ -51,23 +53,30 @@ public class CliFileResolver {
         return new ResolveResult(filesToProcess, skippedNonScriptFiles);
     }
 
-    static void printSummary(List<File> skippedNonScriptFiles, List<File> skippedAlreadyFormatted,
+    static void printSummary(List<File> skippedNonScriptFiles, List<File> skippedAlreadyProcessed,
                              List<File> processedFiles, String action) {
-        printSummary(skippedNonScriptFiles, skippedAlreadyFormatted, List.of(), processedFiles, action);
+        printSummary(skippedNonScriptFiles, skippedAlreadyProcessed, List.of(), List.of(), processedFiles, action);
     }
 
-    static void printSummary(List<File> skippedNonScriptFiles, List<File> skippedAlreadyFormatted,
-                             List<File> skippedNotPreformatted, List<File> processedFiles, String action) {
+    static void printSummary(List<File> skippedNonScriptFiles, List<File> skippedAlreadyProcessed,
+                             List<File> skippedNotPreformatted, List<File> failedFiles,
+                             List<File> processedFiles, String action) {
         System.out.println();
+        if (!failedFiles.isEmpty()) {
+            System.out.println(failedFiles.size() + " files failed to be " + action + " due to error (see above):");
+            for (File f : failedFiles) {
+                System.out.println("  - " + f.getAbsolutePath());
+            }
+        }
         if (!skippedNonScriptFiles.isEmpty()) {
-            System.out.println(skippedNonScriptFiles.size() + " files skipped as non-script files because they do not import s-pipes-lib:");
+            System.out.println(skippedNonScriptFiles.size() + " files skipped as non-script files because they do not import s-pipes or s-pipes-lib:");
             for (File f : skippedNonScriptFiles) {
                 System.out.println("  - " + f.getAbsolutePath());
             }
         }
-        if (!skippedAlreadyFormatted.isEmpty()) {
-            System.out.println(skippedAlreadyFormatted.size() + " files skipped as already " + action + ":");
-            for (File f : skippedAlreadyFormatted) {
+        if (!skippedAlreadyProcessed.isEmpty()) {
+            System.out.println(skippedAlreadyProcessed.size() + " files skipped as already " + action + ":");
+            for (File f : skippedAlreadyProcessed) {
                 System.out.println("  - " + f.getAbsolutePath());
             }
         }
