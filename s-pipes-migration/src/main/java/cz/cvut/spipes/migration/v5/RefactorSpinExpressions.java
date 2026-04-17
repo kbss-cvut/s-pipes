@@ -24,11 +24,25 @@ import java.util.Set;
 public class RefactorSpinExpressions {
 
     private static final Set<Resource> NON_EXPRESSION_SP_TYPES = Set.of(
+        // Query types
         SP.Ask, SP.Select, SP.Construct, SP.Modify, SP.Describe,
+        // Update operation types
+        SP.Update, SP.Clear, SP.Create, SP.Delete, SP.DeleteData,
+        SP.DeleteWhere, SP.Drop, SP.Insert, SP.InsertData, SP.Load,
+        // Abstract supertypes
+        SP.Command, SP.Query,
+        // Expression container (already refactored)
         SP.Expression,
+        // Structural pattern elements
         SP.Bind, SP.Filter, SP.SubQuery, SP.Service, SP.Optional,
         SP.Union, SP.Minus, SP.NamedGraph, SP.Values,
-        SP.Triple, SP.TriplePath, SP.TriplePattern, SP.TripleTemplate
+        SP.Exists, SP.NotExists,
+        // Triple patterns
+        SP.Triple, SP.TriplePath, SP.TriplePattern, SP.TripleTemplate,
+        // Property path types
+        SP.AltPath, SP.SeqPath, SP.ModPath, SP.ReversePath, SP.ReverseLinkPath,
+        // Variable and deprecated types
+        SP.Variable, SP.Let
     );
 
     private static final Property[] ARG_PROPERTIES = {

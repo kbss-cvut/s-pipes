@@ -1,0 +1,20 @@
+@prefix : <http://example.org/> .
+@prefix sp: <http://spinrdf.org/sp#> .
+@prefix sml: <http://topbraid.org/sparqlmotionlib#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+:module1
+    a sml:ApplyConstruct ;
+    sml:updateQuery [
+        a sp:Update ;
+        sp:text """DELETE { ?s ?p ?o } INSERT { ?s ?p2 ?o } WHERE { ?s ?p ?o }""" ;
+    ] ;
+.
+
+:module2
+    a sml:ApplyConstruct ;
+    :myExpression [
+        a sp:Expression ;
+        sp:text "concat(?x, \" suffix\")" ;
+    ] ;
+.
