@@ -6,7 +6,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
@@ -18,14 +17,9 @@ public class ImportE5XZIPModuleTest extends ImportE5XModuleTest {
         String dir = "data/e5x.zip";
         String contentType = "application/octet-stream";
 
-        List<String> files = null;
-        try {
-            files = IOUtils.readLines(
-                Objects.requireNonNull(ImportE5XZIPModuleTest.class.getClassLoader().getResourceAsStream(dir)),
-                StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        List<String> files = IOUtils.readLines(
+            Objects.requireNonNull(ImportE5XZIPModuleTest.class.getClassLoader().getResourceAsStream(dir)),
+            StandardCharsets.UTF_8);
 
         return Objects.requireNonNull(files)
             .stream().map((file) -> Arguments.of("/" + dir + "/" + file, contentType));
