@@ -30,6 +30,8 @@ public class Vocabulary {
     public final static String s_c_description = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/description";
     public final static String s_c_entity_partition = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/entity-partition";
     public final static String s_c_execution_context_dataset_source = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/execution-context-dataset-source";
+    public final static String s_c_failed_pipeline_execution = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/failed-pipeline-execution";
+    public final static String s_c_finished_pipeline_execution = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/finished-pipeline-execution";
     public final static String s_c_human_interpretation = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/human-interpretation";
     public final static String s_c_intent = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/intent";
     public final static String s_c_module_execution = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/module-execution";
@@ -106,8 +108,10 @@ public class Vocabulary {
     public final static String s_p_difference_found_in = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison/difference-found-in";
     public final static String s_p_pipeline = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/pipeline-comparison/pipeline";
     public final static String s_p_executed_in = "http://onto.fel.cvut.cz/ontologies/s-pipes/executed-in";
+    public final static String s_p_has_function = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-function";
     public final static String s_p_has_module_execution = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-module-execution";
     public final static String s_p_has_related_resource = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-related-resource";
+    public final static String s_p_has_script = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-script";
     public final static String s_p_has_creation_date = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-creation-date";
     public final static String s_p_has_data_hash = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-data-hash";
     public final static String s_p_has_download_url = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/has-download-url";
@@ -124,7 +128,9 @@ public class Vocabulary {
     public final static String s_p_has_module_execution_start_date = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-module-execution-start-date";
     public final static String s_p_has_module_id = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-module-id";
     public final static String s_p_has_output_model_triple_count = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-output-model-triple-count";
+    public final static String s_p_has_pipeline_execution_finish_date = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-pipeline-execution-finish-date";
     public final static String s_p_has_pipeline_execution_start_date = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-pipeline-execution-start-date";
+    public final static String s_p_has_script_path = "http://onto.fel.cvut.cz/ontologies/s-pipes/has-script-path";
     public final static String s_p_s_pipes_model_name = "http://onto.fel.cvut.cz/ontologies/s-pipes/name";
     public final static String s_p_value = "http://onto.fel.cvut.cz/ontologies/s-pipes/related-resource/value";
     public final static String s_p_label = "http://www.w3.org/2000/01/rdf-schema#label";

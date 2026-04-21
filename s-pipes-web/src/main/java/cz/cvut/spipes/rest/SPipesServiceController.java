@@ -396,6 +396,7 @@ public class SPipesServiceController {
         return id;
     }
 
+
     private Model extractConfigurationModel(final MultiValueMap<String, String> parameters) {
         ServiceParametersHelper paramHelper = new ServiceParametersHelper(parameters);
 

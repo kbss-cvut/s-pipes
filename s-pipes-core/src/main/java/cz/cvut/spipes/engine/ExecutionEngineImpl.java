@@ -7,6 +7,7 @@ import org.apache.jena.rdf.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Map;
@@ -26,10 +27,29 @@ class ExecutionEngineImpl implements ExecutionEngine {
         log.info("Executing script {} with context {}.", module.getResource(), inputContext.toSimpleString());
         final long pipelineExecutionId = Instant.now().toEpochMilli()*1000+(i++);
 
-        fire((l) -> {l.pipelineExecutionStarted(pipelineExecutionId); return null;});
-        ExecutionContext outputContext = _executePipeline(pipelineExecutionId, module, inputContext, null);
-        fire((l) -> {l.pipelineExecutionFinished(pipelineExecutionId); return null;});
-        return outputContext;
+        String function = inputContext.getId();
+        String scriptPath;
+        if (inputContext.getScriptUri() != null) {
+            scriptPath = inputContext.getScriptUri();
+        } else {
+            scriptPath = null;
+        }
+
+        String script = new File(module.getResource().getURI()).getParent();
+
+        fire((l) -> {l.pipelineExecutionStarted(pipelineExecutionId, function, scriptPath, script); return null;});
+        try {
+            ExecutionContext outputContext = _executePipeline(pipelineExecutionId, module, inputContext, null);
+            fire((l) -> {l.pipelineExecutionFinished(pipelineExecutionId); return null;});
+            return outputContext;
+        } catch (Exception e) {
+            log.error("Pipeline execution failed", e);
+            fire((l) -> {
+                l.pipelineExecutionFailed(pipelineExecutionId);
+                return null;
+            });
+            throw e;
+        }
     }
 
     private void fire(final Function<ProgressListener,Void> function) {
