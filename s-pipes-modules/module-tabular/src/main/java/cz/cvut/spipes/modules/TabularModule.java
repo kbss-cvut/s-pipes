@@ -321,6 +321,14 @@ public class TabularModule extends AnnotatedAbstractModule {
                 rowNumber++;
                 // 4.6.1 and 4.6.3
                 Row r = new Row();
+                // Assign an explicit, deterministic identifier instead of relying on
+                // JOPA's generated id. The generator picks a random IRI and only checks
+                // it against the underlying storage, not against new objects still pending
+                // in the persistence context. For large inputs (tens of thousands of rows)
+                // this leads to birthday-paradox collisions and an OWLEntityExistsException.
+                // Keep the "instance" token so BNodesTransformer still emits the row as a
+                // blank node in the output (preserving the previous output shape).
+                r.setUri(URI.create(sourceResource.getUri() + "#Row_instance-" + rowNumber));
 
                 if (outputMode == Mode.STANDARD) {
                     // 4.6.2
