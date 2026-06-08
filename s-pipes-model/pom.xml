@@ -20,7 +20,7 @@
     <dependencies>
         <dependency>
             <groupId>cz.cvut.kbss.jopa</groupId>
-            <artifactId>jopa-impl</artifactId>
+            <artifactId>jopa-api</artifactId>
         </dependency>
     </dependencies>
 
