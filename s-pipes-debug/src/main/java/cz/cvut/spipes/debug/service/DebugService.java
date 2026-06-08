@@ -62,7 +62,7 @@ public class DebugService {
     public List<PipelineExecutionDto> getAllPipelineExecutions() {
         List<PipelineExecution> pipelineExecutionDtos = pipelineExecutionDao.findAll();
         return pipelineExecutionDtos.stream()
-                .sorted(comparing(PipelineExecution::getHas_pipepline_execution_date, Comparator.reverseOrder()))
+                .sorted(comparing(PipelineExecution::getHas_pipepline_execution_start_date, Comparator.reverseOrder()))
                 .map(pipelineExecutionMapper::toDto)
                 .collect(Collectors.toList());
     }

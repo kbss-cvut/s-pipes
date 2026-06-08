@@ -43,4 +43,6 @@ public class SPIPES {
     public static final Property has_output_content = property("has-output-content");
     public static final Property has_script = property("has-script");
 
+    public static final Property has_function = property("has-function");
+    public static final Property has_script_path  = property("has-script-path");
 }

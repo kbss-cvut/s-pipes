@@ -1,23 +1,15 @@
 package cz.cvut.spipes.model;
 
+import cz.cvut.kbss.jopa.model.annotations.*;
+import cz.cvut.kbss.jopa.vocabulary.DC;
+import cz.cvut.kbss.jopa.vocabulary.RDFS;
+import cz.cvut.spipes.Vocabulary;
+
+import java.net.URI;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import cz.cvut.kbss.jopa.model.annotations.FetchType;
-import cz.cvut.kbss.jopa.model.annotations.Id;
-import cz.cvut.kbss.jopa.model.annotations.OWLAnnotationProperty;
-import cz.cvut.kbss.jopa.model.annotations.OWLClass;
-import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
-import cz.cvut.kbss.jopa.model.annotations.OWLObjectProperty;
-import cz.cvut.kbss.jopa.model.annotations.ParticipationConstraint;
-import cz.cvut.kbss.jopa.model.annotations.ParticipationConstraints;
-import cz.cvut.kbss.jopa.model.annotations.Properties;
-import cz.cvut.kbss.jopa.model.annotations.Types;
-import cz.cvut.kbss.jopa.vocabulary.DC;
-import cz.cvut.kbss.jopa.vocabulary.RDFS;
-import cz.cvut.spipes.Vocabulary;
 
 @OWLClass(iri = Vocabulary.s_c_pipeline_execution)
 public class PipelineExecution extends Thing {
@@ -71,7 +63,19 @@ public class PipelineExecution extends Thing {
     protected Date finish_date;
 
     @OWLDataProperty(iri = Vocabulary.s_p_has_pipeline_execution_start_date, fetch = FetchType.EAGER)
-    protected Date has_pipepline_execution_date;
+    protected Date has_pipepline_execution_start_date;
+
+    @OWLDataProperty(iri = Vocabulary.s_p_has_pipeline_execution_finish_date, fetch = FetchType.EAGER)
+    protected Date has_pipeline_execution_finish_date;
+
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_script)
+    protected URI has_script;
+
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_function)
+    protected URI has_function;
+
+    @OWLDataProperty(iri = Vocabulary.s_p_has_script_path)
+    protected String has_script_path;
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_module_id, fetch = FetchType.EAGER)
     protected String has_module_id;
@@ -100,6 +104,10 @@ public class PipelineExecution extends Thing {
 
     public void setTypes(Set<String> types) {
         this.types = types;
+    }
+
+    public void addTypes(Set<String> types) {
+        this.types.addAll(types);
     }
 
     public Set<String> getTypes() {
@@ -155,14 +163,45 @@ public class PipelineExecution extends Thing {
     }
 
 
-    public Date getHas_pipepline_execution_date() {
-        return has_pipepline_execution_date;
+    public Date getHas_pipepline_execution_start_date() {
+        return has_pipepline_execution_start_date;
     }
 
-    public void setHas_pipepline_execution_date(Date has_pipepline_execution_date) {
-        this.has_pipepline_execution_date = has_pipepline_execution_date;
+    public void setHas_pipepline_execution_start_date(Date has_pipepline_execution_start_date) {
+        this.has_pipepline_execution_start_date = has_pipepline_execution_start_date;
     }
 
+    public Date getHas_pipeline_execution_finish_date() {
+        return has_pipeline_execution_finish_date;
+    }
+
+    public void setHas_pipeline_execution_finish_date(Date has_pipeline_execution_finish_date) {
+        this.has_pipeline_execution_finish_date = has_pipeline_execution_finish_date;
+    }
+
+    public URI getHas_script() {
+        return has_script;
+    }
+
+    public void setHas_script(URI has_script) {
+        this.has_script = has_script;
+    }
+
+    public URI getHas_function() {
+        return has_function;
+    }
+
+    public void setHas_function(URI has_function) {
+        this.has_function = has_function;
+    }
+
+    public String getHas_script_path() {
+        return has_script_path;
+    }
+
+    public void setHas_script_path(String has_script_path) {
+        this.has_script_path = has_script_path;
+    }
 
     public String getHas_module_id() {
         return has_module_id;
@@ -186,7 +225,7 @@ public class PipelineExecution extends Thing {
     }
 
 
-    public void setHas_rdf4j_output(SourceDatasetSnapshot has_rdf4j_output) {
+    public void setHas_rdf4j_output(TargetDatasetSnapshot has_rdf4j_output) {
         this.has_rdf4j_output = has_rdf4j_output;
     }
 

@@ -15,6 +15,7 @@ import org.apache.jena.rdf.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -153,10 +154,11 @@ public class SPipesScriptManager {
     /**
      * @implNote Based on jena's OntDocumentManager.
      * @param ontologyIRI
-     * @return file path at which <code>ontologyIRI</code> is loaded
+     * @return an absolute URI string at which <code>ontologyIRI</code> is loaded
      */
     public String getLocation(String ontologyIRI) {
-        return OntDocumentManager.getInstance().doAltURLMapping(ontologyIRI);
+        String scriptPath = OntDocumentManager.getInstance().getFileManager().mapURI(ontologyIRI);
+        return Paths.get(scriptPath).toUri().toString();
     }
     // id -> contexts
     // function id-s
