@@ -19,16 +19,16 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jdk.version>17</jdk.version>
-        <org.apache.jena>5.2.0</org.apache.jena>
+        <org.apache.jena>5.6.0</org.apache.jena>
         <org.topbraid.shacl>1.4.4</org.topbraid.shacl>
         <org.springframework.security.version>6.2.8</org.springframework.security.version>
         <org.springframework.boot.version>3.4.2</org.springframework.boot.version>
         <!-- Should be in sync with Spring Boot version -->
         <org.springframework.version>6.2.2</org.springframework.version>
         <com.fasterxml.jackson.version>2.14.0</com.fasterxml.jackson.version>
-        <org.eclipse.rdf4j.version>5.0.3</org.eclipse.rdf4j.version>
-        <cz.cvut.kbss.jopa.version>2.2.0</cz.cvut.kbss.jopa.version>
-        <cz.cvut.kbss.jopa.spring.tx.version>0.4.0</cz.cvut.kbss.jopa.spring.tx.version>
+        <org.eclipse.rdf4j.version>5.2.2</org.eclipse.rdf4j.version>
+        <cz.cvut.kbss.jopa.version>2.9.3</cz.cvut.kbss.jopa.version>
+        <cz.cvut.kbss.jopa.spring.tx.version>0.4.3</cz.cvut.kbss.jopa.spring.tx.version>
 
         <org.junit.jupiter.version>5.9.2</org.junit.jupiter.version>
         <org.mockito.version>5.0.0</org.mockito.version>
@@ -118,7 +118,7 @@
             <dependency>
                 <groupId>cz.cvut.kbss.jsonld</groupId>
                 <artifactId>jb4jsonld-jackson</artifactId>
-                <version>0.14.2</version>
+                <version>0.16.0</version>
             </dependency>
             <dependency>
                 <groupId>xerces</groupId>
